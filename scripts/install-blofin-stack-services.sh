@@ -21,9 +21,10 @@ fi
 
 cp "$SYSTEMD_SRC/blofin-stack-ingestor.service" "$SYSTEMD_DEST/"
 cp "$SYSTEMD_SRC/blofin-stack-api.service" "$SYSTEMD_DEST/"
+cp "$SYSTEMD_SRC/blofin-stack-paper.service" "$SYSTEMD_DEST/"
 
 systemctl --user daemon-reload
-systemctl --user enable --now blofin-stack-ingestor.service blofin-stack-api.service
+systemctl --user enable --now blofin-stack-ingestor.service blofin-stack-api.service blofin-stack-paper.service
 
 echo "Installed and started blofin-stack services"
 systemctl --user --no-pager --full status blofin-stack-ingestor.service || true

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import os
+import time
 from collections import Counter
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
@@ -48,6 +49,22 @@ def fetch_summary():
     by_strat = Counter(s['strategy'] for s in sigs)
     by_symbol_sig = Counter(s['symbol'] for s in sigs)
     latest_by_symbol = [dict(r) for r in con.execute(f'SELECT symbol, MAX(ts_iso) as last_seen, COUNT(*) as ticks FROM ticks {wh} GROUP BY symbol ORDER BY symbol', args)]
+
+    now_ms = int(time.time() * 1000)
+    tick_flow = dict(con.execute(
+        f'''
+        SELECT
+            SUM(CASE WHEN ts_ms >= ? THEN 1 ELSE 0 END) AS ticks_10s,
+            SUM(CASE WHEN ts_ms >= ? THEN 1 ELSE 0 END) AS ticks_60s,
+            MAX(ts_ms) AS last_tick_ms
+        FROM ticks
+        {wh}
+        ''',
+        [now_ms - 10_000, now_ms - 60_000, *args],
+    ).fetchone())
+    last_tick_ms = tick_flow.get('last_tick_ms')
+    seconds_since_last_tick = round(max(0.0, (now_ms - last_tick_ms) / 1000.0), 1) if last_tick_ms else None
+    is_live = bool((tick_flow.get('ticks_10s') or 0) > 0 and seconds_since_last_tick is not None and seconds_since_last_tick <= 12)
 
     points_where, points_args = _in_clause(SYMBOLS)
     if points_where:
@@ -126,6 +143,13 @@ def fetch_summary():
         'signals_by_strategy': dict(by_strat),
         'signals_by_symbol': dict(by_symbol_sig.most_common(25)),
         'latest_by_symbol': latest_by_symbol,
+        'live_status': {
+            'is_live': is_live,
+            'ticks_10s': int(tick_flow.get('ticks_10s') or 0),
+            'ticks_60s': int(tick_flow.get('ticks_60s') or 0),
+            'last_tick_ms': last_tick_ms,
+            'seconds_since_last_tick': seconds_since_last_tick,
+        },
         'points_by_symbol_7d': points_by_symbol_7d,
         'recent_signals': sigs[:120],
         'confirmed_signals': confirmed[:120],
@@ -188,11 +212,16 @@ select{{background:#0e1730;color:#e7ecff;border:1px solid #2b427a;padding:6px;bo
 </style></head>
 <body><div class='wrap'>
 <h1>Blofin 24/7 Pattern Dashboard</h1>
-<div class='grid'>
-<div class='card'><div class='small'>Configured Tokens</div><div style='font-size:26px'>{len(s['symbols_configured'])}</div></div>
-<div class='card'><div class='small'>Signals</div><div style='font-size:26px'>{s['signals_total_window']}</div></div>
-<div class='card'><div class='small'>Confirmed</div><div style='font-size:26px'>{len(s['confirmed_signals'])}</div></div>
-<div class='card'><div class='small'>Paper Win Rate</div><div style='font-size:26px'>{s['paper_stats']['win_rate_pct']}%</div></div>
+<div class='grid' style='grid-template-columns:repeat(5,minmax(0,1fr))'>
+<div class='card'>
+  <div class='small'>Live Feed</div>
+  <div id='live-pill' style='font-size:22px;font-weight:700;color:{'#2fe38a' if s['live_status']['is_live'] else '#ff6b6b'}'>{'LIVE' if s['live_status']['is_live'] else 'STALE'}</div>
+  <div class='small' id='live-detail'>{s['live_status']['ticks_10s']} ticks / 10s · last {s['live_status']['seconds_since_last_tick'] if s['live_status']['seconds_since_last_tick'] is not None else 'n/a'}s</div>
+</div>
+<div class='card'><div class='small'>Configured Tokens</div><div id='configured-count' style='font-size:26px'>{len(s['symbols_configured'])}</div></div>
+<div class='card'><div class='small'>Signals</div><div id='signals-count' style='font-size:26px'>{s['signals_total_window']}</div></div>
+<div class='card'><div class='small'>Confirmed</div><div id='confirmed-count' style='font-size:26px'>{len(s['confirmed_signals'])}</div></div>
+<div class='card'><div class='small'>Paper Win Rate</div><div id='paper-win-rate' style='font-size:26px'>{s['paper_stats']['win_rate_pct']}%</div></div>
 </div>
 <p>{''.join([f"<span class='badge'>{x}</span>" for x in s['symbols_configured']])}</p>
 
@@ -249,7 +278,40 @@ async function loadSym(sym){{
   if(ch) ch.destroy();
   ch=new Chart(document.getElementById('chart'),{{type:'line',data:{{labels,datasets:[{{label:sym,data:vals,borderColor:'#6ea8fe',pointRadius:0}}]}},options:{{responsive:true}}}});
 }}
-const sel=document.getElementById('sym'); sel.addEventListener('change',()=>loadSym(sel.value)); if(sel.value) loadSym(sel.value);
+
+function renderLive(status){{
+  const live = !!status?.is_live;
+  const pill = document.getElementById('live-pill');
+  const detail = document.getElementById('live-detail');
+  if (!pill || !detail) return;
+  pill.textContent = live ? 'LIVE' : 'STALE';
+  pill.style.color = live ? '#2fe38a' : '#ff6b6b';
+  const age = status?.seconds_since_last_tick;
+  detail.textContent = `${{status?.ticks_10s ?? 0}} ticks / 10s · last ${{age ?? 'n/a'}}s`;
+}}
+
+async function refreshSummary(){{
+  try {{
+    const r = await fetch('/api/summary');
+    const s = await r.json();
+    renderLive(s.live_status || {{}});
+    const signals = document.getElementById('signals-count');
+    const confirmed = document.getElementById('confirmed-count');
+    const win = document.getElementById('paper-win-rate');
+    if (signals) signals.textContent = s.signals_total_window ?? 0;
+    if (confirmed) confirmed.textContent = (s.confirmed_signals || []).length;
+    if (win) win.textContent = `${{s.paper_stats?.win_rate_pct ?? 0}}%`;
+  }} catch (err) {{
+    renderLive({{is_live:false,ticks_10s:0,seconds_since_last_tick:'n/a'}});
+  }}
+}}
+
+const sel=document.getElementById('sym');
+sel.addEventListener('change',()=>loadSym(sel.value));
+if(sel.value) loadSym(sel.value);
+refreshSummary();
+setInterval(refreshSummary, 5000);
+setInterval(() => {{ if (sel.value) loadSym(sel.value); }}, 15000);
 </script></body></html>"""
             return self.sendb(html.encode(), ctype='text/html; charset=utf-8')
 

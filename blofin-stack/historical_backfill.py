@@ -16,7 +16,7 @@ DB_PATH = os.getenv('BLOFIN_DB_PATH', str(ROOT / 'data' / 'blofin_monitor.db'))
 SYMBOLS = [s.strip() for s in os.getenv('BLOFIN_SYMBOLS', 'BTC-USDT,ETH-USDT').split(',') if s.strip()]
 TIMEFRAME = os.getenv('BACKFILL_TIMEFRAME', '1m')
 LOOKBACK_DAYS = int(os.getenv('BACKFILL_LOOKBACK_DAYS', '7'))
-BATCH_LIMIT = int(os.getenv('BACKFILL_BATCH_LIMIT', '1000'))
+BATCH_LIMIT = min(100, max(1, int(os.getenv('BACKFILL_BATCH_LIMIT', '100'))))
 MAX_GAP_MINUTES = int(os.getenv('BACKFILL_MAX_GAP_MINUTES', '10080'))
 LOOP_SECONDS = int(os.getenv('BACKFILL_LOOP_SECONDS', '0'))
 
@@ -83,27 +83,35 @@ def split_large_ranges(ranges: list[tuple[int, int, int]], max_gap_minutes: int)
 
 def fetch_ohlcv_fill(exchange, symbol: str, start_ms: int, end_ms: int) -> list[tuple[int, float]]:
     fetched: dict[int, float] = {}
-    since = start_ms
-    while since <= end_ms:
-        candles = exchange.fetch_ohlcv(symbol, timeframe=TIMEFRAME, since=since, limit=BATCH_LIMIT)
+    cursor_until = end_ms
+
+    while cursor_until >= start_ms:
+        candles = exchange.fetch_ohlcv(
+            symbol,
+            timeframe=TIMEFRAME,
+            limit=BATCH_LIMIT,
+            params={'until': cursor_until},
+        )
         if not candles:
             break
 
-        last_ts = None
+        oldest_ts = None
         for c in candles:
             ts, _o, _h, _l, close, _vol = c
             ts = floor_tf(int(ts))
+            if oldest_ts is None or ts < oldest_ts:
+                oldest_ts = ts
             if ts < start_ms or ts > end_ms:
                 continue
             fetched[ts] = float(close)
-            last_ts = ts
 
-        if last_ts is None:
-            break
-        if last_ts <= since:
+        if oldest_ts is None:
             break
 
-        since = last_ts + TF_MS
+        next_cursor = oldest_ts - TF_MS
+        if next_cursor >= cursor_until:
+            break
+        cursor_until = next_cursor
         time.sleep(exchange.rateLimit / 1000.0)
 
     return sorted(fetched.items())

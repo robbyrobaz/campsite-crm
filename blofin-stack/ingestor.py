@@ -30,6 +30,14 @@ BREAKOUT_LOOKBACK = int(os.getenv("BREAKOUT_LOOKBACK_SECONDS", "900"))
 BREAKOUT_BUFFER_PCT = float(os.getenv("BREAKOUT_BUFFER_PCT", "0.18"))
 REVERSAL_LOOKBACK = int(os.getenv("REVERSAL_LOOKBACK_SECONDS", "600"))
 REVERSAL_BOUNCE_PCT = float(os.getenv("REVERSAL_BOUNCE_PCT", "0.35"))
+VWAP_LOOKBACK = int(os.getenv("VWAP_LOOKBACK_SECONDS", "1200"))
+VWAP_DEVIATION_PCT = float(os.getenv("VWAP_DEVIATION_PCT", "0.40"))
+RSI_WINDOW = int(os.getenv("RSI_WINDOW_SECONDS", "840"))
+RSI_OVERSOLD = float(os.getenv("RSI_OVERSOLD", "30"))
+RSI_OVERBOUGHT = float(os.getenv("RSI_OVERBOUGHT", "70"))
+BB_LOOKBACK = int(os.getenv("BB_LOOKBACK_SECONDS", "1200"))
+BB_STD_MULT = float(os.getenv("BB_STD_MULT", "2.0"))
+BB_SQUEEZE_THRESHOLD = float(os.getenv("BB_SQUEEZE_THRESHOLD", "0.3"))
 SIGNAL_COOLDOWN = int(os.getenv("SIGNAL_COOLDOWN_SECONDS", "240"))
 RECONNECT_MIN = int(os.getenv("RECONNECT_MIN_SECONDS", "2"))
 RECONNECT_MAX = int(os.getenv("RECONNECT_MAX_SECONDS", "20"))
@@ -37,6 +45,7 @@ RECONNECT_MAX = int(os.getenv("RECONNECT_MAX_SECONDS", "20"))
 RAW_FILE = DATA_DIR / f"raw_{datetime.now(timezone.utc).strftime('%Y%m%d')}.jsonl"
 
 price_windows: Dict[str, Deque[Tuple[int, float]]] = defaultdict(deque)
+volume_windows: Dict[str, Deque[Tuple[int, float]]] = defaultdict(deque)
 last_signal_at: Dict[Tuple[str, str, str], int] = {}
 
 
@@ -48,10 +57,10 @@ def iso_utc(ms: int) -> str:
     return datetime.fromtimestamp(ms / 1000, tz=timezone.utc).isoformat()
 
 
-def parse_price(msg: dict) -> Tuple[Optional[str], Optional[float]]:
+def parse_price(msg: dict) -> Tuple[Optional[str], Optional[float], Optional[float]]:
     data = msg.get("data")
     if not data:
-        return None, None
+        return None, None, None
 
     row = None
     if isinstance(data, list) and data:
@@ -60,25 +69,33 @@ def parse_price(msg: dict) -> Tuple[Optional[str], Optional[float]]:
         row = data
 
     if not isinstance(row, dict):
-        return None, None
+        return None, None, None
 
     symbol = row.get("instId") or row.get("symbol") or row.get("s")
     price_val = row.get("last") or row.get("lastPrice") or row.get("price") or row.get("p")
     if symbol is None or price_val is None:
-        return None, None
+        return None, None, None
 
+    # Extract volume (Blofin provides vol24h or volCcy24h)
+    volume_val = row.get("vol24h") or row.get("volCcy24h") or row.get("volume")
+    
     try:
-        return symbol, float(price_val)
+        price = float(price_val)
+        volume = float(volume_val) if volume_val is not None else 0.0
+        return symbol, price, volume
     except Exception:
-        return None, None
+        return None, None, None
 
 
 def _trim(symbol: str, ts_ms: int) -> None:
     q = price_windows[symbol]
-    keep_ms = max(MOMENTUM_WINDOW, BREAKOUT_LOOKBACK, REVERSAL_LOOKBACK) * 1000
+    v = volume_windows[symbol]
+    keep_ms = max(MOMENTUM_WINDOW, BREAKOUT_LOOKBACK, REVERSAL_LOOKBACK, VWAP_LOOKBACK, RSI_WINDOW, BB_LOOKBACK) * 1000
     cutoff = ts_ms - keep_ms
     while q and q[0][0] < cutoff:
         q.popleft()
+    while v and v[0][0] < cutoff:
+        v.popleft()
 
 
 def _slice_window(symbol: str, ts_ms: int, lookback_seconds: int) -> List[Tuple[int, float]]:
@@ -95,10 +112,12 @@ def _cooldown_ok(symbol: str, signal: str, strategy: str, ts_ms: int) -> bool:
     return False
 
 
-def detect_signals(symbol: str, price: float, ts_ms: int) -> List[dict]:
+def detect_signals(symbol: str, price: float, ts_ms: int, volume: float = 0.0) -> List[dict]:
     out = []
     q = price_windows[symbol]
+    v = volume_windows[symbol]
     q.append((ts_ms, price))
+    v.append((ts_ms, volume))
     _trim(symbol, ts_ms)
 
     # Momentum detector
@@ -168,6 +187,118 @@ def detect_signals(symbol: str, price: float, ts_ms: int) -> List[dict]:
                     "details": {"lookback_s": REVERSAL_LOOKBACK, "high": high, "reject_pct": round(reject_pct, 4)},
                 })
 
+    # VWAP Mean Reversion
+    vwap_window = _slice_window(symbol, ts_ms, VWAP_LOOKBACK)
+    if len(vwap_window) >= 10:
+        cutoff = ts_ms - VWAP_LOOKBACK * 1000
+        vwap_volumes = [(t, vol) for (t, vol) in v if t >= cutoff]
+        if len(vwap_volumes) == len(vwap_window) and len(vwap_volumes) > 0:
+            total_pv = sum(p * vol for (_, p), (_, vol) in zip(vwap_window, vwap_volumes))
+            total_v = sum(vol for _, vol in vwap_volumes)
+            if total_v > 0:
+                vwap = total_pv / total_v
+                if vwap > 0:
+                    deviation_pct = ((price - vwap) / vwap) * 100.0
+                    if deviation_pct <= -VWAP_DEVIATION_PCT and _cooldown_ok(symbol, "BUY", "vwap_reversion", ts_ms):
+                        out.append({
+                            "signal": "BUY",
+                            "strategy": "vwap_reversion",
+                            "confidence": min(0.85, max(0.60, abs(deviation_pct) / max(VWAP_DEVIATION_PCT, 0.01))),
+                            "details": {"lookback_s": VWAP_LOOKBACK, "vwap": round(vwap, 6), "deviation_pct": round(deviation_pct, 4)},
+                        })
+                    elif deviation_pct >= VWAP_DEVIATION_PCT and _cooldown_ok(symbol, "SELL", "vwap_reversion", ts_ms):
+                        out.append({
+                            "signal": "SELL",
+                            "strategy": "vwap_reversion",
+                            "confidence": min(0.85, max(0.60, abs(deviation_pct) / max(VWAP_DEVIATION_PCT, 0.01))),
+                            "details": {"lookback_s": VWAP_LOOKBACK, "vwap": round(vwap, 6), "deviation_pct": round(deviation_pct, 4)},
+                        })
+
+    # RSI Divergence
+    rsi_window = _slice_window(symbol, ts_ms, RSI_WINDOW)
+    if len(rsi_window) >= 14:
+        # Calculate simple RSI from price changes
+        prices = [p for _, p in rsi_window]
+        gains = []
+        losses = []
+        for i in range(1, len(prices)):
+            change = prices[i] - prices[i - 1]
+            if change > 0:
+                gains.append(change)
+                losses.append(0)
+            else:
+                gains.append(0)
+                losses.append(abs(change))
+        
+        avg_gain = sum(gains) / len(gains) if gains else 0
+        avg_loss = sum(losses) / len(losses) if losses else 0
+        
+        if avg_loss > 0:
+            rs = avg_gain / avg_loss
+            rsi = 100 - (100 / (1 + rs))
+        elif avg_gain > 0:
+            rsi = 100
+        else:
+            rsi = 50
+        
+        if rsi <= RSI_OVERSOLD and _cooldown_ok(symbol, "BUY", "rsi_divergence", ts_ms):
+            out.append({
+                "signal": "BUY",
+                "strategy": "rsi_divergence",
+                "confidence": min(0.80, max(0.55, (RSI_OVERSOLD - rsi) / RSI_OVERSOLD)),
+                "details": {"window_s": RSI_WINDOW, "rsi": round(rsi, 2), "threshold": RSI_OVERSOLD},
+            })
+        elif rsi >= RSI_OVERBOUGHT and _cooldown_ok(symbol, "SELL", "rsi_divergence", ts_ms):
+            out.append({
+                "signal": "SELL",
+                "strategy": "rsi_divergence",
+                "confidence": min(0.80, max(0.55, (rsi - RSI_OVERBOUGHT) / (100 - RSI_OVERBOUGHT))),
+                "details": {"window_s": RSI_WINDOW, "rsi": round(rsi, 2), "threshold": RSI_OVERBOUGHT},
+            })
+
+    # Bollinger Band Squeeze
+    bb_window = _slice_window(symbol, ts_ms, BB_LOOKBACK)
+    if len(bb_window) >= 20:
+        prices = [p for _, p in bb_window]
+        mean = sum(prices) / len(prices)
+        variance = sum((p - mean) ** 2 for p in prices) / len(prices)
+        std = variance ** 0.5
+        
+        if mean > 0 and std > 0:
+            upper_band = mean + (BB_STD_MULT * std)
+            lower_band = mean - (BB_STD_MULT * std)
+            band_width_pct = ((upper_band - lower_band) / mean) * 100.0
+            
+            # Check if bands are tight (squeeze)
+            is_squeeze = band_width_pct <= (BB_SQUEEZE_THRESHOLD * 100)
+            
+            if is_squeeze:
+                # Check for breakout direction
+                if price > upper_band and _cooldown_ok(symbol, "BUY", "bb_squeeze", ts_ms):
+                    out.append({
+                        "signal": "BUY",
+                        "strategy": "bb_squeeze",
+                        "confidence": 0.75,
+                        "details": {
+                            "lookback_s": BB_LOOKBACK,
+                            "mean": round(mean, 6),
+                            "upper": round(upper_band, 6),
+                            "band_width_pct": round(band_width_pct, 4),
+                        },
+                    })
+                elif price < lower_band and _cooldown_ok(symbol, "SELL", "bb_squeeze", ts_ms):
+                    out.append({
+                        "signal": "SELL",
+                        "strategy": "bb_squeeze",
+                        "confidence": 0.75,
+                        "details": {
+                            "lookback_s": BB_LOOKBACK,
+                            "mean": round(mean, 6),
+                            "lower": round(lower_band, 6),
+                            "band_width_pct": round(band_width_pct, 4),
+                        },
+                    })
+
     return out
 
 
@@ -202,7 +333,7 @@ async def run() -> None:
                     with RAW_FILE.open("a", encoding="utf-8") as f:
                         f.write(json.dumps({"ts_ms": ts, "payload": msg}, ensure_ascii=False) + "\n")
 
-                    symbol, price = parse_price(msg)
+                    symbol, price, volume = parse_price(msg)
                     if not symbol or price is None:
                         continue
 
@@ -214,7 +345,7 @@ async def run() -> None:
                         "raw_json": json.dumps(msg, ensure_ascii=False),
                     })
 
-                    signals = detect_signals(symbol, price, ts)
+                    signals = detect_signals(symbol, price, ts, volume)
                     for s in signals:
                         row = {
                             "ts_ms": ts,

@@ -9,6 +9,7 @@ ROOT = Path(__file__).resolve().parent
 load_dotenv(ROOT / '.env')
 DB_PATH = os.getenv('BLOFIN_DB_PATH', str(ROOT / 'data' / 'blofin_monitor.db'))
 WORKER_NAME = os.getenv('KANBAN_WORKER_NAME', 'kanban_worker')
+STALE_MINUTES = int(os.getenv('KANBAN_STALE_MINUTES', '10'))
 
 
 def now_pair():
@@ -21,11 +22,34 @@ def main():
     con = connect(DB_PATH)
     init_db(con)
 
-    inprog = con.execute("SELECT id FROM kanban_tasks WHERE status='in_progress' ORDER BY priority DESC, created_ts_ms ASC, id ASC").fetchall()
+    inprog = con.execute("SELECT id,updated_ts_ms FROM kanban_tasks WHERE status='in_progress' ORDER BY priority DESC, created_ts_ms ASC, id ASC").fetchall()
     inbox = con.execute("SELECT id FROM kanban_tasks WHERE status='inbox' ORDER BY priority DESC, created_ts_ms ASC, id ASC").fetchall()
 
     fixed = False
     action = 'ok'
+    stale_requeued = None
+
+    now = int(time.time() * 1000)
+    if len(inprog) == 1:
+        task = inprog[0]
+        age_min = (now - int(task['updated_ts_ms'])) / 60000.0
+        if age_min >= STALE_MINUTES and len(inbox) > 0:
+            ts_ms, ts_iso = now_pair()
+            ok = update_kanban_task_status(
+                con,
+                task_id=int(task['id']),
+                from_status='in_progress',
+                to_status='inbox',
+                ts_ms=ts_ms,
+                ts_iso=ts_iso,
+                actor='kanban_watchdog',
+                note=f'stale in_progress > {STALE_MINUTES}m; requeued',
+                assigned_worker=WORKER_NAME,
+            )
+            if ok:
+                stale_requeued = int(task['id'])
+                inprog = []
+                action = 'requeued_stale'
 
     if len(inprog) == 0 and len(inbox) > 0:
         task_id = int(inbox[0]['id'])
@@ -45,11 +69,11 @@ def main():
         action = 'picked_next' if ok else 'pick_failed'
     elif len(inprog) > 1:
         action = 'multiple_in_progress_detected'
-    else:
+    elif action == 'ok':
         action = 'healthy'
 
     ts_ms, ts_iso = now_pair()
-    upsert_heartbeat(con, 'kanban_watchdog', ts_ms, ts_iso, json.dumps({'action': action, 'fixed': fixed, 'in_progress': len(inprog), 'inbox': len(inbox)}))
+    upsert_heartbeat(con, 'kanban_watchdog', ts_ms, ts_iso, json.dumps({'action': action, 'fixed': fixed, 'stale_requeued': stale_requeued, 'in_progress': len(inprog), 'inbox': len(inbox), 'stale_minutes': STALE_MINUTES}))
     con.commit()
 
 

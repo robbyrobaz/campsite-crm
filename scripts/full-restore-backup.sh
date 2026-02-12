@@ -37,13 +37,14 @@ stamp="$(date -u +%Y%m%dT%H%M%SZ)"
 archive="$SNAP_DIR/workspace-${stamp}.tar.gz"
 manifest="$SNAP_DIR/workspace-${stamp}.sha256"
 
+# tar exit code 1 = "file changed as we read it" — harmless for live backups
 tar -czf "$archive" \
   --exclude='.git' \
   --exclude='.venv' \
   --exclude='node_modules' \
   --exclude='__pycache__' \
   --exclude='*.pyc' \
-  -C "$WORKSPACE" .
+  -C "$WORKSPACE" . || { rc=$?; if [[ $rc -ne 1 ]]; then exit $rc; fi; }
 sha256sum "$archive" > "$manifest"
 
 mkdir -p snapshots manifests

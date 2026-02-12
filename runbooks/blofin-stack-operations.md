@@ -28,6 +28,7 @@ curl -sS http://127.0.0.1:8780/api/summary | head
 ```bash
 systemctl --user restart blofin-stack-ingestor.service
 systemctl --user restart blofin-stack-api.service
+systemctl --user restart dashboard-health-check.service
 systemctl --user stop blofin-stack-ingestor.service blofin-stack-api.service
 systemctl --user start blofin-stack-ingestor.service blofin-stack-api.service
 ```

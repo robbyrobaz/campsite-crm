@@ -26,9 +26,11 @@ cp "$SYSTEMD_SRC/kanban-worker.service" "$SYSTEMD_DEST/"
 cp "$SYSTEMD_SRC/kanban-dashboard.service" "$SYSTEMD_DEST/"
 cp "$SYSTEMD_SRC/auto-code-backup-sync.service" "$SYSTEMD_DEST/"
 cp "$SYSTEMD_SRC/auto-code-backup-sync.timer" "$SYSTEMD_DEST/"
+cp "$SYSTEMD_SRC/dashboard-health-check.service" "$SYSTEMD_DEST/"
+cp "$SYSTEMD_SRC/dashboard-health-check.timer" "$SYSTEMD_DEST/"
 
 systemctl --user daemon-reload
-systemctl --user enable --now blofin-stack-ingestor.service blofin-stack-api.service blofin-stack-paper.service kanban-worker.service kanban-dashboard.service auto-code-backup-sync.timer
+systemctl --user enable --now blofin-stack-ingestor.service blofin-stack-api.service blofin-stack-paper.service kanban-worker.service kanban-dashboard.service auto-code-backup-sync.timer dashboard-health-check.timer
 
 echo "Installed and started blofin-stack services"
 systemctl --user --no-pager --full status blofin-stack-ingestor.service || true

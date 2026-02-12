@@ -133,6 +133,18 @@ def init_db(con: sqlite3.Connection) -> None:
             actor TEXT
         );
 
+        CREATE TABLE IF NOT EXISTS dashboard_checks (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ts_ms INTEGER NOT NULL,
+            ts_iso TEXT NOT NULL,
+            name TEXT NOT NULL,
+            url TEXT NOT NULL,
+            ok INTEGER NOT NULL,
+            status_code INTEGER,
+            latency_ms INTEGER,
+            error TEXT
+        );
+
         CREATE INDEX IF NOT EXISTS idx_ticks_symbol_ts ON ticks(symbol, ts_ms);
         CREATE INDEX IF NOT EXISTS idx_signals_symbol_ts ON signals(symbol, ts_ms);
         CREATE INDEX IF NOT EXISTS idx_signals_signal_ts ON signals(signal, ts_ms);

@@ -1,0 +1,10 @@
+[Unit]
+Description=Health check all local dashboards
+After=network-online.target blofin-stack-api.service kanban-dashboard.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/rob/.openclaw/workspace/blofin-stack
+EnvironmentFile=/home/rob/.openclaw/workspace/blofin-stack/.env
+ExecStart=/home/rob/.openclaw/workspace/blofin-stack/.venv/bin/python /home/rob/.openclaw/workspace/blofin-stack/dashboard_health_check.py

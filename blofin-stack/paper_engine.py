@@ -98,6 +98,9 @@ def close_paper_trades(con):
         if side == 'SELL':
             pnl_pct = -pnl_pct
 
+        # Keep OPEN trades marked-to-market with live unrealized PnL.
+        con.execute('UPDATE paper_trades SET pnl_pct=? WHERE id=?', (pnl_pct, r['id']))
+
         age_min = (t - int(r['opened_ts_ms'])) / 60000.0
         reason = None
         if pnl_pct >= PAPER_TP_PCT:

@@ -22,14 +22,14 @@ fi
 cp "$SYSTEMD_SRC/blofin-stack-ingestor.service" "$SYSTEMD_DEST/"
 cp "$SYSTEMD_SRC/blofin-stack-api.service" "$SYSTEMD_DEST/"
 cp "$SYSTEMD_SRC/blofin-stack-paper.service" "$SYSTEMD_DEST/"
-cp "$SYSTEMD_SRC/blofin-stack-kanban-worker.service" "$SYSTEMD_DEST/"
+cp "$SYSTEMD_SRC/kanban-worker.service" "$SYSTEMD_DEST/"
 
 systemctl --user daemon-reload
-systemctl --user enable --now blofin-stack-ingestor.service blofin-stack-api.service blofin-stack-paper.service blofin-stack-kanban-worker.service
+systemctl --user enable --now blofin-stack-ingestor.service blofin-stack-api.service blofin-stack-paper.service kanban-worker.service
 
 echo "Installed and started blofin-stack services"
 systemctl --user --no-pager --full status blofin-stack-ingestor.service || true
 systemctl --user --no-pager --full status blofin-stack-api.service || true
-systemctl --user --no-pager --full status blofin-stack-kanban-worker.service || true
+systemctl --user --no-pager --full status kanban-worker.service || true
 
 echo "Dashboard URL: http://127.0.0.1:8780/"

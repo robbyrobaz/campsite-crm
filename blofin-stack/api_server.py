@@ -7,7 +7,6 @@ from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from dotenv import load_dotenv
-
 from db import connect, init_db
 
 ROOT = Path(__file__).resolve().parent
@@ -33,16 +32,13 @@ def fetch_summary():
     sigs = [dict(r) for r in con.execute(f'SELECT ts_iso,symbol,signal,strategy,confidence,price,details_json FROM signals {wh} ORDER BY ts_ms DESC LIMIT 3000', args)]
     confirmed = [dict(r) for r in con.execute(f'SELECT ts_iso,symbol,signal,score,rationale FROM confirmed_signals {wh} ORDER BY ts_ms DESC LIMIT 300', args)]
     paper = [dict(r) for r in con.execute(f'SELECT opened_ts_iso,closed_ts_iso,symbol,side,entry_price,exit_price,status,pnl_pct,reason FROM paper_trades {wh} ORDER BY id DESC LIMIT 300', args)]
-
     by_sig = Counter(s['signal'] for s in sigs)
     by_strat = Counter(s['strategy'] for s in sigs)
     by_symbol_sig = Counter(s['symbol'] for s in sigs)
     latest_by_symbol = [dict(r) for r in con.execute(f'SELECT symbol, MAX(ts_iso) as last_seen, COUNT(*) as ticks FROM ticks {wh} GROUP BY symbol ORDER BY symbol', args)]
     gaps = [dict(r) for r in con.execute(f'SELECT ts_iso,symbol,gaps_found,rows_inserted,note FROM gap_fill_runs {wh} ORDER BY id DESC LIMIT 100', args)]
-
     closed = [p for p in paper if p['status'] == 'CLOSED' and p['pnl_pct'] is not None]
     win_rate = (sum(1 for p in closed if p['pnl_pct'] > 0) / len(closed) * 100.0) if closed else 0.0
-
     return {
         'symbols_configured': SYMBOLS,
         'signals_total_window': len(sigs),
@@ -78,9 +74,6 @@ class H(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(b)
 
-    def sendj(self, payload, code=200):
-        return self.sendb(json.dumps(payload, default=str).encode(), code=code)
-
     def do_GET(self):
         p = urlparse(self.path)
         q = parse_qs(p.query)
@@ -88,35 +81,31 @@ class H(BaseHTTPRequestHandler):
         if p.path == '/healthz':
             return self.sendb(b'ok', ctype='text/plain')
         if p.path == '/api/summary':
-            return self.sendj(fetch_summary())
+            return self.sendb(json.dumps(fetch_summary(), default=str).encode())
         if p.path == '/api/timeseries':
             symbol = q.get('symbol', [SYMBOLS[0] if SYMBOLS else 'PEPE-USDT'])[0]
             limit = int(q.get('limit', ['300'])[0])
-            return self.sendj(timeseries(symbol, max(30, min(limit, 2000))))
+            return self.sendb(json.dumps(timeseries(symbol, max(30, min(limit, 2000))), default=str).encode())
         if p.path == '/api/gap-fills':
             rows = [dict(r) for r in con.execute('SELECT * FROM gap_fill_runs ORDER BY id DESC LIMIT 200')]
-            return self.sendj(rows)
+            return self.sendb(json.dumps(rows, default=str).encode())
 
         if p.path == '/':
             s = fetch_summary()
-            html = f"""<!doctype html>
-<html><head><meta charset='utf-8'><title>Blofin 24/7 Dashboard</title>
+            html = f"""<!doctype html><html><head><meta charset='utf-8'><title>Blofin 24/7 Dashboard</title>
 <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
 <style>
 body{{margin:0;background:#0b1020;color:#e7ecff;font-family:Inter,Arial,sans-serif}}
-.wrap{{max-width:1400px;margin:0 auto;padding:20px}}
-.h{{display:flex;justify-content:space-between;align-items:center}}
+.wrap{{max-width:1200px;margin:0 auto;padding:20px}}
 .grid{{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}}
 .card{{background:#121a31;border:1px solid #23325f;border-radius:12px;padding:12px}}
 .small{{font-size:12px;color:#9fb0e6}}
 table{{width:100%;border-collapse:collapse}} th,td{{padding:8px;border-bottom:1px solid #22335f;font-size:12px;text-align:left}}
-select,input,textarea,button{{background:#0e1730;color:#e7ecff;border:1px solid #2b427a;padding:6px;border-radius:8px}}
-textarea{{width:100%;min-height:54px}}
-button{{cursor:pointer}}
+select{{background:#0e1730;color:#e7ecff;border:1px solid #2b427a;padding:6px;border-radius:8px}}
 .badge{{display:inline-block;padding:2px 8px;border-radius:8px;background:#203766;margin-right:6px}}
 </style></head>
 <body><div class='wrap'>
-<div class='h'><h1>Blofin 24/7 Pattern Dashboard</h1><div class='small'>local-only · signals · paper · gap-fill</div></div>
+<h1>Blofin 24/7 Pattern Dashboard</h1>
 <div class='grid'>
 <div class='card'><div class='small'>Configured Tokens</div><div style='font-size:26px'>{len(s['symbols_configured'])}</div></div>
 <div class='card'><div class='small'>Signals</div><div style='font-size:26px'>{s['signals_total_window']}</div></div>
@@ -132,7 +121,6 @@ button{{cursor:pointer}}
 </div>
 <canvas id='chart' height='100'></canvas>
 </div>
-
 
 <div class='card' style='margin-top:12px'>
 <h3 style='margin-top:0'>Recent confirmed signals</h3>
@@ -157,26 +145,19 @@ button{{cursor:pointer}}
 </div>
 <script>
 let ch;
-
 async function loadSym(sym){{
   const r=await fetch('/api/timeseries?symbol='+encodeURIComponent(sym)+'&limit=300');
   const d=await r.json();
   const labels=d.map(x=>x.ts_iso.slice(11,19));
   const vals=d.map(x=>x.price);
   if(ch) ch.destroy();
-  ch=new Chart(document.getElementById('chart'),{{type:'line',data:{{labels,datasets:[{{label:sym,data:vals,borderColor:'#6ea8fe',pointRadius:0}}]}},options:{{responsive:true,plugins:{{legend:{{display:true}}}},scales:{{x:{{ticks:{{maxTicksLimit:12,color:'#9fb0e6'}}}},y:{{ticks:{{color:'#9fb0e6'}}}}}}}}}});
+  ch=new Chart(document.getElementById('chart'),{{type:'line',data:{{labels,datasets:[{{label:sym,data:vals,borderColor:'#6ea8fe',pointRadius:0}}]}},options:{{responsive:true}}}});
 }}
-
-const sel=document.getElementById('sym');
-sel.addEventListener('change',()=>loadSym(sel.value));
-if(sel.value) loadSym(sel.value);
+const sel=document.getElementById('sym'); sel.addEventListener('change',()=>loadSym(sel.value)); if(sel.value) loadSym(sel.value);
 </script></body></html>"""
             return self.sendb(html.encode(), ctype='text/html; charset=utf-8')
 
-        return self.sendj({'error': 'not found'}, code=404)
-
-    def do_POST(self):
-        return self.sendj({'error': 'not found'}, code=404)
+        return self.sendb(json.dumps({'error': 'not found'}).encode(), code=404)
 
 
 if __name__ == '__main__':

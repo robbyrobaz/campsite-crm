@@ -1,0 +1,13 @@
+[Unit]
+Description=Blofin local dashboard
+After=network-online.target blofin-research.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/rob/.openclaw/workspace/blofin-dashboard/server.py
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target

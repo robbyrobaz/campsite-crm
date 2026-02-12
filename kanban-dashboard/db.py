@@ -76,6 +76,12 @@ def init_db(con: sqlite3.Connection) -> None:
         'approval_note': 'TEXT',
         'rejected_note': 'TEXT',
         'rejected_ts_ms': 'INTEGER',
+        'completion_summary': 'TEXT',
+        'loc_changed': 'INTEGER DEFAULT 0',
+        'updated_ts_ms': 'INTEGER',
+        'updated_ts_iso': 'TEXT',
+        'notes': 'TEXT',
+        'created_by': 'TEXT',
     }
     for name, typ in missing.items():
         if name not in cols:
@@ -149,7 +155,8 @@ def list_kanban_tasks(con: sqlite3.Connection) -> List[Dict[str, Any]]:
         '''
         SELECT id, created_ts_ms, created_ts_iso, status, priority, title, description, assignee, tags,
                coding_started_ts_ms, coding_done_ts_ms, approved_ts_ms, coding_worker, coding_session_id,
-               approval_reviewer, approval_note, rejected_note, rejected_ts_ms, result_summary
+               approval_reviewer, approval_note, rejected_note, rejected_ts_ms, result_summary,
+               completion_summary, loc_changed, updated_ts_ms, updated_ts_iso, notes, created_by
         FROM kanban_tasks
         ORDER BY CASE status
                    WHEN 'in_progress' THEN 1

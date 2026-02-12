@@ -68,6 +68,7 @@ def build_missing_ranges(existing_minutes: set[int], window_start_ms: int, windo
 
 
 def split_large_ranges(ranges: list[tuple[int, int, int]], max_gap_minutes: int) -> list[tuple[int, int, int]]:
+    """Split large gaps into smaller chunks for gradual filling. If max_gap_minutes=0, return all gaps unmodified."""
     if max_gap_minutes <= 0:
         return ranges
 
@@ -186,7 +187,8 @@ def run_once(con: sqlite3.Connection, ex) -> tuple[int, int]:
 
             total_rows += rows_inserted_sym
             total_gaps += len(filtered)
-            print(f'{sym}: gaps={len(filtered)} inserted={rows_inserted_sym} points={len(existing)}/{expected_points}')
+            coverage_pct = round((len(existing) / expected_points) * 100.0, 2) if expected_points > 0 else 0.0
+            print(f'{sym}: gaps={len(filtered)} inserted={rows_inserted_sym} coverage={coverage_pct}% ({len(existing)}/{expected_points})')
         except Exception as e:
             con.execute(
                 'INSERT INTO gap_fill_runs(ts_ms, ts_iso, symbol, gaps_found, rows_inserted, note) VALUES(?,?,?,?,?,?)',

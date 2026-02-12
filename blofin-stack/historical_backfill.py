@@ -5,7 +5,6 @@ import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
-import ccxt
 from dotenv import load_dotenv
 
 from db import connect, init_db
@@ -66,6 +65,22 @@ def build_missing_ranges(existing_minutes: set[int], window_start_ms: int, windo
     return ranges
 
 
+def split_large_ranges(ranges: list[tuple[int, int, int]], max_gap_minutes: int) -> list[tuple[int, int, int]]:
+    if max_gap_minutes <= 0:
+        return ranges
+
+    chunk_span_ms = max_gap_minutes * TF_MS
+    out: list[tuple[int, int, int]] = []
+    for start, end, _mins in ranges:
+        cur = start
+        while cur <= end:
+            chunk_end = min(end, cur + chunk_span_ms - TF_MS)
+            chunk_mins = int((chunk_end - cur) // TF_MS) + 1
+            out.append((cur, chunk_end, chunk_mins))
+            cur = chunk_end + TF_MS
+    return out
+
+
 def fetch_ohlcv_fill(exchange, symbol: str, start_ms: int, end_ms: int) -> list[tuple[int, float]]:
     fetched: dict[int, float] = {}
     since = start_ms
@@ -108,11 +123,7 @@ def run_once(con: sqlite3.Connection, ex) -> tuple[int, int]:
             existing = get_existing_minute_set(con, sym, window_start_ms, window_end_ms)
             missing_ranges = build_missing_ranges(existing, window_start_ms, window_end_ms)
 
-            filtered = [
-                (gstart, gend, gmins)
-                for (gstart, gend, gmins) in missing_ranges
-                if gmins <= MAX_GAP_MINUTES
-            ]
+            filtered = split_large_ranges(missing_ranges, MAX_GAP_MINUTES)
 
             rows_inserted_sym = 0
             first_gap = filtered[0][0] if filtered else None
@@ -156,6 +167,8 @@ def run_once(con: sqlite3.Connection, ex) -> tuple[int, int]:
 
 
 def main():
+    import ccxt
+
     con = connect(DB_PATH)
     init_db(con)
     ex = ccxt.blofin({'enableRateLimit': True})

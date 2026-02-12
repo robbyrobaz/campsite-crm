@@ -16,9 +16,11 @@ DB_PATH = os.getenv('BLOFIN_DB_PATH', str(ROOT / 'data' / 'blofin_monitor.db'))
 SYMBOLS = [s.strip() for s in os.getenv('BLOFIN_SYMBOLS', 'BTC-USDT,ETH-USDT').split(',') if s.strip()]
 TIMEFRAME = os.getenv('BACKFILL_TIMEFRAME', '1m')
 LOOKBACK_DAYS = int(os.getenv('BACKFILL_LOOKBACK_DAYS', '7'))
-BATCH_LIMIT = min(100, max(1, int(os.getenv('BACKFILL_BATCH_LIMIT', '100'))))
+BATCH_LIMIT = min(100, max(1, int(os.getenv('BACKFILL_BATCH_LIMIT', '60'))))
 MAX_GAP_MINUTES = int(os.getenv('BACKFILL_MAX_GAP_MINUTES', '10080'))
 LOOP_SECONDS = int(os.getenv('BACKFILL_LOOP_SECONDS', '0'))
+REQUEST_SLEEP_MS = max(0, int(os.getenv('BACKFILL_REQUEST_SLEEP_MS', '400')))
+SYMBOL_SLEEP_MS = max(0, int(os.getenv('BACKFILL_SYMBOL_SLEEP_MS', '1000')))
 
 TF_MS = 60_000 if TIMEFRAME == '1m' else 60_000
 
@@ -83,36 +85,44 @@ def split_large_ranges(ranges: list[tuple[int, int, int]], max_gap_minutes: int)
 
 def fetch_ohlcv_fill(exchange, symbol: str, start_ms: int, end_ms: int) -> list[tuple[int, float]]:
     fetched: dict[int, float] = {}
-    cursor_until = end_ms
+    cursor_since = start_ms
 
-    while cursor_until >= start_ms:
+    # Config uses websocket-style ids (e.g. BTC-USDT). CCXT expects unified symbols
+    # (e.g. BTC/USDT:USDT), so resolve first and skip unavailable markets.
+    market = exchange.markets_by_id.get(symbol)
+    if not market:
+        return []
+    ccxt_symbol = market[0]['symbol']
+
+    while cursor_since <= end_ms:
         candles = exchange.fetch_ohlcv(
-            symbol,
+            ccxt_symbol,
             timeframe=TIMEFRAME,
+            since=cursor_since,
             limit=BATCH_LIMIT,
-            params={'until': cursor_until},
         )
         if not candles:
             break
 
-        oldest_ts = None
+        newest_ts = None
         for c in candles:
             ts, _o, _h, _l, close, _vol = c
             ts = floor_tf(int(ts))
-            if oldest_ts is None or ts < oldest_ts:
-                oldest_ts = ts
+            if newest_ts is None or ts > newest_ts:
+                newest_ts = ts
             if ts < start_ms or ts > end_ms:
                 continue
             fetched[ts] = float(close)
 
-        if oldest_ts is None:
+        if newest_ts is None:
             break
 
-        next_cursor = oldest_ts - TF_MS
-        if next_cursor >= cursor_until:
+        next_cursor = newest_ts + TF_MS
+        if next_cursor <= cursor_since:
             break
-        cursor_until = next_cursor
-        time.sleep(exchange.rateLimit / 1000.0)
+        cursor_since = next_cursor
+        sleep_s = max(exchange.rateLimit / 1000.0, REQUEST_SLEEP_MS / 1000.0)
+        time.sleep(sleep_s)
 
     return sorted(fetched.items())
 
@@ -128,6 +138,15 @@ def run_once(con: sqlite3.Connection, ex) -> tuple[int, int]:
 
     for sym in SYMBOLS:
         try:
+            if sym not in ex.markets_by_id:
+                con.execute(
+                    'INSERT INTO gap_fill_runs(ts_ms, ts_iso, symbol, gaps_found, rows_inserted, note) VALUES(?,?,?,?,?,?)',
+                    (now_ms, iso(now_ms), sym, 0, 0, 'skipped: symbol unavailable on Blofin'),
+                )
+                con.commit()
+                print(f'{sym}: skipped (unavailable)')
+                continue
+
             existing = get_existing_minute_set(con, sym, window_start_ms, window_end_ms)
             missing_ranges = build_missing_ranges(existing, window_start_ms, window_end_ms)
 
@@ -169,6 +188,9 @@ def run_once(con: sqlite3.Connection, ex) -> tuple[int, int]:
             )
             con.commit()
             print(f'{sym}: error={e}')
+        finally:
+            if SYMBOL_SLEEP_MS > 0:
+                time.sleep(SYMBOL_SLEEP_MS / 1000.0)
 
     print(f'DONE gaps={total_gaps} rows_inserted={total_rows}')
     return total_gaps, total_rows
@@ -180,6 +202,7 @@ def main():
     con = connect(DB_PATH)
     init_db(con)
     ex = ccxt.blofin({'enableRateLimit': True})
+    ex.load_markets()
 
     if LOOP_SECONDS > 0:
         while True:

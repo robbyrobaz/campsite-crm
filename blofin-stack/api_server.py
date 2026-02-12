@@ -139,15 +139,9 @@ select,input,textarea,button{{background:#0e1730;color:#e7ecff;border:1px solid 
 textarea{{width:100%;min-height:54px}}
 button{{cursor:pointer}}
 .badge{{display:inline-block;padding:2px 8px;border-radius:8px;background:#203766;margin-right:6px}}
-.kgrid{{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}}
-.kcol{{background:#0f1730;border:1px solid #2d4274;border-radius:10px;padding:10px;min-height:220px}}
-.ktask{{background:#1a2648;border:1px solid #35528f;border-radius:8px;padding:8px;margin-bottom:8px}}
-.khdr{{display:flex;justify-content:space-between;align-items:center}}
-.kmeta{{font-size:11px;color:#9fb0e6;margin-top:6px}}
-.row{{display:flex;gap:8px;align-items:center;flex-wrap:wrap}}
 </style></head>
 <body><div class='wrap'>
-<div class='h'><h1>Blofin 24/7 Pattern Dashboard</h1><div class='small'>local-only · signals · paper · gap-fill · kanban ops</div></div>
+<div class='h'><h1>Blofin 24/7 Pattern Dashboard</h1><div class='small'>local-only · signals · paper · gap-fill</div></div>
 <div class='grid'>
 <div class='card'><div class='small'>Configured Tokens</div><div style='font-size:26px'>{len(s['symbols_configured'])}</div></div>
 <div class='card'><div class='small'>Signals</div><div style='font-size:26px'>{s['signals_total_window']}</div></div>
@@ -164,20 +158,6 @@ button{{cursor:pointer}}
 <canvas id='chart' height='100'></canvas>
 </div>
 
-<div class='card' style='margin-top:12px'>
-<div class='khdr'><h3 style='margin:0'>Ops Kanban</h3><div id='kstatus' class='small'>loading…</div></div>
-<div style='margin-top:10px'>
-<div class='row'>
-<input id='ktitle' placeholder='Task title' style='flex:1;min-width:220px'>
-<select id='kprio'>
-<option value='5'>P5 Low</option><option value='4'>P4</option><option value='3' selected>P3 Normal</option><option value='2'>P2 High</option><option value='1'>P1 Urgent</option>
-</select>
-<button onclick='createTask()'>Create</button>
-</div>
-<textarea id='kdesc' placeholder='Description / acceptance criteria'></textarea>
-</div>
-<div class='kgrid' id='kboard' style='margin-top:12px'></div>
-</div>
 
 <div class='card' style='margin-top:12px'>
 <h3 style='margin-top:0'>Recent confirmed signals</h3>
@@ -202,8 +182,6 @@ button{{cursor:pointer}}
 </div>
 <script>
 let ch;
-const COLS = ['inbox','in_progress','needs_approval','done'];
-const COL_LABELS = {{inbox:'Inbox',in_progress:'In Progress',needs_approval:'Needs Approval',done:'Done'}};
 
 async function loadSym(sym){{
   const r=await fetch('/api/timeseries?symbol='+encodeURIComponent(sym)+'&limit=300');
@@ -214,59 +192,9 @@ async function loadSym(sym){{
   ch=new Chart(document.getElementById('chart'),{{type:'line',data:{{labels,datasets:[{{label:sym,data:vals,borderColor:'#6ea8fe',pointRadius:0}}]}},options:{{responsive:true,plugins:{{legend:{{display:true}}}},scales:{{x:{{ticks:{{maxTicksLimit:12,color:'#9fb0e6'}}}},y:{{ticks:{{color:'#9fb0e6'}}}}}}}}}});
 }}
 
-async function postJson(path,payload){{
-  const r=await fetch(path,{{method:'POST',headers:{{'Content-Type':'application/json'}},body:JSON.stringify(payload)}});
-  const d=await r.json();
-  if(!r.ok) throw new Error(d.error || 'request failed');
-  return d;
-}}
-
-function taskHtml(t){{
-  let controls = '';
-  if(t.status==='needs_approval') controls += `<button onclick="approveTask(${{t.id}})">Approve</button> <button onclick="rejectTask(${{t.id}})">Reject</button>`;
-  if(t.status==='inbox') controls += `<button onclick="moveTask(${{t.id}},'inbox','in_progress')">Start now</button>`;
-  return `<div class='ktask'><div><b>${{t.title}}</b></div><div class='small'>${{(t.description||'').slice(0,160)}}</div><div class='kmeta'>P${{t.priority}} · by ${{t.created_by}} · worker ${{t.assigned_worker||'-'}}</div><div class='kmeta'>approved: ${{t.approval_note||'-'}}<br>rejected: ${{t.rejection_note||'-'}}</div><div style='margin-top:8px'>${{controls}}</div></div>`;
-}}
-
-async function refreshKanban(){{
-  const data = await (await fetch('/api/kanban/tasks')).json();
-  const board = document.getElementById('kboard');
-  board.innerHTML = COLS.map(c => `<div class='kcol'><h4 style='margin-top:0'>${{COL_LABELS[c]}}</h4>${{(data.columns[c]||[]).map(taskHtml).join('') || '<div class="small">empty</div>'}}</div>`).join('');
-  const total = data.tasks.length;
-  document.getElementById('kstatus').textContent = `${{total}} task(s)`;
-}}
-
-async function createTask(){{
-  const title=document.getElementById('ktitle').value.trim();
-  const description=document.getElementById('kdesc').value.trim();
-  const priority=parseInt(document.getElementById('kprio').value,10);
-  if(!title) return alert('Title required');
-  await postJson('/api/kanban/tasks',{{title,description,priority}});
-  document.getElementById('ktitle').value=''; document.getElementById('kdesc').value='';
-  await refreshKanban();
-}}
-
-async function moveTask(taskId,fromStatus,toStatus){{
-  await postJson('/api/kanban/move',{{task_id:taskId,from_status:fromStatus,to_status:toStatus,actor:'dashboard_user'}});
-  await refreshKanban();
-}}
-
-async function approveTask(taskId){{
-  const note = prompt('Approval note (optional):','approved');
-  if(note===null) return;
-  await postJson('/api/kanban/approve',{{task_id:taskId,note,actor:'dashboard_approver'}});
-  await refreshKanban();
-}}
-
-async function rejectTask(taskId){{
-  const note = prompt('Rejection note (required):','');
-  if(note===null) return;
-  await postJson('/api/kanban/reject',{{task_id:taskId,note,actor:'dashboard_approver'}});
-  await refreshKanban();
-}}
-
-const sel=document.getElementById('sym'); sel.addEventListener('change',()=>loadSym(sel.value)); if(sel.value) loadSym(sel.value);
-refreshKanban(); setInterval(refreshKanban, 15000);
+const sel=document.getElementById('sym');
+sel.addEventListener('change',()=>loadSym(sel.value));
+if(sel.value) loadSym(sel.value);
 </script></body></html>"""
             return self.sendb(html.encode(), ctype='text/html; charset=utf-8')
 

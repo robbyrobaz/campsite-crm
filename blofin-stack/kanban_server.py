@@ -70,14 +70,14 @@ class H(BaseHTTPRequestHandler):
 <script>
 const COLS=['inbox','in_progress','needs_approval','done']; const LABEL={inbox:'Inbox',in_progress:'In Progress',needs_approval:'Needs Approval',done:'Done'};
 async function post(u,b){const r=await fetch(u,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}); return r.json();}
-function tHtml(t){let c=''; if(t.status==='needs_approval') c+=`<button onclick="approve(${t.id})">Approve</button> <button onclick="reject(${t.id})">Reject</button>`; if(t.status==='inbox') c+=`<button onclick="move(${t.id},'inbox','in_progress')">Start</button>`; c+=` <button onclick="editTaskById(${t.id})">Edit</button> <button onclick="setLoc(${t.id},${t.loc_changed||0})">Set LOC</button> <button onclick="setSummary(${t.id})">Set summary</button> <button onclick="delTask(${t.id})">Delete</button>`; return `<div class='task'><b>#${t.id} ${t.title}</b><div class='small'>P${t.priority} · ${t.created_by||''}</div><div class='small'>${t.description||''}</div><div class='small'>Stats: ${t.coding_minutes||0} min · +${t.loc_changed||0} LOC · ${t.event_count||0} events</div><div class='small'>Summary: ${t.completion_summary||'-'}</div><div class='small'>${t.notes||''}</div>${c}</div>`;}
+function tHtml(t){let c=''; if(t.status==='needs_approval') c+=`<button onclick="approve(${t.id})">Approve</button> <button onclick="reject(${t.id})">Reject</button>`; if(t.status==='inbox') c+=`<button onclick="move(${t.id},'inbox','in_progress')">Start</button>`; c+=` <button onclick="editTaskById(${t.id})">Edit</button> <button onclick="setLoc(${t.id},${t.loc_changed||0})">Set LOC</button> <button onclick="setCompletionSummary(${t.id})">Set completion summary</button> <button onclick="delTask(${t.id})">Delete</button>`; return `<div class='task'><b>#${t.id} ${t.title}</b><div class='small'>P${t.priority} · ${t.created_by||''}</div><div class='small'>${t.description||''}</div><div class='small'>Stats: ${t.coding_minutes||0} min · +${t.loc_changed||0} LOC · ${t.event_count||0} events</div><div class='small'>Completion summary: ${t.completion_summary||'-'}</div><div class='small'>${t.notes||''}</div>${c}</div>`;}
 async function refresh(){const d=await (await fetch('/api/kanban/tasks')).json(); document.getElementById('board').innerHTML=COLS.map(c=>`<div class='col'><h3>${LABEL[c]}</h3>${(d.columns[c]||[]).map(tHtml).join('')||'<div class="small">empty</div>'}</div>`).join('');}
 async function createTask(){await post('/api/kanban/tasks',{title:document.getElementById('t').value,description:document.getElementById('d').value,priority:parseInt(document.getElementById('p').value)});document.getElementById('t').value='';document.getElementById('d').value='';refresh();}
 async function move(id,from_status,to_status){await post('/api/kanban/move',{task_id:id,from_status,to_status,actor:'dashboard_user'});refresh();}
 async function approve(id){const note=prompt('Approval note','approved')||'approved'; await post('/api/kanban/approve',{task_id:id,note,actor:'dashboard_approver'}); refresh();}
 async function reject(id){const note=prompt('Rework note','please rework')||'please rework'; await post('/api/kanban/reject',{task_id:id,note,actor:'dashboard_approver'}); refresh();}
 async function delTask(id){if(!confirm('Delete this task?')) return; await post('/api/kanban/delete',{task_id:id,actor:'dashboard_user'}); refresh();}
-async function setSummary(id){const s=prompt('10 words max: what was done?','')||''; await post('/api/kanban/set-summary',{task_id:id,summary:s,actor:'assistant'}); refresh();}
+async function setCompletionSummary(id){const s=prompt('10 words max: what was completed?','')||''; await post('/api/kanban/set-completion-summary',{task_id:id,completion_summary:s,actor:'assistant'}); refresh();}
 async function setLoc(id,current){const v=parseInt(prompt('Lines of code changed', String(current||0))||String(current||0),10); await post('/api/kanban/set-loc',{task_id:id,loc_changed:Math.max(0,v||0),actor:'assistant'}); refresh();}
 async function editTaskById(id){
   const data = await (await fetch('/api/kanban/tasks')).json();
@@ -135,16 +135,16 @@ refresh(); setInterval(refresh,10000);
                         (task_id, ts_ms, ts_iso, 'edit', None, None, f'edited task fields; priority={prio}', actor))
             con.commit()
             return self.sendj({'ok': cur.rowcount > 0})
-        if p == '/api/kanban/set-summary':
+        if p == '/api/kanban/set-completion-summary':
             task_id = int(d.get('task_id',0))
             actor = d.get('actor','assistant')
-            summary = (d.get('summary','') or '').strip()
-            words = [w for w in summary.split() if w]
+            completion_summary = (d.get('completion_summary','') or '').strip()
+            words = [w for w in completion_summary.split() if w]
             if len(words) > 10:
-                return self.sendj({'error':'summary must be 10 words or less'},400)
-            cur = con.execute('UPDATE kanban_tasks SET completion_summary=?, updated_ts_ms=?, updated_ts_iso=? WHERE id=?', (summary, ts_ms, ts_iso, task_id))
+                return self.sendj({'error':'completion_summary must be 10 words or less'},400)
+            cur = con.execute('UPDATE kanban_tasks SET completion_summary=?, updated_ts_ms=?, updated_ts_iso=? WHERE id=?', (completion_summary, ts_ms, ts_iso, task_id))
             con.execute('INSERT INTO kanban_task_events(task_id,ts_ms,ts_iso,action,from_status,to_status,note,actor) VALUES(?,?,?,?,?,?,?,?)',
-                        (task_id, ts_ms, ts_iso, 'set_summary', None, None, summary, actor))
+                        (task_id, ts_ms, ts_iso, 'set_completion_summary', None, None, completion_summary, actor))
             con.commit()
             return self.sendj({'ok': cur.rowcount > 0})
         if p == '/api/kanban/set-loc':

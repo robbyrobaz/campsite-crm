@@ -27,6 +27,18 @@ def _in_clause(symbols):
     return f' WHERE symbol IN ({ph}) ', list(symbols)
 
 
+def _grade_score(score: float) -> str:
+    if score >= 85:
+        return 'A'
+    if score >= 70:
+        return 'B'
+    if score >= 55:
+        return 'C'
+    if score >= 40:
+        return 'D'
+    return 'F'
+
+
 def fetch_summary():
     wh, args = _in_clause(SYMBOLS)
     sigs = [dict(r) for r in con.execute(f'SELECT ts_iso,symbol,signal,strategy,confidence,price,details_json FROM signals {wh} ORDER BY ts_ms DESC LIMIT 3000', args)]
@@ -59,6 +71,54 @@ def fetch_summary():
     gaps = [dict(r) for r in con.execute(f'SELECT ts_iso,symbol,gaps_found,rows_inserted,note FROM gap_fill_runs {wh} ORDER BY id DESC LIMIT 100', args)]
     closed = [p for p in paper if p['status'] == 'CLOSED' and p['pnl_pct'] is not None]
     win_rate = (sum(1 for p in closed if p['pnl_pct'] > 0) / len(closed) * 100.0) if closed else 0.0
+
+    perf_where, perf_args = _in_clause(SYMBOLS)
+    perf_rows = [dict(r) for r in con.execute(
+        f'''
+        SELECT
+            s.strategy AS strategy,
+            cs.signal AS pattern,
+            COUNT(*) AS closed_count,
+            SUM(CASE WHEN pt.pnl_pct > 0 THEN 1 ELSE 0 END) AS wins,
+            AVG(pt.pnl_pct) AS avg_pnl_pct,
+            SUM(pt.pnl_pct) AS total_pnl_pct
+        FROM paper_trades pt
+        JOIN confirmed_signals cs ON cs.id = pt.confirmed_signal_id
+        JOIN signals s ON s.id = cs.signal_id
+        {perf_where.replace('symbol', 'pt.symbol')}
+          {'AND' if perf_where else 'WHERE'} pt.status='CLOSED' AND pt.pnl_pct IS NOT NULL
+        GROUP BY s.strategy, cs.signal
+        ORDER BY total_pnl_pct DESC, avg_pnl_pct DESC
+        ''',
+        perf_args,
+    )]
+
+    strategy_pattern_scores = []
+    for row in perf_rows:
+        closed_count = int(row['closed_count'] or 0)
+        wins = int(row['wins'] or 0)
+        win_rate_pct = (wins / closed_count * 100.0) if closed_count else 0.0
+        avg_pnl_pct = float(row['avg_pnl_pct'] or 0.0)
+        total_pnl_pct = float(row['total_pnl_pct'] or 0.0)
+        if closed_count < 3:
+            score = None
+            grade = 'N/A'
+        else:
+            pnl_component = max(0.0, min(100.0, ((avg_pnl_pct + 2.0) / 4.0) * 100.0))
+            score = round((win_rate_pct * 0.6) + (pnl_component * 0.4), 2)
+            grade = _grade_score(score)
+        strategy_pattern_scores.append({
+            'strategy': row['strategy'],
+            'pattern': row['pattern'],
+            'closed_count': closed_count,
+            'wins': wins,
+            'win_rate_pct': round(win_rate_pct, 2),
+            'avg_pnl_pct': round(avg_pnl_pct, 4),
+            'total_pnl_pct': round(total_pnl_pct, 4),
+            'score': score,
+            'grade': grade,
+        })
+
     return {
         'symbols_configured': SYMBOLS,
         'signals_total_window': len(sigs),
@@ -76,6 +136,7 @@ def fetch_summary():
             'win_rate_pct': round(win_rate, 2),
             'avg_pnl_pct': round(sum(p['pnl_pct'] for p in closed) / len(closed), 4) if closed else 0.0,
         },
+        'strategy_pattern_scores': strategy_pattern_scores[:120],
         'gap_fill_runs': gaps,
     }
 
@@ -161,6 +222,13 @@ select{{background:#0e1730;color:#e7ecff;border:1px solid #2b427a;padding:6px;bo
 <h3 style='margin-top:0'>Data points per coin (last 7d)</h3>
 <table><thead><tr><th>Symbol</th><th>Rows</th><th>Minute buckets</th></tr></thead><tbody>
 {''.join([f"<tr><td>{r['symbol']}</td><td>{r['points_7d']}</td><td>{r['minute_buckets_7d']}</td></tr>" for r in s['points_by_symbol_7d']])}
+</tbody></table>
+</div>
+
+<div class='card' style='margin-top:12px'>
+<h3 style='margin-top:0'>Strategy/pattern scorecard</h3>
+<table><thead><tr><th>Strategy</th><th>Pattern</th><th>Closed</th><th>Win%</th><th>Avg PnL%</th><th>Total PnL%</th><th>Score</th><th>Grade</th></tr></thead><tbody>
+{''.join([f"<tr><td>{r['strategy']}</td><td>{r['pattern']}</td><td>{r['closed_count']}</td><td>{r['win_rate_pct']}</td><td>{r['avg_pnl_pct']}</td><td>{r['total_pnl_pct']}</td><td>{r['score'] if r['score'] is not None else ''}</td><td>{r['grade']}</td></tr>" for r in s['strategy_pattern_scores'][:80]])}
 </tbody></table>
 </div>
 

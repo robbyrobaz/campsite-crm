@@ -67,16 +67,18 @@ def latest_price(con, symbol):
 
 def open_paper_trades(con):
     c = con.execute(
-        "SELECT id,ts_ms,ts_iso,symbol,signal,score FROM confirmed_signals WHERE id NOT IN (SELECT confirmed_signal_id FROM paper_trades)")
+        "SELECT id,ts_ms,ts_iso,symbol,signal,score,rationale FROM confirmed_signals WHERE id NOT IN (SELECT confirmed_signal_id FROM paper_trades)")
     rows = c.fetchall()
     opened = 0
     for r in rows:
         px = latest_price(con, r['symbol'])
         if px is None:
             continue
+        entry_reason = (r['rationale'] or '').strip() or 'No rationale provided'
+        opened_ts = now_ms()
         con.execute(
-            'INSERT INTO paper_trades(confirmed_signal_id,opened_ts_ms,opened_ts_iso,symbol,side,entry_price,qty,status) VALUES(?,?,?,?,?,?,?,?)',
-            (r['id'], now_ms(), iso(now_ms()), r['symbol'], r['signal'], px, 1.0, 'OPEN'),
+            'INSERT INTO paper_trades(confirmed_signal_id,opened_ts_ms,opened_ts_iso,symbol,side,entry_price,qty,status,reason) VALUES(?,?,?,?,?,?,?,?,?)',
+            (r['id'], opened_ts, iso(opened_ts), r['symbol'], r['signal'], px, 1.0, 'OPEN', f'ENTRY: {entry_reason}'),
         )
         opened += 1
     return opened
@@ -106,9 +108,15 @@ def close_paper_trades(con):
             reason = 'TIME'
 
         if reason:
+            existing_reason = (r['reason'] or '').strip()
+            close_reason = f'EXIT: {reason}'
+            if existing_reason:
+                combined_reason = f'{existing_reason} | {close_reason}'
+            else:
+                combined_reason = close_reason
             con.execute(
                 'UPDATE paper_trades SET status="CLOSED",closed_ts_ms=?,closed_ts_iso=?,exit_price=?,pnl_pct=?,reason=? WHERE id=?',
-                (t, iso(t), px, pnl_pct, reason, r['id']),
+                (t, iso(t), px, pnl_pct, combined_reason, r['id']),
             )
             closed += 1
     return closed

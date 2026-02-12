@@ -106,7 +106,8 @@ def init_db(con: sqlite3.Connection) -> None:
             updated_ts_iso TEXT NOT NULL,
             notes TEXT,
             auto_worker_state TEXT,
-            last_transition_by TEXT
+            last_transition_by TEXT,
+            completion_summary TEXT
         );
 
         CREATE TABLE IF NOT EXISTS kanban_events (
@@ -161,6 +162,7 @@ def init_db(con: sqlite3.Connection) -> None:
         ('assigned_worker', "TEXT"),
         ('approval_note', "TEXT"),
         ('rejection_note', "TEXT"),
+        ('completion_summary', "TEXT"),
     ]:
         if name not in cols:
             con.execute(f'ALTER TABLE kanban_tasks ADD COLUMN {name} {typ}')
@@ -283,7 +285,7 @@ def list_kanban_tasks(con: sqlite3.Connection) -> List[Dict[str, Any]]:
     cur = con.execute(
         '''
         SELECT id, created_ts_iso, updated_ts_iso, title, description, status, priority,
-               source, created_by, assigned_worker, approval_note, rejection_note
+               source, created_by, assigned_worker, approval_note, rejection_note, completion_summary
         FROM kanban_tasks
         ORDER BY
             CASE status

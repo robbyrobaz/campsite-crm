@@ -114,6 +114,32 @@ def fetch_summary():
     worst_coverage_pct_7d = float(min((r.get('coverage_pct_7d', 0.0) for r in points_by_symbol_7d), default=0.0))
     coverage_health = 'good' if worst_coverage_pct_7d >= 99.5 else ('warn' if worst_coverage_pct_7d >= 97.0 else 'critical')
 
+    # Coverage since first data point (realistic metric)
+    coverage_since_start = []
+    for sym in SYMBOLS:
+        earliest_row = con.execute('SELECT MIN(ts_ms) FROM ticks WHERE symbol=?', (sym,)).fetchone()
+        if not earliest_row or not earliest_row[0]:
+            continue
+        earliest_ms = int(earliest_row[0])
+        actual_buckets = int(con.execute(
+            'SELECT COUNT(DISTINCT ((ts_ms / 60000) * 60000)) FROM ticks WHERE symbol=? AND ts_ms >= ?',
+            (sym, earliest_ms)
+        ).fetchone()[0])
+        expected_buckets = int((now_ms - earliest_ms) / 60000)
+        coverage_pct = round((actual_buckets / expected_buckets) * 100.0, 2) if expected_buckets > 0 else 0.0
+        hours_active = round((now_ms - earliest_ms) / 3600000.0, 1)
+        coverage_since_start.append({
+            'symbol': sym,
+            'hours_active': hours_active,
+            'coverage_pct': coverage_pct,
+            'actual_minutes': actual_buckets,
+            'expected_minutes': expected_buckets,
+            'missing_minutes': max(0, expected_buckets - actual_buckets),
+        })
+    coverage_since_start.sort(key=lambda r: r['coverage_pct'])
+    worst_coverage_since_start = coverage_since_start[0]['coverage_pct'] if coverage_since_start else 100.0
+    real_health = 'good' if worst_coverage_since_start >= 99.5 else ('warn' if worst_coverage_since_start >= 97.0 else 'critical')
+
     gaps = [dict(r) for r in con.execute(f'SELECT ts_iso,symbol,gaps_found,rows_inserted,note FROM gap_fill_runs {wh} ORDER BY id DESC LIMIT 100', args)]
     closed = [p for p in paper if p['status'] == 'CLOSED' and p['pnl_pct'] is not None]
     win_rate = (sum(1 for p in closed if p['pnl_pct'] > 0) / len(closed) * 100.0) if closed else 0.0
@@ -185,6 +211,11 @@ def fetch_summary():
             'worst_symbol': worst_symbol_7d,
             'worst_coverage_pct': round(worst_coverage_pct_7d, 2),
             'health': coverage_health,
+        },
+        'coverage_since_start': coverage_since_start,
+        'coverage_health_real': {
+            'worst_coverage_pct': round(worst_coverage_since_start, 2),
+            'health': real_health,
         },
         'recent_signals': sigs[:120],
         'confirmed_signals': confirmed[:120],
@@ -258,9 +289,9 @@ select{{background:#0e1730;color:#e7ecff;border:1px solid #2b427a;padding:6px;bo
 <div class='card'><div class='small'>Confirmed</div><div id='confirmed-count' style='font-size:26px'>{len(s['confirmed_signals'])}</div></div>
 <div class='card'><div class='small'>Paper Win Rate</div><div id='paper-win-rate' style='font-size:26px'>{s['paper_stats']['win_rate_pct']}%</div></div>
 <div class='card'>
-  <div class='small'>7d Coverage Health</div>
-  <div id='coverage-health' style='font-size:22px;font-weight:700;color:{'#2fe38a' if s['coverage_overview_7d']['health']=='good' else ('#ffd166' if s['coverage_overview_7d']['health']=='warn' else '#ff6b6b')}'>{str(s['coverage_overview_7d']['health']).upper()}</div>
-  <div class='small' id='coverage-detail'>worst {s['coverage_overview_7d']['worst_symbol'] or '-'} · {s['coverage_overview_7d']['worst_coverage_pct']}% · missing {s['coverage_overview_7d']['total_missing_minutes']}m</div>
+  <div class='small'>Data Quality</div>
+  <div id='coverage-health' style='font-size:22px;font-weight:700;color:{'#2fe38a' if s['coverage_health_real']['health']=='good' else ('#ffd166' if s['coverage_health_real']['health']=='warn' else '#ff6b6b')}'>{str(s['coverage_health_real']['health']).upper()}</div>
+  <div class='small' id='coverage-detail'>worst {s['coverage_health_real']['worst_coverage_pct']}% since start</div>
 </div>
 </div>
 <p>{''.join([f"<span class='badge'>{x}</span>" for x in s['symbols_configured']])}</p>
@@ -288,9 +319,9 @@ select{{background:#0e1730;color:#e7ecff;border:1px solid #2b427a;padding:6px;bo
 </div>
 
 <div class='card' style='margin-top:12px'>
-<h3 style='margin-top:0'>Data points per coin (last 7d)</h3>
-<table><thead><tr><th>Symbol</th><th>Rows</th><th>Minute buckets</th><th>Coverage</th><th>Missing min</th></tr></thead><tbody>
-{''.join([f"<tr><td>{r['symbol']}</td><td>{r['points_7d']}</td><td>{r['minute_buckets_7d']}/{r['expected_minutes_7d']}</td><td>{r['coverage_pct_7d']}%</td><td>{r['missing_minutes_7d']}</td></tr>" for r in s['points_by_symbol_7d']])}
+<h3 style='margin-top:0'>Data quality per symbol (since first data)</h3>
+<table><thead><tr><th>Symbol</th><th>Hours Active</th><th>Coverage</th><th>Minutes</th><th>Missing</th></tr></thead><tbody>
+{''.join([f"<tr><td>{r['symbol']}</td><td>{r['hours_active']:.1f}h</td><td>{r['coverage_pct']:.1f}%</td><td>{r['actual_minutes']}/{r['expected_minutes']}</td><td>{r['missing_minutes']}</td></tr>" for r in s['coverage_since_start']])}
 </tbody></table>
 </div>
 
@@ -343,14 +374,14 @@ async function refreshSummary(){{
     if (signals) signals.textContent = s.signals_total_window ?? 0;
     if (confirmed) confirmed.textContent = (s.confirmed_signals || []).length;
     if (win) win.textContent = `${{s.paper_stats?.win_rate_pct ?? 0}}%`;
-    const ov = s.coverage_overview_7d || {{}};
+    const ov = s.coverage_health_real || {{}};
     if (coverage) {{
       const health = String(ov.health || 'critical').toLowerCase();
       coverage.textContent = health.toUpperCase();
       coverage.style.color = health === 'good' ? '#2fe38a' : (health === 'warn' ? '#ffd166' : '#ff6b6b');
     }}
     if (coverageDetail) {{
-      coverageDetail.textContent = `worst ${{ov.worst_symbol || '-'}} · ${{ov.worst_coverage_pct ?? 0}}% · missing ${{ov.total_missing_minutes ?? 0}}m`;
+      coverageDetail.textContent = `worst ${{ov.worst_coverage_pct ?? 0}}% since start`;
     }}
   }} catch (err) {{
     renderLive({{is_live:false,ticks_10s:0,seconds_since_last_tick:'n/a'}});

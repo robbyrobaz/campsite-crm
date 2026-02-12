@@ -1,16 +1,14 @@
 #!/usr/bin/env python3
 import json
 import os
-import time
 from collections import Counter
-from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
 from dotenv import load_dotenv
 
-from db import connect, create_kanban_task, init_db, list_kanban_tasks, update_kanban_task_status
+from db import connect, init_db
 
 ROOT = Path(__file__).resolve().parent
 load_dotenv(ROOT / '.env')
@@ -21,12 +19,6 @@ SYMBOLS = [s.strip() for s in os.getenv('BLOFIN_SYMBOLS', '').split(',') if s.st
 
 con = connect(DB_PATH)
 init_db(con)
-
-
-def now_pair() -> tuple[int, str]:
-    ts_ms = int(time.time() * 1000)
-    ts_iso = datetime.now(timezone.utc).isoformat()
-    return ts_ms, ts_iso
 
 
 def _in_clause(symbols):
@@ -78,14 +70,6 @@ def timeseries(symbol: str, limit: int = 300):
     return out
 
 
-def get_kanban_payload():
-    tasks = list_kanban_tasks(con)
-    cols = {'inbox': [], 'in_progress': [], 'needs_approval': [], 'done': []}
-    for t in tasks:
-        cols[t['status']].append(t)
-    return {'tasks': tasks, 'columns': cols}
-
-
 class H(BaseHTTPRequestHandler):
     def sendb(self, b: bytes, code=200, ctype='application/json'):
         self.send_response(code)
@@ -96,13 +80,6 @@ class H(BaseHTTPRequestHandler):
 
     def sendj(self, payload, code=200):
         return self.sendb(json.dumps(payload, default=str).encode(), code=code)
-
-    def _read_json(self):
-        length = int(self.headers.get('Content-Length', '0') or '0')
-        if length <= 0:
-            return {}
-        raw = self.rfile.read(length)
-        return json.loads(raw.decode('utf-8'))
 
     def do_GET(self):
         p = urlparse(self.path)
@@ -119,8 +96,6 @@ class H(BaseHTTPRequestHandler):
         if p.path == '/api/gap-fills':
             rows = [dict(r) for r in con.execute('SELECT * FROM gap_fill_runs ORDER BY id DESC LIMIT 200')]
             return self.sendj(rows)
-        if p.path == '/api/kanban/tasks':
-            return self.sendj(get_kanban_payload())
 
         if p.path == '/':
             s = fetch_summary()
@@ -201,89 +176,6 @@ if(sel.value) loadSym(sel.value);
         return self.sendj({'error': 'not found'}, code=404)
 
     def do_POST(self):
-        p = urlparse(self.path)
-        try:
-            payload = self._read_json()
-        except Exception:
-            return self.sendj({'error': 'invalid json'}, code=400)
-
-        ts_ms, ts_iso = now_pair()
-
-        if p.path == '/api/kanban/tasks':
-            title = (payload.get('title') or '').strip()
-            description = (payload.get('description') or '').strip()
-            if not title:
-                return self.sendj({'error': 'title required'}, code=400)
-            try:
-                priority = int(payload.get('priority', 3))
-            except Exception:
-                priority = 3
-            priority = max(1, min(priority, 5))
-            task_id = create_kanban_task(con, ts_ms=ts_ms, ts_iso=ts_iso, title=title, description=description, priority=priority)
-            return self.sendj({'ok': True, 'task_id': task_id}, code=201)
-
-        if p.path == '/api/kanban/move':
-            task_id = int(payload.get('task_id', 0) or 0)
-            from_status = payload.get('from_status') or ''
-            to_status = payload.get('to_status') or ''
-            actor = payload.get('actor') or 'dashboard_user'
-            allowed = {'inbox', 'in_progress', 'needs_approval', 'done'}
-            if task_id <= 0 or from_status not in allowed or to_status not in allowed:
-                return self.sendj({'error': 'invalid move request'}, code=400)
-            ok = update_kanban_task_status(
-                con,
-                task_id=task_id,
-                from_status=from_status,
-                to_status=to_status,
-                ts_ms=ts_ms,
-                ts_iso=ts_iso,
-                actor=actor,
-                note=(payload.get('note') or '').strip(),
-            )
-            if not ok:
-                return self.sendj({'error': 'task not found in expected status'}, code=409)
-            return self.sendj({'ok': True})
-
-        if p.path == '/api/kanban/approve':
-            task_id = int(payload.get('task_id', 0) or 0)
-            note = (payload.get('note') or '').strip()
-            actor = payload.get('actor') or 'dashboard_approver'
-            ok = update_kanban_task_status(
-                con,
-                task_id=task_id,
-                from_status='needs_approval',
-                to_status='done',
-                ts_ms=ts_ms,
-                ts_iso=ts_iso,
-                actor=actor,
-                note=note,
-                approval_note=note or 'approved',
-            )
-            if not ok:
-                return self.sendj({'error': 'task not in needs_approval'}, code=409)
-            return self.sendj({'ok': True})
-
-        if p.path == '/api/kanban/reject':
-            task_id = int(payload.get('task_id', 0) or 0)
-            note = (payload.get('note') or '').strip()
-            actor = payload.get('actor') or 'dashboard_approver'
-            if not note:
-                return self.sendj({'error': 'rejection note required'}, code=400)
-            ok = update_kanban_task_status(
-                con,
-                task_id=task_id,
-                from_status='needs_approval',
-                to_status='in_progress',
-                ts_ms=ts_ms,
-                ts_iso=ts_iso,
-                actor=actor,
-                note=note,
-                rejection_note=note,
-            )
-            if not ok:
-                return self.sendj({'error': 'task not in needs_approval'}, code=409)
-            return self.sendj({'ok': True})
-
         return self.sendj({'error': 'not found'}, code=404)
 
 

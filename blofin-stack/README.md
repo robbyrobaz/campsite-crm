@@ -1,13 +1,13 @@
-# Blofin Monitoring Stack (Restored + Ops Kanban)
+# Blofin Monitoring Stack
 
 Local-first monitoring stack for Blofin public market data:
 
 - WebSocket ingestion for ~25 symbols
-- Durable SQLite storage (`ticks`, `signals`, `service_heartbeats`, `kanban_*`)
+- Durable SQLite storage (`ticks`, `signals`, `service_heartbeats`)
 - Pattern detectors (momentum + breakout + reversal)
 - Buy/sell signal recording
 - Local dashboard/API endpoints
-- Integrated ops kanban board with worker auto-pick
+- Separate ops kanban service (decoupled from main dashboard)
 - systemd user services for auto-start
 
 ## Quick start
@@ -31,12 +31,7 @@ python kanban_worker.py
 - `GET /api/summary`
 - `GET /api/timeseries?symbol=BTC-USDT&limit=300`
 - `GET /api/gap-fills`
-- `GET /api/kanban/tasks`
-- `POST /api/kanban/tasks`
-- `POST /api/kanban/move`
-- `POST /api/kanban/approve`
-- `POST /api/kanban/reject`
-- `GET /` (HTML dashboard + kanban panel)
+- `GET /` (HTML dashboard)
 
 ## Kanban auto-pick priority
 

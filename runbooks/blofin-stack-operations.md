@@ -3,14 +3,16 @@
 ## Components
 - Ingestor service: `blofin-stack-ingestor.service`
 - API/dashboard service: `blofin-stack-api.service`
+- Gap-fill timer: `blofin-stack-gapfill.timer` (+ `blofin-stack-gapfill.service`)
 - DB: `/home/rob/.openclaw/workspace/blofin-stack/data/blofin_monitor.db`
-- Dashboard: `http://127.0.0.1:8780/`
+- **Single dashboard**: `http://127.0.0.1:8780/`
 
 ## Install / Reinstall
 ```bash
 cd /home/rob/.openclaw/workspace
-chmod +x scripts/install-blofin-stack-services.sh
+chmod +x scripts/install-blofin-stack-services.sh scripts/install-blofin-stack-gapfill.sh
 ./scripts/install-blofin-stack-services.sh
+./scripts/install-blofin-stack-gapfill.sh
 ```
 
 ## Verify health

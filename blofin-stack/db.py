@@ -46,6 +46,18 @@ def init_db(con: sqlite3.Connection) -> None:
             details_json TEXT
         );
 
+        CREATE TABLE IF NOT EXISTS gap_fill_runs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ts_ms INTEGER NOT NULL,
+            ts_iso TEXT NOT NULL,
+            symbol TEXT NOT NULL,
+            gaps_found INTEGER NOT NULL,
+            rows_inserted INTEGER NOT NULL,
+            first_gap_ts_ms INTEGER,
+            last_gap_ts_ms INTEGER,
+            note TEXT
+        );
+
         CREATE INDEX IF NOT EXISTS idx_ticks_symbol_ts ON ticks(symbol, ts_ms);
         CREATE INDEX IF NOT EXISTS idx_signals_symbol_ts ON signals(symbol, ts_ms);
         CREATE INDEX IF NOT EXISTS idx_signals_signal_ts ON signals(signal, ts_ms);

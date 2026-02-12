@@ -8,93 +8,144 @@ from urllib.parse import parse_qs, urlparse
 
 from dotenv import load_dotenv
 
-from db import connect, init_db, latest_signals, latest_ticks
+from db import connect, init_db
 
 ROOT = Path(__file__).resolve().parent
-load_dotenv(ROOT / ".env")
-
-DB_PATH = os.getenv("BLOFIN_DB_PATH", str(ROOT / "data" / "blofin_monitor.db"))
-HOST = os.getenv("API_HOST", "127.0.0.1")
-PORT = int(os.getenv("API_PORT", "8780"))
+load_dotenv(ROOT / '.env')
+DB_PATH = os.getenv('BLOFIN_DB_PATH', str(ROOT / 'data' / 'blofin_monitor.db'))
+HOST = os.getenv('API_HOST', '127.0.0.1')
+PORT = int(os.getenv('API_PORT', '8780'))
+SYMBOLS = [s.strip() for s in os.getenv('BLOFIN_SYMBOLS', '').split(',') if s.strip()]
 
 con = connect(DB_PATH)
 init_db(con)
 
 
-def summary() -> dict:
-    sigs = latest_signals(con, 5000)
-    ticks = latest_ticks(con, 200)
-    by_signal = Counter(s.get("signal", "UNKNOWN") for s in sigs)
-    by_strategy = Counter(s.get("strategy", "UNKNOWN") for s in sigs)
-    by_symbol = Counter(s.get("symbol", "UNKNOWN") for s in sigs)
-    hb = con.execute("SELECT service, ts_iso, details_json FROM service_heartbeats ORDER BY ts_ms DESC").fetchall()
-    heartbeats = [dict(r) for r in hb]
+def fetch_summary():
+    sigs = [dict(r) for r in con.execute('SELECT ts_iso,symbol,signal,strategy,confidence,price,details_json FROM signals ORDER BY ts_ms DESC LIMIT 2000')]
+    ticks = [dict(r) for r in con.execute('SELECT ts_iso,symbol,price,source FROM ticks ORDER BY ts_ms DESC LIMIT 5000')]
+    by_sig = Counter(s['signal'] for s in sigs)
+    by_strat = Counter(s['strategy'] for s in sigs)
+    by_symbol_sig = Counter(s['symbol'] for s in sigs)
+    latest_by_symbol = [dict(r) for r in con.execute('SELECT symbol, MAX(ts_iso) as last_seen, COUNT(*) as ticks FROM ticks GROUP BY symbol ORDER BY symbol')]
+    gaps = [dict(r) for r in con.execute('SELECT ts_iso,symbol,gaps_found,rows_inserted,note FROM gap_fill_runs ORDER BY id DESC LIMIT 100')]
     return {
-        "signals_total_window": len(sigs),
-        "signals_by_type": dict(by_signal),
-        "signals_by_strategy": dict(by_strategy),
-        "signals_by_symbol": dict(by_symbol.most_common(25)),
-        "recent_signals": sigs[:50],
-        "recent_ticks": ticks[:50],
-        "heartbeats": heartbeats,
+        'symbols_configured': SYMBOLS,
+        'signals_total_window': len(sigs),
+        'signals_by_type': dict(by_sig),
+        'signals_by_strategy': dict(by_strat),
+        'signals_by_symbol': dict(by_symbol_sig.most_common(25)),
+        'latest_by_symbol': latest_by_symbol,
+        'recent_signals': sigs[:120],
+        'recent_ticks': ticks[:200],
+        'gap_fill_runs': gaps,
     }
 
 
-class Handler(BaseHTTPRequestHandler):
-    def _send(self, body: bytes, status: int = 200, ctype: str = "application/json"):
-        self.send_response(status)
-        self.send_header("Content-Type", ctype)
-        self.send_header("Content-Length", str(len(body)))
+def timeseries(symbol: str, limit: int = 300):
+    rows = con.execute('SELECT ts_iso, price, source FROM ticks WHERE symbol=? ORDER BY ts_ms DESC LIMIT ?', (symbol, limit)).fetchall()
+    out = [dict(r) for r in rows]
+    out.reverse()
+    return out
+
+
+class H(BaseHTTPRequestHandler):
+    def sendb(self, b: bytes, code=200, ctype='application/json'):
+        self.send_response(code)
+        self.send_header('Content-Type', ctype)
+        self.send_header('Content-Length', str(len(b)))
         self.end_headers()
-        self.wfile.write(body)
+        self.wfile.write(b)
 
     def do_GET(self):
-        parsed = urlparse(self.path)
-        path = parsed.path
-        q = parse_qs(parsed.query)
+        p = urlparse(self.path)
+        q = parse_qs(p.query)
 
-        if path == "/healthz":
-            self._send(b"ok", ctype="text/plain")
-            return
+        if p.path == '/healthz':
+            return self.sendb(b'ok', ctype='text/plain')
+        if p.path == '/api/summary':
+            return self.sendb(json.dumps(fetch_summary(), default=str).encode())
+        if p.path == '/api/timeseries':
+            symbol = q.get('symbol', [SYMBOLS[0] if SYMBOLS else 'BTC-USDT'])[0]
+            limit = int(q.get('limit', ['300'])[0])
+            return self.sendb(json.dumps(timeseries(symbol, max(30, min(limit, 2000))), default=str).encode())
+        if p.path == '/api/gap-fills':
+            rows = [dict(r) for r in con.execute('SELECT * FROM gap_fill_runs ORDER BY id DESC LIMIT 200')]
+            return self.sendb(json.dumps(rows, default=str).encode())
 
-        if path == "/api/summary":
-            self._send(json.dumps(summary(), default=str).encode())
-            return
-
-        if path == "/api/signals":
-            limit = int(q.get("limit", ["100"])[0])
-            self._send(json.dumps(latest_signals(con, max(1, min(limit, 5000))), default=str).encode())
-            return
-
-        if path == "/api/ticks/latest":
-            limit = int(q.get("limit", ["100"])[0])
-            self._send(json.dumps(latest_ticks(con, max(1, min(limit, 5000))), default=str).encode())
-            return
-
-        if path == "/":
-            s = summary()
-            html = f"""<!doctype html><html><head><meta charset='utf-8'><title>Blofin Monitor</title>
+        if p.path == '/':
+            s = fetch_summary()
+            html = f"""<!doctype html>
+<html><head><meta charset='utf-8'><title>Blofin 24/7 Dashboard</title>
+<script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
 <style>
-body{{font-family:Arial;padding:18px;background:#111;color:#ddd}}
-.card{{display:inline-block;background:#1d1d1d;padding:10px 12px;margin:6px;border-radius:8px}}
-a{{color:#9cf}}
-pre{{background:#000;padding:12px;overflow:auto;max-height:420px}}
-</style></head><body>
-<h1>Blofin Monitoring Stack</h1>
-<div class='card'>Signals(5k window): <b>{s['signals_total_window']}</b></div>
-<div class='card'>By Type: <b>{s['signals_by_type']}</b></div>
-<div class='card'>By Strategy: <b>{s['signals_by_strategy']}</b></div>
-<p><a href='/healthz'>/healthz</a> · <a href='/api/summary'>/api/summary</a> · <a href='/api/signals?limit=100'>/api/signals</a> · <a href='/api/ticks/latest?limit=100'>/api/ticks/latest</a></p>
-<h2>Recent signals</h2>
-<pre>{json.dumps(s['recent_signals'], indent=2, default=str)}</pre>
-<h2>Heartbeats</h2>
-<pre>{json.dumps(s['heartbeats'], indent=2, default=str)}</pre>
-</body></html>"""
-            self._send(html.encode(), ctype="text/html; charset=utf-8")
-            return
+body{{margin:0;background:#0b1020;color:#e7ecff;font-family:Inter,Arial,sans-serif}}
+.wrap{{max-width:1200px;margin:0 auto;padding:20px}}
+.h{{display:flex;justify-content:space-between;align-items:center}}
+.grid{{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}}
+.card{{background:#121a31;border:1px solid #23325f;border-radius:12px;padding:12px}}
+.small{{font-size:12px;color:#9fb0e6}}
+table{{width:100%;border-collapse:collapse}} th,td{{padding:8px;border-bottom:1px solid #22335f;font-size:12px;text-align:left}}
+select{{background:#0e1730;color:#e7ecff;border:1px solid #2b427a;padding:6px;border-radius:8px}}
+</style></head>
+<body><div class='wrap'>
+<div class='h'><h1>Blofin 24/7 Pattern Dashboard</h1><div class='small'>Single dashboard (ws + db + patterns + gap fill)</div></div>
+<div class='grid'>
+<div class='card'><div class='small'>Configured Tokens</div><div style='font-size:26px'>{len(s['symbols_configured'])}</div></div>
+<div class='card'><div class='small'>Signals (window)</div><div style='font-size:26px'>{s['signals_total_window']}</div></div>
+<div class='card'><div class='small'>Signal Types</div><div>{s['signals_by_type']}</div></div>
+<div class='card'><div class='small'>Strategies</div><div>{s['signals_by_strategy']}</div></div>
+</div>
 
-        self._send(json.dumps({"error": "not found"}).encode(), status=404)
+<div class='card' style='margin-top:12px'>
+<div style='display:flex;justify-content:space-between;align-items:center'>
+<h3 style='margin:0'>Token chart</h3>
+<div><select id='sym'>{''.join([f"<option>{x}</option>" for x in s['symbols_configured']])}</select></div>
+</div>
+<canvas id='chart' height='100'></canvas>
+</div>
+
+<div class='card' style='margin-top:12px'>
+<h3 style='margin-top:0'>Tokens + last seen</h3>
+<table><thead><tr><th>Symbol</th><th>Last seen</th><th>Ticks</th></tr></thead><tbody>
+{''.join([f"<tr><td>{r['symbol']}</td><td>{r['last_seen']}</td><td>{r['ticks']}</td></tr>" for r in s['latest_by_symbol']])}
+</tbody></table>
+</div>
+
+<div class='card' style='margin-top:12px'>
+<h3 style='margin-top:0'>Recent pattern signals</h3>
+<table><thead><tr><th>Time</th><th>Symbol</th><th>Signal</th><th>Pattern</th><th>Price</th></tr></thead><tbody>
+{''.join([f"<tr><td>{r['ts_iso']}</td><td>{r['symbol']}</td><td>{r['signal']}</td><td>{r['strategy']}</td><td>{r['price']}</td></tr>" for r in s['recent_signals'][:80]])}
+</tbody></table>
+</div>
+
+<div class='card' style='margin-top:12px'>
+<h3 style='margin-top:0'>Gap fills (historical backfill)</h3>
+<table><thead><tr><th>Run time</th><th>Symbol</th><th>Gaps found</th><th>Rows inserted</th><th>Note</th></tr></thead><tbody>
+{''.join([f"<tr><td>{g['ts_iso']}</td><td>{g['symbol']}</td><td>{g['gaps_found']}</td><td>{g['rows_inserted']}</td><td>{g['note']}</td></tr>" for g in s['gap_fill_runs'][:50]])}
+</tbody></table>
+</div>
+
+<p class='small'>APIs: /api/summary · /api/timeseries?symbol=BTC-USDT · /api/gap-fills</p>
+</div>
+<script>
+let ch;
+async function loadSym(sym){{
+  const r=await fetch('/api/timeseries?symbol='+encodeURIComponent(sym)+'&limit=300');
+  const d=await r.json();
+  const labels=d.map(x=>x.ts_iso.slice(11,19));
+  const vals=d.map(x=>x.price);
+  if(ch) ch.destroy();
+  ch=new Chart(document.getElementById('chart'),{{type:'line',data:{{labels,datasets:[{{label:sym,data:vals,borderColor:'#6ea8fe',pointRadius:0}}]}},options:{{responsive:true,plugins:{{legend:{{display:true}}}},scales:{{x:{{ticks:{{maxTicksLimit:12,color:'#9fb0e6'}}}},y:{{ticks:{{color:'#9fb0e6'}}}}}}}}}});
+}}
+const sel=document.getElementById('sym');
+sel.addEventListener('change',()=>loadSym(sel.value));
+if(sel.value) loadSym(sel.value);
+</script></body></html>"""
+            return self.sendb(html.encode(), ctype='text/html; charset=utf-8')
+
+        return self.sendb(json.dumps({'error':'not found'}).encode(), code=404)
 
 
-if __name__ == "__main__":
-    HTTPServer((HOST, PORT), Handler).serve_forever()
+if __name__ == '__main__':
+    HTTPServer((HOST, PORT), H).serve_forever()

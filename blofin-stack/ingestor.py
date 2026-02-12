@@ -172,8 +172,13 @@ def detect_signals(symbol: str, price: float, ts_ms: int) -> List[dict]:
 
 
 async def subscribe(ws) -> None:
-    args = [{"channel": "tickers", "instId": s} for s in SYMBOLS]
-    await ws.send(json.dumps({"op": "subscribe", "args": args}))
+    # Blofin may reject oversized subscribe payloads (code 60012).
+    # Send in small batches to keep requests valid.
+    batch_size = 8
+    for i in range(0, len(SYMBOLS), batch_size):
+        args = [{"channel": "tickers", "instId": s} for s in SYMBOLS[i:i + batch_size]]
+        await ws.send(json.dumps({"op": "subscribe", "args": args}))
+        await asyncio.sleep(0.15)
 
 
 async def run() -> None:

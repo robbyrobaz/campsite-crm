@@ -1,0 +1,10 @@
+[Unit]
+Description=Kanban watchdog (ensure active coding task)
+After=network-online.target kanban-worker.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+WorkingDirectory=/home/rob/.openclaw/workspace/blofin-stack
+EnvironmentFile=/home/rob/.openclaw/workspace/blofin-stack/.env
+ExecStart=/home/rob/.openclaw/workspace/blofin-stack/.venv/bin/python /home/rob/.openclaw/workspace/blofin-stack/kanban_watchdog.py

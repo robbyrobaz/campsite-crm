@@ -86,7 +86,7 @@ def loop_once(con):
                 ts_ms=ts_ms,
                 ts_iso=ts_iso,
                 actor=WORKER_NAME,
-                note='auto-picked: actively coding now (priority queue)',
+                note='auto-picked: actively coding now (priority queue, single active slot)',
                 assigned_worker=WORKER_NAME,
             )
             if ok:

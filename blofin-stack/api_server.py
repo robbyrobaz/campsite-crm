@@ -223,7 +223,6 @@ async function postJson(path,payload){{
 
 function taskHtml(t){{
   let controls = '';
-  if(t.status==='in_progress') controls += `<button onclick="moveTask(${{t.id}},'in_progress','needs_approval')">Request approval</button>`;
   if(t.status==='needs_approval') controls += `<button onclick="approveTask(${{t.id}})">Approve</button> <button onclick="rejectTask(${{t.id}})">Reject</button>`;
   if(t.status==='inbox') controls += `<button onclick="moveTask(${{t.id}},'inbox','in_progress')">Start now</button>`;
   return `<div class='ktask'><div><b>${{t.title}}</b></div><div class='small'>${{(t.description||'').slice(0,160)}}</div><div class='kmeta'>P${{t.priority}} · by ${{t.created_by}} · worker ${{t.assigned_worker||'-'}}</div><div class='kmeta'>approved: ${{t.approval_note||'-'}}<br>rejected: ${{t.rejection_note||'-'}}</div><div style='margin-top:8px'>${{controls}}</div></div>`;

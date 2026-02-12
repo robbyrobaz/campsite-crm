@@ -1,41 +1,45 @@
 #!/usr/bin/env python3
 import json
+import sqlite3
+from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
-from collections import Counter
 
-DATA_DIR = Path('/home/rob/.openclaw/workspace/blofin-research/data')
+DB_PATH = Path('/home/rob/.openclaw/workspace/blofin-research/data/blofin.db')
 HOST = '127.0.0.1'
 PORT = 8766
 
 
-def latest_file(prefix: str):
-    files = sorted(DATA_DIR.glob(f"{prefix}_*.jsonl"))
-    return files[-1] if files else None
-
-
-def read_tail(path: Path, n=200):
-    if not path or not path.exists():
+def q(sql, args=()):
+    if not DB_PATH.exists():
         return []
-    lines = path.read_text(encoding='utf-8', errors='ignore').splitlines()
-    out = []
-    for ln in lines[-n:]:
-        try:
-            out.append(json.loads(ln))
-        except Exception:
-            pass
-    return out
+    con = sqlite3.connect(DB_PATH)
+    con.row_factory = sqlite3.Row
+    rows = con.execute(sql, args).fetchall()
+    con.close()
+    return [dict(r) for r in rows]
 
 
 def metrics():
-    events = read_tail(latest_file('events'), 2000)
-    c = Counter(e.get('type', 'unknown') for e in events)
-    by_sym = Counter(e.get('symbol', 'unknown') for e in events)
+    one_hour = int(datetime.now(timezone.utc).timestamp() * 1000) - 3600_000
+    total_ticks = q('SELECT COUNT(*) c FROM ticks')
+    total_signals = q('SELECT COUNT(*) c FROM signals')
+    ticks_1h = q('SELECT COUNT(*) c FROM ticks WHERE ts_ms >= ?', (one_hour,))
+    signals_1h = q('SELECT COUNT(*) c FROM signals WHERE ts_ms >= ?', (one_hour,))
+    top_symbols = q('SELECT symbol, COUNT(*) c FROM ticks GROUP BY symbol ORDER BY c DESC LIMIT 25')
+    top_patterns = q('SELECT pattern, COUNT(*) c FROM signals GROUP BY pattern ORDER BY c DESC LIMIT 20')
+    latest_signals = q('SELECT ts_ms,symbol,signal,pattern,score,price FROM signals ORDER BY id DESC LIMIT 50')
+    latest_ticks = q('SELECT ts_ms,symbol,price FROM ticks ORDER BY id DESC LIMIT 50')
     return {
-        'events_total': len(events),
-        'event_types': c,
-        'symbols': by_sym,
-        'latest_events': events[-25:],
+        'db_path': str(DB_PATH),
+        'total_ticks': (total_ticks[0]['c'] if total_ticks else 0),
+        'total_signals': (total_signals[0]['c'] if total_signals else 0),
+        'ticks_last_hour': (ticks_1h[0]['c'] if ticks_1h else 0),
+        'signals_last_hour': (signals_1h[0]['c'] if signals_1h else 0),
+        'top_symbols': top_symbols,
+        'top_patterns': top_patterns,
+        'latest_signals': latest_signals,
+        'latest_ticks': latest_ticks,
     }
 
 
@@ -49,28 +53,26 @@ class H(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path == '/healthz':
-            self._send(b'ok', ctype='text/plain')
-            return
-        if self.path == '/api/metrics':
-            body = json.dumps(metrics(), default=str).encode()
-            self._send(body, ctype='application/json')
-            return
-
+            return self._send(b'ok', ctype='text/plain')
         m = metrics()
+        if self.path == '/api/metrics':
+            return self._send(json.dumps(m, default=str).encode(), ctype='application/json')
+
         html = f"""<!doctype html><html><head><meta charset='utf-8'><title>Blofin Dashboard</title>
-<style>body{{font-family:Arial;padding:20px}}pre{{background:#111;color:#0f0;padding:12px;overflow:auto}}.kpi{{display:inline-block;margin-right:20px;padding:8px 12px;background:#f2f2f2;border-radius:8px}}</style>
+<style>body{{font-family:Arial;padding:20px}}pre{{background:#111;color:#0f0;padding:12px;overflow:auto}}.k{{display:inline-block;margin-right:14px;padding:8px 10px;background:#f1f1f1;border-radius:8px}}</style>
 </head><body>
-<h1>Blofin Research Dashboard</h1>
-<div class='kpi'>Events: <b>{m['events_total']}</b></div>
-<div class='kpi'>Types: <b>{dict(m['event_types'])}</b></div>
-<div class='kpi'>Symbols: <b>{dict(m['symbols'])}</b></div>
+<h1>Blofin Pattern Monitor</h1>
+<div class='k'>Total ticks: <b>{m['total_ticks']}</b></div>
+<div class='k'>Total signals: <b>{m['total_signals']}</b></div>
+<div class='k'>Ticks 1h: <b>{m['ticks_last_hour']}</b></div>
+<div class='k'>Signals 1h: <b>{m['signals_last_hour']}</b></div>
 <p><a href='/api/metrics'>/api/metrics</a> · <a href='/healthz'>/healthz</a></p>
-<h2>Latest events</h2>
-<pre>{json.dumps(m['latest_events'], indent=2, default=str)}</pre>
+<h2>Top Symbols</h2><pre>{json.dumps(m['top_symbols'], indent=2)}</pre>
+<h2>Top Patterns</h2><pre>{json.dumps(m['top_patterns'], indent=2)}</pre>
+<h2>Latest Signals</h2><pre>{json.dumps(m['latest_signals'], indent=2)}</pre>
 </body></html>"""
         self._send(html.encode())
 
 
 if __name__ == '__main__':
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
     HTTPServer((HOST, PORT), H).serve_forever()

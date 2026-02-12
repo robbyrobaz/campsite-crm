@@ -64,6 +64,16 @@ cp knowledge-base/scripts/offsite-backup.env.example \
 
 See runbook: `knowledge-base/runbooks/offsite-backup-2nd-brain.md`
 
+## Restored live systems
+
+- Blofin 24/7 stack runbook: `runbooks/blofin-stack-24x7.md`
+- Full-restore backup runbook: `runbooks/full-restore-backup.md`
+
+Local dashboard URLs:
+- Blofin Dashboard: `http://127.0.0.1:8766`
+- Blofin Metrics API: `http://127.0.0.1:8766/api/metrics`
+- Ops Kanban Dashboard: `http://127.0.0.1:8767`
+
 ## Conventions
 
 - Use `YYYY-MM-DD` in filenames for chronology.

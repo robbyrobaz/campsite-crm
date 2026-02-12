@@ -7,7 +7,7 @@ Wants=network-online.target
 Type=simple
 WorkingDirectory=/home/rob/.openclaw/workspace/blofin-research
 EnvironmentFile=/home/rob/.openclaw/workspace/blofin-research/.env
-ExecStart=/home/rob/.openclaw/workspace/blofin-research/.venv/bin/python /home/rob/.openclaw/workspace/blofin-research/ws_monitor.py
+ExecStart=/home/rob/.openclaw/workspace/blofin-research/.venv/bin/python /home/rob/.openclaw/workspace/blofin-research/app.py
 Restart=always
 RestartSec=3
 

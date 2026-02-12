@@ -7,7 +7,7 @@ from db import connect, init_db, update_kanban_task_status, upsert_heartbeat
 
 ROOT = Path(__file__).resolve().parent
 load_dotenv(ROOT / '.env')
-DB_PATH = os.getenv('BLOFIN_DB_PATH', str(ROOT / 'data' / 'blofin_monitor.db'))
+DB_PATH = os.getenv('KANBAN_DB_PATH', str(ROOT / 'data' / 'kanban.db'))
 WORKER_NAME = os.getenv('KANBAN_WORKER_NAME', 'kanban_worker')
 STALE_MINUTES = int(os.getenv('KANBAN_STALE_MINUTES', '10'))
 

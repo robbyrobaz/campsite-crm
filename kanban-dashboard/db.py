@@ -17,6 +17,13 @@ def connect(db_path: str) -> sqlite3.Connection:
 def init_db(con: sqlite3.Connection) -> None:
     con.executescript(
         '''
+        CREATE TABLE IF NOT EXISTS service_heartbeats (
+            service TEXT PRIMARY KEY,
+            ts_ms INTEGER NOT NULL,
+            ts_iso TEXT NOT NULL,
+            details_json TEXT
+        );
+
         CREATE TABLE IF NOT EXISTS kanban_tasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             created_ts_ms INTEGER NOT NULL,
@@ -157,3 +164,31 @@ def list_kanban_tasks(con: sqlite3.Connection) -> List[Dict[str, Any]]:
         '''
     ).fetchall()
     return [dict(r) for r in rows]
+
+
+def upsert_heartbeat(con: sqlite3.Connection, service: str, ts_ms: int, ts_iso: str, details_json: str = '{}') -> None:
+    con.execute(
+        '''
+        INSERT INTO service_heartbeats (service, ts_ms, ts_iso, details_json)
+        VALUES (?, ?, ?, ?)
+        ON CONFLICT(service) DO UPDATE SET
+            ts_ms=excluded.ts_ms,
+            ts_iso=excluded.ts_iso,
+            details_json=excluded.details_json
+        ''',
+        (service, ts_ms, ts_iso, details_json),
+    )
+    con.commit()
+
+
+def upsert_heartbeat(con: sqlite3.Connection, service: str, ts_ms: int, ts_iso: str, details_json: str = '{}') -> None:
+    """Store a service heartbeat timestamp."""
+    # Since we don't have a service_heartbeats table in kanban DB, we can create a simple events table
+    con.execute(
+        '''
+        INSERT INTO kanban_events (ts_ms, ts_iso, event_type, note, actor)
+        VALUES (?, ?, ?, ?, ?)
+        ''',
+        (ts_ms, ts_iso, 'heartbeat', details_json, service),
+    )
+    con.commit()

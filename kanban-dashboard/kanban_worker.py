@@ -11,7 +11,7 @@ from db import connect, init_db, update_kanban_task_status, upsert_heartbeat
 ROOT = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(ROOT, '.env'))
 
-DB_PATH = os.getenv('BLOFIN_DB_PATH', os.path.join(ROOT, 'data', 'blofin_monitor.db'))
+DB_PATH = os.getenv('KANBAN_DB_PATH', os.path.join(ROOT, 'data', 'kanban.db'))
 LOOP_SECONDS = max(3, int(os.getenv('KANBAN_WORKER_LOOP_SECONDS', '10')))
 MAX_IN_PROGRESS = max(1, int(os.getenv('KANBAN_MAX_IN_PROGRESS', '1')))
 WORKER_NAME = os.getenv('KANBAN_WORKER_NAME', 'kanban_worker')

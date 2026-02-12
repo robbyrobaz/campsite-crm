@@ -8,7 +8,7 @@ from db import connect, init_db, create_kanban_task, list_kanban_tasks, update_k
 
 ROOT = Path(__file__).resolve().parent
 load_dotenv(ROOT / '.env')
-DB_PATH = os.getenv('BLOFIN_DB_PATH', str(ROOT / 'data' / 'blofin_monitor.db'))
+DB_PATH = os.getenv('KANBAN_DB_PATH', str(ROOT / 'data' / 'kanban.db'))
 HOST = '127.0.0.1'
 PORT = int(os.getenv('KANBAN_PORT', '8781'))
 

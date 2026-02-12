@@ -15,7 +15,7 @@ load_dotenv(ROOT / '.env')
 DB_PATH = os.getenv('BLOFIN_DB_PATH', str(ROOT / 'data' / 'blofin_monitor.db'))
 SYMBOLS = [s.strip() for s in os.getenv('BLOFIN_SYMBOLS', 'BTC-USDT,ETH-USDT').split(',') if s.strip()]
 TIMEFRAME = os.getenv('BACKFILL_TIMEFRAME', '1m')
-LOOKBACK_DAYS = int(os.getenv('BACKFILL_LOOKBACK_DAYS', '7'))
+LOOKBACK_HOURS = int(os.getenv('BACKFILL_LOOKBACK_HOURS', '16'))
 BATCH_LIMIT = min(100, max(1, int(os.getenv('BACKFILL_BATCH_LIMIT', '60'))))
 MAX_GAP_MINUTES = int(os.getenv('BACKFILL_MAX_GAP_MINUTES', '10080'))
 LOOP_SECONDS = int(os.getenv('BACKFILL_LOOP_SECONDS', '0'))
@@ -128,16 +128,16 @@ def fetch_ohlcv_fill(exchange, symbol: str, start_ms: int, end_ms: int) -> list[
     return sorted(fetched.items())
 
 
-def compute_window_bounds(now_ms: int, lookback_days: int) -> tuple[int, int]:
+def compute_window_bounds(now_ms: int, lookback_hours: int) -> tuple[int, int]:
     """Return inclusive [start,end] bounds for fully closed candles only."""
     window_end_ms = floor_tf(now_ms - TF_MS)
-    window_start_ms = floor_tf(window_end_ms - lookback_days * 24 * 60 * 60 * 1000)
+    window_start_ms = floor_tf(window_end_ms - lookback_hours * 60 * 60 * 1000)
     return window_start_ms, window_end_ms
 
 
 def run_once(con: sqlite3.Connection, ex) -> tuple[int, int]:
     now_ms = int(time.time() * 1000)
-    window_start_ms, window_end_ms = compute_window_bounds(now_ms, LOOKBACK_DAYS)
+    window_start_ms, window_end_ms = compute_window_bounds(now_ms, LOOKBACK_HOURS)
     expected_points = int((window_end_ms - window_start_ms) // TF_MS) + 1
 
     total_rows = 0
@@ -176,7 +176,7 @@ def run_once(con: sqlite3.Connection, ex) -> tuple[int, int]:
                     rows_inserted_sym += 1
 
             note = (
-                f'tf={TIMEFRAME} window={LOOKBACK_DAYS}d '
+                f'tf={TIMEFRAME} window={LOOKBACK_HOURS}h '
                 f'points={len(existing)}/{expected_points} max_gap={MAX_GAP_MINUTES}m'
             )
             con.execute(

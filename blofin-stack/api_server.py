@@ -85,6 +85,29 @@ def fetch_summary():
         points_args,
     )]
 
+    expected_minutes_7d = 7 * 24 * 60
+    points_by_symbol_map = {r['symbol']: r for r in points_by_symbol_7d}
+    if SYMBOLS:
+        points_by_symbol_7d = []
+        for sym in SYMBOLS:
+            row = points_by_symbol_map.get(sym, {'symbol': sym, 'points_7d': 0, 'minute_buckets_7d': 0})
+            minute_buckets = int(row.get('minute_buckets_7d') or 0)
+            coverage_pct = round((minute_buckets / expected_minutes_7d) * 100.0, 2)
+            points_by_symbol_7d.append({
+                'symbol': sym,
+                'points_7d': int(row.get('points_7d') or 0),
+                'minute_buckets_7d': minute_buckets,
+                'expected_minutes_7d': expected_minutes_7d,
+                'coverage_pct_7d': coverage_pct,
+                'missing_minutes_7d': max(0, expected_minutes_7d - minute_buckets),
+            })
+    else:
+        for row in points_by_symbol_7d:
+            minute_buckets = int(row.get('minute_buckets_7d') or 0)
+            row['expected_minutes_7d'] = expected_minutes_7d
+            row['coverage_pct_7d'] = round((minute_buckets / expected_minutes_7d) * 100.0, 2)
+            row['missing_minutes_7d'] = max(0, expected_minutes_7d - minute_buckets)
+
     gaps = [dict(r) for r in con.execute(f'SELECT ts_iso,symbol,gaps_found,rows_inserted,note FROM gap_fill_runs {wh} ORDER BY id DESC LIMIT 100', args)]
     closed = [p for p in paper if p['status'] == 'CLOSED' and p['pnl_pct'] is not None]
     win_rate = (sum(1 for p in closed if p['pnl_pct'] > 0) / len(closed) * 100.0) if closed else 0.0
@@ -249,8 +272,8 @@ select{{background:#0e1730;color:#e7ecff;border:1px solid #2b427a;padding:6px;bo
 
 <div class='card' style='margin-top:12px'>
 <h3 style='margin-top:0'>Data points per coin (last 7d)</h3>
-<table><thead><tr><th>Symbol</th><th>Rows</th><th>Minute buckets</th></tr></thead><tbody>
-{''.join([f"<tr><td>{r['symbol']}</td><td>{r['points_7d']}</td><td>{r['minute_buckets_7d']}</td></tr>" for r in s['points_by_symbol_7d']])}
+<table><thead><tr><th>Symbol</th><th>Rows</th><th>Minute buckets</th><th>Coverage</th><th>Missing min</th></tr></thead><tbody>
+{''.join([f"<tr><td>{r['symbol']}</td><td>{r['points_7d']}</td><td>{r['minute_buckets_7d']}/{r['expected_minutes_7d']}</td><td>{r['coverage_pct_7d']}%</td><td>{r['missing_minutes_7d']}</td></tr>" for r in s['points_by_symbol_7d']])}
 </tbody></table>
 </div>
 

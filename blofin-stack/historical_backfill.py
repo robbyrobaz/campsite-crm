@@ -27,27 +27,58 @@ def iso(ms: int) -> str:
     return datetime.fromtimestamp(ms / 1000, tz=timezone.utc).isoformat()
 
 
-def get_recent_ticks(con: sqlite3.Connection, symbol: str, since_ms: int):
+def floor_tf(ms: int) -> int:
+    return (ms // TF_MS) * TF_MS
+
+
+def get_recent_ticks(con: sqlite3.Connection, symbol: str, since_ms: int, until_ms: int):
     cur = con.execute(
-        'SELECT ts_ms, price FROM ticks WHERE symbol=? AND ts_ms>=? ORDER BY ts_ms ASC',
-        (symbol, since_ms),
+        'SELECT ts_ms, price FROM ticks WHERE symbol=? AND ts_ms>=? AND ts_ms<=? ORDER BY ts_ms ASC',
+        (symbol, since_ms, until_ms),
     )
     return cur.fetchall()
 
 
-def detect_gaps(rows):
-    gaps = []
-    if len(rows) < 2:
-        return gaps
-    prev = rows[0][0]
+def detect_missing_ranges(rows, window_start_ms: int, window_end_ms: int):
+    """Return [(start_ms, end_ms, missing_minutes), ...] within full target window."""
+    if window_end_ms <= window_start_ms:
+        return []
+
+    ranges = []
+    if not rows:
+        missing_minutes = int((window_end_ms - window_start_ms) // TF_MS) + 1
+        return [(window_start_ms, window_end_ms, missing_minutes)]
+
+    # Leading missing range.
+    first_ts = rows[0][0]
+    if first_ts > window_start_ms:
+        start = window_start_ms
+        end = first_ts - TF_MS
+        if end >= start:
+            missing_minutes = int((end - start) // TF_MS) + 1
+            ranges.append((start, end, missing_minutes))
+
+    # Internal gaps.
+    prev = first_ts
     for r in rows[1:]:
         cur = r[0]
-        d = cur - prev
-        if d > TF_MS * 2:
-            gap_minutes = d // TF_MS - 1
-            gaps.append((prev + TF_MS, cur - TF_MS, int(gap_minutes)))
+        if cur - prev > TF_MS:
+            start = prev + TF_MS
+            end = cur - TF_MS
+            missing_minutes = int((end - start) // TF_MS) + 1
+            ranges.append((start, end, missing_minutes))
         prev = cur
-    return gaps
+
+    # Trailing missing range.
+    last_ts = rows[-1][0]
+    if last_ts < window_end_ms:
+        start = last_ts + TF_MS
+        end = window_end_ms
+        if end >= start:
+            missing_minutes = int((end - start) // TF_MS) + 1
+            ranges.append((start, end, missing_minutes))
+
+    return ranges
 
 
 def fetch_ohlcv_fill(exchange, symbol: str, start_ms: int, end_ms: int):
@@ -76,39 +107,56 @@ def main():
     ex = ccxt.blofin({'enableRateLimit': True})
 
     now_ms = int(time.time() * 1000)
-    since_ms = now_ms - LOOKBACK_DAYS * 24 * 60 * 60 * 1000
+    window_end_ms = floor_tf(now_ms)
+    window_start_ms = floor_tf(now_ms - LOOKBACK_DAYS * 24 * 60 * 60 * 1000)
 
     total_rows = 0
     total_gaps = 0
     for sym in SYMBOLS:
-        rows = get_recent_ticks(con, sym, since_ms)
-        gaps = detect_gaps(rows)
+        rows = get_recent_ticks(con, sym, window_start_ms, window_end_ms)
+        existing_ts = {int(r[0]) for r in rows}
+        gaps = detect_missing_ranges(rows, window_start_ms, window_end_ms)
         if not gaps:
-            con.execute('INSERT INTO gap_fill_runs(ts_ms, ts_iso, symbol, gaps_found, rows_inserted, note) VALUES(?,?,?,?,?,?)',
-                        (now_ms, iso(now_ms), sym, 0, 0, 'no gaps'))
+            con.execute(
+                'INSERT INTO gap_fill_runs(ts_ms, ts_iso, symbol, gaps_found, rows_inserted, note) VALUES(?,?,?,?,?,?)',
+                (now_ms, iso(now_ms), sym, 0, 0, f'window_covered tf={TIMEFRAME}'),
+            )
             con.commit()
             continue
 
-        gaps = [g for g in gaps if g[2] <= MAX_GAP_MINUTES]
-        rows_inserted_sym = 0
-        first_gap = gaps[0][0] if gaps else None
-        last_gap = gaps[-1][1] if gaps else None
-
+        # Keep very large internal outages optional, but always include edge ranges
+        # so the 7-day target window can be backfilled from scratch.
+        filtered = []
         for gstart, gend, gmins in gaps:
+            touches_edge = gstart <= window_start_ms or gend >= window_end_ms
+            if touches_edge or gmins <= MAX_GAP_MINUTES:
+                filtered.append((gstart, gend, gmins))
+
+        rows_inserted_sym = 0
+        first_gap = filtered[0][0] if filtered else None
+        last_gap = filtered[-1][1] if filtered else None
+
+        for gstart, gend, gmins in filtered:
             candles = fetch_ohlcv_fill(ex, sym, gstart, gend)
             for ts, px in candles:
+                if ts in existing_ts:
+                    continue
                 con.execute(
                     'INSERT INTO ticks(ts_ms, ts_iso, symbol, price, source, raw_json) VALUES(?,?,?,?,?,?)',
                     (ts, iso(ts), sym, float(px), 'historical_fill', None),
                 )
+                existing_ts.add(ts)
                 rows_inserted_sym += 1
 
-        con.execute('INSERT INTO gap_fill_runs(ts_ms, ts_iso, symbol, gaps_found, rows_inserted, first_gap_ts_ms, last_gap_ts_ms, note) VALUES(?,?,?,?,?,?,?,?)',
-                    (now_ms, iso(now_ms), sym, len(gaps), rows_inserted_sym, first_gap, last_gap, f'tf={TIMEFRAME}'))
+        note = f'tf={TIMEFRAME} window={LOOKBACK_DAYS}d max_gap={MAX_GAP_MINUTES}m'
+        con.execute(
+            'INSERT INTO gap_fill_runs(ts_ms, ts_iso, symbol, gaps_found, rows_inserted, first_gap_ts_ms, last_gap_ts_ms, note) VALUES(?,?,?,?,?,?,?,?)',
+            (now_ms, iso(now_ms), sym, len(filtered), rows_inserted_sym, first_gap, last_gap, note),
+        )
         con.commit()
         total_rows += rows_inserted_sym
-        total_gaps += len(gaps)
-        print(f'{sym}: gaps={len(gaps)} inserted={rows_inserted_sym}')
+        total_gaps += len(filtered)
+        print(f'{sym}: gaps={len(filtered)} inserted={rows_inserted_sym}')
 
     print(f'DONE gaps={total_gaps} rows_inserted={total_rows}')
 

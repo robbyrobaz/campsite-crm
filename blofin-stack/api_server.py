@@ -36,6 +36,26 @@ def fetch_summary():
     by_strat = Counter(s['strategy'] for s in sigs)
     by_symbol_sig = Counter(s['symbol'] for s in sigs)
     latest_by_symbol = [dict(r) for r in con.execute(f'SELECT symbol, MAX(ts_iso) as last_seen, COUNT(*) as ticks FROM ticks {wh} GROUP BY symbol ORDER BY symbol', args)]
+
+    points_where, points_args = _in_clause(SYMBOLS)
+    if points_where:
+        points_where = points_where.replace('WHERE', 'WHERE ts_ms >= (CAST(strftime(\'%s\',\'now\') AS INTEGER) - 7*24*60*60) * 1000 AND', 1)
+    else:
+        points_where = " WHERE ts_ms >= (CAST(strftime('%s','now') AS INTEGER) - 7*24*60*60) * 1000 "
+
+    points_by_symbol_7d = [dict(r) for r in con.execute(
+        f'''
+        SELECT symbol,
+               COUNT(*) AS points_7d,
+               COUNT(DISTINCT ((ts_ms / 60000) * 60000)) AS minute_buckets_7d
+        FROM ticks
+        {points_where}
+        GROUP BY symbol
+        ORDER BY symbol
+        ''',
+        points_args,
+    )]
+
     gaps = [dict(r) for r in con.execute(f'SELECT ts_iso,symbol,gaps_found,rows_inserted,note FROM gap_fill_runs {wh} ORDER BY id DESC LIMIT 100', args)]
     closed = [p for p in paper if p['status'] == 'CLOSED' and p['pnl_pct'] is not None]
     win_rate = (sum(1 for p in closed if p['pnl_pct'] > 0) / len(closed) * 100.0) if closed else 0.0
@@ -46,6 +66,7 @@ def fetch_summary():
         'signals_by_strategy': dict(by_strat),
         'signals_by_symbol': dict(by_symbol_sig.most_common(25)),
         'latest_by_symbol': latest_by_symbol,
+        'points_by_symbol_7d': points_by_symbol_7d,
         'recent_signals': sigs[:120],
         'confirmed_signals': confirmed[:120],
         'paper_trades': paper[:120],
@@ -133,6 +154,13 @@ select{{background:#0e1730;color:#e7ecff;border:1px solid #2b427a;padding:6px;bo
 <h3 style='margin-top:0'>Paper trades</h3>
 <table><thead><tr><th>Symbol</th><th>Side</th><th>Status</th><th>Entry</th><th>Exit</th><th>PNL%</th><th>Reason</th></tr></thead><tbody>
 {''.join([f"<tr><td>{r['symbol']}</td><td>{r['side']}</td><td>{r['status']}</td><td>{r['entry_price']}</td><td>{r['exit_price'] or ''}</td><td>{r['pnl_pct'] or ''}</td><td>{r['reason'] or ''}</td></tr>" for r in s['paper_trades'][:80]])}
+</tbody></table>
+</div>
+
+<div class='card' style='margin-top:12px'>
+<h3 style='margin-top:0'>Data points per coin (last 7d)</h3>
+<table><thead><tr><th>Symbol</th><th>Rows</th><th>Minute buckets</th></tr></thead><tbody>
+{''.join([f"<tr><td>{r['symbol']}</td><td>{r['points_7d']}</td><td>{r['minute_buckets_7d']}</td></tr>" for r in s['points_by_symbol_7d']])}
 </tbody></table>
 </div>
 

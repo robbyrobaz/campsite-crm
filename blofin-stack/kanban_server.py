@@ -77,7 +77,6 @@ async function move(id,from_status,to_status){await post('/api/kanban/move',{tas
 async function approve(id){const note=prompt('Approval note','approved')||'approved'; await post('/api/kanban/approve',{task_id:id,note,actor:'dashboard_approver'}); refresh();}
 async function reject(id){const note=prompt('Rework note','please rework')||'please rework'; await post('/api/kanban/reject',{task_id:id,note,actor:'dashboard_approver'}); refresh();}
 async function delTask(id){if(!confirm('Delete this task?')) return; await post('/api/kanban/delete',{task_id:id,actor:'dashboard_user'}); refresh();}
-async function setCompletionSummary(id){const s=prompt('10 words max: what was completed?','')||''; await post('/api/kanban/set-completion-summary',{task_id:id,completion_summary:s,actor:'assistant'}); refresh();}
 async function setLoc(id,current){const v=parseInt(prompt('Lines of code changed', String(current||0))||String(current||0),10); await post('/api/kanban/set-loc',{task_id:id,loc_changed:Math.max(0,v||0),actor:'assistant'}); refresh();}
 async function editTaskById(id){
   const data = await (await fetch('/api/kanban/tasks')).json();

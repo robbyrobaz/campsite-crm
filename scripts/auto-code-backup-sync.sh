@@ -9,23 +9,15 @@ if ! git remote get-url second-brain >/dev/null 2>&1; then
   git remote add second-brain https://github.com/robbyrobaz/openclaw-2nd-brain.git
 fi
 
-# Keep these in backup scope (actual built code + ops docs)
-INCLUDE_PATHS=(
-  blofin-stack
-  scripts
-  systemd
-  runbooks
-  projects
-  memory
-  README.md
-  .gitignore
-)
-
-for p in "${INCLUDE_PATHS[@]}"; do
+# Keep these in backup scope from config list
+LIST_FILE="/home/rob/.openclaw/workspace/config/backup-paths.txt"
+while IFS= read -r p; do
+  [[ -z "${p// }" ]] && continue
+  [[ "$p" =~ ^# ]] && continue
   if [[ -e "$p" ]]; then
     git add "$p"
   fi
-done
+done < "$LIST_FILE"
 
 if git diff --cached --quiet; then
   echo "No code/doc changes to backup"

@@ -27,3 +27,19 @@ node_modules/
 
 # OS
 .DS_Store
+
+# Local external/source repos (kept for reference, not part of core stack)
+external-repos/
+ML_Predict_Assets/
+BTC/
+openclaw/
+tradingview-triggers-1/
+cloud-code-function-tradingview-triggers-bOvuLu/
+.restore-safety/
+AGENTS.md
+BOOTSTRAP.md
+HEARTBEAT.md
+IDENTITY.md
+SOUL.md
+TOOLS.md
+USER.md

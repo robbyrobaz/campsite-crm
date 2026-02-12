@@ -11,7 +11,6 @@ DB_PATH = os.getenv('BLOFIN_DB_PATH', str(ROOT / 'data' / 'blofin_monitor.db'))
 
 TARGETS = [
     ('blofin', 'http://127.0.0.1:8780/healthz'),
-    ('kanban', 'http://127.0.0.1:8781/healthz'),
 ]
 
 

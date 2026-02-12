@@ -127,10 +127,16 @@ def fetch_ohlcv_fill(exchange, symbol: str, start_ms: int, end_ms: int) -> list[
     return sorted(fetched.items())
 
 
+def compute_window_bounds(now_ms: int, lookback_days: int) -> tuple[int, int]:
+    """Return inclusive [start,end] bounds for fully closed candles only."""
+    window_end_ms = floor_tf(now_ms - TF_MS)
+    window_start_ms = floor_tf(window_end_ms - lookback_days * 24 * 60 * 60 * 1000)
+    return window_start_ms, window_end_ms
+
+
 def run_once(con: sqlite3.Connection, ex) -> tuple[int, int]:
     now_ms = int(time.time() * 1000)
-    window_end_ms = floor_tf(now_ms)
-    window_start_ms = floor_tf(now_ms - LOOKBACK_DAYS * 24 * 60 * 60 * 1000)
+    window_start_ms, window_end_ms = compute_window_bounds(now_ms, LOOKBACK_DAYS)
     expected_points = int((window_end_ms - window_start_ms) // TF_MS) + 1
 
     total_rows = 0

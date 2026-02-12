@@ -4,6 +4,12 @@ import historical_backfill as hb
 
 
 class HistoricalBackfillTests(unittest.TestCase):
+    def test_compute_window_bounds_excludes_open_minute(self):
+        now = 10 * hb.TF_MS + 42_000
+        start, end = hb.compute_window_bounds(now, lookback_days=0)
+        self.assertEqual(end, 9 * hb.TF_MS)
+        self.assertEqual(start, 9 * hb.TF_MS)
+
     def test_build_missing_ranges_single_large_gap(self):
         start = 0
         end = 10 * hb.TF_MS

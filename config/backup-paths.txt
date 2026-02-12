@@ -2,7 +2,8 @@ blofin-stack
 scripts
 systemd
 runbooks
-projects
+brain
 memory
+config
 README.md
 .gitignore

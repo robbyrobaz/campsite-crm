@@ -2,8 +2,8 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PROJECTS_DIR="$ROOT/projects"
-TEMPLATE="$ROOT/templates/project-update.md"
+PROJECTS_DIR="$ROOT/brain/projects"
+TEMPLATE="$ROOT/brain/templates/project-update.md"
 
 PROJECT_RAW="${1:-new-project}"
 SLUG="$(echo "$PROJECT_RAW" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g')"

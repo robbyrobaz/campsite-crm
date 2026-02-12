@@ -2,8 +2,8 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-INBOX_DIR="$ROOT/inbox"
-TEMPLATE="$ROOT/templates/session-summary.md"
+INBOX_DIR="$ROOT/brain/inbox"
+TEMPLATE="$ROOT/brain/templates/session-summary.md"
 
 TITLE_RAW="${1:-session}"
 SLUG="$(echo "$TITLE_RAW" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+|-+$//g')"

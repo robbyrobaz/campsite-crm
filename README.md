@@ -1,82 +1,62 @@
-# Knowledge Base (v1)
+# OpenClaw 2nd Brain + Blofin Workspace
 
-Lightweight 2nd-brain for OpenClaw work across projects.
+This repository now has a clear split between **personal knowledge files** and **runtime apps/services**.
 
-## Structure
+## Top-level layout
 
-- `inbox/` — quick raw captures (notes, links, ideas). Low friction.
-- `projects/` — project-level files and updates.
-- `decisions/` — decision records (what/why/tradeoffs).
-- `learnings/` — lessons, patterns, mistakes, wins.
-- `runbooks/` — repeatable procedures and checklists.
-- `weekly/` — weekly review snapshots.
-- `templates/` — reusable markdown templates.
-- `scripts/` — helper scripts to create consistent notes.
+- `brain/` — personal 2nd-brain knowledge base (notes + templates)
+  - `brain/inbox/`
+  - `brain/projects/`
+  - `brain/decisions/`
+  - `brain/learnings/`
+  - `brain/weekly/`
+  - `brain/templates/`
+- `runbooks/` — operational procedures
+- `scripts/` — automation helpers (backup, installers, note scaffolding)
+- `config/` — local config snippets
+- `systemd/` — service units/timers
+- `blofin-stack/` — live monitor/API stack
+- `blofin-dashboard/` — dashboard frontend
+- `kanban-dashboard/` — local ops kanban frontend
+- `blofin-research/` — research workspace
+- `external-repos/` — untracked upstream clones/sandboxes
+- `memory/` + `MEMORY.md` pattern (agent memory continuity)
 
-## Workflow (Capture -> Distill -> Link)
+## 2nd-brain workflow
 
-1. **Capture** (fast)
-   - Drop rough notes into `inbox/`.
-   - Use `scripts/new-session-summary.sh` after meaningful sessions.
+1. **Capture** quickly in `brain/inbox/`
+2. **Distill** into `brain/projects/`, `brain/decisions/`, `brain/learnings/`
+3. **Review** weekly in `brain/weekly/`
 
-2. **Distill** (daily/weekly)
-   - Move high-value items from `inbox/` into:
-     - `projects/` for project state
-     - `decisions/` for non-trivial choices
-     - `learnings/` for reusable insight
+## Quick commands
 
-3. **Link** (make it findable)
-   - In every distilled note, add links to:
-     - related project file in `projects/`
-     - related task/ticket/reference
-     - upstream source note from `inbox/` or session summary
-
-## Quick Start
-
-### 1) Create a session summary
+Create a session summary:
 
 ```bash
-./knowledge-base/scripts/new-session-summary.sh "short-title"
+./scripts/new-session-summary.sh "short-title"
 ```
 
-### 2) Create/update a project note
+Create/update a project note:
 
 ```bash
-./knowledge-base/scripts/new-project-update.sh "project-slug"
+./scripts/new-project-update.sh "project-slug"
 ```
 
-### 3) Weekly review
+Start weekly review note:
 
 ```bash
-cp knowledge-base/templates/weekly-review.md \
-  "knowledge-base/weekly/$(date +%F)-weekly-review.md"
+cp brain/templates/weekly-review.md \
+  "brain/weekly/$(date +%F)-weekly-review.md"
 ```
 
-### 4) Offsite backup (2nd brain)
+## Backup references
 
-```bash
-cp knowledge-base/scripts/offsite-backup.env.example \
-  knowledge-base/scripts/offsite-backup.env
-./knowledge-base/scripts/offsite-backup.sh check-config
-./knowledge-base/scripts/offsite-backup.sh backup
-./knowledge-base/scripts/offsite-backup.sh verify
-```
+- 2nd-brain offsite backup runbook: `runbooks/offsite-backup-2nd-brain.md`
+- Auto code backup sync: `runbooks/auto-code-backup-sync.md`
+- Blofin stack backup/restore: `runbooks/blofin-stack-backup-restore.md`
 
-See runbook: `knowledge-base/runbooks/offsite-backup-2nd-brain.md`
+## Live local URLs
 
-## Restored live systems
-
-- Blofin 24/7 stack runbook: `runbooks/blofin-stack-24x7.md`
-- Full-restore backup runbook: `runbooks/full-restore-backup.md`
-
-Local dashboard URLs:
 - Blofin Dashboard: `http://127.0.0.1:8766`
 - Blofin Metrics API: `http://127.0.0.1:8766/api/metrics`
 - Ops Kanban Dashboard: `http://127.0.0.1:8767`
-
-## Conventions
-
-- Use `YYYY-MM-DD` in filenames for chronology.
-- Keep notes short and operational.
-- Prefer one project file per active project (`projects/<slug>.md`).
-- Capture first, polish later.

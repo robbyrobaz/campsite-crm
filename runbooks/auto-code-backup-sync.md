@@ -8,7 +8,7 @@ Continuously back up active code/docs to `robbyrobaz/openclaw-2nd-brain` so in-p
 - `scripts/`
 - `systemd/`
 - `runbooks/`
-- `projects/`
+- `brain/`
 - `memory/`
 - `README.md`, `.gitignore`
 

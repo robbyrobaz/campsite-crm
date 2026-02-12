@@ -1,0 +1,29 @@
+# Python
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+
+# Secrets/env
+.env
+*.env
+*.secret
+process.env
+
+# Databases and runtime data
+*.db
+*.sqlite
+*.sqlite3
+*.sqlite3.gz
+*-wal
+*-shm
+blofin-stack/data/
+blofin-stack/backups/
+blofin-research/data/
+
+# Node
+node_modules/
+
+# OS
+.DS_Store

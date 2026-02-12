@@ -108,6 +108,12 @@ def fetch_summary():
             row['coverage_pct_7d'] = round((minute_buckets / expected_minutes_7d) * 100.0, 2)
             row['missing_minutes_7d'] = max(0, expected_minutes_7d - minute_buckets)
 
+    points_by_symbol_7d.sort(key=lambda r: (-int(r.get('missing_minutes_7d') or 0), r.get('symbol', '')))
+    total_missing_minutes_7d = int(sum(int(r.get('missing_minutes_7d') or 0) for r in points_by_symbol_7d))
+    worst_symbol_7d = points_by_symbol_7d[0]['symbol'] if points_by_symbol_7d else None
+    worst_coverage_pct_7d = float(min((r.get('coverage_pct_7d', 0.0) for r in points_by_symbol_7d), default=0.0))
+    coverage_health = 'good' if worst_coverage_pct_7d >= 99.5 else ('warn' if worst_coverage_pct_7d >= 97.0 else 'critical')
+
     gaps = [dict(r) for r in con.execute(f'SELECT ts_iso,symbol,gaps_found,rows_inserted,note FROM gap_fill_runs {wh} ORDER BY id DESC LIMIT 100', args)]
     closed = [p for p in paper if p['status'] == 'CLOSED' and p['pnl_pct'] is not None]
     win_rate = (sum(1 for p in closed if p['pnl_pct'] > 0) / len(closed) * 100.0) if closed else 0.0
@@ -174,6 +180,12 @@ def fetch_summary():
             'seconds_since_last_tick': seconds_since_last_tick,
         },
         'points_by_symbol_7d': points_by_symbol_7d,
+        'coverage_overview_7d': {
+            'total_missing_minutes': total_missing_minutes_7d,
+            'worst_symbol': worst_symbol_7d,
+            'worst_coverage_pct': round(worst_coverage_pct_7d, 2),
+            'health': coverage_health,
+        },
         'recent_signals': sigs[:120],
         'confirmed_signals': confirmed[:120],
         'paper_trades': paper[:120],
@@ -235,7 +247,7 @@ select{{background:#0e1730;color:#e7ecff;border:1px solid #2b427a;padding:6px;bo
 </style></head>
 <body><div class='wrap'>
 <h1>Blofin 24/7 Pattern Dashboard</h1>
-<div class='grid' style='grid-template-columns:repeat(5,minmax(0,1fr))'>
+<div class='grid' style='grid-template-columns:repeat(6,minmax(0,1fr))'>
 <div class='card'>
   <div class='small'>Live Feed</div>
   <div id='live-pill' style='font-size:22px;font-weight:700;color:{'#2fe38a' if s['live_status']['is_live'] else '#ff6b6b'}'>{'LIVE' if s['live_status']['is_live'] else 'STALE'}</div>
@@ -245,6 +257,11 @@ select{{background:#0e1730;color:#e7ecff;border:1px solid #2b427a;padding:6px;bo
 <div class='card'><div class='small'>Signals</div><div id='signals-count' style='font-size:26px'>{s['signals_total_window']}</div></div>
 <div class='card'><div class='small'>Confirmed</div><div id='confirmed-count' style='font-size:26px'>{len(s['confirmed_signals'])}</div></div>
 <div class='card'><div class='small'>Paper Win Rate</div><div id='paper-win-rate' style='font-size:26px'>{s['paper_stats']['win_rate_pct']}%</div></div>
+<div class='card'>
+  <div class='small'>7d Coverage Health</div>
+  <div id='coverage-health' style='font-size:22px;font-weight:700;color:{'#2fe38a' if s['coverage_overview_7d']['health']=='good' else ('#ffd166' if s['coverage_overview_7d']['health']=='warn' else '#ff6b6b')}'>{str(s['coverage_overview_7d']['health']).upper()}</div>
+  <div class='small' id='coverage-detail'>worst {s['coverage_overview_7d']['worst_symbol'] or '-'} · {s['coverage_overview_7d']['worst_coverage_pct']}% · missing {s['coverage_overview_7d']['total_missing_minutes']}m</div>
+</div>
 </div>
 <p>{''.join([f"<span class='badge'>{x}</span>" for x in s['symbols_configured']])}</p>
 
@@ -321,9 +338,20 @@ async function refreshSummary(){{
     const signals = document.getElementById('signals-count');
     const confirmed = document.getElementById('confirmed-count');
     const win = document.getElementById('paper-win-rate');
+    const coverage = document.getElementById('coverage-health');
+    const coverageDetail = document.getElementById('coverage-detail');
     if (signals) signals.textContent = s.signals_total_window ?? 0;
     if (confirmed) confirmed.textContent = (s.confirmed_signals || []).length;
     if (win) win.textContent = `${{s.paper_stats?.win_rate_pct ?? 0}}%`;
+    const ov = s.coverage_overview_7d || {{}};
+    if (coverage) {{
+      const health = String(ov.health || 'critical').toLowerCase();
+      coverage.textContent = health.toUpperCase();
+      coverage.style.color = health === 'good' ? '#2fe38a' : (health === 'warn' ? '#ffd166' : '#ff6b6b');
+    }}
+    if (coverageDetail) {{
+      coverageDetail.textContent = `worst ${{ov.worst_symbol || '-'}} · ${{ov.worst_coverage_pct ?? 0}}% · missing ${{ov.total_missing_minutes ?? 0}}m`;
+    }}
   }} catch (err) {{
     renderLive({{is_live:false,ticks_10s:0,seconds_since_last_tick:'n/a'}});
   }}

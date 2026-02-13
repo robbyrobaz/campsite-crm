@@ -148,27 +148,46 @@ def fetch_summary_data():
             if signal_type in strategy_data[strat]['by_signal']:
                 strategy_data[strat]['by_signal'][signal_type] += 1
         
+        # Fetch per-strategy trades by joining with signals
+        strategy_trades_map = {}
+        for row in con.execute('''
+            SELECT s.strategy, pt.pnl_pct, pt.status
+            FROM paper_trades pt
+            JOIN confirmed_signals cs ON pt.confirmed_signal_id = cs.id
+            JOIN signals s ON cs.signal_id = s.id
+            ORDER BY pt.opened_ts_ms DESC
+        '''):
+            row_dict = dict(row)
+            strat = row_dict.get('strategy', 'unknown')
+            if strat not in strategy_trades_map:
+                strategy_trades_map[strat] = []
+            strategy_trades_map[strat].append(row_dict)
+        
         # Calculate scores for each strategy
         for strat_name, strat_info in sorted(strategy_data.items(), key=lambda x: x[1]['count'], reverse=True):
-            strat_trades = [p for p in paper if p['status'] == 'CLOSED']
-            if strat_trades:
-                wins = sum(1 for p in strat_trades if p['pnl_pct'] and p['pnl_pct'] > 0)
-                wr = (wins / len(strat_trades) * 100) if strat_trades else 0
-                avg_pnl = sum(p['pnl_pct'] for p in strat_trades if p['pnl_pct']) / len(strat_trades) if strat_trades else 0
-                total_pnl = sum(p['pnl_pct'] for p in strat_trades if p['pnl_pct'])
+            # Filter trades to only those for this strategy
+            strat_trades = strategy_trades_map.get(strat_name, [])
+            closed_strat_trades = [p for p in strat_trades if p['status'] == 'CLOSED']
+            
+            if closed_strat_trades:
+                wins = sum(1 for p in closed_strat_trades if p['pnl_pct'] and p['pnl_pct'] > 0)
+                wr = (wins / len(closed_strat_trades) * 100) if closed_strat_trades else 0
+                avg_pnl = sum(p['pnl_pct'] for p in closed_strat_trades if p['pnl_pct']) / len(closed_strat_trades) if closed_strat_trades else 0
+                total_pnl = sum(p['pnl_pct'] for p in closed_strat_trades if p['pnl_pct'])
                 
                 pnl_component = max(0.0, min(100.0, ((avg_pnl + 2.0) / 4.0) * 100.0))
                 score = (wr * 0.6) + (pnl_component * 0.4)
                 
-                # Calculate advanced stats
-                stats = calculate_stats(strat_trades)
+                # Calculate advanced stats using the strategy-specific trade data
+                trade_pnls = [p.get('pnl_pct', 0) for p in closed_strat_trades]
+                stats = calculate_stats([{'pnl_pct': pnl} for pnl in trade_pnls])
                 
                 strategy_scores.append({
                     'strategy': strat_name,
                     'signals': strat_info['count'],
                     'buy_count': strat_info['by_signal'].get('BUY', 0),
                     'sell_count': strat_info['by_signal'].get('SELL', 0),
-                    'closed_count': len(strat_trades),
+                    'closed_count': len(closed_strat_trades),
                     'win_rate_pct': round(wr, 2),
                     'avg_pnl_pct': round(avg_pnl, 4),
                     'total_pnl_pct': round(total_pnl, 4),
@@ -177,6 +196,23 @@ def fetch_summary_data():
                     'max_dd': stats['max_dd'],
                     'score': round(score, 2),
                     'grade': _grade_score(score),
+                })
+            else:
+                # Strategy has signals but no closed trades
+                strategy_scores.append({
+                    'strategy': strat_name,
+                    'signals': strat_info['count'],
+                    'buy_count': strat_info['by_signal'].get('BUY', 0),
+                    'sell_count': strat_info['by_signal'].get('SELL', 0),
+                    'closed_count': 0,
+                    'win_rate_pct': 0.0,
+                    'avg_pnl_pct': 0.0,
+                    'total_pnl_pct': 0.0,
+                    'profit_factor': 0.0,
+                    'sortino': 0.0,
+                    'max_dd': 0.0,
+                    'score': 0.0,
+                    'grade': 'F',
                 })
         
         # Top 10 paper trades by PnL

@@ -144,36 +144,36 @@ def fetch_summary():
     closed = [p for p in paper if p['status'] == 'CLOSED' and p['pnl_pct'] is not None]
     win_rate = (sum(1 for p in closed if p['pnl_pct'] > 0) / len(closed) * 100.0) if closed else 0.0
 
-    # Rolling window win rates (12h default for display, plus 1h and 24h)
-    rolling_windows = {}
-    for label, hours in [('1h', 1), ('12h', 12), ('24h', 24)]:
-        cutoff_ms = now_ms - hours * 3600 * 1000
-        if wh.strip():
-            rw_sql = f'''SELECT COUNT(*) as total,
-                       SUM(CASE WHEN pnl_pct > 0 THEN 1 ELSE 0 END) as wins,
-                       AVG(pnl_pct) as avg_pnl,
-                       SUM(pnl_pct) as total_pnl
-                FROM paper_trades
-                {wh} AND status='CLOSED' AND pnl_pct IS NOT NULL AND closed_ts_ms >= ?'''
-            rw_args = args + [cutoff_ms]
-        else:
-            rw_sql = f'''SELECT COUNT(*) as total,
-                       SUM(CASE WHEN pnl_pct > 0 THEN 1 ELSE 0 END) as wins,
-                       AVG(pnl_pct) as avg_pnl,
-                       SUM(pnl_pct) as total_pnl
-                FROM paper_trades
-                WHERE status='CLOSED' AND pnl_pct IS NOT NULL AND closed_ts_ms >= ?'''
-            rw_args = [cutoff_ms]
-        rw_rows = con.execute(rw_sql, rw_args).fetchone()
-        total = int(rw_rows['total'] or 0)
-        wins = int(rw_rows['wins'] or 0)
-        rolling_windows[label] = {
-            'trades': total,
+    # Top 3 strategies by win rate in last 6 hours (min 3 trades to qualify)
+    top3_cutoff_ms = now_ms - 6 * 3600 * 1000
+    top3_rows = con.execute(
+        '''SELECT s.strategy,
+                  COUNT(*) as trades,
+                  SUM(CASE WHEN pt.pnl_pct > 0 THEN 1 ELSE 0 END) as wins,
+                  ROUND(AVG(pt.pnl_pct), 4) as avg_pnl,
+                  ROUND(SUM(pt.pnl_pct), 4) as total_pnl
+           FROM paper_trades pt
+           JOIN confirmed_signals cs ON cs.id = pt.confirmed_signal_id
+           JOIN signals s ON s.id = cs.signal_id
+           WHERE pt.status='CLOSED' AND pt.pnl_pct IS NOT NULL AND pt.closed_ts_ms >= ?
+           GROUP BY s.strategy
+           HAVING COUNT(*) >= 3
+           ORDER BY AVG(pt.pnl_pct) DESC
+           LIMIT 3''',
+        [top3_cutoff_ms],
+    ).fetchall()
+    top3_strategies = []
+    for r in top3_rows:
+        trades = int(r['trades'])
+        wins = int(r['wins'])
+        top3_strategies.append({
+            'strategy': r['strategy'],
+            'trades': trades,
             'wins': wins,
-            'win_rate_pct': round(wins / total * 100.0, 2) if total > 0 else None,
-            'avg_pnl_pct': round(float(rw_rows['avg_pnl'] or 0), 4) if total > 0 else None,
-            'total_pnl_pct': round(float(rw_rows['total_pnl'] or 0), 4) if total > 0 else None,
-        }
+            'win_rate_pct': round(wins / trades * 100.0, 1),
+            'avg_pnl_pct': float(r['avg_pnl'] or 0),
+            'total_pnl_pct': float(r['total_pnl'] or 0),
+        })
 
     perf_where, perf_args = _in_clause(SYMBOLS)
     perf_rows = [dict(r) for r in con.execute(
@@ -256,7 +256,7 @@ def fetch_summary():
             'open_count': sum(1 for p in paper if p['status'] == 'OPEN'),
             'win_rate_pct': round(win_rate, 2),
             'avg_pnl_pct': round(sum(p['pnl_pct'] for p in closed) / len(closed), 4) if closed else 0.0,
-            'rolling': rolling_windows,
+            'top3_6h': top3_strategies,
         },
         'strategy_pattern_scores': strategy_pattern_scores[:120],
         'gap_fill_runs': gaps,
@@ -381,19 +381,28 @@ class H(BaseHTTPRequestHandler):
             live_secs = s['live_status']['seconds_since_last_tick'] if s['live_status']['seconds_since_last_tick'] is not None else 'n/a'
             dq_health = str(s['coverage_health_real']['health']).upper()
             dq_color = '#10b981' if s['coverage_health_real']['health'] == 'good' else ('#f59e0b' if s['coverage_health_real']['health'] == 'warn' else '#ef4444')
-            # Use rolling 12h win rate as primary display, fall back to all-time
-            r12 = s['paper_stats'].get('rolling', {}).get('12h', {})
-            r1 = s['paper_stats'].get('rolling', {}).get('1h', {})
-            r24 = s['paper_stats'].get('rolling', {}).get('24h', {})
-            wr_12h = r12.get('win_rate_pct')
-            wr_display = wr_12h if wr_12h is not None else s['paper_stats']['win_rate_pct']
-            wr_color = '#10b981' if wr_display >= 50 else ('#f59e0b' if wr_display >= 35 else '#ef4444')
-            wr_bar = min(100, wr_display)
-            wr_label = '12h' if wr_12h is not None else 'all'
-            wr_1h_text = f"{r1['win_rate_pct']}% ({r1['trades']})" if r1.get('win_rate_pct') is not None else '—'
-            wr_24h_text = f"{r24['win_rate_pct']}% ({r24['trades']})" if r24.get('win_rate_pct') is not None else '—'
-            wr_12h_trades = r12.get('trades', 0)
-            wr_alltime_text = f"{s['paper_stats']['win_rate_pct']}% ({s['paper_stats']['closed_count']})"
+            # Top 3 strategies in last 6h for the win rate card
+            top3 = s['paper_stats'].get('top3_6h', [])
+            if top3:
+                best_wr = top3[0]['win_rate_pct']
+                wr_color = '#10b981' if best_wr >= 50 else ('#f59e0b' if best_wr >= 35 else '#ef4444')
+                top3_html_lines = []
+                medals = ['🥇', '🥈', '🥉']
+                for i, t in enumerate(top3):
+                    pnl_sign = '+' if t['avg_pnl_pct'] >= 0 else ''
+                    pnl_color_i = '#10b981' if t['avg_pnl_pct'] >= 0 else '#ef4444'
+                    top3_html_lines.append(
+                        f"<div style='display:flex;justify-content:space-between;align-items:center;padding:2px 0'>"
+                        f"<span>{medals[i]} {t['strategy']}</span>"
+                        f"<span style='font-weight:600'>{t['win_rate_pct']}% "
+                        f"<span style='color:{pnl_color_i};font-size:11px'>({pnl_sign}{t['avg_pnl_pct']:.2f}%)</span>"
+                        f" <span style='opacity:0.5;font-size:10px'>{t['trades']}t</span></span></div>"
+                    )
+                top3_html = ''.join(top3_html_lines)
+            else:
+                best_wr = 0
+                wr_color = '#64748b'
+                top3_html = "<div style='opacity:0.5;text-align:center;padding:4px'>collecting data...</div>"
 
             n_scorecard = len(s['strategy_pattern_scores'])
             n_confirmed = len(s['confirmed_signals'])
@@ -461,11 +470,9 @@ select:hover{{border-color:#60a5fa;box-shadow:0 0 10px rgba(96,165,250,.3)}}
 <div class='card'><div class='small'>Configured Tokens</div><div id='configured-count' class='stat-value'>{len(s['symbols_configured'])}</div></div>
 <div class='card'><div class='small'>Signals</div><div id='signals-count' class='stat-value'>{s['signals_total_window']}</div></div>
 <div class='card'><div class='small'>Confirmed</div><div id='confirmed-count' class='stat-value'>{len(s['confirmed_signals'])}</div></div>
-<div class='card'>
-  <div class='small'>Win Rate <span style='opacity:0.6'>({wr_label})</span></div>
-  <div id='paper-win-rate' class='stat-value' style='color:{wr_color}'>{wr_display}%</div>
-  <div class='win-rate-bar'><div class='win-rate-fill' style='width:{wr_bar}%'></div></div>
-  <div class='small' style='margin-top:4px;opacity:0.7;font-size:11px'>1h: {wr_1h_text} · 24h: {wr_24h_text} · all: {wr_alltime_text}</div>
+<div class='card' style='min-width:220px'>
+  <div class='small'>Top Strategies <span style='opacity:0.6'>(6h)</span></div>
+  <div id='top3-strategies' style='margin:6px 0;font-size:13px'>{top3_html}</div>
 </div>
 <div class='card'>
   <div class='small'>Data Quality</div>
@@ -579,9 +586,15 @@ function refreshSummary(){{
     var el;
     el=document.getElementById('signals-count');if(el)el.textContent=s.signals_total_window||0;
     el=document.getElementById('confirmed-count');if(el)el.textContent=(s.confirmed_signals||[]).length;
-    var r12=s.paper_stats&&s.paper_stats.rolling?s.paper_stats.rolling['12h']:{{}};
-    var wr=(r12&&r12.win_rate_pct!==null&&r12.win_rate_pct!==undefined)?r12.win_rate_pct:(s.paper_stats?s.paper_stats.win_rate_pct:0);
-    el=document.getElementById('paper-win-rate');if(el){{el.textContent=wr+'%';el.style.color=wr>=50?'#10b981':(wr>=35?'#f59e0b':'#ef4444')}}
+    var top3=s.paper_stats?s.paper_stats.top3_6h:[];
+    el=document.getElementById('top3-strategies');
+    if(el&&top3){{var medals=['🥇','🥈','🥉'];var h='';
+      for(var i=0;i<top3.length;i++){{var t=top3[i];var sign=t.avg_pnl_pct>=0?'+':'';var pc=t.avg_pnl_pct>=0?'#10b981':'#ef4444';
+        h+="<div style='display:flex;justify-content:space-between;align-items:center;padding:2px 0'>"+
+          "<span>"+medals[i]+' '+t.strategy+"</span>"+
+          "<span style='font-weight:600'>"+t.win_rate_pct+"% <span style='color:"+pc+";font-size:11px'>("+sign+t.avg_pnl_pct.toFixed(2)+"%)</span> <span style='opacity:0.5;font-size:10px'>"+t.trades+"t</span></span></div>"}}
+      if(!h)h="<div style='opacity:0.5;text-align:center;padding:4px'>collecting data...</div>";
+      el.innerHTML=h}}
     var ov=s.coverage_health_real||{{}};
     el=document.getElementById('coverage-health');
     if(el){{var h=String(ov.health||'critical').toLowerCase();el.textContent=h.toUpperCase();el.style.color=h==='good'?'#10b981':(h==='warn'?'#f59e0b':'#ef4444')}}

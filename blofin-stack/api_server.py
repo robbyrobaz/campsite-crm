@@ -49,6 +49,45 @@ def _grade_score(score: float) -> str:
     if score >= 40: return 'D'
     return 'F'
 
+def calculate_stats(trades):
+    """Calculate advanced trading stats: profit factor, Sortino ratio, max drawdown."""
+    if not trades:
+        return {'profit_factor': 0, 'sortino': 0, 'max_dd': 0, 'return_pct': 0}
+    
+    pnls = [t.get('pnl_pct', 0) for t in trades if t.get('pnl_pct')]
+    if not pnls:
+        return {'profit_factor': 0, 'sortino': 0, 'max_dd': 0, 'return_pct': 0}
+    
+    # Profit factor: gross profit / gross loss (avoid div by zero)
+    gains = sum(p for p in pnls if p > 0)
+    losses = abs(sum(p for p in pnls if p < 0))
+    profit_factor = (gains / losses) if losses > 0 else gains
+    
+    # Sortino ratio (downside deviation focus)
+    mean_pnl = sum(pnls) / len(pnls)
+    downside = [p for p in pnls if p < mean_pnl]
+    downside_std = (sum((p - mean_pnl) ** 2 for p in downside) / len(downside)) ** 0.5 if downside else 0
+    sortino = (mean_pnl / downside_std * (252 ** 0.5)) if downside_std > 0 else 0
+    
+    # Max drawdown
+    cumulative = 0
+    peak = 0
+    max_dd = 0
+    for p in pnls:
+        cumulative += p
+        if cumulative > peak:
+            peak = cumulative
+        dd = peak - cumulative
+        if dd > max_dd:
+            max_dd = dd
+    
+    return {
+        'profit_factor': round(profit_factor, 2),
+        'sortino': round(sortino, 2),
+        'max_dd': round(max_dd, 2),
+        'return_pct': round(sum(pnls), 2),
+    }
+
 def fetch_summary_data():
     """Fetch summary data (may be slow, runs in background)."""
     try:
@@ -121,6 +160,9 @@ def fetch_summary_data():
                 pnl_component = max(0.0, min(100.0, ((avg_pnl + 2.0) / 4.0) * 100.0))
                 score = (wr * 0.6) + (pnl_component * 0.4)
                 
+                # Calculate advanced stats
+                stats = calculate_stats(strat_trades)
+                
                 strategy_scores.append({
                     'strategy': strat_name,
                     'signals': strat_info['count'],
@@ -130,6 +172,9 @@ def fetch_summary_data():
                     'win_rate_pct': round(wr, 2),
                     'avg_pnl_pct': round(avg_pnl, 4),
                     'total_pnl_pct': round(total_pnl, 4),
+                    'profit_factor': stats['profit_factor'],
+                    'sortino': stats['sortino'],
+                    'max_dd': stats['max_dd'],
                     'score': round(score, 2),
                     'grade': _grade_score(score),
                 })
@@ -264,12 +309,12 @@ select{background:#0f172a;color:#e7ecff;border:1px solid #334155;padding:6px;bor
 </div>
 <div class="section">
 <h2>Top Strategies (25)</h2>
-<table><thead><tr><th>Strategy</th><th>Signals</th><th>Win%</th><th>Avg PnL%</th><th>Total%</th><th>Grade</th></tr></thead>
+<table><thead><tr><th>Strategy</th><th>Signals</th><th>Trades</th><th>Win%</th><th>PnL%</th><th>Profit Factor</th><th>Sortino</th><th>Max DD%</th><th>Grade</th></tr></thead>
 <tbody id="strats"></tbody></table>
 </div>
 <div class="section">
-<h2>Top 10 Trades by PnL</h2>
-<table><thead><tr><th>Symbol</th><th>Side</th><th>Entry</th><th>Exit</th><th>PnL%</th><th>Status</th></tr></thead>
+<h2>Top 10 Paper Trades by PnL</h2>
+<table><thead><tr><th>Symbol</th><th>Side</th><th>Entry</th><th>Exit</th><th>Paper PnL%</th><th>Status</th></tr></thead>
 <tbody id="trades"></tbody></table>
 </div>
 <div class="section">
@@ -318,16 +363,17 @@ async function render(){
     
     let h='';
     for(let s of d.strategy_scores){
-      const c=s.avg_pnl_pct>=0?'positive':'negative';
-      h+='<tr><td>'+s.strategy+'</td><td>'+s.signals+'</td><td>'+s.win_rate_pct+'%</td><td class="'+c+'">'+s.avg_pnl_pct.toFixed(3)+'%</td><td class="'+c+'">'+s.total_pnl_pct.toFixed(1)+'%</td><td>'+s.grade+'</td></tr>';
+      const c=s.total_pnl_pct>=0?'positive':'negative';
+      const pf=s.profit_factor>1.5?'positive':(s.profit_factor>1?'#999':' negative');
+      h+='<tr><td>'+s.strategy+'</td><td>'+s.signals+'</td><td>'+s.closed_count+'</td><td>'+s.win_rate_pct+'%</td><td class="'+c+'">'+s.total_pnl_pct.toFixed(1)+'%</td><td style="color:'+pf+'">'+s.profit_factor+'</td><td>'+s.sortino.toFixed(2)+'</td><td>'+s.max_dd.toFixed(2)+'%</td><td>'+s.grade+'</td></tr>';
     }
     document.getElementById('strats').innerHTML=h;
     
-    // Top 10 trades
+    // Top 10 paper trades
     h='';
     for(let t of (d.top_trades||[])){
       const c=t.pnl_pct>=0?'positive':'negative';
-      h+='<tr><td>'+t.symbol+'</td><td>'+t.side+'</td><td>'+t.entry_price.toFixed(4)+'</td><td>'+(t.exit_price?t.exit_price.toFixed(4):'-')+'</td><td class="'+c+'">'+t.pnl_pct.toFixed(2)+'%</td><td>'+t.status+'</td></tr>';
+      h+='<tr><td>'+t.symbol+'</td><td>'+t.side+'</td><td>'+t.entry_price.toFixed(4)+'</td><td>'+(t.exit_price?t.exit_price.toFixed(4):'-')+'</td><td class="'+c+'" title="PAPER TRADING ONLY">'+t.pnl_pct.toFixed(2)+'%</td><td>'+t.status+'</td></tr>';
     }
     document.getElementById('trades').innerHTML=h;
     

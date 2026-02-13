@@ -264,363 +264,188 @@ class H(BaseHTTPRequestHandler):
 
         if p.path == '/':
             s = fetch_summary()
-            
-            # Helper for PnL coloring
+
             def pnl_color(val):
                 if val is None or val == '':
                     return '#9fb0e6'
                 try:
                     v = float(val)
                     return '#10b981' if v > 0 else ('#ef4444' if v < 0 else '#9fb0e6')
-                except:
+                except Exception:
                     return '#9fb0e6'
-            
-            # Helper for grade color
+
             def grade_color(grade):
-                if grade == 'A': return '#10b981'
-                if grade == 'B': return '#3b82f6'
-                if grade == 'C': return '#f59e0b'
-                if grade == 'D': return '#f97316'
-                if grade == 'F': return '#ef4444'
-                return '#6b7280'
-            
-            # Helper for signal color
-            def signal_color(sig):
-                if 'BUY' in sig.upper():
-                    return '#10b981'
-                elif 'SELL' in sig.upper():
-                    return '#ef4444'
-                return '#3b82f6'
-            
+                colors = {'A': '#10b981', 'B': '#3b82f6', 'C': '#f59e0b', 'D': '#f97316', 'F': '#ef4444'}
+                return colors.get(grade, '#6b7280')
+
+            LIMIT = 5
+
+            scorecard_rows = ''.join([
+                f"<tr class='{'hidden-row' if i >= LIMIT else ''}' data-table='scorecard'>"
+                f"<td>{r['strategy']}</td>"
+                f"<td><span class='pill pill-{'buy' if 'BUY' in r['pattern'].upper() else 'sell'}'>{r['pattern']}</span></td>"
+                f"<td>{r['closed_count']}</td>"
+                f"<td>{r['win_rate_pct']}%</td>"
+                f"<td style='color:{pnl_color(r['avg_pnl_pct'])};font-weight:600'>{r['avg_pnl_pct']}</td>"
+                f"<td style='color:{pnl_color(r['total_pnl_pct'])};font-weight:700'>{r['total_pnl_pct']}</td>"
+                f"<td>{r['score'] if r['score'] is not None else 'N/A'}</td>"
+                f"<td><span class='grade-badge' style='background:{grade_color(r['grade'])};color:white'>{r['grade']}</span></td>"
+                f"</tr>"
+                for i, r in enumerate(s['strategy_pattern_scores'])
+            ])
+
+            confirmed_rows = ''.join([
+                f"<tr class='{'hidden-row' if i >= LIMIT else ''}' data-table='confirmed'>"
+                f"<td>{r['ts_iso'][11:19]}</td>"
+                f"<td><strong>{r['symbol']}</strong></td>"
+                f"<td><span class='pill pill-{'buy' if 'BUY' in r['signal'].upper() else 'sell'}'>{r['signal']}</span></td>"
+                f"<td style='font-weight:600;color:#60a5fa'>{r['score']}</td>"
+                f"<td style='font-size:12px;color:#94a3b8'>{r['rationale'][:100]}</td>"
+                f"</tr>"
+                for i, r in enumerate(s['confirmed_signals'])
+            ])
+
+            paper_rows = ''.join([
+                f"<tr class='{'hidden-row' if i >= LIMIT else ''}' data-table='trades'>"
+                f"<td><strong>{r['symbol']}</strong></td>"
+                f"<td><span class='pill pill-{'buy' if r['side'] == 'BUY' else 'sell'}'>{r['side']}</span></td>"
+                f"<td>{r['status']}</td>"
+                f"<td style='color:#94a3b8'>{r['entry_price']}</td>"
+                f"<td style='color:#94a3b8'>{r['exit_price'] or '—'}</td>"
+                f"<td style='color:{pnl_color(r['pnl_pct'])};font-weight:700'>{r['pnl_pct'] if r['pnl_pct'] else '—'}</td>"
+                f"<td style='font-size:11px;color:#64748b'>{(r['reason'] or '')[:80]}</td>"
+                f"</tr>"
+                for i, r in enumerate(s['paper_trades'])
+            ])
+
+            quality_rows = ''.join([
+                f"<tr class='{'hidden-row' if i >= LIMIT else ''}' data-table='quality'>"
+                f"<td><strong>{r['symbol']}</strong></td>"
+                f"<td>{r['hours_active']:.1f}h</td>"
+                f"<td style='color:{('#10b981' if r['coverage_pct'] >= 99.5 else ('#f59e0b' if r['coverage_pct'] >= 97 else '#ef4444'))};font-weight:600'>{r['coverage_pct']:.2f}%</td>"
+                f"<td style='color:#94a3b8;font-size:12px'>{r['actual_minutes']:,} / {r['expected_minutes']:,}</td>"
+                f"<td style='color:#ef4444;font-weight:600'>{r['missing_minutes']:,}</td>"
+                f"</tr>"
+                for i, r in enumerate(s['coverage_since_start'])
+            ])
+
+            gap_rows = ''.join([
+                f"<tr class='{'hidden-row' if i >= LIMIT else ''}' data-table='gaps'>"
+                f"<td>{g['ts_iso'][11:19]}</td>"
+                f"<td><strong>{g['symbol']}</strong></td>"
+                f"<td style='color:#f59e0b;font-weight:600'>{g['gaps_found']}</td>"
+                f"<td style='color:#10b981;font-weight:600'>{g['rows_inserted']}</td>"
+                f"<td style='font-size:11px;color:#64748b'>{g['note'][:80]}</td>"
+                f"</tr>"
+                for i, g in enumerate(s['gap_fill_runs'])
+            ])
+
+            badges = ''.join([f"<span class='badge'>{x}</span>" for x in s['symbols_configured']])
+            options = ''.join([f"<option>{x}</option>" for x in s['symbols_configured']])
+
+            live_class = 'live-indicator' if s['live_status']['is_live'] else ''
+            live_color = '#10b981' if s['live_status']['is_live'] else '#ef4444'
+            live_text = 'LIVE' if s['live_status']['is_live'] else 'STALE'
+            live_secs = s['live_status']['seconds_since_last_tick'] if s['live_status']['seconds_since_last_tick'] is not None else 'n/a'
+            dq_health = str(s['coverage_health_real']['health']).upper()
+            dq_color = '#10b981' if s['coverage_health_real']['health'] == 'good' else ('#f59e0b' if s['coverage_health_real']['health'] == 'warn' else '#ef4444')
+            wr_color = '#10b981' if s['paper_stats']['win_rate_pct'] >= 50 else '#f59e0b'
+            wr_bar = min(100, s['paper_stats']['win_rate_pct'])
+
+            n_scorecard = len(s['strategy_pattern_scores'])
+            n_confirmed = len(s['confirmed_signals'])
+            n_trades = len(s['paper_trades'])
+            n_quality = len(s['coverage_since_start'])
+            n_gaps = len(s['gap_fill_runs'])
+
             html = f"""<!doctype html><html><head><meta charset='utf-8'><title>Blofin 24/7 Dashboard</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src='https://cdn.jsdelivr.net/npm/chart.js'></script>
 <style>
-* {{box-sizing: border-box;}}
-body {{
-  margin:0;
-  background: linear-gradient(135deg, #0a0e1a 0%, #0f1629 100%);
-  color:#e7ecff;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Arial, sans-serif;
-  animation: fadeIn 0.6s ease-in;
-}}
-@keyframes fadeIn {{
-  from {{ opacity: 0; }}
-  to {{ opacity: 1; }}
-}}
-@keyframes pulse {{
-  0%, 100% {{ opacity: 1; }}
-  50% {{ opacity: 0.6; }}
-}}
-.wrap {{
-  max-width:1400px;
-  margin:0 auto;
-  padding:24px;
-}}
-h1 {{
-  font-size: 32px;
-  font-weight: 700;
-  background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0 0 24px 0;
-}}
-.section-title {{
-  font-size: 14px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #94a3b8;
-  margin: 32px 0 16px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #1e293b;
-}}
-.grid {{
-  display:grid;
-  grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
-  gap:16px;
-  margin-bottom: 20px;
-}}
-.card {{
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid rgba(148, 163, 184, 0.1);
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 0 20px rgba(99, 102, 241, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  position: relative;
-  overflow: hidden;
-}}
-.card::before {{
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6, #ec4899);
-  opacity: 0.6;
-}}
-.card:hover {{
-  transform: translateY(-2px);
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.4), 0 0 30px rgba(99, 102, 241, 0.15);
-}}
-.small {{
-  font-size:11px;
-  color:#94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  font-weight: 600;
-  margin-bottom: 8px;
-}}
-.stat-value {{
-  font-size:28px;
-  font-weight:700;
-  line-height: 1.2;
-}}
-.live-indicator {{
-  animation: pulse 2s ease-in-out infinite;
-}}
-table {{
-  width:100%;
-  border-collapse:collapse;
-  font-size:13px;
-}}
-thead {{
-  background: rgba(30, 41, 59, 0.5);
-}}
-th {{
-  padding:12px;
-  text-align:left;
-  font-weight:600;
-  color:#cbd5e1;
-  text-transform: uppercase;
-  font-size: 11px;
-  letter-spacing: 0.5px;
-  border-bottom: 2px solid #334155;
-}}
-td {{
-  padding:12px;
-  border-bottom:1px solid rgba(51, 65, 85, 0.3);
-}}
-tbody tr {{
-  transition: background-color 0.15s ease;
-}}
-tbody tr:nth-child(even) {{
-  background: rgba(30, 41, 59, 0.2);
-}}
-tbody tr:hover {{
-  background: rgba(59, 130, 246, 0.1);
-}}
-select {{
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  color:#e7ecff;
-  border:1px solid rgba(148, 163, 184, 0.3);
-  padding:10px 16px;
-  border-radius:10px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}}
-select:hover {{
-  border-color: #60a5fa;
-  box-shadow: 0 0 10px rgba(96, 165, 250, 0.3);
-}}
-.badge {{
-  display:inline-block;
-  padding:6px 12px;
-  border-radius:20px;
-  background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
-  margin:4px 6px 4px 0;
-  font-size: 12px;
-  font-weight: 600;
-  border: 1px solid rgba(96, 165, 250, 0.3);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  transition: transform 0.15s ease;
-}}
-.badge:hover {{
-  transform: scale(1.05);
-}}
-.chart-container {{
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid rgba(148, 163, 184, 0.1);
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 0 30px rgba(139, 92, 246, 0.1);
-  margin: 24px 0;
-}}
-.chart-header {{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom: 20px;
-}}
-.chart-header h3 {{
-  margin:0;
-  font-size: 20px;
-  font-weight: 600;
-  color: #e2e8f0;
-}}
-.table-container {{
-  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-  border: 1px solid rgba(148, 163, 184, 0.1);
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-  margin: 16px 0;
-  overflow: hidden;
-}}
-.table-container h3 {{
-  margin:0 0 16px 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: #e2e8f0;
-}}
-.table-wrapper {{
-  overflow-x: auto;
-}}
-.toggle-btn {{
-  margin-top: 16px;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}}
-.toggle-btn:hover {{
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
-}}
-.pill {{
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-}}
-.pill-buy {{
-  background: rgba(16, 185, 129, 0.2);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.4);
-}}
-.pill-sell {{
-  background: rgba(239, 68, 68, 0.2);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.4);
-}}
-.grade-badge {{
-  display: inline-block;
-  padding: 4px 10px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 700;
-  text-align: center;
-  min-width: 32px;
-}}
-.footer {{
-  margin-top: 48px;
-  padding: 24px 0;
-  text-align: center;
-  color: #64748b;
-  font-size: 13px;
-  border-top: 1px solid rgba(51, 65, 85, 0.3);
-}}
-.footer strong {{
-  color: #94a3b8;
-  font-weight: 600;
-}}
-.win-rate-bar {{
-  display: inline-block;
-  width: 60px;
-  height: 8px;
-  background: rgba(100, 116, 139, 0.3);
-  border-radius: 4px;
-  overflow: hidden;
-  vertical-align: middle;
-  margin-left: 8px;
-}}
-.win-rate-fill {{
-  height: 100%;
-  background: linear-gradient(90deg, #10b981, #059669);
-  transition: width 0.3s ease;
-}}
-@media (max-width: 768px) {{
-  .grid {{
-    grid-template-columns: repeat(2, 1fr);
-  }}
-  h1 {{
-    font-size: 24px;
-  }}
-  .wrap {{
-    padding: 16px;
-  }}
-}}
-</style>
-</head>
-<body>
-<div class='wrap'>
+*{{box-sizing:border-box}}
+body{{margin:0;background:linear-gradient(135deg,#0a0e1a 0%,#0f1629 100%);color:#e7ecff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Arial,sans-serif;animation:fadeIn .6s ease-in}}
+@keyframes fadeIn{{from{{opacity:0}}to{{opacity:1}}}}
+@keyframes pulse{{0%,100%{{opacity:1}}50%{{opacity:.6}}}}
+.wrap{{max-width:1400px;margin:0 auto;padding:24px}}
+h1{{font-size:32px;font-weight:700;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:0 0 24px}}
+.section-title{{font-size:14px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin:32px 0 16px;padding-bottom:8px;border-bottom:2px solid #1e293b}}
+.grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-bottom:20px}}
+.card{{background:linear-gradient(135deg,#1e293b,#0f172a);border:1px solid rgba(148,163,184,.1);border-radius:16px;padding:20px;box-shadow:0 4px 6px rgba(0,0,0,.3),0 0 20px rgba(99,102,241,.05);transition:transform .2s,box-shadow .2s;position:relative;overflow:hidden}}
+.card::before{{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#3b82f6,#8b5cf6,#ec4899);opacity:.6}}
+.card:hover{{transform:translateY(-2px);box-shadow:0 8px 12px rgba(0,0,0,.4),0 0 30px rgba(99,102,241,.15)}}
+.small{{font-size:11px;color:#94a3b8;text-transform:uppercase;letter-spacing:.5px;font-weight:600;margin-bottom:8px}}
+.stat-value{{font-size:28px;font-weight:700;line-height:1.2}}
+.live-indicator{{animation:pulse 2s ease-in-out infinite}}
+table{{width:100%;border-collapse:collapse;font-size:13px}}
+thead{{background:rgba(30,41,59,.5)}}
+th{{padding:12px;text-align:left;font-weight:600;color:#cbd5e1;text-transform:uppercase;font-size:11px;letter-spacing:.5px;border-bottom:2px solid #334155}}
+td{{padding:12px;border-bottom:1px solid rgba(51,65,85,.3)}}
+tbody tr{{transition:background-color .15s}}
+tbody tr:nth-child(even){{background:rgba(30,41,59,.2)}}
+tbody tr:hover{{background:rgba(59,130,246,.1)}}
+select{{background:linear-gradient(135deg,#1e293b,#0f172a);color:#e7ecff;border:1px solid rgba(148,163,184,.3);padding:10px 16px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s}}
+select:hover{{border-color:#60a5fa;box-shadow:0 0 10px rgba(96,165,250,.3)}}
+.badge{{display:inline-block;padding:6px 12px;border-radius:20px;background:linear-gradient(135deg,#1e40af,#3730a3);margin:4px 6px 4px 0;font-size:12px;font-weight:600;border:1px solid rgba(96,165,250,.3);box-shadow:0 2px 4px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.1);transition:transform .15s}}
+.badge:hover{{transform:scale(1.05)}}
+.chart-container{{background:linear-gradient(135deg,#1e293b,#0f172a);border:1px solid rgba(148,163,184,.1);border-radius:16px;padding:24px;box-shadow:0 4px 6px rgba(0,0,0,.3),0 0 30px rgba(139,92,246,.1);margin:24px 0}}
+.chart-header{{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}}
+.chart-header h3{{margin:0;font-size:20px;font-weight:600;color:#e2e8f0}}
+.table-container{{background:linear-gradient(135deg,#1e293b,#0f172a);border:1px solid rgba(148,163,184,.1);border-radius:16px;padding:24px;box-shadow:0 4px 6px rgba(0,0,0,.3);margin:16px 0;overflow:hidden}}
+.table-container h3{{margin:0 0 16px;font-size:18px;font-weight:600;color:#e2e8f0}}
+.table-wrapper{{overflow-x:auto}}
+.toggle-btn{{margin-top:16px;padding:10px 20px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;border:none;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;transition:all .2s;box-shadow:0 2px 4px rgba(0,0,0,.2)}}
+.toggle-btn:hover{{transform:translateY(-1px);box-shadow:0 4px 8px rgba(59,130,246,.4)}}
+.pill{{display:inline-block;padding:4px 10px;border-radius:12px;font-size:11px;font-weight:600;text-transform:uppercase}}
+.pill-buy{{background:rgba(16,185,129,.2);color:#10b981;border:1px solid rgba(16,185,129,.4)}}
+.pill-sell{{background:rgba(239,68,68,.2);color:#ef4444;border:1px solid rgba(239,68,68,.4)}}
+.grade-badge{{display:inline-block;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:700;text-align:center;min-width:32px}}
+.footer{{margin-top:48px;padding:24px 0;text-align:center;color:#64748b;font-size:13px;border-top:1px solid rgba(51,65,85,.3)}}
+.footer strong{{color:#94a3b8;font-weight:600}}
+.win-rate-bar{{display:inline-block;width:60px;height:8px;background:rgba(100,116,139,.3);border-radius:4px;overflow:hidden;vertical-align:middle;margin-left:8px}}
+.win-rate-fill{{height:100%;background:linear-gradient(90deg,#10b981,#059669);transition:width .3s}}
+.hidden-row{{display:none}}
+@media(max-width:768px){{.grid{{grid-template-columns:repeat(2,1fr)}}h1{{font-size:24px}}.wrap{{padding:16px}}}}
+</style></head>
+<body><div class='wrap'>
 <h1>Blofin 24/7 Pattern Dashboard</h1>
 
 <div class='grid'>
 <div class='card'>
   <div class='small'>Live Feed</div>
-  <div id='live-pill' class='stat-value {"live-indicator" if s['live_status']['is_live'] else ""}' style='color:{"#10b981" if s['live_status']['is_live'] else "#ef4444"}'>{'LIVE' if s['live_status']['is_live'] else 'STALE'}</div>
-  <div class='small' id='live-detail'>{s['live_status']['ticks_10s']} ticks / 10s · {s['live_status']['seconds_since_last_tick'] if s['live_status']['seconds_since_last_tick'] is not None else 'n/a'}s ago</div>
+  <div id='live-pill' class='stat-value {live_class}' style='color:{live_color}'>{live_text}</div>
+  <div class='small' id='live-detail'>{s['live_status']['ticks_10s']} ticks / 10s · {live_secs}s ago</div>
 </div>
-<div class='card'>
-  <div class='small'>Configured Tokens</div>
-  <div id='configured-count' class='stat-value'>{len(s['symbols_configured'])}</div>
-</div>
-<div class='card'>
-  <div class='small'>Signals</div>
-  <div id='signals-count' class='stat-value'>{s['signals_total_window']}</div>
-</div>
-<div class='card'>
-  <div class='small'>Confirmed</div>
-  <div id='confirmed-count' class='stat-value'>{len(s['confirmed_signals'])}</div>
-</div>
+<div class='card'><div class='small'>Configured Tokens</div><div id='configured-count' class='stat-value'>{len(s['symbols_configured'])}</div></div>
+<div class='card'><div class='small'>Signals</div><div id='signals-count' class='stat-value'>{s['signals_total_window']}</div></div>
+<div class='card'><div class='small'>Confirmed</div><div id='confirmed-count' class='stat-value'>{len(s['confirmed_signals'])}</div></div>
 <div class='card'>
   <div class='small'>Paper Win Rate</div>
-  <div id='paper-win-rate' class='stat-value' style='color:#{"10b981" if s["paper_stats"]["win_rate_pct"] >= 50 else "f59e0b"}'>{s['paper_stats']['win_rate_pct']}%</div>
-  <div class='win-rate-bar'><div class='win-rate-fill' style='width:{min(100, s["paper_stats"]["win_rate_pct"])}%'></div></div>
+  <div id='paper-win-rate' class='stat-value' style='color:{wr_color}'>{s['paper_stats']['win_rate_pct']}%</div>
+  <div class='win-rate-bar'><div class='win-rate-fill' style='width:{wr_bar}%'></div></div>
 </div>
 <div class='card'>
   <div class='small'>Data Quality</div>
-  <div id='coverage-health' class='stat-value' style='color:{"#10b981" if s['coverage_health_real']['health']=='good' else ("#f59e0b" if s['coverage_health_real']['health']=='warn' else "#ef4444")}'>{{str(s['coverage_health_real']['health']).upper()}}</div>
+  <div id='coverage-health' class='stat-value' style='color:{dq_color}'>{dq_health}</div>
   <div class='small' id='coverage-detail'>worst {s['coverage_health_real']['worst_coverage_pct']}% since start</div>
 </div>
 </div>
 
-<div style='margin: 20px 0;'>
-{''.join([f"<span class='badge'>{x}</span>" for x in s['symbols_configured']])}
-</div>
+<div style='margin:20px 0'>{badges}</div>
 
 <div class='section-title'>🏆 Strategy Performance Scorecard</div>
 <div class='table-container'>
-<h3>Top performing strategies & patterns</h3>
+<h3>Top performing strategies &amp; patterns</h3>
 <div class='table-wrapper'>
-<table id='scorecard-table'><thead><tr><th>Strategy</th><th>Pattern</th><th>Closed</th><th>Win%</th><th>Avg PnL%</th><th>Total PnL%</th><th>Score</th><th>Grade</th></tr></thead>
-<tbody>
-{''.join([f"<tr class='{'hidden-row' if i >= 10 else ''}' data-table='scorecard'><td>{r['strategy']}</td><td><span class='pill pill-{"buy" if "BUY" in r["pattern"].upper() else "sell"}'>{r['pattern']}</span></td><td>{r['closed_count']}</td><td>{r['win_rate_pct']}%</td><td style='color:{pnl_color(r["avg_pnl_pct"])};font-weight:600'>{r['avg_pnl_pct']}</td><td style='color:{pnl_color(r["total_pnl_pct"])};font-weight:700'>{r['total_pnl_pct']}</td><td>{r['score'] if r['score'] is not None else 'N/A'}</td><td><span class='grade-badge' style='background:{grade_color(r["grade"])};color:white'>{r['grade']}</span></td></tr>" for i, r in enumerate(s['strategy_pattern_scores'])])}
-</tbody>
-</table>
-</div>
-<button class='toggle-btn' onclick='toggleTable("scorecard", {len(s["strategy_pattern_scores"])})' id='toggle-scorecard'>Show all ({len(s['strategy_pattern_scores'])})</button>
+<table><thead><tr><th>Strategy</th><th>Pattern</th><th>Closed</th><th>Win%</th><th>Avg PnL%</th><th>Total PnL%</th><th>Score</th><th>Grade</th></tr></thead>
+<tbody>{scorecard_rows}</tbody></table></div>
+{f"<button class='toggle-btn' onclick='toggleTable(this,\"scorecard\",{n_scorecard})'>Show all ({n_scorecard})</button>" if n_scorecard > LIMIT else ""}
 </div>
 
 <div class='section-title'>📈 Live Price Chart</div>
 <div class='chart-container'>
 <div class='chart-header'>
 <h3>Token Price Movement</h3>
-<div><select id='sym'>{''.join([f"<option>{x}</option>" for x in s['symbols_configured']])}</select></div>
+<div><select id='sym'>{options}</select></div>
 </div>
 <canvas id='chart' height='80'></canvas>
 </div>
@@ -629,202 +454,103 @@ select:hover {{
 <div class='table-container'>
 <h3>High-confidence pattern detections</h3>
 <div class='table-wrapper'>
-<table id='confirmed-table'><thead><tr><th>Time</th><th>Symbol</th><th>Signal</th><th>Score</th><th>Rationale</th></tr></thead>
-<tbody>
-{''.join([f"<tr class='{'hidden-row' if i >= 10 else ''}' data-table='confirmed'><td>{r['ts_iso'][11:19]}</td><td><strong>{r['symbol']}</strong></td><td><span class='pill pill-{"buy" if "BUY" in r["signal"].upper() else "sell"}'>{r['signal']}</span></td><td style='font-weight:600;color:#60a5fa'>{r['score']}</td><td style='font-size:12px;color:#94a3b8'>{r['rationale'][:100]}</td></tr>" for i, r in enumerate(s['confirmed_signals'])])}
-</tbody>
-</table>
-</div>
-<button class='toggle-btn' onclick='toggleTable("confirmed", {len(s["confirmed_signals"])})' id='toggle-confirmed'>Show all ({len(s['confirmed_signals'])})</button>
+<table><thead><tr><th>Time</th><th>Symbol</th><th>Signal</th><th>Score</th><th>Rationale</th></tr></thead>
+<tbody>{confirmed_rows}</tbody></table></div>
+{f"<button class='toggle-btn' onclick='toggleTable(this,\"confirmed\",{n_confirmed})'>Show all ({n_confirmed})</button>" if n_confirmed > LIMIT else ""}
 </div>
 
 <div class='section-title'>💼 Paper Trades</div>
 <div class='table-container'>
 <h3>Simulated trade executions</h3>
 <div class='table-wrapper'>
-<table id='trades-table'><thead><tr><th>Symbol</th><th>Side</th><th>Status</th><th>Entry</th><th>Exit</th><th>PNL%</th><th>Reason</th></tr></thead>
-<tbody>
-{''.join([f"<tr class='{'hidden-row' if i >= 10 else ''}' data-table='trades'><td><strong>{r['symbol']}</strong></td><td><span class='pill pill-{"buy" if r["side"]=="LONG" else "sell"}'>{r['side']}</span></td><td>{r['status']}</td><td style='color:#94a3b8'>{r['entry_price']}</td><td style='color:#94a3b8'>{r['exit_price'] or '—'}</td><td style='color:{pnl_color(r["pnl_pct"])};font-weight:700'>{r['pnl_pct'] if r['pnl_pct'] else '—'}</td><td style='font-size:11px;color:#64748b'>{(r['reason'] or '')[:80]}</td></tr>" for i, r in enumerate(s['paper_trades'])])}
-</tbody>
-</table>
-</div>
-<button class='toggle-btn' onclick='toggleTable("trades", {len(s["paper_trades"])})' id='toggle-trades'>Show all ({len(s['paper_trades'])})</button>
+<table><thead><tr><th>Symbol</th><th>Side</th><th>Status</th><th>Entry</th><th>Exit</th><th>PNL%</th><th>Reason</th></tr></thead>
+<tbody>{paper_rows}</tbody></table></div>
+{f"<button class='toggle-btn' onclick='toggleTable(this,\"trades\",{n_trades})'>Show all ({n_trades})</button>" if n_trades > LIMIT else ""}
 </div>
 
 <div class='section-title'>📊 Data Quality Per Symbol</div>
 <div class='table-container'>
 <h3>Coverage metrics since first data point</h3>
 <div class='table-wrapper'>
-<table id='quality-table'><thead><tr><th>Symbol</th><th>Hours Active</th><th>Coverage</th><th>Minutes</th><th>Missing</th></tr></thead>
-<tbody>
-{''.join([f"<tr class='{'hidden-row' if i >= 10 else ''}' data-table='quality'><td><strong>{r['symbol']}</strong></td><td>{r['hours_active']:.1f}h</td><td style='color:{("#10b981" if r["coverage_pct"] >= 99.5 else ("#f59e0b" if r["coverage_pct"] >= 97 else "#ef4444"))};font-weight:600'>{r['coverage_pct']:.2f}%</td><td style='color:#94a3b8;font-size:12px'>{r['actual_minutes']:,} / {r['expected_minutes']:,}</td><td style='color:#ef4444;font-weight:600'>{r['missing_minutes']:,}</td></tr>" for i, r in enumerate(s['coverage_since_start'])])}
-</tbody>
-</table>
-</div>
-<button class='toggle-btn' onclick='toggleTable("quality", {len(s["coverage_since_start"])})' id='toggle-quality'>Show all ({len(s['coverage_since_start'])})</button>
+<table><thead><tr><th>Symbol</th><th>Hours Active</th><th>Coverage</th><th>Minutes</th><th>Missing</th></tr></thead>
+<tbody>{quality_rows}</tbody></table></div>
+{f"<button class='toggle-btn' onclick='toggleTable(this,\"quality\",{n_quality})'>Show all ({n_quality})</button>" if n_quality > LIMIT else ""}
 </div>
 
 <div class='section-title'>🔧 Gap Fill Operations</div>
 <div class='table-container'>
 <h3>Historical data backfill runs</h3>
 <div class='table-wrapper'>
-<table id='gaps-table'><thead><tr><th>Run Time</th><th>Symbol</th><th>Gaps Found</th><th>Rows Inserted</th><th>Note</th></tr></thead>
-<tbody>
-{''.join([f"<tr class='{'hidden-row' if i >= 10 else ''}' data-table='gaps'><td>{g['ts_iso'][11:19]}</td><td><strong>{g['symbol']}</strong></td><td style='color:#f59e0b;font-weight:600'>{g['gaps_found']}</td><td style='color:#10b981;font-weight:600'>{g['rows_inserted']}</td><td style='font-size:11px;color:#64748b'>{g['note'][:80]}</td></tr>" for i, g in enumerate(s['gap_fill_runs'])])}
-</tbody>
-</table>
-</div>
-<button class='toggle-btn' onclick='toggleTable("gaps", {len(s["gap_fill_runs"])})' id='toggle-gaps'>Show all ({len(s['gap_fill_runs'])})</button>
+<table><thead><tr><th>Run Time</th><th>Symbol</th><th>Gaps Found</th><th>Rows Inserted</th><th>Note</th></tr></thead>
+<tbody>{gap_rows}</tbody></table></div>
+{f"<button class='toggle-btn' onclick='toggleTable(this,\"gaps\",{n_gaps})'>Show all ({n_gaps})</button>" if n_gaps > LIMIT else ""}
 </div>
 
 <div class='footer'>
 <strong>Blofin 24/7 Monitor</strong> · Last updated: <span id='timestamp'>{time.strftime('%Y-%m-%d %H:%M:%S')}</span>
 </div>
-
 </div>
 
 <script>
-let ch;
-
-function toggleTable(name, total) {{{{
-  const rows = document.querySelectorAll(`tr.hidden-row[data-table="${{name}}"]`);
-  const btn = document.getElementById(`toggle-${{name}}`);
-  const isHidden = rows[0]?.classList.contains('hidden-row');
-  
-  rows.forEach(row => {{{{
-    if (isHidden) {{{{
-      row.style.display = '';
-      row.classList.remove('hidden-row');
-    }}}} else {{{{
-      row.style.display = 'none';
-      row.classList.add('hidden-row');
-    }}}}
-  }}}});
-  
-  btn.textContent = isHidden ? 'Show less' : `Show all (${{total}})`;
-}}}}
-
-document.querySelectorAll('.hidden-row').forEach(row => {{{{
-  row.style.display = 'none';
-}}}});
-
-async function loadSym(sym) {{{{
-  const r = await fetch('/api/timeseries?symbol=' + encodeURIComponent(sym) + '&limit=300');
-  const d = await r.json();
-  const labels = d.map(x => x.ts_iso.slice(11,19));
-  const vals = d.map(x => x.price);
-  if(ch) ch.destroy();
-  ch = new Chart(document.getElementById('chart'), {{{{
-    type: 'line',
-    data: {{{{
-      labels,
-      datasets: [{{{{
-        label: sym,
-        data: vals,
-        borderColor: '#8b5cf6',
-        backgroundColor: 'rgba(139, 92, 246, 0.1)',
-        borderWidth: 2,
-        pointRadius: 0,
-        tension: 0.1,
-        fill: true
-      }}}}]
-    }}}},
-    options: {{{{
-      responsive: true,
-      maintainAspectRatio: true,
-      plugins: {{{{
-        legend: {{{{
-          display: true,
-          labels: {{{{
-            color: '#e2e8f0',
-            font: {{{{
-              size: 13,
-              weight: 600
-            }}}}
-          }}}}
-        }}}}
-      }}}},
-      scales: {{{{
-        x: {{{{
-          ticks: {{{{ color: '#64748b', maxRotation: 0 }}}},
-          grid: {{{{ color: 'rgba(51, 65, 85, 0.3)' }}}}
-        }}}},
-        y: {{{{
-          ticks: {{{{ color: '#64748b' }}}},
-          grid: {{{{ color: 'rgba(51, 65, 85, 0.3)' }}}}
-        }}}}
-      }}}}
-    }}}}
-  }});
-}}}}
-
-function renderLive(status) {{{{
-  const live = !!status?.is_live;
-  const pill = document.getElementById('live-pill');
-  const detail = document.getElementById('live-detail');
-  if (!pill || !detail) return;
-  pill.textContent = live ? 'LIVE' : 'STALE';
-  pill.style.color = live ? '#10b981' : '#ef4444';
-  if (live) {{{{
-    pill.classList.add('live-indicator');
-  }}}} else {{{{
-    pill.classList.remove('live-indicator');
-  }}}}
-  const age = status?.seconds_since_last_tick;
-  detail.textContent = `${{status?.ticks_10s ?? 0}} ticks / 10s · ${{age ?? 'n/a'}}s ago`;
-}}}}
-
-async function refreshSummary() {{{{
-  try {{{{
-    const r = await fetch('/api/summary');
-    const s = await r.json();
-    renderLive(s.live_status || {{}});
-    
-    const signals = document.getElementById('signals-count');
-    const confirmed = document.getElementById('confirmed-count');
-    const win = document.getElementById('paper-win-rate');
-    const coverage = document.getElementById('coverage-health');
-    const coverageDetail = document.getElementById('coverage-detail');
-    const timestamp = document.getElementById('timestamp');
-    
-    if (signals) signals.textContent = s.signals_total_window ?? 0;
-    if (confirmed) confirmed.textContent = (s.confirmed_signals || []).length;
-    
-    const winRate = s.paper_stats?.win_rate_pct ?? 0;
-    if (win) {{{{
-      win.textContent = `${{winRate}}%`;
-      win.style.color = winRate >= 50 ? '#10b981' : '#f59e0b';
-    }}}}
-    
-    const ov = s.coverage_health_real || {{}};
-    if (coverage) {{{{
-      const health = String(ov.health || 'critical').toLowerCase();
-      coverage.textContent = health.toUpperCase();
-      coverage.style.color = health === 'good' ? '#10b981' : (health === 'warn' ? '#f59e0b' : '#ef4444');
-    }}}}
-    if (coverageDetail) {{{{
-      coverageDetail.textContent = `worst ${{ov.worst_coverage_pct ?? 0}}% since start`;
-    }}}}
-    if (timestamp) {{{{
-      const now = new Date();
-      timestamp.textContent = now.toISOString().slice(0, 19).replace('T', ' ');
-    }}}}
-  }}}} catch (err) {{{{
-    console.error('Refresh failed:', err);
-    renderLive({{{{is_live:false, ticks_10s:0, seconds_since_last_tick:'n/a'}}}});
-  }}}}
-}}}}
-
-const sel = document.getElementById('sym');
-sel.addEventListener('change', () => loadSym(sel.value));
-if (sel.value) loadSym(sel.value);
-
+var ch;
+function toggleTable(btn,name,total){{
+  var rows=document.querySelectorAll('tr[data-table="'+name+'"].hidden-row');
+  if(rows.length>0){{
+    rows.forEach(function(r){{r.classList.remove('hidden-row');r.style.display=''}});
+    btn.textContent='Show less';
+  }}else{{
+    var all=document.querySelectorAll('tr[data-table="'+name+'"]');
+    for(var i={LIMIT};i<all.length;i++){{all[i].classList.add('hidden-row');all[i].style.display='none'}}
+    btn.textContent='Show all ('+total+')';
+  }}
+}}
+function loadSym(sym){{
+  fetch('/api/timeseries?symbol='+encodeURIComponent(sym)+'&limit=300')
+    .then(function(r){{return r.json()}})
+    .then(function(d){{
+      var labels=d.map(function(x){{return x.ts_iso.slice(11,19)}});
+      var vals=d.map(function(x){{return x.price}});
+      if(ch)ch.destroy();
+      ch=new Chart(document.getElementById('chart'),{{
+        type:'line',
+        data:{{labels:labels,datasets:[{{label:sym,data:vals,borderColor:'#8b5cf6',backgroundColor:'rgba(139,92,246,0.1)',borderWidth:2,pointRadius:0,tension:0.1,fill:true}}]}},
+        options:{{responsive:true,maintainAspectRatio:true,plugins:{{legend:{{display:true,labels:{{color:'#e2e8f0',font:{{size:13,weight:600}}}}}}}},scales:{{x:{{ticks:{{color:'#64748b',maxRotation:0}},grid:{{color:'rgba(51,65,85,0.3)'}}}},y:{{ticks:{{color:'#64748b'}},grid:{{color:'rgba(51,65,85,0.3)'}}}}}}}}
+      }});
+    }});
+}}
+function renderLive(status){{
+  var live=!!(status&&status.is_live);
+  var pill=document.getElementById('live-pill');
+  var detail=document.getElementById('live-detail');
+  if(!pill||!detail)return;
+  pill.textContent=live?'LIVE':'STALE';
+  pill.style.color=live?'#10b981':'#ef4444';
+  if(live)pill.classList.add('live-indicator');else pill.classList.remove('live-indicator');
+  var age=status?status.seconds_since_last_tick:null;
+  detail.textContent=(status?status.ticks_10s:0)+' ticks / 10s · '+(age!==null&&age!==undefined?age:'n/a')+'s ago';
+}}
+function refreshSummary(){{
+  fetch('/api/summary').then(function(r){{return r.json()}}).then(function(s){{
+    renderLive(s.live_status||{{}});
+    var el;
+    el=document.getElementById('signals-count');if(el)el.textContent=s.signals_total_window||0;
+    el=document.getElementById('confirmed-count');if(el)el.textContent=(s.confirmed_signals||[]).length;
+    var wr=s.paper_stats?s.paper_stats.win_rate_pct:0;
+    el=document.getElementById('paper-win-rate');if(el){{el.textContent=wr+'%';el.style.color=wr>=50?'#10b981':'#f59e0b'}}
+    var ov=s.coverage_health_real||{{}};
+    el=document.getElementById('coverage-health');
+    if(el){{var h=String(ov.health||'critical').toLowerCase();el.textContent=h.toUpperCase();el.style.color=h==='good'?'#10b981':(h==='warn'?'#f59e0b':'#ef4444')}}
+    el=document.getElementById('coverage-detail');if(el)el.textContent='worst '+(ov.worst_coverage_pct||0)+'% since start';
+    el=document.getElementById('timestamp');if(el)el.textContent=new Date().toISOString().slice(0,19).replace('T',' ');
+  }}).catch(function(){{renderLive({{is_live:false,ticks_10s:0,seconds_since_last_tick:null}})}});
+}}
+var sel=document.getElementById('sym');
+sel.addEventListener('change',function(){{loadSym(sel.value)}});
+if(sel.value)loadSym(sel.value);
 refreshSummary();
-setInterval(refreshSummary, 5000);
-setInterval(() => {{{{ if (sel.value) loadSym(sel.value); }}}}, 15000);
-</script>
-</body>
-</html>"""
+setInterval(refreshSummary,5000);
+setInterval(function(){{if(sel.value)loadSym(sel.value)}},15000);
+</script></body></html>"""
             return self.sendb(html.encode(), ctype='text/html; charset=utf-8')
 
         return self.sendb(json.dumps({'error': 'not found'}).encode(), code=404)

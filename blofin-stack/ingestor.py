@@ -371,20 +371,65 @@ async def run() -> None:
                         "raw_json": json.dumps(msg, ensure_ascii=False),
                     })
 
-                    signals = detect_signals(symbol, price, ts, volume)
-                    for s in signals:
-                        row = {
-                            "ts_ms": ts,
-                            "ts_iso": ts_iso,
-                            "symbol": symbol,
-                            "signal": s["signal"],
-                            "strategy": s["strategy"],
-                            "confidence": s["confidence"],
-                            "price": price,
-                            "details_json": json.dumps(s["details"], ensure_ascii=False),
-                        }
-                        insert_signal(con, row)
-                        print({k: row[k] for k in ["ts_iso", "symbol", "signal", "strategy", "price"]})
+                    # Detect signals using plugin system or legacy code
+                    if USE_PLUGIN_SYSTEM and strategy_manager:
+                        try:
+                            # Use new plugin-based detection
+                            signal_objects = strategy_manager.detect_all(
+                                symbol=symbol,
+                                price=price,
+                                volume=volume,
+                                ts_ms=ts,
+                                prices=list(price_windows[symbol]),
+                                volumes=list(volume_windows[symbol])
+                            )
+                            
+                            for sig in signal_objects:
+                                row = {
+                                    "ts_ms": ts,
+                                    "ts_iso": ts_iso,
+                                    "symbol": symbol,
+                                    "signal": sig.signal,
+                                    "strategy": sig.strategy,
+                                    "confidence": sig.confidence,
+                                    "price": price,
+                                    "details_json": json.dumps(sig.details, ensure_ascii=False),
+                                }
+                                insert_signal(con, row)
+                                print({k: row[k] for k in ["ts_iso", "symbol", "signal", "strategy", "price"]})
+                        except Exception as e:
+                            print(f"[ingestor] Strategy manager error: {e}, falling back to legacy")
+                            # Fall back to legacy on error
+                            signals = detect_signals(symbol, price, ts, volume)
+                            for s in signals:
+                                row = {
+                                    "ts_ms": ts,
+                                    "ts_iso": ts_iso,
+                                    "symbol": symbol,
+                                    "signal": s["signal"],
+                                    "strategy": s["strategy"],
+                                    "confidence": s["confidence"],
+                                    "price": price,
+                                    "details_json": json.dumps(s["details"], ensure_ascii=False),
+                                }
+                                insert_signal(con, row)
+                                print({k: row[k] for k in ["ts_iso", "symbol", "signal", "strategy", "price"]})
+                    else:
+                        # Use legacy strategy detection
+                        signals = detect_signals(symbol, price, ts, volume)
+                        for s in signals:
+                            row = {
+                                "ts_ms": ts,
+                                "ts_iso": ts_iso,
+                                "symbol": symbol,
+                                "signal": s["signal"],
+                                "strategy": s["strategy"],
+                                "confidence": s["confidence"],
+                                "price": price,
+                                "details_json": json.dumps(s["details"], ensure_ascii=False),
+                            }
+                            insert_signal(con, row)
+                            print({k: row[k] for k in ["ts_iso", "symbol", "signal", "strategy", "price"]})
 
                     upsert_heartbeat(
                         con,
@@ -393,6 +438,28 @@ async def run() -> None:
                         ts_iso=ts_iso,
                         details_json=json.dumps({"symbols": len(SYMBOLS)}),
                     )
+                    
+                    # Periodic maintenance for plugin system
+                    if USE_PLUGIN_SYSTEM and strategy_manager:
+                        # Update performance scores every 5 minutes
+                        if ts - last_score_update >= SCORE_UPDATE_INTERVAL_MS:
+                            try:
+                                count = knowledge_base.update_all_scores(con)
+                                print(f"[ingestor] Updated {count} performance scores")
+                                last_score_update = ts
+                            except Exception as e:
+                                print(f"[ingestor] Error updating scores: {e}")
+                        
+                        # Auto-manage strategies every hour
+                        if ts - last_auto_manage >= AUTO_MANAGE_INTERVAL_MS:
+                            try:
+                                changes = knowledge_base.auto_manage_strategies(con, strategy_manager)
+                                if changes['disabled'] or changes['enabled']:
+                                    print(f"[ingestor] Auto-manage: disabled={changes['disabled']}, enabled={changes['enabled']}")
+                                last_auto_manage = ts
+                            except Exception as e:
+                                print(f"[ingestor] Error in auto-manage: {e}")
+                    
                     con.commit()
         except Exception as e:
             print(f"[reconnect] {e}")

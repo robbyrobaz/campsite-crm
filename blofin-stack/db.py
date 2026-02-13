@@ -105,6 +105,51 @@ def init_db(con: sqlite3.Connection) -> None:
         CREATE INDEX IF NOT EXISTS idx_signals_signal_ts ON signals(signal, ts_ms);
         CREATE INDEX IF NOT EXISTS idx_confirmed_symbol_ts ON confirmed_signals(symbol, ts_ms);
         CREATE INDEX IF NOT EXISTS idx_paper_symbol_status ON paper_trades(symbol, status);
+        
+        CREATE TABLE IF NOT EXISTS strategy_scores (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ts_ms INTEGER NOT NULL,
+            ts_iso TEXT NOT NULL,
+            strategy TEXT NOT NULL,
+            symbol TEXT,
+            window TEXT NOT NULL,
+            trades INTEGER,
+            wins INTEGER,
+            losses INTEGER,
+            win_rate REAL,
+            avg_pnl_pct REAL,
+            total_pnl_pct REAL,
+            sharpe_ratio REAL,
+            max_drawdown_pct REAL,
+            score REAL,
+            enabled INTEGER DEFAULT 1
+        );
+        
+        CREATE TABLE IF NOT EXISTS knowledge_entries (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ts_ms INTEGER NOT NULL,
+            ts_iso TEXT NOT NULL,
+            category TEXT NOT NULL,
+            strategy TEXT,
+            symbol TEXT,
+            content TEXT NOT NULL,
+            source TEXT,
+            metadata TEXT
+        );
+        
+        CREATE TABLE IF NOT EXISTS strategy_configs (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            ts_ms INTEGER NOT NULL,
+            ts_iso TEXT NOT NULL,
+            strategy TEXT NOT NULL,
+            config_json TEXT NOT NULL,
+            source TEXT,
+            note TEXT
+        );
+        
+        CREATE INDEX IF NOT EXISTS idx_strategy_scores_strategy ON strategy_scores(strategy, window);
+        CREATE INDEX IF NOT EXISTS idx_knowledge_category ON knowledge_entries(category, strategy);
+        CREATE INDEX IF NOT EXISTS idx_strategy_configs_strategy ON strategy_configs(strategy, ts_ms);
         '''
     )
     con.commit()

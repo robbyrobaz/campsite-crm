@@ -14,6 +14,16 @@ from dotenv import load_dotenv
 
 from db import connect, init_db, insert_signal, insert_tick, upsert_heartbeat
 
+# Try to import strategy manager (new plugin system)
+try:
+    from strategy_manager import StrategyManager
+    import knowledge_base
+    USE_PLUGIN_SYSTEM = True
+    print("[ingestor] Using plugin-based strategy system")
+except ImportError as e:
+    print(f"[ingestor] Plugin system not available ({e}), using legacy strategies")
+    USE_PLUGIN_SYSTEM = False
+
 ROOT = Path(__file__).resolve().parent
 load_dotenv(ROOT / ".env")
 
@@ -316,6 +326,22 @@ async def run() -> None:
     con = connect(DB_PATH)
     init_db(con)
     backoff = RECONNECT_MIN
+    
+    # Initialize strategy manager if using plugin system
+    strategy_manager = None
+    if USE_PLUGIN_SYSTEM:
+        try:
+            strategy_manager = StrategyManager()
+            print(f"[ingestor] Strategy manager initialized with {len(strategy_manager.strategies)} strategies")
+        except Exception as e:
+            print(f"[ingestor] Failed to initialize strategy manager: {e}")
+            print("[ingestor] Falling back to legacy strategies")
+    
+    # Periodic maintenance counters
+    last_score_update = now_ms()
+    last_auto_manage = now_ms()
+    SCORE_UPDATE_INTERVAL_MS = 5 * 60 * 1000  # 5 minutes
+    AUTO_MANAGE_INTERVAL_MS = 60 * 60 * 1000  # 1 hour
 
     while True:
         try:

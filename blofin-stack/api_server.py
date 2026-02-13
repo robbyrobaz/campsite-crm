@@ -144,6 +144,37 @@ def fetch_summary():
     closed = [p for p in paper if p['status'] == 'CLOSED' and p['pnl_pct'] is not None]
     win_rate = (sum(1 for p in closed if p['pnl_pct'] > 0) / len(closed) * 100.0) if closed else 0.0
 
+    # Rolling window win rates (12h default for display, plus 1h and 24h)
+    rolling_windows = {}
+    for label, hours in [('1h', 1), ('12h', 12), ('24h', 24)]:
+        cutoff_ms = now_ms - hours * 3600 * 1000
+        if wh.strip():
+            rw_sql = f'''SELECT COUNT(*) as total,
+                       SUM(CASE WHEN pnl_pct > 0 THEN 1 ELSE 0 END) as wins,
+                       AVG(pnl_pct) as avg_pnl,
+                       SUM(pnl_pct) as total_pnl
+                FROM paper_trades
+                {wh} AND status='CLOSED' AND pnl_pct IS NOT NULL AND closed_ts_ms >= ?'''
+            rw_args = args + [cutoff_ms]
+        else:
+            rw_sql = f'''SELECT COUNT(*) as total,
+                       SUM(CASE WHEN pnl_pct > 0 THEN 1 ELSE 0 END) as wins,
+                       AVG(pnl_pct) as avg_pnl,
+                       SUM(pnl_pct) as total_pnl
+                FROM paper_trades
+                WHERE status='CLOSED' AND pnl_pct IS NOT NULL AND closed_ts_ms >= ?'''
+            rw_args = [cutoff_ms]
+        rw_rows = con.execute(rw_sql, rw_args).fetchone()
+        total = int(rw_rows['total'] or 0)
+        wins = int(rw_rows['wins'] or 0)
+        rolling_windows[label] = {
+            'trades': total,
+            'wins': wins,
+            'win_rate_pct': round(wins / total * 100.0, 2) if total > 0 else None,
+            'avg_pnl_pct': round(float(rw_rows['avg_pnl'] or 0), 4) if total > 0 else None,
+            'total_pnl_pct': round(float(rw_rows['total_pnl'] or 0), 4) if total > 0 else None,
+        }
+
     perf_where, perf_args = _in_clause(SYMBOLS)
     perf_rows = [dict(r) for r in con.execute(
         f'''
@@ -225,6 +256,7 @@ def fetch_summary():
             'open_count': sum(1 for p in paper if p['status'] == 'OPEN'),
             'win_rate_pct': round(win_rate, 2),
             'avg_pnl_pct': round(sum(p['pnl_pct'] for p in closed) / len(closed), 4) if closed else 0.0,
+            'rolling': rolling_windows,
         },
         'strategy_pattern_scores': strategy_pattern_scores[:120],
         'gap_fill_runs': gaps,
@@ -349,8 +381,19 @@ class H(BaseHTTPRequestHandler):
             live_secs = s['live_status']['seconds_since_last_tick'] if s['live_status']['seconds_since_last_tick'] is not None else 'n/a'
             dq_health = str(s['coverage_health_real']['health']).upper()
             dq_color = '#10b981' if s['coverage_health_real']['health'] == 'good' else ('#f59e0b' if s['coverage_health_real']['health'] == 'warn' else '#ef4444')
-            wr_color = '#10b981' if s['paper_stats']['win_rate_pct'] >= 50 else '#f59e0b'
-            wr_bar = min(100, s['paper_stats']['win_rate_pct'])
+            # Use rolling 12h win rate as primary display, fall back to all-time
+            r12 = s['paper_stats'].get('rolling', {}).get('12h', {})
+            r1 = s['paper_stats'].get('rolling', {}).get('1h', {})
+            r24 = s['paper_stats'].get('rolling', {}).get('24h', {})
+            wr_12h = r12.get('win_rate_pct')
+            wr_display = wr_12h if wr_12h is not None else s['paper_stats']['win_rate_pct']
+            wr_color = '#10b981' if wr_display >= 50 else ('#f59e0b' if wr_display >= 35 else '#ef4444')
+            wr_bar = min(100, wr_display)
+            wr_label = '12h' if wr_12h is not None else 'all'
+            wr_1h_text = f"{r1['win_rate_pct']}% ({r1['trades']})" if r1.get('win_rate_pct') is not None else '—'
+            wr_24h_text = f"{r24['win_rate_pct']}% ({r24['trades']})" if r24.get('win_rate_pct') is not None else '—'
+            wr_12h_trades = r12.get('trades', 0)
+            wr_alltime_text = f"{s['paper_stats']['win_rate_pct']}% ({s['paper_stats']['closed_count']})"
 
             n_scorecard = len(s['strategy_pattern_scores'])
             n_confirmed = len(s['confirmed_signals'])
@@ -419,9 +462,10 @@ select:hover{{border-color:#60a5fa;box-shadow:0 0 10px rgba(96,165,250,.3)}}
 <div class='card'><div class='small'>Signals</div><div id='signals-count' class='stat-value'>{s['signals_total_window']}</div></div>
 <div class='card'><div class='small'>Confirmed</div><div id='confirmed-count' class='stat-value'>{len(s['confirmed_signals'])}</div></div>
 <div class='card'>
-  <div class='small'>Paper Win Rate</div>
-  <div id='paper-win-rate' class='stat-value' style='color:{wr_color}'>{s['paper_stats']['win_rate_pct']}%</div>
+  <div class='small'>Win Rate <span style='opacity:0.6'>({wr_label})</span></div>
+  <div id='paper-win-rate' class='stat-value' style='color:{wr_color}'>{wr_display}%</div>
   <div class='win-rate-bar'><div class='win-rate-fill' style='width:{wr_bar}%'></div></div>
+  <div class='small' style='margin-top:4px;opacity:0.7;font-size:11px'>1h: {wr_1h_text} · 24h: {wr_24h_text} · all: {wr_alltime_text}</div>
 </div>
 <div class='card'>
   <div class='small'>Data Quality</div>
@@ -535,8 +579,9 @@ function refreshSummary(){{
     var el;
     el=document.getElementById('signals-count');if(el)el.textContent=s.signals_total_window||0;
     el=document.getElementById('confirmed-count');if(el)el.textContent=(s.confirmed_signals||[]).length;
-    var wr=s.paper_stats?s.paper_stats.win_rate_pct:0;
-    el=document.getElementById('paper-win-rate');if(el){{el.textContent=wr+'%';el.style.color=wr>=50?'#10b981':'#f59e0b'}}
+    var r12=s.paper_stats&&s.paper_stats.rolling?s.paper_stats.rolling['12h']:{{}};
+    var wr=(r12&&r12.win_rate_pct!==null&&r12.win_rate_pct!==undefined)?r12.win_rate_pct:(s.paper_stats?s.paper_stats.win_rate_pct:0);
+    el=document.getElementById('paper-win-rate');if(el){{el.textContent=wr+'%';el.style.color=wr>=50?'#10b981':(wr>=35?'#f59e0b':'#ef4444')}}
     var ov=s.coverage_health_real||{{}};
     el=document.getElementById('coverage-health');
     if(el){{var h=String(ov.health||'critical').toLowerCase();el.textContent=h.toUpperCase();el.style.color=h==='good'?'#10b981':(h==='warn'?'#f59e0b':'#ef4444')}}

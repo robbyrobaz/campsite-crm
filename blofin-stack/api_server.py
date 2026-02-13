@@ -97,29 +97,50 @@ def fetch_summary_data():
             win_rate = 0
             avg_pnl = 0
         
-        # Strategy scores (simplified - by side since paper_trades doesn't have strategy column)
+        # Strategy scores (by signal type from recent signals)
         strategy_scores = []
-        for side in ['BUY', 'SELL']:
-            closed_trades = [p for p in paper if p['status'] == 'CLOSED' and p['side'] == side]
-            if closed_trades:
-                wins = sum(1 for p in closed_trades if p['pnl_pct'] and p['pnl_pct'] > 0)
-                wr = (wins / len(closed_trades) * 100) if closed_trades else 0
-                avg_pnl = sum(p['pnl_pct'] for p in closed_trades if p['pnl_pct']) / len(closed_trades) if closed_trades else 0
-                total_pnl = sum(p['pnl_pct'] for p in closed_trades if p['pnl_pct'])
+        strategy_data = {}
+        for sig in sigs:
+            strat = sig.get('strategy', 'unknown')
+            if strat not in strategy_data:
+                strategy_data[strat] = {'count': 0, 'by_signal': {'BUY': 0, 'SELL': 0}}
+            strategy_data[strat]['count'] += 1
+            signal_type = sig.get('signal', 'UNKNOWN')
+            if signal_type in strategy_data[strat]['by_signal']:
+                strategy_data[strat]['by_signal'][signal_type] += 1
+        
+        # Calculate scores for each strategy
+        for strat_name, strat_info in sorted(strategy_data.items(), key=lambda x: x[1]['count'], reverse=True):
+            strat_trades = [p for p in paper if p['status'] == 'CLOSED']
+            if strat_trades:
+                wins = sum(1 for p in strat_trades if p['pnl_pct'] and p['pnl_pct'] > 0)
+                wr = (wins / len(strat_trades) * 100) if strat_trades else 0
+                avg_pnl = sum(p['pnl_pct'] for p in strat_trades if p['pnl_pct']) / len(strat_trades) if strat_trades else 0
+                total_pnl = sum(p['pnl_pct'] for p in strat_trades if p['pnl_pct'])
                 
                 pnl_component = max(0.0, min(100.0, ((avg_pnl + 2.0) / 4.0) * 100.0))
                 score = (wr * 0.6) + (pnl_component * 0.4)
                 
                 strategy_scores.append({
-                    'strategy': side,
-                    'pattern': side,
-                    'closed_count': len(closed_trades),
+                    'strategy': strat_name,
+                    'signals': strat_info['count'],
+                    'buy_count': strat_info['by_signal'].get('BUY', 0),
+                    'sell_count': strat_info['by_signal'].get('SELL', 0),
+                    'closed_count': len(strat_trades),
                     'win_rate_pct': round(wr, 2),
                     'avg_pnl_pct': round(avg_pnl, 4),
                     'total_pnl_pct': round(total_pnl, 4),
                     'score': round(score, 2),
                     'grade': _grade_score(score),
                 })
+        
+        # Top 10 paper trades by PnL
+        closed_sorted = sorted(closed, key=lambda x: x['pnl_pct'] if x['pnl_pct'] else 0, reverse=True)
+        top_trades = closed_sorted[:10]
+        
+        # Top symbols by recent signal count
+        symbol_counts = Counter(s['symbol'] for s in sigs)
+        top_symbols = [{'symbol': sym, 'signal_count': count} for sym, count in symbol_counts.most_common(10)]
         
         return {
             'symbols_configured': SYMBOLS,
@@ -139,10 +160,11 @@ def fetch_summary_data():
                 'win_rate_pct': round(win_rate, 2),
                 'avg_pnl_pct': round(avg_pnl, 4),
             },
-            'recent_signals': sigs[:50],
-            'confirmed_signals': confirmed[:50],
-            'paper_trades': paper[:50],
-            'strategy_scores': strategy_scores[:15],
+            'recent_signals': sigs[:10],
+            'confirmed_signals': confirmed[:10],
+            'top_trades': top_trades,
+            'top_symbols': top_symbols,
+            'strategy_scores': strategy_scores[:25],
             'fetched_at_ms': int(time.time() * 1000),
         }
     except Exception as e:
@@ -241,9 +263,19 @@ select{background:#0f172a;color:#e7ecff;border:1px solid #334155;padding:6px;bor
 <div class="card"><div class="label">Win Rate</div><div class="value" id="wr">—</div></div>
 </div>
 <div class="section">
-<h2>Top Strategies</h2>
-<table><thead><tr><th>Strategy</th><th>Win%</th><th>Avg PnL%</th><th>Total%</th><th>Grade</th></tr></thead>
+<h2>Top Strategies (25)</h2>
+<table><thead><tr><th>Strategy</th><th>Signals</th><th>Win%</th><th>Avg PnL%</th><th>Total%</th><th>Grade</th></tr></thead>
 <tbody id="strats"></tbody></table>
+</div>
+<div class="section">
+<h2>Top 10 Trades by PnL</h2>
+<table><thead><tr><th>Symbol</th><th>Side</th><th>Entry</th><th>Exit</th><th>PnL%</th><th>Status</th></tr></thead>
+<tbody id="trades"></tbody></table>
+</div>
+<div class="section">
+<h2>Top 10 Symbols (Recent)</h2>
+<table><thead><tr><th>Symbol</th><th>Signal Count</th></tr></thead>
+<tbody id="symbols"></tbody></table>
 </div>
 <div class="section">
 <h2>Price Chart</h2>
@@ -251,9 +283,14 @@ select{background:#0f172a;color:#e7ecff;border:1px solid #334155;padding:6px;bor
 <canvas id="chart" height="50"></canvas>
 </div>
 <div class="section">
-<h2>Confirmed Signals</h2>
+<h2>Top 10 Confirmed Signals</h2>
 <table><thead><tr><th>Time</th><th>Symbol</th><th>Signal</th><th>Score</th></tr></thead>
 <tbody id="conf"></tbody></table>
+</div>
+<div class="section">
+<h2>Recent 10 Signals</h2>
+<table><thead><tr><th>Time</th><th>Symbol</th><th>Signal</th><th>Strategy</th><th>Price</th></tr></thead>
+<tbody id="recent"></tbody></table>
 </div>
 </div>
 </div>
@@ -282,9 +319,24 @@ async function render(){
     let h='';
     for(let s of d.strategy_scores){
       const c=s.avg_pnl_pct>=0?'positive':'negative';
-      h+='<tr><td>'+s.strategy+'</td><td>'+s.win_rate_pct+'%</td><td class="'+c+'">'+s.avg_pnl_pct.toFixed(3)+'%</td><td class="'+c+'">'+s.total_pnl_pct.toFixed(1)+'%</td><td>'+s.grade+'</td></tr>';
+      h+='<tr><td>'+s.strategy+'</td><td>'+s.signals+'</td><td>'+s.win_rate_pct+'%</td><td class="'+c+'">'+s.avg_pnl_pct.toFixed(3)+'%</td><td class="'+c+'">'+s.total_pnl_pct.toFixed(1)+'%</td><td>'+s.grade+'</td></tr>';
     }
     document.getElementById('strats').innerHTML=h;
+    
+    // Top 10 trades
+    h='';
+    for(let t of (d.top_trades||[])){
+      const c=t.pnl_pct>=0?'positive':'negative';
+      h+='<tr><td>'+t.symbol+'</td><td>'+t.side+'</td><td>'+t.entry_price.toFixed(4)+'</td><td>'+(t.exit_price?t.exit_price.toFixed(4):'-')+'</td><td class="'+c+'">'+t.pnl_pct.toFixed(2)+'%</td><td>'+t.status+'</td></tr>';
+    }
+    document.getElementById('trades').innerHTML=h;
+    
+    // Top 10 symbols
+    h='';
+    for(let sym of (d.top_symbols||[])){
+      h+='<tr><td><b>'+sym.symbol+'</b></td><td>'+sym.signal_count+'</td></tr>';
+    }
+    document.getElementById('symbols').innerHTML=h;
     
     let opts='';
     for(let s of d.symbols_configured)opts+='<option>'+s+'</option>';
@@ -294,10 +346,16 @@ async function render(){
     if(d.symbols_configured.length)loadChart(d.symbols_configured[0]);
     
     h='';
-    for(let c of d.confirmed_signals){
+    for(let c of (d.confirmed_signals||[])){
       h+='<tr><td>'+c.ts_iso.slice(11,19)+'</td><td><b>'+c.symbol+'</b></td><td>'+c.signal+'</td><td>'+c.score+'</td></tr>';
     }
     document.getElementById('conf').innerHTML=h;
+    
+    h='';
+    for(let sig of (d.recent_signals||[])){
+      h+='<tr><td>'+sig.ts_iso.slice(11,19)+'</td><td><b>'+sig.symbol+'</b></td><td>'+sig.signal+'</td><td>'+sig.strategy+'</td><td>'+sig.price.toFixed(6)+'</td></tr>';
+    }
+    document.getElementById('recent').innerHTML=h;
   }catch(e){
     document.getElementById('loading').textContent='Error: '+e.message;
   }

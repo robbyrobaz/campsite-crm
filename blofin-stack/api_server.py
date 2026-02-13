@@ -323,7 +323,9 @@ h1{font-size:28px;margin:0 0 8px;color:#60a5fa}
 .card .label{font-size:10px;color:#94a3b8;text-transform:uppercase;margin-bottom:4px}
 .card .value{font-size:18px;font-weight:700}
 table{width:100%;border-collapse:collapse;margin:12px 0;font-size:12px}
-th{background:#0f172a;padding:8px;text-align:left;border-bottom:1px solid #334155;font-weight:600}
+th{background:#0f172a;padding:8px;text-align:left;border-bottom:1px solid #334155;font-weight:600;cursor:pointer;user-select:none}
+th:hover{background:#1e293b}
+th.sorted{color:#60a5fa}
 td{padding:8px;border-bottom:1px solid #334155}
 .section{background:#1e293b;border:1px solid #334155;padding:16px;margin:12px 0;border-radius:6px}
 .section h2{margin:0 0 12px;font-size:14px}
@@ -345,7 +347,7 @@ select{background:#0f172a;color:#e7ecff;border:1px solid #334155;padding:6px;bor
 </div>
 <div class="section">
 <h2>Top Strategies (25)</h2>
-<table><thead><tr><th>Strategy</th><th>Signals</th><th>Trades</th><th>Win%</th><th>PnL%</th><th>Profit Factor</th><th>Sortino</th><th>Max DD%</th><th>Grade</th></tr></thead>
+<table><thead><tr><th data-col="strategy">Strategy</th><th data-col="signals">Signals</th><th data-col="trades">Trades</th><th data-col="wr">Win%</th><th data-col="pnl">PnL%</th><th data-col="pf">Profit Factor</th><th data-col="sortino">Sortino</th><th data-col="maxdd">Max DD%</th><th data-col="grade" title="Grade: A (85+), B (70-84), C (55-69), D (40-54), F (<40). Combines win rate, profit factor, Sortino ratio, and max drawdown into a single score.">Grade</th></tr></thead>
 <tbody id="strats"></tbody></table>
 </div>
 <div class="section">
@@ -377,11 +379,43 @@ select{background:#0f172a;color:#e7ecff;border:1px solid #334155;padding:6px;bor
 </div>
 <script>
 let ch=null;
+let strategyData=[];
+let currentSort={col:'grade',asc:false};
 function formatAge(ms){
   const s=Math.round((Date.now()-ms)/1000);
   if(s<60)return s+'s ago';
   if(s<3600)return Math.round(s/60)+'m ago';
   return Math.round(s/3600)+'h ago';
+}
+function renderStrategies(){
+  const sorted=[...strategyData];
+  const col=currentSort.col;
+  const asc=currentSort.asc;
+  sorted.sort((a,b)=>{
+    let av,bv;
+    if(col==='strategy')av=a.strategy,bv=b.strategy;
+    else if(col==='signals')av=a.signals,bv=b.signals;
+    else if(col==='trades')av=a.closed_count,bv=b.closed_count;
+    else if(col==='wr')av=a.win_rate_pct,bv=b.win_rate_pct;
+    else if(col==='pnl')av=a.total_pnl_pct,bv=b.total_pnl_pct;
+    else if(col==='pf')av=a.profit_factor,bv=b.profit_factor;
+    else if(col==='sortino')av=a.sortino,bv=b.sortino;
+    else if(col==='maxdd')av=a.max_dd,bv=b.max_dd;
+    else if(col==='grade'){const gv={A:4,B:3,C:2,D:1,F:0};av=gv[a.grade]||0;bv=gv[b.grade]||0;}
+    if(typeof av==='string')return asc?av.localeCompare(bv):bv.localeCompare(av);
+    return asc?av-bv:bv-av;
+  });
+  let h='';
+  for(let s of sorted){
+    const c=s.total_pnl_pct>=0?'positive':'negative';
+    const pf=s.profit_factor>1.5?'positive':(s.profit_factor>1?'#999':' negative');
+    h+='<tr><td>'+s.strategy+'</td><td>'+s.signals+'</td><td>'+s.closed_count+'</td><td>'+s.win_rate_pct+'%</td><td class="'+c+'">'+s.total_pnl_pct.toFixed(1)+'%</td><td style="color:'+pf+'">'+s.profit_factor+'</td><td>'+s.sortino.toFixed(2)+'</td><td>'+s.max_dd.toFixed(2)+'%</td><td>'+s.grade+'</td></tr>';
+  }
+  document.getElementById('strats').innerHTML=h;
+  document.querySelectorAll('table thead th[data-col]').forEach(th=>{
+    th.classList.remove('sorted');
+    if(th.dataset.col===col)th.classList.add('sorted');
+  });
 }
 async function render(){
   try{
@@ -397,13 +431,16 @@ async function render(){
     document.getElementById('confirmed').textContent=d.confirmed_count;
     document.getElementById('wr').textContent=d.paper_stats.win_rate_pct+'%';
     
-    let h='';
-    for(let s of d.strategy_scores){
-      const c=s.total_pnl_pct>=0?'positive':'negative';
-      const pf=s.profit_factor>1.5?'positive':(s.profit_factor>1?'#999':' negative');
-      h+='<tr><td>'+s.strategy+'</td><td>'+s.signals+'</td><td>'+s.closed_count+'</td><td>'+s.win_rate_pct+'%</td><td class="'+c+'">'+s.total_pnl_pct.toFixed(1)+'%</td><td style="color:'+pf+'">'+s.profit_factor+'</td><td>'+s.sortino.toFixed(2)+'</td><td>'+s.max_dd.toFixed(2)+'%</td><td>'+s.grade+'</td></tr>';
-    }
-    document.getElementById('strats').innerHTML=h;
+    strategyData=d.strategy_scores||[];
+    renderStrategies();
+    document.querySelectorAll('table thead th[data-col]').forEach(th=>{
+      th.onclick=e=>{
+        const col=th.dataset.col;
+        if(currentSort.col===col)currentSort.asc=!currentSort.asc;
+        else{currentSort.col=col;currentSort.asc=col==='strategy';}
+        renderStrategies();
+      };
+    });
     
     // Top 10 paper trades
     h='';

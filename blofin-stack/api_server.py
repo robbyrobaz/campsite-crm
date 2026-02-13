@@ -3,7 +3,7 @@ import json
 import os
 import time
 from collections import Counter
-from http.server import BaseHTTPRequestHandler, HTTPServer
+from http.server import BaseHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
@@ -19,6 +19,24 @@ SYMBOLS = [s.strip() for s in os.getenv('BLOFIN_SYMBOLS', '').split(',') if s.st
 
 con = connect(DB_PATH)
 init_db(con)
+
+# Cache to reduce CPU spike from repeated /api/summary requests
+# The dashboard refreshes every 5 seconds, so a 3-second cache helps
+_cache = {}
+_cache_ts = {}
+
+def _get_cached(key, ttl_sec=3):
+    """Get cached result if fresh, else None"""
+    if key not in _cache:
+        return None
+    if time.time() - _cache_ts.get(key, 0) > ttl_sec:
+        return None
+    return _cache[key]
+
+def _set_cache(key, value):
+    """Cache a result with timestamp"""
+    _cache[key] = value
+    _cache_ts[key] = time.time()
 
 
 def _in_clause(symbols):
@@ -285,7 +303,12 @@ class H(BaseHTTPRequestHandler):
         if p.path == '/healthz':
             return self.sendb(b'ok', ctype='text/plain')
         if p.path == '/api/summary':
-            return self.sendb(json.dumps(fetch_summary(), default=str).encode())
+            cached = _get_cached('summary')
+            if cached:
+                return self.sendb(cached)
+            result = json.dumps(fetch_summary(), default=str).encode()
+            _set_cache('summary', result)
+            return self.sendb(result)
         if p.path == '/api/timeseries':
             symbol = q.get('symbol', [SYMBOLS[0] if SYMBOLS else 'PEPE-USDT'])[0]
             limit = int(q.get('limit', ['300'])[0])
@@ -615,4 +638,6 @@ setInterval(function(){{if(sel.value)loadSym(sel.value)}},15000);
 
 
 if __name__ == '__main__':
-    HTTPServer((HOST, PORT), H).serve_forever()
+    # Use ThreadingHTTPServer to handle multiple concurrent requests
+    # instead of blocking on each one. Fixes CPU spike from dashboard auto-refresh.
+    ThreadingHTTPServer((HOST, PORT), H).serve_forever()

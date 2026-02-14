@@ -363,6 +363,11 @@ async def run() -> None:
                     if not symbol or price is None:
                         continue
 
+                    # Update in-memory windows used by strategy detectors
+                    price_windows[symbol].append((ts, price))
+                    volume_windows[symbol].append((ts, volume))
+                    _trim(symbol, ts)
+
                     insert_tick(con, {
                         "ts_ms": ts,
                         "ts_iso": ts_iso,

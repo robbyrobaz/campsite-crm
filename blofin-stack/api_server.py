@@ -216,7 +216,15 @@ def fetch_summary_data():
                 })
         
         # Top 10 paper trades by PnL
-        closed_sorted = sorted(closed, key=lambda x: x['pnl_pct'] if x['pnl_pct'] else 0, reverse=True)
+        # Use a dedicated CLOSED-trades slice so dashboard doesn't go empty when
+        # recent activity is mostly OPEN trades.
+        closed_for_ranking = [dict(r) for r in con.execute(
+            f"SELECT opened_ts_iso,closed_ts_iso,symbol,side,entry_price,exit_price,status,pnl_pct "
+            f"FROM paper_trades {wh + (' AND ' if wh else ' WHERE ')} status='CLOSED' "
+            f"ORDER BY id DESC LIMIT 2000",
+            args
+        )]
+        closed_sorted = sorted(closed_for_ranking, key=lambda x: x['pnl_pct'] if x['pnl_pct'] else 0, reverse=True)
         top_trades = closed_sorted[:10]
         
         # Top symbols by recent signal count

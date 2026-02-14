@@ -20,6 +20,11 @@ PAPER_SL_PCT = float(os.getenv('PAPER_SL_PCT', '1.0'))
 PAPER_MAX_HOLD_MIN = int(os.getenv('PAPER_MAX_HOLD_MINUTES', '180'))
 LOOP_SECONDS = int(os.getenv('PAPER_LOOP_SECONDS', '15'))
 
+# Trading friction model (percent values, e.g., 0.04 = 0.04%)
+# Defaults include small crypto-style fees + slippage for more realistic paper PnL.
+PAPER_FEE_PCT_PER_SIDE = float(os.getenv('PAPER_FEE_PCT_PER_SIDE', '0.04'))
+PAPER_SLIPPAGE_PCT_PER_SIDE = float(os.getenv('PAPER_SLIPPAGE_PCT_PER_SIDE', '0.02'))
+
 
 def now_ms():
     return int(time.time() * 1000)
@@ -84,6 +89,23 @@ def open_paper_trades(con):
     return opened
 
 
+def calc_pnl_pct_with_friction(entry_price: float, mark_price: float, side: str) -> float:
+    """Calculate PnL% with per-side fee + slippage applied at entry and exit."""
+    fee = PAPER_FEE_PCT_PER_SIDE / 100.0
+    slip = PAPER_SLIPPAGE_PCT_PER_SIDE / 100.0
+
+    if side == 'SELL':
+        # Short: worse fill on sell entry, worse fill on buy-to-cover exit.
+        effective_entry = entry_price * (1.0 - slip - fee)
+        effective_exit = mark_price * (1.0 + slip + fee)
+        return ((effective_entry - effective_exit) / effective_entry) * 100.0
+
+    # BUY long: worse fill on buy entry, worse fill on sell exit.
+    effective_entry = entry_price * (1.0 + slip + fee)
+    effective_exit = mark_price * (1.0 - slip - fee)
+    return ((effective_exit - effective_entry) / effective_entry) * 100.0
+
+
 def close_paper_trades(con):
     rows = con.execute('SELECT * FROM paper_trades WHERE status="OPEN"').fetchall()
     closed = 0
@@ -94,9 +116,7 @@ def close_paper_trades(con):
             continue
         entry = float(r['entry_price'])
         side = r['side']
-        pnl_pct = ((px - entry) / entry) * 100.0
-        if side == 'SELL':
-            pnl_pct = -pnl_pct
+        pnl_pct = calc_pnl_pct_with_friction(entry, px, side)
 
         # Keep OPEN trades marked-to-market with live unrealized PnL.
         con.execute('UPDATE paper_trades SET pnl_pct=? WHERE id=?', (pnl_pct, r['id']))

@@ -175,12 +175,24 @@ def fetch_summary_data():
                 avg_pnl = sum(p['pnl_pct'] for p in closed_strat_trades if p['pnl_pct']) / len(closed_strat_trades) if closed_strat_trades else 0
                 total_pnl = sum(p['pnl_pct'] for p in closed_strat_trades if p['pnl_pct'])
                 
-                pnl_component = max(0.0, min(100.0, ((avg_pnl + 2.0) / 4.0) * 100.0))
-                score = (wr * 0.6) + (pnl_component * 0.4)
-                
                 # Calculate advanced stats using the strategy-specific trade data
                 trade_pnls = [p.get('pnl_pct', 0) for p in closed_strat_trades]
                 stats = calculate_stats([{'pnl_pct': pnl} for pnl in trade_pnls])
+
+                # Composite scoring:
+                # - Win rate, average PnL, profit factor, Sortino, and max drawdown
+                # - Normalized to 0..100 then weighted
+                pnl_component = max(0.0, min(100.0, ((avg_pnl + 2.0) / 4.0) * 100.0))
+                pf_component = max(0.0, min(100.0, ((stats['profit_factor'] - 0.8) / 1.2) * 100.0))
+                sortino_component = max(0.0, min(100.0, ((stats['sortino'] + 1.0) / 3.0) * 100.0))
+                dd_component = max(0.0, min(100.0, 100.0 - (stats['max_dd'] * 5.0)))
+                score = (
+                    (wr * 0.35) +
+                    (pnl_component * 0.25) +
+                    (pf_component * 0.20) +
+                    (sortino_component * 0.10) +
+                    (dd_component * 0.10)
+                )
                 
                 strategy_scores.append({
                     'strategy': strat_name,
@@ -215,6 +227,9 @@ def fetch_summary_data():
                     'grade': 'F',
                 })
         
+        # Rank strategy table by composite score first (then closed trades and signals)
+        strategy_scores.sort(key=lambda s: (s.get('score', 0), s.get('closed_count', 0), s.get('signals', 0)), reverse=True)
+
         # Top 10 paper trades by PnL
         # Use a dedicated CLOSED-trades slice so dashboard doesn't go empty when
         # recent activity is mostly OPEN trades.
@@ -388,7 +403,8 @@ select{background:#0f172a;color:#e7ecff;border:1px solid #334155;padding:6px;bor
 <script>
 let ch=null;
 let strategyData=[];
-let currentSort={col:'grade',asc:false};
+// Default to profitability-first sorting for quick operational triage.
+let currentSort={col:'pnl',asc:false};
 function formatAge(ms){
   const s=Math.round((Date.now()-ms)/1000);
   if(s<60)return s+'s ago';

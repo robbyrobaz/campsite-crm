@@ -287,7 +287,6 @@ All documentation is self-contained in markdown files at workspace root.
 | Service | Port | Purpose |
 |---------|------|---------|
 | Blofin Dashboard | 8780 | Trading pipeline monitoring |
-| Kanban | 8781 | Task management |
 | Campsite Frontend | 3000 | CRM UI |
 | Campsite Backend | 5000 | CRM API |
 

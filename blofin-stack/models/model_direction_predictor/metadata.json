@@ -1,9 +1,12 @@
 {
   "created_at": null,
-  "trained_at": "2026-02-16T09:00:39.998945",
+  "trained_at": "2026-02-16T10:00:32.760021",
   "performance": {
     "train_accuracy": 1.0,
-    "val_accuracy": 1.0,
+    "test_accuracy": 1.0,
+    "f1_score": 1.0,
+    "precision": 1.0,
+    "recall": 1.0,
     "n_samples": 1000
   },
   "feature_importance": {
@@ -16,5 +19,5 @@
     "volume_sma": 0.0,
     "volume_ratio": 0.0
   },
-  "saved_at": "2026-02-16T09:00:40.002534"
+  "saved_at": "2026-02-16T10:00:32.763578"
 }

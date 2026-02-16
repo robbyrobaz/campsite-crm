@@ -206,31 +206,64 @@ Provide ONLY the Python code, no explanation, no markdown, just the code.
         return prompt
     
     def _call_opus(self, prompt: str) -> str:
-        """Call Claude Opus via OpenClaw CLI."""
+        """Call Claude Opus via OpenClaw CLI with file-based prompt."""
+        import tempfile
+        import os
         try:
+            # Write prompt to temp file to avoid CLI length limits
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+                f.write(prompt)
+                prompt_file = f.name
+            
             result = subprocess.run(
-                ['openclaw', 'chat', '--model', 'opus', '--prompt', prompt],
+                ['openclaw', 'chat', '--model', 'opus', '--file', prompt_file],
                 capture_output=True,
                 text=True,
-                timeout=300  # 5 min timeout
+                timeout=300,  # 5 min timeout
+                env={**os.environ, 'NO_COLOR': '1'}  # Disable ANSI colors
             )
+            
+            os.unlink(prompt_file)
+            
+            # Validate output
+            if not result.stdout.strip():
+                error_msg = f"Empty Opus output. stderr: {result.stderr}"
+                print(f"ERROR: {error_msg}")
+                raise Exception(error_msg)
+            
+            if result.returncode != 0:
+                error_msg = f"Opus call failed with code {result.returncode}. stderr: {result.stderr}"
+                print(f"ERROR: {error_msg}")
+                raise Exception(error_msg)
+            
             return result.stdout.strip()
         except Exception as e:
             raise Exception(f"Failed to call Opus: {e}")
     
     def _extract_code(self, opus_output: str) -> str:
-        """Extract Python code from Opus output."""
+        """Extract Python code from Opus output with validation."""
+        if not opus_output or not opus_output.strip():
+            raise ValueError("Cannot extract code from empty Opus output")
+        
         # Try to find code block
         code_match = re.search(r'```python\n(.*?)```', opus_output, re.DOTALL)
         if code_match:
-            return code_match.group(1).strip()
+            code = code_match.group(1).strip()
+            if code:
+                return code
         
         # If no code block, try to find shebang
         if opus_output.strip().startswith('#!/usr/bin/env python'):
             return opus_output.strip()
         
-        # Last resort: assume entire output is code
-        return opus_output.strip()
+        # Last resort: assume entire output is code (if it looks like Python)
+        if 'class Strategy' in opus_output or 'def analyze' in opus_output:
+            return opus_output.strip()
+        
+        # Log failure for debugging
+        print(f"WARNING: Could not extract code from Opus output. First 500 chars:")
+        print(opus_output[:500])
+        raise ValueError("Failed to extract valid Python code from Opus output")
     
     def _get_next_strategy_number(self) -> int:
         """Find next available strategy number."""
@@ -247,7 +280,19 @@ Provide ONLY the Python code, no explanation, no markdown, just the code.
         return max(numbers) + 1 if numbers else 1
     
     def _save_strategy(self, code: str, strategy_num: int) -> Path:
-        """Save strategy code to file."""
+        """Save strategy code to file with validation."""
+        # VALIDATE: Check if code is sufficient
+        if not code or len(code.strip()) < 100:
+            raise ValueError(f"Code too short ({len(code)} chars), refusing to save")
+        
+        # VALIDATE: Basic syntax check
+        try:
+            compile(code, '<string>', 'exec')
+        except SyntaxError as e:
+            print(f"ERROR: Generated code has syntax errors: {e}")
+            print(f"Code:\n{code}")
+            raise ValueError(f"Code has syntax errors: {e}")
+        
         filename = f"strategy_{strategy_num:03d}.py"
         filepath = self.strategies_dir / filename
         
@@ -256,6 +301,12 @@ Provide ONLY the Python code, no explanation, no markdown, just the code.
         
         # Make executable
         filepath.chmod(0o755)
+        
+        # VALIDATE: File was written
+        if not filepath.exists() or filepath.stat().st_size == 0:
+            raise IOError(f"Strategy file was not written or is empty: {filepath}")
+        
+        print(f"✓ Strategy saved: {filepath} ({filepath.stat().st_size} bytes)")
         
         return filepath
     
@@ -294,10 +345,33 @@ Provide ONLY the Python code, no explanation, no markdown, just the code.
             print("Calling Opus to design new strategy...")
             opus_output = self._call_opus(prompt)
             
-            # Extract and save code
-            code = self._extract_code(opus_output)
+            # VALIDATE: Check if Opus returned anything
+            if not opus_output or len(opus_output.strip()) < 100:
+                print(f"ERROR: Opus returned insufficient output ({len(opus_output)} chars)")
+                print(f"Output preview: {opus_output[:200] if opus_output else 'None'}")
+                return None
+            
+            # Extract code
+            try:
+                code = self._extract_code(opus_output)
+            except ValueError as e:
+                print(f"ERROR: Code extraction failed: {e}")
+                print(f"Opus output length: {len(opus_output)}")
+                return None
+            
+            # VALIDATE: Check if code extraction succeeded
+            if not code or len(code) < 100:
+                print(f"ERROR: Code extraction produced insufficient code ({len(code)} chars)")
+                print(f"Opus output:\n{opus_output[:500]}")
+                return None
+            
+            # Save strategy with validation
             strategy_num = self._get_next_strategy_number()
-            filepath = self._save_strategy(code, strategy_num)
+            try:
+                filepath = self._save_strategy(code, strategy_num)
+            except (ValueError, IOError) as e:
+                print(f"ERROR: Failed to save strategy: {e}")
+                return None
             
             # Extract strategy name from code
             name_match = re.search(r'self\.name\s*=\s*["\']([^"\']+)["\']', code)

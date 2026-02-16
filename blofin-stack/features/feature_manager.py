@@ -94,13 +94,19 @@ class FeatureManager:
         if df.empty:
             raise ValueError(f"No tick data found for {symbol} in the specified time range")
         
-        # Clean data: drop rows with NaN price, fill NaN volume with 0
-        df = df.dropna(subset=['price'])
-        df['volume'] = pd.to_numeric(df['volume'], errors='coerce').fillna(0)
+        # Clean data BEFORE any conversions
+        # 1. Convert types explicitly
+        df['ts_ms'] = pd.to_numeric(df['ts_ms'], errors='coerce')
         df['price'] = pd.to_numeric(df['price'], errors='coerce')
-        df = df.dropna(subset=['price'])
+        df['volume'] = pd.to_numeric(df['volume'], errors='coerce').fillna(0)
         
-        # Convert timestamp to datetime
+        # 2. Drop rows with NaN in critical columns
+        df = df.dropna(subset=['ts_ms', 'price'])
+        
+        # 3. Ensure ts_ms is integer type (required for pd.to_datetime with unit='ms')
+        df['ts_ms'] = df['ts_ms'].astype('int64')
+        
+        # NOW safe to convert timestamp
         df['timestamp'] = pd.to_datetime(df['ts_ms'], unit='ms')
         df.set_index('timestamp', inplace=True)
         

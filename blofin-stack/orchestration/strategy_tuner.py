@@ -175,25 +175,51 @@ CRITICAL: Return ONLY valid JSON. No markdown, no code fences, no explanation te
         return prompt
     
     def _call_sonnet(self, prompt: str) -> str:
-        """Call Claude Sonnet via OpenClaw CLI."""
+        """Call Claude Sonnet via OpenClaw CLI with file-based prompt."""
+        import tempfile
+        import os
         try:
+            # Write prompt to temp file to avoid CLI length limits
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as f:
+                f.write(prompt)
+                prompt_file = f.name
+            
             result = subprocess.run(
-                ['openclaw', 'chat', '--model', 'sonnet', '--prompt', prompt],
+                ['openclaw', 'chat', '--model', 'sonnet', '--file', prompt_file],
                 capture_output=True,
                 text=True,
-                timeout=120  # 2 min timeout
+                timeout=120,  # 2 min timeout
+                env={**os.environ, 'NO_COLOR': '1'}  # Disable ANSI colors
             )
+            
+            os.unlink(prompt_file)
+            
+            # Validate output
+            if not result.stdout.strip():
+                error_msg = f"Empty Sonnet output. stderr: {result.stderr}"
+                print(f"WARNING: {error_msg}")
+                return ""  # Return empty to trigger fallback
+            
+            if result.returncode != 0:
+                error_msg = f"Sonnet call failed with code {result.returncode}. stderr: {result.stderr}"
+                print(f"WARNING: {error_msg}")
+                return ""
+            
             return result.stdout.strip()
         except Exception as e:
-            raise Exception(f"Failed to call Sonnet: {e}")
+            print(f"ERROR: Failed to call Sonnet: {e}")
+            return ""
     
     def _parse_tuning_suggestions(self, sonnet_output: str) -> Optional[Dict[str, Any]]:
         """Parse JSON suggestions from Sonnet with robust error handling."""
         if not sonnet_output or not sonnet_output.strip():
-            print("Empty Sonnet output")
+            print("ERROR: Empty Sonnet output")
             return None
         
         text = sonnet_output.strip()
+        
+        # Log first 500 chars for debugging
+        print(f"DEBUG: Sonnet output preview ({len(text)} chars): {text[:500]}...")
         
         # Strip markdown code fences (```json ... ``` or ``` ... ```)
         text = re.sub(r'^```(?:json)?\s*\n?', '', text, flags=re.MULTILINE)
@@ -263,7 +289,10 @@ CRITICAL: Return ONLY valid JSON. No markdown, no code fences, no explanation te
         except Exception:
             pass
         
-        print(f"Failed to parse Sonnet output (length={len(sonnet_output)}): {sonnet_output[:200]}...")
+        # If all parsing fails, log the full output for debugging
+        print(f"ERROR: Failed to parse Sonnet output after all strategies")
+        print(f"Output length: {len(sonnet_output)} chars")
+        print(f"Full output:\n{sonnet_output}")
         return None
     
     def _apply_parameter_changes(self, code: str, changes: List[Dict[str, Any]]) -> str:

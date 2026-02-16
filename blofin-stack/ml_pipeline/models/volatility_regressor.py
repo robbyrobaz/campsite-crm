@@ -89,25 +89,29 @@ class VolatilityRegressor(BaseModel):
         # Update metadata
         self.metadata["trained_at"] = datetime.now().isoformat()
         self.metadata["performance"] = {
+            "train_accuracy": float(train_score),  # R² as accuracy for regression
+            "test_accuracy": float(val_score),  # Standardized name
             "train_r2": float(train_score),
-            "val_r2": float(val_score),
-            "val_mae": float(mae),
-            "val_rmse": float(rmse),
-            "val_mape": float(mape),
+            "test_r2": float(val_score),
+            "test_mae": float(mae),
+            "test_rmse": float(rmse),
+            "test_mape": float(mape),
             "n_samples": len(X),
         }
         self.metadata["feature_importance"] = feature_importance
         
         metrics = {
+            "train_accuracy": train_score,  # R² as accuracy for regression
+            "test_accuracy": val_score,  # Standardized name for DB
             "train_r2": train_score,
-            "val_r2": val_score,
-            "val_mae": mae,
-            "val_rmse": rmse,
-            "val_mape": mape,
+            "test_r2": val_score,
+            "mae": mae,
+            "rmse": rmse,
+            "mape": mape,
             "feature_importance": feature_importance,
         }
         
-        print(f"✓ {self.model_name} trained - Val R²: {val_score:.4f}, MAE: {mae:.6f}")
+        print(f"✓ {self.model_name} trained - Test R²: {val_score:.4f}, MAE: {mae:.6f}")
         return metrics
     
     def predict(self, X: pd.DataFrame, **kwargs) -> Dict[str, Any]:
@@ -134,7 +138,7 @@ class VolatilityRegressor(BaseModel):
         volatility = self.model.predict(X_scaled)
         
         # Calculate confidence based on validation performance
-        val_mape = self.metadata["performance"].get("val_mape", 100)
+        val_mape = self.metadata["performance"].get("test_mape", 100)
         confidence = max(0.5, min(0.95, 1.0 - (val_mape / 100)))
         
         # Format output

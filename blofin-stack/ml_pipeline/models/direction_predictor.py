@@ -9,6 +9,7 @@ from datetime import datetime
 import xgboost as xgb
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import f1_score, precision_score, recall_score
 from models.common.base_model import BaseModel
 
 
@@ -79,6 +80,15 @@ class DirectionPredictor(BaseModel):
         train_acc = self.model.score(X_train, y_train)
         val_acc = self.model.score(X_val, y_val)
         
+        # Calculate predictions for additional metrics
+        y_pred_train = self.model.predict(X_train)
+        y_pred_val = self.model.predict(X_val)
+        
+        # Calculate classification metrics
+        f1 = f1_score(y_val, y_pred_val, average='binary', zero_division=0)
+        precision = precision_score(y_val, y_pred_val, average='binary', zero_division=0)
+        recall = recall_score(y_val, y_pred_val, average='binary', zero_division=0)
+        
         # Get feature importance
         feature_importance = dict(zip(
             self.feature_names,
@@ -89,18 +99,24 @@ class DirectionPredictor(BaseModel):
         self.metadata["trained_at"] = datetime.now().isoformat()
         self.metadata["performance"] = {
             "train_accuracy": float(train_acc),
-            "val_accuracy": float(val_acc),
+            "test_accuracy": float(val_acc),  # Standardized name
+            "f1_score": float(f1),
+            "precision": float(precision),
+            "recall": float(recall),
             "n_samples": len(X),
         }
         self.metadata["feature_importance"] = feature_importance
         
         metrics = {
             "train_accuracy": train_acc,
-            "val_accuracy": val_acc,
+            "test_accuracy": val_acc,  # Standardized name for DB
+            "f1_score": f1,
+            "precision": precision,
+            "recall": recall,
             "feature_importance": feature_importance,
         }
         
-        print(f"✓ {self.model_name} trained - Val Accuracy: {val_acc:.4f}")
+        print(f"✓ {self.model_name} trained - Test Accuracy: {val_acc:.4f}, F1: {f1:.4f}")
         return metrics
     
     def predict(self, X: pd.DataFrame, **kwargs) -> Dict[str, Any]:

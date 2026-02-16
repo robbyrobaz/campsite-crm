@@ -9,6 +9,7 @@ from datetime import datetime
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import f1_score, precision_score, recall_score
 from models.common.base_model import BaseModel
 
 
@@ -75,6 +76,7 @@ class MomentumClassifier(BaseModel):
         val_acc = self.model.score(X_val, y_val)
         
         # Per-class accuracy
+        y_pred_train = self.model.predict(X_train)
         y_pred = self.model.predict(X_val)
         class_accuracies = {}
         for i, class_name in self.label_map.items():
@@ -83,11 +85,19 @@ class MomentumClassifier(BaseModel):
                 class_acc = (y_pred[mask] == y_val[mask]).sum() / mask.sum()
                 class_accuracies[class_name] = float(class_acc)
         
+        # Calculate classification metrics (macro average for multi-class)
+        f1 = f1_score(y_val, y_pred, average='macro', zero_division=0)
+        precision = precision_score(y_val, y_pred, average='macro', zero_division=0)
+        recall = recall_score(y_val, y_pred, average='macro', zero_division=0)
+        
         # Update metadata
         self.metadata["trained_at"] = datetime.now().isoformat()
         self.metadata["performance"] = {
             "train_accuracy": float(train_acc),
-            "val_accuracy": float(val_acc),
+            "test_accuracy": float(val_acc),  # Standardized name
+            "f1_score": float(f1),
+            "precision": float(precision),
+            "recall": float(recall),
             "class_accuracies": class_accuracies,
             "n_samples": len(X),
             "class_distribution": {
@@ -98,11 +108,14 @@ class MomentumClassifier(BaseModel):
         
         metrics = {
             "train_accuracy": train_acc,
-            "val_accuracy": val_acc,
+            "test_accuracy": val_acc,  # Standardized name for DB
+            "f1_score": f1,
+            "precision": precision,
+            "recall": recall,
             "class_accuracies": class_accuracies,
         }
         
-        print(f"✓ {self.model_name} trained - Val Accuracy: {val_acc:.4f}")
+        print(f"✓ {self.model_name} trained - Test Accuracy: {val_acc:.4f}, F1: {f1:.4f}")
         return metrics
     
     def predict(self, X: pd.DataFrame, **kwargs) -> Dict[str, Any]:

@@ -89,23 +89,27 @@ class RiskScorer(BaseModel):
         # Update metadata
         self.metadata["trained_at"] = datetime.now().isoformat()
         self.metadata["performance"] = {
+            "train_accuracy": float(train_score),  # R² as accuracy for regression
+            "test_accuracy": float(val_score),  # Standardized name
             "train_r2": float(train_score),
-            "val_r2": float(val_score),
-            "val_mae": float(mae),
-            "val_rmse": float(rmse),
+            "test_r2": float(val_score),
+            "test_mae": float(mae),
+            "test_rmse": float(rmse),
             "n_samples": len(X),
         }
         self.metadata["feature_importance"] = feature_importance
         
         metrics = {
+            "train_accuracy": train_score,  # R² as accuracy for regression
+            "test_accuracy": val_score,  # Standardized name for DB
             "train_r2": train_score,
-            "val_r2": val_score,
-            "val_mae": mae,
-            "val_rmse": rmse,
+            "test_r2": val_score,
+            "mae": mae,
+            "rmse": rmse,
             "feature_importance": feature_importance,
         }
         
-        print(f"✓ {self.model_name} trained - Val R²: {val_score:.4f}, MAE: {mae:.2f}")
+        print(f"✓ {self.model_name} trained - Test R²: {val_score:.4f}, MAE: {mae:.2f}")
         return metrics
     
     def predict(self, X: pd.DataFrame, **kwargs) -> Any:

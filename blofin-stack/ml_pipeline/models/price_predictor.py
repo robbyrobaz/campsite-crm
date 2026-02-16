@@ -151,25 +151,34 @@ class PricePredictor(BaseModel):
         train_rmse = np.sqrt(np.mean((y_train.values.reshape(-1, 1) - train_pred) ** 2))
         val_rmse = np.sqrt(np.mean((y_val.values.reshape(-1, 1) - val_pred) ** 2))
         
+        # Calculate R² score for consistency
+        from sklearn.metrics import r2_score
+        train_r2 = r2_score(y_train.values, train_pred.flatten())
+        val_r2 = r2_score(y_val.values, val_pred.flatten())
+        
         # Update metadata
         self.metadata["trained_at"] = datetime.now().isoformat()
         self.metadata["performance"] = {
+            "train_accuracy": float(train_r2),  # R² as accuracy for regression
+            "test_accuracy": float(val_r2),  # Standardized name
             "train_mae": float(train_mae),
-            "val_mae": float(val_mae),
+            "test_mae": float(val_mae),
             "train_rmse": float(train_rmse),
-            "val_rmse": float(val_rmse),
+            "test_rmse": float(val_rmse),
             "best_val_loss": float(best_val_loss),
             "n_samples": len(X),
         }
         
         metrics = {
+            "train_accuracy": train_r2,  # R² as accuracy for regression
+            "test_accuracy": val_r2,  # Standardized name for DB
             "train_mae": train_mae,
-            "val_mae": val_mae,
+            "test_mae": val_mae,
             "train_rmse": train_rmse,
-            "val_rmse": val_rmse,
+            "test_rmse": val_rmse,
         }
         
-        print(f"✓ {self.model_name} trained - Val MAE: {val_mae:.2f}, RMSE: {val_rmse:.2f}")
+        print(f"✓ {self.model_name} trained - Test R²: {val_r2:.4f}, MAE: {val_mae:.2f}, RMSE: {val_rmse:.2f}")
         return metrics
     
     def predict(self, X: pd.DataFrame, **kwargs) -> Dict[str, Any]:
@@ -201,8 +210,8 @@ class PricePredictor(BaseModel):
             predictions = self.model(X_tensor).cpu().numpy()
         
         # Calculate confidence (based on recent performance)
-        val_mae = self.metadata["performance"].get("val_mae", 0)
-        val_rmse = self.metadata["performance"].get("val_rmse", 1)
+        val_mae = self.metadata["performance"].get("test_mae", 0)
+        val_rmse = self.metadata["performance"].get("test_rmse", 1)
         
         # Confidence inversely related to error
         confidence = max(0.5, min(0.95, 1.0 - (val_mae / (val_rmse * 2))))

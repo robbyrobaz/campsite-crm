@@ -70,11 +70,17 @@ tar -czf "$archive" \
   --exclude='subagents' \
   --exclude='.git' \
   --exclude='.venv' \
+  --exclude='venv' \
   --exclude='node_modules' \
   --exclude='__pycache__' \
   --exclude='*.pyc' \
   --exclude='*.tar.gz' \
   --exclude='openclaw.json.bak*' \
+  --exclude='blofin-stack/data/*.db' \
+  --exclude='blofin-stack/data/*.db-wal' \
+  --exclude='blofin-stack/data/*.db-shm' \
+  --exclude='blofin-stack/data/*.jsonl' \
+  --exclude='android-sdk' \
   -C "$OPENCLAW_DIR" \
   workspace \
   openclaw.json \

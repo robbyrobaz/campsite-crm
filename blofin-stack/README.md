@@ -7,7 +7,6 @@ Local-first monitoring stack for Blofin public market data:
 - Pattern detectors (momentum + breakout + reversal)
 - Buy/sell signal recording
 - Local dashboard/API endpoints
-- Separate ops kanban service (decoupled from main dashboard)
 - systemd user services for auto-start
 
 ## Quick start
@@ -21,8 +20,6 @@ pip install -r requirements.txt
 python ingestor.py
 # in another terminal:
 python api_server.py
-# optional third terminal:
-python kanban_worker.py
 ```
 
 ## API
@@ -50,14 +47,3 @@ python tradovate_nq_probe.py --symbol NQ --max-messages 20
 ```
 
 Output is written to `data/tradovate_nq_probe.jsonl`.
-
-## Kanban auto-pick priority
-
-`kanban_worker.py` auto-moves tasks from `inbox` to `in_progress` while there is capacity.
-
-Selection order:
-1. Higher `priority` first (`5` highest in current worker sort)
-2. Older `created_ts_ms` first
-3. Lower `id` first (stable tie-break)
-
-Capacity is controlled by `KANBAN_MAX_IN_PROGRESS` and loop frequency by `KANBAN_WORKER_LOOP_SECONDS`.

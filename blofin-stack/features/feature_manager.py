@@ -163,7 +163,7 @@ class FeatureManager:
     
     def get_features(self, symbol: str, timeframe: str = '1m', 
                     feature_list: List[str] = None, lookback_bars: int = 500,
-                    params: Dict[str, Any] = None) -> pd.DataFrame:
+                    params: Dict[str, Any] = None, limit_rows: int = None) -> pd.DataFrame:
         """
         Compute features for a symbol.
         
@@ -173,6 +173,7 @@ class FeatureManager:
             feature_list: List of specific features to compute (None = all features)
             lookback_bars: Number of candles to load
             params: Optional parameters for feature computation
+            limit_rows: (Smoke test) Limit raw data to N rows from database
             
         Returns:
             DataFrame with OHLCV data and computed features

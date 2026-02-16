@@ -28,7 +28,8 @@ class BacktestEngine:
         symbol: str,
         days_back: int = 7,
         db_path: str = 'data/blofin_monitor.db',
-        initial_capital: float = 10000.0
+        initial_capital: float = 10000.0,
+        limit_rows: int = None
     ):
         """
         Initialize backtester.
@@ -43,6 +44,7 @@ class BacktestEngine:
         self.days_back = days_back
         self.db_path = db_path
         self.initial_capital = initial_capital
+        self.limit_rows = limit_rows
         
         # Load historical data
         self.ticks = self._load_ticks()
@@ -58,15 +60,16 @@ class BacktestEngine:
         start_ts = int((datetime.now() - timedelta(days=self.days_back)).timestamp() * 1000)
         
         # Query ticks
-        cur = con.execute(
-            '''
+        query = '''
             SELECT ts_ms, price
             FROM ticks
             WHERE symbol = ? AND ts_ms >= ? AND ts_ms <= ?
             ORDER BY ts_ms ASC
-            ''',
-            (self.symbol, start_ts, end_ts)
-        )
+        '''
+        if self.limit_rows:
+            query += f' LIMIT {self.limit_rows}'
+        
+        cur = con.execute(query, (self.symbol, start_ts, end_ts))
         
         ticks = [dict(row) for row in cur.fetchall()]
         con.close()

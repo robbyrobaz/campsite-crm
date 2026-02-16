@@ -170,7 +170,7 @@ TASK:
   "expected_improvement": "Brief explanation of expected impact"
 }}
 
-Provide ONLY the JSON output, no additional text.
+CRITICAL: Return ONLY valid JSON. No markdown, no code fences, no explanation text before or after the JSON. Start with {{ and end with }}.
 """
         return prompt
     
@@ -188,17 +188,83 @@ Provide ONLY the JSON output, no additional text.
             raise Exception(f"Failed to call Sonnet: {e}")
     
     def _parse_tuning_suggestions(self, sonnet_output: str) -> Optional[Dict[str, Any]]:
-        """Parse JSON suggestions from Sonnet."""
+        """Parse JSON suggestions from Sonnet with robust error handling."""
+        if not sonnet_output or not sonnet_output.strip():
+            print("Empty Sonnet output")
+            return None
+        
+        text = sonnet_output.strip()
+        
+        # Strip markdown code fences (```json ... ``` or ``` ... ```)
+        text = re.sub(r'^```(?:json)?\s*\n?', '', text, flags=re.MULTILINE)
+        text = re.sub(r'\n?```\s*$', '', text, flags=re.MULTILINE)
+        text = text.strip()
+        
+        # Strategy 1: Direct parse
         try:
-            # Try to extract JSON from output
-            json_match = re.search(r'\{.*\}', sonnet_output, re.DOTALL)
+            return json.loads(text)
+        except json.JSONDecodeError:
+            pass
+        
+        # Strategy 2: Find outermost { ... } with balanced braces
+        try:
+            depth = 0
+            start_idx = None
+            for i, ch in enumerate(text):
+                if ch == '{':
+                    if depth == 0:
+                        start_idx = i
+                    depth += 1
+                elif ch == '}':
+                    depth -= 1
+                    if depth == 0 and start_idx is not None:
+                        candidate = text[start_idx:i+1]
+                        try:
+                            return json.loads(candidate)
+                        except json.JSONDecodeError:
+                            # Try fixing common issues
+                            pass
+        except Exception:
+            pass
+        
+        # Strategy 3: Fix common JSON issues and retry
+        try:
+            # Remove control characters except \n \r \t
+            cleaned = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f]', '', text)
+            # Fix trailing commas before } or ]
+            cleaned = re.sub(r',\s*([}\]])', r'\1', cleaned)
+            # Fix single quotes to double quotes (careful with apostrophes)
+            # Only do this if no double quotes exist in the content
+            json_match = re.search(r'\{[^{}]*\}', cleaned, re.DOTALL)
             if json_match:
                 return json.loads(json_match.group(0))
-            else:
-                return json.loads(sonnet_output)
-        except Exception as e:
-            print(f"Failed to parse Sonnet output: {e}")
-            return None
+        except json.JSONDecodeError:
+            pass
+        
+        # Strategy 4: Extract key fields manually as fallback
+        try:
+            result = {"parameter_changes": [], "code_modifications": [], "expected_improvement": ""}
+            
+            # Try to find parameter_changes array
+            pc_match = re.search(r'"parameter_changes"\s*:\s*\[([^\]]*)\]', text, re.DOTALL)
+            if pc_match:
+                # Try parsing just that array
+                try:
+                    result["parameter_changes"] = json.loads('[' + pc_match.group(1) + ']')
+                except Exception:
+                    pass
+            
+            ei_match = re.search(r'"expected_improvement"\s*:\s*"([^"]*)"', text)
+            if ei_match:
+                result["expected_improvement"] = ei_match.group(1)
+            
+            if result["parameter_changes"]:
+                return result
+        except Exception:
+            pass
+        
+        print(f"Failed to parse Sonnet output (length={len(sonnet_output)}): {sonnet_output[:200]}...")
+        return None
     
     def _apply_parameter_changes(self, code: str, changes: List[Dict[str, Any]]) -> str:
         """Apply parameter changes to strategy code."""

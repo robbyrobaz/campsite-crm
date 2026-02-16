@@ -132,16 +132,98 @@ class DailyRunner:
             return {'error': str(e), 'strategies_designed': 0}
     
     def step_backtest_new_strategies(self, designed_strategies: List[str]) -> Dict[str, Any]:
-        """Step 2b: Backtest newly designed strategies (Sonnet)."""
+        """Step 2b: Backtest newly designed strategies using real tick data."""
         self._log_step('backtest_strategies', 'started')
         start_time = datetime.utcnow()
         
         try:
-            # Stub: In production, integrate with backtesting module
-            self.logger.info(f"Backtesting {len(designed_strategies)} new strategies (STUB)")
+            from backtester.backtest_engine import BacktestEngine
+            import importlib
+            
+            backtest_results = []
+            symbols = ['BTC-USDT', 'ETH-USDT']
+            
+            for strat_name in designed_strategies:
+                # Try to load strategy module
+                strategy_obj = None
+                try:
+                    # Check numbered strategies and named strategies
+                    strategies_dir = self.workspace_dir / 'strategies'
+                    for py_file in strategies_dir.glob('*.py'):
+                        if py_file.name.startswith('__'):
+                            continue
+                        spec = importlib.util.spec_from_file_location(py_file.stem, py_file)
+                        mod = importlib.util.module_from_spec(spec)
+                        try:
+                            spec.loader.exec_module(mod)
+                        except Exception:
+                            continue
+                        # Look for strategy class with matching name
+                        for attr_name in dir(mod):
+                            attr = getattr(mod, attr_name)
+                            if hasattr(attr, 'detect') and hasattr(attr, 'name'):
+                                try:
+                                    inst = attr() if callable(attr) else attr
+                                    if getattr(inst, 'name', '') == strat_name:
+                                        strategy_obj = inst
+                                        break
+                                except Exception:
+                                    continue
+                        if strategy_obj:
+                            break
+                except Exception as e:
+                    self.logger.warning(f"Could not load strategy {strat_name}: {e}")
+                    continue
+                
+                if not strategy_obj:
+                    self.logger.warning(f"Strategy {strat_name} not found, skipping backtest")
+                    continue
+                
+                # Run backtest on each symbol with real tick data
+                for symbol in symbols:
+                    try:
+                        engine = BacktestEngine(
+                            symbol=symbol,
+                            days_back=7,
+                            db_path=str(self.db_path),
+                            initial_capital=10000.0
+                        )
+                        
+                        if not engine.ticks:
+                            self.logger.info(f"No tick data for {symbol}, skipping")
+                            continue
+                        
+                        bt_result = engine.run_strategy(
+                            strategy_obj,
+                            timeframe='5m',
+                            stop_loss_pct=3.0,
+                            take_profit_pct=5.0
+                        )
+                        
+                        self.logger.info(
+                            f"Backtest {strat_name}/{symbol}: "
+                            f"{len(bt_result['trades'])} trades, "
+                            f"final=${bt_result['final_capital']:.2f}, "
+                            f"{bt_result['num_candles']} candles"
+                        )
+                        
+                        backtest_results.append({
+                            'strategy': strat_name,
+                            'symbol': symbol,
+                            'trades': len(bt_result['trades']),
+                            'final_capital': bt_result['final_capital'],
+                            'metrics': bt_result.get('metrics', {})
+                        })
+                        
+                        # Save to strategy_backtest_results table
+                        self._save_backtest_result(strat_name, symbol, bt_result)
+                        
+                    except Exception as e:
+                        self.logger.warning(f"Backtest failed for {strat_name}/{symbol}: {e}")
             
             result = {
-                'backtested_count': len(designed_strategies),
+                'backtested_count': len(backtest_results),
+                'results': backtest_results,
                 'duration_seconds': (datetime.utcnow() - start_time).total_seconds()
             }
             
@@ -151,6 +233,36 @@ class DailyRunner:
         except Exception as e:
             self._log_step('backtest_strategies', 'failure', {'error': str(e)})
             return {'error': str(e)}
+    
+    def _save_backtest_result(self, strategy_name: str, symbol: str, bt_result: Dict):
+        """Save backtest result to database."""
+        import sqlite3
+        try:
+            con = sqlite3.connect(str(self.db_path), timeout=30)
+            ts_ms = int(datetime.utcnow().timestamp() * 1000)
+            ts_iso = datetime.utcnow().isoformat() + 'Z'
+            metrics = bt_result.get('metrics', {})
+            
+            con.execute('''
+                INSERT OR REPLACE INTO strategy_backtest_results 
+                (ts_ms, ts_iso, strategy, symbol, timeframe, days_back,
+                 total_trades, win_rate, sharpe_ratio, max_drawdown_pct, 
+                 total_pnl_pct, final_capital, results_json)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (
+                ts_ms, ts_iso, strategy_name, symbol, '5m', 7,
+                len(bt_result['trades']),
+                metrics.get('win_rate', 0),
+                metrics.get('sharpe_ratio', 0),
+                metrics.get('max_drawdown_pct', 0),
+                metrics.get('total_pnl_pct', 0),
+                bt_result['final_capital'],
+                json.dumps({'trades': bt_result['trades'][:50], 'metrics': metrics})
+            ))
+            con.commit()
+            con.close()
+        except Exception as e:
+            self.logger.warning(f"Failed to save backtest result: {e}")
     
     def step_tune_underperformers(self) -> Dict[str, Any]:
         """Step 3: Tune underperforming strategies with Sonnet (20 min)."""

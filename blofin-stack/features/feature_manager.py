@@ -79,7 +79,11 @@ class FeatureManager:
         con = sqlite3.connect(self.db_path)
         query = """
             SELECT ts_ms, price, 
-                   COALESCE(json_extract(raw_json, '$.vol24h'), 0) as volume
+                   COALESCE(
+                       CAST(json_extract(raw_json, '$.data[0].vol24h') AS REAL),
+                       CAST(json_extract(raw_json, '$.vol24h') AS REAL),
+                       0
+                   ) as volume
             FROM ticks 
             WHERE symbol = ? AND ts_ms >= ? AND ts_ms <= ?
             ORDER BY ts_ms ASC
@@ -89,6 +93,12 @@ class FeatureManager:
         
         if df.empty:
             raise ValueError(f"No tick data found for {symbol} in the specified time range")
+        
+        # Clean data: drop rows with NaN price, fill NaN volume with 0
+        df = df.dropna(subset=['price'])
+        df['volume'] = pd.to_numeric(df['volume'], errors='coerce').fillna(0)
+        df['price'] = pd.to_numeric(df['price'], errors='coerce')
+        df = df.dropna(subset=['price'])
         
         # Convert timestamp to datetime
         df['timestamp'] = pd.to_datetime(df['ts_ms'], unit='ms')

@@ -52,37 +52,49 @@ class TrainingPipeline:
         """
         print("Preparing training data for all models...")
         
+        # Auto-generate targets if missing
+        if "target_direction" not in features_df.columns:
+            from ml_pipeline.target_generator import add_targets
+            print("  ⋯ Generating targets from price data...")
+            features_df = add_targets(features_df, lookback=5)
+        
         training_data = {}
+        exclude_cols = ["target_direction", "target_price", "target_momentum", "target_volatility", "momentum"]
         
         # Direction Predictor - predict if price goes UP/DOWN in next 5 candles
         if "target_direction" in features_df.columns:
-            X = features_df.drop(columns=["target_direction"], errors="ignore")
+            X = features_df.drop(columns=exclude_cols, errors="ignore")
             y = features_df["target_direction"]
             training_data["direction_predictor"] = (X, y)
+            print(f"  ✓ Direction: {len(X)} samples")
         
-        # Risk Scorer - predict risk level based on volatility features
-        if "target_risk" in features_df.columns:
-            X = features_df.drop(columns=["target_risk"], errors="ignore")
-            y = features_df["target_risk"]
+        # Risk Scorer - use volatility as risk proxy
+        if "target_volatility" in features_df.columns:
+            X = features_df.drop(columns=exclude_cols, errors="ignore")
+            y = (features_df["target_volatility"] > features_df["target_volatility"].median()).astype(int)
             training_data["risk_scorer"] = (X, y)
+            print(f"  ✓ Risk scorer: {len(X)} samples")
         
         # Price Predictor - predict future price
         if "target_price" in features_df.columns:
-            X = features_df.drop(columns=["target_price"], errors="ignore")
+            X = features_df.drop(columns=exclude_cols, errors="ignore")
             y = features_df["target_price"]
             training_data["price_predictor"] = (X, y)
+            print(f"  ✓ Price: {len(X)} samples")
         
         # Momentum Classifier - classify momentum state
         if "target_momentum" in features_df.columns:
-            X = features_df.drop(columns=["target_momentum"], errors="ignore")
+            X = features_df.drop(columns=exclude_cols, errors="ignore")
             y = features_df["target_momentum"]
             training_data["momentum_classifier"] = (X, y)
+            print(f"  ✓ Momentum: {len(X)} samples")
         
         # Volatility Regressor - predict future volatility
         if "target_volatility" in features_df.columns:
-            X = features_df.drop(columns=["target_volatility"], errors="ignore")
+            X = features_df.drop(columns=exclude_cols, errors="ignore")
             y = features_df["target_volatility"]
             training_data["volatility_regressor"] = (X, y)
+            print(f"  ✓ Volatility: {len(X)} samples")
         
         return training_data
     

@@ -1,0 +1,14 @@
+{
+  "created_at": null,
+  "trained_at": "2026-02-16T00:09:19.652586",
+  "performance": {
+    "train_mae": 3022.4243086703996,
+    "val_mae": 3098.8315441330637,
+    "train_rmse": 3787.9724908656713,
+    "val_rmse": 3925.2949606236125,
+    "best_val_loss": 15407941.0,
+    "n_samples": 1000
+  },
+  "feature_importance": {},
+  "saved_at": "2026-02-16T00:09:19.654225"
+}

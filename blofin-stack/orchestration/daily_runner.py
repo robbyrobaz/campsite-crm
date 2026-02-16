@@ -20,6 +20,9 @@ from orchestration.ranker import Ranker
 from orchestration.reporter import DailyReporter
 from orchestration.strategy_designer import StrategyDesigner
 from orchestration.strategy_tuner import StrategyTuner
+from ml_pipeline.train import TrainingPipeline
+from ml_pipeline.db_connector import MLDatabaseConnector
+from features.feature_manager import FeatureManager
 
 
 class DailyRunner:
@@ -176,12 +179,65 @@ class DailyRunner:
         start_time = datetime.utcnow()
         
         try:
-            # Stub: In production, integrate with ml_pipeline
-            self.logger.info("Training ML models (STUB - will integrate with ml_pipeline)")
+            self.logger.info("Training 5 ML models in parallel...")
+            
+            # Initialize ML components
+            pipeline = TrainingPipeline(
+                base_model_dir=str(self.workspace_dir / 'models')
+            )
+            db_connector = MLDatabaseConnector(str(self.db_path))
+            feature_manager = FeatureManager(str(self.db_path))
+            
+            # Get training data
+            self.logger.info("Fetching feature data for ML training...")
+            try:
+                # Try to get real feature data from database
+                features_df = feature_manager.get_features(
+                    symbol='BTC-USDT',
+                    timeframe='1m',
+                    lookback_bars=1000  # Use smaller dataset for speed
+                )
+                
+                # Generate targets (simplified for initial testing)
+                import pandas as pd
+                import numpy as np
+                
+                features_df['target_direction'] = (features_df['close'].shift(-5) > features_df['close']).astype(int)
+                features_df['target_risk'] = features_df['close'].rolling(20).std().fillna(0) * 100
+                features_df['target_price'] = features_df['close'].shift(-5).fillna(features_df['close'])
+                features_df['target_momentum'] = pd.cut(
+                    features_df['close'].pct_change(),
+                    bins=[-np.inf, -0.01, 0.01, np.inf],
+                    labels=[0, 1, 2]
+                ).astype(int)
+                features_df['target_volatility'] = features_df['close'].rolling(10).std().fillna(0) / 1000
+                
+                # Drop rows with NaN targets
+                features_df = features_df.dropna()
+                
+                self.logger.info(f"✓ Loaded {len(features_df)} samples from feature_manager")
+                
+            except Exception as e:
+                # Fallback to synthetic data if feature_manager fails
+                self.logger.warning(f"Feature manager failed ({e}), using synthetic data")
+                features_df = pipeline.generate_synthetic_data(n_samples=1000)
+            
+            # Train all models in parallel
+            self.logger.info(f"Training {len(pipeline.models)} ML models...")
+            training_results = pipeline.train_all_models(
+                features_df,
+                max_workers=5
+            )
+            
+            # Save results to database
+            self.logger.info("Saving training results to database...")
+            row_ids = db_connector.save_all_results(training_results)
             
             result = {
-                'models_trained': 0,
-                'ensembles_tested': 0,
+                'models_trained': training_results.get('successful', 0),
+                'models_failed': training_results.get('failed', 0),
+                'db_rows_saved': len(row_ids),
+                'training_time': training_results.get('total_time', 0),
                 'duration_seconds': (datetime.utcnow() - start_time).total_seconds()
             }
             

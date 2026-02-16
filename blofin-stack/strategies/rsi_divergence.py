@@ -14,8 +14,8 @@ class RSIDivergenceStrategy(BaseStrategy):
     
     def __init__(self):
         self.window_seconds = int(os.getenv("RSI_WINDOW_SECONDS", "840"))
-        self.oversold = float(os.getenv("RSI_OVERSOLD", "30"))
-        self.overbought = float(os.getenv("RSI_OVERBOUGHT", "70"))
+        self.oversold = float(os.getenv("RSI_OVERSOLD", "25"))
+        self.overbought = float(os.getenv("RSI_OVERBOUGHT", "75"))
     
     def detect(
         self,

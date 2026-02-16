@@ -164,28 +164,48 @@ blofin-stack/
 ### Daily Orchestration (Cron)
 
 ```
-Every 12 hours (00:00, 12:00 UTC):
+Every 24 hours at 00:00 UTC:
 
-1. If day % 2 == 0 (strategy day):
-   └─ Run strategy_cycle.py
-   └─ Output: new strategies, tuned params, backtest results
+1. Score all 20 strategies + 5 models (Haiku, 2 min)
+   └─ Pull backtest results from last 7 days
+   └─ Rank by score
 
-2. Always:
-   └─ Run ml_cycle.py
-   └─ Output: new models, ensemble configs, validation results
+2. [PARALLEL] Design new strategies + backtest (Opus + Sonnet, 45 min)
+   ├─ Opus: Design 2-3 new candidates (analyze failures, market regime)
+   ├─ Sonnet: Backtest on 1m/5m/60m (execute detect(), calc metrics)
+   └─ Haiku: Validate vs live data (< 10% drift acceptable)
 
-3. Generate daily report:
-   └─ What changed (strategies, models, ensembles)
-   └─ Performance metrics (vs 7 days ago)
-   └─ What's top performing
-   └─ AI recommendations for next cycle
-   └─ Save to data/reports/
+3. [PARALLEL] Tune underperformers (Sonnet, 20 min)
+   └─ Analyze worst performers
+   └─ Suggest parameter adjustments
+   └─ Backtest with new params
+   └─ Keep if improved
 
-4. AI Review (Opus, 10 min, async):
-   └─ Read daily report
-   └─ Decide: what to focus on next?
-   └─ Propose next design targets
+4. [PARALLEL] Build ML models (Sonnet, 50 min)
+   ├─ Train 5 models in parallel (direction, risk, price, momentum, volatility)
+   ├─ Backtest each on holdout data
+   └─ Test ensemble combinations
+
+5. Rank & Update (Haiku, 2 min)
+   ├─ Keep top 20 strategies
+   ├─ Keep top 5 models
+   ├─ Keep top 3 ensembles
+   └─ Archive bottom performers
+
+6. Generate Report (Haiku, 5 min)
+   ├─ What changed (strategies, models, ensembles)
+   ├─ Performance metrics (top 5, performance trends)
+   ├─ Who got replaced and why
+   └─ Save to data/reports/YYYY-MM-DD.json
+
+7. AI Review (Opus, 10 min)
+   ├─ Read daily report
+   ├─ Analyze trends
+   ├─ Recommend improvements
    └─ Log to ai_reviews/
+
+Total time: ~2.5 hours (mostly parallel)
+Sleep: 21.5 hours until next cycle
 ```
 
 ---

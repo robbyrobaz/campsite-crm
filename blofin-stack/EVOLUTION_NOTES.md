@@ -50,3 +50,27 @@ ai_review.py          — periodic AI analysis of KB → strategy adjustments
 ingestor.py           — calls strategy_manager instead of hardcoded logic
 paper_engine.py       — confidence-weighted position sizing
 ```
+
+---
+
+## Dashboard CPU Optimization — 2026-02-15
+
+### Problem
+`api_server.py` was burning ~37% CPU average due to an unbounded 3-table JOIN
+fetching all 12,415 paper_trades every 3 seconds plus Python-side advanced stats.
+
+### Changes
+- Replaced per-trade JOIN with `GROUP BY` aggregate (~8 rows vs 12K+)
+- Dropped Sortino/profit-factor/max-drawdown from dashboard (simplified scoring)
+- Top trades: SQL `ORDER BY pnl_pct DESC LIMIT 10` (was 2,000 rows + Python sort)
+- Refresh interval: 60 seconds (was 3s backend / 2s frontend)
+
+### Scoring Formula (simplified)
+```
+pnl_component = clamp(0, 100, ((avg_pnl + 2.0) / 4.0) * 100)
+score = (win_rate * 0.6) + (pnl_component * 0.4)
+Grade: A (85+), B (70-84), C (55-69), D (40-54), F (<40)
+```
+
+### Result
+CPU: ~37% → <1% average. Dashboard columns: Strategy, Signals, Trades, Win%, PnL%, Grade.

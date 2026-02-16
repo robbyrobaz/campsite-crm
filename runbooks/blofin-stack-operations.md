@@ -39,6 +39,13 @@ Both services are `enable`d to `default.target`. For start before interactive lo
 sudo loginctl enable-linger rob
 ```
 
+## Dashboard refresh rates
+- Backend `fetch_summary_data()` runs every **60 seconds** in a background thread
+- Frontend polls `/api/summary` every **60 seconds** (`setInterval`)
+- These are hardcoded in `api_server.py` (search for `time.sleep` and `setInterval`)
+- Strategy scoring uses SQL `GROUP BY` aggregates (not per-trade Python loops)
+- Top trades use SQL `ORDER BY pnl_pct DESC LIMIT 10` (no Python sort)
+
 ## Tuning
 Edit `/home/rob/.openclaw/workspace/blofin-stack/.env`:
 - `BLOFIN_SYMBOLS` (~25 tokens default)

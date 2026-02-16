@@ -304,6 +304,30 @@ blofin-stack/
 
 ---
 
+## 2026-02-15: Dashboard CPU Optimization
+
+### Problem
+`api_server.py` background thread was burning ~35-37% CPU average:
+- Unbounded 3-table JOIN fetching all 12,415 paper_trades rows every 3 seconds
+- Python-side Sortino/profit-factor/max-drawdown calculations per strategy per cycle
+- Top-trades query fetching 2,000 rows → Python sort → take 10
+- Frontend polling every 2 seconds
+
+### Changes
+1. **SQL GROUP BY aggregate** — single query returns ~8 strategy rows instead of 12K+ individual trades
+2. **Simplified scoring** — `score = (win_rate * 0.6) + (pnl_component * 0.4)` replaces composite with Sortino/profit-factor/max-drawdown
+3. **SQL-side top trades** — `ORDER BY pnl_pct DESC LIMIT 10` instead of fetching 2,000 and sorting in Python
+4. **60-second refresh** — both backend (`time.sleep(60)`) and frontend (`setInterval(render, 60000)`)
+5. **Removed `calculate_stats()`** — no longer needed without per-trade advanced stats
+6. **Removed dashboard columns** — Profit Factor, Sortino, Max DD removed from HTML table
+
+### Results
+- CPU average: **~37% → <1%** (spike of ~2 seconds once per minute, idle otherwise)
+- CPU temps: 57°C package (down from elevated)
+- Dashboard still shows strategy grades, win rates, PnL, and top trades
+
+---
+
 **Implementation completed by:** Subagent (agent:main:subagent:338ed2e8)  
 **Date:** February 12, 2026  
 **Duration:** ~1 hour  

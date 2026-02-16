@@ -49,44 +49,6 @@ def _grade_score(score: float) -> str:
     if score >= 40: return 'D'
     return 'F'
 
-def calculate_stats(trades):
-    """Calculate advanced trading stats: profit factor, Sortino ratio, max drawdown."""
-    if not trades:
-        return {'profit_factor': 0, 'sortino': 0, 'max_dd': 0, 'return_pct': 0}
-    
-    pnls = [t.get('pnl_pct', 0) for t in trades if t.get('pnl_pct')]
-    if not pnls:
-        return {'profit_factor': 0, 'sortino': 0, 'max_dd': 0, 'return_pct': 0}
-    
-    # Profit factor: gross profit / gross loss (avoid div by zero)
-    gains = sum(p for p in pnls if p > 0)
-    losses = abs(sum(p for p in pnls if p < 0))
-    profit_factor = (gains / losses) if losses > 0 else gains
-    
-    # Sortino ratio (downside deviation focus)
-    mean_pnl = sum(pnls) / len(pnls)
-    downside = [p for p in pnls if p < mean_pnl]
-    downside_std = (sum((p - mean_pnl) ** 2 for p in downside) / len(downside)) ** 0.5 if downside else 0
-    sortino = (mean_pnl / downside_std * (252 ** 0.5)) if downside_std > 0 else 0
-    
-    # Max drawdown
-    cumulative = 0
-    peak = 0
-    max_dd = 0
-    for p in pnls:
-        cumulative += p
-        if cumulative > peak:
-            peak = cumulative
-        dd = peak - cumulative
-        if dd > max_dd:
-            max_dd = dd
-    
-    return {
-        'profit_factor': round(profit_factor, 2),
-        'sortino': round(sortino, 2),
-        'max_dd': round(max_dd, 2),
-        'return_pct': round(sum(pnls), 2),
-    }
 
 def fetch_summary_data():
     """Fetch summary data (may be slow, runs in background)."""
@@ -148,64 +110,48 @@ def fetch_summary_data():
             if signal_type in strategy_data[strat]['by_signal']:
                 strategy_data[strat]['by_signal'][signal_type] += 1
         
-        # Fetch per-strategy trades by joining with signals
-        strategy_trades_map = {}
+        # Fetch per-strategy aggregates via SQL GROUP BY (returns ~8 rows instead of 12K+)
+        strat_agg = {}
         for row in con.execute('''
-            SELECT s.strategy, pt.pnl_pct, pt.status
+            SELECT s.strategy,
+                   COUNT(*) as total,
+                   SUM(CASE WHEN pt.status='CLOSED' THEN 1 ELSE 0 END) as closed_count,
+                   SUM(CASE WHEN pt.status='CLOSED' AND pt.pnl_pct > 0 THEN 1 ELSE 0 END) as wins,
+                   AVG(CASE WHEN pt.status='CLOSED' THEN pt.pnl_pct END) as avg_pnl,
+                   SUM(CASE WHEN pt.status='CLOSED' THEN pt.pnl_pct END) as total_pnl
             FROM paper_trades pt
             JOIN confirmed_signals cs ON pt.confirmed_signal_id = cs.id
             JOIN signals s ON cs.signal_id = s.id
-            ORDER BY pt.opened_ts_ms DESC
+            WHERE pt.status = 'CLOSED'
+            GROUP BY s.strategy
         '''):
-            row_dict = dict(row)
-            strat = row_dict.get('strategy', 'unknown')
-            if strat not in strategy_trades_map:
-                strategy_trades_map[strat] = []
-            strategy_trades_map[strat].append(row_dict)
-        
-        # Calculate scores for each strategy
-        for strat_name, strat_info in sorted(strategy_data.items(), key=lambda x: x[1]['count'], reverse=True):
-            # Filter trades to only those for this strategy
-            strat_trades = strategy_trades_map.get(strat_name, [])
-            closed_strat_trades = [p for p in strat_trades if p['status'] == 'CLOSED']
-            
-            if closed_strat_trades:
-                wins = sum(1 for p in closed_strat_trades if p['pnl_pct'] and p['pnl_pct'] > 0)
-                wr = (wins / len(closed_strat_trades) * 100) if closed_strat_trades else 0
-                avg_pnl = sum(p['pnl_pct'] for p in closed_strat_trades if p['pnl_pct']) / len(closed_strat_trades) if closed_strat_trades else 0
-                total_pnl = sum(p['pnl_pct'] for p in closed_strat_trades if p['pnl_pct'])
-                
-                # Calculate advanced stats using the strategy-specific trade data
-                trade_pnls = [p.get('pnl_pct', 0) for p in closed_strat_trades]
-                stats = calculate_stats([{'pnl_pct': pnl} for pnl in trade_pnls])
+            r = dict(row)
+            strat_agg[r['strategy']] = r
 
-                # Composite scoring:
-                # - Win rate, average PnL, profit factor, Sortino, and max drawdown
-                # - Normalized to 0..100 then weighted
-                pnl_component = max(0.0, min(100.0, ((avg_pnl + 2.0) / 4.0) * 100.0))
-                pf_component = max(0.0, min(100.0, ((stats['profit_factor'] - 0.8) / 1.2) * 100.0))
-                sortino_component = max(0.0, min(100.0, ((stats['sortino'] + 1.0) / 3.0) * 100.0))
-                dd_component = max(0.0, min(100.0, 100.0 - (stats['max_dd'] * 5.0)))
-                score = (
-                    (wr * 0.35) +
-                    (pnl_component * 0.25) +
-                    (pf_component * 0.20) +
-                    (sortino_component * 0.10) +
-                    (dd_component * 0.10)
-                )
-                
+        # Calculate scores for each strategy using aggregated data
+        for strat_name, strat_info in sorted(strategy_data.items(), key=lambda x: x[1]['count'], reverse=True):
+            agg = strat_agg.get(strat_name)
+
+            if agg and agg['closed_count'] > 0:
+                closed_count = agg['closed_count']
+                wins_count = agg['wins'] or 0
+                wr = (wins_count / closed_count * 100)
+                avg_pnl_val = agg['avg_pnl'] or 0
+                total_pnl_val = agg['total_pnl'] or 0
+
+                # Simplified scoring: win_rate * 0.6 + pnl_component * 0.4
+                pnl_component = max(0.0, min(100.0, ((avg_pnl_val + 2.0) / 4.0) * 100.0))
+                score = (wr * 0.6) + (pnl_component * 0.4)
+
                 strategy_scores.append({
                     'strategy': strat_name,
                     'signals': strat_info['count'],
                     'buy_count': strat_info['by_signal'].get('BUY', 0),
                     'sell_count': strat_info['by_signal'].get('SELL', 0),
-                    'closed_count': len(closed_strat_trades),
+                    'closed_count': closed_count,
                     'win_rate_pct': round(wr, 2),
-                    'avg_pnl_pct': round(avg_pnl, 4),
-                    'total_pnl_pct': round(total_pnl, 4),
-                    'profit_factor': stats['profit_factor'],
-                    'sortino': stats['sortino'],
-                    'max_dd': stats['max_dd'],
+                    'avg_pnl_pct': round(avg_pnl_val, 4),
+                    'total_pnl_pct': round(total_pnl_val, 4),
                     'score': round(score, 2),
                     'grade': _grade_score(score),
                 })
@@ -220,9 +166,6 @@ def fetch_summary_data():
                     'win_rate_pct': 0.0,
                     'avg_pnl_pct': 0.0,
                     'total_pnl_pct': 0.0,
-                    'profit_factor': 0.0,
-                    'sortino': 0.0,
-                    'max_dd': 0.0,
                     'score': 0.0,
                     'grade': 'F',
                 })
@@ -230,17 +173,13 @@ def fetch_summary_data():
         # Rank strategy table by composite score first (then closed trades and signals)
         strategy_scores.sort(key=lambda s: (s.get('score', 0), s.get('closed_count', 0), s.get('signals', 0)), reverse=True)
 
-        # Top 10 paper trades by PnL
-        # Use a dedicated CLOSED-trades slice so dashboard doesn't go empty when
-        # recent activity is mostly OPEN trades.
-        closed_for_ranking = [dict(r) for r in con.execute(
+        # Top 10 paper trades by PnL (SQL-side sort, no Python re-sort needed)
+        top_trades = [dict(r) for r in con.execute(
             f"SELECT opened_ts_iso,closed_ts_iso,symbol,side,entry_price,exit_price,status,pnl_pct "
             f"FROM paper_trades {wh + (' AND ' if wh else ' WHERE ')} status='CLOSED' "
-            f"ORDER BY id DESC LIMIT 2000",
+            f"ORDER BY pnl_pct DESC LIMIT 10",
             args
         )]
-        closed_sorted = sorted(closed_for_ranking, key=lambda x: x['pnl_pct'] if x['pnl_pct'] else 0, reverse=True)
-        top_trades = closed_sorted[:10]
         
         # Top symbols by recent signal count
         symbol_counts = Counter(s['symbol'] for s in sigs)
@@ -290,7 +229,7 @@ def background_update():
     """Periodically fetch fresh data in background."""
     global _cache_data
     while True:
-        time.sleep(3)  # Update every 3 seconds
+        time.sleep(60)  # Update every 60 seconds (monitoring dashboard, not trading execution)
         data = fetch_summary_data()
         if data:
             with _cache_lock:
@@ -370,7 +309,7 @@ select{background:#0f172a;color:#e7ecff;border:1px solid #334155;padding:6px;bor
 </div>
 <div class="section">
 <h2>Top Strategies (25)</h2>
-<table><thead><tr><th data-col="strategy">Strategy</th><th data-col="signals">Signals</th><th data-col="trades">Trades</th><th data-col="wr">Win%</th><th data-col="pnl">PnL%</th><th data-col="pf">Profit Factor</th><th data-col="sortino">Sortino</th><th data-col="maxdd">Max DD%</th><th data-col="grade" title="Grade: A (85+), B (70-84), C (55-69), D (40-54), F (<40). Combines win rate, profit factor, Sortino ratio, and max drawdown into a single score.">Grade</th></tr></thead>
+<table><thead><tr><th data-col="strategy">Strategy</th><th data-col="signals">Signals</th><th data-col="trades">Trades</th><th data-col="wr">Win%</th><th data-col="pnl">PnL%</th><th data-col="grade" title="Grade: A (85+), B (70-84), C (55-69), D (40-54), F (<40). Combines win rate (60%) and avg PnL (40%).">Grade</th></tr></thead>
 <tbody id="strats"></tbody></table>
 </div>
 <div class="section">
@@ -422,9 +361,6 @@ function renderStrategies(){
     else if(col==='trades')av=a.closed_count,bv=b.closed_count;
     else if(col==='wr')av=a.win_rate_pct,bv=b.win_rate_pct;
     else if(col==='pnl')av=a.total_pnl_pct,bv=b.total_pnl_pct;
-    else if(col==='pf')av=a.profit_factor,bv=b.profit_factor;
-    else if(col==='sortino')av=a.sortino,bv=b.sortino;
-    else if(col==='maxdd')av=a.max_dd,bv=b.max_dd;
     else if(col==='grade'){const gv={A:4,B:3,C:2,D:1,F:0};av=gv[a.grade]||0;bv=gv[b.grade]||0;}
     if(typeof av==='string')return asc?av.localeCompare(bv):bv.localeCompare(av);
     return asc?av-bv:bv-av;
@@ -432,8 +368,7 @@ function renderStrategies(){
   let h='';
   for(let s of sorted){
     const c=s.total_pnl_pct>=0?'positive':'negative';
-    const pf=s.profit_factor>1.5?'positive':(s.profit_factor>1?'#999':' negative');
-    h+='<tr><td>'+s.strategy+'</td><td>'+s.signals+'</td><td>'+s.closed_count+'</td><td>'+s.win_rate_pct+'%</td><td class="'+c+'">'+s.total_pnl_pct.toFixed(1)+'%</td><td style="color:'+pf+'">'+s.profit_factor+'</td><td>'+s.sortino.toFixed(2)+'</td><td>'+s.max_dd.toFixed(2)+'%</td><td>'+s.grade+'</td></tr>';
+    h+='<tr><td>'+s.strategy+'</td><td>'+s.signals+'</td><td>'+s.closed_count+'</td><td>'+s.win_rate_pct+'%</td><td class="'+c+'">'+s.total_pnl_pct.toFixed(1)+'%</td><td>'+s.grade+'</td></tr>';
   }
   document.getElementById('strats').innerHTML=h;
   document.querySelectorAll('table thead th[data-col]').forEach(th=>{
@@ -512,7 +447,7 @@ async function loadChart(sym){
   ch=new Chart(document.getElementById('chart'),{type:'line',data:{labels:ls,datasets:[{label:sym,data:ps,borderColor:'#8b5cf6',backgroundColor:'rgba(139,92,246,0.1)',borderWidth:2,pointRadius:0,tension:0.1,fill:true}]},options:{responsive:true,plugins:{legend:{labels:{color:'#e2e8f0'}}}}});
 }
 render();
-setInterval(render,2000);
+setInterval(render,60000);
 </script>
 </body></html>'''
             return self.sendb(html.encode('utf-8'), ctype='text/html; charset=utf-8')

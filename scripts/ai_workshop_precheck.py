@@ -202,11 +202,12 @@ def main():
         state["last_check_ts"] = int(time.time())
         save_state(state)
 
+        # Always output JSON and exit 0
+        result = {"has_work": has_work}
         if has_work:
-            print(json.dumps(changes, indent=2))
-            sys.exit(0)
-        else:
-            sys.exit(1)
+            result.update(changes)
+        print(json.dumps(result, indent=2))
+        sys.exit(0)
 
     finally:
         release_lock()

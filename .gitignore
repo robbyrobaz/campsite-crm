@@ -28,6 +28,9 @@ node_modules/
 # OS
 .DS_Store
 
+# Repos with their own git (pushed to separate GitHub repos)
+blofin-stack/
+
 # Local external/source repos (kept for reference, not part of core stack)
 external-repos/
 ML_Predict_Assets/

@@ -1,3 +1,0 @@
-"""
-Feature library tests
-"""

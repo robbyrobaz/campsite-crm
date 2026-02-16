@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""AI Workshop precheck: detect new actionable GitHub issues without using LLM.
+"""AI Workshop precheck: detect actionable GitHub issues without using LLM.
 
 Exit codes:
   0 = work found (invoke LLM)
@@ -9,9 +9,7 @@ Exit codes:
 Outputs JSON to stdout ONLY when exit code is 0.
 
 Triggers:
-  - Any open issue with the "feedback" label (top priority, always triggers)
-  - New ai-task issues not seen before
-  - ai-task issues with updated comments since last check
+  - Any open issue with the "ai-task" label (new or updated since last check)
 """
 import json
 import os
@@ -32,7 +30,6 @@ def check_lock():
                 data = json.load(f)
             pid = data.get("pid", 0)
             ts = data.get("ts", 0)
-            # PID dead → clear immediately; TTL only fallback for alive PID
             if pid and os.path.exists(f"/proc/{pid}"):
                 if time.time() - ts < LOCK_TTL:
                     return False
@@ -71,44 +68,16 @@ def save_state(state):
         json.dump(state, f, indent=2)
 
 
-def gh_issue_list(label):
-    """Fetch open issues with a given label."""
-    result = subprocess.run(
-        [
-            "gh", "issue", "list", "--repo", REPO,
-            "--label", label, "--state", "open",
-            "--json", "number,title,updatedAt,labels,comments",
-        ],
-        capture_output=True, text=True, timeout=30,
-    )
-    if result.returncode != 0:
-        return None
-    try:
-        return json.loads(result.stdout)
-    except json.JSONDecodeError:
-        return None
-
-
 def get_latest_comment_at(comments):
-    """Extract the most recent comment timestamp from a comments list."""
     if not comments or not isinstance(comments, list):
         return ""
     latest = ""
     for c in comments:
-        ts = ""
         if isinstance(c, dict):
             ts = c.get("updatedAt", c.get("createdAt", ""))
-        if ts > latest:
-            latest = ts
+            if ts > latest:
+                latest = ts
     return latest
-
-
-def get_label_names(issue):
-    """Extract label names from an issue."""
-    labels = issue.get("labels", [])
-    if not isinstance(labels, list):
-        return []
-    return [l.get("name", "") if isinstance(l, dict) else str(l) for l in labels]
 
 
 def main():
@@ -118,40 +87,30 @@ def main():
     acquire_lock()
     try:
         state = load_state()
-        known_issues = state.get("issues", {})
+        known = state.get("issues", {})
 
-        # Fetch ai-task issues (main work queue)
-        ai_task_issues = gh_issue_list("ai-task")
-        if ai_task_issues is None:
-            print("gh CLI failed for ai-task", file=sys.stderr)
+        result = subprocess.run(
+            [
+                "gh", "issue", "list", "--repo", REPO,
+                "--label", "ai-task", "--state", "open",
+                "--json", "number,title,updatedAt,labels,comments",
+            ],
+            capture_output=True, text=True, timeout=30,
+        )
+        if result.returncode != 0:
+            print(f"gh error: {result.stderr}", file=sys.stderr)
             sys.exit(2)
 
-        # Fetch feedback-labeled issues (top priority — always triggers)
-        feedback_issues_raw = gh_issue_list("feedback")
-        if feedback_issues_raw is None:
-            feedback_issues_raw = []
+        try:
+            issues = json.loads(result.stdout)
+        except json.JSONDecodeError:
+            print(f"JSON parse error: {result.stdout[:200]}", file=sys.stderr)
+            sys.exit(2)
 
-        # Build set of feedback issue numbers for fast lookup
-        feedback_numbers = {str(i.get("number", "")) for i in feedback_issues_raw}
-
-        changes = {
-            "feedback_issues": [],
-            "new_issues": [],
-            "updated_issues": [],
-        }
-
-        # Any issue with "feedback" label is immediate work — no state comparison needed
-        for issue in feedback_issues_raw:
-            num = str(issue.get("number", ""))
-            if num:
-                changes["feedback_issues"].append({
-                    "number": int(num),
-                    "title": issue.get("title", ""),
-                })
-
-        # Check ai-task issues for new/updated (skip those already in feedback)
+        actionable = []
         new_known = {}
-        for issue in ai_task_issues:
+
+        for issue in issues:
             num = str(issue.get("number", ""))
             if not num:
                 continue
@@ -160,8 +119,12 @@ def main():
             comments = issue.get("comments", [])
             if not isinstance(comments, list):
                 comments = []
-
             latest_comment_at = get_latest_comment_at(comments)
+
+            # Check if this issue has in-progress label (already being worked on)
+            labels = issue.get("labels", [])
+            label_names = [l.get("name", "") if isinstance(l, dict) else str(l) for l in labels]
+            is_in_progress = "in-progress" in label_names
 
             new_known[num] = {
                 "updated_at": updated_at,
@@ -169,44 +132,40 @@ def main():
                 "comment_count": len(comments),
             }
 
-            # Skip if already captured as feedback
-            if num in feedback_numbers:
+            # Skip issues already in-progress (agent is already working on it)
+            if is_in_progress:
                 continue
 
-            prev = known_issues.get(num)
+            prev = known.get(num)
 
             if prev is None:
-                changes["new_issues"].append({
+                # New issue
+                actionable.append({
                     "number": int(num),
                     "title": issue.get("title", ""),
+                    "reason": "new",
                 })
             else:
-                issue_changed = (
+                # Check for updates
+                changed = (
                     prev.get("updated_at") != updated_at
                     or prev.get("latest_comment_at", "") != latest_comment_at
                 )
-                if issue_changed:
-                    changes["updated_issues"].append({
+                if changed:
+                    actionable.append({
                         "number": int(num),
                         "title": issue.get("title", ""),
+                        "reason": "updated",
                     })
-
-        has_work = (
-            len(changes["feedback_issues"]) > 0
-            or len(changes["new_issues"]) > 0
-            or len(changes["updated_issues"]) > 0
-        )
 
         # Update state
         state["issues"] = new_known
         state["last_check_ts"] = int(time.time())
         save_state(state)
 
-        # Always output JSON and exit 0
-        result = {"has_work": has_work}
-        if has_work:
-            result.update(changes)
-        print(json.dumps(result, indent=2))
+        # Always exit 0 — cron reads JSON to determine next action
+        output = {"actionable_issues": actionable}
+        print(json.dumps(output, indent=2))
         sys.exit(0)
 
     finally:

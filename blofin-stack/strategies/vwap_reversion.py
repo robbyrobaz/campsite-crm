@@ -14,7 +14,7 @@ class VWAPReversionStrategy(BaseStrategy):
     
     def __init__(self):
         self.lookback_seconds = int(os.getenv("VWAP_LOOKBACK_SECONDS", "1200"))
-        self.deviation_pct = float(os.getenv("VWAP_DEVIATION_PCT", "0.80"))
+        self.deviation_pct = float(os.getenv("VWAP_DEVIATION_PCT", "1.20"))
     
     def detect(
         self,

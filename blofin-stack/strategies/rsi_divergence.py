@@ -13,9 +13,9 @@ class RSIDivergenceStrategy(BaseStrategy):
     description = "Detects RSI overbought and oversold conditions"
     
     def __init__(self):
-        self.window_seconds = int(os.getenv("RSI_WINDOW_SECONDS", "840"))
-        self.oversold = float(os.getenv("RSI_OVERSOLD", "25"))
-        self.overbought = float(os.getenv("RSI_OVERBOUGHT", "75"))
+        self.window_seconds = int(os.getenv("RSI_WINDOW_SECONDS", "1200"))
+        self.oversold = float(os.getenv("RSI_OVERSOLD", "20"))
+        self.overbought = float(os.getenv("RSI_OVERBOUGHT", "80"))
     
     def detect(
         self,

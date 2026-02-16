@@ -13,9 +13,9 @@ class MomentumStrategy(BaseStrategy):
     description = "Detects strong upward or downward price momentum"
     
     def __init__(self):
-        self.window_seconds = int(os.getenv("MOMENTUM_WINDOW_SECONDS", "180"))
-        self.up_pct = float(os.getenv("MOMENTUM_UP_PCT", "0.60"))
-        self.down_pct = float(os.getenv("MOMENTUM_DOWN_PCT", "-0.60"))
+        self.window_seconds = int(os.getenv("MOMENTUM_WINDOW_SECONDS", "240"))
+        self.up_pct = float(os.getenv("MOMENTUM_UP_PCT", "1.00"))
+        self.down_pct = float(os.getenv("MOMENTUM_DOWN_PCT", "-1.00"))
     
     def detect(
         self,

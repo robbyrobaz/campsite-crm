@@ -70,9 +70,13 @@ Apply this to all new automation: default to haiku unless the task explicitly re
 - rsi_divergence: 79.30 (grade B, 45% win rate)
 - momentum: 79.25 (grade B, 37% win rate)
 
-**Dashboards (both fixed Feb 16):**
-- **8780 (basic):** Websocket ingestor status, live signals, strategy scores. Fixed: now pulls from strategy_scores table instead of stale backtest_results.
-- **8888 (advanced ML):** Strategy cards, ML models, performance trends, confirmed signals. Fixed: now merges top_strategies + active_strategies metrics so dashboard renders complete data.
+**Dashboards (Feb 16):**
+- **8780 (basic):** DEPRECATED — ignore. Old websocket dashboard.
+- **8888 (advanced ML):** THE LIVE DASHBOARD
+  - Fixed: win_rate format (decimal not percentage)
+  - Fixed: top_strategies now has complete data (scores + metrics merged)
+  - Added: Live data tracker showing real-time tick flow (updates every 3 seconds)
+  - Indicator shows "📊 Live: X ticks/10s" in header — green dot if data flowing, red if stale
 
 **Repo:** Public at github.com/robbyrobaz/blofin-trading-pipeline
 - dev branch: Active development

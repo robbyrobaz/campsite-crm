@@ -1,6 +1,14 @@
 {
   "lastUpdated": "2026-02-17T02:40:00Z",
-  "activeTasks": [],
+  "activeTasks": [
+    {
+      "id": "blofin-multiframe-optimization",
+      "title": "Blofin: 10-iteration optimization loop with multi-timeframe data",
+      "status": "in-progress",
+      "priority": "critical",
+      "details": "Building 1h/4h candles, iterative backtest->tune->ML cycle x10, find profitable strategies"
+    }
+  ],
   "lastTaskCompleted": {
     "id": "blofin-dashboard-8888-complete",
     "title": "8888 dashboard fully operational with live data tracker",

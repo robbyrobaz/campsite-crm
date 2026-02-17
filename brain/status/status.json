@@ -11,12 +11,17 @@
     }
   ],
   "systemHealth": {
-    "gateway": "starting",
-    "watchdog": "starting",
-    "services": "starting",
-    "cpu_temp": "pending",
+    "gateway": "active",
+    "watchdog": "operational",
+    "services": "running",
+    "cpu_temp": "61°C",
     "disk_pct": "18%",
-    "lastCheck": "2026-02-17T02:13:45Z"
+    "lastCheck": "2026-02-17T02:30:00Z"
+  },
+  "backupStatus": {
+    "full_restore": "enabled (every 2h)",
+    "knowledge_base": "enabled (every 10m)",
+    "lastSync": "2026-02-17T02:23:48Z"
   },
   "incidents": []
 }

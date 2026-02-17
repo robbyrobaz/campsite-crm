@@ -1,6 +1,12 @@
 {
   "lastUpdated": "2026-02-17T02:40:00Z",
   "activeTasks": [],
+  "lastTaskCompleted": {
+    "id": "blofin-dashboard-fixes",
+    "title": "Fixed Blofin dashboards (8780 & 8888) to display real strategy metrics",
+    "completedAt": "2026-02-17T03:16:00Z",
+    "summary": "Both dashboards were showing zeros or stale data. Root cause: API endpoints pulling from wrong tables or missing data. Fixed data sources, API response merging, and CORS headers."
+  },
   "queued": [],
   "recentlyCompleted": [
     {

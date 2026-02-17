@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blofin ML Trading Platform</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #151b3d;
+            --bg-card: #1a2142;
+            --bg-card-hover: #1f2751;
+            --accent-primary: #00d4ff;
+            --accent-secondary: #7c3aed;
+            --accent-success: #10b981;
+            --accent-warning: #f59e0b;
+            --accent-danger: #ef4444;
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --text-muted: #6b7280;
+            --border-color: #2d3561;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .background-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(124, 58, 237, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(0, 212, 255, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .container {
+            max-width: 1900px;
+            margin: 0 auto;
+            padding: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            text-align: center;
+            padding: 15px 0 20px;
+            position: relative;
+        }
+        
+        .logo-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 5px;
+            letter-spacing: -1px;
+        }
+        
+        .subtitle {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 6px 14px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .status-running .status-dot {
+            background: var(--accent-success);
+            box-shadow: 0 0 10px var(--accent-success);
+        }
+        
+        .status-idle .status-dot {
+            background: var(--accent-warning);
+            box-shadow: 0 0 10px var(--accent-warning);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .grid-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card.compact {
+            padding: 12px;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+            border-color: var(--accent-primary);
+        }
+        
+        .card:hover::before {
+            opacity: 1;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .card-icon {
+            font-size: 1.2rem;
+        }
+        
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            flex: 1;
+        }
+        
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .metric {
+            background: var(--bg-secondary);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            transition: all 0.2s ease;
+        }
+        
+        .metric:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-primary);
+        }
+        
+        .metric-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+        
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+        
+        .metric-value.large {
+            font-size: 1.8rem;
+        }
+        
+        .metric-change {
+            font-size: 0.75rem;
+            margin-top: 3px;
+            font-weight: 600;
+        }
+        
+        .positive {
+            color: var(--accent-success);
+        }
+        
+        .negative {
+            color: var(--accent-danger);
+        }
+        
+        .neutral {
+            color: var(--text-secondary);
+        }
+        
+        .strategy-list, .model-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .strategy-card, .model-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-left: 3px solid var(--accent-primary);
+            border-radius: 10px;
+            padding: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .strategy-card:hover, .model-card:hover {
+            background: var(--bg-card-hover);
+            border-left-color: var(--accent-secondary);
+            transform: translateX(4px);
+        }
+        
+        .strategy-header, .model-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .strategy-name, .model-name {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .strategy-score {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 6px rgba(0, 212, 255, 0.3);
+        }
+        
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 8px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            margin-bottom: 3px;
+        }
+        
+        .stat-value {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .service-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-secondary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .service-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .service-running {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-success);
+            border: 1px solid var(--accent-success);
+        }
+        
+        .service-idle {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-warning);
+            border: 1px solid var(--accent-warning);
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 220px;
+            margin-top: 10px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        
+        .loading::after {
+            content: '...';
+            animation: dots 1.5s steps(4, end) infinite;
+        }
+        
+        @keyframes dots {
+            0%, 20% { content: '.'; }
+            40% { content: '..'; }
+            60%, 100% { content: '...'; }
+        }
+        
+        .error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--accent-danger);
+            border: 1px solid var(--accent-danger);
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .badge-success {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-success);
+        }
+        
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-warning);
+        }
+        
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-danger);
+        }
+        
+        .timestamp {
+            text-align: center;
+            padding: 12px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        
+        .highlight-card {
+            background: linear-gradient(135deg, rgba(124, 58, 237, 0.1), rgba(0, 212, 255, 0.1));
+            border: 1px solid rgba(124, 58, 237, 0.3);
+        }
+        
+        @media (max-width: 1200px) {
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .card[style*="grid-column: span 2"] {
+                grid-column: span 1 !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .grid, .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+            .logo-title {
+                font-size: 1.8rem;
+            }
+            .metric-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-gradient"></div>
+    
+    <div class="container">
+        <header>
+            <h1 class="logo-title">⚡ Blofin ML Trading</h1>
+            <p class="subtitle">Real-Time Algorithmic Trading Intelligence</p>
+            <div style="display: flex; gap: 20px; margin-top: 10px; justify-content: center; align-items: center;">
+                <div id="mainStatus" class="status-indicator">
+                    <span class="status-dot"></span>
+                    <span>Initializing...</span>
+                </div>
+                <div id="liveDataIndicator" class="status-indicator" style="background: #0f172a; border: 1px solid #2d3561;">
+                    <span class="status-dot" style="background: #10b981;"></span>
+                    <span>📊 Live: <span id="liveTickCount">--</span> ticks/10s</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Key Metrics Overview -->
+        <div class="grid grid-4" id="keyMetrics">
+            <div class="card highlight-card">
+                <div class="metric">
+                    <div class="metric-label">Pipeline Status</div>
+                    <div class="metric-value" id="pipelineStatus">--</div>
+                    <div class="metric-change neutral" id="servicesCount">-- services</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="metric">
+                    <div class="metric-label">Trades (1h)</div>
+                    <div class="metric-value large" id="tradesCount">--</div>
+                    <div class="metric-change" id="tradesChange">--</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="metric">
+                    <div class="metric-label">Strategy Scores</div>
+                    <div class="metric-value large" id="scoresCount">--</div>
+                    <div class="metric-change" id="scoresChange">--</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="metric">
+                    <div class="metric-label">Portfolio Health</div>
+                    <div class="metric-value" id="healthScore">--</div>
+                    <div class="metric-change" id="healthStatus">--</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Advanced Trading Metrics -->
+        <div class="card highlight-card">
+            <div class="card-header">
+                <span class="card-icon">💹</span>
+                <h2 class="card-title">Advanced Trading Metrics</h2>
+            </div>
+            <div class="metric-grid" id="advancedMetrics">
+                <div class="metric">
+                    <div class="metric-label">Profit Factor</div>
+                    <div class="metric-value">--</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Sortino Ratio</div>
+                    <div class="metric-value">--</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Sharpe Ratio</div>
+                    <div class="metric-value">--</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Max Drawdown</div>
+                    <div class="metric-value">--</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Expectancy</div>
+                    <div class="metric-value">--</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Win / Loss Ratio</div>
+                    <div class="metric-value">--</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Total PnL</div>
+                    <div class="metric-value">--</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Total Trades</div>
+                    <div class="metric-value">--</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Services & Metrics -->
+        <div class="grid grid-3">
+            <div class="card compact">
+                <div class="card-header">
+                    <span class="card-icon">🔧</span>
+                    <h2 class="card-title">Services</h2>
+                </div>
+                <div id="servicesContent" class="loading">Loading</div>
+            </div>
+            
+            <div class="card compact" style="grid-column: span 2;">
+                <div class="card-header">
+                    <span class="card-icon">📊</span>
+                    <h2 class="card-title">Performance Metrics</h2>
+                </div>
+                <div class="metric-grid" id="performanceMetrics">
+                    <div class="metric">
+                        <div class="metric-label">Avg Score</div>
+                        <div class="metric-value">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Win Rate</div>
+                        <div class="metric-value">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Active Strategies</div>
+                        <div class="metric-value">--</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Active Models</div>
+                        <div class="metric-value">--</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Strategies & Models -->
+        <div class="grid grid-2">
+            <div class="card compact">
+                <div class="card-header">
+                    <span class="card-icon">🎯</span>
+                    <h2 class="card-title">Top Strategies</h2>
+                </div>
+                <div id="strategiesContent" class="loading">Loading</div>
+            </div>
+            
+            <div class="card compact">
+                <div class="card-header">
+                    <span class="card-icon">🤖</span>
+                    <h2 class="card-title">ML Models</h2>
+                </div>
+                <div id="modelsContent" class="loading">Loading</div>
+            </div>
+        </div>
+        
+        <!-- Charts -->
+        <div class="grid grid-2">
+            <div class="card compact">
+                <div class="card-header">
+                    <span class="card-icon">📈</span>
+                    <h2 class="card-title">Strategy Performance Trends</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="card compact">
+                <div class="card-header">
+                    <span class="card-icon">📉</span>
+                    <h2 class="card-title">Model Training History</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="modelChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <div class="timestamp">
+            Last updated: <span id="lastUpdate">Never</span>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE = 'http://localhost:8888/api';
+        let performanceChart = null;
+        let modelChart = null;
+        
+        async function fetchData(endpoint) {
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                return await response.json();
+            } catch (error) {
+                console.error(`Error fetching ${endpoint}:`, error);
+                return null;
+            }
+        }
+        
+        function formatNumber(num) {
+            if (num >= 1000000) return (num / 1000000).toFixed(1) + 'M';
+            if (num >= 1000) return (num / 1000).toFixed(1) + 'K';
+            return num.toString();
+        }
+        
+        function formatPercent(num) {
+            return (num * 100).toFixed(1) + '%';
+        }
+        
+        async function updateLiveData() {
+            const data = await fetchData('/live-data');
+            if (!data) return;
+            
+            const indicator = document.getElementById('liveDataIndicator');
+            const tickCount = document.getElementById('liveTickCount');
+            
+            tickCount.textContent = data.ticks_10s;
+            
+            // Green dot if flowing, red if stale
+            if (data.is_flowing) {
+                indicator.style.borderColor = '#10b981';
+                indicator.querySelector('.status-dot').style.background = '#10b981';
+            } else {
+                indicator.style.borderColor = '#ef4444';
+                indicator.querySelector('.status-dot').style.background = '#ef4444';
+            }
+        }
+        
+        async function updateStatus() {
+            const data = await fetchData('/status');
+            if (!data) return;
+            
+            // Update main status
+            const mainStatus = document.getElementById('mainStatus');
+            const runningServices = data.services.filter(s => s.status === 'running').length;
+            
+            if (data.status === 'running') {
+                mainStatus.className = 'status-indicator status-running';
+                mainStatus.innerHTML = `<span class="status-dot"></span><span>Pipeline Active</span>`;
+            } else {
+                mainStatus.className = 'status-indicator status-idle';
+                mainStatus.innerHTML = `<span class="status-dot"></span><span>Pipeline Idle</span>`;
+            }
+            
+            // Update key metrics
+            document.getElementById('pipelineStatus').textContent = data.status.toUpperCase();
+            document.getElementById('servicesCount').textContent = `${runningServices} active`;
+            document.getElementById('tradesCount').textContent = formatNumber(data.activity.recent_trades_1h);
+            document.getElementById('scoresCount').textContent = formatNumber(data.activity.recent_scores_1h);
+            
+            // Update services list
+            let html = '<div class="service-list">';
+            data.services.forEach(service => {
+                const age = service.age_seconds < 60 ? `${service.age_seconds}s` : 
+                            service.age_seconds < 3600 ? `${Math.floor(service.age_seconds / 60)}m` : 
+                            `${Math.floor(service.age_seconds / 3600)}h`;
+                html += `
+                    <div class="service-item">
+                        <span style="font-weight: 600;">${service.name}</span>
+                        <div style="display: flex; gap: 12px; align-items: center;">
+                            <span style="color: var(--text-muted); font-size: 0.85rem;">${age} ago</span>
+                            <span class="service-badge service-${service.status}">${service.status}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            document.getElementById('servicesContent').innerHTML = html;
+        }
+        
+        async function updateStrategies() {
+            const data = await fetchData('/strategies');
+            if (!data) return;
+            
+            const strategies = data.top_strategies || [];
+            
+            let html = '<div class="strategy-list">';
+            strategies.slice(0, 8).forEach((strat, idx) => {
+                const name = strat.strategy || strat.name;
+                const score = strat.best_score || strat.avg_score || 0;
+                const winRate = ((strat.win_rate || 0) * 100).toFixed(1);
+                const sharpe = (strat.sharpe_ratio || 0).toFixed(2);
+                const pnl = (strat.total_pnl_pct || 0).toFixed(2);
+                const trades = strat.score_count || strat.trades || 0;
+                
+                html += `
+                    <div class="strategy-card">
+                        <div class="strategy-header">
+                            <span class="strategy-name">#${idx + 1} ${name}</span>
+                            <span class="strategy-score">${score.toFixed(1)}</span>
+                        </div>
+                        <div class="stats-row">
+                            <div class="stat">
+                                <div class="stat-label">Win Rate</div>
+                                <div class="stat-value ${parseFloat(winRate) > 50 ? 'positive' : 'neutral'}">${winRate}%</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-label">Sharpe</div>
+                                <div class="stat-value">${sharpe}</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-label">PnL %</div>
+                                <div class="stat-value ${parseFloat(pnl) > 0 ? 'positive' : 'negative'}">${pnl}%</div>
+                            </div>
+                            <div class="stat">
+                                <div class="stat-label">Signals</div>
+                                <div class="stat-value">${formatNumber(trades)}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            document.getElementById('strategiesContent').innerHTML = html;
+        }
+        
+        async function updateModels() {
+            const data = await fetchData('/models');
+            if (!data) return;
+            
+            // Group by model name and get latest results
+            const modelMap = new Map();
+            data.models.forEach(model => {
+                if (!modelMap.has(model.model_name) || model.created_at > modelMap.get(model.model_name).created_at) {
+                    modelMap.set(model.model_name, model);
+                }
+            });
+            
+            const latestModels = Array.from(modelMap.values());
+            
+            let html = '<div class="model-list">';
+            latestModels.forEach(model => {
+                const hasTestData = model.test_accuracy > 0;
+                const accuracy = hasTestData ? model.test_accuracy : model.train_accuracy;
+                const accType = hasTestData ? 'test' : 'train';
+                
+                html += `
+                    <div class="model-card">
+                        <div class="model-header">
+                            <span class="model-name">${model.model_name}</span>
+                            <span class="badge ${accuracy > 90 ? 'badge-success' : accuracy > 70 ? 'badge-warning' : 'badge-danger'}">
+                                ${accuracy}% ${accType}
+                            </span>
+                        </div>
+                        <div class="stats-row">
+                            ${model.train_accuracy > 0 ? `
+                            <div class="stat">
+                                <div class="stat-label">Train Acc</div>
+                                <div class="stat-value">${model.train_accuracy}%</div>
+                            </div>
+                            ` : ''}
+                            ${model.test_accuracy > 0 ? `
+                            <div class="stat">
+                                <div class="stat-label">Test Acc</div>
+                                <div class="stat-value">${model.test_accuracy}%</div>
+                            </div>
+                            ` : ''}
+                            ${model.precision > 0 ? `
+                            <div class="stat">
+                                <div class="stat-label">Precision</div>
+                                <div class="stat-value">${model.precision}%</div>
+                            </div>
+                            ` : ''}
+                            ${model.f1_score > 0 ? `
+                            <div class="stat">
+                                <div class="stat-label">F1 Score</div>
+                                <div class="stat-value">${model.f1_score}</div>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            document.getElementById('modelsContent').innerHTML = html;
+            
+            // Update model history chart
+            if (data.model_history && data.model_history.length > 0) {
+                updateModelChart(data.model_history);
+            }
+        }
+        
+        function updateModelChart(history) {
+            const ctx = document.getElementById('modelChart').getContext('2d');
+            
+            // Group by model name
+            const modelData = {};
+            history.forEach(entry => {
+                if (!modelData[entry.model_name]) {
+                    modelData[entry.model_name] = {
+                        timestamps: [],
+                        accuracies: []
+                    };
+                }
+                modelData[entry.model_name].timestamps.push(entry.timestamp);
+                modelData[entry.model_name].accuracies.push(entry.accuracy);
+            });
+            
+            // Create datasets
+            const colors = {
+                'direction_predictor': '#00d4ff',
+                'price_predictor': '#7c3aed',
+                'volatility_regressor': '#10b981',
+                'risk_scorer': '#f59e0b',
+                'momentum_classifier': '#ef4444'
+            };
+            
+            const datasets = Object.keys(modelData).map(modelName => ({
+                label: modelName,
+                data: modelData[modelName].accuracies,
+                borderColor: colors[modelName] || '#9ca3af',
+                backgroundColor: 'transparent',
+                borderWidth: 2,
+                tension: 0.4,
+                pointRadius: 3,
+                pointHoverRadius: 5
+            }));
+            
+            // Use timestamps from first model as labels
+            const labels = Object.values(modelData)[0].timestamps.map(ts => {
+                const date = new Date(ts);
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            });
+            
+            if (modelChart) {
+                modelChart.destroy();
+            }
+            
+            modelChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#e5e7eb',
+                                font: { size: 11, weight: '600' }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.parsed.y.toFixed(2) + '%';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#2d3561' },
+                            ticks: { 
+                                color: '#9ca3af',
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        },
+                        y: {
+                            grid: { color: '#2d3561' },
+                            ticks: { color: '#9ca3af' },
+                            title: {
+                                display: true,
+                                text: 'Training Accuracy %',
+                                color: '#e5e7eb'
+                            },
+                            min: 0,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        }
+        
+        async function updateReports() {
+            const data = await fetchData('/reports');
+            if (!data || !data.latest_report) return;
+            
+            const report = data.latest_report;
+            const health = report.portfolio_health || {};
+            
+            // Update health metrics
+            document.getElementById('healthScore').textContent = (health.health_score || 0) + '/100';
+            document.getElementById('healthStatus').textContent = (health.health_status || 'unknown').toUpperCase();
+            document.getElementById('healthStatus').className = `metric-change ${health.health_score > 70 ? 'positive' : health.health_score > 40 ? 'neutral' : 'negative'}`;
+            
+            // Update performance metrics
+            const metricsHTML = `
+                <div class="metric">
+                    <div class="metric-label">Avg Portfolio Score</div>
+                    <div class="metric-value">${(health.avg_portfolio_score || 0).toFixed(1)}</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Recent Win Rate</div>
+                    <div class="metric-value ${health.recent_win_rate > 50 ? 'positive' : ''}">${(health.recent_win_rate || 0).toFixed(1)}%</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Active Strategies</div>
+                    <div class="metric-value">${health.active_strategies || 0}</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Active Models</div>
+                    <div class="metric-value">${health.active_models || 0}</div>
+                </div>
+            `;
+            document.getElementById('performanceMetrics').innerHTML = metricsHTML;
+            
+            // Update chart
+            if (report.performance_trends && report.performance_trends.daily_averages) {
+                updateChart(report.performance_trends.daily_averages);
+            }
+        }
+        
+        function updateChart(dailyAverages) {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            
+            const labels = dailyAverages.map(d => d.date).reverse();
+            const scores = dailyAverages.map(d => d.avg_score).reverse();
+            const winRates = dailyAverages.map(d => d.avg_win_rate * 100).reverse();
+            
+            if (performanceChart) {
+                performanceChart.destroy();
+            }
+            
+            performanceChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Avg Strategy Score',
+                            data: scores,
+                            borderColor: '#00d4ff',
+                            backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: 'Win Rate %',
+                            data: winRates,
+                            borderColor: '#10b981',
+                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                            borderWidth: 3,
+                            tension: 0.4,
+                            fill: true,
+                            yAxisID: 'y1'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: '#e5e7eb',
+                                font: { size: 13, weight: '600' }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#2d3561' },
+                            ticks: { color: '#9ca3af' }
+                        },
+                        y: {
+                            type: 'linear',
+                            position: 'left',
+                            grid: { color: '#2d3561' },
+                            ticks: { color: '#9ca3af' },
+                            title: {
+                                display: true,
+                                text: 'Strategy Score',
+                                color: '#00d4ff'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            position: 'right',
+                            grid: { drawOnChartArea: false },
+                            ticks: { color: '#9ca3af' },
+                            title: {
+                                display: true,
+                                text: 'Win Rate %',
+                                color: '#10b981'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        async function updateAdvancedMetrics() {
+            const data = await fetchData('/advanced_metrics');
+            if (!data) return;
+            
+            const trading = data.trading_metrics || {};
+            const risk = data.risk_metrics || {};
+            
+            const winLossRatio = trading.avg_loss !== 0 ? Math.abs(trading.avg_win / trading.avg_loss) : 0;
+            
+            const metricsHTML = `
+                <div class="metric">
+                    <div class="metric-label">Profit Factor</div>
+                    <div class="metric-value ${trading.profit_factor > 1 ? 'positive' : 'negative'}">
+                        ${trading.profit_factor.toFixed(2)}
+                    </div>
+                    <div class="metric-change ${trading.profit_factor > 1 ? 'positive' : 'negative'}">
+                        ${trading.profit_factor > 1 ? '↑ Profitable' : '↓ Losing'}
+                    </div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Sortino Ratio</div>
+                    <div class="metric-value ${risk.sortino_ratio > 1 ? 'positive' : 'neutral'}">
+                        ${risk.sortino_ratio.toFixed(2)}
+                    </div>
+                    <div class="metric-change neutral">Downside risk-adj</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Sharpe Ratio</div>
+                    <div class="metric-value ${risk.avg_sharpe_ratio > 1 ? 'positive' : 'neutral'}">
+                        ${risk.avg_sharpe_ratio.toFixed(2)}
+                    </div>
+                    <div class="metric-change neutral">Max: ${risk.max_sharpe_ratio.toFixed(2)}</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Max Drawdown</div>
+                    <div class="metric-value negative">
+                        ${risk.max_drawdown_pct.toFixed(2)}%
+                    </div>
+                    <div class="metric-change neutral">Avg: ${risk.avg_drawdown_pct.toFixed(2)}%</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Expectancy</div>
+                    <div class="metric-value ${trading.expectancy > 0 ? 'positive' : 'negative'}">
+                        ${(trading.expectancy * 100).toFixed(3)}%
+                    </div>
+                    <div class="metric-change neutral">Per trade avg</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Win / Loss Ratio</div>
+                    <div class="metric-value ${winLossRatio > 1 ? 'positive' : 'negative'}">
+                        ${winLossRatio.toFixed(2)}
+                    </div>
+                    <div class="metric-change neutral">${Math.abs(trading.avg_win * 100).toFixed(2)}% / ${Math.abs(trading.avg_loss * 100).toFixed(2)}%</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Total PnL</div>
+                    <div class="metric-value large ${trading.total_pnl_pct > 0 ? 'positive' : 'negative'}">
+                        ${trading.total_pnl_pct.toFixed(2)}%
+                    </div>
+                    <div class="metric-change neutral">${trading.winning_trades}W / ${trading.losing_trades}L</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-label">Total Trades</div>
+                    <div class="metric-value large">
+                        ${formatNumber(trading.total_trades)}
+                    </div>
+                    <div class="metric-change ${trading.win_rate > 50 ? 'positive' : 'negative'}">
+                        ${trading.win_rate.toFixed(1)}% win rate
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('advancedMetrics').innerHTML = metricsHTML;
+        }
+        
+        async function updateAll() {
+            await Promise.all([
+                updateStatus(),
+                updateStrategies(),
+                updateModels(),
+                updateReports(),
+                updateAdvancedMetrics()
+            ]);
+            
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleTimeString();
+        }
+        
+        // Initial load
+        updateAll();
+        updateLiveData();  // Load immediately
+        
+        // Auto-refresh every 10 seconds (full update)
+        setInterval(updateAll, 10000);
+        
+        // Auto-refresh live data every 3 seconds (lightweight, shows real-time ticks)
+        setInterval(updateLiveData, 3000);
+    </script>
+</body>
+</html>

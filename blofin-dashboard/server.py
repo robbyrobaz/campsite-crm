@@ -124,6 +124,52 @@ def api_status(conn):
     })
 
 
+@app.route('/api/live-data')
+@safe_query
+def api_live_data(conn):
+    """Get real-time data flow status (lightweight, fast endpoint)."""
+    cursor = conn.cursor()
+    now = datetime.utcnow()
+    
+    # Recent ticks (last 10 seconds)
+    ten_sec_ago = (now - timedelta(seconds=10)).isoformat()
+    cursor.execute(
+        "SELECT COUNT(*) as count FROM ticks WHERE ts_iso > ?",
+        (ten_sec_ago,)
+    )
+    ticks_10s = cursor.fetchone()['count']
+    
+    # Recent signals (last 60 seconds)
+    one_min_ago = (now - timedelta(seconds=60)).isoformat()
+    cursor.execute(
+        "SELECT COUNT(*) as count FROM signals WHERE ts_iso > ?",
+        (one_min_ago,)
+    )
+    signals_1m = cursor.fetchone()['count']
+    
+    # Last tick timestamp
+    cursor.execute(
+        "SELECT MAX(ts_iso) as last_ts FROM ticks"
+    )
+    last_tick = cursor.fetchone()['last_ts']
+    
+    # Check if data is flowing (any ticks in last 30 seconds)
+    thirty_sec_ago = (now - timedelta(seconds=30)).isoformat()
+    cursor.execute(
+        "SELECT COUNT(*) as count FROM ticks WHERE ts_iso > ?",
+        (thirty_sec_ago,)
+    )
+    is_flowing = cursor.fetchone()['count'] > 0
+    
+    return jsonify({
+        "ticks_10s": ticks_10s,
+        "signals_1m": signals_1m,
+        "last_tick_iso": last_tick,
+        "is_flowing": is_flowing,
+        "timestamp": now.isoformat() + "Z"
+    })
+
+
 @app.route('/api/strategies')
 @safe_query
 def api_strategies(conn):

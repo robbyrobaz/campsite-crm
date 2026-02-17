@@ -27,6 +27,21 @@
 
 **Success metrics:** 20 strategies rotating, 5+ models >55% accuracy, 3+ ensembles ready in 4-8 weeks
 
+## Rate Limiting Fix (Feb 16, 21:20 MST)
+
+**Issue:** Hit 429 rate limits during aggressive optimizer run. Analyzer had no rate limiting logic.
+
+**Root cause:** `llm_client.py` was calling Claude via subprocess with no throttling. Aggressive optimizer made 10+ sequential calls, hitting Claude's 1000 RPM ceiling instantly.
+
+**Fix implemented:**
+- Added `ClaudeRateLimiter` class tracking requests per 1-minute sliding window
+- Exponential backoff when approaching 950 RPM (95% threshold)
+- Thread-safe with Lock-protected deque, automatic 60-sec cleanup
+- Records request timestamp on every successful call
+- Prevents connectivity blackouts from rate limit hammering
+
+**Key insight:** Claude's limits are per-minute, NOT per 4-6 hours. The 4-6 hour window Rob mentioned was likely a billing cycle or token usage reporting window, not the actual refresh.
+
 ## Model Strategy
 
 **Cost-efficiency rule:** Use Haiku for regular automated tasks, Sonnet for heavy reasoning.

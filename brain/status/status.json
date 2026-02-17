@@ -18,6 +18,13 @@
   "queued": [],
   "recentlyCompleted": [
     {
+      "id": "rate-limit-fix",
+      "title": "Fixed: Claude-aware rate limiting (1000 RPM)",
+      "status": "completed",
+      "completedAt": "2026-02-17T04:20:30Z",
+      "summary": "Added ClaudeRateLimiter to llm_client.py tracking requests per 1-min sliding window. Exponential backoff at 950 RPM threshold. Prevents 429 errors from aggressive optimization loops."
+    },
+    {
       "id": "blofin-pipeline-complete",
       "title": "Blofin trading pipeline fully operational with real data",
       "status": "completed",

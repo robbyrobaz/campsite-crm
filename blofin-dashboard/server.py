@@ -182,8 +182,27 @@ def api_strategies(conn):
             "updated": row['last_update']
         })
     
+    # Merge both arrays so dashboard gets complete data for each strategy
+    merged_strategies = {}
+    
+    # Start with top_strategies (has scores)
+    for s in strategies:
+        merged_strategies[s['strategy']] = s
+    
+    # Add metrics from active_strategies
+    for a in active_strategies:
+        if a['name'] in merged_strategies:
+            merged_strategies[a['name']].update({
+                'win_rate': a['win_rate'],
+                'sharpe_ratio': a['sharpe_ratio'],
+                'total_pnl_pct': a['total_pnl_pct'],
+                'trades': a['trades']
+            })
+    
+    merged_list = sorted(list(merged_strategies.values()), key=lambda x: x.get('best_score', 0), reverse=True)
+    
     return jsonify({
-        "top_strategies": strategies,
+        "top_strategies": merged_list,
         "active_strategies": active_strategies,
         "timestamp": datetime.utcnow().isoformat() + "Z"
     })

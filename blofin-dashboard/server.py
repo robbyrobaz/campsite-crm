@@ -175,7 +175,7 @@ def api_strategies(conn):
     for row in cursor.fetchall():
         active_strategies.append({
             "name": row['strategy'],
-            "win_rate": round(row['avg_win_rate'] * 100, 1) if row['avg_win_rate'] else 0,
+            "win_rate": round(row['avg_win_rate'], 4) if row['avg_win_rate'] else 0,  # Send as decimal (0-1), not percentage
             "sharpe_ratio": round(row['avg_sharpe'], 2) if row['avg_sharpe'] else 0,
             "total_pnl_pct": round(row['avg_pnl'], 2) if row['avg_pnl'] else 0,
             "trades": int(row['total_evals']) if row['total_evals'] else 0,

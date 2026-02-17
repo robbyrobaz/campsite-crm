@@ -36,3 +36,17 @@
 - **Alias:** Use `sonnet` shorthand instead of full `anthropic/claude-sonnet-4-5`
 
 Apply this to all new automation: default to haiku unless the task explicitly requires nuanced thinking.
+
+## Jarvis Infrastructure (Feb 16 Evening)
+
+**Status:** Fully bootstrapped and operational
+
+**What's in place:**
+- All persona files loaded (SOUL.md, IDENTITY.md, USER.md, AGENTS.md)
+- Brain directory structure (status.json, STANDARDS.md, CONTEXT.md)
+- Daily memory logs (memory/YYYY-MM-DD.md)
+- Backup infrastructure working: auto-syncs to github.com/robbyrobaz/openclaw-2nd-brain.git every 10 minutes
+- All Blofin services running (ingestor, API)
+- System health good: CPU 61°C, disk 18%, gateway active
+
+**Disaster recovery:** If laptop breaks, entire setup recoverable from GitHub (coin data can be redownloaded, stored separately in gitignore)

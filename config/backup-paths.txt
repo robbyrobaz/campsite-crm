@@ -1,9 +1,18 @@
-blofin-stack
-scripts
-systemd
-runbooks
-brain
-memory
-config
-README.md
-.gitignore
+# ────────────────────────────────────────────────────────────────────
+# KNOWLEDGE BASE ONLY — for continuity + Claude CLI fallback
+# ────────────────────────────────────────────────────────────────────
+# This backs up Jarvis's brain: memory, learnings, decisions, status.
+# Everything else (projects, automation, config) is in openclaw-full-restore.
+
+brain/
+memory/
+MEMORY.md
+
+# ────────────────────────────────────────────────────────────────────
+# EXCLUDED (handled by openclaw-full-restore backup every 2h):
+# ────────────────────────────────────────────────────────────────────
+# - ai-workshop/, campsite-crm/, blofin-stack/ (projects)
+# - scripts/, runbooks/ (automation)
+# - JARVIS_ARCHITECTURE_v2.md, STANDARDS.md, CONTEXT.md (in full-restore)
+# - Persona files: SOUL.md, IDENTITY.md, USER.md, AGENTS.md (system files)
+# - .gitignore, README.md, etc. (infrastructure)

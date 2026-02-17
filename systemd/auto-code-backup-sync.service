@@ -1,9 +1,0 @@
-[Unit]
-Description=Auto backup OpenClaw code + runbooks to second-brain
-After=network-online.target
-Wants=network-online.target
-
-[Service]
-Type=oneshot
-WorkingDirectory=/home/rob/.openclaw/workspace
-ExecStart=/home/rob/.openclaw/workspace/scripts/auto-code-backup-sync.sh

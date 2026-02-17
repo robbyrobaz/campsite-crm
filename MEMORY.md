@@ -37,7 +37,7 @@
 
 Apply this to all new automation: default to haiku unless the task explicitly requires nuanced thinking.
 
-## Jarvis Infrastructure (Feb 16 Evening)
+## Jarvis Infrastructure (Feb 16 Evening) ✅
 
 **Status:** Fully bootstrapped and operational
 
@@ -45,8 +45,31 @@ Apply this to all new automation: default to haiku unless the task explicitly re
 - All persona files loaded (SOUL.md, IDENTITY.md, USER.md, AGENTS.md)
 - Brain directory structure (status.json, STANDARDS.md, CONTEXT.md)
 - Daily memory logs (memory/YYYY-MM-DD.md)
-- Backup infrastructure working: auto-syncs to github.com/robbyrobaz/openclaw-2nd-brain.git every 10 minutes
-- All Blofin services running (ingestor, API)
-- System health good: CPU 61°C, disk 18%, gateway active
+- Two-tier backup infrastructure working:
+  - **Full-restore (every 2h):** Complete system snapshots to GitHub with Git LFS
+  - **2nd-brain (every 10m):** Knowledge-only sync for Claude CLI fallback
+- All Blofin services running (ingestor, API, paper trading, dashboard)
+- System health good: CPU 50°C, disk 18%, gateway active
 
-**Disaster recovery:** If laptop breaks, entire setup recoverable from GitHub (coin data can be redownloaded, stored separately in gitignore)
+**Disaster recovery:** If laptop breaks, entire setup recoverable from GitHub. Full snapshots in full-restore repo, knowledge base in 2nd-brain repo.
+
+## Blofin Pipeline Status (Feb 16 Evening) 🚀
+
+**Critical blockers being cleared:**
+
+1. **Strategy generation (FIXED)** — Builder-A completed refactor of strategy_designer.py + strategy_tuner.py
+   - Replaced broken `openclaw chat` subprocess calls with direct Anthropic SDK
+   - Code ready to use after API key added to `.env`
+   - Deployed on dev branch, ready to merge
+
+2. **Feature engineering (IN PROGRESS)** — Builder-B stripping synthetic data, using real 24.7M ticks
+   - Real data confirmed: Blofin websocket ingesting 24/7, 24.7M ticks in database
+   - Features will pull from `ticks` table (real market data)
+   - Dashboard will display real values instead of zeros
+
+3. **Real data available** ✅ — No synthetic data shortcut needed
+   - Ingestor running continuously since Feb 16 19:13 MST
+   - Live coin data flowing in from Blofin API
+   - Stored in local SQLite database
+
+**Repo status:** Public repo at github.com/robbyrobaz/blofin-trading-pipeline, dev/main branch strategy in place.

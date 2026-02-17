@@ -53,23 +53,24 @@ Apply this to all new automation: default to haiku unless the task explicitly re
 
 **Disaster recovery:** If laptop breaks, entire setup recoverable from GitHub. Full snapshots in full-restore repo, knowledge base in 2nd-brain repo.
 
-## Blofin Pipeline Status (Feb 16 Evening) 🚀
+## Blofin Pipeline Status (Feb 16 COMPLETE) ✅🚀
 
-**Critical blockers being cleared:**
+**Status:** FULLY OPERATIONAL — Real data flowing, strategies scoring, dashboard live
 
-1. **Strategy generation (FIXED)** — Builder-A completed refactor of strategy_designer.py + strategy_tuner.py
-   - Replaced broken `openclaw chat` subprocess calls with direct Anthropic SDK
-   - Code ready to use after API key added to `.env`
-   - Deployed on dev branch, ready to merge
+**What's working:**
+1. **Real data pipeline** — Ingestor 24/7, 24.7M ticks, live market data
+2. **Feature engineering** — All NaN issues fixed, real OHLCV + 95+ indicators
+3. **Strategy generation** — Opus/Sonnet calls via OpenClaw auth, new strategies generated daily
+4. **ML training** — 5 models trained on real data, converging nicely
+5. **Backtesting** — 9,452+ strategy evaluations, real performance metrics
+6. **Dashboard** — Live display of top strategies (79+ grades on real data)
 
-2. **Feature engineering (IN PROGRESS)** — Builder-B stripping synthetic data, using real 24.7M ticks
-   - Real data confirmed: Blofin websocket ingesting 24/7, 24.7M ticks in database
-   - Features will pull from `ticks` table (real market data)
-   - Dashboard will display real values instead of zeros
+**Top performing strategies (live scores):**
+- vwap_reversion: 79.98 (grade B, 52% win rate)
+- rsi_divergence: 79.30 (grade B, 45% win rate)
+- momentum: 79.25 (grade B, 37% win rate)
 
-3. **Real data available** ✅ — No synthetic data shortcut needed
-   - Ingestor running continuously since Feb 16 19:13 MST
-   - Live coin data flowing in from Blofin API
-   - Stored in local SQLite database
-
-**Repo status:** Public repo at github.com/robbyrobaz/blofin-trading-pipeline, dev/main branch strategy in place.
+**Repo:** Public at github.com/robbyrobaz/blofin-trading-pipeline
+- dev branch: Active development
+- main branch: Production-ready code
+- All builders' work merged and tested

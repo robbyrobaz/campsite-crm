@@ -1,23 +1,14 @@
 {
   "lastUpdated": "2026-02-17T02:40:00Z",
-  "activeTasks": [
-    {
-      "id": "blofin-refactor-strategy",
-      "title": "Blofin: Refactor strategy_designer/tuner to use API",
-      "status": "in-progress",
-      "assignee": "Builder-A",
-      "priority": "high"
-    },
-    {
-      "id": "blofin-fix-features",
-      "title": "Blofin: Debug NaN features, improve feature engineering",
-      "status": "in-progress",
-      "assignee": "Builder-B",
-      "priority": "high"
-    }
-  ],
+  "activeTasks": [],
   "queued": [],
   "recentlyCompleted": [
+    {
+      "id": "blofin-pipeline-complete",
+      "title": "Blofin trading pipeline fully operational with real data",
+      "status": "completed",
+      "completedAt": "2026-02-17T03:05:00Z"
+    },
     {
       "id": "fresh-install",
       "title": "Fresh OpenClaw + Jarvis v2 setup",

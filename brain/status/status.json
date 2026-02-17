@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-17T02:40:00Z",
+  "lastUpdated": "2026-02-17T04:27:00Z",
   "activeTasks": [
     {
       "id": "blofin-multiframe-optimization",
@@ -50,5 +50,16 @@
     "knowledge_base": "enabled (every 10m)",
     "lastSync": "2026-02-17T02:23:48Z"
   },
-  "incidents": []
+  "incidents": [],
+  "deploymentLog": {
+    "timestamp": "2026-02-17T04:27:00Z",
+    "action": "Evening deployment: strategy pruning + parameter tuning + VWAP threshold fix",
+    "changes": [
+      "✅ Fixed Claude rate limiter (1000 RPM per-minute sliding window)",
+      "✅ Fixed VWAP_DEVIATION_PCT: 0.40 → 0.80 (adjuster found ≥0.5% performs better)",
+      "⏳ Disabling 3 loser strategies (breakout 25.1% WR, momentum 30.9%, reversal 34.8%)",
+      "⏳ Parameter tuning: bb_squeeze +min_band_width, momentum threshold +0.4%, RSI SELL gate",
+      "📝 Momentum flagged for 24h re-enable review (conflict with paper trading +0.05% pnl)"
+    ]
+  }
 }

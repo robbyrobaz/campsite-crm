@@ -1,62 +1,34 @@
-# OpenClaw 2nd Brain + Blofin Workspace
+# Jarvis Workspace
 
-This repository now has a clear split between **personal knowledge files** and **runtime apps/services**.
+Rob's AI-managed workspace. Jarvis (COO) handles all operations via OpenClaw gateway.
 
-## Top-level layout
+## Layout
 
-- `brain/` — personal 2nd-brain knowledge base (notes + templates)
-  - `brain/inbox/`
-  - `brain/projects/`
-  - `brain/decisions/`
-  - `brain/learnings/`
-  - `brain/weekly/`
-  - `brain/templates/`
-- `runbooks/` — operational procedures
-- `scripts/` — automation helpers (backup, installers, note scaffolding)
-- `config/` — local config snippets
-- `systemd/` — service units/timers
-- `blofin-stack/` — live monitor/API stack
-- `blofin-dashboard/` — dashboard frontend
-- `kanban-dashboard/` — local ops kanban frontend
-- `blofin-research/` — research workspace
-- `external-repos/` — untracked upstream clones/sandboxes
-- `memory/` + `MEMORY.md` pattern (agent memory continuity)
+- `SOUL.md` — Jarvis persona and rules
+- `USER.md` — Rob's preferences and context
+- `IDENTITY.md` — Jarvis identity card
+- `AGENTS.md` — Operating manual (model routing, delegation, workflows)
+- `TOOLS.md` — Local service notes
+- `HEARTBEAT.md` — Proactive health check procedures
+- `MEMORY.md` — Long-term curated memory
+- `JARVIS_ARCHITECTURE_v2.md` — Full architecture design document
+- `brain/` — Jarvis persistent state (status.json, STANDARDS.md, CONTEXT.md)
+- `memory/` — Daily session logs
+- `scripts/` — Automation (watchdog, backup, status renderer)
+- `runbooks/` — Operational procedures
+- `blofin-stack/` — AI trading pipeline (production)
+- `blofin-dashboard/` — Trading dashboard (production, port 8780)
+- `ai-workshop/` — GitHub issue-driven AI dev workspace
+- `campsite-crm/` — CRM application
 
-## 2nd-brain workflow
+## Services
 
-1. **Capture** quickly in `brain/inbox/`
-2. **Distill** into `brain/projects/`, `brain/decisions/`, `brain/learnings/`
-3. **Review** weekly in `brain/weekly/`
+| Service | URL |
+|---------|-----|
+| OpenClaw Gateway | ws://127.0.0.1:18789 |
+| Blofin Dashboard | http://127.0.0.1:8780 |
+| Telegram Bot | @jarvis_omen_claw_bot |
 
-## Quick commands
+## Architecture
 
-Create a session summary:
-
-```bash
-./scripts/new-session-summary.sh "short-title"
-```
-
-Create/update a project note:
-
-```bash
-./scripts/new-project-update.sh "project-slug"
-```
-
-Start weekly review note:
-
-```bash
-cp brain/templates/weekly-review.md \
-  "brain/weekly/$(date +%F)-weekly-review.md"
-```
-
-## Backup references
-
-- 2nd-brain offsite backup runbook: `runbooks/offsite-backup-2nd-brain.md`
-- Auto code backup sync: `runbooks/auto-code-backup-sync.md`
-- Blofin stack backup/restore: `runbooks/blofin-stack-backup-restore.md`
-
-## Live local URLs
-
-- Blofin Dashboard: `http://127.0.0.1:8766`
-- Blofin Metrics API: `http://127.0.0.1:8766/api/metrics`
-- Ops Kanban Dashboard: `http://127.0.0.1:8767`
+See `JARVIS_ARCHITECTURE_v2.md` for the full design (2 agents: Jarvis + Builder).

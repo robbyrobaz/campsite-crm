@@ -1,0 +1,22 @@
+{
+  "lastUpdated": "2026-02-17T02:13:45Z",
+  "activeTasks": [],
+  "queued": [],
+  "recentlyCompleted": [
+    {
+      "id": "fresh-install",
+      "title": "Fresh OpenClaw + Jarvis v2 setup",
+      "status": "completed",
+      "completedAt": "2026-02-17T02:13:45Z"
+    }
+  ],
+  "systemHealth": {
+    "gateway": "starting",
+    "watchdog": "starting",
+    "services": "starting",
+    "cpu_temp": "pending",
+    "disk_pct": "18%",
+    "lastCheck": "2026-02-17T02:13:45Z"
+  },
+  "incidents": []
+}

@@ -2,10 +2,17 @@
   "lastUpdated": "2026-02-17T04:27:00Z",
   "activeTasks": [],
   "lastTaskCompleted": {
-    "id": "phase2-ml-framework-complete",
-    "title": "Phase 2 ML Retrain Framework built and tested (smoke 6/6 passing)",
-    "completedAt": "2026-02-17T11:30:00Z",
-    "summary": "Core modules (ml_retrain_phase2.py, ab_test_models.py, execution_calibrator_v2.py), systemd scheduling, 15KB smoke test suite. All files in place, cron jobs ready, documentation complete. Production ready."
+    "id": "audit-bugs-fix-complete",
+    "title": "All 5 critical audit bugs fixed and deployed (39/39 tests passing)",
+    "completedAt": "2026-02-17T11:24:00Z",
+    "summary": "P1: Top-N dedup (GROUP BY). P2: Sharpe min 30 trades. P3: Temporal split 24h embargo. P4: Health labels corrected. P5: Convergence gates + auto-archive. All live on :8888. Dashboard includes new backtest-vs-paper section."
+  },
+  "nextTask": {
+    "id": "phase2-ml-framework-deploy",
+    "title": "Phase 2 ML Retrain Framework - ready to spawn",
+    "status": "staged",
+    "blockedReason": "Awaiting go-ahead. Framework design complete (2-week trigger + 75 trades + regime diversity gates). Code not yet deployed.",
+    "action": "Spawn builder: ml_retrain_phase2.py, ab_test_models.py, execution_calibrator_v2.py"
   },
   "queued": [],
   "recentlyCompleted": [

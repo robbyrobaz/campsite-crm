@@ -103,3 +103,50 @@ Apply this to all new automation: default to haiku unless the task explicitly re
 - dev branch: Active development
 - main branch: Production-ready code
 - All builders' work merged and tested
+
+## Strategy Ranking Overhaul (Feb 17) ✅
+
+**Status:** Entry + Exit Package Score (EEP) integrated; replaces win-rate-only ranking
+
+**Problem:** Win rate is misleading. 40% win rate with big winners beats 70% with small losers.
+
+**Solution:** Composite EEP scoring
+- **Entry metrics (60%):** Profit Factor (30%) + Sharpe (25%) + Max DD (20%) + Sortino (15%) + Expectancy (10%)
+- **Exit metrics (40%):** % of max profit captured (25%) + R:R realization (20%) + Stop-hit frequency (15%) + Breakeven stop usage (10%)
+- **Hard gates:** PF ≥ 1.3, Sharpe ≥ 0.8, MDD ≤ 35%, Trades ≥ 30, positive expectancy
+
+Dashboard now shows strategies ranked by EEP, not win rate.
+
+## Paper Trading Feedback Loop (Feb 17) ✅
+
+**Status:** Phase 1 (execution calibrator) complete. Phase 2 gates set for 2-week accelerated timeline.
+
+**Phase 1 — Execution Calibrator (LIVE):**
+- Reads closed paper trades (33.4K trades accumulated)
+- Learns: actual slippage, fill rates, hold times
+- Updates position sizing dynamically
+- Zero look-ahead bias (closed trades only)
+
+**Reality gap discovered:**
+- **Actual slippage:** 0.052%/side vs 0.02% assumed (2.6x worse)
+- **Stop-hit frequency:** 47.2% stops hit then reversed (stops at obvious levels)
+- **Avg hold time:** 104.6 min vs 60 min assumed
+- **Fill rate:** 67% (not 100%)
+- **Paper PnL:** Currently unprofitable (PF=0.74) due to tight stops
+
+**Phase 2 — ML Retrain (Accelerated Timeline):**
+- Trigger: 2 weeks + 75 closed trades (not 4 weeks + 100)
+- Safety gates: 
+  - Regime diversity check (volatility must span 20th-80th percentile)
+  - A/B test minimum 100 trades per arm
+  - Conservative 1.5-2x slippage multiplier until 6 weeks data
+- Walk-forward retrain with 24h embargo (prevents label leakage)
+
+**Top 3 Strategies Ready:**
+1. mtf_trend_align / SHIB-USDT [5m/1h] — 81.8% WR, 16.74 Sharpe, +9.76% PnL
+2. ml_gbt_5m / ETH-USDT [5m] — 71.0% WR, 7.62 Sharpe, +42.3% PnL
+3. mtf_momentum_confirm / JUP-USDT [15m/4h] — 76.9% WR, 8.56 Sharpe, +29.28% PnL
+
+**Strategy lifecycle:** Discovery phase (now) → convergence (4-8 weeks) → stability. Once top 3 prove out, research tempo drops significantly. New strategies must clear increasingly high bar.
+
+**Key actionable:** Stops are too tight. Increase SL by 10-75bps to avoid algo stop-hunting at obvious levels.

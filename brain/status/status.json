@@ -116,18 +116,28 @@
       }
     },
     {
-      "id": "sports-betting-phase2",
-      "title": "Phase 2: Odds API Integration + Event Matching + Arbitrage Detection",
-      "spawnedAt": "2026-02-17T20:38:48.008638",
-      "status": "queued",
+      "id": "sports-betting-phase2-real-apps",
+      "sessionKey": "agent:main:subagent:a0d5ba1a-f054-485f-aafe-7f713cf7a82f",
+      "runId": "baaae165-a60e-47fe-8ba6-10cd2552a00f",
+      "title": "Phase 2: Real Sportsbook Apps + Play Services",
+      "spawnedAt": "2026-02-17T22:04:30Z",
+      "status": "active",
       "model": "sonnet",
-      "expectedCompletionMinutes": 180,
+      "expectedCompletionMinutes": 90,
+      "expectedCompletionTime": "2026-02-17T23:34:30Z",
       "deliverables": [
-        "Odds API client (start with free source: ESPN, RapidAPI)",
-        "Event matching engine (team fuzzy match, league match, market equivalence)",
-        "Arbitrage detector (implied prob calculation, 2-way arb check)",
-        "Live JSON output: event_id -> arbitrage opportunities",
-        "Integration test with Phase 1 OCR output"
+        "Emulator with Play Services + Google account auth",
+        "Real sportsbook apps installed (DraftKings, FanDuel, BetMGM)",
+        "Screenshot + OCR pipeline on real odds",
+        "Arbitrage JSON output from real sportsbooks",
+        "Git commit to sports-betting/phase2-real-apps"
+      ],
+      "verificationRequired": [
+        "adb devices output (emulator running)",
+        "adb shell pm list packages (real apps installed)",
+        "5+ real PNG screenshots (>200KB each)",
+        "JSON with real odds/arbitrage data",
+        "Git commit with all deliverables"
       ]
     }
   ]

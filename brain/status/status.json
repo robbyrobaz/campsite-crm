@@ -76,5 +76,29 @@
     "librarian_promotions": 0,
     "watch_list_additions": 1,
     "action": "Pruning completed. Parameter rotation scheduled. Librarian check at 12:00 PM MST."
-  }
+  },
+  "activeSpawns": [
+    {
+      "id": "sports-betting-phase1",
+      "sessionKey": "agent:main:subagent:d2ecaaa6-1707-4a73-b545-4bfcb21d70fe",
+      "runId": "ad353041-4e3b-4c80-b0fe-503f1bd5df5c",
+      "title": "Sports Betting Phase 1: Emulator + OCR Extraction",
+      "spawnedAt": "2026-02-17T20:24:00Z",
+      "model": "sonnet",
+      "expectedCompletionMinutes": 120,
+      "status": "producing_output",
+      "lastChecked": "2026-02-17T20:31:34.594536",
+      "outputFolder": "/home/rob/.openclaw/workspace/ai-workshop/projects/sports-betting/captures/",
+      "progress": {
+        "screenshots_captured": 3,
+        "ocr_pipeline_built": true,
+        "extractions_generated": 27,
+        "sample_outputs": [
+          "Rangers vs Bruins (NHL) odds boost",
+          "Yankees vs Red Sox (MLB) arbitrage",
+          "Warriors vs Suns (NBA) moneyline"
+        ]
+      }
+    }
+  ]
 }

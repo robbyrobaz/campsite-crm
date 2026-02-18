@@ -186,3 +186,47 @@ Dashboard now shows strategies ranked by EEP, not win rate.
 **Solution:** Only monitor *active* spawns. For completed tasks, check status.json truth store instead. Disable monitors once builders are done.
 
 **Applied:** Removed two stale monitoring crons (audit bug fix, Phase 2 framework) on Feb 17 18:00 MST after confirming status.json.
+
+## Librarian Deployment Candidates (Feb 17 Evening) ✅ → Live Deployment Ready
+
+**Status:** 3 strategies qualified and monitoring for Phase 2 launch
+
+**Three Librarian Candidates (Feb 17, 20:01 MST Evening):**
+1. **mtf_trend_align** — 79.7% WR, 10.34 Sharpe (primary candidate for first live deployment)
+2. **ml_gbt_5m** — 70.3% WR, 7.19 Sharpe (ML-backed, highly robust)
+3. **mtf_momentum_confirm** — 70.5% WR, 5.20 Sharpe (multi-timeframe confirmation bias)
+
+**Deployment Timeline:**
+- **Feb 17-24:** 7-day monitoring phase (parameter sensitivity validation)
+- **~March 1:** Phase 2 ML Retrain launch (regime diversity gates + A/B test framework)
+- **March 1+:** A/B test validation (100+ trades per arm minimum)
+- **Conditional live:** Once A/B gates pass, deploy to real capital with Kelly Criterion position sizing
+
+**Key Constraints for Live Deployment:**
+- Real slippage: 0.052%/side (vs 0.02% assumed—2.6x worse)
+- Fill rate: 67% (vs 100% assumed)
+- Stop-hunting detected: 47.2% stops hit then reversed → widen stops 10-75bps
+- Conservative slippage multiplier: 1.5-2x until 6 weeks of data
+
+**Current Active Roster:** 6 strategies (down from 13; pruned 7 losers in evening adjustment)
+
+## Sports Betting App (Feb 17 Evening) ⚠️ Builder Spawn Failed
+
+**Goal (from GitHub #24):** Build backend intelligence system for sports betting arbitrage detection:
+- Phase 1: Android emulator captures sportsbook screenshots → OCR extraction → structured data
+- Phase 2: Ingest baseline odds → match promos to events → detect arbitrage
+- Phase 3: Calculate EV, rank opportunities → alert users to profitable bets
+
+**Work Attempted (18:28-20:18 MST):** Spawned Sonnet builder to tackle Phase 1 infrastructure.
+
+**Status:** Builder failed silently (sessionKey: agent:main:subagent:43eac50c-e7af-4cba-a092-4fdf109338cb)
+- No output messages in history
+- Not in active sessions list
+- Likely crash on spawn or sandbox initialization issue
+
+**Blocker:** Need to determine root cause and either:
+1. Respawn with explicit error channels
+2. Start manually and debug step-by-step
+3. De-prioritize if other work takes precedence
+
+**Context:** Clarified with Rob that goal is backend system, NOT Android client UI. Emulator is tool for capturing real sportsbook data.

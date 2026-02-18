@@ -106,6 +106,13 @@
         "ocr_pipeline": "pytesseract + custom parser",
         "extractions": "12 clean JSON entries (promos + arbitrage)",
         "blocker": "Real APKs unavailable; using BetEdge Pro simulator"
+      },
+      "committed": {
+        "branch": "sports-betting/phase1-ocr-pipeline",
+        "commit": "e8a7051",
+        "message": "Sports Betting Phase 1: OCR Extraction Pipeline - COMPLETE",
+        "files": 12,
+        "url": "https://github.com/robbyrobaz/ai-workshop/tree/sports-betting/phase1-ocr-pipeline"
       }
     },
     {

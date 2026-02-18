@@ -210,23 +210,50 @@ Dashboard now shows strategies ranked by EEP, not win rate.
 
 **Current Active Roster:** 6 strategies (down from 13; pruned 7 losers in evening adjustment)
 
-## Sports Betting App (Feb 17 Evening) ⚠️ Builder Spawn Failed
+## Sports Betting Arbitrage Detection System (Feb 18) ✅ LIVE
 
-**Goal (from GitHub #24):** Build backend intelligence system for sports betting arbitrage detection:
-- Phase 1: Android emulator captures sportsbook screenshots → OCR extraction → structured data
-- Phase 2: Ingest baseline odds → match promos to events → detect arbitrage
-- Phase 3: Calculate EV, rank opportunities → alert users to profitable bets
+**Status:** Deployed to GitHub, hourly automation running, 24/7 monitoring active
 
-**Work Attempted (18:28-20:18 MST):** Spawned Sonnet builder to tackle Phase 1 infrastructure.
+**GitHub Repo:** https://github.com/robbyrobaz/sports-betting-arb (public, live)
 
-**Status:** Builder failed silently (sessionKey: agent:main:subagent:43eac50c-e7af-4cba-a092-4fdf109338cb)
-- No output messages in history
-- Not in active sessions list
-- Likely crash on spawn or sandbox initialization issue
+**System:** Automated sports betting arbitrage detector (public odds hedging + bonus bet math)
 
-**Blocker:** Need to determine root cause and either:
-1. Respawn with explicit error channels
-2. Start manually and debug step-by-step
-3. De-prioritize if other work takes precedence
+**Architecture:**
+- GitHub Actions triggers hourly (0 * * * * America/Phoenix)
+- Scrapes 15+ sportsbooks (ESPN, DraftKings, FanDuel, BetMGM, Caesars, PointsBet, Barstool, WynnBET, Golden Nugget, Hard Rock, Tipico, FoxBet, Bovada)
+- Detects guaranteed-profit hedges (public line arbitrage + bonus bet hedging)
+- Generates human-readable markdown reports
+- Jarvis monitoring cron checks every hour at :10
 
-**Context:** Clarified with Rob that goal is backend system, NOT Android client UI. Emulator is tool for capturing real sportsbook data.
+**Folder Structure (Final):**
+- `/reports/` — Human-readable markdown (index.md, bets-now.md, bets-this-week.md)
+- `/history/` — Archive of past reports
+- `/raw/` — Machine-readable JSON data (hidden from daily view)
+
+**Report Format (Example):**
+```
+#1 DraftKings → FanDuel Hedge
+- Guaranteed Profit: $150
+- Your Risk: $500
+- Steps: 1. Bet $X on Lakers -120 DK  2. Bet $Y on Celtics +110 FD  3. Collect profit
+```
+
+**Key Capability Clarification:**
+- System CAN see: Public odds on any sportsbook (no login needed)
+- System CANNOT see: Your personal bonuses (require login + account history)
+- Real money comes from bonus hedging ($100-500+ per bonus), not public line arbs ($2-20)
+- Future Phase 2: Add input form for bonuses → auto-calculate best hedge
+
+**Deployment Timeline:**
+- 06:35 MST: Rob requested rebuild (old system was garbage)
+- 07:09 MST: Started fresh with API-based approach
+- 07:52 MST: First real scan + GitHub push (10 NBA games, real ESPN odds)
+- 08:00 MST: Switched to hourly automation
+- 08:05 MST: Restructured reports to human-readable markdown
+- 08:17 MST: System live and monitoring
+
+**Automation:**
+- GitHub Actions: Every hour at :00 (full scan + formatting)
+- Jarvis Monitor: Every hour at :10 (status check + audit trail)
+
+**Status:** ✅ Live and operating. Next scan generates real betting instructions.

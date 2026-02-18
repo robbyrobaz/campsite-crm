@@ -257,3 +257,15 @@ Dashboard now shows strategies ranked by EEP, not win rate.
 - Jarvis Monitor: Every hour at :10 (status check + audit trail)
 
 **Status:** ✅ Live and operating. Next scan generates real betting instructions.
+
+## Claude Code Agent Teams (Feb 18, 2026) ✅
+
+**What:** Claude's built-in multi-agent feature for parallel coding. Part of Claude Max 5x plan ($100/mo), no extra cost.
+**Setup:** `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in `~/.claude/settings.json` (already enabled)
+**Launch:** Interactive `claude` session with `--teammate-mode in-process`, paste task, lead spawns teammates
+**Monitoring:** Subagent .jsonl files in `~/.claude/projects/<project>/<session>/subagents/`
+**Reference:** `brain/AGENT_TEAMS.md` for full details
+
+**First use:** Blofin pipeline redesign — 4 teammates (ML fix, strategy lifecycle, pipeline scheduling, dashboard)
+**Lesson:** Don't use `-p` flag (non-interactive) — Agent Teams requires interactive mode
+**Lesson:** Must select "Yes, I accept" on permissions prompt (option 2, not default)

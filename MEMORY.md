@@ -42,15 +42,15 @@
 
 **Key insight:** Claude's limits are per-minute, NOT per 4-6 hours. The 4-6 hour window Rob mentioned was likely a billing cycle or token usage reporting window, not the actual refresh.
 
-## Model Strategy
+## Model Strategy (Updated 2026-02-18)
 
-**Cost-efficiency rule:** Use Haiku for regular automated tasks, Sonnet for heavy reasoning.
+**Primary (Opus):** Jarvis main agent — all conversations, planning, code review, complex reasoning.
+**Cron/Heartbeats (Haiku):** Isolated sessions — hourly health checks, Blofin strategy adjustments. Silent unless alert needed.
+**Builders (Sonnet):** Subagent code generation, refactors, bug fixes, tests.
+**Automation (Mini):** Token audits, build loops, log parsing, cron jobs.
 
-- **Default (Haiku):** All cron jobs, heartbeats, periodic checks, routine automation
-- **Heavy tasks (Sonnet):** Complex reasoning, code reviews, strategy analysis, research — override with `model=sonnet` when you know it needs depth
-- **Alias:** Use `sonnet` shorthand instead of full `anthropic/claude-sonnet-4-5`
-
-Apply this to all new automation: default to haiku unless the task explicitly requires nuanced thinking.
+**Subscription:** Claude Max 5x ($100/mo flat). NOT per-token API billing. Resets every 5 hours.
+**Cost optimization:** Keep heartbeats/cron on Haiku isolated to conserve Opus usage cap for real work.
 
 ## Jarvis Infrastructure (Feb 16 Evening) ✅
 

@@ -26,8 +26,8 @@ Before delivering ANY work to Rob, verify all of these:
 |------|----------|-------------|
 | **Safe** | Docs, comments, formatting, refactor (no behavior change) | Jarvis self-review |
 | **Normal** | New features, bug fixes, dependency updates | Jarvis reviews + runs tests |
-| **Risky** | Infra changes, systemd units, auth configs, database migrations | Jarvis reviews + asks Rob before applying |
-| **Destructive** | Deletes, force pushes, drops tables, removes services | ALWAYS ask Rob first |
+| **Risky** | Infra changes, systemd units, auth configs, database migrations | Jarvis reviews + runs tests + applies autonomously. **Notify Rob after** with a summary of what changed and why |
+| **Destructive** | Permanent deletes, force pushes, drops tables, removes entire services | ALWAYS ask Rob first |
 
 ## Coding Standards
 

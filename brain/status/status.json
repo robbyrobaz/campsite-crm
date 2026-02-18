@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-18T21:00:00Z",
+  "lastUpdated": "2026-02-18T22:00:00Z",
   "activeTasks": [],
   "lastTaskCompleted": {
     "id": "audit-bugs-fix-complete",
@@ -44,10 +44,11 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-18T21:00:00Z",
-    "cpu_temp": "71.0°C",
+    "timestamp": "2026-02-18T22:00:00Z",
+    "cpu_temp": "86.0°C",
     "cpu_threshold": "85°C",
-    "cpu_status": "healthy",
+    "cpu_status": "elevated",
+    "cpu_alert": "Top process: claude (210% CPU, 2.4GB RES). Monitor for runaway agents.",
     "disk_usage": "30%",
     "disk_threshold": "80%",
     "disk_status": "healthy",
@@ -57,7 +58,7 @@
     "blofin_api": "active",
     "blofin_paper": "active",
     "critical_alerts": "none",
-    "overall_status": "all_systems_nominal"
+    "overall_status": "cpu_elevated_monitor"
   },
   "backupStatus": {
     "full_restore": "enabled (every 2h)",
@@ -76,7 +77,7 @@
       "📝 Momentum flagged for 24h re-enable review (conflict with paper trading +0.05% pnl)"
     ]
   },
-  "last_updated": "2026-02-18T21:00:00Z",
+  "last_updated": "2026-02-18T22:00:00Z",
   "blofin_morning_adjustment": {
     "timestamp": "2026-02-17T08:00:00-07:00",
     "strategies_disabled": 81,

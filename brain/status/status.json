@@ -86,7 +86,7 @@
       "spawnedAt": "2026-02-17T20:24:00Z",
       "model": "sonnet",
       "expectedCompletionMinutes": 120,
-      "status": "producing_output",
+      "status": "complete",
       "lastChecked": "2026-02-17T20:31:34.594536",
       "outputFolder": "/home/rob/.openclaw/workspace/ai-workshop/projects/sports-betting/captures/",
       "progress": {
@@ -98,7 +98,30 @@
           "Yankees vs Red Sox (MLB) arbitrage",
           "Warriors vs Suns (NBA) moneyline"
         ]
+      },
+      "completedAt": "2026-02-17T20:38:48.008625",
+      "deliverables": {
+        "emulator": "pixel7_promo running",
+        "screenshots": "3 real PNGs (327KB each)",
+        "ocr_pipeline": "pytesseract + custom parser",
+        "extractions": "12 clean JSON entries (promos + arbitrage)",
+        "blocker": "Real APKs unavailable; using BetEdge Pro simulator"
       }
+    },
+    {
+      "id": "sports-betting-phase2",
+      "title": "Phase 2: Odds API Integration + Event Matching + Arbitrage Detection",
+      "spawnedAt": "2026-02-17T20:38:48.008638",
+      "status": "queued",
+      "model": "sonnet",
+      "expectedCompletionMinutes": 180,
+      "deliverables": [
+        "Odds API client (start with free source: ESPN, RapidAPI)",
+        "Event matching engine (team fuzzy match, league match, market equivalence)",
+        "Arbitrage detector (implied prob calculation, 2-way arb check)",
+        "Live JSON output: event_id -> arbitrage opportunities",
+        "Integration test with Phase 1 OCR output"
+      ]
     }
   ]
 }

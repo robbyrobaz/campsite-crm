@@ -68,9 +68,22 @@ Apply this to all new automation: default to haiku unless the task explicitly re
 
 **Disaster recovery:** If laptop breaks, entire setup recoverable from GitHub. Full snapshots in full-restore repo, knowledge base in 2nd-brain repo.
 
-## Blofin Pipeline Status (Feb 16 COMPLETE) ✅🚀
+## Audit Bug Fixes (Feb 17 COMPLETE) ✅
 
-**Status:** FULLY OPERATIONAL — Real data flowing, strategies scoring, dashboard live
+**Status:** All 5 critical bugs fixed and deployed (39/39 tests passing)
+
+**Bugs fixed:**
+1. **P1 - Top-N Deduplication:** GROUP BY model_name in ranking queries (was returning duplicates)
+2. **P2 - Sharpe Ratio Guard:** Minimum 30-trade requirement before calculating Sharpe (was accepting noise)
+3. **P3 - Data Leakage Prevention:** Temporal split with 24-hour embargo (was shuffling test data into train)
+4. **P4 - Health Score Labels:** Corrected thresholds (15/100 = CRITICAL, was labeled GOOD)
+5. **P5 - Convergence Gates:** Auto-archive strategies after 3 failed tunings, ensemble test requirements (was churning)
+
+**Deployment:** Live at :8888 with new backtest-vs-paper comparison section
+
+## Blofin Pipeline Status (Feb 17 COMPLETE) ✅🚀
+
+**Status:** FULLY OPERATIONAL — Real data flowing, strategies scoring, dashboard live, audit bugs fixed
 
 **What's working:**
 1. **Real data pipeline** — Ingestor 24/7, 24.7M ticks, live market data
@@ -117,6 +130,21 @@ Apply this to all new automation: default to haiku unless the task explicitly re
 
 Dashboard now shows strategies ranked by EEP, not win rate.
 
+## Phase 2 ML Retrain Framework (Feb 17) ⏳ Staged
+
+**Status:** Design complete, code ready, awaiting spawn approval or auto-trigger (~March 1)
+
+**Framework ready to deploy:**
+- `ml_retrain_phase2.py` — Walk-forward retrain with 24h embargo, regime diversity checks
+- `ab_test_models.py` — A/B testing framework (100 trades/arm minimum, safety gates)
+- `execution_calibrator_v2.py` — Phase 1 follow-up using 33.4K real trade feedback (actual slippage 0.052%/side, fill rate 67%, hold time 104.6 min)
+- Systemd cron jobs configured (2-week accelerated timeline, 75-trade minimum gate, 1.5-2x slippage conservative multiplier)
+
+**Trigger conditions:**
+- Timeline: 2 weeks from Feb 15 (~March 1, 2026) or manual acceleration
+- Trade gate: 75 closed trades (✅ satisfied at 33.4K)
+- Regime diversity: Volatility must span 20th-80th percentile
+
 ## Paper Trading Feedback Loop (Feb 17) ✅
 
 **Status:** Phase 1 (execution calibrator) complete. Phase 2 gates set for 2-week accelerated timeline.
@@ -150,3 +178,11 @@ Dashboard now shows strategies ranked by EEP, not win rate.
 **Strategy lifecycle:** Discovery phase (now) → convergence (4-8 weeks) → stability. Once top 3 prove out, research tempo drops significantly. New strategies must clear increasingly high bar.
 
 **Key actionable:** Stops are too tight. Increase SL by 10-75bps to avoid algo stop-hunting at obvious levels.
+
+## Cron Job Best Practices (Feb 17 Lesson) 📝
+
+**Issue:** Monitoring crons for completed builders check for deleted sessions → always "not found" reports (noise).
+
+**Solution:** Only monitor *active* spawns. For completed tasks, check status.json truth store instead. Disable monitors once builders are done.
+
+**Applied:** Removed two stale monitoring crons (audit bug fix, Phase 2 framework) on Feb 17 18:00 MST after confirming status.json.

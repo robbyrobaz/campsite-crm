@@ -1,50 +1,28 @@
 {
-  "lastUpdated": "2026-02-19T06:55:00Z",
-  "activeTasks": [
-    {
-      "id": "strategy-cleanup-revival",
-      "title": "Demote fake T2s, tweak 0-trade T0 strategies, investigate all dead weight",
-      "status": "in-progress",
-      "assignedTo": "sonnet-builder",
-      "sessionKey": "agent:main:subagent:fab0b81c-4f0e-4c31-b5f4-79f950b6dc99",
-      "startedAt": "2026-02-19T06:55:00Z",
-      "description": "10 fake T2 strategies demoted to T0. 7+ zero-trade T0 strategies getting parameter tweaks. strategy_023-028 cleanup. Every strategy gets a fair shot before killing.",
-      "priority": "high"
-    },
-    {
-      "id": "numerai-era-boosting",
-      "title": "Numerai Experiment 001 — Era-Boosting",
-      "status": "in-progress",
-      "assignedTo": "sonnet-builder",
-      "sessionKey": "agent:main:subagent:328a7362-a525-4cad-8f73-3528469878c8",
-      "startedAt": "2026-02-19T05:48:00Z",
-      "description": "Era-boosting experiment for robbyrobml. Smoke test → 50K → full dataset.",
-      "priority": "medium"
-    },
-    {
-      "id": "hedgeengine-qa",
-      "title": "HedgeEngine QA — 100 scenarios",
-      "status": "in-progress",
-      "assignedTo": "subagent",
-      "description": "100 test scenarios for hedge calculator"
-    }
-  ],
+  "lastUpdated": "2026-02-19T07:15:00Z",
+  "activeTasks": [],
   "recentlyCompleted": [
     {
-      "id": "backtest-engine-fix",
-      "title": "Fix BacktestEngine — BUY/SELL bug + 50K candle cap + registry orphans",
-      "completedAt": "2026-02-19T06:50:00Z",
-      "summary": "3 bugs fixed: side normalization (100% WR → real 50%), limit_rows DESC subquery, 5 orphan registry entries deleted."
+      "id": "numerai-era-boosting-resume",
+      "title": "Numerai Era-Boosting — 50K run complete",
+      "completedAt": "2026-02-19T07:14:00Z",
+      "summary": "Pipeline works E2E but early stopping bug kills era-boost rounds after 1 tree. Fix needed before full run."
     },
     {
-      "id": "cron-cleanup",
-      "title": "Remove 3 stale disabled cron jobs",
-      "completedAt": "2026-02-19T06:53:00Z",
-      "summary": "Removed: Morning/Evening strategy adjustment, sports-betting-phase2-monitor. 3 active remain."
+      "id": "hedgeengine-presets",
+      "title": "HedgeEngine — Save/Load Presets feature",
+      "completedAt": "2026-02-19T07:07:00Z",
+      "summary": "Named presets via localStorage. Deployed to GitHub Pages."
+    },
+    {
+      "id": "blofin-cleanup-and-fix",
+      "title": "Blofin — BUY/SELL bug fix + strategy cleanup + tier reset",
+      "completedAt": "2026-02-19T07:05:00Z",
+      "summary": "Fixed 100% WR bug, cleaned 22 orphan strategies, demoted all 31 to T0. 45/45 tests pass."
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-19T06:55:00Z",
+    "timestamp": "2026-02-19T07:15:00Z",
     "overall_status": "healthy"
   }
 }

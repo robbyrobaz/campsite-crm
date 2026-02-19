@@ -1,42 +1,37 @@
 {
-  "lastUpdated": "2026-02-19T08:00:00Z",
-  "activeTasks": [
-    {
-      "id": "numerai-era-boost-fix-v2",
-      "title": "Numerai — Fix early stopping bug (respawn #2)",
-      "status": "in-progress",
-      "assignedTo": "sonnet-builder",
-      "sessionKey": "agent:main:subagent:387129e5-857a-4bb5-83f0-76f1a7d82210",
-      "startedAt": "2026-02-19T07:45:00Z",
-      "description": "Previous builder died mid-training. Respawned to fix early stopping and run medium+full.",
-      "priority": "high",
-      "monitor": true
-    }
-  ],
-  "recentlyCompleted": [
-    {
-      "id": "blofin-pipeline-smooth",
-      "title": "Blofin pipeline — confirmed smooth",
-      "completedAt": "2026-02-19T07:35:00Z",
-      "summary": "Pipeline cron ran at 00:15 with honest metrics. 12 T0→T1 promotions. Strategy cleanup fixed 7 zero-trade strategies."
-    }
-  ],
+  "timestamp": "2026-02-19T09:00:00Z",
+  "lastHeartbeat": "2026-02-19T09:00:00Z",
   "systemHealth": {
-    "timestamp": "2026-02-19T08:00:00Z",
-    "cpu_temp": "71C",
-    "disk_usage": "38%",
-    "gateway_status": "active",
-    "blofin_services": {
+    "cpuTemp": {
+      "value": 68,
+      "unit": "°C",
+      "status": "OK",
+      "threshold": 85
+    },
+    "diskUsage": {
+      "value": 38,
+      "unit": "%",
+      "status": "OK",
+      "threshold": 80,
+      "filesystem": "/dev/nvme0n1p2",
+      "size": "468G",
+      "used": "168G",
+      "available": "276G"
+    },
+    "gateway": {
+      "service": "openclaw-gateway.service",
+      "status": "active"
+    },
+    "blofin": {
       "ingestor": "active",
       "dashboard": "active",
-      "paper_trading": "active"
+      "paper": "active"
     },
-    "critical_alerts": "none",
-    "failed_systemd_units": [
-      "gnome-remote-desktop.service (masked)",
+    "failedServices": [
+      "gnome-remote-desktop.service (masked, non-critical)",
       "openclaw-full-restore-backup.service (non-critical)",
       "update-notifier-crash.service (non-critical)"
     ],
-    "overall_status": "healthy"
+    "criticalAlerts": "none"
   }
 }

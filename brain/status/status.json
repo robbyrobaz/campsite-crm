@@ -1,23 +1,12 @@
 {
-  "lastUpdated": "2026-02-19T21:02:00Z",
+  "lastUpdated": "2026-02-19T22:00:12Z",
   "activeTasks": [
-    {
-      "id": "numerai-era-boost-full",
-      "title": "Numerai — Full dataset era-boosting run (attempt 3)",
-      "status": "in-progress",
-      "assignedTo": "jarvis-direct",
-      "pid": 401561,
-      "startedAt": "2026-02-19T21:01:00Z",
-      "description": "Fixed OOM: reduced from 740 to 304 features (v2_equivalent set). 10.7GB RSS vs 29GB. Training vanilla model now.",
-      "priority": "high",
-      "monitor": true
-    },
     {
       "id": "blofin-fixes",
       "title": "Blofin — Fix breakout strategies + bump smoke test",
       "status": "in-progress",
       "assignedTo": "sonnet-builder",
-      "sessionKey": "agent:main:subagent:9b4b1661-8ada-4b47-a76c-cb7402a79e59",
+      "sessionKey": "agent:main:subagent:a336db75-8423-4938-a460-fa4c6e3c56f8",
       "startedAt": "2026-02-19T20:53:00Z",
       "description": "Builder found root cause: all 3 breakout files have name='breakout' instead of versioned names. Working on fix.",
       "priority": "medium",
@@ -26,18 +15,33 @@
   ],
   "recentlyCompleted": [
     {
+      "id": "numerai-era-boost-full",
+      "title": "Numerai — Full dataset era-boosting run (attempt 3)",
+      "completedAt": "2026-02-19T22:00:00Z",
+      "note": "Process exited or completed. Check logs."
+    },
+    {
       "id": "kanban-telegram-config",
       "title": "Claw-Kanban — Telegram dispatch + role routing configured",
       "completedAt": "2026-02-19T17:07:00Z"
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-19T21:02:00Z",
-    "overall_status": "ok",
-    "cpu_temp": "67.0C",
-    "disk_usage": "59%",
-    "gateway": "active (restarted at 13:55 after OOM)",
-    "claw_kanban": "active (port 8787)",
-    "notes": "OOM kill at 13:55 when Numerai tried loading 740 features. Gateway auto-recovered. Fixed to 304 features."
+    "timestamp": "2026-02-19T22:00:12Z",
+    "overall_status": "ok_with_warnings",
+    "cpu_temp": "59.0C",
+    "cpu_status": "OK",
+    "disk_usage": "62%",
+    "disk_status": "OK",
+    "gateway": "active",
+    "claw_kanban": "active",
+    "blofin_services": "active (ingestor, paper)",
+    "critical_alerts": "none",
+    "failed_services": [
+      "openclaw-full-restore-backup.service (Git LFS 2GB limit — expected)",
+      "gnome-remote-desktop.service (masked)",
+      "update-notifier-crash.service (benign)"
+    ],
+    "notes": "Numerai process PID 401561 exited. Check if training completed successfully or crashed. Blofin fixes builder still running."
   }
 }

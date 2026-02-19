@@ -34,6 +34,8 @@
 - **Smoke test uses 5K ticks (~10 candles)** — too few for strategies needing 25+ candle warmup.
 - **Agent Teams need interactive mode** — no `-p` flag. Must accept permissions prompt (option 2).
 - **Git LFS rejects >2GB objects** — exclude large data files from backup sweeps.
+- **Numerai full dataset OOMs with 740 features on 32GB RAM.** Use v2_equivalent (304 features). OOM also kills OTHER processes (gateway died as collateral).
+- **pandas dropna() breaks index alignment with numpy.** Always `reset_index(drop=True)` after dropna before passing to model.predict().
 
 ## Rob's Preferences
 - Concise updates, not walls of text

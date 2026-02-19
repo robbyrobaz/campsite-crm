@@ -1,27 +1,24 @@
 {
-  "lastUpdated": "2026-02-18T22:12:00Z",
+  "lastUpdated": "2026-02-19T06:46:00Z",
   "activeTasks": [
     {
-      "id": "blofin-interface-fix",
-      "title": "Fix BacktestEngine ↔ Strategy interface mismatch",
-      "status": "completed",
-      "completedAt": "2026-02-19T05:57:00Z",
-      "note": "35/35 strategies pass validation. 22 empty files deleted, 22 registry entries archived, syntax errors fixed.",
+      "id": "backtest-engine-fix",
+      "title": "Fix BacktestEngine — 100% WR bug + 50K candle cap + registry mismatch",
+      "status": "in-progress",
       "assignedTo": "sonnet-builder",
-      "sessionKey": "agent:main:subagent:7ec3ba0d-8918-494a-a19b-1d2e83ed7f9d",
-      "startedAt": "2026-02-19T04:30:00Z",
-      "description": "Converting 12 tick-interface strategies + 5 analyze-interface strategies to candle interface. Deleting 22 empty strategy files. Archiving dead registry entries.",
-      "priority": "high"
+      "sessionKey": "agent:main:subagent:11c42a0c-a145-4a72-b20c-d0df3dd70b91",
+      "startedAt": "2026-02-19T06:46:00Z",
+      "description": "3 bugs: (1) BUY/SELL vs LONG/SHORT side mismatch causes 100% WR, (2) full backtest loads 36M ticks instead of 50K candle cap, (3) strategy_023-027 registry name mismatch",
+      "priority": "critical"
     },
     {
       "id": "numerai-era-boosting",
       "title": "Numerai Experiment 001 — Era-Boosting",
-      "status": "stuck-queued",
-      "note": "Subagent at 0 tokens after 1.5h — likely never started. Re-spawn next main session.",
+      "status": "in-progress",
       "assignedTo": "sonnet-builder",
-      "sessionKey": "agent:main:subagent:db305f8c-a311-4b3a-9ea3-af070d32ebae",
-      "startedAt": "2026-02-19T04:30:00Z",
-      "description": "Running era-boosting experiment for robbyrobml. Smoke test (1K) → 50K → full dataset. Goal: reduce era std by 20%+.",
+      "sessionKey": "agent:main:subagent:328a7362-a525-4cad-8f73-3528469878c8",
+      "startedAt": "2026-02-19T05:48:00Z",
+      "description": "Era-boosting experiment for robbyrobml. Smoke test → 50K → full dataset.",
       "priority": "medium"
     },
     {
@@ -34,42 +31,34 @@
   ],
   "recentlyCompleted": [
     {
-      "id": "token-usage-tracking",
-      "title": "API token usage tracking research",
-      "completedAt": "2026-02-19T04:29:00Z",
-      "summary": "OpenClaw already has built-in tracking via fetchClaudeUsage() → api.anthropic.com/api/oauth/usage. Shows five_hour.utilization and seven_day.utilization. No patching needed."
+      "id": "blofin-interface-fix",
+      "title": "Fix strategy interface mismatch (tick→candle)",
+      "completedAt": "2026-02-19T05:57:00Z",
+      "summary": "35/35 strategies pass validation. 22 empty files deleted. All strategies now use candle interface."
     },
     {
-      "id": "agent-teams-doc",
-      "title": "Agent Teams vs Independent Agents documentation",
-      "completedAt": "2026-02-19T04:28:00Z",
-      "summary": "Expanded brain/AGENT_TEAMS.md with real-world comparison from Blofin redesign. Agent Teams win for multi-file same-repo work; OpenClaw subagents win for independent focused tasks."
+      "id": "blofin-pipeline-manual-run",
+      "title": "Manual pipeline run — post-fix verification",
+      "completedAt": "2026-02-19T06:43:00Z",
+      "summary": "205s run. 5 T0→T1 promotions, 5 T1→T2 promotions. Strategies generating trades BUT 100% WR bug discovered in BacktestEngine."
     },
     {
-      "id": "blofin-pipeline-redesign",
-      "title": "Full Blofin pipeline redesign — 3-tier lifecycle",
-      "completedAt": "2026-02-19T01:15:00Z",
-      "summary": "ML leakage fixed, strategy registry, pipeline runner, dashboard rebuilt. Hourly cron running."
-    },
-    {
-      "id": "numerai-gpu-setup",
-      "title": "Numerai GPU smoke test & environment setup",
-      "completedAt": "2026-02-19T04:00:00Z",
-      "summary": "GPU benchmarked. XGBoost/CatBoost/PyTorch benefit from GPU. LightGBM does not. RandomForest removed (timeouts)."
+      "id": "token-usage-tracker",
+      "title": "Token usage aggregator + systemd timer",
+      "completedAt": "2026-02-19T06:05:00Z",
+      "summary": "brain/status/token_usage.md refreshed every 15 min. Zero AI tokens. Added to HEARTBEAT.md."
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-18T22:12:00Z",
-    "cpu_temp": "68.0°C",
+    "timestamp": "2026-02-19T06:46:00Z",
+    "cpu_temp": "75.0°C",
     "cpu_status": "healthy",
-    "disk_usage": "31%",
+    "disk_usage": "35%",
     "disk_status": "healthy",
-    "failed_services": "none",
     "gateway": "active",
-    "blofin_dashboard": "active",
     "blofin_ingestor": "active",
+    "blofin_dashboard": "active",
     "blofin_paper": "active",
-    "blofin_daily_pipeline": "activating (started 22:12:40 MST)",
     "critical_alerts": "none",
     "overall_status": "healthy"
   },

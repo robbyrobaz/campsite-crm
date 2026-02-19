@@ -98,13 +98,13 @@
 - rsi_divergence: 79.30 (grade B, 45% win rate)
 - momentum: 79.25 (grade B, 37% win rate)
 
-**Dashboards (Feb 16):**
-- **8780 (basic):** DEPRECATED — ignore. Old websocket dashboard.
-- **8888 (advanced ML):** THE LIVE DASHBOARD
-  - Fixed: win_rate format (decimal not percentage)
-  - Fixed: top_strategies now has complete data (scores + metrics merged)
-  - Added: Live data tracker showing real-time tick flow (updates every 3 seconds)
-  - Indicator shows "📊 Live: X ticks/10s" in header — green dot if data flowing, red if stale
+**Dashboard (Feb 18 rebuild):**
+- **8888:** THE LIVE DASHBOARD (only dashboard — 8780 fully deprecated and removed)
+  - Pipeline funnel: T0→T1→T2→T3 visual flow with promotion gates
+  - Strategy table sorted by EEP score (Profit Factor weighted 30%)
+  - ML model cards with LEAKAGE SUSPECTED warnings
+  - 30s auto-refresh, responsive design
+  - Endpoints: /api/registry, /api/ml_models, /api/summary, /api/advanced_metrics
 
 **Current Initiative (Feb 16 evening):**
 - Deployed aggressive 10-iteration optimizer using existing 24.7M ticks

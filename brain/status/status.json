@@ -1,38 +1,25 @@
 {
-  "timestamp": "2026-02-19T11:00:00Z",
-  "lastHeartbeat": "2026-02-19T11:00:00Z",
+  "lastUpdated": "2026-02-19T11:30:00Z",
+  "activeTasks": [],
+  "recentlyCompleted": [
+    {
+      "id": "blofin-pipeline-smooth",
+      "title": "Blofin pipeline — confirmed smooth",
+      "completedAt": "2026-02-19T07:35:00Z",
+      "summary": "Pipeline cron working with honest metrics. 12 T0→T1 promotions."
+    }
+  ],
+  "pendingForRob": [
+    {
+      "id": "numerai-early-stop-fix",
+      "title": "Numerai era-boost early stopping bug — needs direct fix",
+      "note": "3 sonnet builders failed silently (0 messages each). Will fix directly in main session when Rob is awake."
+    }
+  ],
   "systemHealth": {
-    "cpuTemp": {
-      "value": 63,
-      "unit": "°C",
-      "status": "OK",
-      "threshold": 85
-    },
-    "diskUsage": {
-      "value": 42,
-      "unit": "%",
-      "status": "OK",
-      "threshold": 80,
-      "filesystem": "/dev/nvme0n1p2",
-      "size": "468G",
-      "used": "185G",
-      "available": "260G"
-    },
-    "gateway": {
-      "service": "openclaw-gateway.service",
-      "status": "active"
-    },
-    "blofin": {
-      "ingestor": "active",
-      "api": "inactive",
-      "paper": "active",
-      "note": "api service not running (may be on-demand)"
-    },
-    "failedServices": [
-      "gnome-remote-desktop.service (masked, non-critical)",
-      "openclaw-full-restore-backup.service (backup service, non-critical)",
-      "update-notifier-crash.service (non-critical)"
-    ],
-    "criticalAlerts": "none (exit code 0)"
+    "timestamp": "2026-02-19T11:30:00Z",
+    "cpu_temp": "76C",
+    "disk_usage": "42%",
+    "overall_status": "healthy"
   }
 }

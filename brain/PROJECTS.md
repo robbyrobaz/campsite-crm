@@ -1,7 +1,8 @@
 # PROJECTS.md — Active Project Board
 
-> **The single source of truth for all projects.** Read on every session boot. Update before spawning any Task.
-> Rob and Jarvis both reference this. Keep it scannable.
+> **Strategic project overview.** Kanban board (:8787) is the live work queue.
+> This file is the high-level view — project status, architecture, what matters.
+> Update both when creating/completing projects. Keep it scannable.
 
 ---
 

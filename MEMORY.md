@@ -18,11 +18,8 @@
 - Baselines: robbyrobml val_corr=0.02916 Sharpe=1.40
 
 ### Model Strategy
-- **Opus:** Jarvis main (conversations, planning, code review)
-- **Sonnet:** Builder subagents (code generation, refactors)
-- **Haiku:** Heartbeats, cron jobs (isolated sessions)
-- **Mini:** Build loops, log parsing, automation
 - Subscription: Claude Max 5x ($100/mo flat). Resets every 5 hours.
+- Model routing table is in AGENTS.md (opus/sonnet/haiku/mini/codex)
 
 ## Lessons Learned
 

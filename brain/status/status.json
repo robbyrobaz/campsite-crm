@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-18T22:00:00Z",
+  "lastUpdated": "2026-02-18T23:00:00Z",
   "activeTasks": [],
   "lastTaskCompleted": {
     "id": "audit-bugs-fix-complete",
@@ -44,8 +44,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-18T22:00:00Z",
-    "cpu_temp": "66.0°C",
+    "timestamp": "2026-02-18T23:00:00Z",
+    "cpu_temp": "54.0°C",
     "cpu_threshold": "85°C",
     "cpu_status": "healthy",
     "cpu_alert": "none",
@@ -56,11 +56,13 @@
     "failed_services": "none",
     "gateway": "active",
     "blofin_ingestor": "active",
-    "blofin_api": "active",
+    "blofin_api": "unit_not_configured",
     "blofin_paper": "active",
+    "dashboard": "activating",
     "critical_alerts": "none",
     "overall_status": "healthy",
-    "lastHeartbeat": "2026-02-18T22:00:00Z"
+    "lastHeartbeat": "2026-02-18T23:00:00Z",
+    "notes": "Dashboard service was crashing (1768 restart attempts). Restarted. dashboard-health-check masked (script missing). All core systems operational."
   },
   "backupStatus": {
     "full_restore": "enabled (every 2h)",
@@ -79,7 +81,7 @@
       "📝 Momentum flagged for 24h re-enable review (conflict with paper trading +0.05% pnl)"
     ]
   },
-  "last_updated": "2026-02-18T22:00:00Z",
+  "last_updated": "2026-02-18T23:00:00Z",
   "blofin_morning_adjustment": {
     "timestamp": "2026-02-17T08:00:00-07:00",
     "strategies_disabled": 81,

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-19T11:30:00Z",
+  "lastUpdated": "2026-02-19T05:00:00-07:00",
   "activeTasks": [],
   "recentlyCompleted": [
     {
@@ -17,9 +17,15 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-19T11:30:00Z",
-    "cpu_temp": "76C",
-    "disk_usage": "42%",
+    "timestamp": "2026-02-19T05:00:00-07:00",
+    "cpu_temp_c": 65,
+    "disk_usage_percent": 46,
+    "gateway": "active",
+    "blofin_ingestor": "active",
+    "blofin_paper": "active",
+    "blofin_dashboard": "active",
+    "critical_alerts": "none",
+    "failed_services_note": "gnome-remote-desktop (masked), openclaw-full-restore-backup (git lfs size limit—non-critical), update-notifier-crash (notification)",
     "overall_status": "healthy"
   }
 }

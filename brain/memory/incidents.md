@@ -45,3 +45,22 @@
 ---
 ---
 [2026-02-19 02:00:14] CRITICAL: blofin-stack-api.service was INACTIVE during heartbeat check (02:00 AM). Restarted successfully.
+
+## Backup Service — Git LFS Size Limit (Feb 19, 06:00 MST)
+
+**Service:** openclaw-full-restore-backup.service  
+**Status:** Failed  
+**Error:** Multiple files exceed 2GB limit on Git LFS  
+**Details:**
+- Files rejected: 2383d07..., 1977a17..., 2f4b925...
+- Error: "Size must be less than or equal to 2147483648"
+- Last attempt: 2026-02-19 04:41:01 MST (1h 19min ago)
+- Backup still runs on timer; objects staged but not pushed to GitHub
+
+**Action needed:** Rob to review large objects and either:
+1. Prune old data from repository
+2. Adjust .gitattributes to exclude large files
+3. Switch to separate storage for large artifacts
+
+**Impact:** Backup service fails silently on push; local snapshots still captured, but GitHub redundancy broken.
+

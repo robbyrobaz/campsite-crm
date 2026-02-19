@@ -1,30 +1,30 @@
 # Token Usage
-**Updated:** 2026-02-19 13:00 MST
+**Updated:** 2026-02-19 13:15 MST
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 7.6M (137 requests)
-- **Input:** 555 | **Output:** 38.4K
-- **Cache Read:** 6.3M | **Cache Write:** 1.2M
-- **Cost (est):** $10.67
+- **Total Tokens:** 7.9M (125 requests)
+- **Input:** 449 | **Output:** 36.0K
+- **Cache Read:** 6.7M | **Cache Write:** 1.2M
+- **Cost (est):** $10.78
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 65 | 6.0M | 19.8K | $9.90 |
-| sonnet | 37 | 826.6K | 4.7K | $0.55 |
-| haiku | 33 | 707.9K | 13.9K | $0.22 |
+| opus | 73 | 6.8M | 21.0K | $10.24 |
+| sonnet | 25 | 574.1K | 3.5K | $0.38 |
+| haiku | 25 | 493.4K | 11.6K | $0.16 |
 | codex/mini | 2 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 171.8M (2067 requests)
-- **Output Tokens:** 407.4K
-- **Cost (est):** $133.80
+- **Total Tokens:** 164.5M (1993 requests)
+- **Output Tokens:** 395.9K
+- **Cost (est):** $131.30
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 1549 | 156.7M | 291.7K | $129.20 |
-| haiku | 277 | 9.3M | 90.0K | $1.69 |
+| opus | 1476 | 149.5M | 281.8K | $126.71 |
+| haiku | 276 | 9.3M | 88.4K | $1.67 |
 | sonnet | 229 | 5.7M | 25.7K | $2.91 |
 | codex/mini | 10 | 0 | 0 | $0.00 |
 | delivery-mirror | 2 | 0 | 0 | $0.00 |

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-19T04:30:00Z",
+  "lastUpdated": "2026-02-18T22:12:00Z",
   "activeTasks": [
     {
       "id": "blofin-interface-fix",
@@ -58,15 +58,17 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-19T04:45:00Z",
-    "cpu_temp": "49.0°C",
+    "timestamp": "2026-02-18T22:12:00Z",
+    "cpu_temp": "68.0°C",
     "cpu_status": "healthy",
-    "disk_usage": "30%",
+    "disk_usage": "31%",
     "disk_status": "healthy",
+    "failed_services": "none",
     "gateway": "active",
-    "blofin_ingestor": "active",
     "blofin_dashboard": "active",
+    "blofin_ingestor": "active",
     "blofin_paper": "active",
+    "blofin_daily_pipeline": "activating (started 22:12:40 MST)",
     "critical_alerts": "none",
     "overall_status": "healthy"
   },

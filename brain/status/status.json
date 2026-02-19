@@ -1,112 +1,74 @@
 {
-  "lastUpdated": "2026-02-19T03:00:13Z",
-  "activeTasks": [],
-  "lastTaskCompleted": {
-    "id": "audit-bugs-fix-complete",
-    "title": "All 5 critical audit bugs fixed and deployed (39/39 tests passing)",
-    "completedAt": "2026-02-17T11:24:00Z",
-    "summary": "P1: Top-N dedup (GROUP BY). P2: Sharpe min 30 trades. P3: Temporal split 24h embargo. P4: Health labels corrected. P5: Convergence gates + auto-archive. All live on :8888. Dashboard includes new backtest-vs-paper section."
-  },
-  "nextTask": {
-    "id": "phase2-ml-framework-deploy",
-    "title": "Phase 2 ML Retrain Framework - ready to spawn",
-    "status": "staged",
-    "blockedReason": "Awaiting go-ahead. Framework design complete (2-week trigger + 75 trades + regime diversity gates). Code not yet deployed.",
-    "action": "Spawn builder: ml_retrain_phase2.py, ab_test_models.py, execution_calibrator_v2.py"
-  },
-  "queued": [],
+  "lastUpdated": "2026-02-19T04:03:00Z",
+  "activeTasks": [
+    {
+      "id": "numerai-gpu-setup",
+      "title": "Numerai GPU smoke test & environment setup",
+      "status": "in-progress",
+      "assignedTo": "sonnet-builder",
+      "sessionKey": "agent:main:subagent:aa5eb9d8-07b1-42d9-aee9-12b1af634378",
+      "startedAt": "2026-02-19T01:42:00Z",
+      "description": "Setting up venv, installing LightGBM/CatBoost/numerapi, running CPU vs GPU benchmarks at 1K/10K/50K rows",
+      "nextAction": "Review results, document in GPU_BENCHMARK.md, then run first experiments"
+    },
+    {
+      "id": "blofin-backtest-interface-fix",
+      "title": "Fix BacktestEngine ↔ Strategy interface mismatch",
+      "status": "pending",
+      "description": "Tier 0 strategies generate 0 trades. BacktestEngine feeds raw ticks but strategies expect OHLCV candles. 32 strategies can't load (syntax errors). THIS IS THE BOTTLENECK.",
+      "priority": "high"
+    },
+    {
+      "id": "token-usage-tracking",
+      "title": "Find lightweight way to check Claude Max 5h window token usage",
+      "status": "researching",
+      "description": "Rob wants a way to check % of 5-hour token window used. Need to find if Anthropic exposes this via API headers or dashboard.",
+      "priority": "medium"
+    },
+    {
+      "id": "hedgeengine-qa",
+      "title": "HedgeEngine QA — 100 scenarios",
+      "status": "in-progress",
+      "assignedTo": "subagent",
+      "description": "100 test scenarios for hedge calculator"
+    }
+  ],
   "recentlyCompleted": [
     {
-      "id": "audit-bugs-fix-all-5",
-      "title": "All 5 critical audit bugs fixed and validated (39/39 tests passing)",
-      "status": "completed",
-      "completedAt": "2026-02-17T11:24:00Z",
-      "summary": "P1: Top-N deduplication (GROUP BY model_name). P2: Sharpe min 30 trades. P3: Data leakage (temporal split, no shuffle). P4: Health score labels fixed (15=CRITICAL). P5: Convergence gates + auto-archive."
+      "id": "numerai-analysis",
+      "title": "Numerai tournament analysis + improvement plan",
+      "completedAt": "2026-02-19T01:32:00Z",
+      "summary": "Analyzed 3 models. MMC ~0.001 (target >0.01). Created IMPROVEMENT_PLAN.md with 11 ranked ideas."
     },
     {
-      "id": "rate-limit-fix",
-      "title": "Fixed: Claude-aware rate limiting (1000 RPM)",
-      "status": "completed",
-      "completedAt": "2026-02-17T04:20:30Z",
-      "summary": "Added ClaudeRateLimiter to llm_client.py tracking requests per 1-min sliding window. Exponential backoff at 950 RPM threshold. Prevents 429 errors from aggressive optimization loops."
+      "id": "blofin-pipeline-redesign",
+      "title": "Full Blofin pipeline redesign — 3-tier lifecycle",
+      "completedAt": "2026-02-19T01:15:00Z",
+      "summary": "ML leakage fixed, strategy registry, pipeline runner, dashboard rebuilt. Hourly cron running."
     },
     {
-      "id": "blofin-pipeline-complete",
-      "title": "Blofin trading pipeline fully operational with real data",
-      "status": "completed",
-      "completedAt": "2026-02-17T03:05:00Z"
-    },
-    {
-      "id": "fresh-install",
-      "title": "Fresh OpenClaw + Jarvis v2 setup",
-      "status": "completed",
-      "completedAt": "2026-02-17T02:13:45Z"
+      "id": "dashboard-healthcheck-disabled",
+      "title": "Disabled stale dashboard-health-check.timer",
+      "completedAt": "2026-02-19T01:37:00Z",
+      "summary": "Script was trashed in cleanup. Timer disabled, failed state reset."
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-19T03:00:13Z",
-    "cpu_temp": "58.0°C",
-    "cpu_threshold": "85°C",
+    "timestamp": "2026-02-19T04:00:00Z",
+    "cpu_temp": "48.0°C",
     "cpu_status": "healthy",
-    "cpu_alert": "none",
     "disk_usage": "30%",
-    "disk_threshold": "80%",
     "disk_status": "healthy",
-    "disk_available": "312G",
-    "failed_services": [
-      {
-        "name": "dashboard-health-check.service",
-        "status": "failed",
-        "reason": "Script not found: /home/rob/.openclaw/workspace/blofin-stack/dashboard_health_check.py",
-        "exit_code": 2,
-        "lastFailure": "2026-02-18T18:57:34Z",
-        "severity": "warning"
-      }
-    ],
     "gateway": "active",
     "blofin_ingestor": "active",
-    "blofin_api": "not_configured",
+    "blofin_dashboard": "active",
     "blofin_paper": "active",
     "critical_alerts": "none",
-    "overall_status": "healthy_with_warnings",
-    "lastHeartbeat": "2026-02-19T03:00:13Z",
-    "notes": "Dashboard health check script missing (non-critical). Core Blofin services operational (ingestor + paper). Gateway active."
+    "overall_status": "healthy"
   },
   "backupStatus": {
     "full_restore": "enabled (every 2h)",
-    "knowledge_base": "enabled (every 10m)",
-    "lastSync": "2026-02-17T02:23:48Z"
+    "knowledge_base": "enabled (every 10m)"
   },
-  "incidents": [
-    {
-      "timestamp": "2026-02-19T03:00:13Z",
-      "severity": "warning",
-      "service": "dashboard-health-check.service",
-      "issue": "Service failed: script not found at /home/rob/.openclaw/workspace/blofin-stack/dashboard_health_check.py",
-      "action_needed": "Recreate script or disable service timer",
-      "status": "monitoring"
-    }
-  ],
-  "activeSpawns": [
-    {
-      "id": "sports-betting-phase1",
-      "sessionKey": "agent:main:subagent:d2ecaaa6-1707-4a73-b545-4bfcb21d70fe",
-      "runId": "ad353041-4e3b-4c80-b0fe-503f1bd5df5c",
-      "title": "Sports Betting Phase 1: Emulator + OCR Extraction",
-      "spawnedAt": "2026-02-17T20:24:00Z",
-      "model": "sonnet",
-      "status": "complete",
-      "completedAt": "2026-02-17T20:38:48Z"
-    },
-    {
-      "id": "sports-betting-phase2-real-apps",
-      "sessionKey": "agent:main:subagent:a0d5ba1a-f054-485f-aafe-7f713cf7a82f",
-      "runId": "baaae165-a60e-47fe-8ba6-10cd2552a00f",
-      "title": "Phase 2: Real Sportsbook Apps + Play Services",
-      "spawnedAt": "2026-02-17T22:04:30Z",
-      "status": "complete",
-      "completedAt": "2026-02-17T22:16:45Z"
-    }
-  ],
-  "last_updated": "2026-02-19T03:00:13Z"
+  "incidents": []
 }

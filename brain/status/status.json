@@ -1,15 +1,15 @@
 {
-  "lastUpdated": "2026-02-19T06:46:00Z",
+  "lastUpdated": "2026-02-19T06:55:00Z",
   "activeTasks": [
     {
-      "id": "backtest-engine-fix",
-      "title": "Fix BacktestEngine — 100% WR bug + 50K candle cap + registry mismatch",
+      "id": "strategy-cleanup-revival",
+      "title": "Demote fake T2s, tweak 0-trade T0 strategies, investigate all dead weight",
       "status": "in-progress",
       "assignedTo": "sonnet-builder",
-      "sessionKey": "agent:main:subagent:11c42a0c-a145-4a72-b20c-d0df3dd70b91",
-      "startedAt": "2026-02-19T06:46:00Z",
-      "description": "3 bugs: (1) BUY/SELL vs LONG/SHORT side mismatch causes 100% WR, (2) full backtest loads 36M ticks instead of 50K candle cap, (3) strategy_023-027 registry name mismatch",
-      "priority": "critical"
+      "sessionKey": "agent:main:subagent:fab0b81c-4f0e-4c31-b5f4-79f950b6dc99",
+      "startedAt": "2026-02-19T06:55:00Z",
+      "description": "10 fake T2 strategies demoted to T0. 7+ zero-trade T0 strategies getting parameter tweaks. strategy_023-028 cleanup. Every strategy gets a fair shot before killing.",
+      "priority": "high"
     },
     {
       "id": "numerai-era-boosting",
@@ -31,40 +31,20 @@
   ],
   "recentlyCompleted": [
     {
-      "id": "blofin-interface-fix",
-      "title": "Fix strategy interface mismatch (tick→candle)",
-      "completedAt": "2026-02-19T05:57:00Z",
-      "summary": "35/35 strategies pass validation. 22 empty files deleted. All strategies now use candle interface."
+      "id": "backtest-engine-fix",
+      "title": "Fix BacktestEngine — BUY/SELL bug + 50K candle cap + registry orphans",
+      "completedAt": "2026-02-19T06:50:00Z",
+      "summary": "3 bugs fixed: side normalization (100% WR → real 50%), limit_rows DESC subquery, 5 orphan registry entries deleted."
     },
     {
-      "id": "blofin-pipeline-manual-run",
-      "title": "Manual pipeline run — post-fix verification",
-      "completedAt": "2026-02-19T06:43:00Z",
-      "summary": "205s run. 5 T0→T1 promotions, 5 T1→T2 promotions. Strategies generating trades BUT 100% WR bug discovered in BacktestEngine."
-    },
-    {
-      "id": "token-usage-tracker",
-      "title": "Token usage aggregator + systemd timer",
-      "completedAt": "2026-02-19T06:05:00Z",
-      "summary": "brain/status/token_usage.md refreshed every 15 min. Zero AI tokens. Added to HEARTBEAT.md."
+      "id": "cron-cleanup",
+      "title": "Remove 3 stale disabled cron jobs",
+      "completedAt": "2026-02-19T06:53:00Z",
+      "summary": "Removed: Morning/Evening strategy adjustment, sports-betting-phase2-monitor. 3 active remain."
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-19T06:46:00Z",
-    "cpu_temp": "75.0°C",
-    "cpu_status": "healthy",
-    "disk_usage": "35%",
-    "disk_status": "healthy",
-    "gateway": "active",
-    "blofin_ingestor": "active",
-    "blofin_dashboard": "active",
-    "blofin_paper": "active",
-    "critical_alerts": "none",
+    "timestamp": "2026-02-19T06:55:00Z",
     "overall_status": "healthy"
-  },
-  "backupStatus": {
-    "full_restore": "enabled (every 2h)",
-    "knowledge_base": "enabled (every 10m)"
-  },
-  "incidents": []
+  }
 }

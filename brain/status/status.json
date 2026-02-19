@@ -1,28 +1,36 @@
 {
-  "lastUpdated": "2026-02-19T07:15:00Z",
-  "activeTasks": [],
+  "lastUpdated": "2026-02-19T07:35:00Z",
+  "activeTasks": [
+    {
+      "id": "numerai-era-boost-fix",
+      "title": "Numerai — Fix early stopping bug + run full experiment",
+      "status": "in-progress",
+      "assignedTo": "sonnet-builder",
+      "sessionKey": "agent:main:subagent:f401f913-629b-47e3-9e5a-59d73579acdf",
+      "startedAt": "2026-02-19T07:20:00Z",
+      "description": "Fix LightGBM early stopping. Training in progress.",
+      "priority": "high",
+      "monitor": true
+    }
+  ],
   "recentlyCompleted": [
     {
-      "id": "numerai-era-boosting-resume",
-      "title": "Numerai Era-Boosting — 50K run complete",
-      "completedAt": "2026-02-19T07:14:00Z",
-      "summary": "Pipeline works E2E but early stopping bug kills era-boost rounds after 1 tree. Fix needed before full run."
+      "id": "blofin-pipeline-smooth",
+      "title": "Blofin pipeline — confirmed smooth",
+      "completedAt": "2026-02-19T07:35:00Z",
+      "summary": "Pipeline cron ran successfully at 00:15 with honest metrics. 12 T0→T1 promotions. Strategy cleanup fixed 7 zero-trade strategies. Dedicated builder failed silently but pipeline is healthy — no respawn needed."
     },
     {
-      "id": "hedgeengine-presets",
-      "title": "HedgeEngine — Save/Load Presets feature",
-      "completedAt": "2026-02-19T07:07:00Z",
-      "summary": "Named presets via localStorage. Deployed to GitHub Pages."
-    },
-    {
-      "id": "blofin-cleanup-and-fix",
-      "title": "Blofin — BUY/SELL bug fix + strategy cleanup + tier reset",
-      "completedAt": "2026-02-19T07:05:00Z",
-      "summary": "Fixed 100% WR bug, cleaned 22 orphan strategies, demoted all 31 to T0. 45/45 tests pass."
+      "id": "strategy-cleanup-revival",
+      "title": "Strategy cleanup — fixed 7 zero-trade strategies",
+      "completedAt": "2026-02-19T07:23:00Z",
+      "summary": "Fixed tick-count volume thresholds. 2 legit T2s, 10 T1, 19 T0."
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-19T07:15:00Z",
+    "timestamp": "2026-02-19T07:35:00Z",
+    "cpu_temp": "71C",
+    "disk_usage": "35%",
     "overall_status": "healthy"
   }
 }

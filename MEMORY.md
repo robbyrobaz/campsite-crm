@@ -41,3 +41,11 @@
 - Lead with bad news
 - Hates: babysitting AI, temp files in repos, being asked questions he already answered
 - Wants: clear project visibility, autonomous execution, honest opinions
+- **NEVER block main session** — spawn work and stay available. Rob got angry when I was unavailable 5 min (Feb 19)
+- **Use the kanban board** — don't discount visual tools. Markdown files are not enough for project tracking.
+- **Be a COO** — prioritize and execute autonomously between conversations. Don't wait idle.
+
+## Infrastructure Reference
+- **Claw-Kanban:** port 8787, systemd `claw-kanban.service`, SQLite DB at `kanban-dashboard/kanban.sqlite`
+- **Agent files:** `.claude/agents/` — ml-engineer, dashboard-builder, devops-engineer, qa-sentinel, crypto-researcher
+- **Numerai "medium" feature set = 740 features** (misleading). v2_equivalent = 304. Full dataset OOMs with 740 on 32GB RAM.

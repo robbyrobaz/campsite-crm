@@ -22,7 +22,7 @@ The current OpenClaw setup on omen-claw (HP Omen server) has grown organically i
 - Blofin trading pipeline (running, profitable signal detection)
 - Server ops automation (backups, health checks, data retention)
 - OpenClaw gateway with Telegram + WebChat channels
-- Model routing with fallback chain (haiku → sonnet → opus)
+- Model routing with fallback chain (opus → sonnet → haiku)
 
 ### What needs to change
 - Single point of failure (OpenClaw gateway down = no AI assistant)
@@ -153,8 +153,8 @@ Both OpenClaw and Claude Code CLI can read the same files.
 
 ### 5.3 Ops Agent
 
-**Model:** Haiku (fast, cheap) for routine checks, Sonnet for incident response
-**Triggered by:** Scheduled timers + Jarvis escalation
+**Model:** Haiku (isolated cron job) for routine checks. Alerts Jarvis (Opus) only for incidents.
+**Triggered by:** Scheduled cron jobs (hourly heartbeat)
 **Standing responsibilities:**
 - Server health checks (temps, disk, CPU, memory)
 - Monitor OpenClaw gateway health
@@ -326,7 +326,7 @@ Last updated: 2026-02-17 14:32 UTC
 | Task tracking | STATUS.md + Telegram | Lightweight, no context-switching |
 | Monitoring | systemd timer + bash | Simple, independent, reliable |
 | Alerts | ntfy.sh | Free, no vendor lock-in, push to phone |
-| Models | Opus (Jarvis), Sonnet (Architect/Builder), Haiku (Ops/routine) | Cost-optimized per role |
+| Models | Opus (Jarvis primary), Sonnet (Builder subagents), Haiku (heartbeats/cron), Mini (automation) | Cost-optimized per role |
 
 ---
 
@@ -385,7 +385,7 @@ Last updated: 2026-02-17 14:32 UTC
 | Agent Teams experimental instability | Parallel builds crash or produce bad code | Jarvis reviews all output; disable Agent Teams and fall back to sequential subagents |
 | Rate limit cooldown spiral (again) | All models unavailable | Watchdog auto-resets auth-profiles.json; alert Rob immediately |
 | Agents accumulate junk files | Repo gets messy again | Architect SOUL.md enforces clean commits; .gitignore templates; periodic cleanup |
-| Token cost escalation | Opus everywhere = expensive | Model routing: Opus only for Jarvis, Sonnet for code, Haiku for routine. Monitor costs weekly. |
+| Token cost escalation | Opus as primary uses more of Max 5x usage cap | Heartbeats + cron on Haiku (isolated). Builders on Sonnet. Weekly token audit monitors usage. Max 5x subscription = flat $100/mo. |
 | Blofin services break during migration | Lost trading data | Migrate paths last; keep services running throughout; test before cutover |
 
 ---
@@ -427,7 +427,7 @@ After implementation, these should be true:
 ### Key Critiques Accepted
 1. **Nuclear migration is reckless** — Changed to in-place restructuring, zero downtime
 2. **4 agents is over-engineered** — Reduced to 2 (Jarvis + Builder). Architect merged into Jarvis. Ops stays as bash scripts.
-3. **Jarvis on Opus is a 30x cost increase** — Stays on Haiku with existing escalation ladder
+3. **Jarvis on Opus is a 30x cost increase** — ~~Stays on Haiku~~ **UPDATED 2026-02-18:** Jarvis now runs on Opus. Cost is flat $100/mo (Max 5x subscription). Heartbeats moved to Haiku isolated cron to conserve usage cap.
 4. **Ops Agent as LLM is waste** — Replaced with bash watchdog + systemd timers ($0/month)
 5. **No cost tracking** — Added daily token budget with auto-downgrade at 80%
 6. **No rollback plan** — Added Phase 0 with tested backup to /mnt/data
@@ -460,8 +460,9 @@ After implementation, these should be true:
 FINAL DESIGN — 2 Agents, In-Place Migration
 
 Agents:
-  Jarvis    = Chat + Route + Review | Haiku (escalates to Sonnet/Opus)
+  Jarvis    = Chat + Route + Review | Opus (primary, all conversations)
   Builder   = Ephemeral per-task    | Sonnet | Optional Agent Teams
+  Heartbeat = Isolated cron (hourly)| Haiku  | Silent unless alert needed
 
 Infrastructure (unchanged from current):
   Bash watchdog + ntfy.sh     (auto-recover + alert, no LLM)
@@ -482,5 +483,5 @@ Migration Phases:
   Phase 3: Enable Agent Teams (optional), set up watchdog + ntfy.sh
   Phase 4: Validate, cleanup repos, test end-to-end
 
-Cost: ~$5-10/day (comparable to current), NOT $20-45/day
+Cost: $100/month flat (Claude Max 5x subscription). Heartbeats on Haiku, builders on Sonnet.
 ```

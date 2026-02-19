@@ -1,28 +1,24 @@
 {
-  "lastUpdated": "2026-02-19T04:03:00Z",
+  "lastUpdated": "2026-02-19T04:30:00Z",
   "activeTasks": [
     {
-      "id": "numerai-gpu-setup",
-      "title": "Numerai GPU smoke test & environment setup",
+      "id": "blofin-interface-fix",
+      "title": "Fix BacktestEngine ↔ Strategy interface mismatch",
       "status": "in-progress",
       "assignedTo": "sonnet-builder",
-      "sessionKey": "agent:main:subagent:aa5eb9d8-07b1-42d9-aee9-12b1af634378",
-      "startedAt": "2026-02-19T01:42:00Z",
-      "description": "Setting up venv, installing LightGBM/CatBoost/numerapi, running CPU vs GPU benchmarks at 1K/10K/50K rows",
-      "nextAction": "Review results, document in GPU_BENCHMARK.md, then run first experiments"
-    },
-    {
-      "id": "blofin-backtest-interface-fix",
-      "title": "Fix BacktestEngine ↔ Strategy interface mismatch",
-      "status": "pending",
-      "description": "Tier 0 strategies generate 0 trades. BacktestEngine feeds raw ticks but strategies expect OHLCV candles. 32 strategies can't load (syntax errors). THIS IS THE BOTTLENECK.",
+      "sessionKey": "agent:main:subagent:7ec3ba0d-8918-494a-a19b-1d2e83ed7f9d",
+      "startedAt": "2026-02-19T04:30:00Z",
+      "description": "Converting 12 tick-interface strategies + 5 analyze-interface strategies to candle interface. Deleting 22 empty strategy files. Archiving dead registry entries.",
       "priority": "high"
     },
     {
-      "id": "token-usage-tracking",
-      "title": "Find lightweight way to check Claude Max 5h window token usage",
-      "status": "researching",
-      "description": "Rob wants a way to check % of 5-hour token window used. Need to find if Anthropic exposes this via API headers or dashboard.",
+      "id": "numerai-era-boosting",
+      "title": "Numerai Experiment 001 — Era-Boosting",
+      "status": "in-progress",
+      "assignedTo": "sonnet-builder",
+      "sessionKey": "agent:main:subagent:db305f8c-a311-4b3a-9ea3-af070d32ebae",
+      "startedAt": "2026-02-19T04:30:00Z",
+      "description": "Running era-boosting experiment for robbyrobml. Smoke test (1K) → 50K → full dataset. Goal: reduce era std by 20%+.",
       "priority": "medium"
     },
     {
@@ -35,10 +31,16 @@
   ],
   "recentlyCompleted": [
     {
-      "id": "numerai-analysis",
-      "title": "Numerai tournament analysis + improvement plan",
-      "completedAt": "2026-02-19T01:32:00Z",
-      "summary": "Analyzed 3 models. MMC ~0.001 (target >0.01). Created IMPROVEMENT_PLAN.md with 11 ranked ideas."
+      "id": "token-usage-tracking",
+      "title": "API token usage tracking research",
+      "completedAt": "2026-02-19T04:29:00Z",
+      "summary": "OpenClaw already has built-in tracking via fetchClaudeUsage() → api.anthropic.com/api/oauth/usage. Shows five_hour.utilization and seven_day.utilization. No patching needed."
+    },
+    {
+      "id": "agent-teams-doc",
+      "title": "Agent Teams vs Independent Agents documentation",
+      "completedAt": "2026-02-19T04:28:00Z",
+      "summary": "Expanded brain/AGENT_TEAMS.md with real-world comparison from Blofin redesign. Agent Teams win for multi-file same-repo work; OpenClaw subagents win for independent focused tasks."
     },
     {
       "id": "blofin-pipeline-redesign",
@@ -47,14 +49,14 @@
       "summary": "ML leakage fixed, strategy registry, pipeline runner, dashboard rebuilt. Hourly cron running."
     },
     {
-      "id": "dashboard-healthcheck-disabled",
-      "title": "Disabled stale dashboard-health-check.timer",
-      "completedAt": "2026-02-19T01:37:00Z",
-      "summary": "Script was trashed in cleanup. Timer disabled, failed state reset."
+      "id": "numerai-gpu-setup",
+      "title": "Numerai GPU smoke test & environment setup",
+      "completedAt": "2026-02-19T04:00:00Z",
+      "summary": "GPU benchmarked. XGBoost/CatBoost/PyTorch benefit from GPU. LightGBM does not. RandomForest removed (timeouts)."
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-19T04:00:00Z",
+    "timestamp": "2026-02-19T04:30:00Z",
     "cpu_temp": "48.0°C",
     "cpu_status": "healthy",
     "disk_usage": "30%",

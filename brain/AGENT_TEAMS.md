@@ -77,3 +77,43 @@ Require plan approval before teammates make changes.
 - Plan approval mode is good for complex work — prevents teammates from going rogue
 - 4 teammates is a good sweet spot for a major refactor
 - Teammates can work on: ML pipeline, strategy files, systemd timers, dashboard — all in parallel without conflicts if scoped to different directories
+
+## Real-World Comparison: Agent Teams vs OpenClaw Subagents
+
+### Test Case: Blofin Pipeline Redesign (Feb 18, 2026)
+**Scope:** 4 tasks — ML leakage fix, strategy lifecycle, pipeline scheduling, dashboard rebuild
+
+#### Agent Teams (what we used)
+- **Session 1 (tide-summit):** 3/4 tasks completed before rate limit hit (~45 min)
+- **Session 2 (rapid-prairie):** Task 4 completed in ~9 minutes
+- **Total wall-clock:** ~55 minutes for all 4 tasks
+- **Quality:** All code committed, tested, no rework needed
+- **Coordination:** Teammates auto-coordinated on shared DB schema, no conflicts
+- **Downside:** Rate limits hit harder because 4 parallel contexts burn tokens fast. One session wasn't enough — needed a second.
+
+#### OpenClaw Subagents (typical pattern)
+- 4 independent `sessions_spawn` calls with `model=sonnet`
+- Each gets a focused task prompt, reports back
+- **Estimated wall-clock:** 30-40 min (similar parallelism)
+- **Coordination:** None between subagents. Jarvis must manually resolve conflicts.
+- **Token cost:** Lower per-agent (summarized results), but Jarvis review adds overhead
+- **Quality:** More variable — each subagent works in isolation, may make conflicting assumptions
+
+#### Verdict
+| Factor | Agent Teams | OpenClaw Subagents |
+|--------|------------|-------------------|
+| **Speed** | ★★★★ Fast parallel | ★★★★ Similar parallel |
+| **Coordination** | ★★★★★ Auto cross-talk | ★★ Manual via Jarvis |
+| **Token efficiency** | ★★ Burns tokens fast | ★★★★ Leaner per-task |
+| **Rate limit risk** | ★★ Hit limits on Session 1 | ★★★★ Spread across models |
+| **Quality control** | ★★★★ Self-reviewing | ★★★ Needs Jarvis review |
+| **Setup complexity** | ★★★ PTY + paste dance | ★★★★★ Simple API call |
+| **Best for** | Multi-file refactors in ONE repo | Independent focused tasks |
+
+#### TL;DR
+- **Agent Teams** when: 3+ tasks touch the same codebase and need to know about each other's changes (shared schemas, imports, configs). Worth the token cost for coordination.
+- **OpenClaw Subagents** when: Tasks are independent (different repos, different concerns), or you want to mix models (Sonnet for code, Mini for automation). Cheaper and simpler.
+- **Don't use Agent Teams for:** Sequential work, single-file fixes, cross-repo tasks, or anything where you'd just be spawning 1 teammate (pointless overhead).
+
+#### Cost Reality
+On Claude Max 5x ($100/mo flat), Agent Teams are "free" — no marginal cost. The only cost is burning through your 5-hour usage cap faster. A 4-teammate session used roughly 3x the tokens of a single-agent equivalent. If you're rate-limited, that matters. If you have headroom, it's the better tool for complex refactors.

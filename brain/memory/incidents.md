@@ -26,3 +26,20 @@
 
 **Decision:** Alerting Rob. Script needs to be rebuilt or service removed from systemd.
 
+
+## Feb 19, 03:00 UTC (8:00 PM MST) — Dashboard Health Check Script Missing
+
+**Severity:** Warning (non-critical)
+**Service:** dashboard-health-check.service
+**Status:** Failed
+**Root Cause:** Script not found at `/home/rob/.openclaw/workspace/blofin-stack/dashboard_health_check.py`
+**Exit Code:** 2 (INVALIDARGUMENT)
+**Last Failure:** 2026-02-18T18:57:34Z
+
+**Impact:** Health check service fails on timer. All core Blofin services (ingestor, paper trading) remain active and operational.
+
+**Action Taken:** Logged to incidents.md and status.json for monitoring.
+
+**Next Steps:** Either recreate the missing script or disable the timer (`systemctl --user disable dashboard-health-check.timer`).
+
+---

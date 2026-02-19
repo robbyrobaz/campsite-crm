@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-18T19:00:00Z",
+  "lastUpdated": "2026-02-19T03:00:13Z",
   "activeTasks": [],
   "lastTaskCompleted": {
     "id": "audit-bugs-fix-complete",
@@ -44,8 +44,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-18T19:00:00Z",
-    "cpu_temp": "63.0°C",
+    "timestamp": "2026-02-19T03:00:13Z",
+    "cpu_temp": "58.0°C",
     "cpu_threshold": "85°C",
     "cpu_status": "healthy",
     "cpu_alert": "none",
@@ -59,7 +59,8 @@
         "status": "failed",
         "reason": "Script not found: /home/rob/.openclaw/workspace/blofin-stack/dashboard_health_check.py",
         "exit_code": 2,
-        "lastFailure": "2026-02-18T18:57:34Z"
+        "lastFailure": "2026-02-18T18:57:34Z",
+        "severity": "warning"
       }
     ],
     "gateway": "active",
@@ -68,8 +69,8 @@
     "blofin_paper": "active",
     "critical_alerts": "none",
     "overall_status": "healthy_with_warnings",
-    "lastHeartbeat": "2026-02-18T19:00:00Z",
-    "notes": "Dashboard health check script missing. API service not configured. Core Blofin services operational (ingestor + paper)."
+    "lastHeartbeat": "2026-02-19T03:00:13Z",
+    "notes": "Dashboard health check script missing (non-critical). Core Blofin services operational (ingestor + paper). Gateway active."
   },
   "backupStatus": {
     "full_restore": "enabled (every 2h)",
@@ -78,11 +79,12 @@
   },
   "incidents": [
     {
-      "timestamp": "2026-02-18T19:00:00Z",
+      "timestamp": "2026-02-19T03:00:13Z",
       "severity": "warning",
       "service": "dashboard-health-check.service",
       "issue": "Service failed: script not found at /home/rob/.openclaw/workspace/blofin-stack/dashboard_health_check.py",
-      "action_needed": "Recreate script or disable service timer"
+      "action_needed": "Recreate script or disable service timer",
+      "status": "monitoring"
     }
   ],
   "activeSpawns": [
@@ -106,5 +108,5 @@
       "completedAt": "2026-02-17T22:16:45Z"
     }
   ],
-  "last_updated": "2026-02-18T19:00:00Z"
+  "last_updated": "2026-02-19T03:00:13Z"
 }

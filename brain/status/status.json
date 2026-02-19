@@ -1,14 +1,14 @@
 {
-  "lastUpdated": "2026-02-19T07:35:00Z",
+  "lastUpdated": "2026-02-19T07:45:00Z",
   "activeTasks": [
     {
-      "id": "numerai-era-boost-fix",
-      "title": "Numerai — Fix early stopping bug + run full experiment",
+      "id": "numerai-era-boost-fix-v2",
+      "title": "Numerai — Fix early stopping bug (respawn #2)",
       "status": "in-progress",
       "assignedTo": "sonnet-builder",
-      "sessionKey": "agent:main:subagent:f401f913-629b-47e3-9e5a-59d73579acdf",
-      "startedAt": "2026-02-19T07:20:00Z",
-      "description": "Fix LightGBM early stopping. Training in progress.",
+      "sessionKey": "agent:main:subagent:387129e5-857a-4bb5-83f0-76f1a7d82210",
+      "startedAt": "2026-02-19T07:45:00Z",
+      "description": "Previous builder died mid-training. Respawned to fix early stopping and run medium+full.",
       "priority": "high",
       "monitor": true
     }
@@ -18,18 +18,12 @@
       "id": "blofin-pipeline-smooth",
       "title": "Blofin pipeline — confirmed smooth",
       "completedAt": "2026-02-19T07:35:00Z",
-      "summary": "Pipeline cron ran successfully at 00:15 with honest metrics. 12 T0→T1 promotions. Strategy cleanup fixed 7 zero-trade strategies. Dedicated builder failed silently but pipeline is healthy — no respawn needed."
-    },
-    {
-      "id": "strategy-cleanup-revival",
-      "title": "Strategy cleanup — fixed 7 zero-trade strategies",
-      "completedAt": "2026-02-19T07:23:00Z",
-      "summary": "Fixed tick-count volume thresholds. 2 legit T2s, 10 T1, 19 T0."
+      "summary": "Pipeline cron ran at 00:15 with honest metrics. 12 T0→T1 promotions. Strategy cleanup fixed 7 zero-trade strategies."
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-19T07:35:00Z",
-    "cpu_temp": "71C",
+    "timestamp": "2026-02-19T07:45:00Z",
+    "cpu_temp": "77C",
     "disk_usage": "35%",
     "overall_status": "healthy"
   }

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-18T23:00:00Z",
+  "lastUpdated": "2026-02-18T19:00:00Z",
   "activeTasks": [],
   "lastTaskCompleted": {
     "id": "audit-bugs-fix-complete",
@@ -44,52 +44,47 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-18T23:00:00Z",
-    "cpu_temp": "54.0°C",
+    "timestamp": "2026-02-18T19:00:00Z",
+    "cpu_temp": "63.0°C",
     "cpu_threshold": "85°C",
     "cpu_status": "healthy",
     "cpu_alert": "none",
     "disk_usage": "30%",
     "disk_threshold": "80%",
     "disk_status": "healthy",
-    "disk_available": "313G",
-    "failed_services": "none",
+    "disk_available": "312G",
+    "failed_services": [
+      {
+        "name": "dashboard-health-check.service",
+        "status": "failed",
+        "reason": "Script not found: /home/rob/.openclaw/workspace/blofin-stack/dashboard_health_check.py",
+        "exit_code": 2,
+        "lastFailure": "2026-02-18T18:57:34Z"
+      }
+    ],
     "gateway": "active",
     "blofin_ingestor": "active",
-    "blofin_api": "unit_not_configured",
+    "blofin_api": "not_configured",
     "blofin_paper": "active",
-    "dashboard": "activating",
     "critical_alerts": "none",
-    "overall_status": "healthy",
-    "lastHeartbeat": "2026-02-18T23:00:00Z",
-    "notes": "Dashboard service was crashing (1768 restart attempts). Restarted. dashboard-health-check masked (script missing). All core systems operational."
+    "overall_status": "healthy_with_warnings",
+    "lastHeartbeat": "2026-02-18T19:00:00Z",
+    "notes": "Dashboard health check script missing. API service not configured. Core Blofin services operational (ingestor + paper)."
   },
   "backupStatus": {
     "full_restore": "enabled (every 2h)",
     "knowledge_base": "enabled (every 10m)",
     "lastSync": "2026-02-17T02:23:48Z"
   },
-  "incidents": [],
-  "deploymentLog": {
-    "timestamp": "2026-02-17T04:27:00Z",
-    "action": "Evening deployment: strategy pruning + parameter tuning + VWAP threshold fix",
-    "changes": [
-      "✅ Fixed Claude rate limiter (1000 RPM per-minute sliding window)",
-      "✅ Fixed VWAP_DEVIATION_PCT: 0.40 → 0.80 (adjuster found ≥0.5% performs better)",
-      "⏳ Disabling 3 loser strategies (breakout 25.1% WR, momentum 30.9%, reversal 34.8%)",
-      "⏳ Parameter tuning: bb_squeeze +min_band_width, momentum threshold +0.4%, RSI SELL gate",
-      "📝 Momentum flagged for 24h re-enable review (conflict with paper trading +0.05% pnl)"
-    ]
-  },
-  "last_updated": "2026-02-18T23:00:00Z",
-  "blofin_morning_adjustment": {
-    "timestamp": "2026-02-17T08:00:00-07:00",
-    "strategies_disabled": 81,
-    "strategies_enabled": 233,
-    "librarian_promotions": 0,
-    "watch_list_additions": 1,
-    "action": "Pruning completed. Parameter rotation scheduled. Librarian check at 12:00 PM MST."
-  },
+  "incidents": [
+    {
+      "timestamp": "2026-02-18T19:00:00Z",
+      "severity": "warning",
+      "service": "dashboard-health-check.service",
+      "issue": "Service failed: script not found at /home/rob/.openclaw/workspace/blofin-stack/dashboard_health_check.py",
+      "action_needed": "Recreate script or disable service timer"
+    }
+  ],
   "activeSpawns": [
     {
       "id": "sports-betting-phase1",
@@ -98,35 +93,8 @@
       "title": "Sports Betting Phase 1: Emulator + OCR Extraction",
       "spawnedAt": "2026-02-17T20:24:00Z",
       "model": "sonnet",
-      "expectedCompletionMinutes": 120,
       "status": "complete",
-      "lastChecked": "2026-02-17T20:31:34.594536",
-      "outputFolder": "/home/rob/.openclaw/workspace/ai-workshop/projects/sports-betting/captures/",
-      "progress": {
-        "screenshots_captured": 3,
-        "ocr_pipeline_built": true,
-        "extractions_generated": 27,
-        "sample_outputs": [
-          "Rangers vs Bruins (NHL) odds boost",
-          "Yankees vs Red Sox (MLB) arbitrage",
-          "Warriors vs Suns (NBA) moneyline"
-        ]
-      },
-      "completedAt": "2026-02-17T20:38:48.008625",
-      "deliverables": {
-        "emulator": "pixel7_promo running",
-        "screenshots": "3 real PNGs (327KB each)",
-        "ocr_pipeline": "pytesseract + custom parser",
-        "extractions": "12 clean JSON entries (promos + arbitrage)",
-        "blocker": "Real APKs unavailable; using BetEdge Pro simulator"
-      },
-      "committed": {
-        "branch": "sports-betting/phase1-ocr-pipeline",
-        "commit": "e8a7051",
-        "message": "Sports Betting Phase 1: OCR Extraction Pipeline - COMPLETE",
-        "files": 12,
-        "url": "https://github.com/robbyrobaz/ai-workshop/tree/sports-betting/phase1-ocr-pipeline"
-      }
+      "completedAt": "2026-02-17T20:38:48Z"
     },
     {
       "id": "sports-betting-phase2-real-apps",
@@ -135,22 +103,8 @@
       "title": "Phase 2: Real Sportsbook Apps + Play Services",
       "spawnedAt": "2026-02-17T22:04:30Z",
       "status": "complete",
-      "completedAt": "2026-02-17T22:16:45Z",
-      "model": "sonnet",
-      "duration_minutes": 12.25,
-      "deliverables": {
-        "emulator": "✅ Android 14, emulator-5554, Play Services",
-        "google_auth": "✅ jarvis.is.my.coo@gmail.com authenticated",
-        "screenshots": "✅ 10 real PNG files (325KB-1.3MB each)",
-        "json_data": "✅ 2 extracted files (440K+ each) with real odds/arbitrage",
-        "code": "✅ arbitrage_detector.py, odds_fetcher.py, pipeline.py",
-        "documentation": "✅ README.md, BLOCKERS.md with infrastructure analysis",
-        "git_commit": "✅ 75e032e on sports-betting/phase2-real-apps"
-      },
-      "blockers_documented": {
-        "play_integrity_api": "CRITICAL - Real sportsbook apps require MEETS_STRONG_INTEGRITY (emulators fail)",
-        "recommendation": "Physical device (Pixel 7, ~$600) or cloud device farm (BrowserStack)"
-      }
+      "completedAt": "2026-02-17T22:16:45Z"
     }
-  ]
+  ],
+  "last_updated": "2026-02-18T19:00:00Z"
 }

@@ -16,3 +16,13 @@
 **Impact:** Dashboard UI may be briefly unavailable, but core trading pipeline unaffected. Ingestor + paper trading still active.
 
 **Follow-up:** If dashboard continues crashing, check logs: `journalctl --user -u blofin-dashboard.service -n 50`
+## Feb 18, 19:00 MST - Dashboard Health Check Service Failed
+
+**Service:** dashboard-health-check.service
+**Status:** FAILED (exit code 2 - INVALIDARGUMENT)
+**Reason:** Script not found at `/home/rob/.openclaw/workspace/blofin-stack/dashboard_health_check.py`
+
+**Action:** Service will continue failing on each timer trigger until script is recreated or timer is disabled.
+
+**Decision:** Alerting Rob. Script needs to be rebuilt or service removed from systemd.
+

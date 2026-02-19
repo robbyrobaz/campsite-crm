@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-02-19T10:00:00Z",
-  "lastHeartbeat": "2026-02-19T10:00:00Z",
+  "timestamp": "2026-02-19T11:00:00Z",
+  "lastHeartbeat": "2026-02-19T11:00:00Z",
   "systemHealth": {
     "cpuTemp": {
-      "value": 67,
+      "value": 63,
       "unit": "°C",
       "status": "OK",
       "threshold": 85
@@ -15,7 +15,7 @@
       "threshold": 80,
       "filesystem": "/dev/nvme0n1p2",
       "size": "468G",
-      "used": "184G",
+      "used": "185G",
       "available": "260G"
     },
     "gateway": {
@@ -24,6 +24,7 @@
     },
     "blofin": {
       "ingestor": "active",
+      "api": "inactive",
       "paper": "active",
       "note": "api service not running (may be on-demand)"
     },

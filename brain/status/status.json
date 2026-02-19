@@ -1,10 +1,10 @@
 {
-  "lastUpdated": "2026-02-19T19:00:00Z",
+  "lastUpdated": "2026-02-19T20:00:00Z",
   "activeTasks": [
     {
       "id": "numerai-era-boost-full",
       "title": "Numerai — Full dataset era-boosting run",
-      "status": "in-progress",
+      "status": "failed-silently",
       "assignedTo": "jarvis-direct",
       "processId": "clear-tidepool",
       "startedAt": "2026-02-19T13:51:00Z",
@@ -28,15 +28,15 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-19T19:00:00Z",
+    "timestamp": "2026-02-19T20:00:00Z",
     "overall_status": "ok",
     "cpu_temp": "61.0°C (OK)",
-    "disk_usage": "56% (OK)",
+    "disk_usage": "59% (OK)",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
     "critical_alerts": "none (exit code 0)",
     "failed_services": "gnome-remote-desktop (masked), openclaw-full-restore-backup (Git LFS size >2GB), update-notifier-crash (non-critical)",
-    "notes": "All critical systems operating normally. Backup service failing on large Git LFS objects (expected, known issue). 1 active task (numerai-era-boost-full) in progress since 13:51."
+    "notes": "All critical systems operating normally. Backup service failing on large Git LFS objects (expected, known issue). 1 active task (numerai-era-boost-full) running for ~6h20m."
   }
 }

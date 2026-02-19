@@ -4,8 +4,9 @@
     {
       "id": "blofin-interface-fix",
       "title": "Fix BacktestEngine ↔ Strategy interface mismatch",
-      "status": "stuck-queued",
-      "note": "Subagent at 0 tokens after 1.5h — likely never started. Re-spawn next main session.",
+      "status": "completed",
+      "completedAt": "2026-02-19T05:57:00Z",
+      "note": "35/35 strategies pass validation. 22 empty files deleted, 22 registry entries archived, syntax errors fixed.",
       "assignedTo": "sonnet-builder",
       "sessionKey": "agent:main:subagent:7ec3ba0d-8918-494a-a19b-1d2e83ed7f9d",
       "startedAt": "2026-02-19T04:30:00Z",

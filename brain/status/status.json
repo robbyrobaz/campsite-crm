@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-19T07:45:00Z",
+  "lastUpdated": "2026-02-19T08:00:00Z",
   "activeTasks": [
     {
       "id": "numerai-era-boost-fix-v2",
@@ -22,9 +22,21 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-19T07:45:00Z",
-    "cpu_temp": "77C",
-    "disk_usage": "35%",
+    "timestamp": "2026-02-19T08:00:00Z",
+    "cpu_temp": "71C",
+    "disk_usage": "38%",
+    "gateway_status": "active",
+    "blofin_services": {
+      "ingestor": "active",
+      "dashboard": "active",
+      "paper_trading": "active"
+    },
+    "critical_alerts": "none",
+    "failed_systemd_units": [
+      "gnome-remote-desktop.service (masked)",
+      "openclaw-full-restore-backup.service (non-critical)",
+      "update-notifier-crash.service (non-critical)"
+    ],
     "overall_status": "healthy"
   }
 }

@@ -64,3 +64,20 @@
 
 **Impact:** Backup service fails silently on push; local snapshots still captured, but GitHub redundancy broken.
 
+
+---
+
+## Feb 19, 08:00 MST - Backup Service Still Failed (Persistent Git LFS Issue)
+
+**Service:** openclaw-full-restore-backup.service
+**Status:** Still FAILED (no change since 06:41 MST)
+**Error:** Git LFS size limit exceeded
+**Details:**
+- Last failure: 2026-02-19 06:41:43 MST (1h 19min ago at heartbeat check)
+- Same 4 objects still exceeding 2GB limit each
+- Service remains in failed state; timer will retry next cycle
+
+**Heartbeat Check:** 08:00 MST — Verified failure persists, status.json updated with warning.
+
+**Note:** This is a persistent issue requiring manual intervention. Local snapshots continue, but GitHub backup is blocked.
+

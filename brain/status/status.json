@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-19T14:00:00Z",
+  "lastUpdated": "2026-02-19T08:00:00Z",
   "activeTasks": [
     {
       "id": "numerai-era-boost-full",
@@ -28,15 +28,16 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-19T14:00:00Z",
-    "overall_status": "healthy",
-    "cpu_temp": "56.0C (OK)",
+    "timestamp": "2026-02-19T08:00:00Z",
+    "overall_status": "warning",
+    "cpu_temp": "69.0C (OK)",
     "disk_usage": "49% (OK)",
     "gateway": "active",
     "blofin_dashboard": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
     "critical_alerts": "none",
-    "failed_services": "3 non-critical (gnome-remote-desktop masked, update-notifier-crash, openclaw-full-restore-backup)"
+    "failed_services": "openclaw-full-restore-backup.service FAILED (Git LFS size limit exceeded at 06:41 MST)",
+    "notes": "Backup service failed pushing large objects >2GB to GitHub LFS. Need to split or prune database."
   }
 }

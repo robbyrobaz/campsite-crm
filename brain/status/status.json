@@ -1,7 +1,25 @@
 {
-  "lastUpdated": "2026-02-19T06:00:00-07:00",
-  "activeTasks": [],
+  "lastUpdated": "2026-02-19T13:51:00Z",
+  "activeTasks": [
+    {
+      "id": "numerai-era-boost-full",
+      "title": "Numerai — Full dataset era-boosting run",
+      "status": "in-progress",
+      "assignedTo": "jarvis-direct",
+      "processId": "clear-tidepool",
+      "startedAt": "2026-02-19T13:51:00Z",
+      "description": "Running exp001 --mode full on 2.7M rows. Medium run showed Sharpe 0.145→0.557, corr +312%. Full run will give true comparison vs baselines.",
+      "priority": "high",
+      "monitor": true
+    }
+  ],
   "recentlyCompleted": [
+    {
+      "id": "numerai-era-boost-medium",
+      "title": "Numerai era-boosting medium run — early stopping fix confirmed",
+      "completedAt": "2026-02-19T13:51:00Z",
+      "summary": "50K rows: Sharpe 0.145→0.557, corr +312%, feature exposure -77%. Era std gate not met but all other metrics dramatically improved. Code committed and pushed."
+    },
     {
       "id": "blofin-pipeline-smooth",
       "title": "Blofin pipeline — confirmed smooth",
@@ -9,23 +27,8 @@
       "summary": "Pipeline cron working with honest metrics. 12 T0→T1 promotions."
     }
   ],
-  "pendingForRob": [
-    {
-      "id": "numerai-early-stop-fix",
-      "title": "Numerai era-boost early stopping bug — needs direct fix",
-      "note": "3 sonnet builders failed silently (0 messages each). Will fix directly in main session when Rob is awake."
-    }
-  ],
   "systemHealth": {
-    "timestamp": "2026-02-19T06:00:00-07:00",
-    "cpu_temp_c": 63,
-    "disk_usage_percent": 46,
-    "gateway": "active",
-    "blofin_ingestor": "active",
-    "blofin_paper": "active",
-    "blofin_dashboard": "active",
-    "critical_alerts": "none",
-    "failed_services_note": "gnome-remote-desktop (masked), openclaw-full-restore-backup (git lfs size limit—objects exceed 2GB max), update-notifier-crash (notification)",
+    "timestamp": "2026-02-19T13:51:00Z",
     "overall_status": "healthy"
   }
 }

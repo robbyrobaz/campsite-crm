@@ -1,22 +1,22 @@
 {
-  "timestamp": "2026-02-19T09:00:00Z",
-  "lastHeartbeat": "2026-02-19T09:00:00Z",
+  "timestamp": "2026-02-19T10:00:00Z",
+  "lastHeartbeat": "2026-02-19T10:00:00Z",
   "systemHealth": {
     "cpuTemp": {
-      "value": 68,
+      "value": 67,
       "unit": "°C",
       "status": "OK",
       "threshold": 85
     },
     "diskUsage": {
-      "value": 38,
+      "value": 42,
       "unit": "%",
       "status": "OK",
       "threshold": 80,
       "filesystem": "/dev/nvme0n1p2",
       "size": "468G",
-      "used": "168G",
-      "available": "276G"
+      "used": "184G",
+      "available": "260G"
     },
     "gateway": {
       "service": "openclaw-gateway.service",
@@ -24,14 +24,14 @@
     },
     "blofin": {
       "ingestor": "active",
-      "dashboard": "active",
-      "paper": "active"
+      "paper": "active",
+      "note": "api service not running (may be on-demand)"
     },
     "failedServices": [
       "gnome-remote-desktop.service (masked, non-critical)",
-      "openclaw-full-restore-backup.service (non-critical)",
+      "openclaw-full-restore-backup.service (backup service, non-critical)",
       "update-notifier-crash.service (non-critical)"
     ],
-    "criticalAlerts": "none"
+    "criticalAlerts": "none (exit code 0)"
   }
 }

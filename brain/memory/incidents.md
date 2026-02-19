@@ -81,3 +81,30 @@
 
 **Note:** This is a persistent issue requiring manual intervention. Local snapshots continue, but GitHub backup is blocked.
 
+
+---
+
+## Feb 19, 14:00 MST - Heartbeat Check: Backup FAILED, API Service Missing
+
+**Heartbeat Time:** 2026-02-19 09:00 MST (Arizona actual time)
+
+**Issues Detected:**
+1. **openclaw-full-restore-backup.service** — FAILED (persistent from 06:41 MST)
+   - Error: Git LFS objects >2GB rejected by GitHub
+   - Last run: 18 min ago, CPU time 4m 41s
+   - Multiple objects (a1e7d5ad, 2383d07f, 1977a177, 2f4b925434) all rejected with "Size must be <= 2147483648"
+   
+2. **blofin-stack-api.service** — NOT INSTALLED
+   - Unit file doesn't exist (exit code 5 on restart attempt)
+   - Earlier query returned "inactive" — this is normal for non-existent services
+   - Confirm: is this service supposed to be installed?
+
+**System Status (OK):**
+- CPU temp: 70.0°C ✓
+- Disk: 53% ✓
+- Gateway: active ✓
+- Blofin ingestor: active ✓
+- Blofin paper trading: active ✓
+- Critical alerts: none ✓
+
+**Action Taken:** status.json updated with warning flags. Backup service requires manual intervention (split large objects or prune DB). API service requires verification of intended config.

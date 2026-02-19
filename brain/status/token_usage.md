@@ -1,16 +1,16 @@
 # Token Usage
-**Updated:** 2026-02-19 02:30 MST
+**Updated:** 2026-02-19 02:45 MST
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 33.0M (493 requests)
-- **Input:** 959 | **Output:** 109.3K
-- **Cache Read:** 31.0M | **Cache Write:** 1.9M
-- **Cost (est):** $28.26
+- **Total Tokens:** 31.1M (450 requests)
+- **Input:** 910 | **Output:** 100.2K
+- **Cache Read:** 29.2M | **Cache Write:** 1.8M
+- **Cost (est):** $26.81
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 320 | 28.6M | 82.2K | $26.43 |
+| opus | 277 | 26.8M | 73.1K | $24.97 |
 | sonnet | 143 | 3.7M | 15.0K | $1.66 |
 | haiku | 27 | 628.4K | 12.1K | $0.17 |
 | codex/mini | 3 | 0 | 0 | $0.00 |

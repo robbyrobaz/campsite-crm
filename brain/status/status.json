@@ -1,42 +1,43 @@
 {
-  "lastUpdated": "2026-02-19T20:00:00Z",
+  "lastUpdated": "2026-02-19T21:02:00Z",
   "activeTasks": [
     {
       "id": "numerai-era-boost-full",
-      "title": "Numerai — Full dataset era-boosting run",
-      "status": "failed-silently",
+      "title": "Numerai — Full dataset era-boosting run (attempt 3)",
+      "status": "in-progress",
       "assignedTo": "jarvis-direct",
-      "processId": "clear-tidepool",
-      "startedAt": "2026-02-19T13:51:00Z",
-      "description": "Running exp001 --mode full on 2.7M rows. Medium run showed Sharpe 0.145→0.557, corr +312%. Full run will give true comparison vs baselines.",
+      "pid": 401561,
+      "startedAt": "2026-02-19T21:01:00Z",
+      "description": "Fixed OOM: reduced from 740 to 304 features (v2_equivalent set). 10.7GB RSS vs 29GB. Training vanilla model now.",
       "priority": "high",
+      "monitor": true
+    },
+    {
+      "id": "blofin-fixes",
+      "title": "Blofin — Fix breakout strategies + bump smoke test",
+      "status": "in-progress",
+      "assignedTo": "sonnet-builder",
+      "sessionKey": "agent:main:subagent:9b4b1661-8ada-4b47-a76c-cb7402a79e59",
+      "startedAt": "2026-02-19T20:53:00Z",
+      "description": "Builder found root cause: all 3 breakout files have name='breakout' instead of versioned names. Working on fix.",
+      "priority": "medium",
       "monitor": true
     }
   ],
   "recentlyCompleted": [
     {
-      "id": "numerai-era-boost-medium",
-      "title": "Numerai era-boosting medium run — early stopping fix confirmed",
-      "completedAt": "2026-02-19T13:51:00Z",
-      "summary": "50K rows: Sharpe 0.145→0.557, corr +312%, feature exposure -77%. Era std gate not met but all other metrics dramatically improved. Code committed and pushed."
-    },
-    {
-      "id": "blofin-pipeline-smooth",
-      "title": "Blofin pipeline — confirmed smooth",
-      "completedAt": "2026-02-19T07:35:00Z",
-      "summary": "Pipeline cron working with honest metrics. 12 T0→T1 promotions."
+      "id": "kanban-telegram-config",
+      "title": "Claw-Kanban — Telegram dispatch + role routing configured",
+      "completedAt": "2026-02-19T17:07:00Z"
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-19T20:00:00Z",
+    "timestamp": "2026-02-19T21:02:00Z",
     "overall_status": "ok",
-    "cpu_temp": "61.0°C (OK)",
-    "disk_usage": "59% (OK)",
-    "gateway": "active",
-    "blofin_ingestor": "active",
-    "blofin_paper": "active",
-    "critical_alerts": "none (exit code 0)",
-    "failed_services": "gnome-remote-desktop (masked), openclaw-full-restore-backup (Git LFS size >2GB), update-notifier-crash (non-critical)",
-    "notes": "All critical systems operating normally. Backup service failing on large Git LFS objects (expected, known issue). 1 active task (numerai-era-boost-full) running for ~6h20m."
+    "cpu_temp": "67.0C",
+    "disk_usage": "59%",
+    "gateway": "active (restarted at 13:55 after OOM)",
+    "claw_kanban": "active (port 8787)",
+    "notes": "OOM kill at 13:55 when Numerai tried loading 740 features. Gateway auto-recovered. Fixed to 304 features."
   }
 }

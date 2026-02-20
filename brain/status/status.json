@@ -1,6 +1,22 @@
 {
-  "lastUpdated": "2026-02-20T23:26:00Z",
+  "lastUpdated": "2026-02-20T23:30:00Z",
   "activeTasks": [
+    {
+      "id": "c_6870fc06c1143_19c7d2e7f08",
+      "title": "Design volatility-focused crypto strategy for Blofin stack under current ranging low-vol regime",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-20T23:27:05Z",
+      "project": "blofin-stack"
+    }
+  ],
+  "qaInProgress": [
+    {
+      "id": "c_cfa0c2d6f2c38_19c7c461cf1",
+      "title": "Build some sort of live trump speaking affect on NQ and ES",
+      "status": "Review/Test",
+      "dispatchedAt": "2026-02-20T22:40:00Z",
+      "project": "master-dashboard"
+    },
     {
       "id": "c_54d8f00c85c7f_19c7cbe50b9",
       "title": "figure out why all fwd test blofin strategies have 0 trades, and fix that.",
@@ -14,16 +30,8 @@
       "status": "Review/Test",
       "dispatchedAt": "2026-02-20T21:42:00Z",
       "project": "master-dashboard"
-    },
-    {
-      "id": "c_cfa0c2d6f2c38_19c7c461cf1",
-      "title": "Build some sort of live trump speaking affect on NQ and ES",
-      "status": "Review/Test",
-      "dispatchedAt": "2026-02-20T21:40:00Z",
-      "project": "master-dashboard"
     }
   ],
-  "qaInProgress": [],
   "inboxSize": 1,
   "inboxCards": [
     {
@@ -43,15 +51,12 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T22:30:00Z",
+    "cycle": "2026-02-20T23:30:00Z",
     "actions": [
-      "Phase 1: Health check passed (CPU 88.0\u00b0C, disk 34%, core services active).",
-      "Phase 2: Numerai daily bot service still failed; needs manual restart before relying on submissions.",
-      "Phase 3: Haiku pulse cron obeyed the \u22643 active card limit; three cards moved into Review/Test under the GPT codex path after authentication succeeded.",
-      "Phase 4: Inbox sits at 1 card (c_d776...) waiting for the next cycle.",
-      "Reminder: hourly oversight check is running and this log confirms the dispatcher is fine.",
-      "Phase X: Dispatched new Blofin volatility strategy design card c_6870fc06c1143_19c7d2e7f08.",
-      "Phase X: Completed VWAP volatility strategy manually after builder sessions stalled on template hunting."
+      "Phase 1: Health checks good (CPU 68\u00b0C, disk 35%, services/blofin running).",
+      "Phase2: Numerai daily bot still failed.",
+      "Phase3: Haiku pulse keeps \u22643 active cards; scheduler stuck while new Blofin strategy card is in progress.",
+      "Phase4: Reminder triggered hours ago is propagated."
     ]
   }
 }

@@ -18,6 +18,9 @@
 - [ ] Bump smoke test from 5K to 50K ticks
 - [ ] Monitor T1→T2 promotions
 - [ ] Phase 2 ML retrain triggers ~March 1
+- [ ] Analyze paper trading slippage patterns and propose mitigation (queued)
+- [ ] Add unit tests for feature library core functions (queued)
+- [ ] Optimize backtester memory usage with chunked processing (queued)
 **Blockers:** None
 
 ### 2. Numerai Tournament

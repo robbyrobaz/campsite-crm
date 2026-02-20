@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-02-19 17:15 MST
+**Updated:** 2026-02-19 17:30 MST
 
 ## Rolling 5-Hour Window
 - **Total Tokens:** 19.8M (172 requests)
@@ -17,14 +17,14 @@
 | delivery-mirror | 1 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 141.3M (1713 requests)
-- **Output Tokens:** 349.8K
-- **Cost (est):** $120.67
+- **Total Tokens:** 135.3M (1626 requests)
+- **Output Tokens:** 338.0K
+- **Cost (est):** $116.45
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 1185 | 126.4M | 243.9K | $116.07 |
+| opus | 1098 | 120.4M | 232.1K | $111.85 |
 | haiku | 279 | 9.2M | 79.8K | $1.60 |
 | sonnet | 235 | 5.8M | 26.1K | $3.00 |
 | codex/mini | 12 | 0 | 0 | $0.00 |

@@ -35,9 +35,9 @@
     "note": "Combined build + QA worker"
   },
   "systemHealth": {
-    "timestamp": "2026-02-20T09:49:00Z",
+    "timestamp": "2026-02-20T10:04:00Z",
     "overall_status": "ok",
-    "cpu_temp": "60.0C",
+    "cpu_temp": "68.0C",
     "disk_usage": "41%",
     "gateway": "active",
     "blofin_services": "active",

@@ -10,6 +10,7 @@ import json
 import os
 import glob
 import time
+import subprocess
 from datetime import datetime, timezone, timedelta
 from collections import defaultdict
 
@@ -136,8 +137,31 @@ def format_tokens(n):
     return str(n)
 
 
+def fetch_anthropic_usage():
+    """Fetch real utilization % from Anthropic OAuth usage endpoint."""
+    creds_path = os.path.expanduser("~/.claude/.credentials.json")
+    try:
+        with open(creds_path, 'r') as f:
+            creds = json.load(f)
+        token = creds.get("claudeAiOauth", {}).get("accessToken", "")
+        if not token:
+            return None
+        result = subprocess.run(
+            ["curl", "-s", "-H", f"Authorization: Bearer {token}",
+             "-H", "anthropic-beta: oauth-2025-04-20",
+             "https://api.anthropic.com/api/oauth/usage"],
+            capture_output=True, text=True, timeout=10
+        )
+        return json.loads(result.stdout)
+    except Exception:
+        return None
+
+
 def write_report():
     now = datetime.now(MST)
+    
+    # Fetch real Anthropic utilization
+    usage_api = fetch_anthropic_usage()
     
     # 5-hour window
     total_5h, by_model_5h, oldest_5h, newest_5h = parse_sessions(hours_back=5)
@@ -148,6 +172,46 @@ def write_report():
         "# Token Usage",
         f"**Updated:** {now.strftime('%Y-%m-%d %H:%M MST')}",
         "",
+    ]
+    
+    # Anthropic real utilization section
+    if usage_api:
+        fh = usage_api.get("five_hour", {})
+        sd = usage_api.get("seven_day", {})
+        sd_sonnet = usage_api.get("seven_day_sonnet", {})
+        
+        fh_pct = fh.get("utilization", "?")
+        sd_pct = sd.get("utilization", "?")
+        sd_sonnet_pct = sd_sonnet.get("utilization", "?") if sd_sonnet else "?"
+        
+        fh_reset = fh.get("resets_at", "")
+        sd_reset = sd.get("resets_at", "")
+        
+        # Parse reset times to MST
+        def fmt_reset(iso_str):
+            if not iso_str:
+                return "?"
+            try:
+                dt = datetime.fromisoformat(iso_str)
+                return dt.astimezone(MST).strftime("%b %d %I:%M %p MST")
+            except:
+                return iso_str
+        
+        # Warning levels
+        fh_warn = " ⚠️" if isinstance(fh_pct, (int, float)) and fh_pct >= 70 else ""
+        sd_warn = " 🔴" if isinstance(sd_pct, (int, float)) and sd_pct >= 85 else (" ⚠️" if isinstance(sd_pct, (int, float)) and sd_pct >= 60 else "")
+        
+        lines.extend([
+            "## ⚡ Anthropic Rate Limits (Live)",
+            f"| Window | Usage | Resets At |",
+            f"|--------|-------|-----------|",
+            f"| 5-hour | **{fh_pct}%**{fh_warn} | {fmt_reset(fh_reset)} |",
+            f"| 7-day (all) | **{sd_pct}%**{sd_warn} | {fmt_reset(sd_reset)} |",
+            f"| 7-day (Sonnet) | **{sd_sonnet_pct}%** | {fmt_reset(sd_reset)} |",
+            "",
+        ])
+    
+    lines.extend([
         "## Rolling 5-Hour Window",
         f"- **Total Tokens:** {format_tokens(total_5h['total_tokens'])} ({total_5h['requests']} requests)",
         f"- **Input:** {format_tokens(total_5h['input'])} | **Output:** {format_tokens(total_5h['output'])}",
@@ -157,7 +221,7 @@ def write_report():
         "### By Model (5h)",
         "| Model | Requests | Tokens | Output | Cost |",
         "|-------|----------|--------|--------|------|",
-    ]
+    ])
     
     for model in sorted(by_model_5h.keys(), key=lambda k: by_model_5h[k]["total_tokens"], reverse=True):
         m = by_model_5h[model]
@@ -183,7 +247,7 @@ def write_report():
         "",
         "---",
         "*Note: Max 5x plan is $100/mo flat. Cost shown is equivalent API pricing, not actual charges.*",
-        f"*Anthropic doesn't publish the Max 5x rate limit denominator, so exact utilization % is unknown.*",
+        "*Live utilization from Anthropic OAuth usage API.*",
     ])
     
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)

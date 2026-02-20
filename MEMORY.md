@@ -42,6 +42,7 @@
 - Wants: clear project visibility, autonomous execution, honest opinions
 - **NEVER block main session** — spawn work and stay available. Rob got angry when I was unavailable 5 min (Feb 19)
 - **24/7 means 24/7** — The dispatcher must NEVER stop working overnight. "Late night" only means don't alert Rob, NOT stop dispatching. Lost 8 hours of productivity overnight Feb 19-20 because of a "quiet mode" that nobody asked for.
+- **Rate limit strategy:** 5h window is the real constraint (caused the crash). 7-day has never actually throttled us even at 92%. Only go to "super light mode" (Haiku/Mini only) if 7-day hits 99%. Token tracker now pulls real utilization % from Anthropic OAuth API.
 - **Use the kanban board** — don't discount visual tools. Markdown files are not enough for project tracking.
 - **Be a COO** — prioritize and execute autonomously between conversations. Don't wait idle.
 

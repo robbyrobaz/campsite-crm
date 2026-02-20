@@ -1,26 +1,28 @@
 {
-  "lastUpdated": "2026-02-20T14:49:00Z",
+  "lastUpdated": "2026-02-20T15:04:00Z",
   "activeTasks": [
     {
-      "id": "c_32f3b7b43a0ed_19c7b6548a7",
-      "title": "Master dashboard: add Anthropic rate limit utilization panel",
+      "id": "c_e6dcb4ba505e4_19c7b51208f",
+      "title": "Numerai: add correlation spike detector",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-20T14:34:00Z",
-      "project": "master-dashboard",
-      "pid": 976602
-    },
-    {
-      "id": "c_0e327015bd21_19c7b5120af",
-      "title": "Master dashboard: add historical performance chart (7-day rolling returns)",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-20T14:49:00Z",
-      "project": "master-dashboard",
-      "pid": 985116
+      "dispatchedAt": "2026-02-20T15:04:00Z",
+      "project": "numerai-tournament",
+      "pid": 993373
     }
   ],
   "qaInProgress": [],
-  "inboxSize": 8,
+  "inboxSize": 6,
   "recentlyCompleted": [
+    {
+      "id": "master-dashboard-rate-limit",
+      "title": "Master dashboard: add Anthropic rate limit utilization panel",
+      "completedAt": "2026-02-20T15:04:00Z"
+    },
+    {
+      "id": "master-dashboard-performance",
+      "title": "Master dashboard: add historical performance chart (7-day rolling returns)",
+      "completedAt": "2026-02-20T15:04:00Z"
+    },
     {
       "id": "blofin-parallelize",
       "title": "Parallelize backtest engine + 30min timer",
@@ -54,9 +56,9 @@
     "note": "Jarvis Pulse dispatcher — health + work dispatch + QA"
   },
   "systemHealth": {
-    "timestamp": "2026-02-20T14:49:00Z",
+    "timestamp": "2026-02-20T15:04:00Z",
     "overall_status": "ok",
-    "cpu_temp": "66.0C",
+    "cpu_temp": "78.0C",
     "disk_usage": "39%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -64,14 +66,14 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T14:49:00Z",
+    "cycle": "2026-02-20T15:04:00Z",
     "actions": [
-      "Health: CPU 66°C, disk 39%, all services OK",
-      "Dispatched: historical performance chart (PID 985116)",
-      "Active tasks: 2 (both dashboard work)",
-      "Inbox: 8 cards remain",
+      "Health: CPU 78°C, disk 39%, all services OK, no critical alerts",
+      "Dispatched: Numerai correlation spike detector (PID 993373)",
+      "Active tasks: 1",
+      "Inbox: 6 cards remain (Blofin volume-weighted scoring, hedge-engine presets, etc.)",
       "QA queue: empty"
     ],
-    "nextDispatch": "2026-02-20T15:04:00Z"
+    "nextDispatch": "2026-02-20T15:19:00Z"
   }
 }

@@ -1,6 +1,16 @@
 {
-  "lastUpdated": "2026-02-20T12:34:00Z",
-  "activeTasks": [],
+  "lastUpdated": "2026-02-20T14:19:00Z",
+  "activeTasks": [
+    {
+      "id": "c_839b1c45d8cd1_19c78f4d18a",
+      "title": "Optimize EEP backtester memory usage",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-20T14:19:00Z",
+      "project": "blofin-stack"
+    }
+  ],
+  "qaInProgress": [],
+  "inboxSize": 10,
   "recentlyCompleted": [
     {
       "id": "blofin-parallelize",
@@ -31,16 +41,26 @@
   "autonomousWorker": {
     "cronId": "36f47279-520f-4ce7-8f9c-a7c44be0771a",
     "frequency": "every 15 min",
-    "model": "sonnet",
-    "note": "Combined build + QA worker"
+    "model": "haiku",
+    "note": "Jarvis Pulse dispatcher — health + work dispatch + QA"
   },
   "systemHealth": {
-    "timestamp": "2026-02-20T13:49:00Z",
+    "timestamp": "2026-02-20T14:19:00Z",
     "overall_status": "ok",
-    "cpu_temp": "69.0C",
+    "cpu_temp": "63.0C",
     "disk_usage": "39%",
     "gateway": "active",
-    "blofin_services": "active",
+    "blofin_ingestor": "active",
+    "blofin_paper": "active",
     "critical_alerts": "none"
+  },
+  "dispatcherNotes": {
+    "cycle": "2026-02-20T14:19:00Z",
+    "actions": [
+      "Dispatched EEP backtester memory optimization (Planned → In Progress)",
+      "Spawned QA agent for autonomous work picker review",
+      "Inbox queue: 10 cards ready (replenish skipped)"
+    ],
+    "nextDispatch": "2026-02-20T14:34:00Z"
   }
 }

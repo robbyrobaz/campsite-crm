@@ -46,6 +46,19 @@
 ---
 [2026-02-19 02:00:14] CRITICAL: blofin-stack-api.service was INACTIVE during heartbeat check (02:00 AM). Restarted successfully.
 
+## Feb 20, 10:19 AM MST — Runaway Python Process (CPU 90°C)
+
+**Severity:** CRITICAL
+**PID:** 1028773 (python)
+**CPU Usage:** 100% continuous for 76+ minutes
+**CPU Temp:** 90°C (high threshold = 100°C, danger zone)
+**Status:** Alerting Rob — awaiting kill/investigate decision
+
+**Impact:** System thermal stress, risk of throttling or shutdown if continues
+**Dispatcher action:** Sent alert via Telegram, halting dispatch until resolved
+
+---
+
 ## Backup Service — Git LFS Size Limit (Feb 19, 06:00 MST)
 
 **Service:** openclaw-full-restore-backup.service  

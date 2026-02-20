@@ -59,24 +59,26 @@
     "note": "Jarvis Pulse dispatcher — health + work dispatch + QA"
   },
   "systemHealth": {
-    "timestamp": "2026-02-20T16:49:00Z",
-    "overall_status": "healthy",
-    "cpu_temp": "84.0°C",
+    "timestamp": "2026-02-20T17:19:00Z",
+    "overall_status": "CRITICAL",
+    "cpu_temp": "90.0°C",
     "disk_usage": "38%",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
-    "critical_alerts": "none"
+    "critical_alerts": "Runaway Python process (PID 1028773) at 100% CPU for 76+ minutes",
+    "incident_logged": "brain/memory/incidents.md"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T16:49:00Z",
+    "cycle": "2026-02-20T17:19:00Z",
     "actions": [
-      "Phase 1: Health OK — CPU 84°C, disk 38%, all services active, no critical alerts",
-      "Phase 2: Dispatched 2 cards → In Progress (hedge-engine presets, blofin adaptive stop-loss)",
-      "Phase 3: No Review/Test cards pending",
-      "Phase 4: Skip replenish — 2 Inbox cards queued (master-dashboard, numerai-tournament)",
-      "Capacity: 3/3 In Progress, 0 QA pending, 2 Inbox waiting"
+      "Phase 1: CRITICAL — CPU 90°C (runaway Python PID 1028773 at 100% for 76+ min)",
+      "Phase 2: PAUSED dispatch due to thermal stress (no new tasks until CPU resolves)",
+      "Phase 3: PAUSED QA dispatch",
+      "Phase 4: PAUSED replenish",
+      "Rob alerted via Telegram. Awaiting decision to kill process or investigate.",
+      "Incident logged: brain/memory/incidents.md"
     ],
-    "nextDispatch": "2026-02-20T17:04:00Z"
+    "nextDispatch": "2026-02-20T17:34:00Z (when CPU critical resolved)"
   }
 }

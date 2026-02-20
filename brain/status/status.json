@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-20T19:34:00Z",
+  "lastUpdated": "2026-02-20T19:51:05Z",
   "activeTasks": [
     {
       "id": "c_b4e1c7bf6c4bc_19c7c7ad9ff",
@@ -40,21 +40,21 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-20T19:34:00Z",
-    "cpu_temp": "65.0°C",
-    "disk_usage": "37%",
+    "timestamp": "2026-02-20T19:51:05Z",
+    "cpu_temp": "70.0°C",
+    "disk_usage": "35%",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T19:34:00Z",
+    "cycle": "2026-02-20T19:51:05Z",
     "actions": [
-      "Phase 1: Health check passed — CPU 65.0°C, disk 37%, gateway + Blofin services active, critical alert monitor exit 0.",
-      "Phase 2: In Progress count 3 (c_b4e1c7bf6c4bc_19c7c7ad9ff, c_002ee44599197_19c7c3a91b4, c_a4f715163c949_19c7c3a93ef) so dispatching skipped this cycle.",
-      "Phase 3: Review/Test queue empty, so no QA reviewer spawned.",
-      "Phase 4: Inbox still holds 2 master-dashboard cards, so replenishment deferred."
+      "Phase 1: Health check passed — CPU 70°C, disk 35%, gateway + Blofin services active, critical alert monitor exit 0.",
+      "Phase 2: In Progress count 3 (c_b4e1c7bf6c4bc_19c7c7ad9ff, c_002ee44599197_19c7c3a91b4, c_a4f715163c949_19c7c3a93ef); dispatch skipped until below 3 active cards.",
+      "Phase 3: Review/Test queue empty, no QA reviewer needed.",
+      "Phase 4: Inbox holds 2 master-dashboard cards, so replenishment not triggered."
     ]
   }
 }

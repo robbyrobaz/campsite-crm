@@ -137,3 +137,34 @@
 - Critical alerts: none ✓
 
 **Action Taken:** status.json updated. Numerai process moved to recentlyCompleted; awaiting verification of success/failure.
+
+## Feb 19, 19:00 MST - Heartbeat: Backup Service Still Failed (Git LFS 2GB Limit)
+
+**Timestamp:** 2026-02-19T19:00:00Z  
+**Check Type:** Lightweight hourly heartbeat
+
+**Issue Detected:**
+- **Service:** openclaw-full-restore-backup.service
+- **Status:** FAILED (persistent since 18:41 MST, ~19 min)
+- **Error:** Git LFS size limit exceeded (2GB per-object limit)
+- **Objects blocked:** Multiple large files (2383d07f, 1977a177, 2f4b925434, etc.)
+- **CPU time:** 4m 50s before failure
+
+**System Status (NOMINAL):**
+- CPU temp: 63.0°C ✓
+- Disk usage: 66% ✓
+- Gateway: active ✓
+- Blofin ingestor: active ✓
+- Blofin paper trading: active ✓
+- Critical alerts: none ✓
+
+**Context:**  
+This is a known issue (MEMORY.md: "Git LFS rejects >2GB objects"). Backup captures local snapshots but cannot push to GitHub due to per-object size limits. This was first logged Feb 19 at 06:41 MST and remains unresolved.
+
+**Recommendation:** 
+Manual intervention needed to either:
+1. Prune old/large data from the repository
+2. Update .gitattributes to exclude large files from Git LFS
+3. Move large artifacts to separate storage (S3/GCS)
+
+**Action Taken:** Alert sent to Rob. Monitoring continues on next heartbeat cycle.

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-20T01:19:00Z",
+  "lastUpdated": "2026-02-19T19:00:00Z",
   "activeTasks": [
     {
       "id": "blofin-parallelize",
@@ -44,12 +44,14 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-20T01:19:00Z",
-    "overall_status": "ok",
-    "cpu_temp": "77.0C",
-    "disk_usage": "64%",
+    "timestamp": "2026-02-19T19:00:00Z",
+    "overall_status": "warning",
+    "cpu_temp": "63.0C",
+    "disk_usage": "66%",
     "gateway": "active",
-    "blofin_services": "active",
-    "critical_alerts": "none"
+    "blofin_services": "ingestor=active, paper=active, api=inactive (expected)",
+    "critical_alerts": "none",
+    "failed_services": "openclaw-full-restore-backup.service (persistent Git LFS 2GB limit issue)",
+    "note": "Backup service failed at 18:41 MST — Git LFS rejecting objects >2GB. Local snapshots captured but GitHub push blocked."
   }
 }

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-20T21:30:00Z",
+  "lastUpdated": "2026-02-20T21:34:00Z",
   "activeTasks": [
     {
       "id": "c_54d8f00c85c7f_19c7cbe50b9",
@@ -10,7 +10,7 @@
     },
     {
       "id": "c_2fc7acef0d1be_19c7c2c693c",
-      "title": "Performance audit: dashboard React components \u2014 identify slow renders and optimize",
+      "title": "Performance audit: dashboard React components — identify slow renders and optimize",
       "status": "In Progress",
       "dispatchedAt": "2026-02-20T20:39:08Z",
       "project": "master-dashboard"
@@ -34,8 +34,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-20T21:30:00Z",
-    "cpu_temp": "67.0\u00b0C",
+    "timestamp": "2026-02-20T21:34:00Z",
+    "cpu_temp": "62.0°C",
     "disk_usage": "36%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -43,13 +43,12 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T21:30:00Z",
+    "cycle": "2026-02-20T21:34:00Z",
     "actions": [
-      "Phase 1: Health check passed (67.0\u00b0C CPU, 36% disk, gateway active, critical alert monitor exit 0).",
-      "Phase 2: numerai-daily-bot.service is currently failed; needs a restart or investigation before relying on submissions.",
-      "Phase 3: Haiku pulse cron is dispatching; three cards are already In Progress (c_54d8..., c_2fc7..., c_cfa0...), so dispatch is deferred until load drops below 3.",
-      "Phase 4: Review/Test queue empty, so no QA reviewers running.",
-      "Phase 5: Inbox holds one card (c_d77630cbaac97_19c7cc0b908) for the next cycle."
+      "Phase 1: Health check passed (62.0°C CPU, 36% disk, gateway active, critical alert monitor exit 0).",
+      "Phase 2: Dispatch skipped (3 cards already In Progress: c_54d8f00c85c7f_19c7cbe50b9, c_2fc7acef0d1be_19c7c2c693c, c_cfa0c2d6f2c38_19c7c461cf1).",
+      "Phase 3: Review/Test queue empty, so no QA reviewers spawned.",
+      "Phase 4: Planned (4) + Inbox (1) > 0, so replenishment not run."
     ]
   }
 }

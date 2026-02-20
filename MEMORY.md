@@ -41,6 +41,7 @@
 - Hates: babysitting AI, temp files in repos, being asked questions he already answered
 - Wants: clear project visibility, autonomous execution, honest opinions
 - **NEVER block main session** — spawn work and stay available. Rob got angry when I was unavailable 5 min (Feb 19)
+- **24/7 means 24/7** — The dispatcher must NEVER stop working overnight. "Late night" only means don't alert Rob, NOT stop dispatching. Lost 8 hours of productivity overnight Feb 19-20 because of a "quiet mode" that nobody asked for.
 - **Use the kanban board** — don't discount visual tools. Markdown files are not enough for project tracking.
 - **Be a COO** — prioritize and execute autonomously between conversations. Don't wait idle.
 

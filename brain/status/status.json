@@ -1,23 +1,23 @@
 {
-  "lastUpdated": "2026-02-20T19:04:34Z",
+  "lastUpdated": "2026-02-20T19:05:57Z",
   "activeTasks": [
     {
-      "id": "c_0d25d56851176_19c7c2c6916",
-      "title": "Document numerai model training pipeline and hyperparameter tuning strategy",
+      "id": "c_002ee44599197_19c7c3a91b4",
+      "title": "Add error handling and retry logic for Blofin tick fetch failures — improve robustness",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-20T18:05:00Z",
-      "project": "numerai-tournament"
+      "dispatchedAt": "2026-02-20T19:05:57Z",
+      "project": "blofin-stack"
     },
     {
-      "id": "c_5564d8503ff4_19c7c2c66fc",
-      "title": "Add unit tests for blofin feature calculations (RSI, MACD, Bollinger Bands) with edge cases",
+      "id": "c_a4f715163c949_19c7c3a93ef",
+      "title": "Refactor Numerai model predictions to handle missing/invalid data gracefully",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-20T18:05:00Z",
-      "project": "blofin-stack"
+      "dispatchedAt": "2026-02-20T19:05:57Z",
+      "project": "numerai-tournament"
     }
   ],
   "qaInProgress": [],
-  "inboxSize": 4,
+  "inboxSize": 2,
   "inboxCards": [
     {
       "id": "c_cfa0c2d6f2c38_19c7c461cf1",
@@ -26,27 +26,15 @@
       "project_path": "/home/rob/.openclaw/workspace/master-dashboard"
     },
     {
-      "id": "c_a4f715163c949_19c7c3a93ef",
-      "title": "Refactor Numerai model predictions to handle missing/invalid data gracefully",
-      "project": "numerai-tournament",
-      "project_path": "/home/rob/.openclaw/workspace/numerai-tournament"
-    },
-    {
-      "id": "c_002ee44599197_19c7c3a91b4",
-      "title": "Add error handling and retry logic for Blofin tick fetch failures \u2014 improve robustness",
-      "project": "blofin-stack",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack"
-    },
-    {
       "id": "c_2fc7acef0d1be_19c7c2c693c",
-      "title": "Performance audit: dashboard React components \u2014 identify slow renders and optimize",
+      "title": "Performance audit: dashboard React components — identify slow renders and optimize",
       "project": "master-dashboard",
       "project_path": "/home/rob/.openclaw/workspace/master-dashboard"
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-20T18:49:00Z",
-    "cpu_temp": "75.0\u00b0C",
+    "timestamp": "2026-02-20T19:05:57Z",
+    "cpu_temp": "66.0°C",
     "disk_usage": "37%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -54,13 +42,12 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T18:49:00Z",
+    "cycle": "2026-02-20T19:05:57Z",
     "actions": [
-      "Phase 1: Health check passed \u2014 CPU 75.0\u00b0C, disk 37%, gateway + Blofin services active, critical alert monitor exited 0.",
-      "Phase 2: In Progress queue already has 3 builders, so dispatch skipped this cycle.",
-      "Phase 3: No Review/Test cards waiting, so no QA spawn this cycle.",
-      "Phase 4: Inbox still has cards (4), so replenishment seeding deferred.",
-      "Profiling card c_0a59447197684_19c7bb10b37 marked Done after softening tick ingestion profiler."
+      "Phase 1: Health check passed — CPU 66.0°C, disk 37%, gateway + Blofin services active, critical alert monitor exited 0.",
+      "Phase 2: Dispatched Blofin tick-fetch robustness card c_002ee44599197_19c7c3a91b4 and Numerai missing-data refactor card c_a4f715163c949_19c7c3a93ef; both builders are running (In Progress count = 2).",
+      "Phase 3: Review/Test queue empty, so no QA reviewer spawned this cycle.",
+      "Phase 4: Inbox still has 2 master-dashboard cards, so replenishment deferred."
     ]
   }
 }

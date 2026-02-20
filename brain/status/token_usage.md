@@ -1,40 +1,41 @@
 # Token Usage
-**Updated:** 2026-02-20 10:15 MST
+**Updated:** 2026-02-20 10:30 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
-| 5-hour | **34.0%** | Feb 20 02:00 PM MST |
-| 7-day (all) | **98.0%** 🔴 | Feb 22 02:00 PM MST |
+| 5-hour | **37.0%** | Feb 20 02:00 PM MST |
+| 7-day (all) | **99.0%** 🔴 | Feb 22 02:00 PM MST |
 | 7-day (Sonnet) | **45.0%** | Feb 22 02:00 PM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 20.5M (381 requests)
-- **Input:** 2.7K | **Output:** 104.5K
-- **Cache Read:** 18.7M | **Cache Write:** 1.7M
-- **Cost (est):** $18.35
+- **Total Tokens:** 21.0M (393 requests)
+- **Input:** 2.8K | **Output:** 106.4K
+- **Cache Read:** 19.0M | **Cache Write:** 1.8M
+- **Cost (est):** $19.33
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 156 | 15.2M | 30.3K | $16.18 |
-| haiku | 146 | 3.2M | 57.6K | $0.80 |
-| sonnet | 77 | 2.1M | 16.7K | $1.38 |
-| codex/mini | 2 | 0 | 0 | $0.00 |
+| opus | 156 | 15.4M | 30.0K | $16.99 |
+| haiku | 149 | 3.3M | 58.8K | $0.81 |
+| sonnet | 84 | 2.2M | 17.7K | $1.52 |
+| codex/mini | 3 | 0 | 0 | $0.00 |
+| delivery-mirror | 1 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 83.1M (1319 requests)
-- **Output Tokens:** 327.1K
-- **Cost (est):** $80.61
+- **Total Tokens:** 83.7M (1334 requests)
+- **Output Tokens:** 330.3K
+- **Cost (est):** $81.66
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 615 | 66.3M | 143.2K | $72.91 |
-| sonnet | 395 | 10.8M | 79.1K | $6.15 |
-| haiku | 295 | 6.0M | 104.7K | $1.55 |
+| opus | 617 | 66.6M | 143.3K | $73.86 |
+| sonnet | 400 | 11.0M | 79.7K | $6.21 |
+| haiku | 302 | 6.2M | 107.3K | $1.58 |
 | codex/mini | 13 | 0 | 0 | $0.00 |
-| delivery-mirror | 1 | 0 | 0 | $0.00 |
+| delivery-mirror | 2 | 0 | 0 | $0.00 |
 
 ---
 *Note: Max 5x plan is $100/mo flat. Cost shown is equivalent API pricing, not actual charges.*

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-20T16:49:00Z",
+  "lastUpdated": "2026-02-20T17:34:00Z",
   "activeTasks": [
     {
       "id": "c_0a59447197684_19c7bb10b37",
@@ -10,75 +10,40 @@
       "pid": 1020982
     },
     {
-      "id": "c_59c4903b6c1fa_19c7954d70a",
-      "title": "saved presets don't stay availble everywhere on hedge-engine",
+      "id": "c_7329b0894ca66_19c7be87b77",
+      "title": "Numerai: Add early stopping to era-boost pipeline",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-20T16:49:00Z",
-      "project": "arb-dashboard",
-      "pid": 1056365
-    },
-    {
-      "id": "c_8696447badc34_19c7be87b39",
-      "title": "Blofin: Implement adaptive stop-loss based on recent volatility",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-20T16:49:00Z",
-      "project": "blofin-stack",
-      "pid": 1056375
+      "dispatchedAt": "2026-02-20T17:34:00Z",
+      "project": "numerai-tournament",
+      "pid": 1083356
     }
   ],
   "qaInProgress": [],
-  "inboxSize": 2,
+  "inboxSize": 1,
   "inboxCards": [
     {
-      "id": "c_9112c6c95a91f_19c7be87b98",
-      "title": "Master dashboard: Optimize chart rendering with memoization and lazy rendering",
-      "project": "master-dashboard"
-    },
-    {
-      "id": "c_7329b0894ca66_19c7be87b77",
-      "title": "Numerai: Add early stopping to era-boost pipeline",
-      "project": "numerai-tournament"
+      "id": "c_ec69da1ca5bac_19c7c0c7857",
+      "title": "add chatgpt models as fallback for when anthropic hits any max",
+      "project": "???(needs_clarification)"
     }
   ],
-  "recentlyCompleted": [
-    {
-      "id": "master-dashboard-rate-limit",
-      "title": "Master dashboard: add Anthropic rate limit utilization panel",
-      "completedAt": "2026-02-20T15:04:00Z"
-    },
-    {
-      "id": "master-dashboard-performance",
-      "title": "Master dashboard: add historical performance chart (7-day rolling returns)",
-      "completedAt": "2026-02-20T15:04:00Z"
-    }
-  ],
-  "autonomousWorker": {
-    "cronId": "36f47279-520f-4ce7-8f9c-a7c44be0771a",
-    "frequency": "every 15 min",
-    "model": "haiku",
-    "note": "Jarvis Pulse dispatcher — health + work dispatch + QA"
-  },
   "systemHealth": {
-    "timestamp": "2026-02-20T17:19:00Z",
-    "overall_status": "CRITICAL",
-    "cpu_temp": "90.0°C",
+    "timestamp": "2026-02-20T17:34:00Z",
+    "cpu_temp": "72.0°C",
     "disk_usage": "38%",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
-    "critical_alerts": "Runaway Python process (PID 1028773) at 100% CPU for 76+ minutes",
-    "incident_logged": "brain/memory/incidents.md"
+    "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T17:19:00Z",
+    "cycle": "2026-02-20T17:34:00Z",
     "actions": [
-      "Phase 1: CRITICAL — CPU 90°C (runaway Python PID 1028773 at 100% for 76+ min)",
-      "Phase 2: PAUSED dispatch due to thermal stress (no new tasks until CPU resolves)",
-      "Phase 3: PAUSED QA dispatch",
-      "Phase 4: PAUSED replenish",
-      "Rob alerted via Telegram. Awaiting decision to kill process or investigate.",
-      "Incident logged: brain/memory/incidents.md"
-    ],
-    "nextDispatch": "2026-02-20T17:34:00Z (when CPU critical resolved)"
+      "Phase 1: Healthy — CPU 72°C, disk 38%, all services active",
+      "Phase 2: Dispatched Numerai early-stopping task (PID 1083356)",
+      "Phase 3: No QA cards waiting",
+      "Phase 4: Inbox has 1 task (ChatGPT fallback) — **needs project_path clarification from Rob**",
+      "Next cycle: 2026-02-20T17:49:00Z"
+    ]
   }
 }

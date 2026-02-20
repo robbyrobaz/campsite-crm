@@ -1,30 +1,52 @@
 {
-  "lastUpdated": "2026-02-20T01:01:00Z",
-  "activeTasks": [],
-  "recentlyCompleted": [
+  "lastUpdated": "2026-02-20T01:19:00Z",
+  "activeTasks": [
     {
-      "id": "blofin-fixes",
-      "title": "Blofin — Fix breakout strategies + bump smoke test",
-      "completedAt": "2026-02-19T21:30:00Z",
-      "note": "Breakout strategies renamed, smoke test bumped to 50K ticks, committed & pushed"
+      "id": "blofin-parallelize",
+      "title": "Parallelize backtest engine + crank pipeline timer to 30min",
+      "status": "in-progress",
+      "assignedTo": "sonnet-builder",
+      "sessionKey": "agent:main:subagent:7016d9fb-b271-4b39-a01d-3b34dc3883e3",
+      "startedAt": "2026-02-20T01:11:00Z",
+      "kanbanCard": "c_6b2ef678461c_19c789a9b8a"
     },
+    {
+      "id": "numerai-systemd",
+      "title": "Numerai persistent systemd service for daily submissions",
+      "status": "in-progress",
+      "assignedTo": "sonnet-builder",
+      "sessionKey": "agent:main:subagent:a904fdb2-a788-4165-a1c4-7a2cc10b2845",
+      "startedAt": "2026-02-20T01:19:00Z",
+      "kanbanCard": "c_222956f8e5246_19c76d8cdf9"
+    },
+    {
+      "id": "master-dashboard",
+      "title": "Master status dashboard for all services",
+      "status": "in-progress",
+      "assignedTo": "sonnet-builder",
+      "sessionKey": "agent:main:subagent:21af0789-2ce6-484c-bb13-3ce2ca30f6be",
+      "startedAt": "2026-02-20T01:19:00Z",
+      "kanbanCard": "c_ae0c29acf6abc_19c78a01c0f"
+    }
+  ],
+  "recentlyCompleted": [
     {
       "id": "numerai-era-boost-full",
       "title": "Numerai — Full dataset era-boosting run",
       "completedAt": "2026-02-19T22:23:00Z",
-      "note": "Sharpe 0.768→0.873 (+14%), corr +23%. v2_equivalent features (304). All 4 rounds complete."
+      "note": "Sharpe 0.768→0.873 (+14%), corr +23%"
     },
     {
       "id": "md-cleanup",
       "title": "Operating files cleanup + adversarial review",
       "completedAt": "2026-02-19T22:40:00Z",
-      "note": "14 files → 10 files, 1383→795 lines, removed redundancy, fixed dead refs"
+      "note": "14 files → 10 files, 795 lines"
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-20T01:00:00Z",
+    "timestamp": "2026-02-20T01:19:00Z",
     "overall_status": "ok",
-    "cpu_temp": "71.0C",
+    "cpu_temp": "77.0C",
     "disk_usage": "64%",
     "gateway": "active",
     "blofin_services": "active",

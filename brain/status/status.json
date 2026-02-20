@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-20T16:34:00Z",
+  "lastUpdated": "2026-02-20T16:49:00Z",
   "activeTasks": [
     {
       "id": "c_0a59447197684_19c7bb10b37",
@@ -10,32 +10,36 @@
       "pid": 1020982
     },
     {
-      "id": "c_895fa30133116_19c7952cb00",
-      "title": "blofin ml model status still shows leakage issues from a while ago",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-20T16:34:00Z",
-      "project": "blofin-stack",
-      "pid": 1046999
-    },
-    {
-      "id": "c_71747c4c1e537_19c794a232d",
-      "title": "review claude documentation",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-20T16:34:00Z",
-      "project": "workspace",
-      "pid": 1047171
-    }
-  ],
-  "qaInProgress": [
-    {
       "id": "c_59c4903b6c1fa_19c7954d70a",
       "title": "saved presets don't stay availble everywhere on hedge-engine",
-      "startedAt": "2026-02-20T16:34:00Z",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-20T16:49:00Z",
       "project": "arb-dashboard",
-      "sessionKey": "agent:main:subagent:a8aa30b7-784b-4592-b599-55576c938ede"
+      "pid": 1056365
+    },
+    {
+      "id": "c_8696447badc34_19c7be87b39",
+      "title": "Blofin: Implement adaptive stop-loss based on recent volatility",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-20T16:49:00Z",
+      "project": "blofin-stack",
+      "pid": 1056375
     }
   ],
-  "inboxSize": 0,
+  "qaInProgress": [],
+  "inboxSize": 2,
+  "inboxCards": [
+    {
+      "id": "c_9112c6c95a91f_19c7be87b98",
+      "title": "Master dashboard: Optimize chart rendering with memoization and lazy rendering",
+      "project": "master-dashboard"
+    },
+    {
+      "id": "c_7329b0894ca66_19c7be87b77",
+      "title": "Numerai: Add early stopping to era-boost pipeline",
+      "project": "numerai-tournament"
+    }
+  ],
   "recentlyCompleted": [
     {
       "id": "master-dashboard-rate-limit",
@@ -55,7 +59,7 @@
     "note": "Jarvis Pulse dispatcher — health + work dispatch + QA"
   },
   "systemHealth": {
-    "timestamp": "2026-02-20T16:34:00Z",
+    "timestamp": "2026-02-20T16:49:00Z",
     "overall_status": "healthy",
     "cpu_temp": "84.0°C",
     "disk_usage": "38%",
@@ -65,13 +69,14 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T16:34:00Z",
+    "cycle": "2026-02-20T16:49:00Z",
     "actions": [
-      "Phase 1: Health OK — CPU 84°C, disk 38%, all services active, no alerts",
-      "Phase 2: Dispatched 2 Inbox cards → In Progress",
-      "Phase 3: Spawned QA agent (Sonnet) for hedge-engine presets review",
-      "Capacity: 3/3 In Progress, 1 QA pending, 0 Inbox"
+      "Phase 1: Health OK — CPU 84°C, disk 38%, all services active, no critical alerts",
+      "Phase 2: Dispatched 2 cards → In Progress (hedge-engine presets, blofin adaptive stop-loss)",
+      "Phase 3: No Review/Test cards pending",
+      "Phase 4: Skip replenish — 2 Inbox cards queued (master-dashboard, numerai-tournament)",
+      "Capacity: 3/3 In Progress, 0 QA pending, 2 Inbox waiting"
     ],
-    "nextDispatch": "2026-02-20T16:49:00Z"
+    "nextDispatch": "2026-02-20T17:04:00Z"
   }
 }

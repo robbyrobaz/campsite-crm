@@ -1,13 +1,6 @@
 {
-  "lastUpdated": "2026-02-20T23:17:00Z",
+  "lastUpdated": "2026-02-20T23:26:00Z",
   "activeTasks": [
-    {
-      "id": "c_64975ab70f994_19c7d564d3a",
-      "title": "Run the Blofin strategy pipeline",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-20T23:16:00Z",
-      "project": "blofin-stack"
-    },
     {
       "id": "c_54d8f00c85c7f_19c7cbe50b9",
       "title": "figure out why all fwd test blofin strategies have 0 trades, and fix that.",

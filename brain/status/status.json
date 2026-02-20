@@ -1,30 +1,31 @@
 {
-  "lastUpdated": "2026-02-20T20:39:47Z",
+  "lastUpdated": "2026-02-20T20:52:00Z",
   "activeTasks": [
+    {
+      "id": "c_54d8f00c85c7f_19c7cbe50b9",
+      "title": "figure out why all fwd test blofin strategies have 0 trades, and fix that.",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-20T20:52:00Z",
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_2fc7acef0d1be_19c7c2c693c",
+      "title": "Performance audit: dashboard React components — identify slow renders and optimize",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-20T20:39:08Z",
+      "project": "master-dashboard"
+    },
     {
       "id": "c_cfa0c2d6f2c38_19c7c461cf1",
       "title": "Build some sort of live trump speaking affect on NQ and ES",
       "status": "In Progress",
       "dispatchedAt": "2026-02-20T20:39:08Z",
       "project": "master-dashboard"
-    },
-    {
-      "id": "c_2fc7acef0d1be_19c7c2c693c",
-      "title": "Performance audit: dashboard React components \u2014 identify slow renders and optimize",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-20T20:39:08Z",
-      "project": "master-dashboard"
     }
   ],
   "qaInProgress": [],
-  "inboxSize": 2,
+  "inboxSize": 1,
   "inboxCards": [
-    {
-      "id": "c_54d8f00c85c7f_19c7cbe50b9",
-      "title": "figure out why all fwd test blofin strategies have 0 trades, and fix that.",
-      "project": "blofin-stack",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack"
-    },
     {
       "id": "c_d77630cbaac97_19c7cc0b908",
       "title": "make campsite CRM project live, and back available http://localhost:3000/",
@@ -33,8 +34,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-20T20:39:47Z",
-    "cpu_temp": "63.0\u00b0C",
+    "timestamp": "2026-02-20T20:51:58Z",
+    "cpu_temp": "72.0°C",
     "disk_usage": "36%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -42,13 +43,12 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T20:39:47Z",
+    "cycle": "2026-02-20T20:52:00Z",
     "actions": [
-      "Phase 1: Anthropic 7-day usage is still at 100% (resets Feb 22 02:00 PM MST); the four Blofin/Numerai cards hit the limit before any work could finish, so they were moved back to Planned with blocking notes.",
-      "Phase 2: Dispatcher limit respected \u2014 two master-dashboard Inbox cards (c_cfa0..., c_2fc7...) are now In Progress to keep the pipeline running.",
-      "Phase 3: QA queue currently empty; no reviewers yet.",
-      "Phase 4: Inbox still has 2 cards (c_54d8..., c_d776...) waiting for deployment in the next cycle.",
-      "Phase 5: Completed the oversight check card (c_09e9c9...)."
+      "Phase 1: health check passed (72°C, disk 36%, all services active, no critical alerts).",
+      "Phase 2: dispatched Blofin inbox card c_54d8f00c85c7f_19c7cbe50b9; now 3 In Progress total.",
+      "Phase 3: no Review/Test cards this cycle, QA dispatch skipped.",
+      "Phase 4: Planned and Inbox stacks still populated (no seeding this round)."
     ]
   }
 }

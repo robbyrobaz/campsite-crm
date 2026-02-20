@@ -1,6 +1,13 @@
 {
-  "lastUpdated": "2026-02-20T19:05:57Z",
+  "lastUpdated": "2026-02-20T19:20:42Z",
   "activeTasks": [
+    {
+      "id": "c_b4e1c7bf6c4bc_19c7c7ad9ff",
+      "title": "Run Blofin strategy pipeline per cron request",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-20T19:15:51Z",
+      "project": "blofin-stack"
+    },
     {
       "id": "c_002ee44599197_19c7c3a91b4",
       "title": "Add error handling and retry logic for Blofin tick fetch failures — improve robustness",
@@ -33,8 +40,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-20T19:05:57Z",
-    "cpu_temp": "66.0°C",
+    "timestamp": "2026-02-20T19:20:42Z",
+    "cpu_temp": "61.0°C",
     "disk_usage": "37%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -42,12 +49,12 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T19:05:57Z",
+    "cycle": "2026-02-20T19:20:42Z",
     "actions": [
-      "Phase 1: Health check passed — CPU 66.0°C, disk 37%, gateway + Blofin services active, critical alert monitor exited 0.",
-      "Phase 2: Dispatched Blofin tick-fetch robustness card c_002ee44599197_19c7c3a91b4 and Numerai missing-data refactor card c_a4f715163c949_19c7c3a93ef; both builders are running (In Progress count = 2).",
-      "Phase 3: Review/Test queue empty, so no QA reviewer spawned this cycle.",
-      "Phase 4: Inbox still has 2 master-dashboard cards, so replenishment deferred."
+      "Phase 1: Health check passed — CPU 61.0°C, disk 37%, gateway + Blofin services active, critical alert monitor exit 0.",
+      "Phase 2: In Progress count reached 3 (c_b4e1c7bf6c4bc_19c7c7ad9ff, c_002ee44599197_19c7c3a91b4, c_a4f715163c949_19c7c3a93ef) so dispatching is skipped this cycle.",
+      "Phase 3: Review/Test queue empty, so no QA reviewer was spawned.",
+      "Phase 4: Inbox still holds 2 master-dashboard cards, so replenishment was deferred."
     ]
   }
 }

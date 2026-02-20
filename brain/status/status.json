@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-20T18:34:00Z",
+  "lastUpdated": "2026-02-20T18:49:00Z",
   "activeTasks": [
     {
       "id": "c_0d25d56851176_19c7c2c6916",
@@ -52,8 +52,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-20T18:34:00Z",
-    "cpu_temp": "61.0°C",
+    "timestamp": "2026-02-20T18:49:00Z",
+    "cpu_temp": "75.0°C",
     "disk_usage": "37%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -61,12 +61,12 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T18:34:00Z",
+    "cycle": "2026-02-20T18:49:00Z",
     "actions": [
-      "Phase 1: Health check passed — CPU 61°C, disk 37%, gateway + Blofin services active, no critical alerts.",
-      "Phase 2: In Progress queue already has 3 builders, so no new dispatch this cycle.",
-      "Phase 3: No Review/Test cards waiting, so no QA spawn.",
-      "Phase 4: Inbox still has 4 cards, so no replenishment seeding."
+      "Phase 1: Health check passed — CPU 75.0°C, disk 37%, gateway + Blofin services active, critical alert monitor exited 0.",
+      "Phase 2: In Progress queue already has 3 builders, so dispatch skipped this cycle.",
+      "Phase 3: No Review/Test cards waiting, so no QA spawn this cycle.",
+      "Phase 4: Inbox still has cards (4), so replenishment seeding deferred."
     ]
   }
 }

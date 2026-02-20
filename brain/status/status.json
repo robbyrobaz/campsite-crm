@@ -1,63 +1,46 @@
 {
-  "lastUpdated": "2026-02-19T20:35:00Z",
-  "activeTasks": [
+  "lastUpdated": "2026-02-20T04:01:00Z",
+  "activeTasks": [],
+  "recentlyCompleted": [
     {
       "id": "blofin-parallelize",
-      "title": "Parallelize backtest engine + crank pipeline timer to 30min",
-      "status": "in-progress",
-      "assignedTo": "sonnet-builder",
-      "sessionKey": "agent:main:subagent:7016d9fb-b271-4b39-a01d-3b34dc3883e3",
-      "startedAt": "2026-02-20T01:11:00Z",
-      "kanbanCard": "c_6b2ef678461c_19c789a9b8a"
+      "title": "Parallelize backtest engine + 30min timer",
+      "completedAt": "2026-02-20T01:19:00Z"
     },
     {
       "id": "numerai-systemd",
-      "title": "Numerai persistent systemd service for daily submissions",
-      "status": "in-progress",
-      "assignedTo": "sonnet-builder",
-      "sessionKey": "agent:main:subagent:a904fdb2-a788-4165-a1c4-7a2cc10b2845",
-      "startedAt": "2026-02-20T01:19:00Z",
-      "kanbanCard": "c_222956f8e5246_19c76d8cdf9"
+      "title": "Numerai daily submission service",
+      "completedAt": "2026-02-20T01:20:00Z"
     },
     {
       "id": "master-dashboard",
-      "title": "Master status dashboard for all services",
-      "status": "in-progress",
-      "assignedTo": "sonnet-builder",
-      "sessionKey": "agent:main:subagent:21af0789-2ce6-484c-bb13-3ce2ca30f6be",
-      "startedAt": "2026-02-20T01:19:00Z",
-      "kanbanCard": "c_ae0c29acf6abc_19c78a01c0f"
-    }
-  ],
-  "recentlyCompleted": [
-    {
-      "id": "numerai-hyperparam-sweep",
-      "title": "Numerai hyperparameter sweep tool",
-      "completedAt": "2026-02-19T20:35:00Z",
-      "note": "Created experiment script testing weight_power, boost_rounds, num_leaves. 36 configs, ready to run."
+      "title": "Master status dashboard",
+      "completedAt": "2026-02-20T01:22:00Z"
     },
     {
-      "id": "numerai-era-boost-full",
-      "title": "Numerai — Full dataset era-boosting run",
-      "completedAt": "2026-02-19T22:23:00Z",
-      "note": "Sharpe 0.768→0.873 (+14%), corr +23%"
+      "id": "numerai-era-boost",
+      "title": "Era-boost integrated into production pipeline",
+      "completedAt": "2026-02-20T02:35:00Z"
     },
     {
-      "id": "md-cleanup",
-      "title": "Operating files cleanup + adversarial review",
-      "completedAt": "2026-02-19T22:40:00Z",
-      "note": "14 files → 10 files, 795 lines"
+      "id": "backup-fix",
+      "title": "Backup LFS fix (5.4GB → 78MB)",
+      "completedAt": "2026-02-20T02:28:00Z"
     }
   ],
+  "autonomousWorker": {
+    "cronId": "36f47279-520f-4ce7-8f9c-a7c44be0771a",
+    "frequency": "every 15 min",
+    "model": "sonnet",
+    "note": "Combined build + QA worker"
+  },
   "systemHealth": {
-    "timestamp": "2026-02-19T20:35:00Z",
-    "overall_status": "warning",
-    "cpu_temp": "63.0C",
-    "disk_usage": "66%",
+    "timestamp": "2026-02-20T04:04:00Z",
+    "overall_status": "ok",
+    "cpu_temp": "71.0C",
+    "disk_usage": "44%",
     "gateway": "active",
-    "blofin_services": "ingestor=active, paper=active, api=inactive (expected)",
-    "critical_alerts": "none",
-    "failed_services": "openclaw-full-restore-backup.service (persistent Git LFS 2GB limit issue)",
-    "note": "Backup service failed at 18:41 MST — Git LFS rejecting objects >2GB. Local snapshots captured but GitHub push blocked."
+    "blofin_services": "active",
+    "critical_alerts": "none"
   }
 }

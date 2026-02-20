@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-20T14:34:00Z",
+  "lastUpdated": "2026-02-20T14:49:00Z",
   "activeTasks": [
     {
       "id": "c_32f3b7b43a0ed_19c7b6548a7",
@@ -8,10 +8,18 @@
       "dispatchedAt": "2026-02-20T14:34:00Z",
       "project": "master-dashboard",
       "pid": 976602
+    },
+    {
+      "id": "c_0e327015bd21_19c7b5120af",
+      "title": "Master dashboard: add historical performance chart (7-day rolling returns)",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-20T14:49:00Z",
+      "project": "master-dashboard",
+      "pid": 985116
     }
   ],
   "qaInProgress": [],
-  "inboxSize": 9,
+  "inboxSize": 8,
   "recentlyCompleted": [
     {
       "id": "blofin-parallelize",
@@ -46,9 +54,9 @@
     "note": "Jarvis Pulse dispatcher — health + work dispatch + QA"
   },
   "systemHealth": {
-    "timestamp": "2026-02-20T14:34:00Z",
+    "timestamp": "2026-02-20T14:49:00Z",
     "overall_status": "ok",
-    "cpu_temp": "62.0C",
+    "cpu_temp": "66.0C",
     "disk_usage": "39%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -56,13 +64,14 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T14:34:00Z",
+    "cycle": "2026-02-20T14:49:00Z",
     "actions": [
-      "Health check: all services OK, CPU 62°C, disk 39%, no critical alerts",
-      "Dispatched master-dashboard rate limit panel (PID 976602)",
-      "QA queue: empty",
-      "Inbox queue: 9 cards available (Blofin, Numerai, dashboard tasks + legacy bugs)"
+      "Health: CPU 66°C, disk 39%, all services OK",
+      "Dispatched: historical performance chart (PID 985116)",
+      "Active tasks: 2 (both dashboard work)",
+      "Inbox: 8 cards remain",
+      "QA queue: empty"
     ],
-    "nextDispatch": "2026-02-20T14:49:00Z"
+    "nextDispatch": "2026-02-20T15:04:00Z"
   }
 }

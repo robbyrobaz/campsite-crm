@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-20T16:19:00Z",
+  "lastUpdated": "2026-02-20T16:34:00Z",
   "activeTasks": [
     {
       "id": "c_0a59447197684_19c7bb10b37",
@@ -10,24 +10,32 @@
       "pid": 1020982
     },
     {
-      "id": "c_9bdb148f348d_19c7ba40753",
-      "title": "have master dashbaord use more space horizontally",
+      "id": "c_895fa30133116_19c7952cb00",
+      "title": "blofin ml model status still shows leakage issues from a while ago",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-20T16:19:00Z",
-      "project": "master-dashboard",
-      "pid": 1038492
+      "dispatchedAt": "2026-02-20T16:34:00Z",
+      "project": "blofin-stack",
+      "pid": 1046999
     },
+    {
+      "id": "c_71747c4c1e537_19c794a232d",
+      "title": "review claude documentation",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-20T16:34:00Z",
+      "project": "workspace",
+      "pid": 1047171
+    }
+  ],
+  "qaInProgress": [
     {
       "id": "c_59c4903b6c1fa_19c7954d70a",
       "title": "saved presets don't stay availble everywhere on hedge-engine",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-20T16:19:00Z",
+      "startedAt": "2026-02-20T16:34:00Z",
       "project": "arb-dashboard",
-      "pid": 1038502
+      "sessionKey": "agent:main:subagent:a8aa30b7-784b-4592-b599-55576c938ede"
     }
   ],
-  "qaInProgress": [],
-  "inboxSize": 2,
+  "inboxSize": 0,
   "recentlyCompleted": [
     {
       "id": "master-dashboard-rate-limit",
@@ -38,31 +46,6 @@
       "id": "master-dashboard-performance",
       "title": "Master dashboard: add historical performance chart (7-day rolling returns)",
       "completedAt": "2026-02-20T15:04:00Z"
-    },
-    {
-      "id": "blofin-parallelize",
-      "title": "Parallelize backtest engine + 30min timer",
-      "completedAt": "2026-02-20T01:19:00Z"
-    },
-    {
-      "id": "numerai-systemd",
-      "title": "Numerai daily submission service",
-      "completedAt": "2026-02-20T01:20:00Z"
-    },
-    {
-      "id": "master-dashboard",
-      "title": "Master status dashboard",
-      "completedAt": "2026-02-20T01:22:00Z"
-    },
-    {
-      "id": "numerai-era-boost",
-      "title": "Era-boost integrated into production pipeline",
-      "completedAt": "2026-02-20T02:35:00Z"
-    },
-    {
-      "id": "backup-fix",
-      "title": "Backup LFS fix (5.4GB → 78MB)",
-      "completedAt": "2026-02-20T02:28:00Z"
     }
   ],
   "autonomousWorker": {
@@ -72,26 +55,23 @@
     "note": "Jarvis Pulse dispatcher — health + work dispatch + QA"
   },
   "systemHealth": {
-    "timestamp": "2026-02-20T16:19:00Z",
-    "overall_status": "warning",
-    "cpu_temp": "85.0°C",
+    "timestamp": "2026-02-20T16:34:00Z",
+    "overall_status": "healthy",
+    "cpu_temp": "84.0°C",
     "disk_usage": "38%",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
-    "critical_alerts": "none",
-    "note": "CPU at threshold — dispatched work is causing load, monitoring"
+    "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T16:19:00Z",
+    "cycle": "2026-02-20T16:34:00Z",
     "actions": [
-      "ALERT: CPU 85.0°C — at threshold, monitoring",
-      "Dispatched: master dashboard layout (PID 1038492), hedge-engine presets (PID 1038502)",
-      "Active tasks: 3 (blofin tick optim, dashboard layout, hedge presets)",
-      "Inbox: 2 cards remain (blofin ML leakage, claude docs review)",
-      "QA queue: empty",
-      "Capacity: FULL (3 In Progress)"
+      "Phase 1: Health OK — CPU 84°C, disk 38%, all services active, no alerts",
+      "Phase 2: Dispatched 2 Inbox cards → In Progress",
+      "Phase 3: Spawned QA agent (Sonnet) for hedge-engine presets review",
+      "Capacity: 3/3 In Progress, 1 QA pending, 0 Inbox"
     ],
-    "nextDispatch": "2026-02-20T16:34:00Z"
+    "nextDispatch": "2026-02-20T16:49:00Z"
   }
 }

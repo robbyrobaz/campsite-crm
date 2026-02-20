@@ -72,9 +72,9 @@
     "note": "Jarvis Pulse dispatcher — health + work dispatch + QA"
   },
   "systemHealth": {
-    "timestamp": "2026-02-20T15:49:00Z",
+    "timestamp": "2026-02-20T16:04:00Z",
     "overall_status": "ok",
-    "cpu_temp": "61°C",
+    "cpu_temp": "81°C",
     "disk_usage": "38%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -82,15 +82,15 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T15:49:00Z",
+    "cycle": "2026-02-20T16:04:00Z",
     "actions": [
-      "Health: CPU 61°C, disk 38%, all services OK, no critical alerts",
-      "Dispatched 2 cards: master-dashboard API logging (PID 1020977), blofin tick optimization (PID 1020982)",
+      "Health: CPU 81°C, disk 38%, all services OK, no critical alerts",
+      "Dispatched: blofin unit tests (PID 1029626), dashboard usage stat resize (PID 1029636)",
       "Active tasks: 3",
-      "Inbox: 6 cards remain (logging, memory profile, unit tests, dashboard layout, hedge presets, ML leakage, claude docs)",
+      "Inbox: 4 cards remain (dashboard layout, hedge presets, ML leakage status, claude docs review)",
       "QA queue: empty",
-      "Capacity: 1 more card can be dispatched if needed"
+      "Capacity: 0 (3 In Progress)"
     ],
-    "nextDispatch": "2026-02-20T16:04:00Z"
+    "nextDispatch": "2026-02-20T16:19:00Z"
   }
 }

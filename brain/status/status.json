@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-20T17:49:00Z",
+  "lastUpdated": "2026-02-20T18:05:00Z",
   "activeTasks": [
     {
       "id": "c_0a59447197684_19c7bb10b37",
@@ -7,40 +7,49 @@
       "status": "In Progress",
       "dispatchedAt": "2026-02-20T15:49:00Z",
       "project": "blofin-stack"
-    }
-  ],
-  "qaInProgress": [],
-  "inboxSize": 4,
-  "inboxCards": [
-    {
-      "id": "c_ec69da1ca5bac_19c7c0c7857",
-      "title": "add chatgpt models as fallback for when anthropic hits any max",
-      "project": "???(needs_clarification)"
     },
     {
       "id": "c_5564d8503ff4_19c7c2c66fc",
       "title": "Add unit tests for blofin feature calculations",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-20T18:05:00Z",
       "project": "blofin-stack"
     },
     {
       "id": "c_0d25d56851176_19c7c2c6916",
       "title": "Document numerai model training pipeline",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-20T18:05:00Z",
       "project": "numerai-tournament"
-    },
+    }
+  ],
+  "qaInProgress": [],
+  "inboxSize": 3,
+  "inboxCards": [
     {
       "id": "c_2fc7acef0d1be_19c7c2c693c",
       "title": "Performance audit: dashboard React components",
       "project": "master-dashboard"
+    },
+    {
+      "id": "c_002ee44599197_19c7c3a91b4",
+      "title": "Add error handling and retry logic for Blofin tick fetch failures",
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_a4f715163c949_19c7c3a93ef",
+      "title": "Refactor Numerai model predictions to handle missing/invalid data",
+      "project": "numerai-tournament"
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-20T17:49:00Z",
-    "cpu_temp": "84.0°C",
+    "timestamp": "2026-02-20T18:05:00Z",
+    "cpu_temp": "87.0°C [CRITICAL - RUNAWAY PROCESS DETECTED]",
     "disk_usage": "37%",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
-    "critical_alerts": "none"
+    "critical_alerts": "URGENT: Runaway Python (PID 1100155, 100% CPU)"
   },
   "dispatcherNotes": {
     "cycle": "2026-02-20T17:49:00Z",

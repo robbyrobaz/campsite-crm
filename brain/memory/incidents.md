@@ -181,3 +181,23 @@ Manual intervention needed to either:
 3. Move large artifacts to separate storage (S3/GCS)
 
 **Action Taken:** Alert sent to Rob. Monitoring continues on next heartbeat cycle.
+
+## Feb 20, 2026 11:04 AM MST - CPU Temperature Critical
+
+**Incident:** CPU temp reached 87°C (threshold: 85°C). Runaway Python process detected.
+
+**Details:**
+- CPU temp: 87.0°C (high = 100°C)
+- Runaway process: PID 1100155, 100% CPU utilization, 1:15 runtime
+- Load average: 2.30
+- All core services active (gateway, ingestor, paper trading)
+- Disk: 37% (OK)
+- Critical alerts: none
+
+**Action taken:**
+- Alerted Rob via ntfy.sh (urgent priority)
+- Updated status.json with critical flag
+- Did NOT kill process (awaiting Rob's instruction)
+- Continuing dispatcher work (system still operational)
+
+**Follow-up:** Rob to investigate and kill runaway process manually. Monitor next cycles.

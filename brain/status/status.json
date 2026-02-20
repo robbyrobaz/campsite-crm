@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-20T15:19:00Z",
+  "lastUpdated": "2026-02-20T15:49:00Z",
   "activeTasks": [
     {
       "id": "c_e2305665561a_19c7b512057",
@@ -8,10 +8,26 @@
       "dispatchedAt": "2026-02-20T15:19:00Z",
       "project": "blofin-stack",
       "pid": 1002379
+    },
+    {
+      "id": "c_b119bc2412a8c_19c7bb10b54",
+      "title": "add request/response logging to master-dashboard API handlers",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-20T15:49:00Z",
+      "project": "master-dashboard",
+      "pid": 1020977
+    },
+    {
+      "id": "c_0a59447197684_19c7bb10b37",
+      "title": "optimize blofin tick ingestion memory footprint — profile on 1M+ ticks",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-20T15:49:00Z",
+      "project": "blofin-stack",
+      "pid": 1020982
     }
   ],
   "qaInProgress": [],
-  "inboxSize": 5,
+  "inboxSize": 6,
   "recentlyCompleted": [
     {
       "id": "master-dashboard-rate-limit",
@@ -56,24 +72,25 @@
     "note": "Jarvis Pulse dispatcher — health + work dispatch + QA"
   },
   "systemHealth": {
-    "timestamp": "2026-02-20T15:19:00Z",
+    "timestamp": "2026-02-20T15:49:00Z",
     "overall_status": "ok",
-    "cpu_temp": "74.0C",
-    "disk_usage": "39%",
+    "cpu_temp": "61°C",
+    "disk_usage": "38%",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T15:19:00Z",
+    "cycle": "2026-02-20T15:49:00Z",
     "actions": [
-      "Health: CPU 74°C, disk 39%, all services OK, no critical alerts",
-      "Dispatched: Blofin volume-weighted signal scoring (PID 1002379)",
-      "Active tasks: 1",
-      "Inbox: 5 cards remain (hedge-engine presets, profit factor missing, services alive check, ML leakage, claude docs review)",
-      "QA queue: empty"
+      "Health: CPU 61°C, disk 38%, all services OK, no critical alerts",
+      "Dispatched 2 cards: master-dashboard API logging (PID 1020977), blofin tick optimization (PID 1020982)",
+      "Active tasks: 3",
+      "Inbox: 6 cards remain (logging, memory profile, unit tests, dashboard layout, hedge presets, ML leakage, claude docs)",
+      "QA queue: empty",
+      "Capacity: 1 more card can be dispatched if needed"
     ],
-    "nextDispatch": "2026-02-20T15:34:00Z"
+    "nextDispatch": "2026-02-20T16:04:00Z"
   }
 }

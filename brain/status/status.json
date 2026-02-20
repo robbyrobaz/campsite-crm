@@ -1,17 +1,17 @@
 {
-  "lastUpdated": "2026-02-20T15:04:00Z",
+  "lastUpdated": "2026-02-20T15:19:00Z",
   "activeTasks": [
     {
-      "id": "c_e6dcb4ba505e4_19c7b51208f",
-      "title": "Numerai: add correlation spike detector",
+      "id": "c_e2305665561a_19c7b512057",
+      "title": "Blofin: add volume-weighted signal scoring to improve fill quality",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-20T15:04:00Z",
-      "project": "numerai-tournament",
-      "pid": 993373
+      "dispatchedAt": "2026-02-20T15:19:00Z",
+      "project": "blofin-stack",
+      "pid": 1002379
     }
   ],
   "qaInProgress": [],
-  "inboxSize": 6,
+  "inboxSize": 5,
   "recentlyCompleted": [
     {
       "id": "master-dashboard-rate-limit",
@@ -56,9 +56,9 @@
     "note": "Jarvis Pulse dispatcher — health + work dispatch + QA"
   },
   "systemHealth": {
-    "timestamp": "2026-02-20T15:04:00Z",
+    "timestamp": "2026-02-20T15:19:00Z",
     "overall_status": "ok",
-    "cpu_temp": "78.0C",
+    "cpu_temp": "74.0C",
     "disk_usage": "39%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -66,14 +66,14 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-20T15:04:00Z",
+    "cycle": "2026-02-20T15:19:00Z",
     "actions": [
-      "Health: CPU 78°C, disk 39%, all services OK, no critical alerts",
-      "Dispatched: Numerai correlation spike detector (PID 993373)",
+      "Health: CPU 74°C, disk 39%, all services OK, no critical alerts",
+      "Dispatched: Blofin volume-weighted signal scoring (PID 1002379)",
       "Active tasks: 1",
-      "Inbox: 6 cards remain (Blofin volume-weighted scoring, hedge-engine presets, etc.)",
+      "Inbox: 5 cards remain (hedge-engine presets, profit factor missing, services alive check, ML leakage, claude docs review)",
       "QA queue: empty"
     ],
-    "nextDispatch": "2026-02-20T15:19:00Z"
+    "nextDispatch": "2026-02-20T15:34:00Z"
   }
 }

@@ -1,13 +1,47 @@
 {
-  "lastUpdated": "2026-02-21T03:16:51Z",
+  "lastUpdated": "2026-02-21T04:10:49Z",
   "activeTasks": [
     {
       "id": "c_6870fc06c1143_19c7d2e7f08",
       "title": "Design volatility-focused crypto strategy for Blofin stack under current ranging low-vol regime",
-      "status": "Review/Test",
-      "dispatchedAt": "2026-02-20T23:27:05Z",
-      "project": "blofin-stack",
-      "notes": "volatility_low_vol_vwap_bollinger strategy file generated; pending QA review"
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-21T01:34:00Z",
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_b4e1c7bf6c4bc_19c7c7ad9ff",
+      "title": "Run Blofin strategy pipeline per cron request",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-21T01:34:00Z",
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_e67bfd3a758bb_19c7ca8412f",
+      "title": "Design a volatility-aware crypto strategy for blofin-stack covering the low-volatility short regime",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-21T01:34:00Z",
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_a4f715163c949_19c7c3a93ef",
+      "title": "Refactor Numerai model predictions to handle missing/invalid data gracefully",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-21T01:34:00Z",
+      "project": "numerai-tournament"
+    },
+    {
+      "id": "c_002ee44599197_19c7c3a91b4",
+      "title": "Add error handling and retry logic for Blofin tick fetch failures — improve robustness",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-21T01:34:00Z",
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_d77630cbaac97_19c7cc0b908",
+      "title": "make campsite CRM project live, and back available http://localhost:3000/",
+      "status": "Done",
+      "dispatchedAt": "2026-02-21T04:07:00Z",
+      "project": "campsite-crm"
     }
   ],
   "qaInProgress": [],
@@ -22,7 +56,7 @@
   ],
   "systemHealth": {
     "timestamp": "2026-02-21T00:00:00Z",
-    "cpu_temp": "68.0\u00b0C",
+    "cpu_temp": "68.0°C",
     "disk_usage": "35%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -30,14 +64,11 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T03:16:51Z",
+    "cycle": "2026-02-21T01:34:00Z",
     "actions": [
-      "Phase 1: Hourly oversight check performed (CPU 76\u00b0C, disk 34%, services healthy).",
-      "Phase 2: Kanban only shows Blofin volatility-strategy card in progress; no Review/Test or Planned cards pending.",
-      "Phase 3: numerai-daily-bot.service still fails for missing models_elite manifests; reminder noted.",
-      "Phase 4: vol_low_vol_vwap_bollinger strategy draft created via builder; ready for QA review.",
-      "Started user-requested Blofin strategy pipeline run (card c_bf9f3036ce7d2_19c7e326a8c).",
-      "Blofin strategy pipeline run completed: Tier0\u2192Tier1 promotions=0, Tier1\u2192Tier2 promotions=0, Tier2 demotions=0; volume_mean_reversion_v1.py still fails to load due to syntax error."
+      "Phase 1: Forced openAI dispatch for the six backlog cards (codex/GPT-5.2) so they are running now instead of waiting on Anthropic.",
+      "Phase 2: Status shows six In Progress tasks; no Review/Test or Planned backlog remains.",
+      "Phase 3: numerai-daily-bot.service still fails for missing models_elite manifests, so the daily submissions remain on hold."
     ]
   }
 }

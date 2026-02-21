@@ -216,3 +216,10 @@ Manual intervention needed to either:
 **State detected:** failed during heartbeat
 **Action:** restarted with `systemctl --user restart numerai-daily-bot.service --no-block`
 **Immediate state:** activating (known blocker may persist: missing models_elite manifests)
+
+## Feb 21, 06:15 MST - numerai-daily-bot restart during heartbeat
+
+**Service:** numerai-daily-bot.service
+**Detected state:** failed
+**Action:** restarted with `systemctl --user restart numerai-daily-bot.service --no-block`
+**Immediate result:** activating

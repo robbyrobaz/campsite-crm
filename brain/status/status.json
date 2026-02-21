@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-21T14:50:22.917179Z",
+  "lastUpdated": "2026-02-21T15:05:21.713715Z",
   "activeTasks": [
     {
       "id": "c_1fc7996763c3_19c7e659c4a",
@@ -24,7 +24,7 @@
     }
   ],
   "qaInProgress": [],
-  "inboxSize": 11,
+  "inboxSize": 10,
   "inboxCards": [
     {
       "id": "c_1d56923da1e5a_19c7ecd7c95",
@@ -57,12 +57,6 @@
       "project_path": null
     },
     {
-      "id": "c_35ce2ba11b7d6_19c7ec5e87a",
-      "title": "make campsite CRM cleaner - better use of space",
-      "project": null,
-      "project_path": null
-    },
-    {
       "id": "c_a02a717567f39_19c7ec306ee",
       "title": "auto feedback loop on campsite crm",
       "project": null,
@@ -73,11 +67,17 @@
       "title": "on campsite crm, allow more than one booking area rented",
       "project": null,
       "project_path": null
+    },
+    {
+      "id": "c_6fad113b4ec8_19c7e72fd3b",
+      "title": "after the 5 new features are live, push/copy the CRM campsite to a new repo dedicated to this.",
+      "project": null,
+      "project_path": null
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T14:50:22.917179Z",
-    "cpu_temp": "70.0\u00b0C",
+    "timestamp": "2026-02-21T15:05:21.713715Z",
+    "cpu_temp": "72.0\u00b0C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -85,14 +85,7 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T14:50:22.917179Z",
-    "actions": [
-      "Stale c_1fc7996763c3_19c7e659c4a (30.0m): moved to Planned",
-      "Stale c_a8cdbb918160b_19c7ecec41a (30.0m): moved to Planned",
-      "Stale c_46ed0bcd6be56_19c7e65c752 (30.0m): moved to Planned",
-      "Dispatched c_46ed0bcd6be56_19c7e65c752",
-      "Dispatched c_a8cdbb918160b_19c7ecec41a",
-      "Dispatched c_1fc7996763c3_19c7e659c4a"
-    ]
+    "cycle": "2026-02-21T15:05:21.713715Z",
+    "actions": []
   }
 }

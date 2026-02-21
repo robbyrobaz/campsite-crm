@@ -50,3 +50,18 @@
 - **Claw-Kanban:** port 8787, systemd `claw-kanban.service`, SQLite DB at `kanban-dashboard/kanban.sqlite`
 - **Agent files:** `.claude/agents/` — ml-engineer, dashboard-builder, devops-engineer, qa-sentinel, crypto-researcher
 - **Numerai "medium" feature set = 740 features** (misleading). v2_equivalent = 304. Full dataset OOMs with 740 on 32GB RAM.
+
+## OpenClaw Ops Memory (Feb 21, 2026)
+
+- Canonical OpenClaw install is user-global only: `/home/rob/.npm-global/lib/node_modules/openclaw` (`2026.2.19-2`).
+- Removed stale ghost install `/usr/lib/node_modules/openclaw` (`2026.2.9`), which had created duplicate binaries.
+- After ghost cleanup, gateway service failed because systemd unit still pointed at `/usr/lib/node_modules/openclaw/dist/index.js`.
+- Fixed by reinstalling service with force so `ExecStart` points to `/home/rob/.npm-global/lib/node_modules/openclaw/dist/index.js`.
+- Cron model cleanup: replaced disallowed `model=sonnet` overrides with `model=openai-codex/gpt-5.3-codex` in `~/.openclaw/cron/jobs.json`.
+- Default model strategy: primary is `openai-codex/gpt-5.3-codex`, with stronger-first fallbacks.
+- Freeze symptom after ~15h uptime: gateway appeared alive but bot responsiveness degraded.
+- Working recovery sequence:
+- `systemctl --user restart openclaw-gateway.service openclaw-browser.service`
+- `openclaw health`
+- `openclaw cron run 36f47279-520f-4ce7-8f9c-a7c44be0771a --expect-final --timeout 180000`
+- Post-fix validation: Jarvis cron resumed with `status=ok` and model `gpt-5.3-codex`.

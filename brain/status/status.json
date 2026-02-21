@@ -1,25 +1,39 @@
 {
-  "lastUpdated": "2026-02-21T15:36:07.697489Z",
+  "lastUpdated": "2026-02-21T15:51:16Z",
   "activeTasks": [
+    {
+      "id": "c_0d404577b25e7_19c80dc2504",
+      "title": "make the campsite crm have an MCP connection for chatgpt",
+      "status": "In Progress",
+      "dispatchedAt": 1771689049595,
+      "project": null
+    },
+    {
+      "id": "c_2e623f43759d1_19c80d85f48",
+      "title": "research 5 more valuable features for campsite crm and add them",
+      "status": "In Progress",
+      "dispatchedAt": 1771689049531,
+      "project": null
+    },
     {
       "id": "c_35ce2ba11b7d6_19c7ec5e87a",
       "title": "make campsite CRM cleaner - better use of space",
       "status": "In Progress",
-      "dispatchedAt": 1771688148581,
+      "dispatchedAt": 1771689049463,
       "project": null
     },
     {
       "id": "c_f93ac050f0b71_19c7ec97e09",
       "title": "fix blofin backtests have some crazy 20000% numbers",
-      "status": "In Progress",
-      "dispatchedAt": 1771688148542,
+      "status": "Review/Test",
+      "dispatchedAt": 1771688508548,
       "project": null
     },
     {
-      "id": "c_7eddc8c6d7bd2_19c7ecb3192",
-      "title": "blofin forward tests show 0 trades - fix this",
-      "status": "In Progress",
-      "dispatchedAt": 1771688148475,
+      "id": "c_1723b84b3650a_19c80cc2f27",
+      "title": "review the blofin process to test strategies per coin",
+      "status": "Review/Test",
+      "dispatchedAt": 1771688387149,
       "project": null
     },
     {
@@ -38,5 +52,85 @@
     }
   ],
   "qaInProgress": [],
-  "inboxSize": 9
+  "inboxSize": 10,
+  "inboxCards": [
+    {
+      "id": "c_abbfab113b816_19c80e4be4c",
+      "title": "on the campsite crm integrate a way to add email connection",
+      "project": null,
+      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
+      "assignee": "codex"
+    },
+    {
+      "id": "c_98fb0e481fea9_19c80d28f13",
+      "title": "Master Status  - projects git status update",
+      "project": null,
+      "project_path": null,
+      "assignee": "codex"
+    },
+    {
+      "id": "c_a02a717567f39_19c7ec306ee",
+      "title": "auto feedback loop on campsite crm",
+      "project": null,
+      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
+      "assignee": "codex"
+    },
+    {
+      "id": "c_456996ea6919c_19c7ec0276a",
+      "title": "on campsite crm, allow more than one booking area rented",
+      "project": null,
+      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
+      "assignee": "codex"
+    },
+    {
+      "id": "c_6fad113b4ec8_19c7e72fd3b",
+      "title": "after the 5 new features are live, push/copy the CRM campsite to a new repo dedicated to this.",
+      "project": null,
+      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
+      "assignee": "codex"
+    },
+    {
+      "id": "c_996f9459e9ce2_19c80c67200",
+      "title": "like the anthropic usage on the master dashboard, on the left add the codex usage stats",
+      "project": null,
+      "project_path": "/home/rob/.openclaw/workspace/master-dashboard",
+      "assignee": "codex"
+    },
+    {
+      "id": "c_abd71d34ea541_19c80c944c1",
+      "title": "add some kind of tracker of kanban tasks done per hour",
+      "project": null,
+      "project_path": null,
+      "assignee": "codex"
+    },
+    {
+      "id": "c_b7114218db69a_19c7e2a9547",
+      "title": "Create a Gilbert PD mission-brief flashcard lane: design scenario cards (e.g., s…",
+      "project": null,
+      "project_path": "/home/rob/.openclaw/workspace/gilbert-pd-radio-trainer",
+      "assignee": "codex"
+    }
+  ],
+  "systemHealth": {
+    "timestamp": "2026-02-21T15:50:49.281110Z",
+    "cpu_temp": "57.0°C",
+    "disk_usage": "34%",
+    "gateway": "active",
+    "blofin_ingestor": "active",
+    "blofin_paper": "active",
+    "critical_alerts": "none"
+  },
+  "dispatcherNotes": {
+    "cycle": "2026-02-21T15:50:49.281110Z",
+    "actions": [
+      "Patched c_abbfab113b816_19c80e4be4c: assignee,project_path",
+      "Patched c_0d404577b25e7_19c80dc2504: assignee,project_path",
+      "Patched c_2e623f43759d1_19c80d85f48: assignee,project_path",
+      "Recycled+restarted c_35ce2ba11b7d6_19c7ec5e87a",
+      "Dispatched c_2e623f43759d1_19c80d85f48",
+      "Dispatched c_0d404577b25e7_19c80dc2504",
+      "QA PASS+Done c_7d5ba9f579c51_19c7eccc8ef",
+      "QA PASS+Done c_7eddc8c6d7bd2_19c7ecb3192"
+    ]
+  }
 }

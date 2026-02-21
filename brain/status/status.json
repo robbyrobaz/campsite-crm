@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-21T11:50:34.170500Z",
+  "lastUpdated": "2026-02-21T12:05:21.909994Z",
   "activeTasks": [
     {
       "id": "c_1fc7996763c3_19c7e659c4a",
@@ -76,8 +76,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T11:50:34.170500Z",
-    "cpu_temp": "58.0\u00b0C",
+    "timestamp": "2026-02-21T12:05:21.909994Z",
+    "cpu_temp": "61.0\u00b0C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -85,11 +85,7 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T11:50:34.170500Z",
-    "actions": [
-      "Stale c_46ed0bcd6be56_19c7e65c752 (15.2m): kicked via /run",
-      "Stale c_a8cdbb918160b_19c7ecec41a (15.2m): kicked via /run",
-      "Stale c_1fc7996763c3_19c7e659c4a (15.2m): kicked via /run"
-    ]
+    "cycle": "2026-02-21T12:05:21.909994Z",
+    "actions": []
   }
 }

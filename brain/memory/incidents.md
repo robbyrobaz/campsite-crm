@@ -209,3 +209,10 @@ Manual intervention needed to either:
 **Action taken:** `systemctl --user restart numerai-daily-bot.service --no-block`
 **Immediate result:** service entered `activating` state, but prior failure cause remains (`FileNotFoundError: models_elite` / missing `manifest_*`).
 **Follow-up needed:** restore `numerai-tournament/models_elite/manifest_*` artifacts so daily submission can complete.
+
+## Feb 20, 22:42 MST - heartbeat restart: numerai-daily-bot
+
+**Service:** numerai-daily-bot.service
+**State detected:** failed during heartbeat
+**Action:** restarted with `systemctl --user restart numerai-daily-bot.service --no-block`
+**Immediate state:** activating (known blocker may persist: missing models_elite manifests)

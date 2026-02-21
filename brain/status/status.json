@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-21T05:35:18Z",
+  "lastUpdated": "2026-02-21T05:44:52Z",
   "activeTasks": [
     {
       "id": "c_6870fc06c1143_19c7d2e7f08",
@@ -31,7 +31,7 @@
     },
     {
       "id": "c_002ee44599197_19c7c3a91b4",
-      "title": "Add error handling and retry logic for Blofin tick fetch failures \u2014 improve robustness",
+      "title": "Add error handling and retry logic for Blofin tick fetch failures — improve robustness",
       "status": "Review/Test",
       "dispatchedAt": "2026-02-21T01:34:00Z",
       "project": "blofin-stack"
@@ -41,6 +41,13 @@
       "title": "research and add 5 more helpful features to the campsite CRM",
       "status": "In Progress",
       "dispatchedAt": "2026-02-21T04:36:00Z",
+      "project": "campsite-crm"
+    },
+    {
+      "id": "manual_campsite_live_20260221",
+      "title": "Restore Campsite CRM so localhost:3000 works with backend on :5000",
+      "status": "Done",
+      "dispatchedAt": "2026-02-21T05:42:47Z",
       "project": "campsite-crm"
     }
   ],
@@ -67,8 +74,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T05:35:18Z",
-    "cpu_temp": "74.0\u00b0C",
+    "timestamp": "2026-02-21T05:40:57Z",
+    "cpu_temp": "68.0°C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -76,11 +83,11 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T05:35:18Z",
+    "cycle": "2026-02-21T05:40:57Z",
     "actions": [
-      "Phase 1 healthy: CPU 74.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
+      "Phase 1 healthy: CPU 68.0°C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
       "Phase 2 skipped dispatch because In Progress count is 3 (capacity threshold reached).",
-      "Phase 3 QA dispatch failed for 2 Review/Test cards due to gateway pairing required error; will retry next cycle.",
+      "Phase 3 spawned 2 QA reviewers for Review/Test cards c_6870fc06c1143_19c7d2e7f08 and c_e67bfd3a758bb_19c7ca8412f using model openai-codex/gpt-5.3-codex.",
       "Phase 4 not needed: Planned and Inbox both non-empty."
     ]
   }

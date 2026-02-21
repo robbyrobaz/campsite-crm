@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-02-21 00:00 MST
+**Updated:** 2026-02-21 00:15 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -9,27 +9,27 @@
 | 7-day (Sonnet) | **45.0%** | Feb 22 02:00 PM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 50.4M (625 requests)
-- **Input:** 7.3M | **Output:** 182.9K
-- **Cache Read:** 42.9M | **Cache Write:** 0
-- **Cost (est):** $11.92
+- **Total Tokens:** 51.4M (650 requests)
+- **Input:** 7.4M | **Output:** 188.4K
+- **Cache Read:** 43.8M | **Cache Write:** 0
+- **Cost (est):** $12.30
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| codex/mini | 625 | 50.4M | 182.9K | $11.92 |
+| codex/mini | 650 | 51.4M | 188.4K | $12.30 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 167.9M (2322 requests)
-- **Output Tokens:** 658.1K
-- **Cost (est):** $44.33
+- **Total Tokens:** 168.8M (2339 requests)
+- **Output Tokens:** 658.2K
+- **Cost (est):** $44.46
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| codex/mini | 1718 | 139.3M | 501.7K | $17.06 |
-| opus | 230 | 20.8M | 52.8K | $24.56 |
-| haiku | 276 | 5.6M | 92.3K | $1.33 |
+| codex/mini | 1743 | 140.3M | 507.3K | $17.45 |
+| opus | 226 | 20.7M | 48.4K | $24.32 |
+| haiku | 272 | 5.5M | 91.3K | $1.31 |
 | sonnet | 97 | 2.3M | 11.3K | $1.38 |
 | delivery-mirror | 1 | 0 | 0 | $0.00 |
 

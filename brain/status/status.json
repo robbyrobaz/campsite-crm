@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-21T05:20:33Z",
+  "lastUpdated": "2026-02-21T05:35:18Z",
   "activeTasks": [
     {
       "id": "c_6870fc06c1143_19c7d2e7f08",
@@ -67,8 +67,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T05:20:33Z",
-    "cpu_temp": "75.0\u00b0C",
+    "timestamp": "2026-02-21T05:35:18Z",
+    "cpu_temp": "74.0\u00b0C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -76,11 +76,11 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T05:20:33Z",
+    "cycle": "2026-02-21T05:35:18Z",
     "actions": [
-      "Phase 1 healthy: CPU 75.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
+      "Phase 1 healthy: CPU 74.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
       "Phase 2 skipped dispatch because In Progress count is 3 (capacity threshold reached).",
-      "Phase 3 spawned 2 QA reviewers for Review/Test cards c_a4f715163c949_19c7c3a93ef and c_002ee44599197_19c7c3a91b4; sonnet override rejected by allowlist so default model used.",
+      "Phase 3 QA dispatch failed for 2 Review/Test cards due to gateway pairing required error; will retry next cycle.",
       "Phase 4 not needed: Planned and Inbox both non-empty."
     ]
   }

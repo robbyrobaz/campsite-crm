@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-21T01:22:00Z",
+  "lastUpdated": "2026-02-21T01:15:00Z",
   "activeTasks": [
     {
       "id": "c_6870fc06c1143_19c7d2e7f08",
@@ -29,13 +29,11 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T01:06:00Z",
+    "cycle": "2026-02-21T01:15:00Z",
     "actions": [
-      "Phase 1: Hourly oversight still shows CPU 74\u00b0C, services healthy, numerai bot failed (missing models_elite manifests).",
-      "Phase 2: Gilbert PD trainer pushed into https://github.com/robbyrobaz/gilbert-radio-codes-trainer with the official dataset files and app sources.",
-      "Phase 3: No other cards are queued; Blofin volatility strategy remains the only In Progress task.",
-      "Running Blofin strategy pipeline per cron request (a566927f-bd7e-42ef-9af9-317276a54ad5).",
-      "Blofin strategy pipeline run complete: no promotions or demotions, Tier counts unchanged (Tier0 stays 19, Tier1 stays 10, Tier2 stays 2)."
+      "Phase 1: Flashcard tab added to the Gilbert PD trainer with flip/next controls, so recruits get a quick memory game besides Teach/Quiz/Speed.",
+      "Phase 2: Blofin strategy card still running; no new Review/Test or Planned cards.",
+      "Phase 3: Numerai daily bot still failing for missing models_elite manifest files."
     ]
   }
 }

@@ -1,11 +1,25 @@
 {
-  "lastUpdated": "2026-02-21T05:53:31Z",
+  "lastUpdated": "2026-02-21T06:05:51Z",
   "activeTasks": [
+    {
+      "id": "c_6870fc06c1143_19c7d2e7f08",
+      "title": "Design volatility-focused crypto strategy for Blofin stack under current ranging\u2026",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-21T06:05:31Z",
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_46ed0bcd6be56_19c7e65c752",
+      "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick\u2026",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-21T06:05:31Z",
+      "project": "master-dashboard"
+    },
     {
       "id": "c_e67bfd3a758bb_19c7ca8412f",
       "title": "Design a volatility-aware crypto strategy for blofin-stack covering the low-vola\u2026",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-21T05:45:14Z",
+      "dispatchedAt": "2026-02-21T05:56:10Z",
       "project": "blofin-stack"
     },
     {
@@ -14,58 +28,63 @@
       "status": "In Progress",
       "dispatchedAt": "2026-02-21T05:17:58Z",
       "project": null
-    },
-    {
-      "id": "c_46ed0bcd6be56_19c7e65c752",
-      "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick\u2026",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-21T05:17:58Z",
-      "project": "master-dashboard"
-    },
-    {
-      "id": "c_b4e707db9b73e_19c7e7048b3",
-      "title": "research and add 5 more helpful features to the campsite CRM",
-      "status": "Review/Test",
-      "dispatchedAt": "2026-02-21T05:52:40Z",
-      "project": "campsite-crm"
     }
   ],
-  "qaInProgress": [
-    {
-      "id": "c_b4e707db9b73e_19c7e7048b3",
-      "session": "agent:main:subagent:ca23dd09-d743-4828-b887-8461ffc7af47"
-    }
-  ],
-  "inboxSize": 4,
+  "qaInProgress": [],
+  "inboxSize": 11,
   "inboxCards": [
+    {
+      "id": "c_1d56923da1e5a_19c7ecd7c95",
+      "title": "make sure blofin ML models are actually paper traded after trained",
+      "project": null,
+      "project_path": null
+    },
+    {
+      "id": "c_7d5ba9f579c51_19c7eccc8ef",
+      "title": "fix the blofin ML - it shows leakage, but it's barely different",
+      "project": null,
+      "project_path": null
+    },
+    {
+      "id": "c_7eddc8c6d7bd2_19c7ecb3192",
+      "title": "blofin forward tests show 0 trades - fix this",
+      "project": null,
+      "project_path": null
+    },
+    {
+      "id": "c_f93ac050f0b71_19c7ec97e09",
+      "title": "fix blofin backtests have some crazy 20000% numbers",
+      "project": null,
+      "project_path": null
+    },
+    {
+      "id": "c_e48cd8e2d1919_19c7ec84f59",
+      "title": "figure out why so many backtests have poor results and aren't moving to forward testing",
+      "project": null,
+      "project_path": null
+    },
+    {
+      "id": "c_35ce2ba11b7d6_19c7ec5e87a",
+      "title": "make campsite CRM cleaner - better use of space",
+      "project": null,
+      "project_path": null
+    },
+    {
+      "id": "c_a02a717567f39_19c7ec306ee",
+      "title": "auto feedback loop on campsite crm",
+      "project": null,
+      "project_path": null
+    },
     {
       "id": "c_456996ea6919c_19c7ec0276a",
       "title": "on campsite crm, allow more than one booking area rented",
       "project": null,
       "project_path": null
-    },
-    {
-      "id": "c_6fad113b4ec8_19c7e72fd3b",
-      "title": "after the 5 new features are live, push/copy the CRM campsite to a new repo dedicated to this.",
-      "project": null,
-      "project_path": null
-    },
-    {
-      "id": "c_13e91ec5fb81d_19c7e2ab2f4",
-      "title": "Add a Code Relay drill for the Gilbert PD trainer: let recruits build 3-4 code s\u2026",
-      "project": "gilbert-pd-radio-trainer",
-      "project_path": "/home/rob/.openclaw/workspace/gilbert-pd-radio-trainer"
-    },
-    {
-      "id": "c_b7114218db69a_19c7e2a9547",
-      "title": "Create a Gilbert PD mission-brief flashcard lane: design scenario cards (e.g., s\u2026",
-      "project": "gilbert-pd-radio-trainer",
-      "project_path": "/home/rob/.openclaw/workspace/gilbert-pd-radio-trainer"
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T05:53:31Z",
-    "cpu_temp": "76.0\u00b0C",
+    "timestamp": "2026-02-21T06:05:51Z",
+    "cpu_temp": "74.0\u00b0C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -73,12 +92,12 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T05:53:31Z",
+    "cycle": "2026-02-21T06:05:51Z",
     "actions": [
-      "Phase 1 healthy: CPU 76.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
-      "Phase 2: no stale In Progress cards over 45 minutes detected; no kick/recycle actions needed.",
-      "Phase 3: active non-stale In Progress count is 3, so no new dispatch this cycle.",
-      "Phase 4: spawned 1 QA reviewer for Review/Test card c_b4e707db9b73e_19c7e7048b3 using model openai-codex/gpt-5.3-codex."
+      "Phase 1 healthy: CPU 74.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
+      "Phase 2 stale recovery: attempted to kick stale In Progress cards; c_46ed0bcd6be56_19c7e65c752 successfully kicked, c_1fc7996763c3_19c7e659c4a run request returned HTTP 400.",
+      "Phase 3 dispatch: started planned card c_6870fc06c1143_19c7d2e7f08 to maintain effective non-stale WIP at target.",
+      "Phase 4: no Review/Test cards at this moment, so no QA spawns this cycle."
     ]
   }
 }

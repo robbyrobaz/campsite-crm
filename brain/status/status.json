@@ -1,52 +1,29 @@
 {
-  "lastUpdated": "2026-02-21T10:35:31Z",
+  "lastUpdated": "2026-02-21T10:50:36Z",
   "activeTasks": [
     {
-      "id": "c_1fc7996763c3_19c7e659c4a",
-      "title": "update MASTER STATUS DASHBOARD with all the dashboard links",
+      "id": "c_46ed0bcd6be56_19c7e65c752",
+      "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick\u2026",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-21T10:33:05Z",
+      "dispatchedAt": "2026-02-21T10:50:23Z",
       "project": "master-dashboard"
     },
     {
       "id": "c_a8cdbb918160b_19c7ecec41a",
       "title": "make sure the campsite crm stays live",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-21T10:33:00Z",
+      "dispatchedAt": "2026-02-21T10:50:23Z",
       "project": "campsite-crm"
     },
     {
-      "id": "c_46ed0bcd6be56_19c7e65c752",
-      "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick\u2026",
+      "id": "c_1fc7996763c3_19c7e659c4a",
+      "title": "update MASTER STATUS DASHBOARD with all the dashboard links",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-21T10:33:00Z",
+      "dispatchedAt": "2026-02-21T10:50:23Z",
       "project": "master-dashboard"
-    },
-    {
-      "id": "c_e67bfd3a758bb_19c7ca8412f",
-      "title": "Design a volatility-aware crypto strategy for blofin-stack covering the low-vola\u2026",
-      "status": "Review/Test",
-      "dispatchedAt": "2026-02-21T10:30:09Z",
-      "project": "blofin-stack"
-    },
-    {
-      "id": "c_6870fc06c1143_19c7d2e7f08",
-      "title": "Design volatility-focused crypto strategy for Blofin stack under current ranging\u2026",
-      "status": "Review/Test",
-      "dispatchedAt": "2026-02-21T10:21:48Z",
-      "project": "blofin-stack"
     }
   ],
-  "qaInProgress": [
-    {
-      "id": "c_e67bfd3a758bb_19c7ca8412f",
-      "session": "agent:main:subagent:ae6932c2-5c7c-4794-a240-834fe7049ab2"
-    },
-    {
-      "id": "c_6870fc06c1143_19c7d2e7f08",
-      "session": "agent:main:subagent:2507273f-8363-4272-8b66-373cd2b8aebb"
-    }
-  ],
+  "qaInProgress": [],
   "inboxSize": 11,
   "inboxCards": [
     {
@@ -99,8 +76,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T10:35:31Z",
-    "cpu_temp": "64.0\u00b0C",
+    "timestamp": "2026-02-21T10:50:36Z",
+    "cpu_temp": "70.0\u00b0C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -108,12 +85,12 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T10:35:31Z",
+    "cycle": "2026-02-21T10:50:36Z",
     "actions": [
-      "Phase 1 healthy: CPU 64.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
-      "Phase 2 enforcement: no In Progress cards exceeded 15-minute stale threshold at this check; no recycle actions required.",
-      "Phase 3 dispatch: active builder runs already at max target (3), no additional dispatch.",
-      "Phase 4 QA: spawned 2 QA reviewers for Review/Test cards c_e67bfd3a758bb_19c7ca8412f and c_6870fc06c1143_19c7d2e7f08 using model openai-codex/gpt-5.3-codex."
+      "Phase 1 healthy: CPU 70.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
+      "Phase 2 hard flow enforcement: all 3 In Progress cards exceeded 15m and were immediately kicked via /run to prevent staleness.",
+      "Phase 3 dispatch: active builders remained at max target (3), so no additional dispatch.",
+      "Phase 4 QA: no Review/Test cards available this cycle."
     ]
   }
 }

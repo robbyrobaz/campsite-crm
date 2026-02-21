@@ -1,25 +1,25 @@
 {
-  "lastUpdated": "2026-02-21T13:05:22.678362Z",
+  "lastUpdated": "2026-02-21T13:20:23.372134Z",
   "activeTasks": [
     {
-      "id": "c_46ed0bcd6be56_19c7e65c752",
-      "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick\u2026",
+      "id": "c_1fc7996763c3_19c7e659c4a",
+      "title": "update MASTER STATUS DASHBOARD with all the dashboard links",
       "status": "In Progress",
-      "dispatchedAt": 1771679123021,
+      "dispatchedAt": 1771680023615,
       "project": null
     },
     {
       "id": "c_a8cdbb918160b_19c7ecec41a",
       "title": "make sure the campsite crm stays live",
       "status": "In Progress",
-      "dispatchedAt": 1771679122981,
+      "dispatchedAt": 1771680023541,
       "project": null
     },
     {
-      "id": "c_1fc7996763c3_19c7e659c4a",
-      "title": "update MASTER STATUS DASHBOARD with all the dashboard links",
+      "id": "c_46ed0bcd6be56_19c7e65c752",
+      "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick\u2026",
       "status": "In Progress",
-      "dispatchedAt": 1771679122942,
+      "dispatchedAt": 1771680023445,
       "project": null
     }
   ],
@@ -76,8 +76,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T13:05:22.678362Z",
-    "cpu_temp": "73.0\u00b0C",
+    "timestamp": "2026-02-21T13:20:23.372134Z",
+    "cpu_temp": "66.0\u00b0C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -85,14 +85,11 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T13:05:22.678362Z",
+    "cycle": "2026-02-21T13:20:23.372134Z",
     "actions": [
-      "Stale c_46ed0bcd6be56_19c7e65c752 (30.0m): moved to Planned",
-      "Stale c_a8cdbb918160b_19c7ecec41a (30.0m): moved to Planned",
-      "Stale c_1fc7996763c3_19c7e659c4a (30.0m): moved to Planned",
-      "Dispatched c_1fc7996763c3_19c7e659c4a",
-      "Dispatched c_a8cdbb918160b_19c7ecec41a",
-      "Dispatched c_46ed0bcd6be56_19c7e65c752"
+      "Stale c_46ed0bcd6be56_19c7e65c752 (15.0m): kicked via /run",
+      "Stale c_a8cdbb918160b_19c7ecec41a (15.0m): kicked via /run",
+      "Stale c_1fc7996763c3_19c7e659c4a (15.0m): kicked via /run"
     ]
   }
 }

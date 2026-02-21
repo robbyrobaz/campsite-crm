@@ -201,3 +201,11 @@ Manual intervention needed to either:
 - Continuing dispatcher work (system still operational)
 
 **Follow-up:** Rob to investigate and kill runaway process manually. Monitor next cycles.
+
+## Feb 20, 22:20 MST - numerai-daily-bot restart attempted during heartbeat
+
+**Service:** numerai-daily-bot.service
+**Status before action:** failed
+**Action taken:** `systemctl --user restart numerai-daily-bot.service --no-block`
+**Immediate result:** service entered `activating` state, but prior failure cause remains (`FileNotFoundError: models_elite` / missing `manifest_*`).
+**Follow-up needed:** restore `numerai-tournament/models_elite/manifest_*` artifacts so daily submission can complete.

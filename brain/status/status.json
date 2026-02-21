@@ -1,83 +1,123 @@
 {
-  "lastUpdated": "2026-02-21T15:15:36Z",
+  "lastUpdated": "2026-02-21T15:24:25Z",
   "activeTasks": [
     {
-      "id": "c_1fc7996763c3_19c7e659c4a",
-      "title": "update MASTER STATUS DASHBOARD with all the dashboard links",
+      "id": "c_7d5ba9f579c51_19c7eccc8ef",
+      "title": "fix the blofin ML - it shows leakage, but it's barely different",
       "status": "In Progress",
-      "dispatchedAt": 1771685423289,
+      "dispatchedAt": 1771687230697,
+      "project": null
+    },
+    {
+      "id": "c_1d56923da1e5a_19c7ecd7c95",
+      "title": "make sure blofin ML models are actually paper traded after trained",
+      "status": "In Progress",
+      "dispatchedAt": 1771687230628,
+      "project": null
+    },
+    {
+      "id": "c_35ce2ba11b7d6_19c7ec5e87a",
+      "title": "make campsite CRM cleaner - better use of space",
+      "status": "In Progress",
+      "dispatchedAt": 1771687230551,
       "project": null
     },
     {
       "id": "c_a8cdbb918160b_19c7ecec41a",
       "title": "make sure the campsite crm stays live",
-      "status": "In Progress",
-      "dispatchedAt": 1771685423226,
+      "status": "Review/Test",
+      "dispatchedAt": 1771686968032,
       "project": null
     },
     {
       "id": "c_46ed0bcd6be56_19c7e65c752",
       "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick…",
-      "status": "In Progress",
-      "dispatchedAt": 1771685423181,
+      "status": "Review/Test",
+      "dispatchedAt": 1771686876418,
+      "project": null
+    },
+    {
+      "id": "c_1fc7996763c3_19c7e659c4a",
+      "title": "update MASTER STATUS DASHBOARD with all the dashboard links",
+      "status": "Review/Test",
+      "dispatchedAt": 1771686757496,
       "project": null
     }
   ],
-  "qaInProgress": [],
+  "qaInProgress": [
+    {
+      "cardId": "c_a8cdbb918160b_19c7ecec41a",
+      "session": "agent:main:subagent:8de8e717-a6ef-4576-bacb-6e0f80741273",
+      "model": "openai-codex/gpt-5.3-codex"
+    },
+    {
+      "cardId": "c_46ed0bcd6be56_19c7e65c752",
+      "session": "agent:main:subagent:e95136bb-a471-4cd2-a275-21d2c4891442",
+      "model": "openai-codex/gpt-5.3-codex"
+    }
+  ],
   "inboxSize": 10,
   "inboxCards": [
-    {
-      "id": "c_1d56923da1e5a_19c7ecd7c95",
-      "title": "make sure blofin ML models are actually paper traded after trained",
-      "project": null,
-      "project_path": null
-    },
-    {
-      "id": "c_7d5ba9f579c51_19c7eccc8ef",
-      "title": "fix the blofin ML - it shows leakage, but it's barely different",
-      "project": null,
-      "project_path": null
-    },
     {
       "id": "c_7eddc8c6d7bd2_19c7ecb3192",
       "title": "blofin forward tests show 0 trades - fix this",
       "project": null,
-      "project_path": null
+      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
+      "assignee": "codex"
     },
     {
       "id": "c_f93ac050f0b71_19c7ec97e09",
       "title": "fix blofin backtests have some crazy 20000% numbers",
       "project": null,
-      "project_path": null
-    },
-    {
-      "id": "c_e48cd8e2d1919_19c7ec84f59",
-      "title": "figure out why so many backtests have poor results and aren't moving to forward testing",
-      "project": null,
-      "project_path": null
+      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
+      "assignee": "codex"
     },
     {
       "id": "c_a02a717567f39_19c7ec306ee",
       "title": "auto feedback loop on campsite crm",
       "project": null,
-      "project_path": null
+      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
+      "assignee": "codex"
     },
     {
       "id": "c_456996ea6919c_19c7ec0276a",
       "title": "on campsite crm, allow more than one booking area rented",
       "project": null,
-      "project_path": null
+      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
+      "assignee": "codex"
     },
     {
       "id": "c_6fad113b4ec8_19c7e72fd3b",
       "title": "after the 5 new features are live, push/copy the CRM campsite to a new repo dedicated to this.",
       "project": null,
-      "project_path": null
+      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
+      "assignee": "codex"
+    },
+    {
+      "id": "c_996f9459e9ce2_19c80c67200",
+      "title": "like the anthropic usage on the master dashboard, on the left add the codex usage stats",
+      "project": null,
+      "project_path": "/home/rob/.openclaw/workspace/master-dashboard",
+      "assignee": "codex"
+    },
+    {
+      "id": "c_abd71d34ea541_19c80c944c1",
+      "title": "add some kind of tracker of kanban tasks done per hour",
+      "project": null,
+      "project_path": null,
+      "assignee": "codex"
+    },
+    {
+      "id": "c_b7114218db69a_19c7e2a9547",
+      "title": "Create a Gilbert PD mission-brief flashcard lane: design scenario cards (e.g., s…",
+      "project": null,
+      "project_path": "/home/rob/.openclaw/workspace/gilbert-pd-radio-trainer",
+      "assignee": "codex"
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T15:05:21.713715Z",
-    "cpu_temp": "72.0°C",
+    "timestamp": "2026-02-21T15:20:30.168554Z",
+    "cpu_temp": "68.0°C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -85,10 +125,21 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T15:05:21.713715Z",
+    "cycle": "2026-02-21T15:20:30.168554Z",
     "actions": [
-      "Confirmed campsite frontend/backend are down; checking service manager",
-      "Campsite CRM hardened: installed systemd always-on service, bound app to localhost:3000 with backend-served frontend build, verified auto-restart after forced crash"
+      "Patched c_35ce2ba11b7d6_19c7ec5e87a: project_path",
+      "Patched c_abd71d34ea541_19c80c944c1: assignee",
+      "Patched c_996f9459e9ce2_19c80c67200: assignee,project_path",
+      "Patched c_6fad113b4ec8_19c7e72fd3b: project_path",
+      "Patched c_456996ea6919c_19c7ec0276a: project_path",
+      "Patched c_a02a717567f39_19c7ec306ee: project_path",
+      "Patched c_f93ac050f0b71_19c7ec97e09: project_path",
+      "Patched c_7eddc8c6d7bd2_19c7ecb3192: project_path",
+      "Patched c_7d5ba9f579c51_19c7eccc8ef: project_path",
+      "Patched c_1d56923da1e5a_19c7ecd7c95: project_path",
+      "Dispatched c_35ce2ba11b7d6_19c7ec5e87a",
+      "Dispatched c_1d56923da1e5a_19c7ecd7c95",
+      "Dispatched c_7d5ba9f579c51_19c7eccc8ef"
     ]
   }
 }

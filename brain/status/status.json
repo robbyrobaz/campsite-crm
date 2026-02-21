@@ -1,6 +1,13 @@
 {
-  "lastUpdated": "2026-02-21T06:35:50Z",
+  "lastUpdated": "2026-02-21T06:50:43Z",
   "activeTasks": [
+    {
+      "id": "c_e67bfd3a758bb_19c7ca8412f",
+      "title": "Design a volatility-aware crypto strategy for blofin-stack covering the low-vola\u2026",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-21T06:50:23Z",
+      "project": "blofin-stack"
+    },
     {
       "id": "c_6870fc06c1143_19c7d2e7f08",
       "title": "Design volatility-focused crypto strategy for Blofin stack under current ranging\u2026",
@@ -16,33 +23,14 @@
       "project": "master-dashboard"
     },
     {
-      "id": "c_e67bfd3a758bb_19c7ca8412f",
-      "title": "Design a volatility-aware crypto strategy for blofin-stack covering the low-vola\u2026",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-21T05:56:10Z",
-      "project": "blofin-stack"
-    },
-    {
       "id": "c_1fc7996763c3_19c7e659c4a",
       "title": "update MASTER STATUS DASHBOARD with all the dashboard links",
       "status": "In Progress",
       "dispatchedAt": "2026-02-21T05:17:58Z",
       "project": null
-    },
-    {
-      "id": "c_a4f715163c949_19c7c3a93ef",
-      "title": "Refactor Numerai model predictions to handle missing/invalid data gracefully",
-      "status": "Review/Test",
-      "dispatchedAt": "2026-02-21T06:21:12Z",
-      "project": "numerai-tournament"
     }
   ],
-  "qaInProgress": [
-    {
-      "id": "c_a4f715163c949_19c7c3a93ef",
-      "session": "agent:main:subagent:1d882bc2-0db2-432f-a6dd-f7cd6a1a0619"
-    }
-  ],
+  "qaInProgress": [],
   "inboxSize": 12,
   "inboxCards": [
     {
@@ -95,8 +83,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T06:35:50Z",
-    "cpu_temp": "72.0\u00b0C",
+    "timestamp": "2026-02-21T06:50:43Z",
+    "cpu_temp": "57.0\u00b0C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -104,12 +92,12 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T06:35:50Z",
+    "cycle": "2026-02-21T06:50:43Z",
     "actions": [
-      "Phase 1 healthy: CPU 72.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
-      "Phase 2 stale recovery: attempted kick on stale In Progress card c_1fc7996763c3_19c7e659c4a (>45m); /run returned HTTP 400.",
-      "Phase 3 dispatch: no additional dispatch; effective WIP already at/above target after prior cycle updates.",
-      "Phase 4 QA: spawned QA reviewer for Review/Test card c_a4f715163c949_19c7c3a93ef using model openai-codex/gpt-5.3-codex."
+      "Phase 1 healthy: CPU 57.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
+      "Phase 2 stall recovery: kicked stale card c_e67bfd3a758bb_19c7ca8412f successfully; attempted kick for c_1fc7996763c3_19c7e659c4a returned HTTP 400.",
+      "Phase 3 dispatch: no new dispatch (WIP remains above target after stale recovery updates).",
+      "Phase 4: no Review/Test cards present, so no QA spawns this cycle."
     ]
   }
 }

@@ -1,12 +1,19 @@
 {
-  "lastUpdated": "2026-02-21T06:50:43Z",
+  "lastUpdated": "2026-02-21T07:05:50Z",
   "activeTasks": [
     {
-      "id": "c_e67bfd3a758bb_19c7ca8412f",
-      "title": "Design a volatility-aware crypto strategy for blofin-stack covering the low-vola\u2026",
+      "id": "c_a8cdbb918160b_19c7ecec41a",
+      "title": "make sure the campsite crm stays live",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-21T06:50:23Z",
-      "project": "blofin-stack"
+      "dispatchedAt": "2026-02-21T07:05:23Z",
+      "project": "campsite-crm"
+    },
+    {
+      "id": "c_46ed0bcd6be56_19c7e65c752",
+      "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick\u2026",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-21T07:05:23Z",
+      "project": "master-dashboard"
     },
     {
       "id": "c_6870fc06c1143_19c7d2e7f08",
@@ -16,22 +23,27 @@
       "project": "blofin-stack"
     },
     {
-      "id": "c_46ed0bcd6be56_19c7e65c752",
-      "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick\u2026",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-21T06:05:31Z",
-      "project": "master-dashboard"
-    },
-    {
       "id": "c_1fc7996763c3_19c7e659c4a",
       "title": "update MASTER STATUS DASHBOARD with all the dashboard links",
       "status": "In Progress",
       "dispatchedAt": "2026-02-21T05:17:58Z",
       "project": null
+    },
+    {
+      "id": "c_e67bfd3a758bb_19c7ca8412f",
+      "title": "Design a volatility-aware crypto strategy for blofin-stack covering the low-vola\u2026",
+      "status": "Review/Test",
+      "dispatchedAt": "2026-02-21T07:01:35Z",
+      "project": "blofin-stack"
     }
   ],
-  "qaInProgress": [],
-  "inboxSize": 12,
+  "qaInProgress": [
+    {
+      "id": "c_e67bfd3a758bb_19c7ca8412f",
+      "session": "agent:main:subagent:6d1e0082-215f-4d1a-ac29-35da795d69c5"
+    }
+  ],
+  "inboxSize": 11,
   "inboxCards": [
     {
       "id": "c_a8cdbb918160b_19c7ecec41a",
@@ -83,8 +95,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T06:50:43Z",
-    "cpu_temp": "57.0\u00b0C",
+    "timestamp": "2026-02-21T07:05:50Z",
+    "cpu_temp": "62.0\u00b0C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -92,12 +104,12 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T06:50:43Z",
+    "cycle": "2026-02-21T07:05:50Z",
     "actions": [
-      "Phase 1 healthy: CPU 57.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
-      "Phase 2 stall recovery: kicked stale card c_e67bfd3a758bb_19c7ca8412f successfully; attempted kick for c_1fc7996763c3_19c7e659c4a returned HTTP 400.",
-      "Phase 3 dispatch: no new dispatch (WIP remains above target after stale recovery updates).",
-      "Phase 4: no Review/Test cards present, so no QA spawns this cycle."
+      "Phase 1 healthy: CPU 62.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
+      "Phase 2 stall recovery: kicked stale card c_46ed0bcd6be56_19c7e65c752 successfully; c_1fc7996763c3_19c7e659c4a kick attempt returned HTTP 400.",
+      "Phase 3 dispatch: set project_path and dispatched inbox card c_a8cdbb918160b_19c7ecec41a (campsite-crm) to maintain throughput.",
+      "Phase 4 QA: spawned QA reviewer for Review/Test card c_e67bfd3a758bb_19c7ca8412f using model openai-codex/gpt-5.3-codex."
     ]
   }
 }

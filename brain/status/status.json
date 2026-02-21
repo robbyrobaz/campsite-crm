@@ -1,25 +1,32 @@
 {
-  "lastUpdated": "2026-02-21T16:20:43.542543Z",
+  "lastUpdated": "2026-02-21T16:36:27Z",
   "activeTasks": [
+    {
+      "id": "c_ab9073af90551_19c81050691",
+      "title": "campsite crm - add 10 more color options",
+      "status": "In Progress",
+      "dispatchedAt": 1771691746020,
+      "project": null
+    },
+    {
+      "id": "c_25a17f621aea3_19c80e7e683",
+      "title": "campsite crm - add recent contact to contacts",
+      "status": "In Progress",
+      "dispatchedAt": 1771691745956,
+      "project": null
+    },
+    {
+      "id": "c_3f13eb33d8ac_19c80e62f5a",
+      "title": "campsite crm contacts",
+      "status": "In Progress",
+      "dispatchedAt": 1771691745893,
+      "project": null
+    },
     {
       "id": "c_502647f3e66e_19c80f7f398",
       "title": "campsite crm colors",
-      "status": "In Progress",
-      "dispatchedAt": 1771690843824,
-      "project": null
-    },
-    {
-      "id": "c_2c7e20eb94bac_19c80f58153",
-      "title": "campsite crm - populate with dummy data and way to save/reset",
-      "status": "In Progress",
-      "dispatchedAt": 1771690843756,
-      "project": null
-    },
-    {
-      "id": "c_2e623f43759d1_19c80d85f48",
-      "title": "research 5 more valuable features for campsite crm and add them",
-      "status": "In Progress",
-      "dispatchedAt": 1771690843692,
+      "status": "Review/Test",
+      "dispatchedAt": 1771691023235,
       "project": null
     },
     {
@@ -70,6 +77,13 @@
       "status": "Review/Test",
       "dispatchedAt": 1771686757496,
       "project": null
+    },
+    {
+      "id": "manual-2026-02-21-campsite-recent-contact-gmail-scan",
+      "title": "campsite crm - recent contacts + gmail scan approval flow",
+      "status": "In Progress",
+      "dispatchedAt": 1771691787151,
+      "project": "/home/rob/.openclaw/workspace/campsite-crm"
     }
   ],
   "qaInProgress": [],
@@ -133,8 +147,8 @@
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T16:20:43.542543Z",
-    "cpu_temp": "73.0\u00b0C",
+    "timestamp": "2026-02-21T16:35:45.796276Z",
+    "cpu_temp": "73.0°C",
     "disk_usage": "35%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -142,15 +156,14 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T16:20:43.542543Z",
+    "cycle": "2026-02-21T16:35:45.796276Z",
     "actions": [
-      "Patched c_502647f3e66e_19c80f7f398: assignee,project_path",
-      "Patched c_2c7e20eb94bac_19c80f58153: assignee,project_path",
-      "Dispatched c_2e623f43759d1_19c80d85f48",
-      "Dispatched c_2c7e20eb94bac_19c80f58153",
-      "Dispatched c_502647f3e66e_19c80f7f398",
-      "QA FAIL c_25a17f621aea3_19c80e7e683 -> Planned",
-      "QA FAIL c_3f13eb33d8ac_19c80e62f5a -> Planned"
+      "Patched c_ab9073af90551_19c81050691: assignee,project_path",
+      "Dispatched c_3f13eb33d8ac_19c80e62f5a",
+      "Dispatched c_25a17f621aea3_19c80e7e683",
+      "Dispatched c_ab9073af90551_19c81050691",
+      "QA FAIL c_2c7e20eb94bac_19c80f58153 -> Planned",
+      "QA FAIL c_2e623f43759d1_19c80d85f48 -> Planned"
     ]
   }
 }

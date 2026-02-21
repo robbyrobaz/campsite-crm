@@ -23,9 +23,15 @@
 ## When builder completes:
 - [ ] Move card to "Review/Test"
 - [ ] Spawn qa-sentinel to review the work (NON-OPTIONAL)
-- [ ] QA passes → move to "Done", notify Rob
+- [ ] QA passes → restart/reload relevant service(s), verify health, then move to "Done", notify Rob
 - [ ] QA fails → fix or respawn, do NOT deliver garbage
+- [ ] Append QA summary note to card (what was checked, result, how to verify)
 - [ ] Update PROJECTS.md if project status changed
+
+## Git backup discipline (every cycle/hourly oversight):
+- [ ] Check repo remote + branch + `git status --short` for active repos
+- [ ] If mature project repo has no remote/wrong remote, fix it immediately
+- [ ] Ensure work is committed/pushed to the correct destination (ai-workshop for early iterations; dedicated repo for mature projects)
 
 ## Between conversations:
 - [ ] Check kanban for Planned/In Progress cards

@@ -52,6 +52,7 @@
 
 ### 5. Agent Stack / Jarvis Infrastructure
 **Status:** Claw-Kanban installed and running at :8787. Agent files created. Enforcement hook active.
+**Git backup governance:** Hourly oversight + heartbeat now include repo remote/branch/dirty checks and maturity routing (ai-workshop vs dedicated repos).
 **Last update:** Feb 19 — Full stack deployment
 **Components deployed:**
 - ✅ Claw-Kanban dashboard (systemd: claw-kanban.service, port 8787)

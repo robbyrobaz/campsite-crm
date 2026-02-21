@@ -1,59 +1,49 @@
 {
-  "lastUpdated": "2026-02-21T05:44:52Z",
+  "lastUpdated": "2026-02-21T05:53:31Z",
   "activeTasks": [
     {
-      "id": "c_6870fc06c1143_19c7d2e7f08",
-      "title": "Design volatility-focused crypto strategy for Blofin stack under current ranging low-vol regime",
-      "status": "Review/Test",
-      "dispatchedAt": "2026-02-21T01:34:00Z",
-      "project": "blofin-stack"
-    },
-    {
-      "id": "c_b4e1c7bf6c4bc_19c7c7ad9ff",
-      "title": "Run Blofin strategy pipeline per cron request",
-      "status": "Review/Test",
-      "dispatchedAt": "2026-02-21T01:34:00Z",
-      "project": "blofin-stack"
-    },
-    {
       "id": "c_e67bfd3a758bb_19c7ca8412f",
-      "title": "Design a volatility-aware crypto strategy for blofin-stack covering the low-volatility short regime",
-      "status": "Review/Test",
-      "dispatchedAt": "2026-02-21T01:34:00Z",
+      "title": "Design a volatility-aware crypto strategy for blofin-stack covering the low-vola\u2026",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-21T05:45:14Z",
       "project": "blofin-stack"
     },
     {
-      "id": "c_a4f715163c949_19c7c3a93ef",
-      "title": "Refactor Numerai model predictions to handle missing/invalid data gracefully",
-      "status": "Review/Test",
-      "dispatchedAt": "2026-02-21T01:34:00Z",
-      "project": "numerai-tournament"
+      "id": "c_1fc7996763c3_19c7e659c4a",
+      "title": "update MASTER STATUS DASHBOARD with all the dashboard links",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-21T05:17:58Z",
+      "project": null
     },
     {
-      "id": "c_002ee44599197_19c7c3a91b4",
-      "title": "Add error handling and retry logic for Blofin tick fetch failures — improve robustness",
-      "status": "Review/Test",
-      "dispatchedAt": "2026-02-21T01:34:00Z",
-      "project": "blofin-stack"
+      "id": "c_46ed0bcd6be56_19c7e65c752",
+      "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick\u2026",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-21T05:17:58Z",
+      "project": "master-dashboard"
     },
     {
       "id": "c_b4e707db9b73e_19c7e7048b3",
       "title": "research and add 5 more helpful features to the campsite CRM",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-21T04:36:00Z",
-      "project": "campsite-crm"
-    },
-    {
-      "id": "manual_campsite_live_20260221",
-      "title": "Restore Campsite CRM so localhost:3000 works with backend on :5000",
-      "status": "Done",
-      "dispatchedAt": "2026-02-21T05:42:47Z",
+      "status": "Review/Test",
+      "dispatchedAt": "2026-02-21T05:52:40Z",
       "project": "campsite-crm"
     }
   ],
-  "qaInProgress": [],
-  "inboxSize": 3,
+  "qaInProgress": [
+    {
+      "id": "c_b4e707db9b73e_19c7e7048b3",
+      "session": "agent:main:subagent:ca23dd09-d743-4828-b887-8461ffc7af47"
+    }
+  ],
+  "inboxSize": 4,
   "inboxCards": [
+    {
+      "id": "c_456996ea6919c_19c7ec0276a",
+      "title": "on campsite crm, allow more than one booking area rented",
+      "project": null,
+      "project_path": null
+    },
     {
       "id": "c_6fad113b4ec8_19c7e72fd3b",
       "title": "after the 5 new features are live, push/copy the CRM campsite to a new repo dedicated to this.",
@@ -62,20 +52,20 @@
     },
     {
       "id": "c_13e91ec5fb81d_19c7e2ab2f4",
-      "title": "Add a Code Relay drill for the Gilbert PD trainer",
+      "title": "Add a Code Relay drill for the Gilbert PD trainer: let recruits build 3-4 code s\u2026",
       "project": "gilbert-pd-radio-trainer",
       "project_path": "/home/rob/.openclaw/workspace/gilbert-pd-radio-trainer"
     },
     {
       "id": "c_b7114218db69a_19c7e2a9547",
-      "title": "Create a Gilbert PD mission-brief flashcard lane",
+      "title": "Create a Gilbert PD mission-brief flashcard lane: design scenario cards (e.g., s\u2026",
       "project": "gilbert-pd-radio-trainer",
       "project_path": "/home/rob/.openclaw/workspace/gilbert-pd-radio-trainer"
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T05:40:57Z",
-    "cpu_temp": "68.0°C",
+    "timestamp": "2026-02-21T05:53:31Z",
+    "cpu_temp": "76.0\u00b0C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -83,12 +73,12 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T05:40:57Z",
+    "cycle": "2026-02-21T05:53:31Z",
     "actions": [
-      "Phase 1 healthy: CPU 68.0°C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
-      "Phase 2 skipped dispatch because In Progress count is 3 (capacity threshold reached).",
-      "Phase 3 spawned 2 QA reviewers for Review/Test cards c_6870fc06c1143_19c7d2e7f08 and c_e67bfd3a758bb_19c7ca8412f using model openai-codex/gpt-5.3-codex.",
-      "Phase 4 not needed: Planned and Inbox both non-empty."
+      "Phase 1 healthy: CPU 76.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
+      "Phase 2: no stale In Progress cards over 45 minutes detected; no kick/recycle actions needed.",
+      "Phase 3: active non-stale In Progress count is 3, so no new dispatch this cycle.",
+      "Phase 4: spawned 1 QA reviewer for Review/Test card c_b4e707db9b73e_19c7e7048b3 using model openai-codex/gpt-5.3-codex."
     ]
   }
 }

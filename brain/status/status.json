@@ -1,26 +1,26 @@
 {
-  "lastUpdated": "2026-02-21T10:50:36Z",
+  "lastUpdated": "2026-02-21T11:05:58.271284Z",
   "activeTasks": [
     {
-      "id": "c_46ed0bcd6be56_19c7e65c752",
-      "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick\u2026",
+      "id": "c_1fc7996763c3_19c7e659c4a",
+      "title": "update MASTER STATUS DASHBOARD with all the dashboard links",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-21T10:50:23Z",
-      "project": "master-dashboard"
+      "dispatchedAt": 1771671958400,
+      "project": null
     },
     {
       "id": "c_a8cdbb918160b_19c7ecec41a",
       "title": "make sure the campsite crm stays live",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-21T10:50:23Z",
-      "project": "campsite-crm"
+      "dispatchedAt": 1771671958352,
+      "project": null
     },
     {
-      "id": "c_1fc7996763c3_19c7e659c4a",
-      "title": "update MASTER STATUS DASHBOARD with all the dashboard links",
+      "id": "c_46ed0bcd6be56_19c7e65c752",
+      "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick\u2026",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-21T10:50:23Z",
-      "project": "master-dashboard"
+      "dispatchedAt": 1771671958313,
+      "project": null
     }
   ],
   "qaInProgress": [],
@@ -75,22 +75,12 @@
       "project_path": null
     }
   ],
-  "systemHealth": {
-    "timestamp": "2026-02-21T10:50:36Z",
-    "cpu_temp": "70.0\u00b0C",
-    "disk_usage": "34%",
-    "gateway": "active",
-    "blofin_ingestor": "active",
-    "blofin_paper": "active",
-    "critical_alerts": "none"
-  },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T10:50:36Z",
+    "cycle": "2026-02-21T11:05:58.271284Z",
     "actions": [
-      "Phase 1 healthy: CPU 70.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
-      "Phase 2 hard flow enforcement: all 3 In Progress cards exceeded 15m and were immediately kicked via /run to prevent staleness.",
-      "Phase 3 dispatch: active builders remained at max target (3), so no additional dispatch.",
-      "Phase 4 QA: no Review/Test cards available this cycle."
+      "Stale c_46ed0bcd6be56_19c7e65c752 (15.6m): kicked via /run",
+      "Stale c_a8cdbb918160b_19c7ecec41a (15.6m): kicked via /run",
+      "Stale c_1fc7996763c3_19c7e659c4a (15.6m): kicked via /run"
     ]
   }
 }

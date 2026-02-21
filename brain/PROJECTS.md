@@ -83,6 +83,7 @@
 - Blofin dashboard rebuild at :8888 (Feb 18)
 - Strategy ranking overhaul to EEP scoring (Feb 17)
 - Sports betting arb scanner full rebuild (Feb 18)
+- Gilbert PD radio trainer app scaffold (Feb 21)
 
 ---
 

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-21T16:36:27Z",
+  "lastUpdated": "2026-02-21T16:41:07Z",
   "activeTasks": [
     {
       "id": "c_ab9073af90551_19c81050691",
@@ -81,7 +81,7 @@
     {
       "id": "manual-2026-02-21-campsite-recent-contact-gmail-scan",
       "title": "campsite crm - recent contacts + gmail scan approval flow",
-      "status": "In Progress",
+      "status": "Done",
       "dispatchedAt": 1771691787151,
       "project": "/home/rob/.openclaw/workspace/campsite-crm"
     }
@@ -165,5 +165,10 @@
       "QA FAIL c_2c7e20eb94bac_19c80f58153 -> Planned",
       "QA FAIL c_2e623f43759d1_19c80d85f48 -> Planned"
     ]
+  },
+  "currentTask": {
+    "title": "campsite crm contacts - gmail suggestions + conversation merge",
+    "phase": "completed",
+    "updatedBy": "codex"
   }
 }

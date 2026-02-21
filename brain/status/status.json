@@ -1,56 +1,38 @@
 {
-  "lastUpdated": "2026-02-21T07:05:50Z",
+  "lastUpdated": "2026-02-21T10:20:59Z",
   "activeTasks": [
     {
-      "id": "c_a8cdbb918160b_19c7ecec41a",
-      "title": "make sure the campsite crm stays live",
+      "id": "c_6870fc06c1143_19c7d2e7f08",
+      "title": "Design volatility-focused crypto strategy for Blofin stack under current ranging\u2026",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-21T07:05:23Z",
-      "project": "campsite-crm"
+      "dispatchedAt": "2026-02-21T10:20:39Z",
+      "project": "blofin-stack"
     },
     {
       "id": "c_46ed0bcd6be56_19c7e65c752",
       "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick\u2026",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-21T07:05:23Z",
+      "dispatchedAt": "2026-02-21T10:20:39Z",
       "project": "master-dashboard"
     },
     {
-      "id": "c_6870fc06c1143_19c7d2e7f08",
-      "title": "Design volatility-focused crypto strategy for Blofin stack under current ranging\u2026",
+      "id": "c_a8cdbb918160b_19c7ecec41a",
+      "title": "make sure the campsite crm stays live",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-21T06:21:17Z",
-      "project": "blofin-stack"
-    },
-    {
-      "id": "c_1fc7996763c3_19c7e659c4a",
-      "title": "update MASTER STATUS DASHBOARD with all the dashboard links",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-21T05:17:58Z",
-      "project": null
+      "dispatchedAt": "2026-02-21T10:20:39Z",
+      "project": "campsite-crm"
     },
     {
       "id": "c_e67bfd3a758bb_19c7ca8412f",
       "title": "Design a volatility-aware crypto strategy for blofin-stack covering the low-vola\u2026",
-      "status": "Review/Test",
-      "dispatchedAt": "2026-02-21T07:01:35Z",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-21T10:20:39Z",
       "project": "blofin-stack"
     }
   ],
-  "qaInProgress": [
-    {
-      "id": "c_e67bfd3a758bb_19c7ca8412f",
-      "session": "agent:main:subagent:6d1e0082-215f-4d1a-ac29-35da795d69c5"
-    }
-  ],
+  "qaInProgress": [],
   "inboxSize": 11,
   "inboxCards": [
-    {
-      "id": "c_a8cdbb918160b_19c7ecec41a",
-      "title": "make sure the campsite crm stays live",
-      "project": null,
-      "project_path": null
-    },
     {
       "id": "c_1d56923da1e5a_19c7ecd7c95",
       "title": "make sure blofin ML models are actually paper traded after trained",
@@ -92,11 +74,17 @@
       "title": "auto feedback loop on campsite crm",
       "project": null,
       "project_path": null
+    },
+    {
+      "id": "c_456996ea6919c_19c7ec0276a",
+      "title": "on campsite crm, allow more than one booking area rented",
+      "project": null,
+      "project_path": null
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T07:05:50Z",
-    "cpu_temp": "62.0\u00b0C",
+    "timestamp": "2026-02-21T10:20:59Z",
+    "cpu_temp": "56.0\u00b0C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -104,12 +92,12 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T07:05:50Z",
+    "cycle": "2026-02-21T10:20:59Z",
     "actions": [
-      "Phase 1 healthy: CPU 62.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
-      "Phase 2 stall recovery: kicked stale card c_46ed0bcd6be56_19c7e65c752 successfully; c_1fc7996763c3_19c7e659c4a kick attempt returned HTTP 400.",
-      "Phase 3 dispatch: set project_path and dispatched inbox card c_a8cdbb918160b_19c7ecec41a (campsite-crm) to maintain throughput.",
-      "Phase 4 QA: spawned QA reviewer for Review/Test card c_e67bfd3a758bb_19c7ca8412f using model openai-codex/gpt-5.3-codex."
+      "Phase 1 healthy: CPU 56.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
+      "Phase 2 stall recovery: kicked 4 stale In Progress cards successfully; one stale card run request failed (HTTP 400) and was recycled to Planned for throughput.",
+      "Phase 3 dispatch: no extra dispatch needed after stale recovery (effective non-stale WIP at/above target).",
+      "Phase 4 QA: no Review/Test cards available this cycle."
     ]
   }
 }

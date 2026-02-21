@@ -1,25 +1,39 @@
 {
-  "lastUpdated": "2026-02-21T15:51:16Z",
+  "lastUpdated": "2026-02-21T16:06:25Z",
   "activeTasks": [
     {
-      "id": "c_0d404577b25e7_19c80dc2504",
-      "title": "make the campsite crm have an MCP connection for chatgpt",
+      "id": "c_dc1f558d5b991_19c80edbb2e",
+      "title": "campsite crm login",
       "status": "In Progress",
-      "dispatchedAt": 1771689049595,
+      "dispatchedAt": 1771689946687,
       "project": null
     },
     {
-      "id": "c_2e623f43759d1_19c80d85f48",
-      "title": "research 5 more valuable features for campsite crm and add them",
+      "id": "c_25a17f621aea3_19c80e7e683",
+      "title": "campsite crm - add recent contact to contacts",
       "status": "In Progress",
-      "dispatchedAt": 1771689049531,
+      "dispatchedAt": 1771689946596,
+      "project": null
+    },
+    {
+      "id": "c_3f13eb33d8ac_19c80e62f5a",
+      "title": "campsite crm contacts",
+      "status": "In Progress",
+      "dispatchedAt": 1771689946491,
+      "project": null
+    },
+    {
+      "id": "c_0d404577b25e7_19c80dc2504",
+      "title": "make the campsite crm have an MCP connection for chatgpt",
+      "status": "Review/Test",
+      "dispatchedAt": 1771689398417,
       "project": null
     },
     {
       "id": "c_35ce2ba11b7d6_19c7ec5e87a",
       "title": "make campsite CRM cleaner - better use of space",
-      "status": "In Progress",
-      "dispatchedAt": 1771689049463,
+      "status": "Review/Test",
+      "dispatchedAt": 1771689174131,
       "project": null
     },
     {
@@ -52,8 +66,15 @@
     }
   ],
   "qaInProgress": [],
-  "inboxSize": 10,
+  "inboxSize": 11,
   "inboxCards": [
+    {
+      "id": "c_85ab04f82aa5f_19c80f2d96e",
+      "title": "campsite crm authentication to chatgpt must be simpler",
+      "project": null,
+      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
+      "assignee": "codex"
+    },
     {
       "id": "c_abbfab113b816_19c80e4be4c",
       "title": "on the campsite crm integrate a way to add email connection",
@@ -102,35 +123,29 @@
       "project": null,
       "project_path": null,
       "assignee": "codex"
-    },
-    {
-      "id": "c_b7114218db69a_19c7e2a9547",
-      "title": "Create a Gilbert PD mission-brief flashcard lane: design scenario cards (e.g., s…",
-      "project": null,
-      "project_path": "/home/rob/.openclaw/workspace/gilbert-pd-radio-trainer",
-      "assignee": "codex"
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T15:50:49.281110Z",
-    "cpu_temp": "57.0°C",
-    "disk_usage": "34%",
+    "timestamp": "2026-02-21T16:05:46.144316Z",
+    "cpu_temp": "52.0°C",
+    "disk_usage": "35%",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T15:50:49.281110Z",
+    "cycle": "2026-02-21T16:05:46.144316Z",
     "actions": [
-      "Patched c_abbfab113b816_19c80e4be4c: assignee,project_path",
-      "Patched c_0d404577b25e7_19c80dc2504: assignee,project_path",
-      "Patched c_2e623f43759d1_19c80d85f48: assignee,project_path",
-      "Recycled+restarted c_35ce2ba11b7d6_19c7ec5e87a",
-      "Dispatched c_2e623f43759d1_19c80d85f48",
-      "Dispatched c_0d404577b25e7_19c80dc2504",
-      "QA PASS+Done c_7d5ba9f579c51_19c7eccc8ef",
-      "QA PASS+Done c_7eddc8c6d7bd2_19c7ecb3192"
+      "Patched c_85ab04f82aa5f_19c80f2d96e: assignee,project_path",
+      "Patched c_dc1f558d5b991_19c80edbb2e: assignee,project_path",
+      "Patched c_25a17f621aea3_19c80e7e683: assignee,project_path",
+      "Patched c_3f13eb33d8ac_19c80e62f5a: assignee,project_path",
+      "Dispatched c_3f13eb33d8ac_19c80e62f5a",
+      "Dispatched c_25a17f621aea3_19c80e7e683",
+      "Dispatched c_dc1f558d5b991_19c80edbb2e",
+      "QA PASS+Done c_7eddc8c6d7bd2_19c7ecb3192",
+      "QA FAIL c_2e623f43759d1_19c80d85f48 -> Planned"
     ]
   }
 }

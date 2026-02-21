@@ -1,12 +1,12 @@
 {
-  "lastUpdated": "2026-02-21T06:05:51Z",
+  "lastUpdated": "2026-02-21T06:20:45Z",
   "activeTasks": [
     {
-      "id": "c_6870fc06c1143_19c7d2e7f08",
-      "title": "Design volatility-focused crypto strategy for Blofin stack under current ranging\u2026",
+      "id": "c_a4f715163c949_19c7c3a93ef",
+      "title": "Refactor Numerai model predictions to handle missing/invalid data gracefully",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-21T06:05:31Z",
-      "project": "blofin-stack"
+      "dispatchedAt": "2026-02-21T06:20:18Z",
+      "project": "numerai-tournament"
     },
     {
       "id": "c_46ed0bcd6be56_19c7e65c752",
@@ -28,11 +28,29 @@
       "status": "In Progress",
       "dispatchedAt": "2026-02-21T05:17:58Z",
       "project": null
+    },
+    {
+      "id": "c_6870fc06c1143_19c7d2e7f08",
+      "title": "Design volatility-focused crypto strategy for Blofin stack under current ranging\u2026",
+      "status": "Review/Test",
+      "dispatchedAt": "2026-02-21T06:06:21Z",
+      "project": "blofin-stack"
     }
   ],
-  "qaInProgress": [],
-  "inboxSize": 11,
+  "qaInProgress": [
+    {
+      "id": "c_6870fc06c1143_19c7d2e7f08",
+      "session": "agent:main:subagent:4d94689c-4e55-444d-91cd-db459adeb44d"
+    }
+  ],
+  "inboxSize": 12,
   "inboxCards": [
+    {
+      "id": "c_a8cdbb918160b_19c7ecec41a",
+      "title": "make sure the campsite crm stays live",
+      "project": null,
+      "project_path": null
+    },
     {
       "id": "c_1d56923da1e5a_19c7ecd7c95",
       "title": "make sure blofin ML models are actually paper traded after trained",
@@ -74,17 +92,11 @@
       "title": "auto feedback loop on campsite crm",
       "project": null,
       "project_path": null
-    },
-    {
-      "id": "c_456996ea6919c_19c7ec0276a",
-      "title": "on campsite crm, allow more than one booking area rented",
-      "project": null,
-      "project_path": null
     }
   ],
   "systemHealth": {
-    "timestamp": "2026-02-21T06:05:51Z",
-    "cpu_temp": "74.0\u00b0C",
+    "timestamp": "2026-02-21T06:20:45Z",
+    "cpu_temp": "72.0\u00b0C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -92,12 +104,12 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T06:05:51Z",
+    "cycle": "2026-02-21T06:20:45Z",
     "actions": [
-      "Phase 1 healthy: CPU 74.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
-      "Phase 2 stale recovery: attempted to kick stale In Progress cards; c_46ed0bcd6be56_19c7e65c752 successfully kicked, c_1fc7996763c3_19c7e659c4a run request returned HTTP 400.",
-      "Phase 3 dispatch: started planned card c_6870fc06c1143_19c7d2e7f08 to maintain effective non-stale WIP at target.",
-      "Phase 4: no Review/Test cards at this moment, so no QA spawns this cycle."
+      "Phase 1 healthy: CPU 72.0\u00b0C, disk 34%, gateway/ingestor/paper active, critical_alert_monitor exit 0.",
+      "Phase 2 stale recovery: attempted kick for stale In Progress card c_1fc7996763c3_19c7e659c4a (>45m), run request returned HTTP 400.",
+      "Phase 3 dispatch: active non-stale In Progress was below target, dispatched planned card c_a4f715163c949_19c7c3a93ef.",
+      "Phase 4 QA: spawned 1 QA reviewer for Review/Test card c_6870fc06c1143_19c7d2e7f08 using model openai-codex/gpt-5.3-codex."
     ]
   }
 }

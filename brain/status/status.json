@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-21T15:05:21.713715Z",
+  "lastUpdated": "2026-02-21T15:15:36Z",
   "activeTasks": [
     {
       "id": "c_1fc7996763c3_19c7e659c4a",
@@ -17,7 +17,7 @@
     },
     {
       "id": "c_46ed0bcd6be56_19c7e65c752",
-      "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick\u2026",
+      "title": "Update the MASTER STATUS DASHBOARD so every dashboard link is listed under quick…",
       "status": "In Progress",
       "dispatchedAt": 1771685423181,
       "project": null
@@ -77,7 +77,7 @@
   ],
   "systemHealth": {
     "timestamp": "2026-02-21T15:05:21.713715Z",
-    "cpu_temp": "72.0\u00b0C",
+    "cpu_temp": "72.0°C",
     "disk_usage": "34%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -86,6 +86,9 @@
   },
   "dispatcherNotes": {
     "cycle": "2026-02-21T15:05:21.713715Z",
-    "actions": []
+    "actions": [
+      "Confirmed campsite frontend/backend are down; checking service manager",
+      "Campsite CRM hardened: installed systemd always-on service, bound app to localhost:3000 with backend-served frontend build, verified auto-restart after forced crash"
+    ]
   }
 }

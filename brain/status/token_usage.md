@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-02-21 17:15 MST
+**Updated:** 2026-02-21 17:30 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -20,14 +20,14 @@
 | codex/mini | 10 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 88.3M (1069 requests)
-- **Output Tokens:** 335.0K
-- **Cost (est):** $23.99
+- **Total Tokens:** 85.6M (1019 requests)
+- **Output Tokens:** 320.8K
+- **Cost (est):** $23.81
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| codex/mini | 1069 | 88.3M | 335.0K | $23.99 |
+| codex/mini | 1019 | 85.6M | 320.8K | $23.81 |
 
 ---
 *Note: Max 5x plan is $100/mo flat. Cost shown is equivalent API pricing, not actual charges.*

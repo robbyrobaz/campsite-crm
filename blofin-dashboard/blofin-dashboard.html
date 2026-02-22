@@ -946,16 +946,15 @@ function renderTable() {
     const ddCls = maxdd > 20 ? 'td-neg' : '';
     const statusLabel = tier === 2 ? 'active' : tier === 1 ? 'testing' : 'library';
 
-    // Profit factor proxy — we don't have it directly in registry, so show pnl/sharpe combo
-    // Actually let me check: registry has bt_pnl_pct and ft_pnl_pct but no profit factor column
-    // I'll show "—" since it's not in the schema
-    const pfDisplay = '—';
+    const pfVal = isFT ? null : (s.bt_profit_factor ?? null);
+    const pfDisplay = pfVal != null && pfVal > 0 ? fmt(pfVal, 2) : '—';
+    const pfCls = pfVal != null ? (pfVal >= 1.5 ? 'td-pos' : pfVal < 1.0 ? 'td-neg' : '') : '';
 
     return `<tr>
       <td class="td-name" title="${s.name}">${s.has_file === false ? '<span class="no-file-dot" title="No .py file on disk"></span>' : ''}${s.name.replace(/_/g,' ')}</td>
       <td><span class="tier-badge t${tier}">${tierName(tier)} ${tierLabel(tier)}</span></td>
       <td class="td-eep ${eepClass(eep)}">${eepLabel}</td>
-      <td class="${pnl>0?'td-pos':pnl<0?'td-neg':''}">${pfDisplay}</td>
+      <td class="${pfCls}">${pfDisplay}</td>
       <td class="${sharpeCls}">${sharpe != null ? fmt(sharpe, 2) : '—'}</td>
       <td class="${ddCls}">${maxdd != null ? fmtPct(maxdd, 1) : '—'}</td>
       <td>${fmtK(trades ?? 0)}</td>

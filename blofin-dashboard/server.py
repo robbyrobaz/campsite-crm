@@ -100,6 +100,27 @@ def safe_query(query_func):
     return wrapper
 
 
+def classify_leakage(train_acc, test_acc, f1_score=None):
+    """Classify likely leakage using strict, near-perfect criteria to avoid false positives."""
+    train = float(train_acc) if train_acc is not None else None
+    test = float(test_acc) if test_acc is not None else None
+    f1 = float(f1_score) if f1_score is not None else None
+
+    # Only flag hard leakage when metrics are unrealistically near-perfect.
+    if train is not None and test is not None:
+        if train >= 0.99 and test >= 0.99:
+            return True, f"Near-perfect train/test scores (train {train:.1%}, test {test:.1%}) — likely leakage"
+        if f1 is not None and f1 >= 0.99 and test >= 0.99:
+            return True, f"Near-perfect test F1/accuracy (F1 {f1:.1%}, test {test:.1%}) — likely leakage"
+        return False, None
+
+    # Missing OOS data is only suspicious when train score is essentially perfect.
+    if train is not None and train >= 0.995:
+        return True, "Train accuracy is near-perfect (≥99.5%) with no test/OOS data — verify split/feature pipeline"
+
+    return False, None
+
+
 @app.route('/')
 def index():
     """Redirect to dashboard."""
@@ -368,6 +389,7 @@ def api_registry(conn):
                 r.bt_max_dd,
                 r.bt_trades,
                 r.bt_eep_score,
+                r.bt_profit_factor,
                 r.ft_win_rate,
                 r.ft_sharpe,
                 r.ft_pnl_pct,
@@ -399,6 +421,7 @@ def api_registry(conn):
                 "bt_max_dd": round(float(row['bt_max_dd'] or 0), 2),
                 "bt_trades": int(row['bt_trades'] or 0),
                 "bt_eep_score": round(bt_eep, 2),
+                "bt_profit_factor": round(float(row['bt_profit_factor'] or 0), 3) if row['bt_profit_factor'] else None,
                 "ft_win_rate": round(float(row['ft_win_rate'] or 0) * 100, 2),
                 "ft_sharpe": round(float(row['ft_sharpe'] or 0), 3),
                 "ft_pnl_pct": round(float(row['ft_pnl_pct'] or 0), 2),
@@ -537,13 +560,11 @@ def api_models(conn):
         # Prefer out-of-sample (test) accuracy as primary metric
         accuracy = test_acc if test_acc is not None else train_acc
 
-        # Detect data leakage: both train and test suspiciously high (>95%)
-        leakage_flag = False
-        leakage_note = None
-        if train_acc is not None and test_acc is not None:
-            if train_acc > 0.95 and test_acc > 0.95:
-                leakage_flag = True
-                leakage_note = "Both train and test accuracy >95% — likely data leakage. OOS performance unknown."
+        leakage_flag, leakage_note = classify_leakage(
+            train_acc,
+            test_acc,
+            row['f1_score'],
+        )
 
         models.append({
             "model_name": row['model_name'],
@@ -1036,17 +1057,11 @@ def api_ml_models(conn):
     for row in cursor.fetchall():
         train_acc = row['train_accuracy'] or 0
         test_acc = row['test_accuracy']
-        # Leakage: train >= 95% AND (no test data OR test matches train closely)
-        leakage_suspected = (
-            train_acc >= 0.95 and
-            (test_acc is None or abs(train_acc - (test_acc or 0)) < 0.05)
+        leakage_suspected, leakage_note = classify_leakage(
+            train_acc,
+            test_acc,
+            row['f1_score'],
         )
-        leakage_note = None
-        if leakage_suspected:
-            if test_acc is None:
-                leakage_note = "Train accuracy ≥95% with no test/OOS data — cannot validate generalization"
-            else:
-                leakage_note = f"Train {train_acc:.1%} ≈ Test {test_acc:.1%} — suspiciously high, likely data leakage"
         models.append({
             "model_name": row['model_name'],
             "model_type": row['model_type'] or 'unknown',

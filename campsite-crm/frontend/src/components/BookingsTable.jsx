@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles/BookingsTable.css';
 
-function BookingsTable({ bookings, onDelete, loading }) {
+function BookingsTable({ bookings, statusOptions = [], onDelete, onStatusChange, loading }) {
   if (loading) {
     return <div className="loading">⏳ Loading bookings...</div>;
   }
@@ -46,17 +46,18 @@ function BookingsTable({ bookings, onDelete, loading }) {
             <tr>
               <th>Date</th>
               <th>Guest Name</th>
-              <th>Type</th>
-              <th>Group</th>
-              <th>Nights</th>
               <th>Area</th>
               <th>Revenue</th>
+              <th>Paid</th>
+              <th>Balance</th>
+              <th>Add-ons</th>
+              <th>Status</th>
               <th>Return?</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {bookings.map(booking => (
+            {bookings.map((booking) => (
               <tr key={booking.id} className={booking.is_return_booking ? 'return-booking' : ''}>
                 <td>
                   <strong>{new Date(booking.booking_date).toLocaleDateString('en-US', {
@@ -65,12 +66,28 @@ function BookingsTable({ bookings, onDelete, loading }) {
                     year: 'numeric'
                   })}</strong>
                 </td>
-                <td>{booking.guest_name}</td>
-                <td>{booking.guest_type}</td>
-                <td>{booking.group_type || '-'}</td>
-                <td className="center">{booking.nights}</td>
+                <td>
+                  <div>{booking.guest_name}</div>
+                  <small>{booking.guest_type}</small>
+                </td>
                 <td>{booking.area_rented}</td>
                 <td className="revenue">${booking.revenue?.toFixed(2) || '0.00'}</td>
+                <td>${(booking.amount_paid || 0).toFixed(2)}</td>
+                <td>${(booking.balance_due || 0).toFixed(2)}</td>
+                <td>{booking.add_ons?.length || 0}</td>
+                <td>
+                  <select
+                    className="status-select"
+                    value={booking.status || 'active'}
+                    onChange={(e) => onStatusChange(booking.id, e.target.value)}
+                  >
+                    {statusOptions.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </td>
                 <td className="center">
                   {booking.is_return_booking ? (
                     <span className="badge badge-return">🔄 Yes</span>
@@ -83,6 +100,7 @@ function BookingsTable({ bookings, onDelete, loading }) {
                     className="btn btn-danger btn-small"
                     onClick={() => onDelete(booking.id)}
                     title="Delete booking"
+                    type="button"
                   >
                     🗑️
                   </button>
@@ -93,11 +111,9 @@ function BookingsTable({ bookings, onDelete, loading }) {
         </table>
       </div>
 
-      {bookings.length > 0 && (
-        <div className="bookings-footer">
-          <p>💡 Tip: Click the 🗑️ button to delete a booking</p>
-        </div>
-      )}
+      <div className="bookings-footer">
+        <p>💡 Tip: Update payment balances in the Payments tab and convert waitlist guests as slots open.</p>
+      </div>
     </div>
   );
 }

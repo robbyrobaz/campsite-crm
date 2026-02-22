@@ -8,6 +8,7 @@ function AreaUtilization({ dateRange }) {
 
   useEffect(() => {
     fetchAreas();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dateRange]);
 
   const fetchAreas = async () => {

@@ -7,9 +7,12 @@ set -euo pipefail
 # Sends ntfy.sh alerts for all state changes.
 
 NTFY_TOPIC="jarvis-omen-claw"
-SERVICE="openclaw-gateway.service"
+GATEWAY_SERVICE="openclaw-gateway.service"
+BROWSER_SERVICE="openclaw-browser.service"
+OPENCLAW_BIN="/home/rob/.npm-global/bin/openclaw"
 STATE_FILE="/tmp/jarvis-watchdog-state.json"
-CHECK_INTERVAL=60  # seconds between checks
+CHECK_INTERVAL=1800  # seconds between checks (30 minutes)
+HEALTH_TIMEOUT=30  # seconds
 
 # Initialize state file if missing
 init_state() {
@@ -42,7 +45,17 @@ now() {
 
 # Check if service is running
 is_service_active() {
-    systemctl --user is-active --quiet "$SERVICE"
+    systemctl --user is-active --quiet "$GATEWAY_SERVICE"
+}
+
+# Check browser service as part of OpenClaw baseline
+is_browser_active() {
+    systemctl --user is-active --quiet "$BROWSER_SERVICE"
+}
+
+# Check full OpenClaw health (telegram/session checks)
+is_openclaw_healthy() {
+    timeout "$HEALTH_TIMEOUT" "$OPENCLAW_BIN" health >/tmp/jarvis-watchdog-health.log 2>&1
 }
 
 # Count restarts in the last 30 minutes
@@ -100,19 +113,19 @@ set_backoff() {
 # Main watchdog loop
 main() {
     init_state
-    notify "Jarvis Watchdog Started" "Monitoring $SERVICE every ${CHECK_INTERVAL}s" "low" "eyes"
+    notify "Jarvis Watchdog Started" "Monitoring OpenClaw services and health every ${CHECK_INTERVAL}s" "low" "eyes"
 
     while true; do
-        if is_service_active; then
+        if is_service_active && is_browser_active && is_openclaw_healthy; then
             # Service is healthy — reset failure counter if it was elevated
             local failures
             failures=$(jq -r '.consecutive_failures' "$STATE_FILE")
             if [[ "$failures" -gt 0 ]]; then
                 reset_failures
-                notify "Gateway Recovered" "Service is healthy again after $failures restart(s)" "default" "white_check_mark"
+                notify "OpenClaw Recovered" "Health restored after $failures restart attempt(s)" "default" "white_check_mark"
             fi
         else
-            # Service is down
+            # OpenClaw is unhealthy
             if in_backoff; then
                 local backoff_until
                 backoff_until=$(jq -r '.backoff_until' "$STATE_FILE")
@@ -127,17 +140,17 @@ main() {
                     local backoff_secs
                     backoff_secs=$(set_backoff)
                     local backoff_min=$(( backoff_secs / 60 ))
-                    notify "CIRCUIT BREAKER TRIPPED" "Gateway crashed $recent times in 30min. Backing off ${backoff_min}m. Manual intervention may be needed." "urgent" "rotating_light"
+                    notify "CIRCUIT BREAKER TRIPPED" "OpenClaw unhealthy $recent times in 30min. Backing off ${backoff_min}m. Manual intervention may be needed." "urgent" "rotating_light"
                 else
-                    # Attempt restart
+                    # Attempt restart of both baseline services
                     record_restart
-                    notify "Gateway Down — Restarting" "Attempt $(( recent + 1 ))/3 in last 30 minutes" "high" "warning"
-                    systemctl --user restart "$SERVICE" 2>/dev/null || true
+                    notify "OpenClaw Unhealthy — Restarting" "Attempt $(( recent + 1 ))/3 in last 30 minutes" "high" "warning"
+                    systemctl --user restart "$BROWSER_SERVICE" "$GATEWAY_SERVICE" 2>/dev/null || true
                     sleep 5
-                    if is_service_active; then
-                        notify "Gateway Restarted" "Service recovered after restart" "default" "white_check_mark"
+                    if is_service_active && is_browser_active && is_openclaw_healthy; then
+                        notify "OpenClaw Restarted" "Services recovered and health check passed" "default" "white_check_mark"
                     else
-                        notify "Restart Failed" "Gateway did not come back up" "high" "x"
+                        notify "Restart Failed" "OpenClaw did not recover. Last health output in /tmp/jarvis-watchdog-health.log" "high" "x"
                     fi
                 fi
             fi

@@ -1,39 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 import '../styles/ReturnGuestAnalysis.css';
 
-function ReturnGuestAnalysis({ dateRange }) {
-  const [returnGuests, setReturnGuests] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    fetchReturnGuests();
-  }, [dateRange]);
-
-  const fetchReturnGuests = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get('/api/return-guests');
-      setReturnGuests(response.data || []);
-    } catch (error) {
-      console.error('Error fetching return guests:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
+function ReturnGuestAnalysis({ returnGuests = [], loading }) {
   if (loading) {
     return <div className="loading">⏳ Loading guest analysis...</div>;
   }
+
+  const guests = returnGuests || [];
 
   return (
     <div className="card">
       <h2>🔄 Return Guest Analysis</h2>
       
-      {returnGuests && returnGuests.length > 0 ? (
+      {guests.length > 0 ? (
         <div className="return-guests-container">
           <div className="guests-list">
-            {returnGuests.map((guest, index) => (
+            {guests.map((guest, index) => (
               <div key={index} className="guest-card">
                 <div className="guest-rank">#{index + 1}</div>
                 <div className="guest-info">
@@ -68,28 +50,28 @@ function ReturnGuestAnalysis({ dateRange }) {
               <span className="icon">👥</span>
               <div>
                 <h4>Total Return Guests</h4>
-                <p>{returnGuests.length}</p>
+                <p>{guests.length}</p>
               </div>
             </div>
             <div className="insight">
               <span className="icon">💰</span>
               <div>
                 <h4>Return Guest Revenue</h4>
-                <p>${returnGuests.reduce((sum, g) => sum + (g.total_revenue || 0), 0).toFixed(2)}</p>
+                <p>${guests.reduce((sum, g) => sum + (g.total_revenue || 0), 0).toFixed(2)}</p>
               </div>
             </div>
             <div className="insight">
               <span className="icon">📈</span>
               <div>
                 <h4>Avg Visits per Guest</h4>
-                <p>{(returnGuests.reduce((sum, g) => sum + g.visit_count, 0) / returnGuests.length).toFixed(1)}x</p>
+                <p>{(guests.reduce((sum, g) => sum + g.visit_count, 0) / guests.length).toFixed(1)}x</p>
               </div>
             </div>
             <div className="insight">
               <span className="icon">⭐</span>
               <div>
                 <h4>Top Guest Value</h4>
-                <p>${Math.max(...returnGuests.map(g => g.total_revenue || 0)).toFixed(2)}</p>
+                <p>${Math.max(...guests.map(g => g.total_revenue || 0)).toFixed(2)}</p>
               </div>
             </div>
           </div>

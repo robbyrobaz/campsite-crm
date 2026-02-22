@@ -76,11 +76,16 @@ tar -czf "$archive" \
   --exclude='*.pyc' \
   --exclude='*.tar.gz' \
   --exclude='openclaw.json.bak*' \
-  --exclude='blofin-stack/data/*.db' \
-  --exclude='blofin-stack/data/*.db-wal' \
-  --exclude='blofin-stack/data/*.db-shm' \
-  --exclude='blofin-stack/data/*.jsonl' \
-  --exclude='android-sdk' \
+  --exclude='workspace/blofin-stack/data/*.db' \
+  --exclude='workspace/blofin-stack/data/*.db-wal' \
+  --exclude='workspace/blofin-stack/data/*.db-shm' \
+  --exclude='workspace/blofin-stack/data/*.jsonl' \
+  --exclude='workspace/blofin-stack/data/logs' \
+  --exclude='workspace/numerai-tournament/v5.1' \
+  --exclude='workspace/numerai-tournament/pickles' \
+  --exclude='workspace/android-sdk' \
+  --exclude='workspace/.trash' \
+  --exclude='*.parquet' \
   -C "$OPENCLAW_DIR" \
   workspace \
   openclaw.json \

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gilbert PD Radio Trainer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <div class="bg-shape bg-shape-1"></div>
+    <div class="bg-shape bg-shape-2"></div>
+
+    <main class="app">
+      <header class="hero">
+        <p class="kicker">Gilbert AZ PD Recruit Trainer</p>
+        <h1>Master Radio Codes Fast</h1>
+        <p class="sub">Study, quiz, and run speed drills. Keep it fun. Keep it sharp.</p>
+        <div class="stats-row">
+          <div class="stat"><span id="stat-correct">0</span><label>Correct</label></div>
+          <div class="stat"><span id="stat-streak">0</span><label>Best Streak</label></div>
+          <div class="stat"><span id="stat-accuracy">0%</span><label>Accuracy</label></div>
+        </div>
+      </header>
+
+      <section class="panel tabs">
+        <button class="tab-btn active" data-tab="teach">Teach</button>
+        <button class="tab-btn" data-tab="quiz">Quiz</button>
+        <button class="tab-btn" data-tab="speed">Speed Drill</button>
+        <button class="tab-btn" data-tab="flash">Flashcards</button>
+        <button class="tab-btn" data-tab="manage">Manage Codes</button>
+      </section>
+
+      <section class="panel tab-content active" id="tab-teach">
+        <div class="teach-top">
+          <input id="search-input" type="text" placeholder="Search code or meaning..." />
+          <span id="teach-count">0 codes</span>
+        </div>
+        <div id="teach-grid" class="teach-grid"></div>
+      </section>
+
+      <section class="panel tab-content" id="tab-quiz">
+        <p class="mode-help">Pick the correct meaning for each radio code.</p>
+        <div id="quiz-card" class="quiz-card">
+          <p class="quiz-label">What does this mean?</p>
+          <h2 id="quiz-code">--</h2>
+          <div id="quiz-options" class="quiz-options"></div>
+          <p id="quiz-feedback" class="feedback"></p>
+          <button id="quiz-next" class="action-btn" disabled>Next</button>
+        </div>
+      </section>
+
+      <section class="panel tab-content" id="tab-speed">
+        <div class="speed-header">
+          <h2>60-Second Rush</h2>
+          <p>Answer as many as you can before time runs out.</p>
+          <div class="speed-meta">
+            <div><span id="speed-time">60</span><label>Seconds</label></div>
+            <div><span id="speed-score">0</span><label>Score</label></div>
+          </div>
+        </div>
+        <div id="speed-play" class="speed-play hidden">
+          <p class="quiz-label">What does this mean?</p>
+          <h2 id="speed-code">--</h2>
+          <div id="speed-options" class="quiz-options"></div>
+          <p id="speed-feedback" class="feedback"></p>
+        </div>
+        <button id="speed-start" class="action-btn">Start Speed Drill</button>
+      </section>
+
+      <section class="panel tab-content" id="tab-flash">
+        <p class="mode-help">Flip through flashcards and quiz yourself before revealing the answer.</p>
+        <div class="flash-wrapper">
+          <article class="flash-card" id="flash-card">
+            <p class="flash-label">Show the meaning</p>
+            <h2 id="flash-code">--</h2>
+            <p id="flash-meaning" class="flash-meaning hidden">----</p>
+          </article>
+          <div class="flash-actions">
+            <button id="flash-show" class="action-btn">Show Meaning</button>
+            <button id="flash-next" class="action-btn secondary">Next Card</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel tab-content" id="tab-manage">
+        <p class="mode-help">Load your official academy sheet and train from it.</p>
+        <div class="manage-actions">
+          <button id="export-btn" class="action-btn secondary">Export Codes</button>
+          <label class="file-btn">Import Codes JSON<input id="import-input" type="file" accept="application/json" /></label>
+        </div>
+        <form id="add-form" class="add-form">
+          <input id="new-code" placeholder="Code (example: 10-76)" required />
+          <input id="new-meaning" placeholder="Meaning" required />
+          <input id="new-category" placeholder="Category" required />
+          <button class="action-btn" type="submit">Add Code</button>
+        </form>
+        <p class="small-note">Note: starter data is generic training content. Replace with official Gilbert PD recruit material for exact policy alignment.</p>
+      </section>
+    </main>
+
+    <script type="module" src="./src/app.js"></script>
+  </body>
+</html>

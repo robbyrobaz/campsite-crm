@@ -126,3 +126,31 @@
     width: 100%;
   }
 }
+
+.addons-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.addon-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #dbe9f2;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f8fcff;
+}
+
+.addon-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.addon-qty {
+  width: 80px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 6px 8px;
+}

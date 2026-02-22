@@ -2,9 +2,9 @@
 
 **Professional dark-themed dashboard** for monitoring the Blofin ML trading pipeline in real-time.
 
-## 🚀 Quick Access
+## Quick Access
 
-**Dashboard URL:** http://localhost:8888/blofin-dashboard.html
+**Dashboard URL:** http://127.0.0.1:8888/
 
 ![Version](https://img.shields.io/badge/version-2.0.0-blue) ![Status](https://img.shields.io/badge/status-active-success)
 
@@ -110,26 +110,26 @@ Test individual API endpoints:
 
 ```bash
 # Health check
-curl http://localhost:8888/health | python3 -m json.tool
+curl http://127.0.0.1:8888/health | python3 -m json.tool
 
 # Pipeline status
-curl http://localhost:8888/api/status | python3 -m json.tool
+curl http://127.0.0.1:8888/api/status | python3 -m json.tool
 
 # Strategies
-curl http://localhost:8888/api/strategies | python3 -m json.tool
+curl http://127.0.0.1:8888/api/strategies | python3 -m json.tool
 
 # Models
-curl http://localhost:8888/api/models | python3 -m json.tool
+curl http://127.0.0.1:8888/api/models | python3 -m json.tool
 
 # Reports
-curl http://localhost:8888/api/reports | python3 -m json.tool
+curl http://127.0.0.1:8888/api/reports | python3 -m json.tool
 ```
 
 ## 🐛 Troubleshooting
 
 ### Dashboard won't load
-1. Check if service is running: `systemctl --user status blofin-dashboard.service`
-2. Check logs: `journalctl --user -u blofin-dashboard.service -n 50`
+1. Check if service is running: `systemctl --user status blofin-dashboard`
+2. Check logs: `journalctl --user -u blofin-dashboard -n 50`
 3. Verify port 8888 is not in use: `lsof -i :8888`
 
 ### Empty data on dashboard

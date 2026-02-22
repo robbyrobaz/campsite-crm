@@ -14,6 +14,8 @@ npm install
 ```bash
 cd /home/rob/.openclaw/workspace/campsite-crm/frontend
 npm install
+cp .env.example .env
+# set REACT_APP_GOOGLE_CLIENT_ID if you want Google OAuth login enabled
 ```
 
 ### Step 2: Start the Backend Server
@@ -38,6 +40,10 @@ npm start
 ```
 
 This will automatically open http://localhost:3000 in your browser.
+
+Login options on the app landing screen:
+- Google OAuth (if `REACT_APP_GOOGLE_CLIENT_ID` is configured)
+- `Continue with Beta Bypass` (always available in beta)
 
 ---
 

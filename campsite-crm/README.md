@@ -35,6 +35,76 @@ A beautiful, modern CRM system built specifically for campsite businesses to tra
 - **Booking count** and nights booked per area
 - **Performance metrics** to optimize area pricing and promotion
 
+### 🛰️ Arrival & Departure Radar
+- Manage the next seven arrivals with guest name, area, nights, status, and the computed departure date so you can plan turnovers.
+- Status chips keep confirmations, check-ins, checked-outs, cancellations, and no-shows visible at a glance.
+- Backed by `GET /api/bookings/arrival-radar`, the new dashboard card always shows the freshest arrivals and departures.
+
+### 🔖 Booking Status Tracker
+- The booking form and edit flows now persist a status dropdown (Active, Confirmed, Checked-In, Checked-Out, Canceled, No-Show).
+- Dashboard badges powered by `GET /api/bookings/status-summary` surface live counts for each status and keep the team aligned.
+
+### ⭐ Guest Value Spotlight
+- Highlights the top three return guests by lifetime revenue using the `/api/return-guests` data feed.
+- Shows visit count, revenue, and loyalty badges (VIP if >3 visits, Loyal if >1) so the best patrons stay top-of-mind.
+
+### 📈 Revenue by Guest Type
+- Chart.js renders a colorful comparison so you can see revenue and booking counts by guest type (Individual, Family, Group, Corporate, Church).
+- `GET /api/bookings/by-guest-type` aggregates booking_count and total_revenue for the selected window powering the chart.
+
+### 🤝 Contract Snapshot
+- Surfaces active horse group contracts (name, group, dates, status) plus renewal windows so you never miss a renewal.
+- `GET /api/contracts/active` sends the current contracts to the dashboard card.
+
+### 💳 Payment Center & Balance Tracking
+- Each booking now tracks `amount_paid`, `due_date`, computed `balance_due`, and an automatic payment status (`paid`, `partial`, `unpaid`, `overdue`).
+- New payment tab gives a quick ledger view and lets staff update paid amounts + due dates in seconds.
+- `GET /api/payments/summary` powers collected/outstanding/overdue KPIs.
+
+### 📝 Waitlist Manager
+- Capture guests when the campsite is full and track them through `waiting`, `contacted`, `converted`, or `closed`.
+- One-click conversion turns a waitlist entry into a confirmed booking once inventory opens up.
+- Backed by `GET/POST/PUT/DELETE /api/waitlist` and `POST /api/waitlist/:id/convert`.
+
+### ✅ Task Board
+- Track operational tasks (`todo`, `in_progress`, `done`) directly in CRM.
+- Tasks are exposed via both REST and MCP tools so ChatGPT assistants can plan and update operations.
+- Backed by `GET/POST/PUT/DELETE /api/tasks`.
+
+### 🤖 ChatGPT + MCP Integration Hub
+- New Settings tab connects OpenAI/ChatGPT with optional MCP shared-secret auth.
+- In-app ChatGPT panel lets users ask questions against live CRM context (bookings, waitlist, tasks, summary).
+- MCP JSON-RPC endpoint at `POST /mcp` exposes tools for summary, bookings, waitlist, and tasks.
+- Integration endpoints: `/api/integrations/chatgpt/settings`, `/api/integrations/chatgpt/test`, `/api/chatgpt/chat`.
+
+### 🧺 Add-on Upsell Tracking
+- Booking form now includes add-on selections (firewood, s'mores kit, kayak rental, etc.) with quantity support.
+- Dashboard highlights top-selling add-ons and total add-on revenue.
+- `GET /api/addons/summary` aggregates add-on quantity and revenue.
+
+### 📬 Automated Message Queue
+- Dashboard previews pre-arrival, departure-day follow-up, and payment reminder messages for the next cycle.
+- Built to support operational follow-through even before external email/SMS automation is connected.
+- `GET /api/messages/upcoming` returns the actionable queue.
+
+### 📈 Occupancy-Based Pricing Recommendations
+- A 30-day occupancy window now produces area-level price guidance (`raise`, `hold`, `discount`) with suggested percent changes.
+- Helps operators react to demand without guessing.
+- `GET /api/pricing/recommendations` returns the recommendation set.
+
+### 🧭 Booking Assistant (New)
+- Added a dedicated booking assistant tab with five high-value booking features inspired by campsite booking leaders:
+1. **Availability by area** for selected dates, nights, and party size.
+2. **Amenity-based area matching** (power, pet-friendly, shelter, horse stalls, etc.).
+3. **Alternate date suggestions** when preferred options are tight.
+4. **Transparent trip cost estimate** (base, add-ons, service fee, tax, deposit due today).
+5. **Cancellation preview** with full/partial/non-refundable windows and refund examples.
+6. **Stay rules checker** (weekend minimums, max nights, same-day cutoff, party-size guardrails).
+7. **Self-service change/cancel preview** with estimated fee, refund amount, and rebooking credit.
+8. **Availability alert capture** (email/phone) so guests can be contacted when inventory opens.
+9. **Booking readiness score** to quickly gauge confidence before finalizing a booking.
+10. **Site-lock transparency** with optional exact-site lock fee included in quote.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -63,11 +133,40 @@ cd campsite-crm/frontend
 # Install dependencies
 npm install
 
+# Optional: enable Google OAuth login
+cp .env.example .env
+# then set REACT_APP_GOOGLE_CLIENT_ID in .env
+
 # Start the development server
 npm start
 ```
 
 The frontend will open at `http://localhost:3000`
+
+## Login (beta)
+
+- Google OAuth login is available via Google Identity Services when `REACT_APP_GOOGLE_CLIENT_ID` is set.
+- A `Continue with Beta Bypass` button remains available for non-live testing.
+- Login currently gates app access only; all signed-in users see the same shared CRM data.
+
+## Always-On Mode (recommended)
+
+To keep Campsite CRM live across terminal closes, crashes, and reboots, run:
+
+```bash
+cd campsite-crm
+./scripts/install-systemd-user.sh
+```
+
+This installs `~/.config/systemd/user/campsite-crm.service` with `Restart=always` and serves the app at `http://localhost:3000`.
+
+Useful commands:
+
+```bash
+systemctl --user status campsite-crm.service
+journalctl --user -u campsite-crm.service -f
+systemctl --user restart campsite-crm.service
+```
 
 ## 📁 Project Structure
 
@@ -108,18 +207,56 @@ campsite-crm/
 ## 📊 API Endpoints
 
 ### Dashboard
-- `GET /api/dashboard/summary` - Get dashboard statistics
+- `GET /api/dashboard/summary` - Get dashboard statistics for the selected period
 
 ### Bookings
-- `GET /api/bookings` - Get all bookings
+- `GET /api/bookings` - Fetch all bookings with optional start/end filters
 - `GET /api/bookings/grouped/:period` - Group bookings by day/week/month
-- `POST /api/bookings` - Create new booking
-- `PUT /api/bookings/:id` - Update booking
-- `DELETE /api/bookings/:id` - Delete booking
+- `POST /api/bookings` - Create a booking (accepts `booking_date`, `status`, `nights`, `area_rented`, `revenue`, etc.)
+- `PUT /api/bookings/:id` - Update booking details or status (supports arrival date + status changes)
+- `DELETE /api/bookings/:id` - Delete a booking
+- `GET /api/bookings/status-summary` - Return counts per status for the dashboard badges
+- `GET /api/bookings/arrival-radar` - Surface the next seven arrivals with computed departure dates and status
+- `GET /api/payments/summary` - Revenue collected vs outstanding balances with overdue counts
+- `GET /api/addons/summary` - Add-on revenue + quantity leaderboard
+- `GET /api/messages/upcoming` - Generated pre-arrival/post-stay/payment reminder queue
+- `GET /api/pricing/recommendations` - Occupancy-driven pricing guidance by area
+- `GET /api/booking-assistant/availability` - Availability + amenity matching + alternate date suggestions
+- `POST /api/booking-assistant/cost-estimate` - Full booking price breakdown and deposit amount
+- `GET /api/booking-assistant/cancellation-preview` - Date-based cancellation/refund preview
+- `GET /api/booking-assistant/stay-rules` - Validate stay against booking rules
+- `POST /api/booking-assistant/manage-preview` - Estimate modify/cancel outcomes before staff changes booking
+- `POST /api/booking-assistant/availability-alerts` - Save alert subscriptions for out-of-stock date/area requests
+- `GET /api/booking-assistant/readiness-score` - Return booking confidence score from availability + rules + amenity fit
 
 ### Analytics
 - `GET /api/return-guests` - Get return guest analysis
 - `GET /api/areas` - Get area utilization data
+- `GET /api/bookings/by-guest-type` - Aggregate booking_count and total_revenue grouped by guest_type
+
+### Waitlist
+- `GET /api/waitlist` - List waitlist entries
+- `POST /api/waitlist` - Add a waitlist entry
+- `PUT /api/waitlist/:id` - Update waitlist status/details
+- `DELETE /api/waitlist/:id` - Remove waitlist entry
+- `POST /api/waitlist/:id/convert` - Convert waitlist entry into a booking
+
+### Tasks
+- `GET /api/tasks` - List all operational tasks
+- `POST /api/tasks` - Create a task
+- `PUT /api/tasks/:id` - Update task details/status
+- `DELETE /api/tasks/:id` - Delete a task
+
+### ChatGPT & MCP Integration
+- `GET /api/integrations/chatgpt/settings` - Read integration settings (safe metadata only)
+- `PUT /api/integrations/chatgpt/settings` - Save integration settings
+- `POST /api/integrations/chatgpt/test` - Validate OpenAI connection
+- `GET /api/integrations/chatgpt/mcp-instructions` - Retrieve MCP setup metadata
+- `POST /api/chatgpt/chat` - Ask ChatGPT from inside CRM (optionally with live CRM context)
+- `POST /mcp` - MCP JSON-RPC endpoint (`initialize`, `tools/list`, `tools/call`)
+
+### Contracts
+- `GET /api/contracts/active` - Show active horse group contracts with start/end windows
 
 ### Health Check
 - `GET /health` - API health status
@@ -135,6 +272,9 @@ campsite-crm/
 - `nights` (INTEGER) - Number of nights
 - `area_rented` (TEXT) - Cabin, Tent, Kitchen, etc.
 - `revenue` (REAL) - Booking revenue
+- `amount_paid` (REAL) - Amount already collected
+- `due_date` (TEXT) - Balance due date
+- `add_ons` (TEXT/JSON) - Serialized add-on items sold with booking
 - `is_return_booking` (INTEGER) - 1 if return guest
 - `notes` (TEXT) - Additional notes
 - `created_at` (TEXT) - Creation timestamp

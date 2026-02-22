@@ -1,6 +1,13 @@
 {
-  "lastUpdated": "2026-02-22T22:21:30Z",
+  "lastUpdated": "2026-02-22T22:34:30Z",
   "activeTasks": [
+    {
+      "id": "c_7aafa071e3176_19c876b2011",
+      "title": "campsite crm authentication gmail needs to be one button to do oauth for users gmail",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-22T22:21:00Z",
+      "project": "/home/rob/.openclaw/workspace/campsite-crm"
+    },
     {
       "id": "c_f93ac050f0b71_19c7ec97e09",
       "title": "fix blofin backtests have some crazy 20000% numbers",
@@ -9,32 +16,40 @@
       "project": "/home/rob/.openclaw/workspace/blofin-stack"
     },
     {
-      "id": "c_4f2e76ea629e_19c876d57cf",
-      "title": "blofin fwd test are also missing profit factor, please fix this",
+      "id": "c_7e7d3709665e7_19c87790c16",
+      "title": "Fix HedgeEnginePro risk-free bet math (calcRiskFree is wrong)",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-22T22:21:00Z",
-      "project": "/home/rob/.openclaw/workspace/blofin-stack"
-    },
-    {
-      "id": "c_7aafa071e3176_19c876b2011",
-      "title": "campsite crm authentication gmail needs to be one button to do oauth for users gmail",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-22T22:21:00Z",
-      "project": "/home/rob/.openclaw/workspace/campsite-crm"
+      "dispatchedAt": "2026-02-22T22:34:00Z",
+      "project": "/home/rob/.openclaw/workspace/arb-dashboard"
     }
   ],
   "qaInProgress": [],
+  "plannedQueue": [
+    {
+      "id": "c_7baa0f9dc7a68_19c87790c3e",
+      "title": "Add toggle to hide 3-way market results (soccer draws etc)",
+      "project": "/home/rob/.openclaw/workspace/arb-dashboard",
+      "priority": 2
+    },
+    {
+      "id": "c_cb34b16bc059d_19c877109f8",
+      "title": "Blofin: per-coin backtesting and promotion gates",
+      "project": "/home/rob/.openclaw/workspace/blofin-stack",
+      "priority": 2
+    }
+  ],
   "inboxSize": 1,
   "inboxCards": [
     {
       "id": "c_85ab04f82aa5f_19c80f2d96e",
       "title": "campsite crm authentication to chatgpt must be simpler",
+      "note": "ON HOLD — campsite CRM rethinking approach",
       "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
       "assignee": "claude"
     }
   ],
   "recentlyDone": [
-    "on the campsite crm integrate a way to add email connection (QA PASS, campsite restarted)",
+    "on the campsite crm integrate a way to add email connection",
     "fix blofin backtests have some crazy 20000% numbers",
     "review the blofin process to test strategies per coin",
     "make campsite CRM cleaner - better use of space",
@@ -46,23 +61,24 @@
     "campsite crm - add recent contact to contacts"
   ],
   "systemHealth": {
-    "timestamp": "2026-02-22T22:21:30Z",
-    "cpu_temp": "60.0C",
+    "timestamp": "2026-02-22T22:34:30Z",
+    "cpu_temp": "58.0C",
     "disk_usage": "35%",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
-    "campsite_crm": "active (3000+5000 OK)",
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-22T22:21:30Z",
+    "cycle": "2026-02-22T22:34:30Z",
     "actions": [
-      "Phase 1: All services active. CPU 60C, disk 35%.",
-      "Phase 3: Fixed assignee+project_path for 2 new Inbox cards (blofin, campsite).",
-      "Phase 6: QA PASS c_abbfab113b816 (campsite email/gmail OAuth) -> Done. campsite-crm restarted, health OK.",
-      "Phase 5: Dispatched 3 cards to In Progress (pids 3765160, 3765173, 3765185). Capacity 3/3.",
-      "Inbox remaining: 1 card (campsite chatgpt auth simplification) - next cycle."
+      "Phase 1: All services active. CPU 58C, disk 35%.",
+      "Phase 4: 2 existing In Progress cards ~13min old — not stale, no recycle.",
+      "Phase 5: Dispatched c_7e7d3709665e7 (Fix HedgeEnginePro calcRiskFree) pid 3775233. Capacity 3/3.",
+      "Phase 6: 0 Review/Test cards — nothing to QA.",
+      "Note: arb-dashboard project appeared with 2 Planned cards (priority 1 and 2) — new project.",
+      "Note: c_4f2e76ea629e (blofin profit factor) completed/removed since last cycle.",
+      "Note: campsite crm cards on hold per description update."
     ]
   }
 }

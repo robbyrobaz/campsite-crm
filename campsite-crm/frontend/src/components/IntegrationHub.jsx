@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import '../styles/IntegrationHub.css';
 
@@ -240,11 +240,6 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
       setApprovingBatchId('');
     }
   };
-
-  const oauthRedirect = useMemo(
-    () => settings.oauth_redirect_uri || settings.oauth_redirect_default || '-',
-    [settings.oauth_redirect_uri, settings.oauth_redirect_default]
-  );
 
   const runDataAction = async (actionKey, request) => {
     setDataOpsAction(actionKey);

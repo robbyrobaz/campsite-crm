@@ -470,6 +470,10 @@ const getIntegrationSettings = async () => {
   const values = await Promise.all(keys.map((key) => getSettingValue(key)));
   const map = Object.fromEntries(keys.map((key, index) => [key, values[index] || '']));
 
+  // Env vars take precedence over DB-stored credentials so users never need to paste keys.
+  const envClientId = process.env.GOOGLE_CLIENT_ID || '';
+  const envClientSecret = process.env.GOOGLE_CLIENT_SECRET || '';
+
   return {
     chatgpt_enabled: map.chatgpt_enabled === '1',
     workspace_name: map.workspace_name || 'Campsite CRM',
@@ -477,8 +481,9 @@ const getIntegrationSettings = async () => {
     openai_model: map.openai_model || 'gpt-4.1-mini',
     mcp_shared_secret: map.mcp_shared_secret || '',
     oauth_enabled: map.oauth_enabled === '1',
-    oauth_client_id: map.oauth_client_id || '',
-    oauth_client_secret: map.oauth_client_secret || '',
+    oauth_client_id: envClientId || map.oauth_client_id || '',
+    oauth_client_secret: envClientSecret || map.oauth_client_secret || '',
+    oauth_from_env: Boolean(envClientId && envClientSecret),
     oauth_redirect_uri: map.oauth_redirect_uri || '',
     gmail_scan_enabled: map.gmail_scan_enabled === '1',
     gmail_account_email: map.gmail_account_email || '',
@@ -495,8 +500,9 @@ const buildSafeSettingsResponse = (settings) => ({
   openai_model: settings.openai_model,
   mcp_secret_configured: Boolean(settings.mcp_shared_secret),
   oauth_enabled: settings.oauth_enabled,
-  oauth_client_id: settings.oauth_client_id,
+  oauth_client_id: settings.oauth_from_env ? '' : settings.oauth_client_id,
   oauth_client_secret_configured: Boolean(settings.oauth_client_secret),
+  oauth_from_env: settings.oauth_from_env,
   oauth_redirect_uri: settings.oauth_redirect_uri,
   gmail_scan_enabled: settings.gmail_scan_enabled,
   gmail_account_email: settings.gmail_account_email,
@@ -4262,6 +4268,7 @@ app.get('/api/auth/gmail/status', async (req, res) => {
       has_refresh_token: Boolean(settings.gmail_refresh_token),
       scan_enabled: settings.gmail_scan_enabled,
       oauth_client_configured: Boolean(settings.oauth_client_id && settings.oauth_client_secret),
+      oauth_from_env: settings.oauth_from_env,
       callback_uri: getGmailCallbackUri(req)
     });
   } catch (error) {

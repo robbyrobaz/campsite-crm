@@ -11,6 +11,7 @@ const INITIAL_SETTINGS = {
   oauth_enabled: false,
   oauth_client_id: '',
   oauth_client_secret: '',
+  oauth_from_env: false,
   oauth_redirect_uri: '',
   gmail_scan_enabled: false,
   gmail_account_email: '',
@@ -370,25 +371,29 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
             />
           </div>
 
-          <div className="form-group">
-            <label>Google OAuth Client ID <span className="field-hint">(from Google Cloud Console)</span></label>
-            <input
-              type="text"
-              value={settings.oauth_client_id}
-              onChange={(e) => setSettings({ ...settings, oauth_client_id: e.target.value })}
-              placeholder="xxxxxxx.apps.googleusercontent.com"
-            />
-          </div>
+          {!settings.oauth_from_env && (
+            <>
+              <div className="form-group">
+                <label>Google OAuth Client ID <span className="field-hint">(from Google Cloud Console)</span></label>
+                <input
+                  type="text"
+                  value={settings.oauth_client_id}
+                  onChange={(e) => setSettings({ ...settings, oauth_client_id: e.target.value })}
+                  placeholder="xxxxxxx.apps.googleusercontent.com"
+                />
+              </div>
 
-          <div className="form-group">
-            <label>Google OAuth Client Secret</label>
-            <input
-              type="password"
-              value={settings.oauth_client_secret}
-              onChange={(e) => setSettings({ ...settings, oauth_client_secret: e.target.value })}
-              placeholder="GOCSPX-..."
-            />
-          </div>
+              <div className="form-group">
+                <label>Google OAuth Client Secret</label>
+                <input
+                  type="password"
+                  value={settings.oauth_client_secret}
+                  onChange={(e) => setSettings({ ...settings, oauth_client_secret: e.target.value })}
+                  placeholder="GOCSPX-..."
+                />
+              </div>
+            </>
+          )}
         </div>
 
         <div className="form-actions">
@@ -405,7 +410,7 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
         <h2>📧 Gmail Account Connection</h2>
         <p className="section-subtext">
           Connect your Gmail account via OAuth to allow the CRM to scan emails for guest contacts and conversation history.
-          Requires a Google Cloud project with OAuth credentials saved above.
+          {!settings.oauth_from_env && ' Requires Google OAuth credentials saved above.'}
         </p>
 
         {gmailNotice === 'success' && (
@@ -443,20 +448,22 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
                 <span className="gmail-status-dot gmail-status-dot--off" />
                 <strong>Not connected</strong>
               </div>
-              {!gmailStatus.oauth_client_configured && (
+              {!gmailStatus.oauth_from_env && !gmailStatus.oauth_client_configured && (
                 <p className="section-subtext" style={{ color: 'var(--color-warning, #e07b00)' }}>
                   Save your Google OAuth Client ID and Client Secret above first.
                 </p>
               )}
-              <div className="gmail-callback-hint">
-                <strong>Authorized Redirect URI to register in Google Cloud Console:</strong>
-                <code>{gmailStatus.callback_uri}</code>
-              </div>
+              {!gmailStatus.oauth_from_env && (
+                <div className="gmail-callback-hint">
+                  <strong>Authorized Redirect URI to register in Google Cloud Console:</strong>
+                  <code>{gmailStatus.callback_uri}</code>
+                </div>
+              )}
               <button
                 className="btn btn-primary"
                 type="button"
                 onClick={connectGmail}
-                disabled={connectingGmail || !gmailStatus.oauth_client_configured}
+                disabled={connectingGmail || (!gmailStatus.oauth_from_env && !gmailStatus.oauth_client_configured)}
               >
                 {connectingGmail ? 'Redirecting to Google...' : 'Connect Gmail Account'}
               </button>
@@ -553,10 +560,14 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
       <section className="card">
         <h2>🧭 Setup Instructions</h2>
         <ol className="instructions-list">
-          <li>In <strong>Google Cloud Console</strong>, create an OAuth 2.0 Client ID (Web application type). Add the Authorized Redirect URI shown in the Gmail Connection section above.</li>
-          <li>Paste the Client ID and Client Secret into settings above and click <strong>Save Settings</strong>.</li>
+          {!settings.oauth_from_env && (
+            <>
+              <li>In <strong>Google Cloud Console</strong>, create an OAuth 2.0 Client ID (Web application type). Add the Authorized Redirect URI shown in the Gmail Connection section above.</li>
+              <li>Paste the Client ID and Client Secret into settings above and click <strong>Save Settings</strong>.</li>
+            </>
+          )}
           <li>Optionally add an OpenAI API key and enable ChatGPT integration for AI-powered email analysis.</li>
-          <li>Click <strong>Connect Gmail Account</strong> in the Gmail Connection section and approve access.</li>
+          <li>Click <strong>Connect Gmail Account</strong> in the Gmail Connection section and approve access in your browser.</li>
           <li>Once connected, go to the <strong>Contacts</strong> tab and run a Gmail scan. Review suggestions and apply the ones you want.</li>
           <li>Use the MCP endpoint URL below in your MCP client or ChatGPT bridge.</li>
         </ol>

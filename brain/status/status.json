@@ -1,26 +1,26 @@
 {
-  "lastUpdated": "2026-02-22T22:04:30Z",
+  "lastUpdated": "2026-02-22T22:21:30Z",
   "activeTasks": [
     {
-      "id": "c_abbfab113b816_19c80e4be4c",
-      "title": "on the campsite crm integrate a way to add email connection",
+      "id": "c_f93ac050f0b71_19c7ec97e09",
+      "title": "fix blofin backtests have some crazy 20000% numbers",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-22T21:57:00Z",
-      "project": "/home/rob/.openclaw/workspace/campsite-crm"
-    },
-    {
-      "id": "c_e48cd8e2d1919_19c7ec84f59",
-      "title": "figure out why so many backtests have poor results and aren't moving to forward testing",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-22T21:57:00Z",
+      "dispatchedAt": "2026-02-22T22:21:00Z",
       "project": "/home/rob/.openclaw/workspace/blofin-stack"
     },
     {
-      "id": "c_98fb0e481fea9_19c80d28f13",
-      "title": "Master Status - projects git status update (auto-commit)",
+      "id": "c_4f2e76ea629e_19c876d57cf",
+      "title": "blofin fwd test are also missing profit factor, please fix this",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-22T22:04:00Z",
-      "project": "/home/rob/.openclaw/workspace/master-dashboard"
+      "dispatchedAt": "2026-02-22T22:21:00Z",
+      "project": "/home/rob/.openclaw/workspace/blofin-stack"
+    },
+    {
+      "id": "c_7aafa071e3176_19c876b2011",
+      "title": "campsite crm authentication gmail needs to be one button to do oauth for users gmail",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-22T22:21:00Z",
+      "project": "/home/rob/.openclaw/workspace/campsite-crm"
     }
   ],
   "qaInProgress": [],
@@ -34,6 +34,7 @@
     }
   ],
   "recentlyDone": [
+    "on the campsite crm integrate a way to add email connection (QA PASS, campsite restarted)",
     "fix blofin backtests have some crazy 20000% numbers",
     "review the blofin process to test strategies per coin",
     "make campsite CRM cleaner - better use of space",
@@ -45,22 +46,23 @@
     "campsite crm - add recent contact to contacts"
   ],
   "systemHealth": {
-    "timestamp": "2026-02-22T22:04:30Z",
-    "cpu_temp": "51.0C",
+    "timestamp": "2026-02-22T22:21:30Z",
+    "cpu_temp": "60.0C",
     "disk_usage": "35%",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
+    "campsite_crm": "active (3000+5000 OK)",
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-22T22:04:30Z",
+    "cycle": "2026-02-22T22:21:30Z",
     "actions": [
-      "Phase 1: All services active. CPU 51C (cooled), disk 35%.",
-      "Phase 4: 2 In Progress cards ~7min old — not stale, no recycle needed.",
-      "Phase 5: Dispatched c_98fb0e481fea9 (master-dashboard git auto-commit) via /run pid 3754374. Capacity now 3/3.",
-      "Phase 6: 0 Review/Test cards — nothing to QA.",
-      "Note: c_1d56923da1e5a (blofin ML paper trading) appears deleted/missing from board."
+      "Phase 1: All services active. CPU 60C, disk 35%.",
+      "Phase 3: Fixed assignee+project_path for 2 new Inbox cards (blofin, campsite).",
+      "Phase 6: QA PASS c_abbfab113b816 (campsite email/gmail OAuth) -> Done. campsite-crm restarted, health OK.",
+      "Phase 5: Dispatched 3 cards to In Progress (pids 3765160, 3765173, 3765185). Capacity 3/3.",
+      "Inbox remaining: 1 card (campsite chatgpt auth simplification) - next cycle."
     ]
   }
 }

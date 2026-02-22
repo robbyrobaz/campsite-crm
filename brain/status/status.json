@@ -1,154 +1,52 @@
 {
-  "lastUpdated": "2026-02-21T16:41:07Z",
+  "lastUpdated": "2026-02-22T22:04:30Z",
   "activeTasks": [
     {
-      "id": "c_ab9073af90551_19c81050691",
-      "title": "campsite crm - add 10 more color options",
+      "id": "c_abbfab113b816_19c80e4be4c",
+      "title": "on the campsite crm integrate a way to add email connection",
       "status": "In Progress",
-      "dispatchedAt": 1771691746020,
-      "project": null
-    },
-    {
-      "id": "c_25a17f621aea3_19c80e7e683",
-      "title": "campsite crm - add recent contact to contacts",
-      "status": "In Progress",
-      "dispatchedAt": 1771691745956,
-      "project": null
-    },
-    {
-      "id": "c_3f13eb33d8ac_19c80e62f5a",
-      "title": "campsite crm contacts",
-      "status": "In Progress",
-      "dispatchedAt": 1771691745893,
-      "project": null
-    },
-    {
-      "id": "c_502647f3e66e_19c80f7f398",
-      "title": "campsite crm colors",
-      "status": "Review/Test",
-      "dispatchedAt": 1771691023235,
-      "project": null
-    },
-    {
-      "id": "c_dc1f558d5b991_19c80edbb2e",
-      "title": "campsite crm login",
-      "status": "Review/Test",
-      "dispatchedAt": 1771690109569,
-      "project": null
-    },
-    {
-      "id": "c_0d404577b25e7_19c80dc2504",
-      "title": "make the campsite crm have an MCP connection for chatgpt",
-      "status": "Review/Test",
-      "dispatchedAt": 1771689398417,
-      "project": null
-    },
-    {
-      "id": "c_35ce2ba11b7d6_19c7ec5e87a",
-      "title": "make campsite CRM cleaner - better use of space",
-      "status": "Review/Test",
-      "dispatchedAt": 1771689174131,
-      "project": null
-    },
-    {
-      "id": "c_f93ac050f0b71_19c7ec97e09",
-      "title": "fix blofin backtests have some crazy 20000% numbers",
-      "status": "Review/Test",
-      "dispatchedAt": 1771688508548,
-      "project": null
-    },
-    {
-      "id": "c_1723b84b3650a_19c80cc2f27",
-      "title": "review the blofin process to test strategies per coin",
-      "status": "Review/Test",
-      "dispatchedAt": 1771688387149,
-      "project": null
-    },
-    {
-      "id": "c_1d56923da1e5a_19c7ecd7c95",
-      "title": "make sure blofin ML models are actually paper traded after trained",
-      "status": "Review/Test",
-      "dispatchedAt": 1771687415320,
-      "project": null
-    },
-    {
-      "id": "c_1fc7996763c3_19c7e659c4a",
-      "title": "update MASTER STATUS DASHBOARD with all the dashboard links",
-      "status": "Review/Test",
-      "dispatchedAt": 1771686757496,
-      "project": null
-    },
-    {
-      "id": "manual-2026-02-21-campsite-recent-contact-gmail-scan",
-      "title": "campsite crm - recent contacts + gmail scan approval flow",
-      "status": "Done",
-      "dispatchedAt": 1771691787151,
+      "dispatchedAt": "2026-02-22T21:57:00Z",
       "project": "/home/rob/.openclaw/workspace/campsite-crm"
+    },
+    {
+      "id": "c_e48cd8e2d1919_19c7ec84f59",
+      "title": "figure out why so many backtests have poor results and aren't moving to forward testing",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-22T21:57:00Z",
+      "project": "/home/rob/.openclaw/workspace/blofin-stack"
+    },
+    {
+      "id": "c_98fb0e481fea9_19c80d28f13",
+      "title": "Master Status - projects git status update (auto-commit)",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-22T22:04:00Z",
+      "project": "/home/rob/.openclaw/workspace/master-dashboard"
     }
   ],
   "qaInProgress": [],
-  "inboxSize": 11,
+  "inboxSize": 1,
   "inboxCards": [
     {
       "id": "c_85ab04f82aa5f_19c80f2d96e",
       "title": "campsite crm authentication to chatgpt must be simpler",
-      "project": null,
       "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
-      "assignee": "codex"
-    },
-    {
-      "id": "c_abbfab113b816_19c80e4be4c",
-      "title": "on the campsite crm integrate a way to add email connection",
-      "project": null,
-      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
-      "assignee": "codex"
-    },
-    {
-      "id": "c_98fb0e481fea9_19c80d28f13",
-      "title": "Master Status  - projects git status update",
-      "project": null,
-      "project_path": null,
-      "assignee": "codex"
-    },
-    {
-      "id": "c_a02a717567f39_19c7ec306ee",
-      "title": "auto feedback loop on campsite crm",
-      "project": null,
-      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
-      "assignee": "codex"
-    },
-    {
-      "id": "c_456996ea6919c_19c7ec0276a",
-      "title": "on campsite crm, allow more than one booking area rented",
-      "project": null,
-      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
-      "assignee": "codex"
-    },
-    {
-      "id": "c_6fad113b4ec8_19c7e72fd3b",
-      "title": "after the 5 new features are live, push/copy the CRM campsite to a new repo dedicated to this.",
-      "project": null,
-      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
-      "assignee": "codex"
-    },
-    {
-      "id": "c_996f9459e9ce2_19c80c67200",
-      "title": "like the anthropic usage on the master dashboard, on the left add the codex usage stats",
-      "project": null,
-      "project_path": "/home/rob/.openclaw/workspace/master-dashboard",
-      "assignee": "codex"
-    },
-    {
-      "id": "c_abd71d34ea541_19c80c944c1",
-      "title": "add some kind of tracker of kanban tasks done per hour",
-      "project": null,
-      "project_path": null,
-      "assignee": "codex"
+      "assignee": "claude"
     }
   ],
+  "recentlyDone": [
+    "fix blofin backtests have some crazy 20000% numbers",
+    "review the blofin process to test strategies per coin",
+    "make campsite CRM cleaner - better use of space",
+    "make the campsite crm have an MCP connection for chatgpt",
+    "campsite crm login",
+    "campsite crm colors",
+    "campsite crm - add 10 more color options",
+    "campsite crm contacts",
+    "campsite crm - add recent contact to contacts"
+  ],
   "systemHealth": {
-    "timestamp": "2026-02-21T16:35:45.796276Z",
-    "cpu_temp": "73.0°C",
+    "timestamp": "2026-02-22T22:04:30Z",
+    "cpu_temp": "51.0C",
     "disk_usage": "35%",
     "gateway": "active",
     "blofin_ingestor": "active",
@@ -156,19 +54,13 @@
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-21T16:35:45.796276Z",
+    "cycle": "2026-02-22T22:04:30Z",
     "actions": [
-      "Patched c_ab9073af90551_19c81050691: assignee,project_path",
-      "Dispatched c_3f13eb33d8ac_19c80e62f5a",
-      "Dispatched c_25a17f621aea3_19c80e7e683",
-      "Dispatched c_ab9073af90551_19c81050691",
-      "QA FAIL c_2c7e20eb94bac_19c80f58153 -> Planned",
-      "QA FAIL c_2e623f43759d1_19c80d85f48 -> Planned"
+      "Phase 1: All services active. CPU 51C (cooled), disk 35%.",
+      "Phase 4: 2 In Progress cards ~7min old — not stale, no recycle needed.",
+      "Phase 5: Dispatched c_98fb0e481fea9 (master-dashboard git auto-commit) via /run pid 3754374. Capacity now 3/3.",
+      "Phase 6: 0 Review/Test cards — nothing to QA.",
+      "Note: c_1d56923da1e5a (blofin ML paper trading) appears deleted/missing from board."
     ]
-  },
-  "currentTask": {
-    "title": "campsite crm contacts - gmail suggestions + conversation merge",
-    "phase": "completed",
-    "updatedBy": "codex"
   }
 }

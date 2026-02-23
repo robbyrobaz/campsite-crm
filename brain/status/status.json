@@ -1,61 +1,64 @@
 {
-  "lastUpdated": "2026-02-23T20:19:00Z",
+  "lastUpdated": "2026-02-23T20:34:00Z",
   "activeTasks": [
     {
       "cardId": "c_f1d36e5aea577_19c8c0145ae",
-      "title": "Investigate volatility_expansion_volume_breakout tier promotion",
+      "title": "Investigate volatility_expansion_volume_breakout for tier promotion",
       "status": "In Progress",
       "project": "blofin-stack",
-      "pid": 712109,
-      "note": "Runner active — analyzing gate=fail vs ft_wr=68.75%. Likely blocked by GATE_MIN_TRADES=100 (only 16 trades). Log at 13:13 MST. Timestamp refreshed 1:19 PM MST."
+      "pid": 733669,
+      "note": "RECYCLED 1:34 PM MST (prev runner PID 712109 died at 13:13 with no result). Fresh restart. Likely blocked by GATE_MIN_TRADES=100 with only 16 FT trades."
     },
     {
-      "cardId": "c_74fc6937bc909_19c8c0145e6",
-      "title": "Run FT pipeline for volatility_regime_switch",
+      "cardId": "c_1ce914d82a666_19c8c2b7bca",
+      "title": "Fix FT_MAX_MDD for concurrent multi-coin strategies",
       "status": "In Progress",
       "project": "blofin-stack",
-      "pid": 723065,
-      "note": "Just dispatched 1:19 PM MST. Tier=2 gate=pass but ft_wr/pnl/trades=NULL. Need 50+ FT trades."
+      "pid": 733855,
+      "note": "Dispatched 1:34 PM MST. cross_asset_correlation gate=fail despite ft_pf=1.24/957 trades — MDD=80% from sequential compounding artifact. Raise FT_MAX_MDD from 50% to 75%."
     },
     {
-      "cardId": "c_5d0060a3cd6a6_19c8be687b4",
-      "title": "ML Feature Engineering: Make Equal Tops/Bottoms profitable",
-      "status": "Review/Test",
-      "project": "ninja_trader_strategies",
-      "note": "Runner complete. Model built (AUC=0.603), WF PF=0.84 (not profitable yet). Verdict: Tier 0 Research. QA agent (haiku) spawned to verify files."
+      "cardId": "c_bea611ea1ca71_19c8c2bc771",
+      "title": "Investigate momentum_v2 tier=2 with 3 FT trades and 0% WR",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "pid": 733877,
+      "note": "Dispatched 1:34 PM MST. tier=2, gate=fail, ft_trades=3, 0% WR — demote if BT metrics weak or signal generation stalled."
     }
   ],
   "recentlyDone": [
     {
-      "cardId": "c_1ef138b763b45_19c8c0145ca",
-      "title": "cross_asset_correlation registry regression fix",
-      "completedAt": "2026-02-23T20:11Z",
-      "note": "Registry restored: ft_trades=957, ft_wr=45.9%, ft_pnl=+127.08%. preserve_ft fix applied. Known issue: MDD=80% will still gate=fail (Phase 8 card created)."
+      "cardId": "c_74fc6937bc909_19c8c0145e6",
+      "title": "Run FT pipeline for volatility_regime_switch",
+      "completedAt": "2026-02-23T20:24Z",
+      "note": "FT tracking active. PF=1.29 aggregate (fails >=1.35 gate), but BTC/ETH/DOGE pass per-coin. Need 50+ FT trades post 20:23 UTC before demotion decision."
+    },
+    {
+      "cardId": "c_5d0060a3cd6a6_19c8be687b4",
+      "title": "ML Feature Engineering: Equal Tops/Bottoms",
+      "completedAt": "2026-02-23T20:21Z",
+      "note": "QA PASS. Model built (AUC=0.603, WF PF=0.84). Tier 0 Research — not profitable yet."
     }
   ],
   "boardSummary": {
-    "inProgress": 2,
-    "reviewTest": 1,
+    "inProgress": 3,
+    "reviewTest": 0,
     "planned": 0,
-    "inbox": 5
+    "inbox": 3
   },
   "systemHealth": {
-    "cpuTemp": "62C",
-    "cpuLoad": "0.51 / 12 cores (4.25%)",
+    "cpuTemp": "63C",
+    "cpuLoad": "low (runners just started)",
     "diskUsage": "37%",
     "services": "all active (gateway, ingestor, paper)",
-    "tokenUsage5h": "17%"
+    "tokenUsage5h": "~17-20%"
   },
-  "phase8CardsCreated": [
-    "Fix FT_MAX_MDD for concurrent multi-coin strategies (c_1ce914d82a666)",
-    "Investigate momentum_v2 tier=2 suspicious (c_bea611ea1ca71)",
-    "Bulk archive 15 ghost tier=0 NULL-FT strategies (c_b917b836b1d81)"
-  ],
   "nextActions": [
-    "Await QA haiku result for Equal Tops/Bottoms (RT card)",
-    "Monitor vol_expansion runner (stale threshold 1:34 PM MST)",
-    "Monitor vol_regime_switch runner (stale threshold 1:34 PM MST)",
-    "After QA completes: move Equal Tops to Done (no service restart needed for research card)",
-    "Dispatch Phase 8 cards from new Inbox batch next cycle"
+    "Monitor 3 runners — stale threshold 1:49 PM MST",
+    "FT_MAX_MDD fix: if successful, cross_asset_correlation should gate=pass → live trading resumes",
+    "momentum_v2: likely quick demote (3 trades, 0% WR, weak BT metrics)",
+    "vol_expansion: likely trade-count limited (16 trades vs 100 minimum gate)",
+    "Inbox: bulk_archive (blofin) + NQ Phase 3 + NQ Phase 4 (NQ blocked by Phase 2)",
+    "Phase 8 skipped: Inbox=3 > 2"
   ]
 }

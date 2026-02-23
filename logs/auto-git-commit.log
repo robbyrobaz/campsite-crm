@@ -544,3 +544,6 @@ CLEAN kanban-dashboard (nothing to commit)
  create mode 120000 models_elite_robbyrob2
 COMMITTED numerai-tournament
 CLEAN ai-workshop (nothing to commit)
+[main 290a9e6] auto: snapshot 2026-02-23T14:00:01Z
+ 2 files changed, 23 insertions(+), 1 deletion(-)
+COMMITTED campsite-crm

@@ -1,31 +1,40 @@
 {
-  "lastUpdated": "2026-02-23T06:49:00Z",
+  "lastUpdated": "2026-02-23T07:04:00Z",
   "activeTasks": [
+    {
+      "id": "c_6fdb7712b3ad8_19c89244ea4",
+      "title": "make a way to see the live work of any deployed agent",
+      "pid": 58596,
+      "project": "master-dashboard"
+    },
     {
       "id": "c_fb277de3dffac_19c892879f4",
       "title": "Run full blofin backtest sweep on all 16 T0 strategies",
-      "pid": 37479
+      "pid": 57919,
+      "recycleCount": 1
     },
     {
-      "id": "c_320ce3d758467_19c88b9fa12",
-      "title": "fully replace EEP from all boards (kanban HTML only \u2014 6th)",
-      "pid": 37407
-    },
-    {
-      "id": "c_9f7f41f644c6c_19c892879a0",
-      "title": "Blofin dashboard: add per-coin strategy performance table",
-      "pid": 47158
+      "id": "c_46fcecb6dc411_19c89287a0f",
+      "title": "Verify 21 strategies blocked by BaseStrategy inheritance",
+      "pid": 59142
     }
   ],
-  "closedDuplicates": [
-    "c_0b8667a99eb9: demotion sweep (already in commit 30b0cd2)"
+  "completedThisCycle": [
+    "c_9f7f41f644c6c: Per-coin performance dashboard \u2014 /api/coin_performance + blofin-dashboard.html table. Blofin restarted (200 OK).",
+    "c_320ce3d758467: EEP replacement \u2014 FINALLY DONE (7th attempt). Self-closed: no EEP labels found in kanban HTML/JS. Master-dashboard + all visible labels already updated."
   ],
-  "inboxRemaining": 6,
+  "inboxQueue": [
+    "c_7fba2584c3d45: Numerai: Retrain full 25-model pipeline",
+    "c_6cbf706829031: Numerai: Build continuous ML experimentation daemon",
+    "c_2577b78e1b8fb: Retrain 4 stale ML models (blofin)",
+    "c_de1e2f50a6d45: Switch Numerai ML to GPU (RTX 2080)"
+  ],
   "health": {
-    "cpu_temp": "55C",
-    "load_pct": "4.5%",
+    "cpu_temp": "83C",
+    "load_pct": "44.7%",
     "disk_pct": "36%",
+    "tokens_5h": "62%",
     "services": "all active"
   },
-  "notes": "23:49 MST \u2014 Closed duplicate demotion card. Per-coin dashboard dispatched. Both IP safe at 13m. Token reset at 02:00 MST. Phase 8 skipped (inbox=8, tokens~59%)."
+  "notes": "00:04 MST \u2014 EEP finally closed (7th). Per-coin dashboard live. 3 IP active. Tokens 62% (over gate). Token reset at 02:00 AM MST (~56min). Phase 8 opens after reset."
 }

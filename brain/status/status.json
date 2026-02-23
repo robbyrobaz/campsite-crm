@@ -1,16 +1,17 @@
 {
-  "lastUpdated": "2026-02-23T17:09:04Z",
+  "lastUpdated": "2026-02-23T17:23:31Z",
   "activeTasks": [
+    {
+      "cardId": "c_e51d11c5e8b9b_19c8b6a26e1",
+      "title": "Investigate ml_gbt_5m poor FT performance: ft_pnl=-50.9% over 859 trades",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "dispatchedAt": "2026-02-23T17:20 UTC",
+      "pid": 545020
+    },
     {
       "cardId": "c_df239d1c2a246_19c8b6a5130",
       "title": "CRITICAL: Fix blofin pipeline FT promotion and registry sync",
-      "status": "In Progress",
-      "project": "blofin-stack",
-      "dispatchedAt": "2026-02-23T17:04 UTC"
-    },
-    {
-      "cardId": "c_4d84d0ef74823_19c8b718f59",
-      "title": "MAJOR: Full blofin pipeline audit",
       "status": "In Progress",
       "project": "blofin-stack",
       "dispatchedAt": "2026-02-23T17:04 UTC"
@@ -21,39 +22,32 @@
       "status": "In Progress",
       "project": "master-dashboard",
       "dispatchedAt": "2026-02-23T17:04 UTC"
-    },
-    {
-      "cardId": "c_e08eefdc5c512_19c8b40556d",
-      "title": "Investigate ensemble_top3 / fix promote_to_ft re-promotion bug",
-      "status": "Review/Test",
-      "project": "blofin-stack",
-      "qaStatus": "QA running (haiku)"
-    },
-    {
-      "cardId": "c_825621affcdfa_19c8b347ab5",
-      "title": "Fix volatility_regressor overfitting",
-      "status": "Review/Test",
-      "project": "blofin-stack",
-      "qaStatus": "QA running (haiku)"
     }
   ],
   "boardSummary": {
     "inProgress": 3,
-    "reviewTest": 2,
+    "reviewTest": 0,
     "planned": 0,
-    "inbox": 1
+    "inbox": 2
   },
+  "recentlyDone": [
+    "volatility_regressor overfitting fix (test_r2=0.484, gap=0.077)",
+    "ensemble_top3 demoted (ft_wr=31.4%, ft_pnl=-84.3%, 1207 trades)",
+    "promote_to_ft.py re-promotion bug fixed (AND archived=0)",
+    "PIPELINE_AUDIT.md written (31KB, 10:14 MST)",
+    "vol_bb_vwap_reversion, volume_mean_reversion_v1, macd_divergence, low_volatility_atr_breakout \u2014 all demoted"
+  ],
   "systemHealth": {
-    "cpuTemp": "90C (high, sub-critical)",
-    "cpuLoad": "3.9/12 = 32%",
+    "cpuTemp": "92C (high, sub-critical \u2014 NinjaTrader ML also running)",
+    "cpuLoad": "2.8/12 = 23%",
     "diskUsage": "37%",
     "services": "all active",
-    "tokenUsage5h": "46%"
+    "tokenUsage5h": "54%"
   },
   "nextActions": [
-    "Await QA results for vol-reg (c_825621affcdfa) and ensemble_top3 fix (c_e08eefdc5c512)",
-    "Apply deploy hooks on QA PASS (blofin service restart)",
-    "Monitor 3 active runners \u2014 stale threshold at 10:19 MST",
-    "Dispatch ml_gbt_5m (c_e51d11c5e8b9b) when a slot opens"
+    "Monitor 3 runners \u2014 stale threshold 10:35 MST",
+    "QA on R/T cards when runners complete",
+    "Dispatch cross_asset_correlation and direction_predictor retrain when slots open",
+    "Watch CPU temp (92C) \u2014 NinjaTrader ML + blofin runners both active"
   ]
 }

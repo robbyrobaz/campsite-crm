@@ -1,58 +1,50 @@
 {
-  "updated": "2026-02-23T10:52:10Z",
-  "updated_mst": "2026-02-23 03:49 MST",
-  "cycle": "Jarvis Pulse 03:49 MST Feb 23 2026",
+  "updated": "2026-02-23T11:04:00Z",
+  "updated_mst": "2026-02-23 04:04 MST",
+  "cycle": "Jarvis Pulse 04:04 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 76,
-    "cpu_load_pct": 82,
+    "cpu_temp_c": 82,
+    "cpu_load_pct": 14,
     "disk_pct": 36,
     "services": [
-      "openclaw-gateway",
-      "blofin-stack-ingestor",
-      "blofin-stack-paper",
-      "blofin-dashboard"
+      "openclaw-gateway: active",
+      "blofin-stack-ingestor: active",
+      "blofin-stack-paper: active"
     ],
-    "alerts": "CPU 82% \u2014 Numerai GPU training finishing + blofin pipeline + 2 new builders"
+    "alerts": "none"
   },
   "board": {
-    "in_progress": 3,
-    "review_test": 0,
+    "in_progress": 0,
+    "review_test": 1,
     "planned": 0,
-    "inbox": 1
+    "inbox": 2
   },
   "activeTasks": [
     {
-      "id": "c_7fba2584c3d45_19c892ad5f9",
-      "title": "Numerai: Retrain full 25-model pipeline with era-boosting en",
-      "status": "In Progress",
-      "project": "/home/rob/.openclaw/workspace/numerai-tournament",
-      "note": "GPU training 27-29/30 models, builder pid=191049 alive 28min"
-    },
-    {
       "id": "c_b2e3d172fa81_19c8a072fe0",
-      "title": "T1 FT failures: ensemble_top3 ft_PnL=-44.2% (646 trades), at",
-      "status": "In Progress",
+      "title": "T1 FT failures: ensemble_top3 ft_PnL=-44.2% (646 trades), atr_regime_fade -22.1%",
+      "status": "Review/Test",
       "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "Blofin DB operation \u2014 archive or investigate"
-    },
+      "note": "QA subagent (haiku) in flight — checking Phase 3 demotion of ensemble_top3 + atr_regime_fade"
+    }
+  ],
+  "completed_this_cycle": [
     {
-      "id": "c_d5d4e0d52742_19c8a072fb7",
-      "title": "Archive 3 T0 strategies with bt_PnL < -25%: momentum_v4, mtf",
-      "status": "In Progress",
-      "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "Blofin DB operation \u2014 archive or investigate"
+      "id": "c_a6f79d83813f2_19c8a072fff",
+      "title": "Disable TIA-USDT paper trading",
+      "outcome": "PASS — already hard-blocked in coin_eligibility.py:21. Blofin services restarted."
     }
   ],
   "phase8_gate": {
-    "inbox_planned": 1,
-    "cpu_pct": 82,
-    "tokens_5h_pct": 7,
-    "status": "BLOCKED (cpu=82%)"
+    "inbox_planned": 0,
+    "cpu_pct": 14,
+    "tokens_5h_pct": 11,
+    "status": "PASS — created 2 improvement cards"
   },
   "last_actions": [
-    "HOLD: Numerai training at 27-29/30 models (delta_20 complete), GPU active, builder alive 28min",
-    "DISPATCH: Archive 3 T0 strategies pid=210308",
-    "DISPATCH: T1 FT failures investigation pid=210319",
-    "PHASE 8: Skipped (cpu=82%>50%)"
+    "QA PASS: TIA-USDT card → Done (hard-block already in coin_eligibility.py:21)",
+    "RESTART: blofin-stack-ingestor + blofin-stack-paper (both active)",
+    "PHASE 8: Created vwap_reversion demotion card + entry/exit_classifier retrain card",
+    "QA RUNNING: haiku subagent checking T1 FT demotion (ensemble_top3, atr_regime_fade)"
   ]
 }

@@ -1,36 +1,34 @@
 {
-  "lastUpdated": "2026-02-23T07:49:00Z",
+  "lastUpdated": "2026-02-23T08:04:00Z",
   "activeTasks": [
     {
-      "id": "c_de1e2f50a6d45_19c891a946c",
-      "title": "Switch Numerai ML to GPU (RTX 2080)",
-      "pid": 91064
+      "id": "c_7fba2584c3d45_19c892ad5f9",
+      "title": "Numerai: Retrain 25-model pipeline (era-boosting, now GPU)",
+      "pid": 92221,
+      "ageMin": 14.4
     },
     {
       "id": "c_fb277de3dffac_19c892879f4",
-      "title": "Blofin backtest sweep (Phase 1 focused)",
-      "pid": 90992,
-      "recycleCount": 3
+      "title": "Blofin backtest sweep (Phase 1 \u2014 4th attempt)",
+      "pid": 101573,
+      "recycleCount": 4
     },
     {
-      "id": "c_7fba2584c3d45_19c892ad5f9",
-      "title": "Numerai: Retrain full 25-model pipeline (era-boosting)",
-      "pid": 92221,
-      "recycleCount": 1
+      "id": "c_6cbf706829031_19c892cfa7d",
+      "title": "Numerai: Build continuous ML experimentation daemon",
+      "pid": 101578
     }
   ],
   "completedThisCycle": [
-    "c_6fdb7712b3ad8: Live Work panel live at port 8890 \u2014 SSE log streaming, /api/live-work/cards working"
+    "c_de1e2f50a6d45 QA PASS: Numerai GPU switch \u2014 5 fixes (exp001, era_boost_deploy, numerai_pipeline_elite x3). RTX 2080 now utilized for all training."
   ],
-  "inboxQueue": [
-    "c_6cbf706829031: Numerai ML experimentation daemon"
-  ],
+  "inboxQueue": [],
   "health": {
-    "cpu_temp": "62C",
-    "load_pct": "9.7%",
+    "cpu_temp": "87C",
+    "load_pct": "41.7%",
     "disk_pct": "36%",
     "tokens_5h": "67%",
     "services": "all active"
   },
-  "notes": "00:49 MST \u2014 Numerai retrain recycled @16m. 3 IP active. Token reset 02:00 MST."
+  "notes": "01:04 MST \u2014 GPU QA PASS. Backtest recycled (4th, 15.5m). Numerai daemon dispatched. Inbox empty. Token reset 02:00 MST (~56min). Phase 8 opens after reset."
 }

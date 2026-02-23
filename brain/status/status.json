@@ -1,47 +1,53 @@
 {
-  "lastUpdated": "2026-02-23T19:06:47Z",
+  "lastUpdated": "2026-02-23T19:22:29Z",
   "activeTasks": [
     {
       "cardId": "c_0f46cbe9e4d59_19c8bc67c47",
       "title": "CRITICAL: Fix NQ strategy signal generation",
       "status": "Review/Test",
       "project": "ninja_trader_strategies",
-      "note": "QA running (haiku). Commit 3860147: strategy filters + walk-forward threshold fix. Feature order remaining."
+      "note": "QA running (haiku). Commit 3860147: strategy filters + walk-forward threshold fix."
     },
     {
       "cardId": "c_5ae5c8808f9c9_19c8bd50ee4",
       "title": "Fix NQ run_phase2.py feature computation order",
-      "status": "In Progress",
+      "status": "Review/Test",
       "project": "ninja_trader_strategies",
-      "pid": 647402,
-      "note": "apply_strategy_candidate_filter() must be called after build_features() + add_session_features()"
+      "note": "QA running (haiku). Commit e8bc87f: Phase 2 re-run, realistic trade counts, PF=1.04."
     },
     {
-      "cardId": "c_c0b6b72fe0b71_19c8bd9328a",
-      "title": "Add NQ Pipeline to master status dashboard",
+      "cardId": "c_029ece7802ae9_19c8bd932af",
+      "title": "New NQ Strategy: Equal Tops & Equal Bottoms",
       "status": "In Progress",
-      "project": "master-dashboard",
-      "pid": 647412
+      "project": "ninja_trader_strategies",
+      "pid": 660275
+    },
+    {
+      "cardId": "c_b493ae5fbaf41_19c8beca852",
+      "title": "Check Anthropic 7-day usage (20x upgrade verification)",
+      "status": "In Progress",
+      "project": "workspace",
+      "pid": 660469
     }
   ],
   "boardSummary": {
     "inProgress": 2,
-    "reviewTest": 1,
+    "reviewTest": 2,
     "planned": 0,
     "inbox": 4,
-    "inboxNote": "NQ Phase 2 (blocked), Phase 3, Phase 4, Equal Tops/Bottoms strategy"
+    "inboxNote": "NQ Phase 2 (blocked on QA), Phase 3, Phase 4, ML Feature Engineering"
   },
   "systemHealth": {
-    "cpuTemp": "86C \u26a0\ufe0f (runners active)",
-    "cpuLoad": "~22%",
+    "cpuTemp": "60C \u2705",
+    "cpuLoad": "~10%",
     "diskUsage": "37%",
     "services": "all active",
-    "tokenUsage5h": "0% (window reset 12:00 PM MST \u2705)"
+    "tokenUsage5h": "5% (fresh window)"
   },
   "nextActions": [
-    "QA result pending for NQ signal fix \u2014 deploy on PASS, recycle on FAIL",
-    "After feature-order fix: dispatch NQ Phase 2 completion",
-    "NQ Phase 2 \u2192 Phase 3 \u2192 Phase 4 sequential pipeline",
-    "Phase 8 blocked: Inbox=4 (need \u22642 before generating new cards)"
+    "Await QA for NQ signal fix + feature order fix",
+    "On PASS: deploy + dispatch NQ Phase 2 immediately",
+    "On FAIL: recycle to Planned for another runner attempt",
+    "Phase 8 unblocked when Inbox drains to \u22642 (currently 4)"
   ]
 }

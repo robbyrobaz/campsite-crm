@@ -1,13 +1,13 @@
 {
-  "lastUpdated": "2026-02-23T19:37:16Z",
+  "lastUpdated": "2026-02-23T19:51:38Z",
   "activeTasks": [
     {
       "cardId": "c_8b64062d36389_19c8bc67c88",
       "title": "NQ Phase 2 completion: Fix strategies and re-run training",
       "status": "In Progress",
       "project": "ninja_trader_strategies",
-      "pid": 670934,
-      "note": "Prerequisites done: signal fix + feature order fix both QA PASS"
+      "pid": 700745,
+      "note": "RECYCLED 12:49 \u2014 died mid-execution (no commit). Fresh restart. Heavy compute (91C)."
     },
     {
       "cardId": "c_5d0060a3cd6a6_19c8be687b4",
@@ -15,32 +15,34 @@
       "status": "In Progress",
       "project": "ninja_trader_strategies",
       "pid": 670937,
-      "note": "Baseline: 3,701 trades, 28.9% WR, PF 0.40 \u2014 ML enhancement"
+      "note": "Log actively writing at 12:49. Still running."
+    },
+    {
+      "cardId": "c_1ef138b763b45_19c8c0145ca",
+      "title": "Investigate cross_asset_correlation registry regression",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "pid": 700990,
+      "note": "ft_pnl +127% -> -26.49% after pipeline phase fix. Investigate registry overwrite."
     }
   ],
   "boardSummary": {
-    "inProgress": 2,
+    "inProgress": 3,
     "reviewTest": 0,
     "planned": 0,
-    "inbox": 5,
-    "inboxNote": "NQ Phase 3 (blocked), Phase 4 (blocked), + 3 new blofin Phase 8 cards"
+    "inbox": 4
   },
   "systemHealth": {
-    "cpuTemp": "66C \u2705",
-    "cpuLoad": "2.5/12 = 21%",
+    "cpuTemp": "91C \u26a0\ufe0f (NQ Phase 2 heavy compute)",
+    "cpuLoad": "~22% load",
     "diskUsage": "37%",
     "services": "all active",
-    "tokenUsage5h": "9%"
+    "tokenUsage5h": "12%"
   },
-  "phase8Created": [
-    "volatility_expansion_volume_breakout investigation (ft_wr=68.75%, tier=0 gate=fail \u2014 hidden gem?)",
-    "cross_asset_correlation registry regression (ft_pnl +127%\u2192-26.49% after pipeline fix)",
-    "volatility_regime_switch FT pipeline run (tier=2 NULL FT data)"
-  ],
   "nextActions": [
-    "NQ Phase 2 in progress \u2014 stale threshold 12:49 PM",
-    "After Phase 2 QA pass: dispatch NQ Phase 3",
-    "Blofin: investigate cross_asset_correlation registry regression (priority)",
-    "Blofin: check volatility_expansion_volume_breakout for possible promotion"
+    "Monitor 3 runners \u2014 stale threshold 1:04 PM MST",
+    "NQ Phase 2 recycled \u2014 watch for commit this time",
+    "CAC regression: determine if ft_pnl crash is pipeline bug or legitimate data",
+    "After Phase 2 completes: dispatch NQ Phase 3"
   ]
 }

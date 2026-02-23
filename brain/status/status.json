@@ -1,52 +1,56 @@
 {
-  "updated": "2026-02-23T15:04:00Z",
-  "updated_mst": "2026-02-23 08:04 MST",
-  "cycle": "Jarvis Pulse 08:04 MST Feb 23 2026",
+  "updated": "2026-02-23T15:19:00Z",
+  "updated_mst": "2026-02-23 08:19 MST",
+  "cycle": "Jarvis Pulse 08:19 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 85,
-    "cpu_load_pct": 25,
+    "cpu_temp_c": 55,
+    "cpu_load_pct": 15,
     "disk_pct": 37,
     "services": ["openclaw-gateway: active", "blofin-stack-ingestor: active", "blofin-stack-paper: active"],
-    "alerts": "none"
+    "alerts": "none — tier-2 board now clean (0 unvalidated strategies)"
   },
   "board": {
-    "in_progress": 2,
-    "review_test": 2,
+    "in_progress": 1,
+    "review_test": 0,
     "planned": 0,
-    "inbox": 0
+    "inbox": 2
   },
   "activeTasks": [
     {
-      "id": "c_294ab2f2815d3_19c8ad2e96c",
-      "title": "Add ADX<25 regime filter to vol_compression_fade",
-      "status": "Review/Test",
-      "note": "Runner added _calc_adx(), ADX<25 threshold, use_next_open=True in strategy_030.py. QA haiku running."
-    },
-    {
-      "id": "c_20cd45b079aef_19c8ad2e94e",
-      "title": "Investigate macd_divergence tier-2 (no FT data)",
-      "status": "Review/Test",
-      "note": "Runner modified pipeline_state.json + backtest_engine.py. QA haiku running."
-    },
-    {
-      "id": "c_aa2c77d1389b4_19c8aef5b8e",
-      "title": "URGENT: Systemic paper trade losses investigation",
-      "status": "In Progress",
-      "note": "Dispatched 08:04. PID=423395."
-    },
-    {
       "id": "c_968374110d0c9_19c8aef5bb4",
-      "title": "Retrain stale ML models (7.3 days)",
+      "title": "Retrain stale ML models (7.3 days old)",
       "status": "In Progress",
-      "note": "Dispatched 08:04. PID=423407."
+      "note": "PID=423407. Timestamp refreshed at 14 min. Running."
     }
   ],
-  "resolved_this_cycle": [
-    "c_8d161fa108d11 (7-day Rolling Returns all 4 tiers) → DONE at 07:59 MST",
-    "aggressive_optimizer.py patched: batch-load 6 symbols + gc.collect() (committed in 08:00 snapshot)"
+  "inbox_waiting": [
+    {
+      "id": "c_6277461282ba6_19c8b171481",
+      "title": "Demote vol_bb_vwap_reversion: ft_pnl=-71.9%, WR=11.4%, 245 trades — worst active strategy",
+      "priority": "HIGH"
+    },
+    {
+      "id": "c_a161359cbbb3a_19c8b1714a2",
+      "title": "Demote volume_mean_reversion_v1: ft_pnl=-69.6%, WR=16.0%, 275 trades",
+      "priority": "HIGH"
+    }
   ],
+  "direct_actions_this_cycle": [
+    "Demoted low_volatility_atr_breakout: tier 2→0, gate_status=fail (tier-2 with NULL FT data, same pattern as macd_divergence). Services restarted.",
+    "0 tier-2+ strategies remaining with gate_status=pass — board is clean"
+  ],
+  "resolved_this_cycle": [
+    "c_aa2c77d1389b4 (systemic paper losses) → Done at 08:15 MST",
+    "ADX filter + macd_divergence + optimizer OOM + 7-day chart → all Done"
+  ],
+  "paper_trading_status": {
+    "tier2_active": 0,
+    "note": "Post-demotion 1h: JTO-USDT WR=61%/+323%, JUP WR=57%/+56%, SEI WR=50%/+31% — positive signs. ARB/BOME still poor (demotion cards queued)."
+  },
   "phase8_gate": {
     "inbox_planned": 0,
-    "status": "SKIPPED — board full (2 In Progress + 2 Review/Test + QA running); CPU check deferred"
+    "cpu_pct": 15,
+    "tokens_5h_pct": 29,
+    "status": "PASS — created 2 cards (vol_bb demotion + volume_mean_reversion_v1 demotion)"
   }
 }

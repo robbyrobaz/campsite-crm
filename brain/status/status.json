@@ -1,11 +1,11 @@
 {
-  "updated": "2026-02-23T11:19:00Z",
-  "updated_mst": "2026-02-23 04:19 MST",
-  "cycle": "Jarvis Pulse 04:19 MST Feb 23 2026",
+  "updated": "2026-02-23T11:34:00Z",
+  "updated_mst": "2026-02-23 04:34 MST",
+  "cycle": "Jarvis Pulse 04:34 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 51,
-    "cpu_load_pct": 5,
-    "disk_pct": 36,
+    "cpu_temp_c": 79,
+    "cpu_load_pct": 11,
+    "disk_pct": 37,
     "services": [
       "openclaw-gateway: active",
       "blofin-stack-ingestor: active",
@@ -15,44 +15,37 @@
   },
   "board": {
     "in_progress": 2,
-    "review_test": 1,
+    "review_test": 0,
     "planned": 0,
-    "inbox": 1
+    "inbox": 2
   },
   "activeTasks": [
     {
-      "id": "c_ecb79a0340d9c_19c8a2e52f2",
-      "title": "Retrain entry_classifier + exit_classifier (XGBoost/ALL): 4.5d old → 5d stale",
-      "status": "In Progress",
-      "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "Dispatched 04:19. PID=230423"
-    },
-    {
       "id": "c_0c62bd4cd8b79_19c8a2e52ba",
-      "title": "Demote vwap_reversion on XRP/ETH/SOL-USDT: WR~0.5%, no demotion yet",
+      "title": "Demote vwap_reversion on XRP/ETH/SOL-USDT: WR~0.5% (82-85 trades)",
       "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "Dispatched 04:19. PID=230434"
+      "note": "Phase 4 stale recovery applied at 04:34 (was 15.2min). Re-ran PID=240987."
     },
     {
-      "id": "c_b2e3d172fa81_19c8a072fe0",
-      "title": "T1 FT failures: ensemble_top3 -44.2% / atr_regime_fade -22.1% — Phase 3 demotion",
-      "status": "Review/Test",
+      "id": "c_84c65a47056e2_19c8a3c1236",
+      "title": "Disable volume_mean_reversion: enabled=1, WR=0.0%, avgPnL=-1.06%",
+      "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "QA haiku subagent running (spawned 04:19). Age=25min in Review/Test."
+      "note": "Dispatched 04:34. PID=240513."
     }
   ],
   "phase8_gate": {
     "inbox_planned": 0,
-    "cpu_pct": 5,
-    "tokens_5h_pct": 12,
-    "status": "PASS — created 1 card"
+    "cpu_pct": 11,
+    "tokens_5h_pct": 13,
+    "status": "PASS — created 2 cards"
   },
   "last_actions": [
-    "PHASE 3: Fixed null assignees on 2 inbox cards → claude",
-    "PHASE 5: Dispatched c_ecb79a0340d9c (retrain models) PID=230423",
-    "PHASE 5: Dispatched c_0c62bd4cd8b79 (demote vwap_reversion) PID=230434",
-    "PHASE 6: QA haiku running on T1 FT failures card (ensemble_top3 + atr_regime_fade)",
-    "PHASE 8: Created 1 card — volume_mean_reversion enabled with WR=0.0% / avgPnL=-1.06%"
+    "PHASE 3: Fixed null assignee on volume_mean_reversion card → claude",
+    "PHASE 4: Stale recovery on vwap_reversion card (15.2min) → recycled to Planned → re-ran PID=240987",
+    "PHASE 5: Dispatched volume_mean_reversion disable card PID=240513",
+    "PHASE 6: No Review/Test cards this cycle",
+    "PHASE 8: Created 2 cards — JTO-USDT backtest (never run, 2818 signals/24h) + optimizer re-run (5.9d stale)"
   ]
 }

@@ -1,28 +1,33 @@
 {
-  "lastUpdated": "2026-02-23T23:30:00Z",
-  "activeTasks": [],
-  "planned": [
-    {"id": "c_f1d36e5aea577", "title": "Investigate volatility_expansion_volume_breakout", "note": "Waiting — blocked until ETB slot is restarted"},
-    {"id": "c_062ab9dbbdf74", "title": "Make equal_tops_bottoms an expert NQ strategy", "note": "⚠️ Builder PID 979010 DEAD as of 4:30 PM heartbeat. Needs restart. Rob alerted."}
+  "lastUpdated": "2026-02-23T23:43:00Z",
+  "activeTasks": [
+    {
+      "cardId": "c_f1d36e5aea577_19c8c0145ae",
+      "title": "Investigate volatility_expansion_volume_breakout for tier promotion",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "pid": 1018557,
+      "note": "Dispatched 4:43 PM MST. tier=0 gate=fail, ft_pf=2.207, WR=68.8%, 16 FT trades. Sole blocker likely GATE_MIN_TRADES=100. Stale threshold: 5:13 PM MST."
+    }
+  ],
+  "recentlyDone": [
+    {
+      "title": "NQ ETB equal_tops_bottoms expert strategy",
+      "completedAt": "2026-02-23T23:40Z",
+      "note": "Done. Cleaned up prior SIGTERM sessions. State correct."
+    }
   ],
   "blofin": {
     "gatePassStrategies": 1,
-    "note": "cross_asset_correlation gate=pass (pf=1.091, mdd=80.03%). vwap_reversion durable fix card in Inbox (c_c264400d324d6). Paper engine limited until 2nd gate=pass strategy."
+    "note": "cross_asset_correlation gate=pass. vwap_reversion durable fix card in Inbox (c_c264400d324d6). Paper engine needs 2nd gate=pass."
   },
   "systemHealth": {
-    "cpuTemp": "72C",
+    "cpuTemp": "68C",
     "diskUsage": "38%",
     "services": "all active"
   },
-  "alerts": [
-    "ETB builder dead (PID 979010 gone, task was In Progress). Rob alerted 4:30 PM MST.",
-    "master-dashboard: no git remote — not backed up",
-    "campsite-crm: not a git repo",
-    "gilbert-pd-radio-trainer: not a git repo"
-  ],
   "nextActions": [
-    "Rob to confirm: restart ETB builder or cancel?",
-    "After ETB slot decision: dispatch vol_expansion investigation",
-    "Add remotes to master-dashboard, init git for campsite-crm and gilbert-pd-radio-trainer"
+    "Monitor vol_expansion — stale threshold 5:13 PM MST",
+    "After vol_expansion: dispatch vwap_reversion durable fix (c_c264400d324d6)"
   ]
 }

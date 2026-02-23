@@ -1,53 +1,54 @@
 {
-  "lastUpdated": "2026-02-23T17:38:14Z",
+  "lastUpdated": "2026-02-23T17:53:51Z",
   "activeTasks": [
-    {
-      "cardId": "c_df239d1c2a246_19c8b6a5130",
-      "title": "CRITICAL: Fix blofin pipeline FT promotion and registry sync",
-      "status": "In Progress",
-      "project": "blofin-stack",
-      "note": "Major commit 7235196 at 10:30 MST (1037 insertions). Pipeline ran at 10:33. Runner still active."
-    },
     {
       "cardId": "c_2405216d444bb_19c8b730e18",
       "title": "Numerai Tournament model stats",
-      "status": "In Progress",
+      "status": "Review/Test",
       "project": "master-dashboard",
-      "dispatchedAt": "2026-02-23T17:04 UTC"
+      "note": "QA running (haiku). get_numerai_model_stats() + color-coded table implemented."
     },
     {
-      "cardId": "c_8ef489fc81f32_19c8b86c652",
-      "title": "Investigate cross_asset_correlation: tier=2 with NULL FT data",
+      "cardId": "c_df239d1c2a246_19c8b6a5130",
+      "title": "CRITICAL: Fix blofin pipeline FT promotion and registry sync",
+      "status": "Review/Test",
+      "project": "blofin-stack",
+      "note": "QA running (haiku). Commit 7235196: 1037 insertions (orchestration, promote_to_ft, PIPELINE_AUDIT.md)."
+    },
+    {
+      "cardId": "c_4a3bd2aac534d_19c8b86c679",
+      "title": "Retrain direction_predictor \u2014 missed in batch retrain",
       "status": "In Progress",
       "project": "blofin-stack",
-      "pid": 565188,
-      "dispatchedAt": "2026-02-23T17:34 UTC"
+      "pid": 577730,
+      "dispatchedAt": "2026-02-23T17:49 UTC"
     }
   ],
   "boardSummary": {
-    "inProgress": 3,
-    "reviewTest": 0,
+    "inProgress": 1,
+    "reviewTest": 2,
     "planned": 0,
     "inbox": 1
   },
+  "correction": "cross_asset_correlation WRONGLY demoted at 10:34, restored at 10:49. Per-coin FT: JTO WR=75%/+103%, SOL WR=64%/+17%. Registry sync bug caused NULL strategy-level data.",
   "recentlyDone": [
-    "ml_gbt_5m archived: BUY WR=21.6% (813t), regime-flip confirmed; 1177 FT trades",
-    "ensemble_top3 demoted: ft_wr=31.4%, ft_pnl=-84.3%, 1207 trades",
-    "vol_reg overfitting fixed: test_r2=0.484 (was -22M), gap=0.077",
-    "PIPELINE_AUDIT.md written (31KB)",
-    "promote_to_ft.py re-promotion bug fixed (AND archived=0)"
+    "cross_asset_correlation: restored tier=2/gate=pass (wrongly archived; per-coin FT is excellent)",
+    "ml_gbt_5m archived: BUY WR=21.6% regime-flip confirmed",
+    "ensemble_top3 demoted: ft_wr=31.4%, ft_pnl=-84.3%",
+    "vol_reg overfitting fixed: test_r2=0.484",
+    "PIPELINE_AUDIT.md written"
   ],
   "systemHealth": {
-    "cpuTemp": "95C \u26a0\ufe0f NEAR HIGH \u2014 NinjaTrader ML + blofin runners",
-    "cpuLoad": "3.0/12 = 25%",
+    "cpuTemp": "56C \u2705 (NinjaTrader ML finished)",
+    "cpuLoad": "0.5/12 = 4%",
     "diskUsage": "37%",
-    "services": "all active",
-    "tokenUsage5h": "56%"
+    "services": "all active (blofin restarted 10:49 to restore cross_asset_correlation)",
+    "tokenUsage5h": "58%"
   },
   "nextActions": [
-    "Monitor 3 runners \u2014 stale threshold 10:49 MST",
-    "QA when FT-fix and cross_asset_correlation complete",
-    "Dispatch direction_predictor retrain when slot opens (currently held for thermal reasons)",
-    "ALERT: CPU 95C \u2014 monitor if exceeds 98C"
+    "Await QA for Numerai stats + FT-fix (haiku agents running)",
+    "On QA PASS: master-dashboard build+restart (Numerai) + blofin restart (FT-fix)",
+    "direction_predictor retrain in progress (PID 577730)",
+    "After FT-fix QA pass: evaluate cross_asset_correlation promotion using fixed registry sync"
   ]
 }

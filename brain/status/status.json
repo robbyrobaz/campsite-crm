@@ -1,10 +1,10 @@
 {
-  "updated": "2026-02-23T08:21:53Z",
-  "updated_mst": "2026-02-23 01:21 MST",
-  "cycle": "Jarvis Pulse 01:19 MST Feb 23 2026",
+  "updated": "2026-02-23T08:36:50Z",
+  "updated_mst": "2026-02-23 01:34 MST",
+  "cycle": "Jarvis Pulse 01:34 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 66,
-    "cpu_load_pct": 5.1,
+    "cpu_temp_c": 82,
+    "cpu_load_pct": 51.5,
     "disk_pct": 36,
     "services": [
       "openclaw-gateway",
@@ -12,7 +12,7 @@
       "blofin-stack-paper",
       "blofin-dashboard"
     ],
-    "alerts": "none"
+    "alerts": "CPU load elevated (51.5%), temp 82C"
   },
   "board": {
     "in_progress": 1,
@@ -27,19 +27,18 @@
       "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/numerai-tournament",
       "assignee": "claude",
-      "updated_at": 1771834839196
+      "pid": 122173,
+      "attempt": 9
     }
   ],
   "phase8_gate": {
     "inbox_planned": 0,
-    "cpu_pct": 5.1,
-    "tokens_5h_pct": 70,
-    "status": "BLOCKED (tokens 70% > 60% gate, reset 02:00 AM MST)"
+    "cpu_pct": 51.5,
+    "tokens_5h_pct": 71,
+    "status": "BLOCKED (cpu=51.5%>50% + tokens=71%>60%, reset 02:00 AM MST)"
   },
   "last_actions": [
-    "PHASE 4: Recycled Numerai retrain card (28.7m stale, 8th cycle), pid=112049",
-    "PHASE 6: QA PASS backtest sweep \u2014 1 T1 promotion (volume_mean_reversion_v1 WR=50.1%), 45 T0 stayed",
-    "PHASE 6: Blofin services restarted, dashboard HTTP 200",
-    "PHASE 8: Skipped (tokens=70%>60%, reset 02:00 AM MST)"
+    "PHASE 4: Recycled Numerai retrain (14.5m stale, process pid 112049 dead since 01:22) \u2192 9th dispatch, pid=122173",
+    "PHASE 8: Skipped (cpu=51.5%>50%, tokens=71%>60%)"
   ]
 }

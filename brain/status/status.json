@@ -1,62 +1,64 @@
 {
-  "updated": "2026-02-23T14:34:00Z",
-  "updated_mst": "2026-02-23 07:34 MST",
-  "cycle": "Jarvis Pulse 07:34 MST Feb 23 2026",
+  "updated": "2026-02-23T14:49:00Z",
+  "updated_mst": "2026-02-23 07:49 MST",
+  "cycle": "Jarvis Pulse 07:49 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 83,
-    "cpu_load_pct": 15,
+    "cpu_temp_c": 74,
+    "cpu_load_pct": 3,
     "disk_pct": 37,
     "services": ["openclaw-gateway: active", "blofin-stack-ingestor: active", "blofin-stack-paper: active"],
-    "alerts": "PAPER TRADING ALERT: All 8 active symbols WR 23-29% over 48h — systemic losses detected"
+    "alerts": "none — 2h trading WR looking healthier (JTO 62%, JUP 58.7%). 48h losses from demoted strategies (historical)."
   },
   "board": {
     "in_progress": 3,
-    "review_test": 1,
+    "review_test": 0,
     "planned": 0,
     "inbox": 2
   },
   "activeTasks": [
     {
-      "id": "c_8d161fa108d11_19c8ad888e2",
-      "title": "7-Day Rolling Returns: all 4 pipeline tiers (0,1,2,3)",
-      "status": "In Progress",
-      "note": "Rob's request. PID=396083. 9.9 min."
-    },
-    {
-      "id": "c_20cd45b079aef_19c8ad2e94e",
-      "title": "Investigate macd_divergence tier-2 (no FT data) + demotion",
-      "status": "In Progress",
-      "note": "Dispatched 07:34. PID=403181."
-    },
-    {
       "id": "c_294ab2f2815d3_19c8ad2e96c",
       "title": "Add ADX<25 regime filter to vol_compression_fade",
       "status": "In Progress",
-      "note": "Dispatched 07:34. PID=403193."
+      "note": "Dispatched 07:34. PID=403193. 13.9 min at last check."
     },
     {
-      "id": "c_38ec4f3edb15_19c8a981c17",
-      "title": "Add Numerai section to master status board",
-      "status": "Review/Test",
-      "note": "QA haiku running (spawned 07:34)."
+      "id": "c_20cd45b079aef_19c8ad2e94e",
+      "title": "Investigate macd_divergence tier-2 promotion (no FT data)",
+      "status": "In Progress",
+      "note": "Dispatched 07:34. PID=403181. Only active tier-2 strategy."
+    },
+    {
+      "id": "c_8d161fa108d11_19c8ad888e2",
+      "title": "7-Day Rolling Returns: all 4 pipeline tiers (0,1,2,3)",
+      "status": "In Progress",
+      "note": "Recycled at 07:49 (was 24 min stale). Re-dispatched PID=413133."
     }
+  ],
+  "resolved_this_cycle": [
+    "c_38ec4f3edb15 (Numerai section) → DONE: loadNumerai() JS added, setInterval(30s), API verified. master-dashboard restarted 200 OK.",
+    "c_d637b5d01b06b (live agents) → DONE: live agent work panel operational."
   ],
   "inbox_waiting": [
     {
       "id": "c_aa2c77d1389b4_19c8aef5b8e",
-      "title": "URGENT: Systemic paper trade losses — ETH WR=23.8%/-75%, ADA WR=26.8%/-159%, NOT-USDT WR=27.1%/-310% over 48h",
-      "priority": "URGENT"
+      "title": "URGENT: Systemic paper trade losses — identify source strategies (48h: ETH -75%, NOT -310%)",
+      "priority": "HIGH — likely from demoted strategies, but confirm"
     },
     {
       "id": "c_968374110d0c9_19c8aef5bb4",
-      "title": "Retrain stale ML models (7.3 days old, >5d threshold) — momentum_classifier, volatility_regressor, risk_scorer, price_predictor",
-      "priority": "HIGH"
+      "title": "Retrain stale ML models (7.3 days old): momentum_classifier, volatility_regressor, risk_scorer, price_predictor"
     }
   ],
+  "paper_trading_note": {
+    "48h_wr": "23-29% (bad — includes trades from demoted strategies)",
+    "2h_wr": "31-62% (current, mixed but JTO/JUP/SEI showing positive)",
+    "active_tier2": "macd_divergence only (no FT data — investigation running)"
+  },
   "phase8_gate": {
-    "inbox_planned_before": 0,
-    "cpu_pct": 15,
-    "tokens_5h_pct": 18,
-    "status": "PASS — created 2 cards (systemic losses + ML staleness)"
+    "inbox_planned": 2,
+    "cpu_pct": 3,
+    "tokens_5h_pct": 23,
+    "status": "SKIPPED — Inbox already at 2 (systemic-losses + ML-retrain queued, sufficient coverage)"
   }
 }

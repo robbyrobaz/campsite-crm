@@ -1206,6 +1206,111 @@ def api_summary(conn):
     })
 
 
+@app.route('/api/coin_performance')
+@cache_response(ttl_seconds=30)
+@safe_query
+def api_coin_performance(conn):
+    """
+    Per-coin strategy performance from strategy_coin_eligibility (paper trading stats)
+    joined with strategy_coin_performance (backtest stats).
+    Returns rows sorted by strategy then symbol.
+    """
+    cursor = conn.cursor()
+
+    # Gracefully handle missing tables
+    cursor.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='strategy_coin_eligibility'"
+    )
+    sce_exists = cursor.fetchone() is not None
+    cursor.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='strategy_coin_performance'"
+    )
+    scp_exists = cursor.fetchone() is not None
+
+    if not sce_exists and not scp_exists:
+        return jsonify({"rows": [], "count": 0, "timestamp": datetime.utcnow().isoformat() + "Z"})
+
+    rows = []
+
+    if sce_exists:
+        join_clause = ""
+        if scp_exists:
+            join_clause = """
+                LEFT JOIN strategy_coin_performance scp
+                    ON sce.strategy_name = scp.strategy_name AND sce.symbol = scp.symbol
+            """
+        cursor.execute(f"""
+            SELECT
+                sce.strategy_name,
+                sce.symbol,
+                sce.total_trades,
+                sce.wins,
+                ROUND(sce.win_rate * 100, 1)    AS win_rate_pct,
+                sce.avg_pnl_pct,
+                sce.sum_pnl_pct,
+                sce.status,
+                sce.reason,
+                {'scp.tier, scp.bt_trades,' if scp_exists else 'NULL AS tier, NULL AS bt_trades,'}
+                {'ROUND(COALESCE(scp.bt_win_rate,0)*100,1) AS bt_win_rate_pct,' if scp_exists else 'NULL AS bt_win_rate_pct,'}
+                {'scp.bt_pnl_pct, scp.bt_profit_factor' if scp_exists else 'NULL AS bt_pnl_pct, NULL AS bt_profit_factor'}
+            FROM strategy_coin_eligibility sce
+            {join_clause}
+            ORDER BY sce.strategy_name, sce.symbol
+        """)
+        for row in cursor.fetchall():
+            rows.append({
+                "strategy":        row['strategy_name'],
+                "symbol":          row['symbol'],
+                "trades":          int(row['total_trades'] or 0),
+                "wins":            int(row['wins'] or 0),
+                "win_rate_pct":    float(row['win_rate_pct'] or 0),
+                "avg_pnl_pct":     round(float(row['avg_pnl_pct'] or 0), 3),
+                "sum_pnl_pct":     round(float(row['sum_pnl_pct'] or 0), 2),
+                "status":          row['status'] or 'active',
+                "reason":          row['reason'] or '',
+                "tier":            row['tier'],
+                "bt_trades":       int(row['bt_trades'] or 0) if row['bt_trades'] is not None else None,
+                "bt_win_rate_pct": float(row['bt_win_rate_pct'] or 0) if row['bt_win_rate_pct'] is not None else None,
+                "bt_pnl_pct":      round(float(row['bt_pnl_pct']), 2) if row['bt_pnl_pct'] is not None else None,
+                "bt_profit_factor": round(float(row['bt_profit_factor']), 3) if row['bt_profit_factor'] is not None else None,
+            })
+    elif scp_exists:
+        # No eligibility data yet — show backtest-only rows
+        cursor.execute("""
+            SELECT
+                strategy_name, symbol, tier,
+                bt_trades,
+                ROUND(COALESCE(bt_win_rate,0)*100,1) AS bt_win_rate_pct,
+                bt_pnl_pct, bt_profit_factor
+            FROM strategy_coin_performance
+            WHERE bt_trades IS NOT NULL AND bt_trades > 0
+            ORDER BY strategy_name, symbol
+        """)
+        for row in cursor.fetchall():
+            rows.append({
+                "strategy":        row['strategy_name'],
+                "symbol":          row['symbol'],
+                "trades":          0,
+                "wins":            0,
+                "win_rate_pct":    0,
+                "avg_pnl_pct":     0,
+                "sum_pnl_pct":     0,
+                "status":          "no_data",
+                "reason":          "",
+                "tier":            row['tier'],
+                "bt_trades":       int(row['bt_trades'] or 0),
+                "bt_win_rate_pct": float(row['bt_win_rate_pct'] or 0),
+                "bt_pnl_pct":      round(float(row['bt_pnl_pct']), 2) if row['bt_pnl_pct'] is not None else None,
+                "bt_profit_factor": round(float(row['bt_profit_factor']), 3) if row['bt_profit_factor'] is not None else None,
+            })
+
+    return jsonify({
+        "rows":      rows,
+        "count":     len(rows),
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+    })
+
+
 @app.route('/health')
 def health():
     """Health check endpoint."""

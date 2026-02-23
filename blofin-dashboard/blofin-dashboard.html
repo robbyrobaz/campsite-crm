@@ -264,6 +264,13 @@ td { padding: 7px 10px; white-space: nowrap; }
 .rank-top { color: var(--green); }
 .rank-mid { color: var(--amber); }
 .rank-none { color: var(--dim); }
+.gate-badge {
+  display: inline-block; padding: 1px 5px; border-radius: 3px;
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+  margin-right: 4px; vertical-align: middle;
+}
+.gate-badge.pass { background: var(--green-dim); color: var(--green); }
+.gate-badge.fail { background: rgba(239,68,68,0.15); color: var(--red); }
 .td-pos { color: var(--green); }
 .td-neg { color: var(--red); }
 .td-muted { color: var(--dim); font-size: 11px; }
@@ -275,6 +282,7 @@ td { padding: 7px 10px; white-space: nowrap; }
 .status-chip.active { background: var(--green-dim); color: var(--green); }
 .status-chip.testing { background: var(--blue-dim); color: var(--blue); }
 .status-chip.library { background: rgba(255,255,255,0.04); color: var(--dim); }
+.status-chip.blisted { background: var(--red-dim); color: var(--red); }
 
 /* ─── ML Models ──────────────────────────────────────────────────────── */
 .ml-grid {
@@ -495,6 +503,41 @@ td { padding: 7px 10px; white-space: nowrap; }
   </table>
 </div>
 
+<!-- ── Per-Coin Performance ─────────────────────────────────────────────── -->
+<div class="section-header">
+  <div class="section-title">Per-Coin Performance</div>
+  <div class="section-line"></div>
+  <div class="section-badge" id="coin-perf-badge">—</div>
+</div>
+
+<div class="table-controls">
+  <button class="tier-filter-btn active" data-cstatus="all" onclick="setCoinStatusFilter('all',this)">All</button>
+  <button class="tier-filter-btn" data-cstatus="active" onclick="setCoinStatusFilter('active',this)">Active</button>
+  <button class="tier-filter-btn" data-cstatus="blacklisted" onclick="setCoinStatusFilter('blacklisted',this)">Blacklisted</button>
+  <input class="search-input" type="text" id="coin-search" placeholder="Filter strategy or coin…" oninput="setCoinSearch(this.value)">
+  <div class="table-count" id="coin-table-count"></div>
+</div>
+
+<div class="table-wrap">
+  <table id="coin-perf-table">
+    <thead>
+      <tr>
+        <th onclick="sortCoinTable('strategy')">Strategy <span class="sort-arrow">↕</span></th>
+        <th onclick="sortCoinTable('symbol')">Coin <span class="sort-arrow">↕</span></th>
+        <th onclick="sortCoinTable('trades')" title="Paper trading trades">Trades <span class="sort-arrow">↕</span></th>
+        <th onclick="sortCoinTable('win_rate')" title="Paper trading win rate">WR% <span class="sort-arrow">↕</span></th>
+        <th onclick="sortCoinTable('avg_pnl')" class="sorted" title="Average PnL% per paper trade">Avg PnL% <span class="sort-arrow">↓</span></th>
+        <th onclick="sortCoinTable('bt_pnl')" title="Backtest total PnL%">BT PnL% <span class="sort-arrow">↕</span></th>
+        <th onclick="sortCoinTable('bt_pf')" title="Backtest profit factor">BT PF <span class="sort-arrow">↕</span></th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="coin-perf-tbody">
+      <tr><td colspan="8" class="loading">Loading per-coin performance…</td></tr>
+    </tbody>
+  </table>
+</div>
+
 <!-- ── ML Model Status ──────────────────────────────────────────────────── -->
 <div class="section-header">
   <div class="section-title">ML Model Status</div>
@@ -530,10 +573,15 @@ const state = {
   mlModels: null,
   metrics: null,
   summary: null,
+  coinPerf: null,
   sortCol: 'pnl_rank',
   sortAsc: false,
   tierFilter: 'all',
   search: '',
+  coinSortCol: 'avg_pnl',
+  coinSortAsc: false,
+  coinStatusFilter: 'all',
+  coinSearch: '',
   countdownSec: 30,
   countdownTimer: null,
 };
@@ -596,16 +644,18 @@ async function safeFetch(url) {
 
 async function refreshAll() {
   resetCountdown();
-  const [registry, mlModels, metrics, summary] = await Promise.all([
+  const [registry, mlModels, metrics, summary, coinPerf] = await Promise.all([
     safeFetch('/api/registry'),
     safeFetch('/api/ml_models'),
     safeFetch('/api/advanced_metrics'),
     safeFetch('/api/summary'),
+    safeFetch('/api/coin_performance'),
   ]);
   state.registry = registry;
   state.mlModels = mlModels;
   state.metrics = metrics;
   state.summary = summary;
+  state.coinPerf = coinPerf;
 
   renderHeader();
   renderHealthBar();
@@ -613,6 +663,7 @@ async function refreshAll() {
   renderPipelineCards();
   renderStatsRow();
   renderTable();
+  renderCoinPerf();
   renderMLModels();
   renderLiveFeed();
 }
@@ -961,7 +1012,7 @@ function renderTable() {
     return `<tr>
       <td class="td-name" title="${s.name}">${s.has_file === false ? '<span class="no-file-dot" title="No .py file on disk"></span>' : ''}${s.name.replace(/_/g,' ')}</td>
       <td><span class="tier-badge t${tier}">${tierName(tier)} ${tierLabel(tier)}</span></td>
-      <td class="${gatePass ? 'td-pos' : 'td-neg'}" title="${s.gate_failures || ''}">${rank != null ? '#'+rank : (gatePass ? '✓' : '✗')}</td>
+      <td class="td-rank ${rank != null ? (rank <= 3 ? 'rank-top' : 'rank-mid') : 'rank-none'}" title="${s.gate_failures || ''}"><span class="gate-badge ${gatePass ? 'pass' : 'fail'}">${gatePass ? 'pass' : 'fail'}</span>${rank != null ? '#'+rank : '—'}</td>
       <td class="${pfCls}">${pfDisplay}</td>
       <td class="${sharpeCls}">${sharpe != null ? fmt(sharpe, 2) : '—'}</td>
       <td class="${ddCls}">${maxdd != null ? fmtPct(maxdd, 1) : '—'}</td>
@@ -973,6 +1024,114 @@ function renderTable() {
   }).join('');
 
   document.getElementById('strategy-tbody').innerHTML = rows;
+}
+
+// ─── Per-Coin Performance ─────────────────────────────────────────────────────
+function setCoinStatusFilter(status, btn) {
+  state.coinStatusFilter = status;
+  document.querySelectorAll('[data-cstatus]').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCoinPerf();
+}
+function setCoinSearch(val) {
+  state.coinSearch = val.toLowerCase();
+  renderCoinPerf();
+}
+function sortCoinTable(col) {
+  if (state.coinSortCol === col) {
+    state.coinSortAsc = !state.coinSortAsc;
+  } else {
+    state.coinSortCol = col;
+    state.coinSortAsc = (col === 'strategy' || col === 'symbol');
+  }
+  // Update header arrows in coin table
+  const ths = document.querySelectorAll('#coin-perf-table thead th');
+  const colIdx = { strategy:0, symbol:1, trades:2, win_rate:3, avg_pnl:4, bt_pnl:5, bt_pf:6 }[col];
+  ths.forEach((th, i) => {
+    th.classList.remove('sorted');
+    const arrow = th.querySelector('.sort-arrow');
+    if (arrow) arrow.textContent = '↕';
+  });
+  if (colIdx != null && ths[colIdx]) {
+    ths[colIdx].classList.add('sorted');
+    const arrow = ths[colIdx].querySelector('.sort-arrow');
+    if (arrow) arrow.textContent = state.coinSortAsc ? '↑' : '↓';
+  }
+  renderCoinPerf();
+}
+
+function renderCoinPerf() {
+  const data = state.coinPerf;
+  const badge = document.getElementById('coin-perf-badge');
+  const tbody = document.getElementById('coin-perf-tbody');
+  const countEl = document.getElementById('coin-table-count');
+
+  if (!data) {
+    tbody.innerHTML = '<tr><td colspan="8" class="loading">Loading…</td></tr>';
+    return;
+  }
+
+  let rows = [...(data.rows ?? [])];
+
+  // Filter by status
+  if (state.coinStatusFilter !== 'all') {
+    rows = rows.filter(r => r.status === state.coinStatusFilter);
+  }
+  // Filter by search
+  if (state.coinSearch) {
+    rows = rows.filter(r =>
+      r.strategy.toLowerCase().includes(state.coinSearch) ||
+      r.symbol.toLowerCase().includes(state.coinSearch)
+    );
+  }
+
+  // Sort
+  const col = state.coinSortCol;
+  rows.sort((a, b) => {
+    let av, bv;
+    if (col === 'strategy') { av = a.strategy; bv = b.strategy; }
+    else if (col === 'symbol') { av = a.symbol; bv = b.symbol; }
+    else if (col === 'trades') { av = a.trades ?? 0; bv = b.trades ?? 0; }
+    else if (col === 'win_rate') { av = a.win_rate_pct ?? 0; bv = b.win_rate_pct ?? 0; }
+    else if (col === 'avg_pnl') { av = a.avg_pnl_pct ?? 0; bv = b.avg_pnl_pct ?? 0; }
+    else if (col === 'bt_pnl') { av = a.bt_pnl_pct ?? -Infinity; bv = b.bt_pnl_pct ?? -Infinity; }
+    else if (col === 'bt_pf') { av = a.bt_profit_factor ?? 0; bv = b.bt_profit_factor ?? 0; }
+    else { av = 0; bv = 0; }
+    if (typeof av === 'string') return state.coinSortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+    return state.coinSortAsc ? av - bv : bv - av;
+  });
+
+  const total = data.rows?.length ?? 0;
+  const active = (data.rows ?? []).filter(r => r.status === 'active').length;
+  const blacklisted = total - active;
+  badge.textContent = `${total} pairs · ${active} active · ${blacklisted} blacklisted`;
+  countEl.textContent = rows.length + ' / ' + total;
+
+  if (!rows.length) {
+    tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No per-coin data yet</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = rows.map(r => {
+    const statusCls = r.status === 'active' ? 'active' : r.status === 'blacklisted' ? 'blisted' : 'library';
+    const statusLabel = r.status === 'blacklisted' ? '✗ blacklisted' : r.status === 'active' ? '✓ active' : r.status;
+    const pnlCls = r.avg_pnl_pct > 0 ? 'td-pos' : r.avg_pnl_pct < 0 ? 'td-neg' : '';
+    const btPnlCls = (r.bt_pnl_pct ?? 0) > 0 ? 'td-pos' : (r.bt_pnl_pct ?? 0) < 0 ? 'td-neg' : '';
+    const btPfCls = r.bt_profit_factor != null ? (r.bt_profit_factor >= 1.5 ? 'td-pos' : r.bt_profit_factor < 1.0 ? 'td-neg' : '') : '';
+    const wrCls = r.trades >= 20 ? (r.win_rate_pct >= 50 ? 'td-pos' : r.win_rate_pct < 35 ? 'td-neg' : '') : 'td-muted';
+    const reasonTitle = r.reason ? ` title="${r.reason}"` : '';
+    const tierBadge = r.tier != null ? `<span class="tier-badge t${r.tier}" style="margin-left:4px">${tierName(r.tier)}</span>` : '';
+    return `<tr>
+      <td class="td-name" title="${r.strategy}">${r.strategy.replace(/_/g,' ')}${tierBadge}</td>
+      <td style="font-weight:700;color:var(--text)">${r.symbol}</td>
+      <td>${r.trades > 0 ? r.trades : '<span class="td-muted">—</span>'}</td>
+      <td class="${wrCls}">${r.trades > 0 ? fmtPct(r.win_rate_pct, 1) : '<span class="td-muted">—</span>'}</td>
+      <td class="${pnlCls}">${r.trades > 0 ? fmtPct(r.avg_pnl_pct, 3) : '<span class="td-muted">—</span>'}</td>
+      <td class="${btPnlCls}">${r.bt_pnl_pct != null ? fmtPct(r.bt_pnl_pct, 1) : '<span class="td-muted">—</span>'}</td>
+      <td class="${btPfCls}">${r.bt_profit_factor != null && r.bt_profit_factor > 0 ? fmt(r.bt_profit_factor, 2) : '<span class="td-muted">—</span>'}</td>
+      <td${reasonTitle}><span class="status-chip ${statusCls}">${statusLabel}</span></td>
+    </tr>`;
+  }).join('');
 }
 
 // ─── ML Models ───────────────────────────────────────────────────────────────

@@ -1,28 +1,13 @@
 {
-  "lastUpdated": "2026-02-23T04:34:00Z",
-  "phase": "idle",
+  "lastUpdated": "2026-02-23T04:49:00Z",
   "activeTasks": [
-    {
-      "id": "c_161d01cbfedb3_19c8841f4d0",
-      "title": "make sure master status dashboard reflects the new pnl ranking",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 4133514,
-      "dispatchedAt": "2026-02-23T04:34:00Z"
-    },
-    {
-      "id": "c_320ce3d758467_19c88b9fa12",
-      "title": "fully replace EEP from all boards (blofin and master)",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 4133661,
-      "dispatchedAt": "2026-02-23T04:34:00Z"
-    }
+    "c_320ce3d758467_19c88b9fa12: fully replace EEP from all boards (blofin and master)",
+    "c_8c787f736d52e_19c88c9fad2: Investigate paper trading systemic failure \u2014 all 10 coins lo",
+    "c_6939280f84308_19c88c9fa9a: Archive entry_classifier/lightgbm (AUC=0.465, below random) "
   ],
-  "phase8Cards": [
-    "c_5cf7e4f1cc29d_19c88c9fa5c: Disable candle_patterns + bb_squeeze (PnL=-837%,-277%)",
-    "c_6939280f84308_19c88c9fa9a: Archive entry_classifier/lightgbm (AUC=0.465, below random)",
-    "c_8c787f736d52e_19c88c9fad2: Investigate paper trading systemic failure (all coins losing 300-700%+ in 7d)"
+  "inboxQueue": [
+    "c_2577b78e1b8fb_19c88d98cc6: Retrain 4 stale ML models \u2014 momentum_classifier, risk_scorer",
+    "c_c7edffe6bdb63_19c88d98c69: Disable remaining reversal strategy \u2014 20,159 enabled rows, a"
   ],
-  "notes": "21:34 MST Feb 22 \u2014 Dispatched 2 inbox cards (master-dashboard PnL, replace EEP). Phase 8: created 3 blofin improvement cards. Health: CPU 0.8% load, 67C, disk 36%, all services active. Token: 10% 5h window."
+  "notes": "21:49 MST \u2014 3 IP active (EEP recycled, lightgbm, systemic failure). Kanban restarted. Master-dashboard deployed (200 OK). candle_patterns+bb_squeeze confirmed fully disabled. Phase 8: reversal disable + ML retrain queued. Tokens 22%."
 }

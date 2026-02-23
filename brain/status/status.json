@@ -1,72 +1,63 @@
 {
-  "lastUpdated": "2026-02-22T22:49:30Z",
+  "lastUpdated": "2026-02-23T00:05:30Z",
   "activeTasks": [
     {
       "id": "c_cb34b16bc059d_19c877109f8",
       "title": "Blofin: per-coin backtesting and promotion gates",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-22T22:46:00Z",
+      "dispatchedAt": "2026-02-23T00:05:00Z",
+      "note": "Recycled after ~85min stale. Re-run pid 3831564.",
+      "project": "/home/rob/.openclaw/workspace/blofin-stack"
+    },
+    {
+      "id": "c_cbe9df9c7dcbf_19c8785fad7",
+      "title": "ML Pipeline: Review ninja_trader_strategies repo for patterns to port to blofin",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-23T00:05:00Z",
+      "note": "Recycled after ~76min stale. Re-run pid 3831577.",
       "project": "/home/rob/.openclaw/workspace/blofin-stack"
     },
     {
       "id": "c_7aafa071e3176_19c876b2011",
       "title": "campsite crm authentication gmail needs to be one button to do oauth for users gmail",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-22T22:49:00Z",
-      "note": "Recycled after 28min stale. Previous run marked Stopped. Re-dispatched pid 3784383.",
+      "dispatchedAt": "2026-02-23T00:05:00Z",
+      "note": "3rd recycle. Previous runs marked Stopped. Re-run pid 3831589.",
       "project": "/home/rob/.openclaw/workspace/campsite-crm"
-    },
-    {
-      "id": "c_cbe9df9c7dcbf_19c8785fad7",
-      "title": "ML Pipeline: Review ninja_trader_strategies repo for patterns to port to blofin",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-22T22:49:00Z",
-      "project": "/home/rob/.openclaw/workspace/blofin-stack"
     }
   ],
   "qaInProgress": [],
   "plannedQueue": [
-    {
-      "id": "c_4c9981f9b413d_19c87873664",
-      "title": "ML Pipeline: Continuous model exploration engine (Phase 7)",
-      "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "priority": 1
-    },
-    {
-      "id": "c_7baa0f9dc7a68_19c87790c3e",
-      "title": "Add toggle to hide 3-way market results (soccer draws etc)",
-      "project": "/home/rob/.openclaw/workspace/arb-dashboard",
-      "priority": 2
-    }
+    {"id": "c_dbd7ad053e8bd_19c87cc5e5f", "title": "RESEARCH: Free/cheap NQ futures real-time data sources", "project": "ninja_trader_strategies", "priority": 2},
+    {"id": "c_f1b5362ba26f2_19c87cc5e3e", "title": "RESEARCH: Prop firm futures automation landscape", "project": "ninja_trader_strategies", "priority": 1},
+    {"id": "c_a8fdf25f1bdf2_19c87cc5e18", "title": "RESEARCH: Tradovate API data feed for prop firm accounts", "project": "ninja_trader_strategies", "priority": 1},
+    {"id": "c_4c9981f9b413d_19c87873664", "title": "ML Pipeline: Continuous model exploration engine (Phase 7)", "project": "blofin-stack", "priority": 1},
+    {"id": "c_7baa0f9dc7a68_19c87790c3e", "title": "Add toggle to hide 3-way market results", "project": "arb-dashboard", "priority": 2}
   ],
   "inboxSize": 1,
   "inboxCards": [
-    {
-      "id": "c_85ab04f82aa5f_19c80f2d96e",
-      "title": "campsite crm authentication to chatgpt must be simpler",
-      "note": "ON HOLD — campsite CRM rethinking approach",
-      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
-      "assignee": "claude"
-    }
+    {"id": "c_85ab04f82aa5f_19c80f2d96e", "title": "campsite crm auth to chatgpt simpler", "note": "ON HOLD", "project_path": "/home/rob/.openclaw/workspace/campsite-crm"}
   ],
   "systemHealth": {
-    "timestamp": "2026-02-22T22:49:30Z",
-    "cpu_temp": "67.0C",
+    "timestamp": "2026-02-23T00:05:30Z",
+    "cpu_temp": "56.0C",
     "disk_usage": "35%",
-    "cpu_load": "18.2% (2.19 avg / 12 cores)",
+    "cpu_load": "4.4% (0.81/12 cores)",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-22T22:49:30Z",
+    "cycle": "2026-02-23T00:05:30Z",
+    "batchedPulses": "4:04 PM, 4:49 PM, 5:05 PM MST — consolidated into one run",
     "actions": [
-      "Phase 1: All services active. CPU 67C, load 18.2%, disk 35%.",
-      "Phase 4: Recycled c_7aafa071e3176 (campsite gmail, 28min stale) -> Planned -> /run pid 3784383.",
-      "Phase 5: Dispatched c_cbe9df9c7dcbf (ML ninja_trader review) pid 3784395. Capacity 3/3.",
+      "Phase 1: All services active. CPU 56C, load 4.4%, disk 35%.",
+      "Phase 4: Recycled all 3 In Progress cards (stale 76-85min due to batched pulses). Pids: 3831564, 3831577, 3831589.",
+      "Phase 5: 3/3 capacity filled by recycled re-runs. No additional dispatches.",
       "Phase 6: 0 Review/Test cards.",
-      "Phase 8: SKIPPED - Gate 1 fail (Planned+Inbox=3 > 2). Gate 2 PASS (cpu 18.2%)."
+      "Phase 8: SKIPPED — Gate 1 FAIL (Planned+Inbox=6 > 2). Gate 2 PASS (cpu 4.4%).",
+      "Note: campsite gmail card (c_7aafa071e3176) on 3rd recycle — if runner stops again, consider manually closing card."
     ]
   }
 }

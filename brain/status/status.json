@@ -1,56 +1,62 @@
 {
-  "updated": "2026-02-23T15:19:00Z",
-  "updated_mst": "2026-02-23 08:19 MST",
-  "cycle": "Jarvis Pulse 08:19 MST Feb 23 2026",
+  "updated": "2026-02-23T15:34:00Z",
+  "updated_mst": "2026-02-23 08:34 MST",
+  "cycle": "Jarvis Pulse 08:34 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 55,
-    "cpu_load_pct": 15,
+    "cpu_temp_c": 80,
+    "cpu_load_pct": 88,
     "disk_pct": 37,
     "services": ["openclaw-gateway: active", "blofin-stack-ingestor: active", "blofin-stack-paper: active"],
-    "alerts": "none — tier-2 board now clean (0 unvalidated strategies)"
+    "alerts": "STRATEGY ALERT: ALL 7 active gate-passing strategies have negative FT PnL. No profitable strategy is currently running."
   },
   "board": {
-    "in_progress": 1,
+    "in_progress": 3,
     "review_test": 0,
     "planned": 0,
-    "inbox": 2
+    "inbox": 0
   },
   "activeTasks": [
     {
       "id": "c_968374110d0c9_19c8aef5bb4",
-      "title": "Retrain stale ML models (7.3 days old)",
+      "title": "Retrain stale ML models",
       "status": "In Progress",
-      "note": "PID=423407. Timestamp refreshed at 14 min. Running."
-    }
-  ],
-  "inbox_waiting": [
+      "note": "PID=423407. 13.4 min at 08:19. Timestamp refreshed."
+    },
     {
       "id": "c_6277461282ba6_19c8b171481",
-      "title": "Demote vol_bb_vwap_reversion: ft_pnl=-71.9%, WR=11.4%, 245 trades — worst active strategy",
-      "priority": "HIGH"
+      "title": "Demote vol_bb_vwap_reversion (ft_pnl=-71.9%)",
+      "status": "In Progress",
+      "note": "Already demoted by Jarvis. Runner confirming. PID=443302."
     },
     {
       "id": "c_a161359cbbb3a_19c8b1714a2",
-      "title": "Demote volume_mean_reversion_v1: ft_pnl=-69.6%, WR=16.0%, 275 trades",
-      "priority": "HIGH"
+      "title": "Demote volume_mean_reversion_v1 (ft_pnl=-69.6%)",
+      "status": "In Progress",
+      "note": "Already demoted by Jarvis. Runner confirming. PID=443314."
     }
   ],
-  "direct_actions_this_cycle": [
-    "Demoted low_volatility_atr_breakout: tier 2→0, gate_status=fail (tier-2 with NULL FT data, same pattern as macd_divergence). Services restarted.",
-    "0 tier-2+ strategies remaining with gate_status=pass — board is clean"
-  ],
-  "resolved_this_cycle": [
-    "c_aa2c77d1389b4 (systemic paper losses) → Done at 08:15 MST",
-    "ADX filter + macd_divergence + optimizer OOM + 7-day chart → all Done"
-  ],
-  "paper_trading_status": {
-    "tier2_active": 0,
-    "note": "Post-demotion 1h: JTO-USDT WR=61%/+323%, JUP WR=57%/+56%, SEI WR=50%/+31% — positive signs. ARB/BOME still poor (demotion cards queued)."
+  "pipeline_crisis": {
+    "status": "ALL strategies FT-negative",
+    "active_strategies": [
+      {"name": "ml_gbt_5m", "ft_pnl": -50.9, "ft_wr": 0.359, "ft_trades": 859},
+      {"name": "ensemble_top3", "ft_pnl": -44.2, "ft_wr": 0.344, "ft_trades": 646},
+      {"name": "atr_regime_fade", "ft_pnl": -22.1, "ft_wr": 0.338, "ft_trades": 204},
+      {"name": "vol_compression_fade", "ft_pnl": -17.4, "ft_wr": 0.258, "ft_trades": 62},
+      {"name": "vol_compression_fade_v2", "ft_pnl": -16.5, "ft_wr": 0.257, "ft_trades": 70},
+      {"name": "volume_volatility_mean_reversion", "ft_pnl": -14.7, "ft_wr": 0.352, "ft_trades": 210},
+      {"name": "volatility_regime_switch", "ft_pnl": -0.6, "ft_wr": 0.464, "ft_trades": 28}
+    ],
+    "note": "volatility_regime_switch is closest to breakeven (-0.6%, WR 46%) with only 28 trades. ml_gbt_5m and ensemble_top3 are deeply negative with large sample sizes — need demotion cards next cycle."
   },
+  "direct_actions_this_cycle": [
+    "Demoted vol_bb_vwap_reversion: archived=1, tier=0, gate_status=fail",
+    "Demoted volume_mean_reversion_v1: archived=1, tier=0, gate_status=fail",
+    "Services restarted to pick up demotions"
+  ],
   "phase8_gate": {
     "inbox_planned": 0,
-    "cpu_pct": 15,
-    "tokens_5h_pct": 29,
-    "status": "PASS — created 2 cards (vol_bb demotion + volume_mean_reversion_v1 demotion)"
+    "cpu_pct": 88,
+    "tokens_5h_pct": 30,
+    "status": "SKIPPED (cpu=88% > 50%) — next cycle: create ml_gbt_5m + ensemble_top3 demotion cards"
   }
 }

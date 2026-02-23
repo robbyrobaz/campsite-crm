@@ -1,64 +1,55 @@
 {
-  "updated": "2026-02-23T16:04:00Z",
-  "updated_mst": "2026-02-23 09:04 MST",
-  "cycle": "Jarvis Pulse 09:04 MST Feb 23 2026",
+  "updated": "2026-02-23T16:19:00Z",
+  "updated_mst": "2026-02-23 09:19 MST",
+  "cycle": "Jarvis Pulse 09:19 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 83,
-    "cpu_load_pct": 10,
+    "cpu_temp_c": 63,
+    "cpu_load_pct": 8,
     "disk_pct": 37,
     "services": ["openclaw-gateway: active", "blofin-stack-ingestor: active", "blofin-stack-paper: active"],
     "alerts": "none"
   },
   "board": {
-    "in_progress": 3,
-    "review_test": 0,
+    "in_progress": 1,
+    "review_test": 2,
     "planned": 0,
     "inbox": 1
   },
   "activeTasks": [
     {
-      "id": "c_825621affcdfa_19c8b347ab5",
-      "title": "Fix volatility_regressor overfitting (train R²=0.999 vs test R²=-22.5M)",
+      "id": "c_e08eefdc5c512_19c8b40556d",
+      "title": "Investigate ensemble_top3 FT vs live gap",
       "status": "In Progress",
-      "note": "PID=462495. Dispatched 09:04."
+      "note": "PID=474051. Dispatched 09:19."
     },
     {
-      "id": "c_d95e851e417a_19c8b33a1e1",
-      "title": "Investigate TIA-USDT trades: WR=84.8%/+38% — should be blocked by coin_eligibility",
-      "status": "In Progress",
-      "note": "PID=462507. Dispatched 09:04."
+      "id": "c_825621affcdfa_19c8b347ab5",
+      "title": "Fix volatility_regressor overfitting (train R²=0.999 vs test R²=-22.5M)",
+      "status": "Review/Test",
+      "note": "QA haiku running."
     },
     {
       "id": "c_8cf6e1900b216_19c8b33a203",
-      "title": "Run FT pipeline for volatility_regime_switch (only 28 trades, WR=46.4%)",
-      "status": "In Progress",
-      "note": "PID=462522. Dispatched 09:04. Best WR of active strategies."
+      "title": "Run FT pipeline for volatility_regime_switch (28 trades, WR=46.4%)",
+      "status": "Review/Test",
+      "note": "DB updated 09:08 MST. QA haiku running."
     }
   ],
   "inbox_waiting": [
     {
-      "id": "c_e08eefdc5c512_19c8b40556d",
-      "title": "Investigate ensemble_top3 FT vs live gap: ft_pnl=-44.2%/WR=34.4% (646 trades) but live JTO/JUP/SOL all WR>48%"
+      "id": "c_6fc6787acc859_19c8b4ec7e5",
+      "title": "Demote atr_regime_fade: ft_pnl=-22.1%, WR=33.8%, 204 trades — below 35% threshold"
     }
   ],
-  "paper_trading_30min": {
+  "paper_30min_top": {
+    "TIA-USDT": "WR=84.8% (33 trades — still appearing despite eligibility investigation)",
     "JTO-USDT": "WR=60.3%, PnL=+322%",
-    "JUP-USDT": "WR=56.8%, PnL=+56%",
-    "TIA-USDT": "WR=84.8%, PnL=+38% (being investigated)",
-    "SOL-USDT": "WR=48.6%, PnL=+32%",
-    "SEI-USDT": "WR=49.8%, PnL=+30%",
-    "note": "All positive — demotion wave working well"
-  },
-  "strategy_registry_summary": {
-    "active_gate_pass": 7,
-    "tier2_unvalidated": 0,
-    "demoted_today": ["macd_divergence","low_volatility_atr_breakout","vol_bb_vwap_reversion","volume_mean_reversion_v1"],
-    "best_WR": "volatility_regime_switch (46.4%, 28 trades — FT expansion running)"
+    "JUP-USDT": "WR=56.8%, PnL=+56%"
   },
   "phase8_gate": {
     "inbox_planned": 0,
-    "cpu_pct": 10,
-    "tokens_5h_pct": 34,
-    "status": "PASS — created 1 card (ensemble_top3 FT vs live investigation)"
+    "cpu_pct": 8,
+    "tokens_5h_pct": 36,
+    "status": "PASS — created 1 card (atr_regime_fade demotion: WR=33.8%, 204 trades)"
   }
 }

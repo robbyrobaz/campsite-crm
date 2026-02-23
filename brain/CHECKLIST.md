@@ -28,6 +28,14 @@
 - [ ] Append QA summary note to card (what was checked, result, how to verify)
 - [ ] Update PROJECTS.md if project status changed
 
+## QA Functional Smoke Test (NON-OPTIONAL for UI/dashboard/API work):
+> Code review catches syntax errors, not integration failures. Run it and verify.
+- [ ] **Dashboards/UI:** Load the page with playwright, check for JS console errors (`page.on("pageerror")`), verify key elements render with real data (not "Loading…" forever)
+- [ ] **API endpoints:** `curl` every new/changed endpoint, verify response has real data and correct shape
+- [ ] **Services:** After restart, verify `systemctl is-active` AND hit the health/status endpoint
+- [ ] **If you can't run the functional test, the QA is incomplete — say so explicitly**
+- [ ] QA sentinel instructions MUST include: "Use playwright to load the page headless, check for JS errors, screenshot the result, verify panels show real data"
+
 ## Git backup discipline (every cycle/hourly oversight):
 - [ ] Check repo remote + branch + `git status --short` for active repos
 - [ ] If mature project repo has no remote/wrong remote, fix it immediately

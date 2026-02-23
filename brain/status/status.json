@@ -1,64 +1,72 @@
 {
-  "updated": "2026-02-23T12:49:00Z",
-  "updated_mst": "2026-02-23 05:49 MST",
-  "cycle": "Jarvis Pulse 05:49 MST Feb 23 2026",
+  "updated": "2026-02-23T13:04:00Z",
+  "updated_mst": "2026-02-23 06:04 MST",
+  "cycle": "Jarvis Pulse 06:04 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 85,
-    "cpu_load_pct": 15,
+    "cpu_temp_c": 82,
+    "cpu_load_pct": 138,
     "disk_pct": 37,
     "services": [
       "openclaw-gateway: active",
       "blofin-stack-ingestor: active",
       "blofin-stack-paper: active"
     ],
-    "alerts": "none"
+    "alerts": "CPU load 16.60/12 (138%) — optimizer + pipeline workers running, expected"
   },
   "board": {
     "in_progress": 3,
-    "review_test": 0,
+    "review_test": 1,
     "planned": 0,
     "inbox": 1
   },
   "activeTasks": [
     {
       "id": "c_9915a03e6cf68_19c8a4a41fc",
-      "title": "Re-run strategy optimizer (2nd run, PID=282596)",
+      "title": "Strategy optimizer — 3rd run, 750K tick cap (started 05:54 MST)",
       "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "HEALTHY at 05:49 — PID=282596 alive at 71% CPU. Phase 1 progressing: PEPE loaded OK (1.87M ticks), loading SHIB/ARB/OP/LINK/AVAX. Timestamp refreshed."
+      "note": "Healthy — all 12 coins loading at 750K ticks (OOM fix). PIDs 298xxx active. Timestamp refreshed."
     },
     {
-      "id": "c_4b9ccdffa5fdd_19c8a81afc1",
-      "title": "Forward-test volume_mean_reversion_v1: bt_pnl=165.06%, 1378 trades",
+      "id": "c_20d61a689930e_19c8a81afed",
+      "title": "Investigate vol_compression_fade BT-FT divergence: bt=+22.73% vs ft=-17.35%",
       "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "Dispatched 05:49. PID=289300. Highest BT PnL tier-1 strategy, no FT data."
+      "note": "Dispatched 06:04. PID=303464."
+    },
+    {
+      "id": "c_06d666a752452_19c8a9719b7",
+      "title": "7-Day Rolling Returns empty on master status dashboard",
+      "status": "In Progress",
+      "project": "/home/rob/.openclaw/workspace/master-dashboard",
+      "note": "Dispatched 06:04. PID=303479. Manual task from Rob."
     },
     {
       "id": "c_5f0645bd3c505_19c8a81afd8",
       "title": "Forward-test vol_bb_vwap_reversion + vol_compression_fade_v2",
-      "status": "In Progress",
+      "status": "Review/Test",
       "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "Dispatched 05:49. PID=289312. bt_pnl=50.10%/39.66%, both no FT data."
+      "note": "QA haiku subagent running (auto-announces). Checking FT data in strategy_registry + per-coin."
     }
   ],
   "inbox_waiting": [
     {
-      "id": "c_20d61a689930e_19c8a81afed",
-      "title": "Investigate vol_compression_fade BT-FT divergence: bt=+22.73% vs ft=-17.35%",
-      "note": "Waiting — board at 3/3 capacity. Will dispatch next cycle when slot opens."
+      "id": "c_38ec4f3edb15_19c8a981c17",
+      "title": "Add Numerai section to master status board",
+      "note": "Manual task from Rob. project_path=master-dashboard, assignee=claude. Will dispatch next open slot."
     }
   ],
   "phase8_gate": {
     "inbox_planned": 1,
-    "cpu_pct": 15,
-    "tokens_5h_pct": 18,
-    "status": "Skipped — board at 3/3 capacity, 1 Inbox card already queued"
+    "cpu_pct": 138,
+    "tokens_5h_pct": 22,
+    "status": "SKIPPED (cpu=138% > 50%)"
   },
   "last_actions": [
-    "PHASE 3: Fixed null assignees on all 3 inbox cards",
-    "PHASE 4: Optimizer card at 13.6min — refreshed timestamp (process healthy, making progress)",
-    "PHASE 5: Dispatched vol_mv1 FT (PID=289300) + vol_bb FT (PID=289312)",
-    "PHASE 8: Skipped — 3/3 In Progress, 1 Inbox already waiting"
+    "PHASE 3: Fixed assignees + project_paths on 2 manual inbox cards (master-dashboard)",
+    "PHASE 4: Optimizer at 15.1min — process healthy (restarted 05:54 with 750K tick cap, OOM fix), timestamp refreshed",
+    "PHASE 5: Dispatched vol_compression_fade divergence (PID=303464) + 7-Day Returns fix (PID=303479)",
+    "PHASE 6: QA haiku spawned for vol_bb_vwap_reversion FT card",
+    "PHASE 8: Skipped (cpu=138% > 50%)"
   ]
 }

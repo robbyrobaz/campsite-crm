@@ -1,48 +1,62 @@
 {
-  "updated": "2026-02-23T14:25:00Z",
-  "updated_mst": "2026-02-23 07:25 MST",
-  "cycle": "Jarvis Pulse 07:19 MST Feb 23 2026 (continued at 07:25)",
+  "updated": "2026-02-23T14:34:00Z",
+  "updated_mst": "2026-02-23 07:34 MST",
+  "cycle": "Jarvis Pulse 07:34 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 56,
-    "cpu_load_pct": 12,
+    "cpu_temp_c": 83,
+    "cpu_load_pct": 15,
     "disk_pct": 37,
     "services": ["openclaw-gateway: active", "blofin-stack-ingestor: active", "blofin-stack-paper: active"],
-    "alerts": "none"
+    "alerts": "PAPER TRADING ALERT: All 8 active symbols WR 23-29% over 48h — systemic losses detected"
   },
   "board": {
-    "in_progress": 2,
+    "in_progress": 3,
     "review_test": 1,
     "planned": 0,
     "inbox": 2
   },
   "activeTasks": [
     {
-      "id": "c_d637b5d01b06b_19c8a9bb90c",
-      "title": "Live agents + Claude teams frontend JS fix",
-      "status": "In Progress",
-      "note": "3rd attempt. Backend done, need liveWorkLoadTeams() + liveWorkRenderTeams() JS functions. PID=395884."
-    },
-    {
       "id": "c_8d161fa108d11_19c8ad888e2",
       "title": "7-Day Rolling Returns: all 4 pipeline tiers (0,1,2,3)",
       "status": "In Progress",
-      "note": "Rob's request. Dispatched 07:25. PID=396083."
+      "note": "Rob's request. PID=396083. 9.9 min."
+    },
+    {
+      "id": "c_20cd45b079aef_19c8ad2e94e",
+      "title": "Investigate macd_divergence tier-2 (no FT data) + demotion",
+      "status": "In Progress",
+      "note": "Dispatched 07:34. PID=403181."
+    },
+    {
+      "id": "c_294ab2f2815d3_19c8ad2e96c",
+      "title": "Add ADX<25 regime filter to vol_compression_fade",
+      "status": "In Progress",
+      "note": "Dispatched 07:34. PID=403193."
     },
     {
       "id": "c_38ec4f3edb15_19c8a981c17",
       "title": "Add Numerai section to master status board",
       "status": "Review/Test",
-      "note": "QA haiku running — awaiting result."
+      "note": "QA haiku running (spawned 07:34)."
     }
   ],
   "inbox_waiting": [
-    {"id": "c_294ab2f2815d3_19c8ad2e96c", "title": "Add ADX<25 regime filter to vol_compression_fade"},
-    {"id": "c_20cd45b079aef_19c8ad2e94e", "title": "Investigate macd_divergence tier-2 promotion (no FT data)"}
-  ],
-  "resolved_this_cycle": [
-    "optimizer-fix card dispatched and completed (not on board — runner self-resolved)"
+    {
+      "id": "c_aa2c77d1389b4_19c8aef5b8e",
+      "title": "URGENT: Systemic paper trade losses — ETH WR=23.8%/-75%, ADA WR=26.8%/-159%, NOT-USDT WR=27.1%/-310% over 48h",
+      "priority": "URGENT"
+    },
+    {
+      "id": "c_968374110d0c9_19c8aef5bb4",
+      "title": "Retrain stale ML models (7.3 days old, >5d threshold) — momentum_classifier, volatility_regressor, risk_scorer, price_predictor",
+      "priority": "HIGH"
+    }
   ],
   "phase8_gate": {
-    "status": "PASS earlier — 2 cards created last cycle (macd_divergence + ADX filter). Board at capacity, no new cards this cycle."
+    "inbox_planned_before": 0,
+    "cpu_pct": 15,
+    "tokens_5h_pct": 18,
+    "status": "PASS — created 2 cards (systemic losses + ML staleness)"
   }
 }

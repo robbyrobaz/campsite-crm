@@ -12,4 +12,12 @@ if [[ ! -f "$FRONTEND_BUILD_INDEX" ]]; then
 fi
 
 cd "$BACKEND_DIR"
+
+# Load Google OAuth credentials from .env if present
+if [[ -f "$BACKEND_DIR/.env" ]]; then
+  set -a
+  source <(grep -v '^#' "$BACKEND_DIR/.env" | grep '=')
+  set +a
+fi
+
 exec env PORT=3000 SERVE_FRONTEND_BUILD=1 NODE_ENV=production node server.js

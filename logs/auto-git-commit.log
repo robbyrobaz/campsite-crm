@@ -157,3 +157,15 @@ CLEAN ai-workshop (nothing to commit)
 [main 3973915] auto: snapshot 2026-02-23T02:00:01Z
  1 file changed, 27 insertions(+)
 COMMITTED campsite-crm
+[main 10365fc] auto: snapshot 2026-02-23T02:00:01Z
+ 1 file changed, 3 insertions(+)
+COMMITTED gilbert-pd-radio-trainer
+Done: 4 committed, 5 skipped
+[master e6f8a47] auto: snapshot 2026-02-23T03:00:01Z
+ 1 file changed, 21 insertions(+), 2 deletions(-)
+COMMITTED master-dashboard
+[main 77a3d42] auto: snapshot 2026-02-23T03:00:01Z
+ 4 files changed, 416 insertions(+), 146 deletions(-)
+ create mode 100644 scoring/__init__.py
+ create mode 100644 scoring/gate_ranker.py
+COMMITTED blofin-stack

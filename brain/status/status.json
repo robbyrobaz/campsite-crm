@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-23T20:34:00Z",
+  "lastUpdated": "2026-02-23T20:49:00Z",
   "activeTasks": [
     {
       "cardId": "c_f1d36e5aea577_19c8c0145ae",
@@ -7,7 +7,7 @@
       "status": "In Progress",
       "project": "blofin-stack",
       "pid": 733669,
-      "note": "RECYCLED 1:34 PM MST (prev runner PID 712109 died at 13:13 with no result). Fresh restart. Likely blocked by GATE_MIN_TRADES=100 with only 16 FT trades."
+      "note": "Runner active (thinking). PF=2.207, WR=68.8%, 16 trades — gate blocked by GATE_MIN_TRADES=100. Timestamp refreshed 1:49 PM MST."
     },
     {
       "cardId": "c_1ce914d82a666_19c8c2b7bca",
@@ -15,50 +15,51 @@
       "status": "In Progress",
       "project": "blofin-stack",
       "pid": 733855,
-      "note": "Dispatched 1:34 PM MST. cross_asset_correlation gate=fail despite ft_pf=1.24/957 trades — MDD=80% from sequential compounding artifact. Raise FT_MAX_MDD from 50% to 75%."
+      "note": "Runner active (thinking MDD diminishing returns across coins). cross_asset_correlation ft_pf=1.091 now (down from 1.24 earlier). Timestamp refreshed 1:49 PM MST."
     },
     {
-      "cardId": "c_bea611ea1ca71_19c8c2bc771",
-      "title": "Investigate momentum_v2 tier=2 with 3 FT trades and 0% WR",
+      "cardId": "c_b917b836b1d81_19c8c2bc7aa",
+      "title": "Bulk archive 15 ghost tier=0 strategies with NULL FT data",
       "status": "In Progress",
       "project": "blofin-stack",
-      "pid": 733877,
-      "note": "Dispatched 1:34 PM MST. tier=2, gate=fail, ft_trades=3, 0% WR — demote if BT metrics weak or signal generation stalled."
+      "pid": 743723,
+      "note": "Dispatched 1:49 PM MST. Archive 20+ tier=0 gate=fail NULL-FT strategies."
     }
   ],
   "recentlyDone": [
     {
-      "cardId": "c_74fc6937bc909_19c8c0145e6",
-      "title": "Run FT pipeline for volatility_regime_switch",
-      "completedAt": "2026-02-23T20:24Z",
-      "note": "FT tracking active. PF=1.29 aggregate (fails >=1.35 gate), but BTC/ETH/DOGE pass per-coin. Need 50+ FT trades post 20:23 UTC before demotion decision."
-    },
-    {
-      "cardId": "c_5d0060a3cd6a6_19c8be687b4",
-      "title": "ML Feature Engineering: Equal Tops/Bottoms",
-      "completedAt": "2026-02-23T20:21Z",
-      "note": "QA PASS. Model built (AUC=0.603, WF PF=0.84). Tier 0 Research — not profitable yet."
+      "cardId": "c_bea611ea1ca71_19c8c2bc771",
+      "title": "Investigate momentum_v2 tier=2 with 3 FT trades",
+      "completedAt": "2026-02-23T20:37Z",
+      "note": "Demoted + archived. bt_pf=1.285 < 1.35 gate. 4 FT trades, 0% WR. Never generated live confirmed_signals."
     }
   ],
   "boardSummary": {
     "inProgress": 3,
     "reviewTest": 0,
     "planned": 0,
-    "inbox": 3
+    "inbox": 4
   },
   "systemHealth": {
-    "cpuTemp": "63C",
-    "cpuLoad": "low (runners just started)",
+    "cpuTemp": "73C",
+    "cpuLoad": "0.61 / 12 (5%)",
     "diskUsage": "37%",
-    "services": "all active (gateway, ingestor, paper)",
-    "tokenUsage5h": "~17-20%"
+    "services": "all active",
+    "tokenUsage5h": "23%"
   },
+  "phase8CardsCreated": [
+    "URGENT paper engine 29.4% WR on 361 trades in 6h (c_5ee172a6bec4e)",
+    "Accelerate FT for vol_expansion_volume_breakout: 16 trades in 48h at PF=2.207 (c_b54fffe9ee131)"
+  ],
+  "alerts": [
+    "WATCH: paper trades last 6h — 29.4% WR, -109.75% PnL on 361 trades. Urgent investigation card created.",
+    "cross_asset_correlation ft_pf dropped from 1.24 to 1.091 since last query (pipeline may have run new cycle)"
+  ],
   "nextActions": [
-    "Monitor 3 runners — stale threshold 1:49 PM MST",
-    "FT_MAX_MDD fix: if successful, cross_asset_correlation should gate=pass → live trading resumes",
-    "momentum_v2: likely quick demote (3 trades, 0% WR, weak BT metrics)",
-    "vol_expansion: likely trade-count limited (16 trades vs 100 minimum gate)",
-    "Inbox: bulk_archive (blofin) + NQ Phase 3 + NQ Phase 4 (NQ blocked by Phase 2)",
-    "Phase 8 skipped: Inbox=3 > 2"
+    "Monitor 3 runners — stale threshold 2:04 PM MST",
+    "FT_MAX_MDD: if gate_ranker.py fix applied, re-run Phase 4 and verify cross_asset_correlation flips to gate=pass",
+    "bulk_archive: expect ~20 strategies archived, then restart services",
+    "Dispatch paper engine investigation card next cycle (URGENT - high priority)",
+    "Inbox: 4 cards (paper engine urgent + vol_expansion FT + NQ Phase 3/4)"
   ]
 }

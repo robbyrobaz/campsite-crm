@@ -1,65 +1,61 @@
 {
-  "lastUpdated": "2026-02-23T00:34:30Z",
+  "lastUpdated": "2026-02-23T00:49:30Z",
   "activeTasks": [
     {
-      "id": "c_4c9981f9b413d_19c87873664",
-      "title": "ML Pipeline: Continuous model exploration engine (Phase 7)",
+      "id": "c_a8fdf25f1bdf2_19c87cc5e18",
+      "title": "RESEARCH: Tradovate API data feed for prop firm accounts (Lucid 100K Flex)",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-23T00:19:00Z",
+      "dispatchedAt": "2026-02-23T00:49:00Z",
+      "note": "Recycled after 30min stale, re-run pid 3881990",
+      "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies"
+    },
+    {
+      "id": "c_f53303bea31b2_19c87e09dc1",
+      "title": "RESEARCH: Replace EEP scoring — design a better strategy ranking system",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-23T00:49:00Z",
       "project": "/home/rob/.openclaw/workspace/blofin-stack"
     },
     {
-      "id": "c_f1b5362ba26f2_19c87cc5e3e",
-      "title": "RESEARCH: Prop firm futures automation landscape",
+      "id": "c_7baa0f9dc7a68_19c87790c3e",
+      "title": "Add toggle to hide 3-way market results (soccer draws etc)",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-23T00:19:00Z",
-      "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies"
-    },
-    {
-      "id": "c_a8fdf25f1bdf2_19c87cc5e18",
-      "title": "RESEARCH: Tradovate API data feed for prop firm accounts",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-23T00:19:00Z",
-      "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies"
+      "dispatchedAt": "2026-02-23T00:49:00Z",
+      "project": "/home/rob/.openclaw/workspace/arb-dashboard"
     }
   ],
   "qaInProgress": [],
   "plannedQueue": [
-    {"id": "c_7aafa071e3176_19c876b2011", "title": "campsite gmail 1-button OAuth (spec now written — one-click flow)", "project": "campsite-crm", "priority": 0},
-    {"id": "c_f53303bea31b2_19c87e09dc1", "title": "RESEARCH: Replace EEP scoring — design better strategy ranking", "project": "blofin-stack", "priority": 1},
-    {"id": "c_dbd7ad053e8bd_19c87cc5e5f", "title": "RESEARCH: Free/cheap NQ futures real-time data sources", "project": "ninja_trader_strategies", "priority": 2},
-    {"id": "c_7baa0f9dc7a68_19c87790c3e", "title": "Add toggle to hide 3-way market results", "project": "arb-dashboard", "priority": 2}
+    {"id": "c_7aafa071e3176_19c876b2011", "title": "campsite gmail 1-button OAuth (spec ready)", "project": "campsite-crm", "priority": 0},
+    {"id": "c_dbd7ad053e8bd_19c87cc5e5f", "title": "RESEARCH: Free/cheap NQ futures real-time data sources", "project": "ninja_trader_strategies", "priority": 2}
   ],
   "inboxSize": 1,
   "inboxCards": [
-    {
-      "id": "c_85ab04f82aa5f_19c80f2d96e",
-      "title": "campsite crm chatgpt auth — 1-button OAuth (spec rewritten)",
-      "project_path": "/home/rob/.openclaw/workspace/campsite-crm",
-      "assignee": "claude",
-      "note": "Spec rewritten by builder: single button OAuth flow, OpenAI OAuth or 1-field fallback"
-    }
+    {"id": "c_85ab04f82aa5f_19c80f2d96e", "title": "campsite crm chatgpt auth — 1-button OAuth (spec ready)", "project_path": "/home/rob/.openclaw/workspace/campsite-crm"}
+  ],
+  "recentlyCompleted": [
+    "ML Pipeline: Continuous model exploration engine (Phase 7)",
+    "RESEARCH: Prop firm futures automation landscape"
   ],
   "systemHealth": {
-    "timestamp": "2026-02-23T00:34:30Z",
-    "cpu_temp": "61.0C",
+    "timestamp": "2026-02-23T00:49:30Z",
+    "cpu_temp": "65.0C",
     "disk_usage": "36%",
-    "cpu_load": "17.8% (1.96/12)",
+    "cpu_load": "2.7% (0.32/12)",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-23T00:34:30Z",
+    "cycle": "2026-02-23T00:49:30Z",
     "actions": [
-      "Phase 1: All services active. CPU 61C (cooled from 89C), load 17.8%, disk 36%.",
-      "Phase 4: 3 In Progress cards at ~15min boundary — NOT recycled (rule is >15min).",
-      "Phase 5: 3/3 capacity full. No new dispatches.",
+      "Phase 1: All services active. CPU 65C, load 2.7%, disk 36%.",
+      "Phase 4: Recycled c_a8fdf25f1bdf2 (Tradovate research, 30min stale) -> re-run pid 3881990.",
+      "Phase 5: Dispatched c_f53303bea31b2 (EEP scoring research) pid 3882003, c_7baa0f9dc7a68 (arb-dashboard toggle) pid 3882015. Capacity 3/3.",
       "Phase 6: 0 Review/Test cards.",
-      "Phase 8: SKIPPED — Gate 1 FAIL (Planned+Inbox=5 > 2). CPU 17.8% PASS.",
-      "Notable: campsite gmail + chatgpt cards now have proper one-click OAuth specs (written by builders).",
-      "Notable: new blofin card added — RESEARCH: Replace EEP scoring (priority 1)."
+      "Phase 8: SKIPPED — Gate 1 FAIL (Planned+Inbox=3 > 2).",
+      "Completed since last cycle: ML Pipeline Phase 7, Prop firm research."
     ]
   }
 }

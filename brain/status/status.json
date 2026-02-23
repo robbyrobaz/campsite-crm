@@ -1,52 +1,59 @@
 {
-  "updated": "2026-02-23T16:49:00Z",
-  "updated_mst": "2026-02-23 09:49 MST",
-  "cycle": "Jarvis Pulse 09:49 MST Feb 23 2026",
-  "health": {
-    "cpu_temp_c": 62,
-    "cpu_load_pct": 10,
-    "disk_pct": 37,
-    "services": ["openclaw-gateway: active", "blofin-stack-ingestor: active", "blofin-stack-paper: active"],
-    "alerts": "none"
-  },
-  "board": {
-    "in_progress": 1,
-    "review_test": 1,
+  "lastUpdated": "2026-02-23T17:09:04Z",
+  "activeTasks": [
+    {
+      "cardId": "c_df239d1c2a246_19c8b6a5130",
+      "title": "CRITICAL: Fix blofin pipeline FT promotion and registry sync",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "dispatchedAt": "2026-02-23T17:04 UTC"
+    },
+    {
+      "cardId": "c_4d84d0ef74823_19c8b718f59",
+      "title": "MAJOR: Full blofin pipeline audit",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "dispatchedAt": "2026-02-23T17:04 UTC"
+    },
+    {
+      "cardId": "c_2405216d444bb_19c8b730e18",
+      "title": "Numerai Tournament model stats",
+      "status": "In Progress",
+      "project": "master-dashboard",
+      "dispatchedAt": "2026-02-23T17:04 UTC"
+    },
+    {
+      "cardId": "c_e08eefdc5c512_19c8b40556d",
+      "title": "Investigate ensemble_top3 / fix promote_to_ft re-promotion bug",
+      "status": "Review/Test",
+      "project": "blofin-stack",
+      "qaStatus": "QA running (haiku)"
+    },
+    {
+      "cardId": "c_825621affcdfa_19c8b347ab5",
+      "title": "Fix volatility_regressor overfitting",
+      "status": "Review/Test",
+      "project": "blofin-stack",
+      "qaStatus": "QA running (haiku)"
+    }
+  ],
+  "boardSummary": {
+    "inProgress": 3,
+    "reviewTest": 2,
     "planned": 0,
     "inbox": 1
   },
-  "activeTasks": [
-    {
-      "id": "c_825621affcdfa_19c8b347ab5",
-      "title": "Fix volatility_regressor overfitting",
-      "status": "Review/Test",
-      "note": "Retrained 09:25 MST: test_r2=0.484 (was -22.5M), train_r2=0.561. QA haiku running."
-    },
-    {
-      "id": "c_e08eefdc5c512_19c8b40556d",
-      "title": "Investigate ensemble_top3 FT vs live gap",
-      "status": "In Progress",
-      "note": "Refreshed at 14.6 min. PID=474051 running."
-    }
-  ],
-  "inbox_waiting": [
-    {
-      "id": "c_e51d11c5e8b9b_19c8b6a26e1",
-      "title": "Investigate ml_gbt_5m: ft_pnl=-50.9% over 859 trades (WR=35.9% but deep negative — poor risk/reward)"
-    }
-  ],
-  "active_strategies": {
-    "count": 6,
-    "highlights": {
-      "volatility_regime_switch": "FT expanded to 48 trades, WR now 37.5% — best candidate",
-      "vol_compression_fade": "ADX filter deployed — WR=25.8% pre-filter, awaiting fresh FT data",
-      "ml_gbt_5m": "ft_pnl=-50.9%, 859 trades — investigation queued"
-    }
+  "systemHealth": {
+    "cpuTemp": "90C (high, sub-critical)",
+    "cpuLoad": "3.9/12 = 32%",
+    "diskUsage": "37%",
+    "services": "all active",
+    "tokenUsage5h": "46%"
   },
-  "phase8_gate": {
-    "inbox_planned": 0,
-    "cpu_pct": 10,
-    "tokens_5h_pct": 41,
-    "status": "PASS — created 1 card (ml_gbt_5m FT investigation)"
-  }
+  "nextActions": [
+    "Await QA results for vol-reg (c_825621affcdfa) and ensemble_top3 fix (c_e08eefdc5c512)",
+    "Apply deploy hooks on QA PASS (blofin service restart)",
+    "Monitor 3 active runners \u2014 stale threshold at 10:19 MST",
+    "Dispatch ml_gbt_5m (c_e51d11c5e8b9b) when a slot opens"
+  ]
 }

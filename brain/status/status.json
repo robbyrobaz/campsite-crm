@@ -1,50 +1,49 @@
 {
-  "lastUpdated": "2026-02-23T18:20:58Z",
-  "activeTasks": [],
+  "lastUpdated": "2026-02-23T18:36:44Z",
+  "activeTasks": [
+    {
+      "cardId": "c_0f46cbe9e4d59_19c8bc67c47",
+      "title": "CRITICAL: Fix NQ strategy signal generation",
+      "status": "In Progress",
+      "project": "ninja_trader_strategies",
+      "pid": 606425,
+      "note": "All 6 strategies produce 235K trades (every bar) \u2014 should_enter() not filtering. Fix run_phase2.py + walk_forward.py"
+    },
+    {
+      "cardId": "c_3638d43a5f68a_19c8bc4312a",
+      "title": "Fix blofin pipeline phase connections (per PIPELINE_AUDIT.md)",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "pid": 606579,
+      "note": "Extend BACKTEST_DAYS to 30, raise gate thresholds, add FT-history override"
+    },
+    {
+      "cardId": "c_92b99f578f387_19c8bc67c6a",
+      "title": "Build NQ Pipeline Dashboard (Flask, port 8891)",
+      "status": "In Progress",
+      "project": "ninja_trader_strategies",
+      "pid": 606583,
+      "note": "Strategy registry, walk-forward folds, tournament results"
+    }
+  ],
   "boardSummary": {
-    "inProgress": 0,
+    "inProgress": 3,
     "reviewTest": 0,
     "planned": 0,
-    "inbox": 0,
-    "note": "Board fully clear at 11:19 MST"
-  },
-  "pipelineState": {
-    "activeStrategies": [
-      {
-        "name": "cross_asset_correlation",
-        "tier": 1,
-        "ft_wr": "65.7%",
-        "ft_pnl": "+142.6%",
-        "ft_trades": 140,
-        "ft_status": "active"
-      },
-      {
-        "name": "volatility_regime_switch",
-        "tier": 1,
-        "ft_wr": "37.5%",
-        "ft_pnl": "-5.6%",
-        "ft_trades": 48,
-        "ft_status": "active"
-      }
-    ],
-    "demotedToday": [
-      "ensemble_top3 (ft_wr=31.4%, -84.3%)",
-      "ml_gbt_5m (BUY WR=21.6%, regime-flip)",
-      "cross_asset_correlation (wrongly demoted 10:34, restored & promoted 11:04)",
-      "macd_divergence, low_volatility_atr_breakout, vol_bb_vwap_reversion, volume_mean_reversion_v1"
-    ]
+    "inbox": 3,
+    "inboxNote": "NQ Phase 2, Phase 3, Phase 4 \u2014 blocked on CRITICAL fix"
   },
   "systemHealth": {
-    "cpuTemp": "65C \u2705",
-    "cpuLoad": "0.4/12 = 3.5%",
+    "cpuTemp": "60C \u2705",
+    "cpuLoad": "1.1/12 = 9%",
     "diskUsage": "37%",
     "services": "all active",
-    "tokenUsage5h": "60% \u2014 window resets 12:00 PM MST (~41 min)"
+    "tokenUsage5h": "61% (window resets 12:00 PM MST \u2014 26 min)"
   },
   "nextActions": [
-    "Token window resets 12:00 PM MST \u2014 Phase 8 will be unblocked",
-    "After reset: mine for improvement cards (pipeline opportunities, vol_compression_fade FT expansion)",
-    "Monitor volatility_regime_switch (48t, WR=37.5%) \u2014 needs more FT trades for confidence",
-    "cross_asset_correlation: top performer ft_wr=65.7% / +142.6% \u2014 watch for continued growth"
+    "Monitor 3 runners \u2014 stale threshold 11:49 MST",
+    "NQ Phase 2 (c_8b64062d36389) blocks on CRITICAL fix \u2014 dispatch when signal fix completes",
+    "Token window resets 12:00 PM MST \u2014 Phase 8 unblocked after",
+    "NQ Phase 3 + 4 blocked until Phase 2 complete"
   ]
 }

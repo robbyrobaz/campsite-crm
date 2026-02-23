@@ -35,6 +35,7 @@
 - [ ] **Services:** After restart, verify `systemctl is-active` AND hit the health/status endpoint
 - [ ] **If you can't run the functional test, the QA is incomplete — say so explicitly**
 - [ ] QA sentinel instructions MUST include: "Use playwright to load the page headless, check for JS errors, screenshot the result, verify panels show real data"
+- [ ] **For any Flask/Jinja dashboard**: extract `<script>` content and run `node --check` to catch syntax errors from Jinja template escaping (known recurring bug: `\'` in JS strings gets eaten by Jinja → use `&quot;` instead)
 
 ## Git backup discipline (every cycle/hourly oversight):
 - [ ] Check repo remote + branch + `git status --short` for active repos

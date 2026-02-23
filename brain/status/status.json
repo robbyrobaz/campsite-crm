@@ -1,60 +1,64 @@
 {
-  "updated": "2026-02-23T15:49:00Z",
-  "updated_mst": "2026-02-23 08:49 MST",
-  "cycle": "Jarvis Pulse 08:49 MST Feb 23 2026",
+  "updated": "2026-02-23T16:04:00Z",
+  "updated_mst": "2026-02-23 09:04 MST",
+  "cycle": "Jarvis Pulse 09:04 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 54,
-    "cpu_load_pct": 12,
+    "cpu_temp_c": 83,
+    "cpu_load_pct": 10,
     "disk_pct": 37,
     "services": ["openclaw-gateway: active", "blofin-stack-ingestor: active", "blofin-stack-paper: active"],
-    "alerts": "none — system healthy, paper trading performing well"
+    "alerts": "none"
   },
   "board": {
-    "in_progress": 0,
-    "review_test": 2,
+    "in_progress": 3,
+    "review_test": 0,
     "planned": 0,
-    "inbox": 2
+    "inbox": 1
   },
   "activeTasks": [
     {
-      "id": "c_968374110d0c9_19c8aef5bb4",
-      "title": "Retrain stale ML models",
-      "status": "Review/Test",
-      "note": "4 models retrained at 15:14 UTC: momentum_classifier(0.535), risk_scorer(0.732), volatility_regressor, price_predictor. QA haiku running."
+      "id": "c_825621affcdfa_19c8b347ab5",
+      "title": "Fix volatility_regressor overfitting (train R²=0.999 vs test R²=-22.5M)",
+      "status": "In Progress",
+      "note": "PID=462495. Dispatched 09:04."
     },
     {
-      "id": "c_6277461282ba6_19c8b171481",
-      "title": "Demote vol_bb_vwap_reversion",
-      "status": "Review/Test",
-      "note": "Demoted tier=0, archived=1, gate_status=fail. QA haiku running."
+      "id": "c_d95e851e417a_19c8b33a1e1",
+      "title": "Investigate TIA-USDT trades: WR=84.8%/+38% — should be blocked by coin_eligibility",
+      "status": "In Progress",
+      "note": "PID=462507. Dispatched 09:04."
+    },
+    {
+      "id": "c_8cf6e1900b216_19c8b33a203",
+      "title": "Run FT pipeline for volatility_regime_switch (only 28 trades, WR=46.4%)",
+      "status": "In Progress",
+      "note": "PID=462522. Dispatched 09:04. Best WR of active strategies."
     }
   ],
   "inbox_waiting": [
     {
-      "id": "c_d95e851e417a_19c8b33a1e1",
-      "title": "Investigate TIA-USDT trades: 33 in 1h WR=84.8% — should be blocked by coin_eligibility.py"
-    },
-    {
-      "id": "c_8cf6e1900b216_19c8b33a203",
-      "title": "Run FT pipeline for volatility_regime_switch: only 28 trades, WR=46.4% — best active strategy, needs more data for tier-2 consideration"
+      "id": "c_e08eefdc5c512_19c8b40556d",
+      "title": "Investigate ensemble_top3 FT vs live gap: ft_pnl=-44.2%/WR=34.4% (646 trades) but live JTO/JUP/SOL all WR>48%"
     }
   ],
-  "paper_trading_1h_highlights": {
-    "JTO-USDT": "WR=60.6%, PnL=+323%",
-    "JUP-USDT": "WR=57.3%, PnL=+58%",
-    "TIA-USDT": "WR=84.8%, PnL=+38% (33 trades — investigate, should be blocked)",
-    "SOL-USDT": "WR=48.8%, PnL=+32%",
-    "note": "Significant improvement vs 48h window — demotions working"
+  "paper_trading_30min": {
+    "JTO-USDT": "WR=60.3%, PnL=+322%",
+    "JUP-USDT": "WR=56.8%, PnL=+56%",
+    "TIA-USDT": "WR=84.8%, PnL=+38% (being investigated)",
+    "SOL-USDT": "WR=48.6%, PnL=+32%",
+    "SEI-USDT": "WR=49.8%, PnL=+30%",
+    "note": "All positive — demotion wave working well"
   },
-  "active_strategies": {
-    "count": 7,
-    "best": "volatility_regime_switch (ft_wr=46.4%, ft_pnl=-0.6%, 28 trades — needs FT expansion)",
-    "note": "All 7 have negative FT metrics but live 1h performance is positive on multiple symbols"
+  "strategy_registry_summary": {
+    "active_gate_pass": 7,
+    "tier2_unvalidated": 0,
+    "demoted_today": ["macd_divergence","low_volatility_atr_breakout","vol_bb_vwap_reversion","volume_mean_reversion_v1"],
+    "best_WR": "volatility_regime_switch (46.4%, 28 trades — FT expansion running)"
   },
   "phase8_gate": {
     "inbox_planned": 0,
-    "cpu_pct": 12,
-    "tokens_5h_pct": 32,
-    "status": "PASS — created 2 cards (TIA eligibility check + volatility_regime_switch FT run)"
+    "cpu_pct": 10,
+    "tokens_5h_pct": 34,
+    "status": "PASS — created 1 card (ensemble_top3 FT vs live investigation)"
   }
 }

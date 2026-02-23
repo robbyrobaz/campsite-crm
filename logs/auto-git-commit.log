@@ -71,3 +71,47 @@ CLEAN master-dashboard (nothing to commit)
  create mode 100644 ml_pipeline/tournament.py
  create mode 100644 ml_pipeline/walk_forward.py
 COMMITTED blofin-stack
+warning: adding embedded git repository: ninja_trader_strategies
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint: 
+hint: 	git submodule add <url> ninja_trader_strategies
+hint: 
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint: 
+hint: 	git rm --cached ninja_trader_strategies
+hint: 
+hint: See "git help submodule" for more information.
+[main 61239a9] auto: snapshot 2026-02-23T01:00:01Z
+ 28 files changed, 1556 insertions(+), 24 deletions(-)
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_170111-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_170611-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_171111-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_171611-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_171728-startup.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_172226-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_172726-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_173226-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_173726-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_174226-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_174726-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_175226-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_175726-auto.json
+ delete mode 100644 campsite-crm/frontend/build/static/css/main.5ffe8b41.css.map
+ rename campsite-crm/frontend/build/static/css/{main.5ffe8b41.css => main.689231bf.css} (87%)
+ create mode 100644 campsite-crm/frontend/build/static/css/main.689231bf.css.map
+ rename campsite-crm/frontend/build/static/js/{main.ff3e0287.js => main.1e158015.js} (51%)
+ rename campsite-crm/frontend/build/static/js/{main.ff3e0287.js.LICENSE.txt => main.1e158015.js.LICENSE.txt} (100%)
+ create mode 100644 campsite-crm/frontend/build/static/js/main.1e158015.js.map
+ delete mode 100644 campsite-crm/frontend/build/static/js/main.ff3e0287.js.map
+ create mode 160000 ninja_trader_strategies
+COMMITTED blofin-dashboard
+[main 04dfc9f] auto: snapshot 2026-02-23T01:00:01Z
+ 2 files changed, 84 insertions(+), 9 deletions(-)
+COMMITTED arb-dashboard
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)

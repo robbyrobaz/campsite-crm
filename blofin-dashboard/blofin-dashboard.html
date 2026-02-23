@@ -193,15 +193,15 @@ button { cursor: pointer; font-family: inherit; }
 .strat-card-metric-val.neg { color: var(--red); }
 .strat-card-metric-val.neutral { color: var(--text); }
 .strat-card-metric-label { font-size: 9px; color: var(--dim); text-transform: uppercase; }
-.eep-bar-wrap { margin-top: 6px; }
-.eep-bar-bg { height: 3px; background: var(--border2); border-radius: 2px; overflow: hidden; }
-.eep-bar-fill {
+.gate-bar-wrap { margin-top: 6px; }
+.gate-bar-bg { height: 3px; background: var(--border2); border-radius: 2px; overflow: hidden; }
+.gate-bar-fill {
   height: 100%; border-radius: 2px;
   transition: width 0.5s ease;
 }
-.eep-good { background: var(--green); }
-.eep-ok { background: var(--amber); }
-.eep-bad { background: var(--red); }
+.gate-pass { background: var(--green); }
+.gate-fail { background: var(--red); }
+.gate-unknown { background: var(--border2); }
 
 /* ─── Strategy Table ─────────────────────────────────────────────────── */
 .table-controls {
@@ -258,12 +258,12 @@ td { padding: 7px 10px; white-space: nowrap; }
 .tier-badge.t1 { background: var(--amber-dim); color: var(--amber); }
 .tier-badge.t2 { background: var(--green-dim); color: var(--green); }
 .tier-badge.t3 { background: rgba(255,255,255,0.05); color: var(--dim); }
-.td-eep {
+.td-rank {
   font-weight: 800; font-size: 13px;
 }
-.eep-high { color: var(--green); }
-.eep-mid { color: var(--amber); }
-.eep-low { color: var(--red); }
+.rank-top { color: var(--green); }
+.rank-mid { color: var(--amber); }
+.rank-none { color: var(--dim); }
 .td-pos { color: var(--green); }
 .td-neg { color: var(--red); }
 .td-muted { color: var(--dim); font-size: 11px; }
@@ -479,7 +479,7 @@ td { padding: 7px 10px; white-space: nowrap; }
       <tr>
         <th onclick="sortTable('name')">Name <span class="sort-arrow">↕</span></th>
         <th onclick="sortTable('tier')">Tier <span class="sort-arrow">↕</span></th>
-        <th onclick="sortTable('eep_score')" class="sorted">EEP Score <span class="sort-arrow">↓</span></th>
+        <th onclick="sortTable('pnl_rank')" class="sorted">Rank <span class="sort-arrow">↓</span></th>
         <th onclick="sortTable('pf')">Profit Factor <span class="sort-arrow">↕</span></th>
         <th onclick="sortTable('sharpe')">Sharpe <span class="sort-arrow">↕</span></th>
         <th onclick="sortTable('maxdd')">Max DD <span class="sort-arrow">↕</span></th>
@@ -530,7 +530,7 @@ const state = {
   mlModels: null,
   metrics: null,
   summary: null,
-  sortCol: 'eep_score',
+  sortCol: 'pnl_rank',
   sortAsc: false,
   tierFilter: 'all',
   search: '',
@@ -563,15 +563,16 @@ function timeShort(isoStr) {
   const s = isoStr.replace('T', ' ').slice(11, 19);
   return s;
 }
-function eepClass(score) {
-  if (score >= 65) return 'eep-high';
-  if (score >= 40) return 'eep-mid';
-  return 'eep-low';
+function rankClass(rank) {
+  if (rank == null) return 'rank-none';
+  if (rank <= 3) return 'rank-top';
+  if (rank <= 10) return 'rank-mid';
+  return 'rank-none';
 }
-function eepBarClass(score) {
-  if (score >= 65) return 'eep-good';
-  if (score >= 40) return 'eep-ok';
-  return 'eep-bad';
+function gateBarClass(status) {
+  if (status === 'pass') return 'gate-pass';
+  if (status === 'fail') return 'gate-fail';
+  return 'gate-unknown';
 }
 function signClass(v) { return v > 0 ? 'pos' : v < 0 ? 'neg' : ''; }
 function tierName(t) {
@@ -678,12 +679,14 @@ function renderPipeline() {
   });
 
   function tierStats(arr) {
-    if (!arr.length) return { count: 0, bestEep: 0, avgEep: 0, topName: '—' };
-    const eeps = arr.map(s => s.eep_score ?? 0);
-    const bestEep = Math.max(...eeps);
-    const avgEep = eeps.reduce((a,b)=>a+b,0) / eeps.length;
-    const top = arr.reduce((a,b) => (b.eep_score??0) > (a.eep_score??0) ? b : a, arr[0]);
-    return { count: arr.length, bestEep, avgEep, topName: top.name };
+    if (!arr.length) return { count: 0, bestPnl: 0, avgPnl: 0, topName: '—' };
+    const pnls = arr.map(s => s.bt_pnl_pct ?? 0);
+    const bestPnl = Math.max(...pnls);
+    const avgPnl = pnls.reduce((a,b)=>a+b,0) / pnls.length;
+    // top = ranked #1 if any, else best PnL
+    const ranked = arr.filter(s => s.pnl_rank != null).sort((a,b) => a.pnl_rank - b.pnl_rank);
+    const top = ranked.length ? ranked[0] : arr.reduce((a,b) => (b.bt_pnl_pct??0) > (a.bt_pnl_pct??0) ? b : a, arr[0]);
+    return { count: arr.length, bestPnl, avgPnl, topName: top.name };
   }
 
   const t0s = tierStats(tiers[0]);
@@ -695,7 +698,8 @@ function renderPipeline() {
   document.getElementById('pipeline-badge').textContent = total + ' strategies total';
 
   const tierBoxHTML = (cls, label, sublabel, stats, emptyMsg) => {
-    const eep = stats.bestEep;
+    const best = stats.bestPnl;
+    const avg = stats.avgPnl;
     const isEmpty = stats.count === 0;
     return `
     <div class="tier-box ${cls}">
@@ -706,12 +710,12 @@ function renderPipeline() {
       ${isEmpty ? `<div class="tier-metrics" style="color:var(--dim);font-size:10px;margin-top:4px;">${emptyMsg}</div>` : `
       <div class="tier-metrics">
         <div class="tier-metric">
-          <span class="tier-metric-label">Best EEP</span>
-          <span class="tier-metric-val ${eep>=65?'pos':eep>=40?'':'neg'}">${eep.toFixed(1)}</span>
+          <span class="tier-metric-label">Best PnL</span>
+          <span class="tier-metric-val ${best>0?'pos':best<0?'neg':''}">${best.toFixed(1)}%</span>
         </div>
         <div class="tier-metric">
-          <span class="tier-metric-label">Avg EEP</span>
-          <span class="tier-metric-val ${stats.avgEep>=65?'pos':stats.avgEep>=40?'':'neg'}">${stats.avgEep.toFixed(1)}</span>
+          <span class="tier-metric-label">Avg PnL</span>
+          <span class="tier-metric-val ${avg>0?'pos':avg<0?'neg':''}">${avg.toFixed(1)}%</span>
         </div>
         <div class="tier-metric">
           <span class="tier-metric-label">Top</span>
@@ -733,9 +737,9 @@ function renderPipeline() {
     tierBoxHTML('t0', 'Tier 0', 'Library', t0s, 'No strategies') +
     gateHTML(['file exists', '≥1 signal']) +
     tierBoxHTML('t1', 'Tier 1', 'Backtest', t1s, 'No strategies promoted') +
-    gateHTML(['≥50 trades', 'WR≥40%', 'Sharpe≥0.5', 'EEP≥50']) +
+    gateHTML(['≥50 trades', 'PF≥1.2', 'MDD<50%', 'PnL>0']) +
     tierBoxHTML('t2', 'Tier 2', 'Forward Test', t2s, 'No strategies') +
-    gateHTML(['≥100 trades', 'WR≥45%', 'Sharpe≥1.0', 'EEP≥65']) +
+    gateHTML(['FT ≥20 trades', 'FT PF≥1.1', 'FT MDD<50%', 'FT PnL>0']) +
     tierBoxHTML('t3', 'Tier 3', 'Live Trading', t3s, 'Future — not yet active');
 }
 
@@ -753,33 +757,37 @@ function renderPipelineCards() {
     const tier = s.tier ?? 0;
     const cls = `t${tier}`;
     // Use forward-test data if tier 2, else backtest
-    const eep = s.eep_score ?? 0;
     const trades = tier >= 2 ? s.ft_trades : s.bt_trades;
     const sharpe = tier >= 2 ? s.ft_sharpe : s.bt_sharpe;
     const pnl = tier >= 2 ? s.ft_pnl_pct : s.bt_pnl_pct;
     const wr = tier >= 2 ? s.ft_win_rate : s.bt_win_rate;
-    const eepCls = eep >= 65 ? 'pos' : eep >= 40 ? 'neutral' : 'neg';
-    const barW = Math.min(100, eep).toFixed(0);
+    const pf = s.bt_profit_factor ?? 0;
+    const gatePass = s.gate_status === 'pass';
+    const rank = s.pnl_rank;
+    const gateCls = gatePass ? 'pos' : 'neg';
+    const rankLabel = rank != null ? '#' + rank : '—';
     return `
     <div class="strat-card ${cls}">
       <div class="strat-card-name" title="${s.name}">${s.name.replace(/_/g,' ')}</div>
       <div class="strat-card-metrics">
         <div class="strat-card-metric">
-          <div class="strat-card-metric-val primary ${eepCls}">${eep.toFixed(1)}</div>
-          <div class="strat-card-metric-label">EEP Score</div>
-        </div>
-        <div class="strat-card-metric">
-          <div class="strat-card-metric-val ${pnl>0?'pos':'neg'}">${pnl!=null?pnl.toFixed(1)+'%':'—'}</div>
+          <div class="strat-card-metric-val primary ${pnl>0?'pos':'neg'}">${pnl!=null?pnl.toFixed(1)+'%':'—'}</div>
           <div class="strat-card-metric-label">PnL%</div>
         </div>
         <div class="strat-card-metric">
-          <div class="strat-card-metric-val neutral">${sharpe!=null?sharpe.toFixed(2):'—'}</div>
-          <div class="strat-card-metric-label">Sharpe</div>
+          <div class="strat-card-metric-val ${gateCls}">${gatePass ? '✓ PASS' : '✗ FAIL'}</div>
+          <div class="strat-card-metric-label">Gates</div>
+        </div>
+        <div class="strat-card-metric">
+          <div class="strat-card-metric-val neutral">${rankLabel}</div>
+          <div class="strat-card-metric-label">Rank</div>
+        </div>
+        <div class="strat-card-metric">
+          <div class="strat-card-metric-val neutral">${pf.toFixed(2)}</div>
+          <div class="strat-card-metric-label">PF</div>
         </div>
       </div>
-      <div class="eep-bar-wrap">
-        <div class="eep-bar-bg"><div class="eep-bar-fill ${eepBarClass(eep)}" style="width:${barW}%"></div></div>
-      </div>
+      ${!gatePass && s.gate_failures ? '<div style="font-size:10px;color:var(--red);margin-top:4px">'+s.gate_failures+'</div>' : ''}
     </div>`;
   };
 
@@ -795,7 +803,7 @@ function renderPipelineCards() {
   }
   if (t0.length) {
     html += `<div class="section-header" style="margin-top:10px">
-      <div style="font-size:10px;color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:0.5px">▶ Tier 0 — Library (Top ${t0.length} by EEP)</div>
+      <div style="font-size:10px;color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:0.5px">▶ Tier 0 — Library (Top ${t0.length} by PnL%)</div>
       <div class="section-line"></div>
     </div>
     <div class="tier-cards-grid">`;
@@ -861,7 +869,7 @@ function sortTable(col) {
     if (arrow) arrow.textContent = '↕';
   });
   // Highlight sorted column
-  const colIdx = { name:0, tier:1, eep_score:2, pf:3, sharpe:4, maxdd:5, trades:6, pnl:7, wr:8 }[col];
+  const colIdx = { name:0, tier:1, pnl_rank:2, pf:3, sharpe:4, maxdd:5, trades:6, pnl:7, wr:8 }[col];
   const ths = document.querySelectorAll('thead th');
   if (colIdx != null && ths[colIdx]) {
     ths[colIdx].classList.add('sorted');
@@ -892,7 +900,7 @@ function renderTable() {
     const at = a.tier ?? 0, bt2 = b.tier ?? 0;
     if (col === 'name') { av = a.name; bv = b.name; }
     else if (col === 'tier') { av = at; bv = bt2; }
-    else if (col === 'eep_score') { av = a.eep_score ?? 0; bv = b.eep_score ?? 0; }
+    else if (col === 'pnl_rank') { av = a.pnl_rank ?? 0; bv = b.pnl_rank ?? 0; }
     else if (col === 'pf') {
       // Use ft_pf if tier 2, else bt (no PF in registry schema — use pnl as proxy)
       av = at >= 2 ? (a.ft_pnl_pct ?? 0) : (a.bt_pnl_pct ?? 0);
@@ -939,8 +947,8 @@ function renderTable() {
     const trades = isFT ? s.ft_trades : s.bt_trades;
     const pnl = isFT ? s.ft_pnl_pct : s.bt_pnl_pct;
     const wr = isFT ? s.ft_win_rate : s.bt_win_rate;
-    const eep = s.eep_score ?? 0;
-    const eepLabel = isFT && s.ft_eep_score ? s.ft_eep_score.toFixed(1) : (s.bt_eep_score ? s.bt_eep_score.toFixed(1) + '*' : eep.toFixed(1));
+    const gatePass = s.gate_status === 'pass';
+    const rank = s.pnl_rank;
     const pnlCls = pnl > 0 ? 'td-pos' : pnl < 0 ? 'td-neg' : '';
     const sharpeCls = sharpe > 1 ? 'td-pos' : sharpe < 0 ? 'td-neg' : '';
     const ddCls = maxdd > 20 ? 'td-neg' : '';
@@ -953,7 +961,7 @@ function renderTable() {
     return `<tr>
       <td class="td-name" title="${s.name}">${s.has_file === false ? '<span class="no-file-dot" title="No .py file on disk"></span>' : ''}${s.name.replace(/_/g,' ')}</td>
       <td><span class="tier-badge t${tier}">${tierName(tier)} ${tierLabel(tier)}</span></td>
-      <td class="td-eep ${eepClass(eep)}">${eepLabel}</td>
+      <td class="${gatePass ? 'td-pos' : 'td-neg'}" title="${s.gate_failures || ''}">${rank != null ? '#'+rank : (gatePass ? '✓' : '✗')}</td>
       <td class="${pfCls}">${pfDisplay}</td>
       <td class="${sharpeCls}">${sharpe != null ? fmt(sharpe, 2) : '—'}</td>
       <td class="${ddCls}">${maxdd != null ? fmtPct(maxdd, 1) : '—'}</td>

@@ -388,26 +388,27 @@ def api_registry(conn):
                 r.bt_pnl_pct,
                 r.bt_max_dd,
                 r.bt_trades,
-                r.bt_eep_score,
                 r.bt_profit_factor,
                 r.ft_win_rate,
                 r.ft_sharpe,
                 r.ft_pnl_pct,
                 r.ft_max_dd,
                 r.ft_trades,
-                r.ft_eep_score,
+                r.gate_status,
+                r.gate_failures,
+                r.pnl_rank,
                 r.archived,
                 r.archive_reason
             FROM strategy_registry r
             WHERE r.archived = 0
-            ORDER BY COALESCE(r.ft_eep_score, r.bt_eep_score, 0) DESC
+            ORDER BY
+                CASE WHEN r.pnl_rank IS NOT NULL THEN 0 ELSE 1 END,
+                r.pnl_rank ASC,
+                r.bt_pnl_pct DESC NULLS LAST
         """)
         for row in cursor.fetchall():
             name = row['strategy_name']
             has_file = name in valid_files
-            bt_eep = float(row['bt_eep_score'] or 0)
-            ft_eep = float(row['ft_eep_score'] or 0)
-            eep_score = ft_eep if ft_eep else bt_eep
             strategies.append({
                 "name": name,
                 "tier": row['tier'],
@@ -420,15 +421,15 @@ def api_registry(conn):
                 "bt_pnl_pct": round(float(row['bt_pnl_pct'] or 0), 2),
                 "bt_max_dd": round(float(row['bt_max_dd'] or 0), 2),
                 "bt_trades": int(row['bt_trades'] or 0),
-                "bt_eep_score": round(bt_eep, 2),
                 "bt_profit_factor": round(float(row['bt_profit_factor'] or 0), 3) if row['bt_profit_factor'] else None,
                 "ft_win_rate": round(float(row['ft_win_rate'] or 0) * 100, 2),
                 "ft_sharpe": round(float(row['ft_sharpe'] or 0), 3),
                 "ft_pnl_pct": round(float(row['ft_pnl_pct'] or 0), 2),
                 "ft_max_dd": round(float(row['ft_max_dd'] or 0), 2),
                 "ft_trades": int(row['ft_trades'] or 0),
-                "ft_eep_score": round(ft_eep, 2),
-                "eep_score": round(eep_score, 2),
+                "gate_status": row['gate_status'] or 'fail',
+                "gate_failures": row['gate_failures'] or '',
+                "pnl_rank": row['pnl_rank'],
             })
     else:
         # Fallback: build from strategy_scores + strategy_backtest_results

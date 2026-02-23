@@ -3649,7 +3649,7 @@ app.put('/api/integrations/chatgpt/settings', async (req, res) => {
         ? payload.mcp_shared_secret.trim()
         : current.mcp_shared_secret,
       oauth_enabled: payload.oauth_enabled === true,
-      oauth_client_id: payload.oauth_client_id || '',
+      oauth_client_id: payload.oauth_client_id || current.oauth_client_id || '',
       oauth_client_secret: typeof payload.oauth_client_secret === 'string' && payload.oauth_client_secret.trim()
         ? payload.oauth_client_secret.trim()
         : current.oauth_client_secret,
@@ -3683,6 +3683,15 @@ app.put('/api/integrations/chatgpt/settings', async (req, res) => {
       message: 'Integration settings saved',
       settings: buildSafeSettingsResponse(next)
     });
+  } catch (error) {
+    return res.status(500).json({ error: error.message });
+  }
+});
+
+app.post('/api/integrations/chatgpt/disconnect-openai', async (req, res) => {
+  try {
+    await upsertSettingValue('openai_api_key', '');
+    return res.json({ message: 'ChatGPT disconnected' });
   } catch (error) {
     return res.status(500).json({ error: error.message });
   }
@@ -4182,7 +4191,7 @@ app.get('/api/auth/gmail/connect-url', async (req, res) => {
   try {
     const settings = await getIntegrationSettings();
     if (!settings.oauth_client_id) {
-      return res.status(400).json({ error: 'OAuth Client ID not configured. Add it in Settings → Integration Settings.' });
+      return res.status(400).json({ error: 'Gmail OAuth is not configured. Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET in the server .env file.' });
     }
     const redirectUri = getGmailCallbackUri(req);
     const params = new URLSearchParams({

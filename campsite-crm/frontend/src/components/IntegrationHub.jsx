@@ -9,8 +9,6 @@ const INITIAL_SETTINGS = {
   openai_model: 'gpt-4.1-mini',
   mcp_shared_secret: '',
   oauth_enabled: false,
-  oauth_client_id: '',
-  oauth_client_secret: '',
   oauth_from_env: false,
   oauth_redirect_uri: '',
   gmail_scan_enabled: false,
@@ -44,8 +42,10 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
   const [gmailStatus, setGmailStatus] = useState(null);
   const [connectingGmail, setConnectingGmail] = useState(false);
   const [disconnectingGmail, setDisconnectingGmail] = useState(false);
-  const [savingAndConnecting, setSavingAndConnecting] = useState(false);
   const [gmailNotice, setGmailNotice] = useState('');
+  const [showOpenAiModal, setShowOpenAiModal] = useState(false);
+  const [modalApiKey, setModalApiKey] = useState('');
+  const [savingKey, setSavingKey] = useState(false);
 
   const loadSettings = async () => {
     setLoading(true);
@@ -117,9 +117,6 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
         openai_model: settings.openai_model,
         mcp_shared_secret: settings.mcp_shared_secret,
         oauth_enabled: settings.oauth_enabled,
-        oauth_client_id: settings.oauth_client_id,
-        oauth_client_secret: settings.oauth_client_secret,
-        oauth_redirect_uri: settings.oauth_redirect_uri,
         gmail_scan_window_days: settings.gmail_scan_window_days
       });
       await loadSettings();
@@ -139,38 +136,8 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
       window.location.href = response.data.url;
     } catch (error) {
       console.error('Error starting Gmail OAuth:', error);
-      alert(error.response?.data?.error || 'Unable to start Gmail connection. Make sure OAuth Client ID and Secret are saved first.');
+      alert(error.response?.data?.error || 'Unable to start Gmail connection. Contact your administrator.');
       setConnectingGmail(false);
-    }
-  };
-
-  // Saves OAuth credentials then immediately starts the Gmail OAuth redirect.
-  // Used when credentials haven't been stored yet — one click does both steps.
-  const saveAndConnect = async () => {
-    if (!settings.oauth_client_id.trim()) {
-      alert('Enter your Google OAuth Client ID first.');
-      return;
-    }
-    setSavingAndConnecting(true);
-    try {
-      await axios.put('/api/integrations/chatgpt/settings', {
-        chatgpt_enabled: settings.chatgpt_enabled,
-        workspace_name: settings.workspace_name,
-        openai_api_key: settings.openai_api_key,
-        openai_model: settings.openai_model,
-        mcp_shared_secret: settings.mcp_shared_secret,
-        oauth_enabled: settings.oauth_enabled,
-        oauth_client_id: settings.oauth_client_id,
-        oauth_client_secret: settings.oauth_client_secret,
-        oauth_redirect_uri: settings.oauth_redirect_uri,
-        gmail_scan_window_days: settings.gmail_scan_window_days
-      });
-      const response = await axios.get('/api/auth/gmail/connect-url');
-      window.location.href = response.data.url;
-    } catch (error) {
-      console.error('Error saving OAuth and connecting:', error);
-      alert(error.response?.data?.error || 'Unable to connect Gmail. Check your OAuth credentials.');
-      setSavingAndConnecting(false);
     }
   };
 
@@ -187,6 +154,32 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
       alert(error.response?.data?.error || 'Unable to disconnect Gmail');
     } finally {
       setDisconnectingGmail(false);
+    }
+  };
+
+  const connectOpenAI = async () => {
+    const key = modalApiKey.trim();
+    if (!key) return;
+    setSavingKey(true);
+    try {
+      await axios.put('/api/integrations/chatgpt/settings', { openai_api_key: key });
+      setModalApiKey('');
+      setShowOpenAiModal(false);
+      await loadSettings();
+    } catch (error) {
+      alert(error.response?.data?.error || 'Unable to save API key');
+    } finally {
+      setSavingKey(false);
+    }
+  };
+
+  const disconnectOpenAI = async () => {
+    if (!window.confirm('Disconnect ChatGPT? The stored API key will be removed.')) return;
+    try {
+      await axios.post('/api/integrations/chatgpt/disconnect-openai');
+      await loadSettings();
+    } catch (error) {
+      alert(error.response?.data?.error || 'Unable to disconnect ChatGPT');
     }
   };
 
@@ -330,6 +323,7 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
   }
 
   return (
+    <>
     <div className="integration-grid">
       <section className="card">
         <h2>⚙️ ChatGPT + MCP Settings</h2>
@@ -362,24 +356,20 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
             />
           </div>
 
-          <div className="form-group">
-            <label>OpenAI API Key</label>
-            <input
-              type="password"
-              value={settings.openai_api_key}
-              onChange={(e) => setSettings({ ...settings, openai_api_key: e.target.value })}
-              placeholder="sk-..."
-            />
-          </div>
-
-          <div className="form-group">
-            <label>OpenAI Model</label>
-            <input
-              type="text"
-              value={settings.openai_model}
-              onChange={(e) => setSettings({ ...settings, openai_model: e.target.value })}
-              placeholder="gpt-4.1-mini"
-            />
+          <div className="openai-connect-block">
+            {settings.openai_key_configured ? (
+              <>
+                <span className="gmail-status-dot gmail-status-dot--on" />
+                <strong>ChatGPT connected</strong>
+                <button className="btn btn-secondary btn-small" type="button" onClick={disconnectOpenAI}>
+                  Disconnect
+                </button>
+              </>
+            ) : (
+              <button className="btn btn-primary" type="button" onClick={() => setShowOpenAiModal(true)}>
+                Connect ChatGPT
+              </button>
+            )}
           </div>
 
           <div className="form-group">
@@ -402,29 +392,6 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
             />
           </div>
 
-          {!settings.oauth_from_env && (
-            <>
-              <div className="form-group">
-                <label>Google OAuth Client ID <span className="field-hint">(from Google Cloud Console)</span></label>
-                <input
-                  type="text"
-                  value={settings.oauth_client_id}
-                  onChange={(e) => setSettings({ ...settings, oauth_client_id: e.target.value })}
-                  placeholder="xxxxxxx.apps.googleusercontent.com"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Google OAuth Client Secret</label>
-                <input
-                  type="password"
-                  value={settings.oauth_client_secret}
-                  onChange={(e) => setSettings({ ...settings, oauth_client_secret: e.target.value })}
-                  placeholder="GOCSPX-..."
-                />
-              </div>
-            </>
-          )}
         </div>
 
         <div className="form-actions">
@@ -441,7 +408,6 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
         <h2>📧 Gmail Account Connection</h2>
         <p className="section-subtext">
           Connect your Gmail account via OAuth to allow the CRM to scan emails for guest contacts and conversation history.
-          {!settings.oauth_from_env && ' Requires Google OAuth credentials saved above.'}
         </p>
 
         {gmailNotice === 'success' && (
@@ -479,49 +445,13 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
                 <span className="gmail-status-dot gmail-status-dot--off" />
                 <strong>Not connected</strong>
               </div>
-              {!gmailStatus.oauth_from_env && (
-                <div className="gmail-callback-hint">
-                  <strong>Authorized Redirect URI — add this in Google Cloud Console:</strong>
-                  <code>{gmailStatus.callback_uri}</code>
-                </div>
-              )}
-              {!gmailStatus.oauth_from_env && !gmailStatus.oauth_client_configured && (
-                <div className="gmail-inline-setup">
-                  <div className="form-group">
-                    <label>Google OAuth Client ID <span className="field-hint">(from Google Cloud Console)</span></label>
-                    <input
-                      type="text"
-                      value={settings.oauth_client_id}
-                      onChange={(e) => setSettings({ ...settings, oauth_client_id: e.target.value })}
-                      placeholder="xxxxxxx.apps.googleusercontent.com"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Google OAuth Client Secret</label>
-                    <input
-                      type="password"
-                      value={settings.oauth_client_secret}
-                      onChange={(e) => setSettings({ ...settings, oauth_client_secret: e.target.value })}
-                      placeholder="GOCSPX-..."
-                    />
-                  </div>
-                </div>
-              )}
               <button
                 className="btn btn-primary"
                 type="button"
-                onClick={gmailStatus.oauth_client_configured ? connectGmail : saveAndConnect}
-                disabled={
-                  connectingGmail ||
-                  savingAndConnecting ||
-                  (!gmailStatus.oauth_from_env && !gmailStatus.oauth_client_configured && !settings.oauth_client_id.trim())
-                }
+                onClick={connectGmail}
+                disabled={connectingGmail}
               >
-                {connectingGmail || savingAndConnecting
-                  ? 'Redirecting to Google...'
-                  : gmailStatus.oauth_client_configured || gmailStatus.oauth_from_env
-                    ? 'Connect Gmail Account'
-                    : 'Save & Connect Gmail'}
+                {connectingGmail ? 'Redirecting to Google...' : 'Connect Gmail Account'}
               </button>
             </div>
           )
@@ -616,12 +546,6 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
       <section className="card">
         <h2>🧭 Setup Instructions</h2>
         <ol className="instructions-list">
-          {!settings.oauth_from_env && (
-            <>
-              <li>In <strong>Google Cloud Console</strong>, create an OAuth 2.0 Client ID (Web application type). Add the Authorized Redirect URI shown in the Gmail Connection section above.</li>
-              <li>Paste the Client ID and Client Secret into settings above and click <strong>Save Settings</strong>.</li>
-            </>
-          )}
           <li>Optionally add an OpenAI API key and enable ChatGPT integration for AI-powered email analysis.</li>
           <li>Click <strong>Connect Gmail Account</strong> in the Gmail Connection section and approve access in your browser.</li>
           <li>Once connected, go to the <strong>Contacts</strong> tab and run a Gmail scan. Review suggestions and apply the ones you want.</li>
@@ -675,6 +599,42 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
         </div>
       </section>
     </div>
+    {showOpenAiModal && (
+      <div className="modal-overlay" onClick={() => setShowOpenAiModal(false)}>
+        <div className="modal-box" onClick={(e) => e.stopPropagation()}>
+          <h3>Connect ChatGPT</h3>
+          <p>
+            Get your API key at{' '}
+            <a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener noreferrer">
+              platform.openai.com/api-keys
+            </a>
+          </p>
+          <div className="form-group">
+            <input
+              type="password"
+              value={modalApiKey}
+              onChange={(e) => setModalApiKey(e.target.value)}
+              placeholder="sk-..."
+              autoFocus
+            />
+          </div>
+          <div className="form-actions">
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={connectOpenAI}
+              disabled={savingKey || !modalApiKey.trim()}
+            >
+              {savingKey ? 'Connecting...' : 'Connect'}
+            </button>
+            <button className="btn btn-secondary" type="button" onClick={() => setShowOpenAiModal(false)}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 }
 

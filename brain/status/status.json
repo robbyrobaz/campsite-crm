@@ -1,34 +1,45 @@
 {
-  "lastUpdated": "2026-02-23T08:04:00Z",
+  "updated": "2026-02-23T08:21:53Z",
+  "updated_mst": "2026-02-23 01:21 MST",
+  "cycle": "Jarvis Pulse 01:19 MST Feb 23 2026",
+  "health": {
+    "cpu_temp_c": 66,
+    "cpu_load_pct": 5.1,
+    "disk_pct": 36,
+    "services": [
+      "openclaw-gateway",
+      "blofin-stack-ingestor",
+      "blofin-stack-paper",
+      "blofin-dashboard"
+    ],
+    "alerts": "none"
+  },
+  "board": {
+    "in_progress": 1,
+    "review_test": 0,
+    "planned": 0,
+    "inbox": 0
+  },
   "activeTasks": [
     {
       "id": "c_7fba2584c3d45_19c892ad5f9",
-      "title": "Numerai: Retrain 25-model pipeline (era-boosting, now GPU)",
-      "pid": 92221,
-      "ageMin": 14.4
-    },
-    {
-      "id": "c_fb277de3dffac_19c892879f4",
-      "title": "Blofin backtest sweep (Phase 1 \u2014 4th attempt)",
-      "pid": 101573,
-      "recycleCount": 4
-    },
-    {
-      "id": "c_6cbf706829031_19c892cfa7d",
-      "title": "Numerai: Build continuous ML experimentation daemon",
-      "pid": 101578
+      "title": "Numerai: Retrain full 25-model pipeline with era-boosting en",
+      "status": "In Progress",
+      "project": "/home/rob/.openclaw/workspace/numerai-tournament",
+      "assignee": "claude",
+      "updated_at": 1771834839196
     }
   ],
-  "completedThisCycle": [
-    "c_de1e2f50a6d45 QA PASS: Numerai GPU switch \u2014 5 fixes (exp001, era_boost_deploy, numerai_pipeline_elite x3). RTX 2080 now utilized for all training."
-  ],
-  "inboxQueue": [],
-  "health": {
-    "cpu_temp": "87C",
-    "load_pct": "41.7%",
-    "disk_pct": "36%",
-    "tokens_5h": "67%",
-    "services": "all active"
+  "phase8_gate": {
+    "inbox_planned": 0,
+    "cpu_pct": 5.1,
+    "tokens_5h_pct": 70,
+    "status": "BLOCKED (tokens 70% > 60% gate, reset 02:00 AM MST)"
   },
-  "notes": "01:04 MST \u2014 GPU QA PASS. Backtest recycled (4th, 15.5m). Numerai daemon dispatched. Inbox empty. Token reset 02:00 MST (~56min). Phase 8 opens after reset."
+  "last_actions": [
+    "PHASE 4: Recycled Numerai retrain card (28.7m stale, 8th cycle), pid=112049",
+    "PHASE 6: QA PASS backtest sweep \u2014 1 T1 promotion (volume_mean_reversion_v1 WR=50.1%), 45 T0 stayed",
+    "PHASE 6: Blofin services restarted, dashboard HTTP 200",
+    "PHASE 8: Skipped (tokens=70%>60%, reset 02:00 AM MST)"
+  ]
 }

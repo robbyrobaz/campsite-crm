@@ -1,72 +1,77 @@
 {
-  "updated": "2026-02-23T13:04:00Z",
-  "updated_mst": "2026-02-23 06:04 MST",
-  "cycle": "Jarvis Pulse 06:04 MST Feb 23 2026",
+  "updated": "2026-02-23T13:20:00Z",
+  "updated_mst": "2026-02-23 06:20 MST",
+  "cycle": "Jarvis Pulse 06:20 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 82,
-    "cpu_load_pct": 138,
+    "cpu_temp_c": 81,
+    "cpu_load_pct": 273,
     "disk_pct": 37,
     "services": [
       "openclaw-gateway: active",
       "blofin-stack-ingestor: active",
       "blofin-stack-paper: active"
     ],
-    "alerts": "CPU load 16.60/12 (138%) — optimizer + pipeline workers running, expected"
+    "alerts": "CPU load 32.74/12 (273%) — optimizer + pipeline workers, expected under load"
   },
   "board": {
     "in_progress": 3,
-    "review_test": 1,
+    "review_test": 2,
     "planned": 0,
-    "inbox": 1
+    "inbox": 0
   },
   "activeTasks": [
     {
       "id": "c_9915a03e6cf68_19c8a4a41fc",
-      "title": "Strategy optimizer — 3rd run, 750K tick cap (started 05:54 MST)",
+      "title": "Strategy optimizer — 4th run attempt (OOM context provided)",
       "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "Healthy — all 12 coins loading at 750K ticks (OOM fix). PIDs 298xxx active. Timestamp refreshed."
+      "note": "PID=323275. Runner has explicit OOM failure pattern — 3 consecutive crashes in Phase 1. Instructed to reduce ticks to 300K or 6 coins, or patch aggressive_optimizer.py."
     },
     {
-      "id": "c_20d61a689930e_19c8a81afed",
-      "title": "Investigate vol_compression_fade BT-FT divergence: bt=+22.73% vs ft=-17.35%",
-      "status": "In Progress",
-      "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "Dispatched 06:04. PID=303464."
-    },
-    {
-      "id": "c_06d666a752452_19c8a9719b7",
-      "title": "7-Day Rolling Returns empty on master status dashboard",
+      "id": "c_38ec4f3edb15_19c8a981c17",
+      "title": "Add Numerai section to master status board",
       "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/master-dashboard",
-      "note": "Dispatched 06:04. PID=303479. Manual task from Rob."
+      "note": "Dispatched 06:20. PID=323683. Manual task from Rob."
+    },
+    {
+      "id": "c_d637b5d01b06b_19c8a9bb90c",
+      "title": "Add all live agents to Live Agent Work section",
+      "status": "In Progress",
+      "project": "/home/rob/.openclaw/workspace/master-dashboard",
+      "note": "Dispatched 06:20. PID=323698. Manual task from Rob."
     },
     {
       "id": "c_5f0645bd3c505_19c8a81afd8",
       "title": "Forward-test vol_bb_vwap_reversion + vol_compression_fade_v2",
       "status": "Review/Test",
       "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "QA haiku subagent running (auto-announces). Checking FT data in strategy_registry + per-coin."
-    }
-  ],
-  "inbox_waiting": [
+      "note": "QA haiku running (2nd QA attempt — checking if FT pipeline actually ran this time)."
+    },
     {
-      "id": "c_38ec4f3edb15_19c8a981c17",
-      "title": "Add Numerai section to master status board",
-      "note": "Manual task from Rob. project_path=master-dashboard, assignee=claude. Will dispatch next open slot."
+      "id": "c_20d61a689930e_19c8a81afed",
+      "title": "Investigate vol_compression_fade BT-FT divergence",
+      "status": "Review/Test",
+      "project": "/home/rob/.openclaw/workspace/blofin-stack",
+      "note": "QA haiku running — checking investigation completeness + demoted_at / archive state."
     }
   ],
+  "optimizer_incident": {
+    "pattern": "3 OOM crashes in Phase 1 loading 12 coins",
+    "cause": "12 coins x 750K ticks sequential load exceeds available RAM",
+    "fix_needed": "Reduce to 300K ticks, or 6 coins, or batch-load with gc.collect()",
+    "last_stuck_at": "AVAX-USDT (12th coin)"
+  },
   "phase8_gate": {
-    "inbox_planned": 1,
-    "cpu_pct": 138,
-    "tokens_5h_pct": 22,
-    "status": "SKIPPED (cpu=138% > 50%)"
+    "inbox_planned": 0,
+    "cpu_pct": 273,
+    "tokens_5h_pct": 29,
+    "status": "SKIPPED (cpu=273% > 50%)"
   },
   "last_actions": [
-    "PHASE 3: Fixed assignees + project_paths on 2 manual inbox cards (master-dashboard)",
-    "PHASE 4: Optimizer at 15.1min — process healthy (restarted 05:54 with 750K tick cap, OOM fix), timestamp refreshed",
-    "PHASE 5: Dispatched vol_compression_fade divergence (PID=303464) + 7-Day Returns fix (PID=303479)",
-    "PHASE 6: QA haiku spawned for vol_bb_vwap_reversion FT card",
-    "PHASE 8: Skipped (cpu=138% > 50%)"
+    "PHASE 4: Optimizer proactively recycled (13.8min but process dead — 3rd OOM crash at AVAX)",
+    "PHASE 5: Dispatched Numerai section (PID=323683) + Live Agents (PID=323698)",
+    "PHASE 6: QA haiku x2 — vol_bb FT (2nd attempt) + vol_compression_fade divergence",
+    "PHASE 8: Skipped (cpu=273%)"
   ]
 }

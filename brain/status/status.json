@@ -1,65 +1,52 @@
 {
-  "lastUpdated": "2026-02-23T20:49:00Z",
+  "lastUpdated": "2026-02-23T21:04:00Z",
   "activeTasks": [
     {
       "cardId": "c_f1d36e5aea577_19c8c0145ae",
       "title": "Investigate volatility_expansion_volume_breakout for tier promotion",
       "status": "In Progress",
       "project": "blofin-stack",
-      "pid": 733669,
-      "note": "Runner active (thinking). PF=2.207, WR=68.8%, 16 trades — gate blocked by GATE_MIN_TRADES=100. Timestamp refreshed 1:49 PM MST."
+      "pid": 753573,
+      "note": "3rd run (prev died at 13:38). ft_pf=2.207 WR=68.8% 16 trades — confirm GATE_MIN_TRADES=100 is sole blocker."
     },
     {
       "cardId": "c_1ce914d82a666_19c8c2b7bca",
       "title": "Fix FT_MAX_MDD for concurrent multi-coin strategies",
       "status": "In Progress",
       "project": "blofin-stack",
-      "pid": 733855,
-      "note": "Runner active (thinking MDD diminishing returns across coins). cross_asset_correlation ft_pf=1.091 now (down from 1.24 earlier). Timestamp refreshed 1:49 PM MST."
+      "pid": 754413,
+      "note": "3rd run (prev died at 13:38). Raise FT_MAX_MDD 50%->75% in scoring/gate_ranker.py. cross_asset_correlation ft_pf=1.091, 1005 trades."
     },
     {
       "cardId": "c_b917b836b1d81_19c8c2bc7aa",
-      "title": "Bulk archive 15 ghost tier=0 strategies with NULL FT data",
+      "title": "Bulk archive 18 ghost strategies (vwap_reversion EXCLUDED)",
       "status": "In Progress",
       "project": "blofin-stack",
-      "pid": 743723,
-      "note": "Dispatched 1:49 PM MST. Archive 20+ tier=0 gate=fail NULL-FT strategies."
+      "pid": 754534,
+      "note": "Updated with exclusions: vwap_reversion (active FT data, 4/5 coins profitable), bb_squeeze_v2, vwap_deviation kept. Archive 18 safe ones then restart services."
     }
   ],
-  "recentlyDone": [
-    {
-      "cardId": "c_bea611ea1ca71_19c8c2bc771",
-      "title": "Investigate momentum_v2 tier=2 with 3 FT trades",
-      "completedAt": "2026-02-23T20:37Z",
-      "note": "Demoted + archived. bt_pf=1.285 < 1.35 gate. 4 FT trades, 0% WR. Never generated live confirmed_signals."
-    }
-  ],
+  "qaNotes": {
+    "bulk_archive_v1": "Runner stopped before archiving — found vwap_reversion has 356 FT trades (4/5 coins profitable). Correct call to not blindly archive. Updated exclusion list and re-dispatched."
+  },
   "boardSummary": {
     "inProgress": 3,
     "reviewTest": 0,
     "planned": 0,
-    "inbox": 4
+    "inbox": 5
   },
   "systemHealth": {
-    "cpuTemp": "73C",
-    "cpuLoad": "0.61 / 12 (5%)",
+    "cpuTemp": "74C",
+    "cpuLoad": "normal",
     "diskUsage": "37%",
     "services": "all active",
-    "tokenUsage5h": "23%"
+    "tokenUsage5h": "~25%"
   },
-  "phase8CardsCreated": [
-    "URGENT paper engine 29.4% WR on 361 trades in 6h (c_5ee172a6bec4e)",
-    "Accelerate FT for vol_expansion_volume_breakout: 16 trades in 48h at PF=2.207 (c_b54fffe9ee131)"
-  ],
-  "alerts": [
-    "WATCH: paper trades last 6h — 29.4% WR, -109.75% PnL on 361 trades. Urgent investigation card created.",
-    "cross_asset_correlation ft_pf dropped from 1.24 to 1.091 since last query (pipeline may have run new cycle)"
-  ],
   "nextActions": [
-    "Monitor 3 runners — stale threshold 2:04 PM MST",
-    "FT_MAX_MDD: if gate_ranker.py fix applied, re-run Phase 4 and verify cross_asset_correlation flips to gate=pass",
-    "bulk_archive: expect ~20 strategies archived, then restart services",
-    "Dispatch paper engine investigation card next cycle (URGENT - high priority)",
-    "Inbox: 4 cards (paper engine urgent + vol_expansion FT + NQ Phase 3/4)"
+    "Monitor 3 runners — stale threshold 2:19 PM MST",
+    "URGENT paper engine card (c_5ee172a6bec4e) queued in Inbox — dispatch next open slot",
+    "vwap_reversion re-promotion card (c_1eee41ea8172b) queued — investigate 356 FT trades, 4/5 coins +PnL",
+    "bulk_archive: on completion, verify services restarted and 18 strategies archived",
+    "FT_MAX_MDD: on completion, verify cross_asset_correlation gate_status flips to pass"
   ]
 }

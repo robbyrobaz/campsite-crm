@@ -1,44 +1,50 @@
 {
-  "lastUpdated": "2026-02-23T01:49:30Z",
+  "lastUpdated": "2026-02-23T02:04:30Z",
   "activeTasks": [
     {
-      "id": "c_a1ad6edc456d3_19c88296d4c",
-      "title": "research how to get live data from traderspost.io to openclaw, and make trades (NQ prop firm)",
+      "id": "c_051efc9964ea5_19c8836892c",
+      "title": "Replace EEP with gate+PnL ranking system",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-23T01:49:00Z",
+      "dispatchedAt": "2026-02-23T01:56:00Z",
+      "note": "Auto-created by builder from EEP research card. Full spec: hard gates (PF>=1.2, MDD<50%, trades>=50, PnL>0) + rank by bt_pnl_pct. 11 passers expected.",
+      "project": "/home/rob/.openclaw/workspace/blofin-stack"
+    },
+    {
+      "id": "c_0b3a1b5f13b68_19c883996b4",
+      "title": "RESEARCH: TradersPost + TradeStation as data feed + execution path for NQ futures pipeline",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-23T02:04:00Z",
+      "note": "pid 3967901. TradeStation data → OpenClaw → ML pipeline → signal → TradersPost webhook → Tradovate (Lucid prop account)",
       "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies"
     }
   ],
   "blockedPlanned": [
     {
       "id": "c_7aafa071e3176_19c876b2011",
-      "title": "campsite gmail 1-button OAuth — BLOCKED: needs Rob to create Google Cloud OAuth app",
-      "note": "Code complete. Rob must: create Google Cloud project → enable Gmail API → create OAuth 2.0 credentials → paste GOOGLE_CLIENT_ID + GOOGLE_CLIENT_SECRET into backend/.env",
+      "title": "campsite gmail 1-button OAuth — BLOCKED: needs Rob's Google Cloud credentials",
       "project": "/home/rob/.openclaw/workspace/campsite-crm"
     }
   ],
-  "qaInProgress": [],
   "systemHealth": {
-    "timestamp": "2026-02-23T01:49:30Z",
-    "cpu_temp": "75.0C",
+    "timestamp": "2026-02-23T02:04:30Z",
+    "cpu_temp": "72.0C",
     "disk_usage": "36%",
-    "cpu_load": "3.1% (0.37/12)",
+    "cpu_load": "4.0% (0.48/12)",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-23T01:49:30Z",
+    "cycle": "2026-02-23T02:04:30Z",
     "actions": [
-      "Phase 1: All services active. CPU 75C, load 3.1%, disk 36%.",
-      "Phase 3: Fixed null assignee + inferred project_path for traderspost.io card → ninja_trader_strategies.",
-      "Phase 4: 0 In Progress — board cleared again (blofin builders completed).",
-      "Phase 5: Dispatched c_a1ad6edc456d3 (traderspost.io NQ research) pid 3951480. Capacity 1/3.",
+      "Phase 1: All services active. CPU 72C, load 4.0%, disk 36%.",
+      "Phase 4: 1 In Progress card (~7min) — not stale.",
+      "Phase 5: Dispatched c_0b3a1b5f13b68 (TradersPost+TradeStation research) pid 3967901. Capacity 2/3.",
       "Phase 6: 0 Review/Test cards.",
-      "Phase 8: SKIPPED — Gate 3 conservative fail: token cost $65.98 in 5h window (significant jump from $38.30 prior cycle — ML retraining tasks consumed heavy tokens).",
-      "BLOCKED: campsite gmail OAuth — waiting on Rob's Google Cloud credentials.",
-      "NOTE: New card added by Rob — traderspost.io integration for live NQ data + prop firm order placement."
+      "Phase 8: SKIPPED — Gate 3 FAIL: 5h token cost $74.37 (elevated from ML retraining tasks).",
+      "Note: Builder auto-created 2 new cards from prior research: Replace EEP (In Progress) + TradersPost+TradeStation (dispatched).",
+      "BLOCKED: campsite gmail OAuth — waiting on Rob's Google Cloud credentials."
     ]
   }
 }

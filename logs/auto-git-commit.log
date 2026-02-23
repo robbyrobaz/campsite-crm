@@ -127,3 +127,30 @@ CLEAN master-dashboard (nothing to commit)
  24 files changed, 482 insertions(+), 73 deletions(-)
  create mode 100644 data/ml_experiment_queue.json
 COMMITTED blofin-stack
+[main bc3f969] auto: snapshot 2026-02-23T02:00:01Z
+ 29 files changed, 1630 insertions(+), 158 deletions(-)
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_180226-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_180726-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_181226-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_181726-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_182226-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_182233-startup.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_182731-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_183231-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_183731-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_184231-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_184731-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_185231-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_185731-auto.json
+ delete mode 100644 campsite-crm/frontend/build/static/css/main.689231bf.css.map
+ rename campsite-crm/frontend/build/static/css/{main.689231bf.css => main.8790ba87.css} (88%)
+ create mode 100644 campsite-crm/frontend/build/static/css/main.8790ba87.css.map
+ delete mode 100644 campsite-crm/frontend/build/static/js/main.1e158015.js.map
+ rename campsite-crm/frontend/build/static/js/{main.1e158015.js => main.27172cd4.js} (81%)
+ rename campsite-crm/frontend/build/static/js/{main.1e158015.js.LICENSE.txt => main.27172cd4.js.LICENSE.txt} (100%)
+ create mode 100644 campsite-crm/frontend/build/static/js/main.27172cd4.js.map
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)

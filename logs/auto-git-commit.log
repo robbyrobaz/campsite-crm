@@ -59,3 +59,15 @@ CLEAN ai-workshop (nothing to commit)
 [main d7d4b52] auto: snapshot 2026-02-23T00:00:01Z
  1 file changed, 19 insertions(+)
 COMMITTED campsite-crm
+[main 742d462] auto: snapshot 2026-02-23T00:00:01Z
+ 1 file changed, 3 insertions(+)
+COMMITTED gilbert-pd-radio-trainer
+Done: 4 committed, 5 skipped
+CLEAN master-dashboard (nothing to commit)
+[main 49dec3a] auto: snapshot 2026-02-23T01:00:01Z
+ 7 files changed, 2264 insertions(+), 62 deletions(-)
+ create mode 100644 docs/STRATEGY_RANKING_REDESIGN.md
+ create mode 100644 ml_pipeline/experiment_engine.py
+ create mode 100644 ml_pipeline/tournament.py
+ create mode 100644 ml_pipeline/walk_forward.py
+COMMITTED blofin-stack

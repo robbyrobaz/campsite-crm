@@ -44,6 +44,7 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
   const [gmailStatus, setGmailStatus] = useState(null);
   const [connectingGmail, setConnectingGmail] = useState(false);
   const [disconnectingGmail, setDisconnectingGmail] = useState(false);
+  const [savingAndConnecting, setSavingAndConnecting] = useState(false);
   const [gmailNotice, setGmailNotice] = useState('');
 
   const loadSettings = async () => {
@@ -140,6 +141,36 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
       console.error('Error starting Gmail OAuth:', error);
       alert(error.response?.data?.error || 'Unable to start Gmail connection. Make sure OAuth Client ID and Secret are saved first.');
       setConnectingGmail(false);
+    }
+  };
+
+  // Saves OAuth credentials then immediately starts the Gmail OAuth redirect.
+  // Used when credentials haven't been stored yet — one click does both steps.
+  const saveAndConnect = async () => {
+    if (!settings.oauth_client_id.trim()) {
+      alert('Enter your Google OAuth Client ID first.');
+      return;
+    }
+    setSavingAndConnecting(true);
+    try {
+      await axios.put('/api/integrations/chatgpt/settings', {
+        chatgpt_enabled: settings.chatgpt_enabled,
+        workspace_name: settings.workspace_name,
+        openai_api_key: settings.openai_api_key,
+        openai_model: settings.openai_model,
+        mcp_shared_secret: settings.mcp_shared_secret,
+        oauth_enabled: settings.oauth_enabled,
+        oauth_client_id: settings.oauth_client_id,
+        oauth_client_secret: settings.oauth_client_secret,
+        oauth_redirect_uri: settings.oauth_redirect_uri,
+        gmail_scan_window_days: settings.gmail_scan_window_days
+      });
+      const response = await axios.get('/api/auth/gmail/connect-url');
+      window.location.href = response.data.url;
+    } catch (error) {
+      console.error('Error saving OAuth and connecting:', error);
+      alert(error.response?.data?.error || 'Unable to connect Gmail. Check your OAuth credentials.');
+      setSavingAndConnecting(false);
     }
   };
 
@@ -448,24 +479,49 @@ function IntegrationHub({ onRefreshData, onRefreshTasks, onRefreshContacts, onRe
                 <span className="gmail-status-dot gmail-status-dot--off" />
                 <strong>Not connected</strong>
               </div>
-              {!gmailStatus.oauth_from_env && !gmailStatus.oauth_client_configured && (
-                <p className="section-subtext" style={{ color: 'var(--color-warning, #e07b00)' }}>
-                  Save your Google OAuth Client ID and Client Secret above first.
-                </p>
-              )}
               {!gmailStatus.oauth_from_env && (
                 <div className="gmail-callback-hint">
-                  <strong>Authorized Redirect URI to register in Google Cloud Console:</strong>
+                  <strong>Authorized Redirect URI — add this in Google Cloud Console:</strong>
                   <code>{gmailStatus.callback_uri}</code>
+                </div>
+              )}
+              {!gmailStatus.oauth_from_env && !gmailStatus.oauth_client_configured && (
+                <div className="gmail-inline-setup">
+                  <div className="form-group">
+                    <label>Google OAuth Client ID <span className="field-hint">(from Google Cloud Console)</span></label>
+                    <input
+                      type="text"
+                      value={settings.oauth_client_id}
+                      onChange={(e) => setSettings({ ...settings, oauth_client_id: e.target.value })}
+                      placeholder="xxxxxxx.apps.googleusercontent.com"
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Google OAuth Client Secret</label>
+                    <input
+                      type="password"
+                      value={settings.oauth_client_secret}
+                      onChange={(e) => setSettings({ ...settings, oauth_client_secret: e.target.value })}
+                      placeholder="GOCSPX-..."
+                    />
+                  </div>
                 </div>
               )}
               <button
                 className="btn btn-primary"
                 type="button"
-                onClick={connectGmail}
-                disabled={connectingGmail || (!gmailStatus.oauth_from_env && !gmailStatus.oauth_client_configured)}
+                onClick={gmailStatus.oauth_client_configured ? connectGmail : saveAndConnect}
+                disabled={
+                  connectingGmail ||
+                  savingAndConnecting ||
+                  (!gmailStatus.oauth_from_env && !gmailStatus.oauth_client_configured && !settings.oauth_client_id.trim())
+                }
               >
-                {connectingGmail ? 'Redirecting to Google...' : 'Connect Gmail Account'}
+                {connectingGmail || savingAndConnecting
+                  ? 'Redirecting to Google...'
+                  : gmailStatus.oauth_client_configured || gmailStatus.oauth_from_env
+                    ? 'Connect Gmail Account'
+                    : 'Save & Connect Gmail'}
               </button>
             </div>
           )

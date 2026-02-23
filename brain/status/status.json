@@ -1,40 +1,38 @@
 {
-  "lastUpdated": "2026-02-23T07:04:00Z",
+  "lastUpdated": "2026-02-23T07:19:00Z",
   "activeTasks": [
     {
+      "id": "c_2577b78e1b8fb_19c88d98cc6",
+      "title": "Retrain 4 stale ML models",
+      "pid": 70184,
+      "ageMin": 0.3
+    },
+    {
       "id": "c_6fdb7712b3ad8_19c89244ea4",
-      "title": "make a way to see the live work of any deployed agent",
+      "title": "Live work viewer for deployed agents",
       "pid": 58596,
-      "project": "master-dashboard"
+      "ageMin": 14.9,
+      "warning": "borderline \u2014 watch next cycle"
     },
     {
       "id": "c_fb277de3dffac_19c892879f4",
-      "title": "Run full blofin backtest sweep on all 16 T0 strategies",
-      "pid": 57919,
-      "recycleCount": 1
-    },
-    {
-      "id": "c_46fcecb6dc411_19c89287a0f",
-      "title": "Verify 21 strategies blocked by BaseStrategy inheritance",
-      "pid": 59142
+      "title": "Blofin backtest sweep (16 T0 strategies)",
+      "pid": 70622,
+      "recycleCount": 2,
+      "ageMin": 0.0
     }
-  ],
-  "completedThisCycle": [
-    "c_9f7f41f644c6c: Per-coin performance dashboard \u2014 /api/coin_performance + blofin-dashboard.html table. Blofin restarted (200 OK).",
-    "c_320ce3d758467: EEP replacement \u2014 FINALLY DONE (7th attempt). Self-closed: no EEP labels found in kanban HTML/JS. Master-dashboard + all visible labels already updated."
   ],
   "inboxQueue": [
     "c_7fba2584c3d45: Numerai: Retrain full 25-model pipeline",
     "c_6cbf706829031: Numerai: Build continuous ML experimentation daemon",
-    "c_2577b78e1b8fb: Retrain 4 stale ML models (blofin)",
-    "c_de1e2f50a6d45: Switch Numerai ML to GPU (RTX 2080)"
+    "c_de1e2f50a6d45: Switch Numerai ML to GPU"
   ],
   "health": {
-    "cpu_temp": "83C",
-    "load_pct": "44.7%",
+    "cpu_temp": "61C",
+    "load_pct": "20%",
     "disk_pct": "36%",
-    "tokens_5h": "62%",
+    "tokens_5h": "63%",
     "services": "all active"
   },
-  "notes": "00:04 MST \u2014 EEP finally closed (7th). Per-coin dashboard live. 3 IP active. Tokens 62% (over gate). Token reset at 02:00 AM MST (~56min). Phase 8 opens after reset."
+  "notes": "00:19 MST \u2014 Backtest swept recycled (15.3m stale, 2nd attempt). ML retrain + live-agent-viewer active. Tokens 63% blocks Phase 8 until 02:00 MST reset (~41min). Live-agent at 14.9m \u2014 watch next cycle."
 }

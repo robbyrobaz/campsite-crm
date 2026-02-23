@@ -1,38 +1,38 @@
 {
-  "lastUpdated": "2026-02-23T07:19:00Z",
+  "lastUpdated": "2026-02-23T07:34:00Z",
   "activeTasks": [
-    {
-      "id": "c_2577b78e1b8fb_19c88d98cc6",
-      "title": "Retrain 4 stale ML models",
-      "pid": 70184,
-      "ageMin": 0.3
-    },
-    {
-      "id": "c_6fdb7712b3ad8_19c89244ea4",
-      "title": "Live work viewer for deployed agents",
-      "pid": 58596,
-      "ageMin": 14.9,
-      "warning": "borderline \u2014 watch next cycle"
-    },
     {
       "id": "c_fb277de3dffac_19c892879f4",
       "title": "Blofin backtest sweep (16 T0 strategies)",
       "pid": 70622,
-      "recycleCount": 2,
-      "ageMin": 0.0
+      "ageMin": 13.8,
+      "recycleCount": 2
+    },
+    {
+      "id": "c_6fdb7712b3ad8_19c89244ea4",
+      "title": "Live work viewer for deployed agents",
+      "pid": 80642,
+      "recycleCount": 1
+    },
+    {
+      "id": "c_7fba2584c3d45_19c892ad5f9",
+      "title": "Numerai: Retrain full 25-model pipeline with era-boosting",
+      "pid": 80715
     }
   ],
+  "completedThisCycle": [
+    "c_2577b78e1b8fb: ML retrain (momentum/risk/volatility/price) \u2014 completed"
+  ],
   "inboxQueue": [
-    "c_7fba2584c3d45: Numerai: Retrain full 25-model pipeline",
     "c_6cbf706829031: Numerai: Build continuous ML experimentation daemon",
-    "c_de1e2f50a6d45: Switch Numerai ML to GPU"
+    "c_de1e2f50a6d45: Switch Numerai ML to GPU (RTX 2080)"
   ],
   "health": {
-    "cpu_temp": "61C",
-    "load_pct": "20%",
+    "cpu_temp": "86C",
+    "load_pct": "13.2%",
     "disk_pct": "36%",
-    "tokens_5h": "63%",
+    "tokens_5h": "~63%",
     "services": "all active"
   },
-  "notes": "00:19 MST \u2014 Backtest swept recycled (15.3m stale, 2nd attempt). ML retrain + live-agent-viewer active. Tokens 63% blocks Phase 8 until 02:00 MST reset (~41min). Live-agent at 14.9m \u2014 watch next cycle."
+  "notes": "00:34 MST \u2014 Live-agent recycled (28.9m). Numerai retrain dispatched. Token reset at 02:00 MST (1h26m). Phase 8 still blocked."
 }

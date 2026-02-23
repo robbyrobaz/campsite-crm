@@ -1,41 +1,50 @@
 {
-  "lastUpdated": "2026-02-23T18:06:23Z",
-  "activeTasks": [
-    {
-      "cardId": "c_c92ab4e4fa9b_19c8ba2887e",
-      "title": "Evaluate cross_asset_correlation for tier-1 promotion",
-      "status": "In Progress",
-      "project": "blofin-stack",
-      "pid": 586474,
-      "dispatchedAt": "2026-02-23T18:04 UTC",
-      "note": "ft_pnl=+127%, ft_wr=45.9%, 957 trades \u2014 already synced by FT-fix. Awaiting formal promotion eval."
-    }
-  ],
+  "lastUpdated": "2026-02-23T18:20:58Z",
+  "activeTasks": [],
   "boardSummary": {
-    "inProgress": 1,
+    "inProgress": 0,
     "reviewTest": 0,
     "planned": 0,
-    "inbox": 0
+    "inbox": 0,
+    "note": "Board fully clear at 11:19 MST"
   },
-  "recentlyDone": [
-    "direction_predictor retrained: test_acc 0.449\u21920.556 (+10.7%)",
-    "FT promotion fix deployed: ft_status synced, orchestration updated (2505 lines)",
-    "Numerai model stats live: CORR/MMC/Season + percentiles for 3 models",
-    "cross_asset_correlation restored & synced: ft_pnl=+127%, ft_wr=45.9%, 957t",
-    "ml_gbt_5m archived: BUY WR=21.6% regime-flip",
-    "ensemble_top3 demoted: ft_wr=31.4%, ft_pnl=-84.3%"
-  ],
+  "pipelineState": {
+    "activeStrategies": [
+      {
+        "name": "cross_asset_correlation",
+        "tier": 1,
+        "ft_wr": "65.7%",
+        "ft_pnl": "+142.6%",
+        "ft_trades": 140,
+        "ft_status": "active"
+      },
+      {
+        "name": "volatility_regime_switch",
+        "tier": 1,
+        "ft_wr": "37.5%",
+        "ft_pnl": "-5.6%",
+        "ft_trades": 48,
+        "ft_status": "active"
+      }
+    ],
+    "demotedToday": [
+      "ensemble_top3 (ft_wr=31.4%, -84.3%)",
+      "ml_gbt_5m (BUY WR=21.6%, regime-flip)",
+      "cross_asset_correlation (wrongly demoted 10:34, restored & promoted 11:04)",
+      "macd_divergence, low_volatility_atr_breakout, vol_bb_vwap_reversion, volume_mean_reversion_v1"
+    ]
+  },
   "systemHealth": {
-    "cpuTemp": "64C \u2705",
-    "cpuLoad": "1.5/12 = 12.5%",
+    "cpuTemp": "65C \u2705",
+    "cpuLoad": "0.4/12 = 3.5%",
     "diskUsage": "37%",
     "services": "all active",
-    "tokenUsage5h": "60% (window resets 12:00 PM MST \u2014 56 min)"
+    "tokenUsage5h": "60% \u2014 window resets 12:00 PM MST (~41 min)"
   },
   "nextActions": [
-    "cross_asset_correlation evaluation in progress \u2014 promote to tier-1 if WR aggregates >45%",
-    "Token window resets 12:00 PM MST \u2014 Phase 8 blocked until then",
-    "After token reset: re-evaluate pipeline for new improvement cards",
-    "volatility_regime_switch (48t, WR=37.5%, ft_pnl=-5.6%) \u2014 borderline, watch for more trades"
+    "Token window resets 12:00 PM MST \u2014 Phase 8 will be unblocked",
+    "After reset: mine for improvement cards (pipeline opportunities, vol_compression_fade FT expansion)",
+    "Monitor volatility_regime_switch (48t, WR=37.5%) \u2014 needs more FT trades for confidence",
+    "cross_asset_correlation: top performer ft_wr=65.7% / +142.6% \u2014 watch for continued growth"
   ]
 }

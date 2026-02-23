@@ -169,3 +169,27 @@ COMMITTED master-dashboard
  create mode 100644 scoring/__init__.py
  create mode 100644 scoring/gate_ranker.py
 COMMITTED blofin-stack
+[main eaa6c6f] auto: snapshot 2026-02-23T03:00:01Z
+ 24 files changed, 1484 insertions(+), 10 deletions(-)
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_190231-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_190731-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_191231-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_191728-startup.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_191833-startup.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_192331-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_192831-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_193331-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_193831-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_194331-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_194831-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_195331-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260222_195831-auto.json
+ delete mode 100644 campsite-crm/frontend/build/static/js/main.27172cd4.js.map
+ rename campsite-crm/frontend/build/static/js/{main.27172cd4.js => main.edacf953.js} (91%)
+ rename campsite-crm/frontend/build/static/js/{main.27172cd4.js.LICENSE.txt => main.edacf953.js.LICENSE.txt} (100%)
+ create mode 100644 campsite-crm/frontend/build/static/js/main.edacf953.js.map
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)

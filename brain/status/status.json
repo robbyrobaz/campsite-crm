@@ -1,49 +1,58 @@
 {
-  "updated": "2026-02-23T12:04:00Z",
-  "updated_mst": "2026-02-23 05:04 MST",
-  "cycle": "Jarvis Pulse 05:04 MST Feb 23 2026",
+  "updated": "2026-02-23T12:19:00Z",
+  "updated_mst": "2026-02-23 05:19 MST",
+  "cycle": "Jarvis Pulse 05:19 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 84,
-    "cpu_load_pct": 10,
+    "cpu_temp_c": 52,
+    "cpu_load_pct": 1,
     "disk_pct": 37,
     "services": [
       "openclaw-gateway: active",
       "blofin-stack-ingestor: active",
       "blofin-stack-paper: active"
     ],
-    "alerts": "CPU 84C — warm but within limit"
+    "alerts": "none"
   },
   "board": {
-    "in_progress": 1,
-    "review_test": 1,
+    "in_progress": 2,
+    "review_test": 0,
     "planned": 0,
-    "inbox": 1
+    "inbox": 0
   },
   "activeTasks": [
     {
       "id": "c_9915a03e6cf68_19c8a4a41fc",
-      "title": "Re-run strategy optimizer: last run Feb 17 (5.9 days stale)",
+      "title": "Re-run strategy optimizer (started 04:52 MST, ~104min runtime)",
       "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "PID=250377, dispatched 04:49, age=14.7min at cycle start. Watch for stale next cycle."
+      "note": "Background process running. Phase 1 confirmed active (loading 12 coins). Log: data/optimizer_run.log. Long-running — do not stale-recycle. Timestamp refreshed 05:19."
     },
     {
-      "id": "c_0c62bd4cd8b79_19c8a2e52ba",
-      "title": "Demote vwap_reversion on XRP/ETH/SOL-USDT",
-      "status": "Review/Test",
+      "id": "c_a6aec0582bf9_19c8a65c183",
+      "title": "Investigate zero-trade anomaly: ADA/OP/BOME/SHIB — 360-383 confirmed signals, 0 paper trades",
+      "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "Stalled 2x due to work already done. DB confirmed XRP/ETH/SOL demoted at 11:24 UTC. QA haiku running."
+      "note": "Dispatched 05:19. PID=270789."
     }
   ],
+  "pipeline_health_snapshot": {
+    "best_coin_24h": "JTO-USDT: 351 trades, avg_pnl=+0.70%",
+    "positive_coins": ["JTO-USDT", "INJ-USDT", "JUP-USDT", "SOL-USDT", "AVAX-USDT"],
+    "gate_mechanism": "CONFIRMED WORKING — vwap_reversion excluded from signal aggregation via gate_status=pass filter. Post-demotion trades on XRP/ETH/SOL are from OTHER eligible strategies.",
+    "open_trades": 282,
+    "closed_24h": "~2700+"
+  },
   "phase8_gate": {
     "inbox_planned": 0,
-    "cpu_pct": 10,
-    "tokens_5h_pct": 15,
-    "status": "PASS — created 1 card"
+    "cpu_pct": 1,
+    "tokens_5h_pct": 16,
+    "status": "Skipped — optimizer running surfaces promotions; 2 active tasks cover open issues"
   },
   "last_actions": [
-    "PHASE 4: vwap_reversion stale 29.1min — investigated DB, work already done, moved to Review/Test",
-    "PHASE 6: QA haiku spawned for vwap_reversion demotion verification",
-    "PHASE 8: Created 1 card — ADA/OP/BOME/SHIB zero-trade anomaly (360-383 confirmed signals, 0 paper trades)"
+    "PHASE 3+5: Fixed null assignee on zero-trade anomaly card, dispatched PID=270789",
+    "PHASE 4: Optimizer card refreshed timestamp (long-running background process, not stale)",
+    "FINDING: vwap_reversion gate IS working — post-demotion trades are from other strategies",
+    "FINDING: JTO-USDT pipeline health excellent (+0.70% avg PnL, 351 trades/24h)",
+    "PHASE 8: Skipped — optimizer in-flight + 2 active investigations"
   ]
 }

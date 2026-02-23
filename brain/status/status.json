@@ -1,57 +1,56 @@
 {
-  "lastUpdated": "2026-02-23T21:19:00Z",
+  "lastUpdated": "2026-02-23T21:34:00Z",
   "activeTasks": [
+    {
+      "cardId": "c_062ab9dbbdf74_19c8c644e47",
+      "title": "Make equal_tops_bottoms an expert NQ strategy",
+      "status": "In Progress",
+      "project": "ninja_trader_strategies",
+      "pid": 775831,
+      "note": "Dispatched 2:34 PM MST (was In Progress with no log — runner never started). Confluence matrix backtest + ML pipeline Phase 2."
+    },
     {
       "cardId": "c_1ce914d82a666_19c8c2b7bca",
       "title": "Fix FT_MAX_MDD for concurrent multi-coin strategies",
       "status": "In Progress",
       "project": "blofin-stack",
-      "pid": 754413,
-      "note": "Active — log at 14:09 MST. Raise FT_MAX_MDD 50%->75% in scoring/gate_ranker.py. 13.5 min stale."
+      "pid": 775843,
+      "note": "4th run — prev runs died at 14:09. Raise FT_MAX_MDD 50%->75% in scoring/gate_ranker.py."
     },
     {
-      "cardId": "c_f1d36e5aea577_19c8c0145ae",
-      "title": "Investigate volatility_expansion_volume_breakout for tier promotion",
+      "cardId": "c_1eee41ea8172b_19c8c53f057",
+      "title": "Investigate vwap_reversion for re-promotion (CRITICAL for paper engine)",
       "status": "In Progress",
       "project": "blofin-stack",
-      "pid": 753573,
-      "note": "Active — log at 14:09 MST. ft_pf=2.207 WR=68.8% 16 trades. Timestamp refreshed 2:19 PM MST."
-    },
-    {
-      "cardId": "c_5ee172a6bec4e_19c8c466ade",
-      "title": "URGENT: Paper engine 29.4% WR on 361 trades last 6h",
-      "status": "In Progress",
-      "project": "blofin-stack",
-      "pid": 764228,
-      "note": "Dispatched 2:19 PM MST. Identify which strategies are live-trading with terrible WR. Check paper_engine.py filter enforcement."
+      "pid": 775866,
+      "note": "CRITICAL: Paper engine frozen (CONFIRM_MIN_STRATEGIES=2, only cross_asset_correlation gate=pass). vwap_reversion has 356 FT trades, 4/5 coins profitable. Promoting to T2 unfreezes paper engine."
     }
   ],
-  "recentlyDone": [
-    {
-      "cardId": "c_b917b836b1d81_19c8c2bc7aa",
-      "title": "Bulk archive 18 ghost strategies",
-      "completedAt": "2026-02-23T21:15Z",
-      "note": "17 strategies archived (tier=-1, archived=1). Excluded: vwap_reversion (active FT), bb_squeeze_v2, vwap_deviation. Services restarted: blofin-dashboard, ingestor, paper."
-    }
-  ],
+  "paperEngineAlert": {
+    "status": "FROZEN - NO NEW SIGNALS",
+    "reason": "CONFIRM_MIN_STRATEGIES=2 requires 2 gate=pass strategies. Only cross_asset_correlation qualifies. Zero confirmed signals in last 30 min.",
+    "staleOpenTrades": 4,
+    "staleTradeDetails": "JUP/ARB/NOT-USDT BUYs opened at 18:33-18:52 UTC, managed by SL/TP",
+    "fix": "Promote vwap_reversion to T2 (runner dispatched, PID 775866)",
+    "crossAssetLiveWarning": "cross_asset_correlation live WR terrible: NOT-USDT SELL 12.5% WR, BOME-USDT SELL 14.3% WR — may need reconsideration"
+  },
   "boardSummary": {
     "inProgress": 3,
     "reviewTest": 0,
-    "planned": 0,
-    "inbox": 4
+    "planned": 1,
+    "inbox": 3
   },
   "systemHealth": {
-    "cpuTemp": "69C",
-    "cpuLoad": "normal",
+    "cpuTemp": "88C (runners active)",
     "diskUsage": "37%",
-    "services": "all active (restarted at ~21:15Z)",
-    "tokenUsage5h": "~27%"
+    "services": "all active",
+    "tokenUsage5h": "~29%"
   },
   "nextActions": [
-    "Monitor 3 runners — stale threshold 2:34 PM MST",
-    "FT_MAX_MDD: on completion, verify cross_asset_correlation flips gate=pass, restart services",
-    "vol_expansion: confirm GATE_MIN_TRADES=100 sole blocker; recommend FT acceleration path",
-    "paper_engine URGENT: identify which strategies are live-trading, check paper_engine.py filter at line 248-249",
-    "After slots free: dispatch vwap_reversion re-promotion (c_1eee41ea8172b) — 356 FT trades, 4/5 coins profitable"
+    "Monitor 3 runners — stale threshold 2:49 PM MST",
+    "vwap_reversion: on promotion, restart services — paper engine resumes signal generation",
+    "FT_MAX_MDD: verify cross_asset_correlation gate flips to pass after fix + restart",
+    "vol_expansion: still in Planned — dispatch next open slot",
+    "After paper engine unfreezes: monitor signal quality from vwap_reversion + cross_asset_correlation"
   ]
 }

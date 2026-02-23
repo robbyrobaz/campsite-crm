@@ -1,54 +1,41 @@
 {
-  "lastUpdated": "2026-02-23T17:53:51Z",
+  "lastUpdated": "2026-02-23T18:06:23Z",
   "activeTasks": [
     {
-      "cardId": "c_2405216d444bb_19c8b730e18",
-      "title": "Numerai Tournament model stats",
-      "status": "Review/Test",
-      "project": "master-dashboard",
-      "note": "QA running (haiku). get_numerai_model_stats() + color-coded table implemented."
-    },
-    {
-      "cardId": "c_df239d1c2a246_19c8b6a5130",
-      "title": "CRITICAL: Fix blofin pipeline FT promotion and registry sync",
-      "status": "Review/Test",
-      "project": "blofin-stack",
-      "note": "QA running (haiku). Commit 7235196: 1037 insertions (orchestration, promote_to_ft, PIPELINE_AUDIT.md)."
-    },
-    {
-      "cardId": "c_4a3bd2aac534d_19c8b86c679",
-      "title": "Retrain direction_predictor \u2014 missed in batch retrain",
+      "cardId": "c_c92ab4e4fa9b_19c8ba2887e",
+      "title": "Evaluate cross_asset_correlation for tier-1 promotion",
       "status": "In Progress",
       "project": "blofin-stack",
-      "pid": 577730,
-      "dispatchedAt": "2026-02-23T17:49 UTC"
+      "pid": 586474,
+      "dispatchedAt": "2026-02-23T18:04 UTC",
+      "note": "ft_pnl=+127%, ft_wr=45.9%, 957 trades \u2014 already synced by FT-fix. Awaiting formal promotion eval."
     }
   ],
   "boardSummary": {
     "inProgress": 1,
-    "reviewTest": 2,
+    "reviewTest": 0,
     "planned": 0,
-    "inbox": 1
+    "inbox": 0
   },
-  "correction": "cross_asset_correlation WRONGLY demoted at 10:34, restored at 10:49. Per-coin FT: JTO WR=75%/+103%, SOL WR=64%/+17%. Registry sync bug caused NULL strategy-level data.",
   "recentlyDone": [
-    "cross_asset_correlation: restored tier=2/gate=pass (wrongly archived; per-coin FT is excellent)",
-    "ml_gbt_5m archived: BUY WR=21.6% regime-flip confirmed",
-    "ensemble_top3 demoted: ft_wr=31.4%, ft_pnl=-84.3%",
-    "vol_reg overfitting fixed: test_r2=0.484",
-    "PIPELINE_AUDIT.md written"
+    "direction_predictor retrained: test_acc 0.449\u21920.556 (+10.7%)",
+    "FT promotion fix deployed: ft_status synced, orchestration updated (2505 lines)",
+    "Numerai model stats live: CORR/MMC/Season + percentiles for 3 models",
+    "cross_asset_correlation restored & synced: ft_pnl=+127%, ft_wr=45.9%, 957t",
+    "ml_gbt_5m archived: BUY WR=21.6% regime-flip",
+    "ensemble_top3 demoted: ft_wr=31.4%, ft_pnl=-84.3%"
   ],
   "systemHealth": {
-    "cpuTemp": "56C \u2705 (NinjaTrader ML finished)",
-    "cpuLoad": "0.5/12 = 4%",
+    "cpuTemp": "64C \u2705",
+    "cpuLoad": "1.5/12 = 12.5%",
     "diskUsage": "37%",
-    "services": "all active (blofin restarted 10:49 to restore cross_asset_correlation)",
-    "tokenUsage5h": "58%"
+    "services": "all active",
+    "tokenUsage5h": "60% (window resets 12:00 PM MST \u2014 56 min)"
   },
   "nextActions": [
-    "Await QA for Numerai stats + FT-fix (haiku agents running)",
-    "On QA PASS: master-dashboard build+restart (Numerai) + blofin restart (FT-fix)",
-    "direction_predictor retrain in progress (PID 577730)",
-    "After FT-fix QA pass: evaluate cross_asset_correlation promotion using fixed registry sync"
+    "cross_asset_correlation evaluation in progress \u2014 promote to tier-1 if WR aggregates >45%",
+    "Token window resets 12:00 PM MST \u2014 Phase 8 blocked until then",
+    "After token reset: re-evaluate pipeline for new improvement cards",
+    "volatility_regime_switch (48t, WR=37.5%, ft_pnl=-5.6%) \u2014 borderline, watch for more trades"
   ]
 }

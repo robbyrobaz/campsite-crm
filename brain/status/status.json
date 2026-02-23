@@ -1,56 +1,23 @@
 {
-  "lastUpdated": "2026-02-23T04:20:30Z",
+  "lastUpdated": "2026-02-23T04:34:00Z",
+  "phase": "dispatch",
   "activeTasks": [
     {
-      "id": "c_7aafa071e3176_19c876b2011",
-      "title": "campsite gmail 1-button OAuth (code done, needs Google Cloud credentials)",
+      "id": "c_161d01cbfedb3_19c8841f4d0",
+      "title": "make sure master status dashboard reflects the new pnl ranking",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-23T04:19:00Z",
-      "note": "Builder just updated at 04:19 UTC. Still waiting on Rob's GOOGLE_CLIENT_ID + SECRET.",
-      "project": "/home/rob/.openclaw/workspace/campsite-crm"
+      "assignee": "claude",
+      "pid": 4133514,
+      "dispatchedAt": "2026-02-23T04:34:00Z"
     },
     {
-      "id": "c_3c5fb864f6b16_19c8840e4c5",
-      "title": "make the anthropic usage header data larger text on the master status dashboard",
+      "id": "c_320ce3d758467_19c88b9fa12",
+      "title": "fully replace EEP from all boards (blofin and master)",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-23T04:20:00Z",
-      "project": "/home/rob/.openclaw/workspace/master-dashboard"
-    },
-    {
-      "id": "c_cfbdadf1b02ae_19c8841897e",
-      "title": "add openai usage stats on the other side of the master status dashboard",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-23T04:20:00Z",
-      "project": "/home/rob/.openclaw/workspace/master-dashboard"
+      "assignee": "claude",
+      "pid": 4133661,
+      "dispatchedAt": "2026-02-23T04:34:00Z"
     }
   ],
-  "qaInProgress": [],
-  "inboxQueue": [
-    {"id": "c_320ce3d758467_19c88b9fa12", "title": "fully replace EEP from all boards (blofin and master)", "project": "blofin-stack"},
-    {"id": "c_161d01cbfedb3_19c8841f4d0", "title": "make sure master status dashboard reflects the new pnl ranking", "project": "master-dashboard"}
-  ],
-  "systemHealth": {
-    "timestamp": "2026-02-23T04:20:30Z",
-    "cpu_temp": "59.0C",
-    "disk_usage": "36%",
-    "cpu_load": "14.8% (1.77/12)",
-    "gateway": "active",
-    "blofin_ingestor": "active",
-    "blofin_paper": "active",
-    "critical_alerts": "none"
-  },
-  "dispatcherNotes": {
-    "cycle": "2026-02-23T04:20:30Z",
-    "batchedPulses": "8:04 PM + 9:20 PM MST — consolidated",
-    "actions": [
-      "Phase 1: All services active. CPU 59C (cooled), load 14.8%, disk 36%.",
-      "Phase 3: Fixed assignee+project_path for all 4 new Rob Inbox cards.",
-      "Phase 4: c_7aafa071e3176 updated 1min ago — NOT stale.",
-      "Phase 5: Dispatched 2 master-dashboard UI cards (anthropic header larger + openai stats). Capacity 3/3.",
-      "Phase 6: 0 Review/Test.",
-      "Phase 8: SKIPPED — Gate 3 FAIL: token cost $82.94 in 5h window.",
-      "Inbox queue (2 remaining): EEP full removal + PnL ranking dashboard — next cycle.",
-      "BLOCKED: campsite gmail — still needs Rob's Google Cloud OAuth credentials."
-    ]
-  }
+  "notes": "21:34 MST Feb 22 \u2014 Dispatched 2 inbox cards. Board: 2 IP, 0 RT, 0 Planned, 0 Inbox. All services healthy. Phase 8 gates PASS (tokens 10%, CPU 0.8%)."
 }

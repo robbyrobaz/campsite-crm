@@ -5,16 +5,33 @@
 
 ---
 
-## Throttle Changes Applied (Mon Feb 23, ~3:15 PM MST)
+## All Throttle Changes (Mon Feb 23, 3:15–3:30 PM MST)
 
-| Change | Before | After |
-|--------|--------|-------|
-| Main session model | Opus | **Sonnet** |
-| Dispatch Pulse | every 15m, Sonnet | every 30m, Sonnet |
-| Oversight Check | every 1h, wakes **Opus main** | every 2h, **isolated Sonnet** |
-| NQ Research Scientist | every 4h | every 6h |
-| Blofin Pipeline | every 2h | every 4h |
-| Auto-card creation (Phase 8) | enabled | **disabled** |
+### Cron Schedule Changes
+| Job | Before | After | How to revert |
+|-----|--------|-------|---------------|
+| Main session model | Opus | **Sonnet** | `openclaw session model opus` (or /model opus in chat) |
+| Dispatch Pulse | every 15m | every 30m | `openclaw cron edit 36f47279... --every 15m` |
+| Oversight Check | every 1h, wakes Opus main | every 2h, isolated Sonnet | `openclaw cron edit 4494f814... --every 1h --session main` |
+| NQ Research Scientist | every 4h | every 6h | `openclaw cron edit 5a4344be... --cron "0 */4 * * *"` |
+| Blofin Pipeline | every 2h | every 4h | `openclaw cron edit a566927f... --cron "15 */2 * * *"` |
+| Auto-card creation (Phase 8) | enabled in dispatch prompt | **disabled** | Re-add Phase 8 block to dispatch prompt |
+
+### Kanban Changes
+| Change | Before | After | How to revert |
+|--------|--------|-------|---------------|
+| Auto QA review (claude-review) | Runs after every card succeeds | **Disabled** | Set `autoReview: true` in kanban settings via `python3 -c "import sqlite3,json; c=sqlite3.connect('kanban-dashboard/kanban.sqlite'); s=json.loads(c.execute('SELECT data FROM settings WHERE id=chr(109)+chr(97)+chr(105)+chr(110)').fetchone()[0]); s['autoReview']=True; c.execute('UPDATE settings SET data=? WHERE id=\"main\"',[json.dumps(s)]); c.commit()"` then restart claw-kanban.service |
+| Cards after success | Move to Review/Test, spawn claude-review | **Go straight to Done** | Revert server/index.ts `handleRunComplete` — remove autoReview check |
+| Deploy step in card prompt | Not present | **Injected per project_path** | Remove deploy block from prompt in server/index.ts |
+| Max In Progress | 2 (was 3 before earlier throttle) | **1** | Update dispatch pulse --message to say "max 2" |
+| Zombie card_run records | 229 stuck as "running" | Cleaned to "stopped" | N/A — cleanup only |
+
+### Why These Were Made
+- Pre-throttle burn: **44% of weekly quota in 2 days** (would hit 100% by Friday)
+- Opus was 78% of cost — almost entirely main session conversation
+- Kanban was running **258 separate Claude CLI spawns per day** (builder + reviewer per card)
+- claude-review was failing >50% of time and duplicating builder's work
+- 229 zombie "running" records were causing dispatch to spin on dead processes
 
 ---
 

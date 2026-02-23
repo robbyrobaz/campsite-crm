@@ -1,45 +1,39 @@
 {
-  "lastUpdated": "2026-02-23T05:34:00Z",
+  "lastUpdated": "2026-02-23T05:49:00Z",
   "activeTasks": [
-    {
-      "id": "c_a980c94ed8823_19c88f9875e",
-      "title": "need to figure out why more backtested strategies aren't moving to forward testing",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 4183954,
-      "source": "manual (Rob)",
-      "dispatchedAt": "2026-02-23T05:34:00Z"
-    },
     {
       "id": "c_8c787f736d52e_19c88c9fad2",
       "title": "Investigate paper trading systemic failure",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 4173505,
-      "ageMinutes": 14.6,
-      "WARNING": "WILL BE STALE NEXT CYCLE"
+      "pid": 1730,
+      "recycleCount": 2
     },
     {
       "id": "c_320ce3d758467_19c88b9fa12",
-      "title": "fully replace EEP from all boards (blofin and master)",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 4173371,
-      "ageMinutes": 14.7,
-      "recycleCount": 3,
-      "WARNING": "WILL BE STALE NEXT CYCLE"
+      "title": "fully replace EEP from all boards",
+      "pid": 1855,
+      "recycleCount": 4,
+      "note": "Scope narrowed: only kanban-dashboard HTML labels remaining"
+    },
+    {
+      "id": "c_c7edffe6bdb63_19c88d98c69",
+      "title": "Disable remaining reversal strategy (20,159 rows)",
+      "pid": 1929
     }
   ],
+  "completedThisCycle": [
+    "c_a980c94ed8823 QA PASS: backtested strategies not moving to fwd testing \u2014 fixed stale FT data bug. 5 strategies expected at T2 next pipeline run. blofin services restarted (all active, 200 OK)."
+  ],
   "inboxQueue": [
-    "c_c7edffe6bdb63: Disable remaining reversal strategy (20,159 rows)",
-    "c_2577b78e1b8fb: Retrain 4 stale ML models (Feb 17, 6d stale)"
+    "c_2577b78e1b8fb: Retrain 4 stale ML models",
+    "c_9afb19c4ecfdd: Fix BaseStrategy inheritance in 21 strategy_NNN.py files",
+    "c_d10d92129c0c3: Numerai era-boosting never deployed (+23% corr)"
   ],
   "health": {
-    "cpu_temp": "55C",
-    "load_pct": "10.1%",
+    "cpu_temp": "73C",
+    "load_pct": "5.5%",
     "disk_pct": "36%",
-    "tokens_5h": "37%",
+    "tokens_5h": "~40%",
     "services": "all active"
   },
-  "notes": "22:34 MST \u2014 Rob created manual card (backtested\u2192fwd testing pipeline blocker), dispatched. Lightgbm card completed. Phase 8 skipped (inbox=2). Systemic+EEP will hit 15m at ~22:35 \u2014 BOTH will need recycle next cycle."
+  "notes": "22:49 MST \u2014 QA PASS on backtesting pipeline fix. Blofin restarted. 2 stale recycled. reversal disable dispatched. Numerai card assignee fixed. Secondary strategy inheritance issue queued."
 }

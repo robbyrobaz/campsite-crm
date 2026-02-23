@@ -1,50 +1,56 @@
 {
-  "lastUpdated": "2026-02-23T02:04:30Z",
+  "lastUpdated": "2026-02-23T04:20:30Z",
   "activeTasks": [
     {
-      "id": "c_051efc9964ea5_19c8836892c",
-      "title": "Replace EEP with gate+PnL ranking system",
+      "id": "c_7aafa071e3176_19c876b2011",
+      "title": "campsite gmail 1-button OAuth (code done, needs Google Cloud credentials)",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-23T01:56:00Z",
-      "note": "Auto-created by builder from EEP research card. Full spec: hard gates (PF>=1.2, MDD<50%, trades>=50, PnL>0) + rank by bt_pnl_pct. 11 passers expected.",
-      "project": "/home/rob/.openclaw/workspace/blofin-stack"
+      "dispatchedAt": "2026-02-23T04:19:00Z",
+      "note": "Builder just updated at 04:19 UTC. Still waiting on Rob's GOOGLE_CLIENT_ID + SECRET.",
+      "project": "/home/rob/.openclaw/workspace/campsite-crm"
     },
     {
-      "id": "c_0b3a1b5f13b68_19c883996b4",
-      "title": "RESEARCH: TradersPost + TradeStation as data feed + execution path for NQ futures pipeline",
+      "id": "c_3c5fb864f6b16_19c8840e4c5",
+      "title": "make the anthropic usage header data larger text on the master status dashboard",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-23T02:04:00Z",
-      "note": "pid 3967901. TradeStation data → OpenClaw → ML pipeline → signal → TradersPost webhook → Tradovate (Lucid prop account)",
-      "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies"
+      "dispatchedAt": "2026-02-23T04:20:00Z",
+      "project": "/home/rob/.openclaw/workspace/master-dashboard"
+    },
+    {
+      "id": "c_cfbdadf1b02ae_19c8841897e",
+      "title": "add openai usage stats on the other side of the master status dashboard",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-23T04:20:00Z",
+      "project": "/home/rob/.openclaw/workspace/master-dashboard"
     }
   ],
-  "blockedPlanned": [
-    {
-      "id": "c_7aafa071e3176_19c876b2011",
-      "title": "campsite gmail 1-button OAuth — BLOCKED: needs Rob's Google Cloud credentials",
-      "project": "/home/rob/.openclaw/workspace/campsite-crm"
-    }
+  "qaInProgress": [],
+  "inboxQueue": [
+    {"id": "c_320ce3d758467_19c88b9fa12", "title": "fully replace EEP from all boards (blofin and master)", "project": "blofin-stack"},
+    {"id": "c_161d01cbfedb3_19c8841f4d0", "title": "make sure master status dashboard reflects the new pnl ranking", "project": "master-dashboard"}
   ],
   "systemHealth": {
-    "timestamp": "2026-02-23T02:04:30Z",
-    "cpu_temp": "72.0C",
+    "timestamp": "2026-02-23T04:20:30Z",
+    "cpu_temp": "59.0C",
     "disk_usage": "36%",
-    "cpu_load": "4.0% (0.48/12)",
+    "cpu_load": "14.8% (1.77/12)",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-23T02:04:30Z",
+    "cycle": "2026-02-23T04:20:30Z",
+    "batchedPulses": "8:04 PM + 9:20 PM MST — consolidated",
     "actions": [
-      "Phase 1: All services active. CPU 72C, load 4.0%, disk 36%.",
-      "Phase 4: 1 In Progress card (~7min) — not stale.",
-      "Phase 5: Dispatched c_0b3a1b5f13b68 (TradersPost+TradeStation research) pid 3967901. Capacity 2/3.",
-      "Phase 6: 0 Review/Test cards.",
-      "Phase 8: SKIPPED — Gate 3 FAIL: 5h token cost $74.37 (elevated from ML retraining tasks).",
-      "Note: Builder auto-created 2 new cards from prior research: Replace EEP (In Progress) + TradersPost+TradeStation (dispatched).",
-      "BLOCKED: campsite gmail OAuth — waiting on Rob's Google Cloud credentials."
+      "Phase 1: All services active. CPU 59C (cooled), load 14.8%, disk 36%.",
+      "Phase 3: Fixed assignee+project_path for all 4 new Rob Inbox cards.",
+      "Phase 4: c_7aafa071e3176 updated 1min ago — NOT stale.",
+      "Phase 5: Dispatched 2 master-dashboard UI cards (anthropic header larger + openai stats). Capacity 3/3.",
+      "Phase 6: 0 Review/Test.",
+      "Phase 8: SKIPPED — Gate 3 FAIL: token cost $82.94 in 5h window.",
+      "Inbox queue (2 remaining): EEP full removal + PnL ranking dashboard — next cycle.",
+      "BLOCKED: campsite gmail — still needs Rob's Google Cloud OAuth credentials."
     ]
   }
 }

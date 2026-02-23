@@ -1,38 +1,36 @@
 {
-  "lastUpdated": "2026-02-23T07:34:00Z",
+  "lastUpdated": "2026-02-23T07:49:00Z",
   "activeTasks": [
     {
-      "id": "c_fb277de3dffac_19c892879f4",
-      "title": "Blofin backtest sweep (16 T0 strategies)",
-      "pid": 70622,
-      "ageMin": 13.8,
-      "recycleCount": 2
+      "id": "c_de1e2f50a6d45_19c891a946c",
+      "title": "Switch Numerai ML to GPU (RTX 2080)",
+      "pid": 91064
     },
     {
-      "id": "c_6fdb7712b3ad8_19c89244ea4",
-      "title": "Live work viewer for deployed agents",
-      "pid": 80642,
-      "recycleCount": 1
+      "id": "c_fb277de3dffac_19c892879f4",
+      "title": "Blofin backtest sweep (Phase 1 focused)",
+      "pid": 90992,
+      "recycleCount": 3
     },
     {
       "id": "c_7fba2584c3d45_19c892ad5f9",
-      "title": "Numerai: Retrain full 25-model pipeline with era-boosting",
-      "pid": 80715
+      "title": "Numerai: Retrain full 25-model pipeline (era-boosting)",
+      "pid": 92221,
+      "recycleCount": 1
     }
   ],
   "completedThisCycle": [
-    "c_2577b78e1b8fb: ML retrain (momentum/risk/volatility/price) \u2014 completed"
+    "c_6fdb7712b3ad8: Live Work panel live at port 8890 \u2014 SSE log streaming, /api/live-work/cards working"
   ],
   "inboxQueue": [
-    "c_6cbf706829031: Numerai: Build continuous ML experimentation daemon",
-    "c_de1e2f50a6d45: Switch Numerai ML to GPU (RTX 2080)"
+    "c_6cbf706829031: Numerai ML experimentation daemon"
   ],
   "health": {
-    "cpu_temp": "86C",
-    "load_pct": "13.2%",
+    "cpu_temp": "62C",
+    "load_pct": "9.7%",
     "disk_pct": "36%",
-    "tokens_5h": "~63%",
+    "tokens_5h": "67%",
     "services": "all active"
   },
-  "notes": "00:34 MST \u2014 Live-agent recycled (28.9m). Numerai retrain dispatched. Token reset at 02:00 MST (1h26m). Phase 8 still blocked."
+  "notes": "00:49 MST \u2014 Numerai retrain recycled @16m. 3 IP active. Token reset 02:00 MST."
 }

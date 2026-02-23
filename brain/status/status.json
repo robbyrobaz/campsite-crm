@@ -1,55 +1,24 @@
 {
-  "lastUpdated": "2026-02-23T22:04:00Z",
-  "activeTasks": [
-    {
-      "cardId": "c_062ab9dbbdf74_19c8c644e47",
-      "title": "Make equal_tops_bottoms an expert NQ strategy",
-      "status": "In Progress",
-      "project": "ninja_trader_strategies",
-      "pid": 775831,
-      "note": "Active — log 14:55 MST (3.5MB). Heavy ML work. Timestamp refreshed 3:04 PM."
-    },
+  "lastUpdated": "2026-02-23T22:21:00Z",
+  "activeTasks": [],
+  "recentlyDone": [
     {
       "cardId": "c_33a23deeec46e_19c8c6f4e91",
-      "title": "NQ ML Pipeline: Full re-run + iteration + dashboard enhancements",
-      "status": "In Progress",
-      "project": "ninja_trader_strategies",
-      "pid": 811041,
-      "note": "Active — log 14:55 MST (streaming, 1.7MB). Timestamp refreshed 3:04 PM."
-    },
-    {
-      "cardId": "c_1ce914d82a666_19c8c2b7bca",
-      "title": "Fix FT_MAX_MDD = 85% in scoring/gate_ranker.py",
-      "status": "In Progress",
-      "project": "blofin-stack",
-      "pid": 876400,
-      "note": "Dispatched 3:04 PM. Set FT_MAX_MDD=85%, rerun Phase 4, verify cross_asset_correlation gate=pass."
+      "title": "NQ ML Pipeline full re-run + iteration + dashboard",
+      "completedAt": "2026-02-23T22:21Z",
+      "note": "6/6 strategies pass gates. ORB PF 2.49, Momentum PF 2.86, VWAP Fade PF 2.05, Prev Day PF 2.07, Gap Fill PF 1.95, Vol Contraction PF 1.78. Wide config sweeps also run. Sharpe=0 display bug remains. ETB reverted (no edge)."
     }
   ],
-  "paperEngineStatus": {
-    "status": "UNBLOCKED",
-    "t2GatePassStrategies": 2,
-    "strategies": ["cross_asset_correlation (tier=2, pf=1.091)", "vwap_reversion (tier=2, pf=1.188, WR=48.6%, 251 trades)"],
-    "note": "vwap_reversion promotion applied directly to DB (3:04 PM). Services restarted. Paper engine now satisfies CONFIRM_MIN_STRATEGIES=2.",
-    "promotionFix": "Runner said Done but DB showed tier=1 — applied UPDATE directly: tier=2, gate=pass, pf=1.188"
-  },
   "boardSummary": {
-    "inProgress": 3,
-    "reviewTest": 0,
+    "inProgress": 0,
     "planned": 1,
-    "inbox": 4
+    "inbox": 4,
+    "done": 182
   },
   "systemHealth": {
-    "cpuTemp": "85C",
-    "diskUsage": "38%",
-    "services": "all active (restarted 3:04 PM)",
-    "tokenUsage5h": "~33%"
-  },
-  "nextActions": [
-    "Monitor 3 runners — stale threshold 3:19 PM MST",
-    "FT_MAX_MDD: on completion, verify cross_asset_correlation gate flips to pass",
-    "Verify paper engine generating new confirmed_signals (check DB after 15 min)",
-    "Dispatch vol_expansion (Planned) when slot opens",
-    "Numerai master-dashboard card (Inbox, c_7b06ecc7b41a7) needs dispatching"
-  ]
+    "cpuTemp": "check",
+    "diskUsage": "37%",
+    "services": "all active",
+    "tokenUsage5h": "46%"
+  }
 }

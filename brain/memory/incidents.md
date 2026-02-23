@@ -223,3 +223,11 @@ Manual intervention needed to either:
 **Detected state:** failed
 **Action:** restarted with `systemctl --user restart numerai-daily-bot.service --no-block`
 **Immediate result:** activating
+
+## Jarvis Google Account (2026-02-22)
+- Email: jarvis.is.my.coo@gmail.com
+- Password: is$$sseljs21
+- Has gcloud CLI access (already authenticated)
+- Has Google Cloud Console access via browser
+- Projects: ml-trading-431520, campsite-crm-app
+- NOTE: Rob gave this account to Jarvis. Stop asking Rob for help with it.

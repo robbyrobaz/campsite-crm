@@ -1,52 +1,57 @@
 {
-  "lastUpdated": "2026-02-23T21:04:00Z",
+  "lastUpdated": "2026-02-23T21:19:00Z",
   "activeTasks": [
-    {
-      "cardId": "c_f1d36e5aea577_19c8c0145ae",
-      "title": "Investigate volatility_expansion_volume_breakout for tier promotion",
-      "status": "In Progress",
-      "project": "blofin-stack",
-      "pid": 753573,
-      "note": "3rd run (prev died at 13:38). ft_pf=2.207 WR=68.8% 16 trades — confirm GATE_MIN_TRADES=100 is sole blocker."
-    },
     {
       "cardId": "c_1ce914d82a666_19c8c2b7bca",
       "title": "Fix FT_MAX_MDD for concurrent multi-coin strategies",
       "status": "In Progress",
       "project": "blofin-stack",
       "pid": 754413,
-      "note": "3rd run (prev died at 13:38). Raise FT_MAX_MDD 50%->75% in scoring/gate_ranker.py. cross_asset_correlation ft_pf=1.091, 1005 trades."
+      "note": "Active — log at 14:09 MST. Raise FT_MAX_MDD 50%->75% in scoring/gate_ranker.py. 13.5 min stale."
     },
     {
-      "cardId": "c_b917b836b1d81_19c8c2bc7aa",
-      "title": "Bulk archive 18 ghost strategies (vwap_reversion EXCLUDED)",
+      "cardId": "c_f1d36e5aea577_19c8c0145ae",
+      "title": "Investigate volatility_expansion_volume_breakout for tier promotion",
       "status": "In Progress",
       "project": "blofin-stack",
-      "pid": 754534,
-      "note": "Updated with exclusions: vwap_reversion (active FT data, 4/5 coins profitable), bb_squeeze_v2, vwap_deviation kept. Archive 18 safe ones then restart services."
+      "pid": 753573,
+      "note": "Active — log at 14:09 MST. ft_pf=2.207 WR=68.8% 16 trades. Timestamp refreshed 2:19 PM MST."
+    },
+    {
+      "cardId": "c_5ee172a6bec4e_19c8c466ade",
+      "title": "URGENT: Paper engine 29.4% WR on 361 trades last 6h",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "pid": 764228,
+      "note": "Dispatched 2:19 PM MST. Identify which strategies are live-trading with terrible WR. Check paper_engine.py filter enforcement."
     }
   ],
-  "qaNotes": {
-    "bulk_archive_v1": "Runner stopped before archiving — found vwap_reversion has 356 FT trades (4/5 coins profitable). Correct call to not blindly archive. Updated exclusion list and re-dispatched."
-  },
+  "recentlyDone": [
+    {
+      "cardId": "c_b917b836b1d81_19c8c2bc7aa",
+      "title": "Bulk archive 18 ghost strategies",
+      "completedAt": "2026-02-23T21:15Z",
+      "note": "17 strategies archived (tier=-1, archived=1). Excluded: vwap_reversion (active FT), bb_squeeze_v2, vwap_deviation. Services restarted: blofin-dashboard, ingestor, paper."
+    }
+  ],
   "boardSummary": {
     "inProgress": 3,
     "reviewTest": 0,
     "planned": 0,
-    "inbox": 5
+    "inbox": 4
   },
   "systemHealth": {
-    "cpuTemp": "74C",
+    "cpuTemp": "69C",
     "cpuLoad": "normal",
     "diskUsage": "37%",
-    "services": "all active",
-    "tokenUsage5h": "~25%"
+    "services": "all active (restarted at ~21:15Z)",
+    "tokenUsage5h": "~27%"
   },
   "nextActions": [
-    "Monitor 3 runners — stale threshold 2:19 PM MST",
-    "URGENT paper engine card (c_5ee172a6bec4e) queued in Inbox — dispatch next open slot",
-    "vwap_reversion re-promotion card (c_1eee41ea8172b) queued — investigate 356 FT trades, 4/5 coins +PnL",
-    "bulk_archive: on completion, verify services restarted and 18 strategies archived",
-    "FT_MAX_MDD: on completion, verify cross_asset_correlation gate_status flips to pass"
+    "Monitor 3 runners — stale threshold 2:34 PM MST",
+    "FT_MAX_MDD: on completion, verify cross_asset_correlation flips gate=pass, restart services",
+    "vol_expansion: confirm GATE_MIN_TRADES=100 sole blocker; recommend FT acceleration path",
+    "paper_engine URGENT: identify which strategies are live-trading, check paper_engine.py filter at line 248-249",
+    "After slots free: dispatch vwap_reversion re-promotion (c_1eee41ea8172b) — 356 FT trades, 4/5 coins profitable"
   ]
 }

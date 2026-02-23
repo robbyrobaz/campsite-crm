@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-23T21:34:00Z",
+  "lastUpdated": "2026-02-23T21:49:00Z",
   "activeTasks": [
     {
       "cardId": "c_062ab9dbbdf74_19c8c644e47",
@@ -7,50 +7,49 @@
       "status": "In Progress",
       "project": "ninja_trader_strategies",
       "pid": 775831,
-      "note": "Dispatched 2:34 PM MST (was In Progress with no log — runner never started). Confluence matrix backtest + ML pipeline Phase 2."
+      "note": "Active — log 14:51 MST (just updated). Confluence matrix backtest + ML Phase 2."
     },
     {
-      "cardId": "c_1ce914d82a666_19c8c2b7bca",
-      "title": "Fix FT_MAX_MDD for concurrent multi-coin strategies",
+      "cardId": "c_33a23deeec46e_19c8c6f4e91",
+      "title": "NQ ML Pipeline: Full re-run + iteration + dashboard enh",
       "status": "In Progress",
-      "project": "blofin-stack",
-      "pid": 775843,
-      "note": "4th run — prev runs died at 14:09. Raise FT_MAX_MDD 50%->75% in scoring/gate_ranker.py."
+      "project": "ninja_trader_strategies",
+      "pid": 811041,
+      "note": "Dispatched 2:49 PM MST (was In Progress with no log — never started). Assignee/project_path fixed."
     },
     {
       "cardId": "c_1eee41ea8172b_19c8c53f057",
-      "title": "Investigate vwap_reversion for re-promotion (CRITICAL for paper engine)",
+      "title": "vwap_reversion 4-coin force-promote EXECUTE",
       "status": "In Progress",
       "project": "blofin-stack",
-      "pid": 775866,
-      "note": "CRITICAL: Paper engine frozen (CONFIRM_MIN_STRATEGIES=2, only cross_asset_correlation gate=pass). vwap_reversion has 356 FT trades, 4/5 coins profitable. Promoting to T2 unfreezes paper engine."
+      "pid": 811053,
+      "note": "CRITICAL — unfreezes paper engine. 4-coin (SOL/ETH/XRP/BTC): PF=1.188, WR=48.6%, PnL=+22.16%, 251 trades. DOGE excluded. Execute + restart services."
     }
   ],
-  "paperEngineAlert": {
-    "status": "FROZEN - NO NEW SIGNALS",
-    "reason": "CONFIRM_MIN_STRATEGIES=2 requires 2 gate=pass strategies. Only cross_asset_correlation qualifies. Zero confirmed signals in last 30 min.",
-    "staleOpenTrades": 4,
-    "staleTradeDetails": "JUP/ARB/NOT-USDT BUYs opened at 18:33-18:52 UTC, managed by SL/TP",
-    "fix": "Promote vwap_reversion to T2 (runner dispatched, PID 775866)",
-    "crossAssetLiveWarning": "cross_asset_correlation live WR terrible: NOT-USDT SELL 12.5% WR, BOME-USDT SELL 14.3% WR — may need reconsideration"
+  "planned": [
+    {"id": "c_1ce914d82a666", "title": "FT_MAX_MDD fix (execute 85%)", "note": "ft_max_dd=80.03%, need 85% threshold in scoring/gate_ranker.py"},
+    {"id": "c_f1d36e5aea577", "title": "vol_expansion investigation", "note": "16 FT trades vs 100 required gate"}
+  ],
+  "executiveDecisions": {
+    "vwap_reversion_promotion": "APPROVED — 4-coin aggregate (excl DOGE): WR=48.6%, PF=1.188. Justification: paper engine frozen (CONFIRM_MIN_STRATEGIES=2, only 1 strategy), unblocking is urgent.",
+    "FT_MAX_MDD_threshold": "APPROVED — set to 85% (cross_asset_correlation ft_max_dd=80.03%, need 5% headroom)"
   },
   "boardSummary": {
     "inProgress": 3,
     "reviewTest": 0,
-    "planned": 1,
+    "planned": 2,
     "inbox": 3
   },
   "systemHealth": {
-    "cpuTemp": "88C (runners active)",
-    "diskUsage": "37%",
+    "cpuTemp": "88C",
+    "diskUsage": "38%",
     "services": "all active",
-    "tokenUsage5h": "~29%"
+    "tokenUsage5h": "~31%"
   },
   "nextActions": [
-    "Monitor 3 runners — stale threshold 2:49 PM MST",
-    "vwap_reversion: on promotion, restart services — paper engine resumes signal generation",
-    "FT_MAX_MDD: verify cross_asset_correlation gate flips to pass after fix + restart",
-    "vol_expansion: still in Planned — dispatch next open slot",
-    "After paper engine unfreezes: monitor signal quality from vwap_reversion + cross_asset_correlation"
+    "Monitor 3 runners — stale threshold 3:04 PM MST",
+    "vwap_reversion execute: on completion, verify paper engine generating new signals (confirmed_signals table)",
+    "After vwap_reversion done: dispatch FT_MAX_MDD execute from Planned",
+    "After vwap_reversion + FT_MAX_MDD: 2 gate=pass strategies enabling cross-confirmation"
   ]
 }

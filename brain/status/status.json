@@ -1,34 +1,45 @@
 {
-  "lastUpdated": "2026-02-23T05:04:00Z",
+  "lastUpdated": "2026-02-23T05:19:00Z",
   "activeTasks": [
     {
       "id": "c_320ce3d758467_19c88b9fa12",
       "title": "fully replace EEP from all boards (blofin and master)",
       "status": "In Progress",
       "assignee": "claude",
-      "ageMinutes": 12.0,
-      "pid": 4154709
+      "pid": 4173371,
+      "recycleCount": 3,
+      "dispatchedAt": "2026-02-23T05:19:00Z",
+      "note": "Recycled 3x. master-dashboard done. Focus: blofin-stack kanban display."
     },
     {
       "id": "c_8c787f736d52e_19c88c9fad2",
-      "title": "Investigate paper trading systemic failure \u2014 all 10 coins losing 300-700%+ in 7d",
+      "title": "Investigate paper trading systemic failure",
       "status": "In Progress",
       "assignee": "claude",
-      "ageMinutes": 12.8,
-      "pid": 4153670
+      "pid": 4173505,
+      "recycleCount": 1,
+      "dispatchedAt": "2026-02-23T05:19:00Z"
     },
     {
       "id": "c_6939280f84308_19c88c9fa9a",
-      "title": "Archive entry_classifier/lightgbm (AUC=0.465, below random)",
+      "title": "Archive entry_classifier/lightgbm (AUC=0.465)",
       "status": "In Progress",
       "assignee": "claude",
-      "ageMinutes": 12.8,
-      "pid": 4153553
+      "pid": 4173634,
+      "recycleCount": 1,
+      "dispatchedAt": "2026-02-23T05:19:00Z"
     }
   ],
   "inboxQueue": [
-    "c_c7edffe6bdb63: Disable remaining reversal strategy (20,159 enabled rows, -44.5% PnL)",
-    "c_2577b78e1b8fb: Retrain 4 stale ML models (momentum/risk/volatility/price, stale since Feb 17)"
+    "c_c7edffe6bdb63: Disable remaining reversal strategy (20,159 rows, -44.5% PnL)",
+    "c_2577b78e1b8fb: Retrain 4 stale ML models (Feb 17, 6d stale)"
   ],
-  "notes": "22:04 MST Feb 22 \u2014 All 3 IP cards alive and under 15m. Health: 49C, 4.1% load, 36% disk. Tokens: 29% 5h. Phase 8 skipped (inbox=2, at limit). Next cycle: check staleness (all cards will be ~27m if not updated)."
+  "health": {
+    "cpu_temp": "56C",
+    "load_pct": "5.9%",
+    "disk_pct": "36%",
+    "tokens_5h": "29%",
+    "services": "all active"
+  },
+  "notes": "22:19 MST \u2014 Recycled all 3 stale IP cards (27-28m). All redispatched. Phase 8 skipped (inbox=2, at limit). Next cycle: watch for runners completing or staling again at ~22:34."
 }

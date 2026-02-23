@@ -547,3 +547,19 @@ CLEAN ai-workshop (nothing to commit)
 [main 290a9e6] auto: snapshot 2026-02-23T14:00:01Z
  2 files changed, 23 insertions(+), 1 deletion(-)
 COMMITTED campsite-crm
+[main 32738b3] auto: snapshot 2026-02-23T14:00:01Z
+ 1 file changed, 3 insertions(+)
+COMMITTED gilbert-pd-radio-trainer
+Done: 6 committed, 3 skipped
+[master e713de3] auto: snapshot 2026-02-23T15:00:01Z
+ 1 file changed, 99 insertions(+), 10 deletions(-)
+COMMITTED master-dashboard
+[main e2566ec] auto: snapshot 2026-02-23T15:00:01Z
+ 12 files changed, 1572 insertions(+), 145 deletions(-)
+ create mode 100644 catboost_info/catboost_training.json
+ create mode 100644 catboost_info/learn/events.out.tfevents
+ create mode 100644 catboost_info/learn_error.tsv
+ create mode 100644 catboost_info/test/events.out.tfevents
+ create mode 100644 catboost_info/test_error.tsv
+ create mode 100644 catboost_info/time_left.tsv
+COMMITTED blofin-stack

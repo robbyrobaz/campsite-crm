@@ -1,6 +1,6 @@
 {
   "lastUpdated": "2026-02-23T04:34:00Z",
-  "phase": "dispatch",
+  "phase": "idle",
   "activeTasks": [
     {
       "id": "c_161d01cbfedb3_19c8841f4d0",
@@ -19,5 +19,10 @@
       "dispatchedAt": "2026-02-23T04:34:00Z"
     }
   ],
-  "notes": "21:34 MST Feb 22 \u2014 Dispatched 2 inbox cards. Board: 2 IP, 0 RT, 0 Planned, 0 Inbox. All services healthy. Phase 8 gates PASS (tokens 10%, CPU 0.8%)."
+  "phase8Cards": [
+    "c_5cf7e4f1cc29d_19c88c9fa5c: Disable candle_patterns + bb_squeeze (PnL=-837%,-277%)",
+    "c_6939280f84308_19c88c9fa9a: Archive entry_classifier/lightgbm (AUC=0.465, below random)",
+    "c_8c787f736d52e_19c88c9fad2: Investigate paper trading systemic failure (all coins losing 300-700%+ in 7d)"
+  ],
+  "notes": "21:34 MST Feb 22 \u2014 Dispatched 2 inbox cards (master-dashboard PnL, replace EEP). Phase 8: created 3 blofin improvement cards. Health: CPU 0.8% load, 67C, disk 36%, all services active. Token: 10% 5h window."
 }

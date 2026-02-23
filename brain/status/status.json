@@ -1,10 +1,10 @@
 {
-  "updated": "2026-02-23T09:23:24Z",
-  "updated_mst": "2026-02-23 02:19 MST",
-  "cycle": "Jarvis Pulse 02:19 MST Feb 23 2026",
+  "updated": "2026-02-23T10:09:04Z",
+  "updated_mst": "2026-02-23 03:10 MST",
+  "cycle": "Jarvis Pulse 03:04 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 84,
-    "cpu_load_pct": 17.7,
+    "cpu_temp_c": 80,
+    "cpu_load_pct": 52.2,
     "disk_pct": 36,
     "services": [
       "openclaw-gateway",
@@ -12,35 +12,48 @@
       "blofin-stack-paper",
       "blofin-dashboard"
     ],
-    "alerts": "none"
+    "alerts": "CPU 52% (builders active)"
   },
   "board": {
-    "in_progress": 1,
-    "review_test": 0,
+    "in_progress": 2,
+    "review_test": 1,
     "planned": 0,
-    "inbox": 3
+    "inbox": 0
   },
   "activeTasks": [
     {
+      "id": "c_1035ac67f20b7_19c89cf3f9a",
+      "title": "Verify forward test coverage for 4 new T1 strategies with ft",
+      "status": "In Progress",
+      "project": "/home/rob/.openclaw/workspace/blofin-stack",
+      "assignee": "claude"
+    },
+    {
+      "id": "c_64d3a5a2e586b_19c89cf3f76",
+      "title": "Investigate TIA-USDT paper trade underperformance: WR=33.7%,",
+      "status": "In Progress",
+      "project": "/home/rob/.openclaw/workspace/blofin-stack",
+      "assignee": "claude"
+    },
+    {
       "id": "c_7fba2584c3d45_19c892ad5f9",
       "title": "Numerai: Retrain full 25-model pipeline with era-boosting en",
-      "status": "In Progress",
+      "status": "Review/Test",
       "project": "/home/rob/.openclaw/workspace/numerai-tournament",
-      "assignee": "claude",
-      "pid": 150875,
-      "attempt": 12,
-      "note": "Background launch: nohup python3 numerai_pipeline_elite.py --train; verify running then move to RT"
+      "note": "Training running pid=180556, monitor: tail -f experiments/full_run.log"
     }
   ],
   "phase8_gate": {
-    "inbox_planned": 3,
-    "cpu_pct": 17.7,
-    "tokens_5h_pct": 0,
-    "status": "ALL PASS \u2014 3 improvement cards created"
+    "inbox_planned": 0,
+    "cpu_pct": 52.2,
+    "tokens_5h_pct": 2,
+    "status": "BLOCKED (cpu=52.2%>50%)"
   },
   "last_actions": [
-    "PHASE 4: Recycled Numerai retrain \u2014 12th dispatch pid=150875 (background launch approach)",
-    "PHASE 8: ALL GATES PASS (tokens=0% post-reset, cpu=17.7%, inbox=0)",
-    "PHASE 8: Created 3 cards: Archive ml_direction_predictor (-66% PnL), TIA-USDT investigation, T1 FT coverage check"
+    "PHASE 4: Recycled TIA-USDT card (13.6m stale, pid 180153) with partial findings",
+    "PHASE 4: Recycled FT coverage card (13.6m stale, pid 180168) with partial findings",
+    "PHASE 6: Numerai QA \u2014 training confirmed running pid=180556, log growing (706 bytes), 30 models expected",
+    "QA DONE: ml_direction_predictor archived \u2014 WR=0.3%, PnL=-66%, 7233 trades. SKIP_MODULES updated. Blofin restarted, dash HTTP 200.",
+    "PHASE 8: Skipped (cpu=52.2%>50%)"
   ]
 }

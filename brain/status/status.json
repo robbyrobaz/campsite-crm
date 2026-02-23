@@ -1,62 +1,60 @@
 {
-  "updated": "2026-02-23T15:34:00Z",
-  "updated_mst": "2026-02-23 08:34 MST",
-  "cycle": "Jarvis Pulse 08:34 MST Feb 23 2026",
+  "updated": "2026-02-23T15:49:00Z",
+  "updated_mst": "2026-02-23 08:49 MST",
+  "cycle": "Jarvis Pulse 08:49 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 80,
-    "cpu_load_pct": 88,
+    "cpu_temp_c": 54,
+    "cpu_load_pct": 12,
     "disk_pct": 37,
     "services": ["openclaw-gateway: active", "blofin-stack-ingestor: active", "blofin-stack-paper: active"],
-    "alerts": "STRATEGY ALERT: ALL 7 active gate-passing strategies have negative FT PnL. No profitable strategy is currently running."
+    "alerts": "none — system healthy, paper trading performing well"
   },
   "board": {
-    "in_progress": 3,
-    "review_test": 0,
+    "in_progress": 0,
+    "review_test": 2,
     "planned": 0,
-    "inbox": 0
+    "inbox": 2
   },
   "activeTasks": [
     {
       "id": "c_968374110d0c9_19c8aef5bb4",
       "title": "Retrain stale ML models",
-      "status": "In Progress",
-      "note": "PID=423407. 13.4 min at 08:19. Timestamp refreshed."
+      "status": "Review/Test",
+      "note": "4 models retrained at 15:14 UTC: momentum_classifier(0.535), risk_scorer(0.732), volatility_regressor, price_predictor. QA haiku running."
     },
     {
       "id": "c_6277461282ba6_19c8b171481",
-      "title": "Demote vol_bb_vwap_reversion (ft_pnl=-71.9%)",
-      "status": "In Progress",
-      "note": "Already demoted by Jarvis. Runner confirming. PID=443302."
-    },
-    {
-      "id": "c_a161359cbbb3a_19c8b1714a2",
-      "title": "Demote volume_mean_reversion_v1 (ft_pnl=-69.6%)",
-      "status": "In Progress",
-      "note": "Already demoted by Jarvis. Runner confirming. PID=443314."
+      "title": "Demote vol_bb_vwap_reversion",
+      "status": "Review/Test",
+      "note": "Demoted tier=0, archived=1, gate_status=fail. QA haiku running."
     }
   ],
-  "pipeline_crisis": {
-    "status": "ALL strategies FT-negative",
-    "active_strategies": [
-      {"name": "ml_gbt_5m", "ft_pnl": -50.9, "ft_wr": 0.359, "ft_trades": 859},
-      {"name": "ensemble_top3", "ft_pnl": -44.2, "ft_wr": 0.344, "ft_trades": 646},
-      {"name": "atr_regime_fade", "ft_pnl": -22.1, "ft_wr": 0.338, "ft_trades": 204},
-      {"name": "vol_compression_fade", "ft_pnl": -17.4, "ft_wr": 0.258, "ft_trades": 62},
-      {"name": "vol_compression_fade_v2", "ft_pnl": -16.5, "ft_wr": 0.257, "ft_trades": 70},
-      {"name": "volume_volatility_mean_reversion", "ft_pnl": -14.7, "ft_wr": 0.352, "ft_trades": 210},
-      {"name": "volatility_regime_switch", "ft_pnl": -0.6, "ft_wr": 0.464, "ft_trades": 28}
-    ],
-    "note": "volatility_regime_switch is closest to breakeven (-0.6%, WR 46%) with only 28 trades. ml_gbt_5m and ensemble_top3 are deeply negative with large sample sizes — need demotion cards next cycle."
-  },
-  "direct_actions_this_cycle": [
-    "Demoted vol_bb_vwap_reversion: archived=1, tier=0, gate_status=fail",
-    "Demoted volume_mean_reversion_v1: archived=1, tier=0, gate_status=fail",
-    "Services restarted to pick up demotions"
+  "inbox_waiting": [
+    {
+      "id": "c_d95e851e417a_19c8b33a1e1",
+      "title": "Investigate TIA-USDT trades: 33 in 1h WR=84.8% — should be blocked by coin_eligibility.py"
+    },
+    {
+      "id": "c_8cf6e1900b216_19c8b33a203",
+      "title": "Run FT pipeline for volatility_regime_switch: only 28 trades, WR=46.4% — best active strategy, needs more data for tier-2 consideration"
+    }
   ],
+  "paper_trading_1h_highlights": {
+    "JTO-USDT": "WR=60.6%, PnL=+323%",
+    "JUP-USDT": "WR=57.3%, PnL=+58%",
+    "TIA-USDT": "WR=84.8%, PnL=+38% (33 trades — investigate, should be blocked)",
+    "SOL-USDT": "WR=48.8%, PnL=+32%",
+    "note": "Significant improvement vs 48h window — demotions working"
+  },
+  "active_strategies": {
+    "count": 7,
+    "best": "volatility_regime_switch (ft_wr=46.4%, ft_pnl=-0.6%, 28 trades — needs FT expansion)",
+    "note": "All 7 have negative FT metrics but live 1h performance is positive on multiple symbols"
+  },
   "phase8_gate": {
     "inbox_planned": 0,
-    "cpu_pct": 88,
-    "tokens_5h_pct": 30,
-    "status": "SKIPPED (cpu=88% > 50%) — next cycle: create ml_gbt_5m + ensemble_top3 demotion cards"
+    "cpu_pct": 12,
+    "tokens_5h_pct": 32,
+    "status": "PASS — created 2 cards (TIA eligibility check + volatility_regime_switch FT run)"
   }
 }

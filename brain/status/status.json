@@ -1,10 +1,10 @@
 {
-  "updated": "2026-02-23T08:36:50Z",
-  "updated_mst": "2026-02-23 01:34 MST",
-  "cycle": "Jarvis Pulse 01:34 MST Feb 23 2026",
+  "updated": "2026-02-23T08:51:53Z",
+  "updated_mst": "2026-02-23 01:49 MST",
+  "cycle": "Jarvis Pulse 01:49 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 82,
-    "cpu_load_pct": 51.5,
+    "cpu_temp_c": 59,
+    "cpu_load_pct": 6.3,
     "disk_pct": 36,
     "services": [
       "openclaw-gateway",
@@ -12,7 +12,7 @@
       "blofin-stack-paper",
       "blofin-dashboard"
     ],
-    "alerts": "CPU load elevated (51.5%), temp 82C"
+    "alerts": "none"
   },
   "board": {
     "in_progress": 1,
@@ -27,18 +27,20 @@
       "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/numerai-tournament",
       "assignee": "claude",
-      "pid": 122173,
-      "attempt": 9
+      "pid": 131664,
+      "attempt": 10,
+      "note": "Using venv Python \u2014 root cause was ModuleNotFoundError: numerapi"
     }
   ],
   "phase8_gate": {
     "inbox_planned": 0,
-    "cpu_pct": 51.5,
-    "tokens_5h_pct": 71,
-    "status": "BLOCKED (cpu=51.5%>50% + tokens=71%>60%, reset 02:00 AM MST)"
+    "cpu_pct": 6.3,
+    "tokens_5h_pct": 72,
+    "status": "BLOCKED (tokens=72%>60%, reset 02:00 AM MST in ~11min)"
   },
   "last_actions": [
-    "PHASE 4: Recycled Numerai retrain (14.5m stale, process pid 112049 dead since 01:22) \u2192 9th dispatch, pid=122173",
-    "PHASE 8: Skipped (cpu=51.5%>50%, tokens=71%>60%)"
+    "PHASE 4: Recycled Numerai retrain (13.9m stale + pid 122173 dead). ROOT CAUSE: system python3 missing 'numerapi' module",
+    "PHASE 4: 10th dispatch pid=131664 with explicit venv instruction (.venv/bin/activate)",
+    "PHASE 8: Skipped (tokens=72%>60%, reset in ~11min at 02:00 AM MST)"
   ]
 }

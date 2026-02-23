@@ -1,61 +1,56 @@
 {
-  "lastUpdated": "2026-02-23T00:49:30Z",
+  "lastUpdated": "2026-02-23T01:04:30Z",
   "activeTasks": [
     {
-      "id": "c_a8fdf25f1bdf2_19c87cc5e18",
-      "title": "RESEARCH: Tradovate API data feed for prop firm accounts (Lucid 100K Flex)",
+      "id": "c_7aafa071e3176_19c876b2011",
+      "title": "campsite gmail 1-button OAuth (one-click Google flow)",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-23T00:49:00Z",
-      "note": "Recycled after 30min stale, re-run pid 3881990",
+      "dispatchedAt": "2026-02-23T01:04:00Z",
+      "project": "/home/rob/.openclaw/workspace/campsite-crm"
+    },
+    {
+      "id": "c_dbd7ad053e8bd_19c87cc5e5f",
+      "title": "RESEARCH: Free/cheap NQ futures real-time data sources",
+      "status": "In Progress",
+      "dispatchedAt": "2026-02-23T01:04:00Z",
       "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies"
     },
     {
-      "id": "c_f53303bea31b2_19c87e09dc1",
-      "title": "RESEARCH: Replace EEP scoring — design a better strategy ranking system",
+      "id": "c_85ab04f82aa5f_19c80f2d96e",
+      "title": "campsite crm chatgpt 1-button OAuth",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-23T00:49:00Z",
-      "project": "/home/rob/.openclaw/workspace/blofin-stack"
-    },
-    {
-      "id": "c_7baa0f9dc7a68_19c87790c3e",
-      "title": "Add toggle to hide 3-way market results (soccer draws etc)",
-      "status": "In Progress",
-      "dispatchedAt": "2026-02-23T00:49:00Z",
-      "project": "/home/rob/.openclaw/workspace/arb-dashboard"
+      "dispatchedAt": "2026-02-23T01:04:00Z",
+      "project": "/home/rob/.openclaw/workspace/campsite-crm"
     }
   ],
   "qaInProgress": [],
-  "plannedQueue": [
-    {"id": "c_7aafa071e3176_19c876b2011", "title": "campsite gmail 1-button OAuth (spec ready)", "project": "campsite-crm", "priority": 0},
-    {"id": "c_dbd7ad053e8bd_19c87cc5e5f", "title": "RESEARCH: Free/cheap NQ futures real-time data sources", "project": "ninja_trader_strategies", "priority": 2}
-  ],
-  "inboxSize": 1,
+  "inboxSize": 3,
   "inboxCards": [
-    {"id": "c_85ab04f82aa5f_19c80f2d96e", "title": "campsite crm chatgpt auth — 1-button OAuth (spec ready)", "project_path": "/home/rob/.openclaw/workspace/campsite-crm"}
-  ],
-  "recentlyCompleted": [
-    "ML Pipeline: Continuous model exploration engine (Phase 7)",
-    "RESEARCH: Prop firm futures automation landscape"
+    {"id": "c_0f879dafe78fb_19c8808f3af", "title": "URGENT: Disable support_resistance — 8170t WR=38.2% PnL=-1484%", "project": "blofin-stack", "priority": 1},
+    {"id": "c_403c6cfafdf6b_19c8808f3cd", "title": "entry_classifier AUC=0.527 — retrain with walk-forward validation", "project": "blofin-stack", "priority": 1},
+    {"id": "c_929981ba44ae4_19c8808f3e3", "title": "TIA-USDT worst coin: 3451t WR=33.5% PnL=-910% — investigate+blacklist", "project": "blofin-stack", "priority": 2}
   ],
   "systemHealth": {
-    "timestamp": "2026-02-23T00:49:30Z",
-    "cpu_temp": "65.0C",
+    "timestamp": "2026-02-23T01:04:30Z",
+    "cpu_temp": "68.0C",
     "disk_usage": "36%",
-    "cpu_load": "2.7% (0.32/12)",
+    "cpu_load": "8.3% (0.55/12)",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-23T00:49:30Z",
+    "cycle": "2026-02-23T01:04:30Z",
     "actions": [
-      "Phase 1: All services active. CPU 65C, load 2.7%, disk 36%.",
-      "Phase 4: Recycled c_a8fdf25f1bdf2 (Tradovate research, 30min stale) -> re-run pid 3881990.",
-      "Phase 5: Dispatched c_f53303bea31b2 (EEP scoring research) pid 3882003, c_7baa0f9dc7a68 (arb-dashboard toggle) pid 3882015. Capacity 3/3.",
+      "Phase 1: All services active. CPU 68C, load 8.3%, disk 36%.",
+      "Phase 4: 0 In Progress — board was empty, all prior builders completed.",
+      "Phase 5: Dispatched 3 cards (campsite gmail OAuth, NQ data research, campsite chatgpt OAuth). Capacity 3/3.",
       "Phase 6: 0 Review/Test cards.",
-      "Phase 8: SKIPPED — Gate 1 FAIL (Planned+Inbox=3 > 2).",
-      "Completed since last cycle: ML Pipeline Phase 7, Prop firm research."
+      "Phase 8: ALL GATES PASS (Planned+Inbox=0, CPU=8.3%). Created 3 blofin improvement cards:",
+      "  1. URGENT: Disable support_resistance (8170t, WR=38.2%, PnL=-1484%) [c_0f879dafe78fb]",
+      "  2. entry_classifier AUC=0.527 (near-random) — retrain walk-forward [c_403c6cfafdf6b]",
+      "  3. TIA-USDT worst coin 3451t WR=33.5% PnL=-910% [c_929981ba44ae4]"
     ]
   }
 }

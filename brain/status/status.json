@@ -1,55 +1,55 @@
 {
-  "updated": "2026-02-23T16:19:00Z",
-  "updated_mst": "2026-02-23 09:19 MST",
-  "cycle": "Jarvis Pulse 09:19 MST Feb 23 2026",
+  "updated": "2026-02-23T16:34:00Z",
+  "updated_mst": "2026-02-23 09:34 MST",
+  "cycle": "Jarvis Pulse 09:34 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 63,
-    "cpu_load_pct": 8,
+    "cpu_temp_c": 86,
+    "cpu_load_pct": 13,
     "disk_pct": 37,
     "services": ["openclaw-gateway: active", "blofin-stack-ingestor: active", "blofin-stack-paper: active"],
     "alerts": "none"
   },
   "board": {
-    "in_progress": 1,
-    "review_test": 2,
+    "in_progress": 3,
+    "review_test": 0,
     "planned": 0,
-    "inbox": 1
+    "inbox": 0
   },
   "activeTasks": [
+    {
+      "id": "c_825621affcdfa_19c8b347ab5",
+      "title": "Fix volatility_regressor label-scale mismatch (BTC/LINK price gap)",
+      "status": "In Progress",
+      "note": "PID=489815. 2nd attempt — exact fix needed: log-return std label + commit uncommitted changes."
+    },
     {
       "id": "c_e08eefdc5c512_19c8b40556d",
       "title": "Investigate ensemble_top3 FT vs live gap",
       "status": "In Progress",
-      "note": "PID=474051. Dispatched 09:19."
+      "note": "PID=474051. Refreshed at 14.9 min."
     },
-    {
-      "id": "c_825621affcdfa_19c8b347ab5",
-      "title": "Fix volatility_regressor overfitting (train R²=0.999 vs test R²=-22.5M)",
-      "status": "Review/Test",
-      "note": "QA haiku running."
-    },
-    {
-      "id": "c_8cf6e1900b216_19c8b33a203",
-      "title": "Run FT pipeline for volatility_regime_switch (28 trades, WR=46.4%)",
-      "status": "Review/Test",
-      "note": "DB updated 09:08 MST. QA haiku running."
-    }
-  ],
-  "inbox_waiting": [
     {
       "id": "c_6fc6787acc859_19c8b4ec7e5",
-      "title": "Demote atr_regime_fade: ft_pnl=-22.1%, WR=33.8%, 204 trades — below 35% threshold"
+      "title": "Demote atr_regime_fade (WR=33.8%, 204 trades)",
+      "status": "In Progress",
+      "note": "PID=498597. Already directly demoted: tier=0, archived=1, gate_status=fail."
     }
   ],
-  "paper_30min_top": {
-    "TIA-USDT": "WR=84.8% (33 trades — still appearing despite eligibility investigation)",
-    "JTO-USDT": "WR=60.3%, PnL=+322%",
-    "JUP-USDT": "WR=56.8%, PnL=+56%"
+  "critical_fix_deployed": {
+    "file": "promote_to_ft.py",
+    "commit": "05c4f26",
+    "fix": "Added AND archived=0 to _promote_to_t2() WHERE clause — prevents pipeline from re-promoting archived/demoted strategies",
+    "trigger": "low_volatility_atr_breakout was demoted 15:21 UTC but re-promoted by pipeline at 15:40 UTC. Same would happen to all manually demoted strategies on next pipeline run."
+  },
+  "demotions_today": {
+    "directly_demoted": ["macd_divergence","low_volatility_atr_breakout (x2)","vol_bb_vwap_reversion","volume_mean_reversion_v1","atr_regime_fade"],
+    "via_runner": ["vwap_volatility_rebound"],
+    "active_gate_passing_remaining": 6
   },
   "phase8_gate": {
     "inbox_planned": 0,
-    "cpu_pct": 8,
-    "tokens_5h_pct": 36,
-    "status": "PASS — created 1 card (atr_regime_fade demotion: WR=33.8%, 204 trades)"
+    "cpu_pct": 13,
+    "tokens_5h_pct": 40,
+    "status": "SKIPPED — board full (3/3 In Progress); direct fix applied instead (promote_to_ft.py)"
   }
 }

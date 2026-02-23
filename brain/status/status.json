@@ -1,13 +1,13 @@
 {
-  "lastUpdated": "2026-02-23T19:51:38Z",
+  "lastUpdated": "2026-02-23T20:04:00Z",
   "activeTasks": [
     {
-      "cardId": "c_8b64062d36389_19c8bc67c88",
-      "title": "NQ Phase 2 completion: Fix strategies and re-run training",
+      "cardId": "c_1ef138b763b45_19c8c0145ca",
+      "title": "Investigate cross_asset_correlation registry regression",
       "status": "In Progress",
-      "project": "ninja_trader_strategies",
-      "pid": 700745,
-      "note": "RECYCLED 12:49 \u2014 died mid-execution (no commit). Fresh restart. Heavy compute (91C)."
+      "project": "blofin-stack",
+      "pid": 700990,
+      "note": "ft_pnl +127% -> -26.49% after pipeline phase fix. Checking BT gate thresholds in orchestration/run_pipeline.py. Log at 13:01 MST."
     },
     {
       "cardId": "c_5d0060a3cd6a6_19c8be687b4",
@@ -15,34 +15,36 @@
       "status": "In Progress",
       "project": "ninja_trader_strategies",
       "pid": 670937,
-      "note": "Log actively writing at 12:49. Still running."
+      "note": "Runner active — walk-forward validation at 1.0pt slippage running. Log at 13:05 MST."
     },
     {
-      "cardId": "c_1ef138b763b45_19c8c0145ca",
-      "title": "Investigate cross_asset_correlation registry regression",
+      "cardId": "c_f1d36e5aea577_19c8c0145ae",
+      "title": "Investigate volatility_expansion_volume_breakout tier promotion",
       "status": "In Progress",
       "project": "blofin-stack",
-      "pid": 700990,
-      "note": "ft_pnl +127% -> -26.49% after pipeline phase fix. Investigate registry overwrite."
+      "pid": 712109,
+      "note": "Just dispatched 1:04 PM MST. gate=fail but ft_wr=68.75% — check why gate fails despite high WR."
     }
   ],
   "boardSummary": {
     "inProgress": 3,
     "reviewTest": 0,
     "planned": 0,
-    "inbox": 4
+    "inbox": 3
   },
   "systemHealth": {
-    "cpuTemp": "91C \u26a0\ufe0f (NQ Phase 2 heavy compute)",
-    "cpuLoad": "~22% load",
+    "cpuTemp": "88C (runners active)",
+    "cpuLoad": "3.66 / 12 cores (30.5%)",
     "diskUsage": "37%",
-    "services": "all active",
-    "tokenUsage5h": "12%"
+    "services": "all active (gateway, ingestor, paper)",
+    "tokenUsage5h": "15%"
   },
   "nextActions": [
-    "Monitor 3 runners \u2014 stale threshold 1:04 PM MST",
-    "NQ Phase 2 recycled \u2014 watch for commit this time",
-    "CAC regression: determine if ft_pnl crash is pipeline bug or legitimate data",
-    "After Phase 2 completes: dispatch NQ Phase 3"
+    "Monitor 3 runners — stale threshold 1:19 PM MST",
+    "CAC regression: determine if ft_pnl crash is pipeline bug vs legit data wipe",
+    "Equal Tops/Bottoms WF: await profitability verdict",
+    "volatility_expansion_volume_breakout: if gate logic fix found, patch + promote to T2",
+    "Phase 8 blocked: Inbox=3 > 2 (dispatch more before Phase 8 unlocks)",
+    "NQ Phase 3/4 inbox — dispatch only after NQ Equal Tops complete"
   ]
 }

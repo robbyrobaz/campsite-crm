@@ -1,53 +1,46 @@
 {
-  "lastUpdated": "2026-02-23T19:22:29Z",
+  "lastUpdated": "2026-02-23T19:37:16Z",
   "activeTasks": [
     {
-      "cardId": "c_0f46cbe9e4d59_19c8bc67c47",
-      "title": "CRITICAL: Fix NQ strategy signal generation",
-      "status": "Review/Test",
-      "project": "ninja_trader_strategies",
-      "note": "QA running (haiku). Commit 3860147: strategy filters + walk-forward threshold fix."
-    },
-    {
-      "cardId": "c_5ae5c8808f9c9_19c8bd50ee4",
-      "title": "Fix NQ run_phase2.py feature computation order",
-      "status": "Review/Test",
-      "project": "ninja_trader_strategies",
-      "note": "QA running (haiku). Commit e8bc87f: Phase 2 re-run, realistic trade counts, PF=1.04."
-    },
-    {
-      "cardId": "c_029ece7802ae9_19c8bd932af",
-      "title": "New NQ Strategy: Equal Tops & Equal Bottoms",
+      "cardId": "c_8b64062d36389_19c8bc67c88",
+      "title": "NQ Phase 2 completion: Fix strategies and re-run training",
       "status": "In Progress",
       "project": "ninja_trader_strategies",
-      "pid": 660275
+      "pid": 670934,
+      "note": "Prerequisites done: signal fix + feature order fix both QA PASS"
     },
     {
-      "cardId": "c_b493ae5fbaf41_19c8beca852",
-      "title": "Check Anthropic 7-day usage (20x upgrade verification)",
+      "cardId": "c_5d0060a3cd6a6_19c8be687b4",
+      "title": "ML Feature Engineering: Make Equal Tops/Bottoms profitable",
       "status": "In Progress",
-      "project": "workspace",
-      "pid": 660469
+      "project": "ninja_trader_strategies",
+      "pid": 670937,
+      "note": "Baseline: 3,701 trades, 28.9% WR, PF 0.40 \u2014 ML enhancement"
     }
   ],
   "boardSummary": {
     "inProgress": 2,
-    "reviewTest": 2,
+    "reviewTest": 0,
     "planned": 0,
-    "inbox": 4,
-    "inboxNote": "NQ Phase 2 (blocked on QA), Phase 3, Phase 4, ML Feature Engineering"
+    "inbox": 5,
+    "inboxNote": "NQ Phase 3 (blocked), Phase 4 (blocked), + 3 new blofin Phase 8 cards"
   },
   "systemHealth": {
-    "cpuTemp": "60C \u2705",
-    "cpuLoad": "~10%",
+    "cpuTemp": "66C \u2705",
+    "cpuLoad": "2.5/12 = 21%",
     "diskUsage": "37%",
     "services": "all active",
-    "tokenUsage5h": "5% (fresh window)"
+    "tokenUsage5h": "9%"
   },
+  "phase8Created": [
+    "volatility_expansion_volume_breakout investigation (ft_wr=68.75%, tier=0 gate=fail \u2014 hidden gem?)",
+    "cross_asset_correlation registry regression (ft_pnl +127%\u2192-26.49% after pipeline fix)",
+    "volatility_regime_switch FT pipeline run (tier=2 NULL FT data)"
+  ],
   "nextActions": [
-    "Await QA for NQ signal fix + feature order fix",
-    "On PASS: deploy + dispatch NQ Phase 2 immediately",
-    "On FAIL: recycle to Planned for another runner attempt",
-    "Phase 8 unblocked when Inbox drains to \u22642 (currently 4)"
+    "NQ Phase 2 in progress \u2014 stale threshold 12:49 PM",
+    "After Phase 2 QA pass: dispatch NQ Phase 3",
+    "Blofin: investigate cross_asset_correlation registry regression (priority)",
+    "Blofin: check volatility_expansion_volume_breakout for possible promotion"
   ]
 }

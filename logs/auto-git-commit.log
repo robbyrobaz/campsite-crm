@@ -680,3 +680,6 @@ CLEAN arb-dashboard (nothing to commit)
 CLEAN kanban-dashboard (nothing to commit)
 CLEAN numerai-tournament (nothing to commit)
 CLEAN ai-workshop (nothing to commit)
+[main 0c80380] auto: snapshot 2026-02-23T18:00:01Z
+ 2 files changed, 35 insertions(+), 16 deletions(-)
+COMMITTED campsite-crm

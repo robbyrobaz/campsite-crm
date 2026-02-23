@@ -1,50 +1,61 @@
 {
-  "lastUpdated": "2026-02-23T20:04:00Z",
+  "lastUpdated": "2026-02-23T20:19:00Z",
   "activeTasks": [
-    {
-      "cardId": "c_1ef138b763b45_19c8c0145ca",
-      "title": "Investigate cross_asset_correlation registry regression",
-      "status": "In Progress",
-      "project": "blofin-stack",
-      "pid": 700990,
-      "note": "ft_pnl +127% -> -26.49% after pipeline phase fix. Checking BT gate thresholds in orchestration/run_pipeline.py. Log at 13:01 MST."
-    },
-    {
-      "cardId": "c_5d0060a3cd6a6_19c8be687b4",
-      "title": "ML Feature Engineering: Make Equal Tops/Bottoms profitable",
-      "status": "In Progress",
-      "project": "ninja_trader_strategies",
-      "pid": 670937,
-      "note": "Runner active — walk-forward validation at 1.0pt slippage running. Log at 13:05 MST."
-    },
     {
       "cardId": "c_f1d36e5aea577_19c8c0145ae",
       "title": "Investigate volatility_expansion_volume_breakout tier promotion",
       "status": "In Progress",
       "project": "blofin-stack",
       "pid": 712109,
-      "note": "Just dispatched 1:04 PM MST. gate=fail but ft_wr=68.75% — check why gate fails despite high WR."
+      "note": "Runner active — analyzing gate=fail vs ft_wr=68.75%. Likely blocked by GATE_MIN_TRADES=100 (only 16 trades). Log at 13:13 MST. Timestamp refreshed 1:19 PM MST."
+    },
+    {
+      "cardId": "c_74fc6937bc909_19c8c0145e6",
+      "title": "Run FT pipeline for volatility_regime_switch",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "pid": 723065,
+      "note": "Just dispatched 1:19 PM MST. Tier=2 gate=pass but ft_wr/pnl/trades=NULL. Need 50+ FT trades."
+    },
+    {
+      "cardId": "c_5d0060a3cd6a6_19c8be687b4",
+      "title": "ML Feature Engineering: Make Equal Tops/Bottoms profitable",
+      "status": "Review/Test",
+      "project": "ninja_trader_strategies",
+      "note": "Runner complete. Model built (AUC=0.603), WF PF=0.84 (not profitable yet). Verdict: Tier 0 Research. QA agent (haiku) spawned to verify files."
+    }
+  ],
+  "recentlyDone": [
+    {
+      "cardId": "c_1ef138b763b45_19c8c0145ca",
+      "title": "cross_asset_correlation registry regression fix",
+      "completedAt": "2026-02-23T20:11Z",
+      "note": "Registry restored: ft_trades=957, ft_wr=45.9%, ft_pnl=+127.08%. preserve_ft fix applied. Known issue: MDD=80% will still gate=fail (Phase 8 card created)."
     }
   ],
   "boardSummary": {
-    "inProgress": 3,
-    "reviewTest": 0,
+    "inProgress": 2,
+    "reviewTest": 1,
     "planned": 0,
-    "inbox": 3
+    "inbox": 5
   },
   "systemHealth": {
-    "cpuTemp": "88C (runners active)",
-    "cpuLoad": "3.66 / 12 cores (30.5%)",
+    "cpuTemp": "62C",
+    "cpuLoad": "0.51 / 12 cores (4.25%)",
     "diskUsage": "37%",
     "services": "all active (gateway, ingestor, paper)",
-    "tokenUsage5h": "15%"
+    "tokenUsage5h": "17%"
   },
+  "phase8CardsCreated": [
+    "Fix FT_MAX_MDD for concurrent multi-coin strategies (c_1ce914d82a666)",
+    "Investigate momentum_v2 tier=2 suspicious (c_bea611ea1ca71)",
+    "Bulk archive 15 ghost tier=0 NULL-FT strategies (c_b917b836b1d81)"
+  ],
   "nextActions": [
-    "Monitor 3 runners — stale threshold 1:19 PM MST",
-    "CAC regression: determine if ft_pnl crash is pipeline bug vs legit data wipe",
-    "Equal Tops/Bottoms WF: await profitability verdict",
-    "volatility_expansion_volume_breakout: if gate logic fix found, patch + promote to T2",
-    "Phase 8 blocked: Inbox=3 > 2 (dispatch more before Phase 8 unlocks)",
-    "NQ Phase 3/4 inbox — dispatch only after NQ Equal Tops complete"
+    "Await QA haiku result for Equal Tops/Bottoms (RT card)",
+    "Monitor vol_expansion runner (stale threshold 1:34 PM MST)",
+    "Monitor vol_regime_switch runner (stale threshold 1:34 PM MST)",
+    "After QA completes: move Equal Tops to Done (no service restart needed for research card)",
+    "Dispatch Phase 8 cards from new Inbox batch next cycle"
   ]
 }

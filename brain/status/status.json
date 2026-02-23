@@ -1,29 +1,28 @@
 {
-  "lastUpdated": "2026-02-23T23:13:00Z",
-  "activeTasks": [
-    {
-      "cardId": "c_062ab9dbbdf74_19c8c644e47",
-      "title": "Make equal_tops_bottoms an expert NQ strategy",
-      "status": "In Progress",
-      "project": "ninja_trader_strategies",
-      "pid": 979010,
-      "note": "Active — log updated 16:13 MST (5.8MB, growing). 29.5 min stale, under 30 min threshold. Stale threshold: 4:43 PM MST."
-    }
-  ],
+  "lastUpdated": "2026-02-23T23:30:00Z",
+  "activeTasks": [],
   "planned": [
-    {"id": "c_f1d36e5aea577", "title": "Investigate volatility_expansion_volume_breakout", "note": "Waiting — dispatches when ETB slot frees"}
+    {"id": "c_f1d36e5aea577", "title": "Investigate volatility_expansion_volume_breakout", "note": "Waiting — blocked until ETB slot is restarted"},
+    {"id": "c_062ab9dbbdf74", "title": "Make equal_tops_bottoms an expert NQ strategy", "note": "⚠️ Builder PID 979010 DEAD as of 4:30 PM heartbeat. Needs restart. Rob alerted."}
   ],
   "blofin": {
     "gatePassStrategies": 1,
     "note": "cross_asset_correlation gate=pass (pf=1.091, mdd=80.03%). vwap_reversion durable fix card in Inbox (c_c264400d324d6). Paper engine limited until 2nd gate=pass strategy."
   },
   "systemHealth": {
-    "cpuTemp": "81C",
+    "cpuTemp": "72C",
     "diskUsage": "38%",
     "services": "all active"
   },
+  "alerts": [
+    "ETB builder dead (PID 979010 gone, task was In Progress). Rob alerted 4:30 PM MST.",
+    "master-dashboard: no git remote — not backed up",
+    "campsite-crm: not a git repo",
+    "gilbert-pd-radio-trainer: not a git repo"
+  ],
   "nextActions": [
-    "NQ ETB stale threshold 4:43 PM MST — recycle if no result by then",
-    "After ETB slot frees: dispatch vwap_reversion durable fix, then vol_expansion"
+    "Rob to confirm: restart ETB builder or cancel?",
+    "After ETB slot decision: dispatch vol_expansion investigation",
+    "Add remotes to master-dashboard, init git for campsite-crm and gilbert-pd-radio-trainer"
   ]
 }

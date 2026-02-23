@@ -1,50 +1,58 @@
 {
-  "lastUpdated": "2026-02-23T01:19:30Z",
+  "lastUpdated": "2026-02-23T01:34:30Z",
   "activeTasks": [
     {
-      "id": "c_0f879dafe78fb_19c8808f3af",
-      "title": "URGENT: Disable support_resistance strategy — 8170 trades, WR=38.2%, PnL=-1484%",
+      "id": "c_069aed40bcd4b_19c8824b3b9",
+      "title": "CRITICAL: entry_classifier AUC=0.450 after retraining — predicting backwards, disable + debug",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-23T01:19:00Z",
+      "dispatchedAt": "2026-02-23T01:34:00Z",
       "project": "/home/rob/.openclaw/workspace/blofin-stack"
     },
     {
-      "id": "c_403c6cfafdf6b_19c8808f3cd",
-      "title": "entry_classifier AUC=0.527 — barely above random, retrain with walk-forward validation",
+      "id": "c_278e7c2a93bb8_19c8824b3db",
+      "title": "URGENT: Archive reversal (ft_pnl=-4219%), candle_patterns (-1258%), support_resistance (-1370%)",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-23T01:19:00Z",
+      "dispatchedAt": "2026-02-23T01:34:00Z",
       "project": "/home/rob/.openclaw/workspace/blofin-stack"
     },
     {
-      "id": "c_929981ba44ae4_19c8808f3e3",
-      "title": "TIA-USDT worst paper trade coin: 3451t WR=33.5% PnL=-910% — investigate and blacklist",
+      "id": "c_e801c3922a84f_19c8824b3fb",
+      "title": "Retrain stale BTC-USDT models: momentum, risk_scorer, volatility_regressor, price_predictor (6d stale)",
       "status": "In Progress",
-      "dispatchedAt": "2026-02-23T01:19:00Z",
+      "dispatchedAt": "2026-02-23T01:34:00Z",
       "project": "/home/rob/.openclaw/workspace/blofin-stack"
     }
   ],
-  "qaInProgress": [],
-  "plannedQueue": [],
-  "inboxSize": 0,
+  "blockedPlanned": [
+    {
+      "id": "c_7aafa071e3176_19c876b2011",
+      "title": "campsite gmail 1-button OAuth",
+      "note": "BLOCKED — code done, needs Rob to create Google Cloud OAuth app (client_id/secret)",
+      "project": "/home/rob/.openclaw/workspace/campsite-crm"
+    }
+  ],
   "systemHealth": {
-    "timestamp": "2026-02-23T01:19:30Z",
+    "timestamp": "2026-02-23T01:34:30Z",
     "cpu_temp": "73.0C",
     "disk_usage": "36%",
-    "cpu_load": "3.2% (0.38/12)",
+    "cpu_load": "3.2% (0.42/12)",
     "gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
     "critical_alerts": "none"
   },
   "dispatcherNotes": {
-    "cycle": "2026-02-23T01:19:30Z",
+    "cycle": "2026-02-23T01:34:30Z",
     "actions": [
       "Phase 1: All services active. CPU 73C, load 3.2%, disk 36%.",
-      "Phase 3: Fixed null assignees on all 3 Inbox cards → claude.",
-      "Phase 4: 0 In Progress — board was clear again.",
-      "Phase 5: Dispatched all 3 blofin improvement cards. Capacity 3/3.",
-      "Phase 6: 0 Review/Test cards.",
-      "Phase 8: Skipped — Phase 8 cards from prev cycle just dispatched; no new analysis to avoid duplicates."
+      "Phase 4: 0 In Progress — board cleared again.",
+      "Phase 5: 3/3 dispatched from Phase 8 cards.",
+      "Phase 6: 0 Review/Test.",
+      "Phase 8: ALL GATES PASS (Planned+Inbox=1, CPU=3.2%). Created 3 critical blofin cards:",
+      "  1. [P1] entry_classifier AUC=0.450 (predicting BACKWARDS after retraining!) [c_069aed40bcd4b]",
+      "  2. [P1] Archive reversal(ft=-4219%)/candle_patterns(-1258%)/support_resistance(-1370%) [c_278e7c2a93bb8]",
+      "  3. [P2] Retrain BTC-USDT models: momentum/risk/vol/price, 6 days stale, price_predictor R²=-0.60 [c_e801c3922a84f]",
+      "BLOCKED: campsite gmail OAuth needs Google Cloud Console setup by Rob (code complete)."
     ]
   }
 }

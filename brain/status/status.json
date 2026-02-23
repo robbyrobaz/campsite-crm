@@ -1,20 +1,12 @@
 {
-  "lastUpdated": "2026-02-23T17:23:31Z",
+  "lastUpdated": "2026-02-23T17:38:14Z",
   "activeTasks": [
-    {
-      "cardId": "c_e51d11c5e8b9b_19c8b6a26e1",
-      "title": "Investigate ml_gbt_5m poor FT performance: ft_pnl=-50.9% over 859 trades",
-      "status": "In Progress",
-      "project": "blofin-stack",
-      "dispatchedAt": "2026-02-23T17:20 UTC",
-      "pid": 545020
-    },
     {
       "cardId": "c_df239d1c2a246_19c8b6a5130",
       "title": "CRITICAL: Fix blofin pipeline FT promotion and registry sync",
       "status": "In Progress",
       "project": "blofin-stack",
-      "dispatchedAt": "2026-02-23T17:04 UTC"
+      "note": "Major commit 7235196 at 10:30 MST (1037 insertions). Pipeline ran at 10:33. Runner still active."
     },
     {
       "cardId": "c_2405216d444bb_19c8b730e18",
@@ -22,32 +14,40 @@
       "status": "In Progress",
       "project": "master-dashboard",
       "dispatchedAt": "2026-02-23T17:04 UTC"
+    },
+    {
+      "cardId": "c_8ef489fc81f32_19c8b86c652",
+      "title": "Investigate cross_asset_correlation: tier=2 with NULL FT data",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "pid": 565188,
+      "dispatchedAt": "2026-02-23T17:34 UTC"
     }
   ],
   "boardSummary": {
     "inProgress": 3,
     "reviewTest": 0,
     "planned": 0,
-    "inbox": 2
+    "inbox": 1
   },
   "recentlyDone": [
-    "volatility_regressor overfitting fix (test_r2=0.484, gap=0.077)",
-    "ensemble_top3 demoted (ft_wr=31.4%, ft_pnl=-84.3%, 1207 trades)",
-    "promote_to_ft.py re-promotion bug fixed (AND archived=0)",
-    "PIPELINE_AUDIT.md written (31KB, 10:14 MST)",
-    "vol_bb_vwap_reversion, volume_mean_reversion_v1, macd_divergence, low_volatility_atr_breakout \u2014 all demoted"
+    "ml_gbt_5m archived: BUY WR=21.6% (813t), regime-flip confirmed; 1177 FT trades",
+    "ensemble_top3 demoted: ft_wr=31.4%, ft_pnl=-84.3%, 1207 trades",
+    "vol_reg overfitting fixed: test_r2=0.484 (was -22M), gap=0.077",
+    "PIPELINE_AUDIT.md written (31KB)",
+    "promote_to_ft.py re-promotion bug fixed (AND archived=0)"
   ],
   "systemHealth": {
-    "cpuTemp": "92C (high, sub-critical \u2014 NinjaTrader ML also running)",
-    "cpuLoad": "2.8/12 = 23%",
+    "cpuTemp": "95C \u26a0\ufe0f NEAR HIGH \u2014 NinjaTrader ML + blofin runners",
+    "cpuLoad": "3.0/12 = 25%",
     "diskUsage": "37%",
     "services": "all active",
-    "tokenUsage5h": "54%"
+    "tokenUsage5h": "56%"
   },
   "nextActions": [
-    "Monitor 3 runners \u2014 stale threshold 10:35 MST",
-    "QA on R/T cards when runners complete",
-    "Dispatch cross_asset_correlation and direction_predictor retrain when slots open",
-    "Watch CPU temp (92C) \u2014 NinjaTrader ML + blofin runners both active"
+    "Monitor 3 runners \u2014 stale threshold 10:49 MST",
+    "QA when FT-fix and cross_asset_correlation complete",
+    "Dispatch direction_predictor retrain when slot opens (currently held for thermal reasons)",
+    "ALERT: CPU 95C \u2014 monitor if exceeds 98C"
   ]
 }

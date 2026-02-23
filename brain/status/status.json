@@ -1,66 +1,49 @@
 {
-  "updated": "2026-02-23T11:49:00Z",
-  "updated_mst": "2026-02-23 04:49 MST",
-  "cycle": "Jarvis Pulse 04:49 MST Feb 23 2026",
+  "updated": "2026-02-23T12:04:00Z",
+  "updated_mst": "2026-02-23 05:04 MST",
+  "cycle": "Jarvis Pulse 05:04 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 52,
-    "cpu_load_pct": 11,
+    "cpu_temp_c": 84,
+    "cpu_load_pct": 10,
     "disk_pct": 37,
     "services": [
       "openclaw-gateway: active",
       "blofin-stack-ingestor: active",
       "blofin-stack-paper: active"
     ],
-    "alerts": "none"
+    "alerts": "CPU 84C — warm but within limit"
   },
   "board": {
-    "in_progress": 3,
-    "review_test": 0,
+    "in_progress": 1,
+    "review_test": 1,
     "planned": 0,
-    "inbox": 0
+    "inbox": 1
   },
   "activeTasks": [
     {
-      "id": "c_0c62bd4cd8b79_19c8a2e52ba",
-      "title": "Demote vwap_reversion on XRP/ETH/SOL-USDT: WR~0.5% (82-85 trades)",
-      "status": "In Progress",
-      "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "Age 14.1min at cycle start. Stale recovery applied last cycle. Watching."
-    },
-    {
       "id": "c_9915a03e6cf68_19c8a4a41fc",
-      "title": "Re-run strategy optimizer: last run Feb 17 (5.9 days ago)",
+      "title": "Re-run strategy optimizer: last run Feb 17 (5.9 days stale)",
       "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "Dispatched 04:49. PID=250377."
+      "note": "PID=250377, dispatched 04:49, age=14.7min at cycle start. Watch for stale next cycle."
     },
     {
-      "id": "c_0230796086d72_19c8a4a41d8",
-      "title": "Backtest JTO-USDT: 2818 signals/24h, zero strategy_coin_performance entries",
-      "status": "In Progress",
+      "id": "c_0c62bd4cd8b79_19c8a2e52ba",
+      "title": "Demote vwap_reversion on XRP/ETH/SOL-USDT",
+      "status": "Review/Test",
       "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "note": "Dispatched 04:49. PID=250391."
-    }
-  ],
-  "completed_since_last_cycle": [
-    {
-      "id": "c_84c65a47056e2_19c8a3c1236",
-      "title": "Disable volume_mean_reversion: WR=0.0%, avgPnL=-1.06%",
-      "outcome": "DONE — strategy archived in strategy_registry (archived=1, gate_status=fail)"
+      "note": "Stalled 2x due to work already done. DB confirmed XRP/ETH/SOL demoted at 11:24 UTC. QA haiku running."
     }
   ],
   "phase8_gate": {
     "inbox_planned": 0,
-    "cpu_pct": 11,
-    "tokens_5h_pct": 14,
-    "status": "Skipped — 3/3 In Progress slots filled with high-priority blofin work"
+    "cpu_pct": 10,
+    "tokens_5h_pct": 15,
+    "status": "PASS — created 1 card"
   },
   "last_actions": [
-    "PHASE 3: Fixed null assignees on optimizer + JTO-USDT inbox cards",
-    "PHASE 4: vwap_reversion at 14.1min — not stale, no action",
-    "PHASE 5: Dispatched optimizer re-run PID=250377",
-    "PHASE 5: Dispatched JTO-USDT backtest PID=250391",
-    "PHASE 6: No Review/Test cards",
-    "PHASE 8: Skipped (board at 3/3 capacity; support_resistance already archived)"
+    "PHASE 4: vwap_reversion stale 29.1min — investigated DB, work already done, moved to Review/Test",
+    "PHASE 6: QA haiku spawned for vwap_reversion demotion verification",
+    "PHASE 8: Created 1 card — ADA/OP/BOME/SHIB zero-trade anomaly (360-383 confirmed signals, 0 paper trades)"
   ]
 }

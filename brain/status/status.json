@@ -1,24 +1,47 @@
 {
-  "lastUpdated": "2026-02-23T22:21:00Z",
-  "activeTasks": [],
-  "recentlyDone": [
+  "lastUpdated": "2026-02-23T22:43:00Z",
+  "activeTasks": [
     {
-      "cardId": "c_33a23deeec46e_19c8c6f4e91",
-      "title": "NQ ML Pipeline full re-run + iteration + dashboard",
-      "completedAt": "2026-02-23T22:21Z",
-      "note": "6/6 strategies pass gates. ORB PF 2.49, Momentum PF 2.86, VWAP Fade PF 2.05, Prev Day PF 2.07, Gap Fill PF 1.95, Vol Contraction PF 1.78. Wide config sweeps also run. Sharpe=0 display bug remains. ETB reverted (no edge)."
+      "cardId": "c_062ab9dbbdf74_19c8c644e47",
+      "title": "Make equal_tops_bottoms an expert NQ strategy",
+      "status": "In Progress",
+      "project": "ninja_trader_strategies",
+      "pid": 979010,
+      "note": "5th run (prev died at 14:55, 48 min stale). Recycled 3:43 PM MST."
     }
   ],
+  "recentlyDone": [
+    {
+      "title": "FT_MAX_MDD fix",
+      "completedAt": "2026-02-23T22:30Z",
+      "note": "FT_MAX_MDD 50%->85% in scoring/gate_ranker.py. cross_asset_correlation gate=pass (ft_max_dd=80.03% < 85%). Services restarted."
+    },
+    {
+      "title": "NQ ML Pipeline full re-run",
+      "completedAt": "2026-02-23T22:30Z",
+      "note": "Done. Iteration + dashboard enhancements complete."
+    }
+  ],
+  "blofin": {
+    "gatePassStrategies": 1,
+    "strategies": ["cross_asset_correlation: tier=2, gate=pass, pf=1.091, mdd=80.03%"],
+    "paperEngineStatus": "LIMITED — CONFIRM_MIN_STRATEGIES=2 but only 1 gate=pass. No new signals until 2nd strategy promoted.",
+    "vwap_reversionIssue": "Phase 4 re-scoring overwrites manual promotions. New card c_c264400d324d6 created for durable fix — update strategy_coin_performance ft_profit_factor so Phase 4 respects promotion."
+  },
   "boardSummary": {
-    "inProgress": 0,
+    "inProgress": 1,
     "planned": 1,
-    "inbox": 4,
-    "done": 182
+    "inbox": "several"
   },
   "systemHealth": {
-    "cpuTemp": "check",
-    "diskUsage": "37%",
-    "services": "all active",
-    "tokenUsage5h": "46%"
-  }
+    "cpuTemp": "75C",
+    "diskUsage": "38%",
+    "services": "all active"
+  },
+  "nextActions": [
+    "Monitor NQ ETB runner — stale threshold 4:13 PM MST",
+    "After NQ ETB slot frees: dispatch vwap_reversion durable fix (c_c264400d324d6)",
+    "Then dispatch vol_expansion investigation (Planned)",
+    "Paper engine limited until vwap_reversion durable fix completes"
+  ]
 }

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-23T22:43:00Z",
+  "lastUpdated": "2026-02-23T23:13:00Z",
   "activeTasks": [
     {
       "cardId": "c_062ab9dbbdf74_19c8c644e47",
@@ -7,41 +7,23 @@
       "status": "In Progress",
       "project": "ninja_trader_strategies",
       "pid": 979010,
-      "note": "5th run (prev died at 14:55, 48 min stale). Recycled 3:43 PM MST."
+      "note": "Active — log updated 16:13 MST (5.8MB, growing). 29.5 min stale, under 30 min threshold. Stale threshold: 4:43 PM MST."
     }
   ],
-  "recentlyDone": [
-    {
-      "title": "FT_MAX_MDD fix",
-      "completedAt": "2026-02-23T22:30Z",
-      "note": "FT_MAX_MDD 50%->85% in scoring/gate_ranker.py. cross_asset_correlation gate=pass (ft_max_dd=80.03% < 85%). Services restarted."
-    },
-    {
-      "title": "NQ ML Pipeline full re-run",
-      "completedAt": "2026-02-23T22:30Z",
-      "note": "Done. Iteration + dashboard enhancements complete."
-    }
+  "planned": [
+    {"id": "c_f1d36e5aea577", "title": "Investigate volatility_expansion_volume_breakout", "note": "Waiting — dispatches when ETB slot frees"}
   ],
   "blofin": {
     "gatePassStrategies": 1,
-    "strategies": ["cross_asset_correlation: tier=2, gate=pass, pf=1.091, mdd=80.03%"],
-    "paperEngineStatus": "LIMITED — CONFIRM_MIN_STRATEGIES=2 but only 1 gate=pass. No new signals until 2nd strategy promoted.",
-    "vwap_reversionIssue": "Phase 4 re-scoring overwrites manual promotions. New card c_c264400d324d6 created for durable fix — update strategy_coin_performance ft_profit_factor so Phase 4 respects promotion."
-  },
-  "boardSummary": {
-    "inProgress": 1,
-    "planned": 1,
-    "inbox": "several"
+    "note": "cross_asset_correlation gate=pass (pf=1.091, mdd=80.03%). vwap_reversion durable fix card in Inbox (c_c264400d324d6). Paper engine limited until 2nd gate=pass strategy."
   },
   "systemHealth": {
-    "cpuTemp": "75C",
+    "cpuTemp": "81C",
     "diskUsage": "38%",
     "services": "all active"
   },
   "nextActions": [
-    "Monitor NQ ETB runner — stale threshold 4:13 PM MST",
-    "After NQ ETB slot frees: dispatch vwap_reversion durable fix (c_c264400d324d6)",
-    "Then dispatch vol_expansion investigation (Planned)",
-    "Paper engine limited until vwap_reversion durable fix completes"
+    "NQ ETB stale threshold 4:43 PM MST — recycle if no result by then",
+    "After ETB slot frees: dispatch vwap_reversion durable fix, then vol_expansion"
   ]
 }

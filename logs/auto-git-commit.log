@@ -449,3 +449,12 @@ CLEAN ai-workshop (nothing to commit)
 [main 32f1b05] auto: snapshot 2026-02-23T11:00:01Z
  2 files changed, 22 insertions(+), 1 deletion(-)
 COMMITTED campsite-crm
+[main a4b878e] auto: snapshot 2026-02-23T11:00:01Z
+ 1 file changed, 3 insertions(+)
+COMMITTED gilbert-pd-radio-trainer
+Done: 5 committed, 4 skipped
+CLEAN master-dashboard (nothing to commit)
+[main 8ea2f56] auto: snapshot 2026-02-23T12:00:01Z
+ 8 files changed, 314 insertions(+), 60 deletions(-)
+ create mode 100644 scripts/backtest_jto.py
+COMMITTED blofin-stack

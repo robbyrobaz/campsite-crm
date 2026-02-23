@@ -1,15 +1,14 @@
 {
-  "lastUpdated": "2026-02-23T05:19:00Z",
+  "lastUpdated": "2026-02-23T05:34:00Z",
   "activeTasks": [
     {
-      "id": "c_320ce3d758467_19c88b9fa12",
-      "title": "fully replace EEP from all boards (blofin and master)",
+      "id": "c_a980c94ed8823_19c88f9875e",
+      "title": "need to figure out why more backtested strategies aren't moving to forward testing",
       "status": "In Progress",
       "assignee": "claude",
-      "pid": 4173371,
-      "recycleCount": 3,
-      "dispatchedAt": "2026-02-23T05:19:00Z",
-      "note": "Recycled 3x. master-dashboard done. Focus: blofin-stack kanban display."
+      "pid": 4183954,
+      "source": "manual (Rob)",
+      "dispatchedAt": "2026-02-23T05:34:00Z"
     },
     {
       "id": "c_8c787f736d52e_19c88c9fad2",
@@ -17,29 +16,30 @@
       "status": "In Progress",
       "assignee": "claude",
       "pid": 4173505,
-      "recycleCount": 1,
-      "dispatchedAt": "2026-02-23T05:19:00Z"
+      "ageMinutes": 14.6,
+      "WARNING": "WILL BE STALE NEXT CYCLE"
     },
     {
-      "id": "c_6939280f84308_19c88c9fa9a",
-      "title": "Archive entry_classifier/lightgbm (AUC=0.465)",
+      "id": "c_320ce3d758467_19c88b9fa12",
+      "title": "fully replace EEP from all boards (blofin and master)",
       "status": "In Progress",
       "assignee": "claude",
-      "pid": 4173634,
-      "recycleCount": 1,
-      "dispatchedAt": "2026-02-23T05:19:00Z"
+      "pid": 4173371,
+      "ageMinutes": 14.7,
+      "recycleCount": 3,
+      "WARNING": "WILL BE STALE NEXT CYCLE"
     }
   ],
   "inboxQueue": [
-    "c_c7edffe6bdb63: Disable remaining reversal strategy (20,159 rows, -44.5% PnL)",
+    "c_c7edffe6bdb63: Disable remaining reversal strategy (20,159 rows)",
     "c_2577b78e1b8fb: Retrain 4 stale ML models (Feb 17, 6d stale)"
   ],
   "health": {
-    "cpu_temp": "56C",
-    "load_pct": "5.9%",
+    "cpu_temp": "55C",
+    "load_pct": "10.1%",
     "disk_pct": "36%",
-    "tokens_5h": "29%",
+    "tokens_5h": "37%",
     "services": "all active"
   },
-  "notes": "22:19 MST \u2014 Recycled all 3 stale IP cards (27-28m). All redispatched. Phase 8 skipped (inbox=2, at limit). Next cycle: watch for runners completing or staling again at ~22:34."
+  "notes": "22:34 MST \u2014 Rob created manual card (backtested\u2192fwd testing pipeline blocker), dispatched. Lightgbm card completed. Phase 8 skipped (inbox=2). Systemic+EEP will hit 15m at ~22:35 \u2014 BOTH will need recycle next cycle."
 }

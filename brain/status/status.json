@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-23T18:36:44Z",
+  "lastUpdated": "2026-02-23T18:51:57Z",
   "activeTasks": [
     {
       "cardId": "c_0f46cbe9e4d59_19c8bc67c47",
@@ -7,43 +7,34 @@
       "status": "In Progress",
       "project": "ninja_trader_strategies",
       "pid": 606425,
-      "note": "All 6 strategies produce 235K trades (every bar) \u2014 should_enter() not filtering. Fix run_phase2.py + walk_forward.py"
+      "note": "Still actively running at 11:49 MST (log 0.5m ago). Testing ORB signals + direction-aware targets."
     },
     {
       "cardId": "c_3638d43a5f68a_19c8bc4312a",
-      "title": "Fix blofin pipeline phase connections (per PIPELINE_AUDIT.md)",
-      "status": "In Progress",
+      "title": "Fix blofin pipeline phase connections",
+      "status": "Review/Test",
       "project": "blofin-stack",
-      "pid": 606579,
-      "note": "Extend BACKTEST_DAYS to 30, raise gate thresholds, add FT-history override"
-    },
-    {
-      "cardId": "c_92b99f578f387_19c8bc67c6a",
-      "title": "Build NQ Pipeline Dashboard (Flask, port 8891)",
-      "status": "In Progress",
-      "project": "ninja_trader_strategies",
-      "pid": 606583,
-      "note": "Strategy registry, walk-forward folds, tournament results"
+      "note": "QA running (haiku). Commit 30a52da: 30d BT, higher gates, FT winner override, optimizer wire-in."
     }
   ],
   "boardSummary": {
-    "inProgress": 3,
-    "reviewTest": 0,
+    "inProgress": 1,
+    "reviewTest": 1,
     "planned": 0,
-    "inbox": 3,
-    "inboxNote": "NQ Phase 2, Phase 3, Phase 4 \u2014 blocked on CRITICAL fix"
+    "inbox": 4,
+    "inboxNote": "NQ Phase 2 (blocked on CRITICAL), Phase 3, Phase 4, + feature-order sub-task"
   },
   "systemHealth": {
-    "cpuTemp": "60C \u2705",
-    "cpuLoad": "1.1/12 = 9%",
+    "cpuTemp": "79C \u26a0\ufe0f (runners active)",
+    "cpuLoad": "2.6/12 = 22%",
     "diskUsage": "37%",
     "services": "all active",
-    "tokenUsage5h": "61% (window resets 12:00 PM MST \u2014 26 min)"
+    "tokenUsage5h": "71% \u26a0\ufe0f (resets 12:00 PM MST \u2014 11 min)"
   },
   "nextActions": [
-    "Monitor 3 runners \u2014 stale threshold 11:49 MST",
-    "NQ Phase 2 (c_8b64062d36389) blocks on CRITICAL fix \u2014 dispatch when signal fix completes",
-    "Token window resets 12:00 PM MST \u2014 Phase 8 unblocked after",
-    "NQ Phase 3 + 4 blocked until Phase 2 complete"
+    "Await QA for blofin phase connections \u2014 deploy on PASS",
+    "NQ-critical still running \u2014 refresh if needed at 14-min mark",
+    "After CRITICAL fix completes: dispatch feature-order sub-task + NQ Phase 2 in sequence",
+    "Token reset 12:00 PM MST \u2014 Phase 8 unblocked; Inbox also needs to drain first"
   ]
 }

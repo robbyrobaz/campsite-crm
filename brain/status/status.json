@@ -1,10 +1,10 @@
 {
-  "updated": "2026-02-23T10:37:03Z",
-  "updated_mst": "2026-02-23 03:34 MST",
-  "cycle": "Jarvis Pulse 03:34 MST Feb 23 2026",
+  "updated": "2026-02-23T10:52:10Z",
+  "updated_mst": "2026-02-23 03:49 MST",
+  "cycle": "Jarvis Pulse 03:49 MST Feb 23 2026",
   "health": {
-    "cpu_temp_c": 85,
-    "cpu_load_pct": 128,
+    "cpu_temp_c": 76,
+    "cpu_load_pct": 82,
     "disk_pct": 36,
     "services": [
       "openclaw-gateway",
@@ -12,13 +12,13 @@
       "blofin-stack-paper",
       "blofin-dashboard"
     ],
-    "alerts": "CPU 128% OVERLOAD \u2014 Numerai GPU training (798% CPU) + blofin pipeline running simultaneously"
+    "alerts": "CPU 82% \u2014 Numerai GPU training finishing + blofin pipeline + 2 new builders"
   },
   "board": {
-    "in_progress": 1,
+    "in_progress": 3,
     "review_test": 0,
     "planned": 0,
-    "inbox": 3
+    "inbox": 1
   },
   "activeTasks": [
     {
@@ -26,23 +26,33 @@
       "title": "Numerai: Retrain full 25-model pipeline with era-boosting en",
       "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/numerai-tournament",
-      "assignee": "claude",
-      "pid_claude": 191049,
-      "training_progress": "6/30 models (20%), ~17min remaining",
-      "training_log": "/tmp/elite_train.log",
-      "note": "GPU training: CatBoost+LightGBM, 500K row sample (memory fix working). ETA 03:45-03:50 MST"
+      "note": "GPU training 27-29/30 models, builder pid=191049 alive 28min"
+    },
+    {
+      "id": "c_b2e3d172fa81_19c8a072fe0",
+      "title": "T1 FT failures: ensemble_top3 ft_PnL=-44.2% (646 trades), at",
+      "status": "In Progress",
+      "project": "/home/rob/.openclaw/workspace/blofin-stack",
+      "note": "Blofin DB operation \u2014 archive or investigate"
+    },
+    {
+      "id": "c_d5d4e0d52742_19c8a072fb7",
+      "title": "Archive 3 T0 strategies with bt_PnL < -25%: momentum_v4, mtf",
+      "status": "In Progress",
+      "project": "/home/rob/.openclaw/workspace/blofin-stack",
+      "note": "Blofin DB operation \u2014 archive or investigate"
     }
   ],
   "phase8_gate": {
-    "inbox_planned": 3,
-    "cpu_pct": 128,
+    "inbox_planned": 1,
+    "cpu_pct": 82,
     "tokens_5h_pct": 7,
-    "status": "BLOCKED (cpu=128% \u2014 GPU training active)"
+    "status": "BLOCKED (cpu=82%)"
   },
   "last_actions": [
-    "PHASE 3: Fixed NULL assignees on 3 inbox cards",
-    "PHASE 4: Numerai builder ALIVE (12:50 elapsed, pid 191049). Training 20% complete (6/30 models). HOLD \u2014 no recycle.",
-    "PHASE 5: No dispatch \u2014 CPU at 128% overload, blofin pipeline + GPU training both running",
-    "PHASE 8: Skipped (cpu=128%>50%)"
+    "HOLD: Numerai training at 27-29/30 models (delta_20 complete), GPU active, builder alive 28min",
+    "DISPATCH: Archive 3 T0 strategies pid=210308",
+    "DISPATCH: T1 FT failures investigation pid=210319",
+    "PHASE 8: Skipped (cpu=82%>50%)"
   ]
 }

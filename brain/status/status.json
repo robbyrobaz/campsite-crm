@@ -1,32 +1,31 @@
 {
-  "lastUpdated": "2026-02-23T06:34:00Z",
+  "lastUpdated": "2026-02-23T06:49:00Z",
   "activeTasks": [
-    {
-      "id": "c_320ce3d758467_19c88b9fa12",
-      "title": "EEP replacement (kanban HTML only \u2014 6th attempt)",
-      "pid": 37407
-    },
     {
       "id": "c_fb277de3dffac_19c892879f4",
       "title": "Run full blofin backtest sweep on all 16 T0 strategies",
       "pid": 37479
     },
     {
-      "id": "c_ec7d3af108ade_19c892879be",
-      "title": "Add gate_status and pnl_rank columns to blofin dashboard",
-      "pid": 37621
+      "id": "c_320ce3d758467_19c88b9fa12",
+      "title": "fully replace EEP from all boards (kanban HTML only \u2014 6th)",
+      "pid": 37407
+    },
+    {
+      "id": "c_9f7f41f644c6c_19c892879a0",
+      "title": "Blofin dashboard: add per-coin strategy performance table",
+      "pid": 47158
     }
   ],
-  "completedThisCycle": [
-    "c_e6b5bf2b6ffb2 QA PASS: Commits pushed \u2014 blofin-stack (55e64e3+30b0cd2 demoted 34 T1 strategies), numerai-tournament (era_boost exp002 logged). Blofin restarted.",
-    "c_9afb19c4ecfdd: BaseStrategy inheritance fix completed"
+  "closedDuplicates": [
+    "c_0b8667a99eb9: demotion sweep (already in commit 30b0cd2)"
   ],
-  "inboxQueue_count": 8,
+  "inboxRemaining": 6,
   "health": {
-    "cpu_temp": "84C",
-    "load_pct": "16.6%",
+    "cpu_temp": "55C",
+    "load_pct": "4.5%",
     "disk_pct": "36%",
     "services": "all active"
   },
-  "notes": "23:34 MST \u2014 Commit/push QA PASS. 34 T1 strategies demoted. EEP recycled (6th, narrow scope). 3 blofin tasks dispatched. Tokens approaching gate."
+  "notes": "23:49 MST \u2014 Closed duplicate demotion card. Per-coin dashboard dispatched. Both IP safe at 13m. Token reset at 02:00 MST. Phase 8 skipped (inbox=8, tokens~59%)."
 }

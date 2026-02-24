@@ -653,13 +653,18 @@ def _update_summary():
 
         pool_w = p.get("pump", {}).get("power_w", 0)
 
+        wc = _state["wall_connector"]
+        ct_w = wc.get("charging_w", 0) if wc.get("status") == "online" else 0
+
         _state["summary"] = {
             "solar_w": solar,
             "load_w": load,
             "battery_w": battery,
             "grid_w": grid,
             "pool_w": pool_w,
-            "self_powered_pct": round(min(100, solar / max(load, 1) * 100), 1) if load > 0 else 0,
+            "ct_charging_w": ct_w,
+            "total_load_w": load + ct_w,   # SPAN load + CT charging = true home consumption
+            "self_powered_pct": round(min(100, solar / max(load + ct_w, 1) * 100), 1) if (load + ct_w) > 0 else 0,
         }
         _state["ts"] = time.time()
 
@@ -1433,14 +1438,13 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .energy-load { border-top: 3px solid var(--load); }
   .energy-pool { border-top: 3px solid var(--pool); }
 
-  /* Flow diagram */
-  .flow-diagram { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 12px 0; }
-  .flow-row { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
-  .flow-node { text-align: center; min-width: 80px; }
-  .flow-icon { font-size: 28px; margin-bottom: 4px; }
-  .flow-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; }
-  .flow-power { font-size: 14px; font-weight: 700; }
-  .flow-arrow { font-size: 20px; color: var(--border); }
+  /* Power flow SVG animation */
+  .flow-path-animated { animation: flowDash 1.5s linear infinite; }
+  @keyframes flowDash { to { stroke-dashoffset: -18; } }
+  .flow-path-slow     { animation: flowDash 3s linear infinite; }
+  .flow-path-fast     { animation: flowDash 0.6s linear infinite; }
+  .flow-path-idle     { opacity: 0.15; animation: none; }
+  .flow-path-bridge   { stroke-dasharray: 6 8; animation: flowDash 2s linear infinite; }
   .c-solar { color: var(--solar); }
   .c-battery { color: var(--battery); }
   .c-grid { color: var(--grid); }
@@ -1590,36 +1594,205 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <!-- ═══ ENERGY COCKPIT ═══════════════════════════════════════════════════════ -->
 <div id="view-cockpit" class="view active">
 
-  <!-- Flow Diagram -->
-  <div class="flow-diagram">
-    <div class="flow-row">
-      <div class="flow-node">
-        <div class="flow-icon">☀️</div>
-        <div class="flow-label">Solar</div>
-        <div class="flow-power c-solar" id="f-solar">— W</div>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-node" style="min-width:100px">
-        <div class="flow-icon">🏠</div>
-        <div class="flow-label">Home</div>
-        <div class="flow-power c-load" id="f-load">— W</div>
-      </div>
-      <div class="flow-arrow">←</div>
-      <div class="flow-node">
-        <div class="flow-icon">🔋</div>
-        <div class="flow-label">Battery</div>
-        <div class="flow-power c-battery" id="f-battery">— W</div>
-        <div class="flow-power" style="font-size:11px;color:var(--text-dim)" id="f-soe">—%</div>
-      </div>
-      <div class="flow-arrow">↔</div>
-      <div class="flow-node">
-        <div class="flow-icon">🔌</div>
-        <div class="flow-label">Grid</div>
-        <div class="flow-power c-grid" id="f-grid">— W</div>
-        <div class="flow-power" style="font-size:11px;color:var(--text-dim)" id="f-grid-dir">—</div>
-      </div>
+  <!-- Animated Power Flow -->
+  <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
+    <div style="padding:12px 16px 4px;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:13px;font-weight:600;color:var(--text)">&#x26A1; Live Power Flow</span>
+      <span style="font-size:11px;color:var(--text-dim)" id="flow-total-label">Total load: &#x2014; W</span>
     </div>
+    <svg id="power-flow-svg" viewBox="0 0 700 320" preserveAspectRatio="xMidYMid meet"
+         style="width:100%;max-height:320px;display:block">
+
+      <defs>
+        <!-- Glow for active particles -->
+        <filter id="pf-glow" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="3" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <!-- Arrow markers -->
+        <marker id="arr-solar" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#f59e0b"/>
+        </marker>
+        <marker id="arr-grid" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#f97316"/>
+        </marker>
+        <marker id="arr-bridge" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#f97316" opacity="0.7"/>
+        </marker>
+        <marker id="arr-ev" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#22d3ee"/>
+        </marker>
+        <marker id="arr-house" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#6b7280"/>
+        </marker>
+      </defs>
+
+      <!-- ── PATHS (behind nodes) ── -->
+
+      <!-- SRP Grid → Tesla Gateway (bezier) -->
+      <path id="path-grid-gw" d="M 535,82 C 535,118 462,130 462,148"
+            stroke="#f97316" stroke-width="3" fill="none" opacity="0.9"
+            stroke-dasharray="10 5" marker-end="url(#arr-grid)"/>
+
+      <!-- Tesla Gateway → SPAN Panel (bezier) -->
+      <path id="path-gw-span" d="M 328,166 C 295,166 270,180 248,182"
+            stroke="#f97316" stroke-width="3" fill="none" opacity="0.9"
+            stroke-dasharray="10 5" marker-end="url(#arr-grid)"/>
+
+      <!-- Bridge: SRP Grid → SPAN direct (Tesla offline fallback) -->
+      <path id="path-grid-span" d="M 533,82 C 510,107 310,103 250,160"
+            stroke="#f97316" stroke-width="2" fill="none" opacity="0"
+            stroke-dasharray="6 8" marker-end="url(#arr-bridge)"/>
+
+      <!-- Solar → SPAN Panel (bezier) -->
+      <path id="path-solar-span" d="M 130,82 C 130,115 190,118 190,150"
+            stroke="#f59e0b" stroke-width="3" fill="none" opacity="0.9"
+            stroke-dasharray="10 5" marker-end="url(#arr-solar)"/>
+
+      <!-- SPAN Panel → House Load -->
+      <path id="path-span-house" d="M 190,218 L 190,264"
+            stroke="#6b7280" stroke-width="3" fill="none" opacity="0.9"
+            stroke-dasharray="10 5" marker-end="url(#arr-house)"/>
+
+      <!-- Tesla Gateway → CT Charger (bezier) -->
+      <path id="path-gw-ct" d="M 395,202 C 435,228 476,242 515,248"
+            stroke="#22d3ee" stroke-width="3" fill="none" opacity="0.9"
+            stroke-dasharray="10 5" marker-end="url(#arr-ev)"/>
+
+      <!-- ── PARTICLE GROUPS (animateMotion dots, staggered) ── -->
+
+      <g id="part-solar-span" visibility="hidden">
+        <circle r="4.5" fill="#f59e0b" filter="url(#pf-glow)">
+          <animateMotion dur="1.5s" begin="0s" repeatCount="indefinite"><mpath href="#path-solar-span"/></animateMotion>
+        </circle>
+        <circle r="3" fill="#f59e0b" opacity="0.65">
+          <animateMotion dur="1.5s" begin="-0.5s" repeatCount="indefinite"><mpath href="#path-solar-span"/></animateMotion>
+        </circle>
+        <circle r="2" fill="#f59e0b" opacity="0.4">
+          <animateMotion dur="1.5s" begin="-1s" repeatCount="indefinite"><mpath href="#path-solar-span"/></animateMotion>
+        </circle>
+      </g>
+
+      <g id="part-grid-gw" visibility="hidden">
+        <circle r="4.5" fill="#f97316" filter="url(#pf-glow)">
+          <animateMotion dur="1.5s" begin="0s" repeatCount="indefinite"><mpath href="#path-grid-gw"/></animateMotion>
+        </circle>
+        <circle r="3" fill="#f97316" opacity="0.65">
+          <animateMotion dur="1.5s" begin="-0.5s" repeatCount="indefinite"><mpath href="#path-grid-gw"/></animateMotion>
+        </circle>
+        <circle r="2" fill="#f97316" opacity="0.4">
+          <animateMotion dur="1.5s" begin="-1s" repeatCount="indefinite"><mpath href="#path-grid-gw"/></animateMotion>
+        </circle>
+      </g>
+
+      <g id="part-gw-span" visibility="hidden">
+        <circle r="4.5" fill="#f97316" filter="url(#pf-glow)">
+          <animateMotion dur="1.5s" begin="0s" repeatCount="indefinite"><mpath href="#path-gw-span"/></animateMotion>
+        </circle>
+        <circle r="3" fill="#f97316" opacity="0.65">
+          <animateMotion dur="1.5s" begin="-0.5s" repeatCount="indefinite"><mpath href="#path-gw-span"/></animateMotion>
+        </circle>
+      </g>
+
+      <g id="part-grid-span" visibility="hidden">
+        <circle r="4" fill="#f97316" filter="url(#pf-glow)" opacity="0.85">
+          <animateMotion dur="1.5s" begin="0s" repeatCount="indefinite"><mpath href="#path-grid-span"/></animateMotion>
+        </circle>
+        <circle r="2.5" fill="#f97316" opacity="0.5">
+          <animateMotion dur="1.5s" begin="-0.5s" repeatCount="indefinite"><mpath href="#path-grid-span"/></animateMotion>
+        </circle>
+      </g>
+
+      <g id="part-span-house" visibility="hidden">
+        <circle r="4" fill="#6b7280" filter="url(#pf-glow)">
+          <animateMotion dur="1.5s" begin="0s" repeatCount="indefinite"><mpath href="#path-span-house"/></animateMotion>
+        </circle>
+        <circle r="2.5" fill="#6b7280" opacity="0.55">
+          <animateMotion dur="1.5s" begin="-0.5s" repeatCount="indefinite"><mpath href="#path-span-house"/></animateMotion>
+        </circle>
+      </g>
+
+      <g id="part-gw-ct" visibility="hidden">
+        <circle r="4" fill="#22d3ee" filter="url(#pf-glow)">
+          <animateMotion dur="1.5s" begin="0s" repeatCount="indefinite"><mpath href="#path-gw-ct"/></animateMotion>
+        </circle>
+        <circle r="2.5" fill="#22d3ee" opacity="0.55">
+          <animateMotion dur="1.5s" begin="-0.5s" repeatCount="indefinite"><mpath href="#path-gw-ct"/></animateMotion>
+        </circle>
+      </g>
+
+      <!-- ── NODES ── -->
+
+      <!-- Solar node (top-left) -->
+      <g id="node-solar" transform="translate(75,22)">
+        <rect rx="12" ry="12" width="110" height="60" fill="#1c1917" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="55" y="20" text-anchor="middle" font-size="17" fill="#f59e0b">&#x2600;&#xFE0F;</text>
+        <text x="55" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">SOLAR</text>
+        <text id="lbl-solar" x="55" y="53" text-anchor="middle" font-size="13" fill="#f59e0b" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
+      </g>
+
+      <!-- SRP Grid node (top-right) -->
+      <g id="node-grid" transform="translate(480,22)">
+        <rect id="rect-grid" rx="12" ry="12" width="110" height="60" fill="#1c1917" stroke="#f97316" stroke-width="1.5"/>
+        <text x="55" y="20" text-anchor="middle" font-size="17" fill="#f97316">&#x1F50C;</text>
+        <text x="55" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">SRP GRID</text>
+        <text id="lbl-grid" x="55" y="53" text-anchor="middle" font-size="13" fill="#f97316" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
+      </g>
+
+      <!-- Tesla Gateway node (center) -->
+      <g id="node-gateway" transform="translate(328,130)">
+        <rect rx="12" ry="12" width="134" height="72" fill="#1c1917" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="67" y="20" text-anchor="middle" font-size="17" fill="#3b82f6">&#x1F50B;</text>
+        <text x="67" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">TESLA GATEWAY V2</text>
+        <text id="lbl-gw" x="67" y="53" text-anchor="middle" font-size="12" fill="#94a3b8" font-family="sans-serif">&#x2014;</text>
+        <text id="lbl-gw-soe" x="67" y="66" text-anchor="middle" font-size="10" fill="#60a5fa" font-family="sans-serif">&#x2014;</text>
+      </g>
+
+      <!-- SPAN Panel node (mid-left) -->
+      <g id="node-span" transform="translate(132,150)">
+        <rect rx="12" ry="12" width="116" height="68" fill="#1c1917" stroke="#8b5cf6" stroke-width="1.5"/>
+        <text x="58" y="20" text-anchor="middle" font-size="17" fill="#8b5cf6">&#x1F4CA;</text>
+        <text x="58" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">SPAN PANEL</text>
+        <text id="lbl-span" x="58" y="55" text-anchor="middle" font-size="13" fill="#8b5cf6" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
+      </g>
+
+      <!-- CT Charger node (mid-right-bottom) -->
+      <g id="node-ct" transform="translate(455,248)">
+        <rect rx="12" ry="12" width="120" height="60" fill="#1c1917" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="60" y="20" text-anchor="middle" font-size="17" fill="#22d3ee">&#x1F697;</text>
+        <text x="60" y="34" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">CYBERTRUCK CT</text>
+        <text id="lbl-ct" x="60" y="52" text-anchor="middle" font-size="12" fill="#22d3ee" font-weight="bold" font-family="sans-serif">idle</text>
+      </g>
+
+      <!-- House Load node (bottom-left) -->
+      <g id="node-house" transform="translate(132,264)">
+        <rect rx="12" ry="12" width="116" height="52" fill="#1c1917" stroke="#6b7280" stroke-width="1.5"/>
+        <text x="58" y="19" text-anchor="middle" font-size="17" fill="#e5e7eb">&#x1F3E0;</text>
+        <text x="58" y="33" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">HOUSE LOAD</text>
+        <text id="lbl-house" x="58" y="50" text-anchor="middle" font-size="13" fill="#e5e7eb" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
+      </g>
+
+      <!-- Bridge mode label (shown when Tesla offline) -->
+      <g id="pf-bridge-label" visibility="hidden">
+        <rect x="248" y="89" rx="6" ry="6" width="165" height="17" fill="#1c1917" stroke="#f97316" stroke-width="0.8" stroke-dasharray="3 2" opacity="0.85"/>
+        <text x="330" y="101" text-anchor="middle" font-size="8.5" fill="#f97316" font-family="sans-serif">&#x26A1; SPAN-bridged &#xB7; no Tesla GW</text>
+      </g>
+
+      <!-- Normal source label (shown when Tesla online) -->
+      <g id="pf-source-label" visibility="visible">
+        <text x="350" y="312" text-anchor="middle" font-size="9" fill="#4b5563" font-family="sans-serif">Jarvis bridges SPAN + Tesla Gateway data</text>
+      </g>
+
+    </svg>
   </div>
+
+  <!-- Legacy hidden elements for backward compat with renderState refs -->
+  <span id="f-solar" style="display:none"></span>
+  <span id="f-load" style="display:none"></span>
+  <span id="f-battery" style="display:none"></span>
+  <span id="f-soe" style="display:none"></span>
+  <span id="f-grid" style="display:none"></span>
+  <span id="f-grid-dir" style="display:none"></span>
 
   <!-- Metric Cards -->
   <div class="grid grid-4" style="margin-bottom:12px">
@@ -2456,6 +2629,122 @@ function fmt(w, unit='W') {
   return Math.round(w) + ' ' + unit;
 }
 
+function updateFlowDiagram(s) {
+  const sum  = s.summary  || {};
+  const wc   = s.wall_connector || {};
+  const span = s.span || {};
+  const td   = s.tesla || {};
+
+  const solarW      = sum.solar_w || 0;
+  const rawGrid     = sum.grid_w  || 0;  // signed: + importing, - exporting
+  const gridW       = Math.abs(rawGrid);
+  const spanW       = span.total_load_w || sum.load_w || 0;
+  const ctW         = sum.ct_charging_w || wc.charging_w || 0;
+  const totalW      = spanW + ctW;
+  const teslaOnline = td.status === 'online';
+  const batW        = td.battery_w || 0;  // + discharging, - charging
+
+  const setLbl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+
+  // Labels
+  setLbl('lbl-solar', fmt(solarW));
+  setLbl('lbl-grid',  fmt(gridW) + (rawGrid >= 0 ? ' \u2193' : ' \u2191'));
+  setLbl('lbl-span',  fmt(spanW));
+  setLbl('lbl-ct',    ctW > 50 ? fmt(ctW) + ' chg' : 'idle');
+  setLbl('lbl-house', fmt(spanW));
+  if (teslaOnline) {
+    setLbl('lbl-gw',    fmt(Math.abs(batW)) + (batW > 50 ? ' dchg' : batW < -50 ? ' chg' : ' idle'));
+    setLbl('lbl-gw-soe', td.soe != null ? td.soe + '% SOE' : '\u2014');
+  } else {
+    setLbl('lbl-gw',    'offline');
+    setLbl('lbl-gw-soe', '\u2014');
+  }
+  const totalLbl = document.getElementById('flow-total-label');
+  if (totalLbl) totalLbl.textContent = 'Total load: ' + fmt(totalW) + (ctW > 50 ? ' (incl. ' + fmt(ctW) + ' EV)' : '');
+
+  // Bridge mode: switch between Gateway route and direct Grid→SPAN
+  const elGridGw    = document.getElementById('path-grid-gw');
+  const elGwSpan    = document.getElementById('path-gw-span');
+  const elGridSpan  = document.getElementById('path-grid-span');
+  const elBridgeLbl = document.getElementById('pf-bridge-label');
+  const elSrcLbl    = document.getElementById('pf-source-label');
+  if (teslaOnline) {
+    if (elGridGw)    elGridGw.setAttribute('opacity', '0.9');
+    if (elGwSpan)    elGwSpan.setAttribute('opacity', '0.9');
+    if (elGridSpan)  elGridSpan.setAttribute('opacity', '0');
+    if (elBridgeLbl) elBridgeLbl.setAttribute('visibility', 'hidden');
+    if (elSrcLbl)    elSrcLbl.setAttribute('visibility', 'visible');
+  } else {
+    if (elGridGw)    elGridGw.setAttribute('opacity', '0.1');
+    if (elGwSpan)    elGwSpan.setAttribute('opacity', '0.1');
+    if (elGridSpan)  elGridSpan.setAttribute('opacity', '0.88');
+    if (elBridgeLbl) elBridgeLbl.setAttribute('visibility', 'visible');
+    if (elSrcLbl)    elSrcLbl.setAttribute('visibility', 'hidden');
+    // Animate bridge path speed via inline style
+    if (elGridSpan) {
+      const dur = gridW > 3000 ? '0.75s' : gridW > 500 ? '1.4s' : '2.8s';
+      elGridSpan.style.animation = gridW > 30 ? ('flowDash ' + dur + ' linear infinite') : 'none';
+    }
+  }
+
+  // Particle groups: show/hide + adjust speed
+  function setParticle(groupId, watts, maxW) {
+    const g = document.getElementById(groupId);
+    if (!g) return;
+    if (watts < 30) { g.setAttribute('visibility', 'hidden'); return; }
+    g.setAttribute('visibility', 'visible');
+    const dur = watts > 3000 ? '0.75s' : watts > 500 ? '1.4s' : '2.8s';
+    g.querySelectorAll('animateMotion').forEach(a => a.setAttribute('dur', dur));
+  }
+
+  setParticle('part-solar-span', solarW, 8000);
+  if (teslaOnline) {
+    setParticle('part-grid-gw',  gridW, 15000);
+    setParticle('part-gw-span',  spanW, 15000);
+    const pg = document.getElementById('part-grid-span');
+    if (pg) pg.setAttribute('visibility', 'hidden');
+  } else {
+    const p1 = document.getElementById('part-grid-gw');
+    const p2 = document.getElementById('part-gw-span');
+    if (p1) p1.setAttribute('visibility', 'hidden');
+    if (p2) p2.setAttribute('visibility', 'hidden');
+    setParticle('part-grid-span', gridW, 15000);
+  }
+  setParticle('part-span-house', spanW, 15000);
+  setParticle('part-gw-ct',      ctW,  11500);
+
+  // Stroke width scaling (power proportional)
+  function setPathWidth(id, watts, maxW) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.setAttribute('stroke-width', Math.max(1.5, Math.min(1, watts / maxW) * 7).toFixed(1));
+  }
+  setPathWidth('path-solar-span', solarW, 8000);
+  setPathWidth('path-grid-gw',    teslaOnline ? gridW : 0, 15000);
+  setPathWidth('path-gw-span',    teslaOnline ? spanW : 0, 15000);
+  setPathWidth('path-grid-span',  teslaOnline ? 0 : gridW, 15000);
+  setPathWidth('path-span-house', spanW, 15000);
+  setPathWidth('path-gw-ct',      ctW,  11500);
+
+  // CSS dash animation class (speed tiers)
+  function setPathAnim(id, watts) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove('flow-path-animated','flow-path-slow','flow-path-fast','flow-path-idle','flow-path-bridge');
+    if (watts < 30)        el.classList.add('flow-path-idle');
+    else if (watts < 500)  el.classList.add('flow-path-slow');
+    else if (watts < 3000) el.classList.add('flow-path-animated');
+    else                   el.classList.add('flow-path-fast');
+  }
+  setPathAnim('path-solar-span', solarW);
+  setPathAnim('path-grid-gw',    teslaOnline ? gridW : 0);
+  setPathAnim('path-gw-span',    teslaOnline ? spanW : 0);
+  setPathAnim('path-span-house', spanW);
+  setPathAnim('path-gw-ct',      ctW);
+  // Bridge path animation handled above via inline style; clear class conflicts
+  if (elGridSpan) elGridSpan.classList.remove('flow-path-animated','flow-path-slow','flow-path-fast','flow-path-idle','flow-path-bridge');
+}
+
 function statusColor(s) {
   if (s==='online') return 'online';
   if (s==='error') return 'error';
@@ -2578,6 +2867,9 @@ function renderState(s) {
   const selfPct = sum.self_powered_pct||0;
   document.getElementById('self-pct').textContent = selfPct.toFixed(0);
   document.getElementById('self-bar').style.width = selfPct + '%';
+
+  // Update animated SVG power flow diagram
+  updateFlowDiagram(s);
 
   // Badges
   document.getElementById('enphase-badge').textContent = ed.status||'—';

@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "version": 1,
+    "generated_at": "2026-02-23T18:50:24.808Z",
+    "generated_by": "campsite-crm"
+  },
+  "counts": {
+    "bookings": 2,
+    "contracts": 0,
+    "waitlist_entries": 2,
+    "tasks": 0,
+    "contacts": 1,
+    "contact_conversations": 0,
+    "contact_scan_batches": 0,
+    "contact_scan_items": 0,
+    "integration_settings": 0
+  },
+  "data": {
+    "bookings": [
+      {
+        "id": "28e4ada4-a7d5-4b50-a618-2b1fb1f02471",
+        "booking_date": "2026-02-25",
+        "guest_name": "QA Wait Guest 2",
+        "guest_type": "individual",
+        "group_type": null,
+        "nights": 1,
+        "area_rented": "tent",
+        "revenue": 500,
+        "status": "confirmed",
+        "is_return_booking": 0,
+        "notes": null,
+        "created_at": "2026-02-20 22:54:09",
+        "updated_at": "2026-02-20 22:54:09",
+        "add_ons": "[]",
+        "due_date": "2026-02-25",
+        "amount_paid": 100
+      },
+      {
+        "id": "98d0d1b5-eecc-420f-8288-66246339aa25",
+        "booking_date": "2026-02-20",
+        "guest_name": "Ron Testing",
+        "guest_type": "family",
+        "group_type": "love the horse riding",
+        "nights": 3,
+        "area_rented": "cabin",
+        "revenue": 2200,
+        "status": "active",
+        "is_return_booking": 0,
+        "notes": "",
+        "created_at": "2026-02-20 21:09:42",
+        "updated_at": "2026-02-20 21:09:42",
+        "add_ons": "[]",
+        "due_date": null,
+        "amount_paid": 0
+      }
+    ],
+    "contracts": [],
+    "waitlist_entries": [
+      {
+        "id": "9444b7a6-49b4-4edb-bd32-f71e8a2ee1b0",
+        "guest_name": "QA Wait Guest 2",
+        "party_size": 2,
+        "preferred_area": "tent",
+        "requested_start_date": "2026-02-25",
+        "requested_end_date": "2026-02-27",
+        "contact_info": "qa@example.com",
+        "notes": null,
+        "status": "converted",
+        "created_at": "2026-02-20 22:54:09",
+        "updated_at": "2026-02-20 22:54:09"
+      },
+      {
+        "id": "8ba3a33a-4dea-4c24-835e-5737ba3b4ae6",
+        "guest_name": "QA Wait Guest",
+        "party_size": 2,
+        "preferred_area": "tent",
+        "requested_start_date": "2026-02-25",
+        "requested_end_date": "2026-02-27",
+        "contact_info": "qa@example.com",
+        "notes": null,
+        "status": "waiting",
+        "created_at": "2026-02-20 22:54:03",
+        "updated_at": "2026-02-20 22:54:03"
+      }
+    ],
+    "tasks": [],
+    "contacts": [
+      {
+        "id": "9af64b48-eb73-42f7-b7a6-996a183a970c",
+        "full_name": "QA Wait Guest",
+        "email": "qa@example.com",
+        "phone": null,
+        "company": null,
+        "contact_source": "waitlist",
+        "status": "lead",
+        "tags": "[]",
+        "notes": null,
+        "conversation_summary": null,
+        "last_contacted_at": "2026-02-20",
+        "last_conversation_at": null,
+        "created_at": "2026-02-21 09:40:45",
+        "updated_at": "2026-02-21 09:41:45"
+      }
+    ],
+    "contact_conversations": [],
+    "contact_scan_batches": [],
+    "contact_scan_items": [],
+    "integration_settings": []
+  }
+}

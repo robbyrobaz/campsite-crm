@@ -1,17 +1,32 @@
 {
-  "lastUpdated": "2026-02-23T00:19:00Z",
-  "activeTasks": [],
-  "recentlyDone": [
+  "lastUpdated": "2026-02-24T00:43:00Z",
+  "activeTasks": [
     {
-      "title": "NQ Research Scientist run #1",
-      "completedAt": "2026-02-23T00:19Z",
-      "note": "vwap_fade candidate filter fixed (40%→2.3% bars, 82K→3.2K trades). PF held at 2.08. Edge confirmed real. ExperimentEngine threshold bug fixed. 6/6 pass gates."
+      "cardId": "c_7b06ecc7b41a7_19c8c7ca2ea",
+      "title": "Numerai section of master status dashboard — column fitting fix",
+      "status": "In Progress",
+      "project": "master-dashboard",
+      "pid": 1081347,
+      "note": "Dispatched 5:43 PM MST. Fix column layout in numerai section. Stale threshold: 6:13 PM MST."
     }
   ],
+  "planned": [
+    {"id": "c_11821c89f01f1", "title": "Live Agent Work — broader agent/subagent search", "note": "master-dashboard; waits for numerai slot to free"}
+  ],
+  "recentlyDone": [
+    {"title": "vol_expansion investigation", "completedAt": "~17:30Z"},
+    {"title": "vwap_reversion durable fix", "completedAt": "~17:30Z"}
+  ],
+  "blofin": {
+    "note": "cross_asset_correlation gate=pass. Monitor vwap_reversion state after durable fix runner completed."
+  },
   "systemHealth": {
-    "services": "all active",
-    "cpuTemp": "65C",
+    "cpuTemp": "60C",
     "diskUsage": "38%",
-    "tokenUsage7d": "47%"
-  }
+    "services": "all active"
+  },
+  "nextActions": [
+    "Monitor numerai dashboard runner — stale threshold 6:13 PM MST",
+    "After numerai done: dispatch Live Agent Work card"
+  ]
 }

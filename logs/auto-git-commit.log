@@ -1347,3 +1347,27 @@ CLEAN master-dashboard (nothing to commit)
 [main d3d3128] auto: snapshot 2026-02-24T16:00:01Z
  1 file changed, 148 insertions(+), 148 deletions(-)
 COMMITTED blofin-stack
+[main d989c26] auto: snapshot 2026-02-24T16:00:01Z
+ 15 files changed, 1353 insertions(+), 1 deletion(-)
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_080028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_080528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_081028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_081528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_082028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_082528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_083028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_083528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_084028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_084528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_085028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_085528-auto.json
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+[sports-betting/phase2-real-apps 08a2a29] auto: snapshot 2026-02-24T16:00:01Z
+ 3 files changed, 153 insertions(+)
+ create mode 100644 projects/sports-betting/analysis/arb_opportunities_20260224_080002.json
+ create mode 100644 projects/sports-betting/analysis/daily_report_20260224_080002.json
+ create mode 100644 projects/sports-betting/analysis/sportsbook_data_20260224_080002.json
+COMMITTED ai-workshop

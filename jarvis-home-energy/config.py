@@ -41,10 +41,10 @@ SRP_USERNAME = ""
 SRP_PASSWORD = ""
 
 # ─── Wyze Cameras ─────────────────────────────────────────────────────────────
-WYZE_EMAIL = ""
-WYZE_PASSWORD = ""
-WYZE_API_KEY = ""        # From developer.wyze.com (preferred over password)
-WYZE_KEY_ID = ""         # API key ID from developer.wyze.com
+WYZE_EMAIL = "rob.hartwig@gmail.com"
+WYZE_PASSWORD = "5Acq3ce3#8s$uHS"
+WYZE_API_KEY = "RI650dYTN7toI4Fa7e9670Qwg4qY3OURDborqbMHqgaCbaOFk6EC047GqlHs"
+WYZE_KEY_ID = "3cc27d1a-1083-4ebc-acf6-bfed5ab05a65"
 
 # ─── Ring Doorbell ────────────────────────────────────────────────────────────
 RING_EMAIL = ""
@@ -52,6 +52,11 @@ RING_PASSWORD = ""
 
 # ─── Nest Thermostat ─────────────────────────────────────────────────────────
 NEST_ACCESS_TOKEN = ""   # From nest_thermostat auth flow or Google SDM
+
+# ─── B-Hyve Sprinkler ─────────────────────────────────────────────────────────
+# Device: 192.168.68.66 (Orbit B-Hyve controller) — cloud API only via api.orbitbhyve.com
+BHYVE_EMAIL = "rob.hartwig@gmail.com"
+BHYVE_PASSWORD = "1978philly"
 
 # ─── Dashboard ────────────────────────────────────────────────────────────────
 DASHBOARD_PORT = 8793

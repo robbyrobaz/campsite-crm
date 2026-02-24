@@ -58,6 +58,10 @@ try:
     from config import NEST_ACCESS_TOKEN
 except ImportError:
     NEST_ACCESS_TOKEN = ""
+try:
+    from config import BHYVE_EMAIL, BHYVE_PASSWORD
+except ImportError:
+    BHYVE_EMAIL = ""; BHYVE_PASSWORD = ""
 
 app = Flask(__name__)
 
@@ -73,6 +77,7 @@ _state = {
     "summary": {"solar_w": 0, "load_w": 0, "battery_w": 0, "grid_w": 0, "net_savings_today": 0},
     "cameras": [],  # list of {name, mac, type, status, last_seen, last_motion, snapshot_path}
     "nest": {"status": "unconfigured", "temp_f": 0, "setpoint_f": 0, "mode": "off", "hvac_state": "idle", "humidity": 0},
+    "bhyve": {"status": "unconfigured", "devices": [], "zones": []},
 }
 _sse_subscribers = []
 _sse_lock = threading.Lock()
@@ -415,16 +420,26 @@ def poll_wall_connector():
         with urllib.request.urlopen(req, timeout=5) as r:
             v = json.loads(r.read())
 
-        # charging_w = grid_v × currentA (single-phase: phase A is active leg)
         grid_v = v.get("grid_v", 0)
-        current_a = v.get("currentA_a", 0)
+        # Use vehicle_current_a — the actual current the car is drawing.
+        # currentA_a / currentB_a are per-phase sensor reads and can be 0 on one leg.
+        current_a = v.get("vehicle_current_a", 0) or v.get("currentB_a", 0) or v.get("currentA_a", 0)
         charging_w = round(grid_v * current_a, 0)
 
-        # evse_state: 4=charging, 5=complete/ready, 9=not charging, 0=booting
+        # evse_state map (expanded — state 11 = charging on newer firmware)
         evse_state = v.get("evse_state", 0)
-        state_map = {0: "booting", 1: "auth_required", 4: "charging", 5: "complete",
-                     6: "fault", 7: "disconnected", 8: "wait_car", 9: "standby"}
-        charge_status = state_map.get(evse_state, f"state_{evse_state}")
+        contactor = v.get("contactor_closed", False)
+        state_map = {
+            0: "booting", 1: "auth_required", 4: "charging", 5: "complete",
+            6: "fault", 7: "disconnected", 8: "wait_car", 9: "standby",
+            11: "charging",   # newer firmware: contactor closed, actively charging
+            12: "charging",   # seen on some units during active charge
+        }
+        # If contactor is closed and current flowing, always show as charging regardless of state code
+        if contactor and current_a > 0.5:
+            charge_status = "charging"
+        else:
+            charge_status = state_map.get(evse_state, f"state_{evse_state}")
 
         with _state_lock:
             _state["wall_connector"] = {
@@ -572,11 +587,13 @@ def _update_summary():
 def poll_cameras():
     cameras = []
 
-    # Wyze
-    if WYZE_API_KEY and WYZE_KEY_ID:
+    # Wyze — requires email + password + api_key + key_id
+    if WYZE_API_KEY and WYZE_KEY_ID and WYZE_EMAIL and WYZE_PASSWORD:
         try:
             from wyze_sdk import Client
-            client = Client(api_key=WYZE_API_KEY, key_id=WYZE_KEY_ID)
+            client = Client(email=WYZE_EMAIL, password=WYZE_PASSWORD,
+                            api_key=WYZE_API_KEY, key_id=WYZE_KEY_ID)
+            client.login()
             devices = client.cameras.list()
             for cam in devices:
                 cameras.append({
@@ -647,6 +664,188 @@ def poll_nest():
         return False
 
 
+# ── B-Hyve Sprinkler Adapter ─────────────────────────────────────────────────
+
+BHYVE_API = "https://api.orbitbhyve.com"
+_bhyve_token = None
+_bhyve_token_lock = threading.Lock()
+
+
+def _bhyve_login():
+    """Login to B-Hyve cloud and return session token."""
+    global _bhyve_token
+    resp = _requests.post(
+        f"{BHYVE_API}/v1/session",
+        json={"session": {"email": BHYVE_EMAIL, "password": BHYVE_PASSWORD}},
+        headers={"Content-Type": "application/json", "Accept": "application/json"},
+        timeout=10,
+    )
+    resp.raise_for_status()
+    data = resp.json()
+    token = data.get("orbit_session_token") or data.get("session_token")
+    if not token:
+        raise RuntimeError(f"No token in login response: {data}")
+    _bhyve_token = token
+    return token
+
+
+def _bhyve_get(path, token=None):
+    """Make authenticated GET to B-Hyve REST API."""
+    tok = token or _bhyve_token
+    headers = {
+        "Orbit-Session-Token": tok or "",
+        "Accept": "application/json",
+        "User-Agent": "Mozilla/5.0",
+    }
+    resp = _requests.get(f"{BHYVE_API}{path}", headers=headers, params={"t": str(time.time())}, timeout=10)
+    resp.raise_for_status()
+    return resp.json()
+
+
+def _bhyve_ws_command(device_id, payload, token=None):
+    """Send a command to B-Hyve via WebSocket."""
+    import asyncio
+    import json as _json
+    tok = token or _bhyve_token
+
+    async def _send():
+        import websockets
+        ws_url = "wss://api.orbitbhyve.com/v1/events"
+        async with websockets.connect(
+            ws_url,
+            extra_headers={"Orbit-Session-Token": tok or ""},
+            ping_interval=None,
+            open_timeout=10,
+        ) as ws:
+            # First message is a hello/subscribe
+            hello = _json.loads(await asyncio.wait_for(ws.recv(), timeout=5))
+            log.debug("B-Hyve WS hello: %s", hello)
+            # Send command
+            await ws.send(_json.dumps(payload))
+            # Wait briefly for acknowledgement
+            try:
+                ack = _json.loads(await asyncio.wait_for(ws.recv(), timeout=5))
+                log.debug("B-Hyve WS ack: %s", ack)
+            except asyncio.TimeoutError:
+                pass  # No ack required
+
+    asyncio.run(_send())
+
+
+def poll_bhyve():
+    global _bhyve_token
+    if not BHYVE_EMAIL or not BHYVE_PASSWORD:
+        with _state_lock:
+            _state["bhyve"]["status"] = "unconfigured"
+        return False
+    try:
+        with _bhyve_token_lock:
+            if not _bhyve_token:
+                _bhyve_login()
+
+        # Get devices
+        devices_raw = _bhyve_get("/v1/devices")
+        if not isinstance(devices_raw, list):
+            devices_raw = []
+
+        # Get timer programs for next-run info
+        try:
+            programs_raw = _bhyve_get("/v1/sprinkler_timer_programs")
+            if not isinstance(programs_raw, list):
+                programs_raw = []
+        except Exception:
+            programs_raw = []
+
+        # Build next_run lookup: device_id → station → next_run string
+        next_run_lookup = {}
+        for prog in programs_raw:
+            dev_id = prog.get("device_id", "")
+            if dev_id not in next_run_lookup:
+                next_run_lookup[dev_id] = {}
+            for run_time in (prog.get("run_times") or []):
+                station = run_time.get("station")
+                # Look for enabled program start times
+                if prog.get("enabled") and station:
+                    start = None
+                    for st in (prog.get("start_times") or []):
+                        start = st
+                        break
+                    if start and station not in next_run_lookup[dev_id]:
+                        next_run_lookup[dev_id][station] = start
+
+        out_devices = []
+        out_zones = []
+
+        for dev in devices_raw:
+            dev_id = dev.get("id", "")
+            dev_name = dev.get("name", "Unknown Device")
+            fw = dev.get("firmware_version", "")
+            dev_type = dev.get("type", "")
+
+            # Only process sprinkler timer devices
+            if "sprinkler" not in dev_type.lower() and "timer" not in dev_type.lower() and dev.get("is_connected") is None:
+                if not dev.get("zones") and not dev.get("num_stations"):
+                    continue
+
+            status_obj = dev.get("status") or {}
+            ws = status_obj.get("watering_status") or {}
+            current_station = ws.get("current_station")
+            current_remaining = ws.get("current_station_remaining", 0)  # seconds
+
+            out_devices.append({
+                "id": dev_id,
+                "name": dev_name,
+                "firmware": fw,
+                "type": dev_type,
+                "connected": dev.get("is_connected", False),
+                "run_mode": status_obj.get("run_mode", "auto"),
+            })
+
+            zones_raw = dev.get("zones") or []
+            if not zones_raw and dev.get("num_stations"):
+                # Synthesize zone list if device has no named zones
+                zones_raw = [{"station": i + 1, "name": f"Zone {i + 1}"} for i in range(dev.get("num_stations", 0))]
+
+            dev_next_runs = next_run_lookup.get(dev_id, {})
+
+            for zone in zones_raw:
+                station = zone.get("station", zone.get("zone_id", 0))
+                name = zone.get("name") or f"Zone {station}"
+                enabled = zone.get("enabled", True)
+                is_running = (current_station == station)
+                remaining_s = int(current_remaining) if is_running else 0
+                next_run = dev_next_runs.get(station, "")
+
+                out_zones.append({
+                    "device_id": dev_id,
+                    "device_name": dev_name,
+                    "zone_id": station,
+                    "name": name,
+                    "enabled": enabled,
+                    "is_running": is_running,
+                    "remaining_s": remaining_s,
+                    "next_run": next_run,
+                })
+
+        with _state_lock:
+            _state["bhyve"] = {
+                "status": "online",
+                "devices": out_devices,
+                "zones": out_zones,
+                "ts": time.time(),
+            }
+        return True
+
+    except Exception as e:
+        log.warning("B-Hyve poll error: %s", e)
+        # Token may have expired — clear it for next poll
+        with _bhyve_token_lock:
+            _bhyve_token = None
+        with _state_lock:
+            _state["bhyve"]["status"] = "error"
+        return False
+
+
 # ╔══════════════════════════════════════════════════════════════════════════════╗
 # ║  POLLING LOOP                                                                ║
 # ╚══════════════════════════════════════════════════════════════════════════════╝
@@ -656,8 +855,8 @@ def _poll_loop():
     log.info("Polling loop started (interval=%ds, parallel)", POLL_INTERVAL_SECONDS)
     while True:
         # Run all device polls concurrently — Pentair can take 45s, don't let it block solar/SPAN
-        with concurrent.futures.ThreadPoolExecutor(max_workers=7) as ex:
-            futs = [ex.submit(f) for f in (poll_pentair, poll_span, poll_enphase, poll_tesla, poll_wall_connector, poll_cameras, poll_nest)]
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
+            futs = [ex.submit(f) for f in (poll_pentair, poll_span, poll_enphase, poll_tesla, poll_wall_connector, poll_cameras, poll_nest, poll_bhyve)]
             concurrent.futures.wait(futs, timeout=60)
         _update_summary()
         _broadcast_sse()
@@ -809,10 +1008,12 @@ def camera_snapshot(cam_id):
                     r = _requests.get(url, timeout=5)
                     return Response(r.content, mimetype='image/jpeg')
         else:
-            if not WYZE_API_KEY:
+            if not WYZE_API_KEY or not WYZE_EMAIL or not WYZE_PASSWORD:
                 return '', 204
             from wyze_sdk import Client
-            client = Client(api_key=WYZE_API_KEY, key_id=WYZE_KEY_ID)
+            client = Client(email=WYZE_EMAIL, password=WYZE_PASSWORD,
+                            api_key=WYZE_API_KEY, key_id=WYZE_KEY_ID)
+            client.login()
             img = client.cameras.get_thumbnail(device_mac=cam_id)
             if img:
                 r = _requests.get(img, timeout=5)
@@ -905,6 +1106,91 @@ def api_settings_nest():
         text = _re.sub(r'^NEST_ACCESS_TOKEN\s*=\s*.*$', f'NEST_ACCESS_TOKEN = "{token}"', text, flags=_re.MULTILINE)
         config_path.write_text(text)
         NEST_ACCESS_TOKEN = token
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/bhyve/run", methods=["POST"])
+def api_bhyve_run():
+    global _bhyve_token
+    if not BHYVE_EMAIL or not BHYVE_PASSWORD:
+        return jsonify({"ok": False, "error": "B-Hyve not configured"}), 403
+    body = request.get_json() or {}
+    device_id = body.get("device_id", "")
+    zone_id = int(body.get("zone_id", 1))
+    minutes = int(body.get("minutes", 10))
+    if not device_id:
+        return jsonify({"ok": False, "error": "device_id required"}), 400
+    try:
+        with _bhyve_token_lock:
+            if not _bhyve_token:
+                _bhyve_login()
+        from datetime import timezone
+        ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+        payload = {
+            "event": "change_mode",
+            "device_id": device_id,
+            "mode": "manual",
+            "stations": [{"station": zone_id, "run_time": minutes}],
+            "timestamp": ts,
+        }
+        _bhyve_ws_command(device_id, payload)
+        return jsonify({"ok": True})
+    except Exception as e:
+        log.warning("B-Hyve run error: %s", e)
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/bhyve/stop", methods=["POST"])
+def api_bhyve_stop():
+    global _bhyve_token
+    if not BHYVE_EMAIL or not BHYVE_PASSWORD:
+        return jsonify({"ok": False, "error": "B-Hyve not configured"}), 403
+    body = request.get_json() or {}
+    device_id = body.get("device_id", "")
+    if not device_id:
+        return jsonify({"ok": False, "error": "device_id required"}), 400
+    try:
+        with _bhyve_token_lock:
+            if not _bhyve_token:
+                _bhyve_login()
+        from datetime import timezone
+        ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
+        payload = {
+            "event": "change_mode",
+            "device_id": device_id,
+            "mode": "auto",
+            "stations": [],
+            "timestamp": ts,
+        }
+        _bhyve_ws_command(device_id, payload)
+        return jsonify({"ok": True})
+    except Exception as e:
+        log.warning("B-Hyve stop error: %s", e)
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/settings/bhyve", methods=["POST"])
+def api_settings_bhyve():
+    global BHYVE_EMAIL, BHYVE_PASSWORD, _bhyve_token
+    body  = request.get_json() or {}
+    email = (body.get("email")    or "").strip()
+    pw    = (body.get("password") or "").strip()
+    config_path = Path(__file__).parent / "config.py"
+    try:
+        import re as _re
+        text = config_path.read_text()
+        if email:
+            text = _re.sub(r'^BHYVE_EMAIL\s*=\s*.*$', f'BHYVE_EMAIL = "{email}"', text, flags=_re.MULTILINE)
+            BHYVE_EMAIL = email
+        if pw:
+            text = _re.sub(r'^BHYVE_PASSWORD\s*=\s*.*$', f'BHYVE_PASSWORD = "{pw}"', text, flags=_re.MULTILINE)
+            BHYVE_PASSWORD = pw
+        config_path.write_text(text)
+        # Reset token so next poll re-authenticates
+        with _bhyve_token_lock:
+            _bhyve_token = None
         return jsonify({"ok": True})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
@@ -1102,6 +1388,31 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .nest-cockpit-tile { background: var(--surface2); border-radius: 8px; padding: 10px 14px; display: flex; gap: 12px; align-items: center; }
   .nest-cockpit-temp { font-size: 24px; font-weight: 700; color: var(--pool); }
   .nest-cockpit-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing:.05em; }
+
+  /* ── B-Hyve Sprinklers ── */
+  .zone-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin-top: 12px; }
+  .zone-tile { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; position: relative; }
+  .zone-tile.running { border-color: var(--online); box-shadow: 0 0 10px rgba(16,185,129,.2); }
+  .zone-name { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .zone-countdown { font-size: 22px; font-weight: 700; color: var(--online); font-variant-numeric: tabular-nums; }
+  .zone-next { font-size: 10px; color: var(--text-dim); margin-top: 6px; }
+  .zone-btns { display: flex; gap: 6px; margin-top: 10px; }
+  .btn-run { background: rgba(16,185,129,.15); border: 1px solid var(--online); color: var(--online); cursor: pointer; padding: 5px 12px; border-radius: 6px; font-size: 11px; font-family: inherit; transition: all .15s; }
+  .btn-run:hover { background: rgba(16,185,129,.25); }
+  .btn-stop { background: rgba(239,68,68,.15); border: 1px solid var(--error); color: var(--error); cursor: pointer; padding: 5px 12px; border-radius: 6px; font-size: 11px; font-family: inherit; transition: all .15s; }
+  .btn-stop:hover { background: rgba(239,68,68,.25); }
+  .badge-running { background: rgba(16,185,129,.2); color: var(--online); animation: pulse-run 1.5s infinite; }
+  @keyframes pulse-run { 0%,100% { opacity:1; } 50% { opacity:.5; } }
+  .badge-scheduled { background: rgba(99,102,241,.15); color: var(--grid); }
+  /* Modal overlay */
+  #bhyve-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:1000; align-items:center; justify-content:center; }
+  #bhyve-modal.show { display:flex; }
+  .modal-box { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:24px; min-width:280px; }
+  .modal-title { font-size:14px; font-weight:700; margin-bottom:16px; }
+  .modal-dur-btns { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; }
+  .dur-btn { background:var(--surface2); border:1px solid var(--border); color:var(--text); cursor:pointer; padding:8px 16px; border-radius:8px; font-family:inherit; font-size:12px; transition:all .15s; }
+  .dur-btn:hover, .dur-btn.selected { background:rgba(16,185,129,.2); border-color:var(--online); color:var(--online); }
+  .modal-actions { display:flex; gap:8px; justify-content:flex-end; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 </head>
@@ -1118,6 +1429,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <button onclick="showView('cybertruck')">Cybertruck</button>
     <button onclick="showView('cameras')">Cameras</button>
     <button onclick="showView('home-control')">Home Control</button>
+    <button onclick="showView('sprinklers')">Sprinklers</button>
     <button onclick="showView('settings')">Settings</button>
   </nav>
   <div class="status-bar">
@@ -1776,6 +2088,72 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 </div><!-- /home-control -->
 
 
+<!-- ═══ SPRINKLERS ══════════════════════════════════════════════════════════ -->
+<div id="view-sprinklers" class="view">
+  <div class="section-title">B-Hyve Sprinkler System</div>
+
+  <!-- Header card with status -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">💧 Orbit B-Hyve — Cloud Integration</span>
+      <span class="badge unconfigured" id="bhyve-badge">unconfigured</span>
+    </div>
+    <div id="bhyve-setup-card" style="display:block">
+      <div style="color:var(--text-dim);font-size:12px;margin-bottom:10px">
+        B-Hyve uses cloud-only authentication. Configure your Orbit/B-Hyve account credentials in
+        <a href="#" onclick="showView('settings');return false" style="color:var(--solar)">Settings → B-Hyve</a>.
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;max-width:480px;margin-bottom:10px">
+        <div>
+          <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Email</div>
+          <input type="email" id="bhyve-quick-email" placeholder="orbit@email.com"
+            style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Password</div>
+          <input type="password" id="bhyve-quick-password" placeholder="B-Hyve password"
+            style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn primary" onclick="saveBhyveQuick()">Connect B-Hyve</button>
+        <span id="bhyve-quick-status" style="font-size:11px;color:var(--text-dim)"></span>
+      </div>
+    </div>
+    <div id="bhyve-device-info" style="display:none">
+      <div id="bhyve-devices-list"></div>
+    </div>
+  </div>
+
+  <!-- Zone grid (shown when online) -->
+  <div id="bhyve-zones-section" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div class="section-title" style="margin-bottom:0">Zones</div>
+      <button class="btn primary" onclick="bhyveRunAll()" id="bhyve-run-all-btn" style="font-size:11px">▶ Run All Zones</button>
+    </div>
+    <div class="zone-grid" id="bhyve-zone-grid"></div>
+  </div>
+</div>
+
+<!-- ── B-Hyve Run Modal ──────────────────────────────────────────────────── -->
+<div id="bhyve-modal">
+  <div class="modal-box">
+    <div class="modal-title" id="bhyve-modal-title">Run Zone</div>
+    <div style="font-size:11px;color:var(--text-dim);margin-bottom:12px">Select duration:</div>
+    <div class="modal-dur-btns">
+      <button class="dur-btn" onclick="selectDur(this,5)">5 min</button>
+      <button class="dur-btn selected" onclick="selectDur(this,10)">10 min</button>
+      <button class="dur-btn" onclick="selectDur(this,15)">15 min</button>
+      <button class="dur-btn" onclick="selectDur(this,20)">20 min</button>
+      <button class="dur-btn" onclick="selectDur(this,30)">30 min</button>
+    </div>
+    <div class="modal-actions">
+      <button class="btn" onclick="closeBhyveModal()">Cancel</button>
+      <button class="btn-run" onclick="confirmBhyveRun()">▶ Start</button>
+    </div>
+  </div>
+</div>
+
 <!-- ═══ SETTINGS ════════════════════════════════════════════════════════════ -->
 <div id="view-settings" class="view">
   <div class="section-title">Integration Settings</div>
@@ -1802,12 +2180,12 @@ DASHBOARD_HTML = """<!DOCTYPE html>
           style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
       </div>
       <div>
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Email (optional)</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Email <span style="color:var(--error)">*required</span></div>
         <input type="email" id="wyze-email" placeholder="you@example.com"
           style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
       </div>
       <div>
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Password (optional)</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Password <span style="color:var(--error)">*required</span></div>
         <input type="password" id="wyze-password" placeholder="password"
           style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
       </div>
@@ -1865,6 +2243,34 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     </div>
   </div>
 
+  <!-- B-Hyve Sprinkler -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">💧 B-Hyve Sprinkler</span>
+      <span class="badge" id="bhyve-cfg-badge">unconfigured</span>
+    </div>
+    <div style="color:var(--text-dim);font-size:11px;margin-bottom:12px">
+      Orbit B-Hyve cloud account credentials. Used to authenticate with api.orbitbhyve.com.
+      Device: 192.168.68.66 (cloud-only, no local API).
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Email</div>
+        <input type="email" id="bhyve-email" placeholder="orbit@email.com"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+      </div>
+      <div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Password</div>
+        <input type="password" id="bhyve-password" placeholder="B-Hyve account password"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn primary" onclick="saveBhyve()">Save B-Hyve Credentials</button>
+      <span id="bhyve-save-status" style="font-size:11px;color:var(--text-dim)"></span>
+    </div>
+  </div>
+
   <!-- Tesla (existing) -->
   <div class="card">
     <div class="card-header">
@@ -1889,7 +2295,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <div id="toast"></div>
 
 <script>
-const views = ['cockpit','span','pool','devices','tesla-energy','cybertruck','cameras','home-control','settings'];
+const views = ['cockpit','span','pool','devices','tesla-energy','cybertruck','cameras','home-control','sprinklers','settings'];
 function showView(v) {
   views.forEach(id => {
     document.getElementById('view-'+id).classList.toggle('active', id===v);
@@ -2194,6 +2600,9 @@ function renderState(s) {
   // ── Nest ──
   renderNest(s.nest || {});
 
+  // ── B-Hyve Sprinklers ──
+  renderBhyve(s.bhyve || {});
+
   // ── Settings badges ──
   const settingsTeslaBadge = document.getElementById('settings-tesla-badge');
   if (settingsTeslaBadge) { settingsTeslaBadge.textContent = td.status||'—'; settingsTeslaBadge.className = 'badge ' + statusColor(td.status); }
@@ -2201,6 +2610,7 @@ function renderState(s) {
   if (wyzeBadge) { const wyzeCfg = (s.cameras||[]).some(c=>c.type==='wyze'); wyzeBadge.textContent = wyzeCfg ? 'connected' : 'unconfigured'; wyzeBadge.className = 'badge ' + (wyzeCfg ? 'online' : 'offline'); }
   const ringBadge = document.getElementById('ring-cfg-badge');
   if (ringBadge) { const ringCfg = (s.cameras||[]).some(c=>c.type==='ring'); ringBadge.textContent = ringCfg ? 'connected' : 'unconfigured'; ringBadge.className = 'badge ' + (ringCfg ? 'online' : 'offline'); }
+  // bhyve badge in settings is handled by renderBhyve() above
 }
 
 // ╔══════════════════════════════════════════════════════════════════════╗
@@ -2647,6 +3057,185 @@ function renderNest(nest) {
   }
 }
 
+// ══ B-Hyve Sprinkler helpers ══════════════════════════════════════════════════
+let _bhyveModalZoneId = null;
+let _bhyveModalDeviceId = null;
+let _bhyveModalDur = 10;
+let _bhyveZoneCountdowns = {};   // zoneKey → {remaining, interval}
+let _bhyveState = null;
+
+function bhyveZoneKey(deviceId, zoneId) { return deviceId + ':' + zoneId; }
+
+function selectDur(btn, min) {
+  document.querySelectorAll('.dur-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  _bhyveModalDur = min;
+}
+
+function openBhyveModal(deviceId, zoneId, zoneName) {
+  _bhyveModalDeviceId = deviceId;
+  _bhyveModalZoneId   = zoneId;
+  _bhyveModalDur      = 10;
+  document.getElementById('bhyve-modal-title').textContent = '▶ Run: ' + zoneName;
+  document.querySelectorAll('.dur-btn').forEach((b,i) => b.classList.toggle('selected', i===1));
+  document.getElementById('bhyve-modal').classList.add('show');
+}
+
+function closeBhyveModal() {
+  document.getElementById('bhyve-modal').classList.remove('show');
+}
+
+function confirmBhyveRun() {
+  if (!_bhyveModalDeviceId) return;
+  closeBhyveModal();
+  fetch('/api/bhyve/run', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({device_id: _bhyveModalDeviceId, zone_id: _bhyveModalZoneId, minutes: _bhyveModalDur})
+  }).then(r=>r.json()).then(d => {
+    if (d.ok) toast('✓ Zone started for ' + _bhyveModalDur + ' min');
+    else toast('✗ ' + (d.error||'Error'), 5000);
+  }).catch(e => toast('✗ ' + e, 5000));
+}
+
+function bhyveStop(deviceId) {
+  fetch('/api/bhyve/stop', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({device_id: deviceId})
+  }).then(r=>r.json()).then(d => {
+    if (d.ok) toast('✓ Sprinkler stopped');
+    else toast('✗ ' + (d.error||'Error'), 5000);
+  }).catch(e => toast('✗ ' + e, 5000));
+}
+
+function bhyveRunAll() {
+  if (!_bhyveState || !_bhyveState.zones || !_bhyveState.zones.length) return;
+  const zone = _bhyveState.zones[0];
+  openBhyveModal(zone.device_id, zone.zone_id, 'All Zones (sequential)');
+}
+
+function saveBhyveQuick() {
+  const email = document.getElementById('bhyve-quick-email').value.trim();
+  const pw    = document.getElementById('bhyve-quick-password').value.trim();
+  const statusEl = document.getElementById('bhyve-quick-status');
+  if (!email || !pw) { toast('Enter email and password'); return; }
+  statusEl.textContent = 'Saving…';
+  fetch('/api/settings/bhyve', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})})
+    .then(r=>r.json()).then(d => {
+      statusEl.textContent = d.ok ? '✓ Saved — polling…' : ('✗ ' + (d.error||'Error'));
+      statusEl.style.color = d.ok ? 'var(--online)' : 'var(--error)';
+      if (d.ok) toast('✓ B-Hyve credentials saved');
+    }).catch(e => { statusEl.textContent = '✗ ' + e; statusEl.style.color = 'var(--error)'; });
+}
+
+function startZoneCountdown(key, remainingSecs) {
+  if (_bhyveZoneCountdowns[key]) {
+    clearInterval(_bhyveZoneCountdowns[key].interval);
+  }
+  let rem = Math.max(0, remainingSecs);
+  const update = () => {
+    const el = document.getElementById('countdown-' + key);
+    if (!el) { clearInterval(_bhyveZoneCountdowns[key]?.interval); return; }
+    const m = Math.floor(rem / 60);
+    const s = rem % 60;
+    el.textContent = m + ':' + String(s).padStart(2,'0');
+    if (rem <= 0) clearInterval(_bhyveZoneCountdowns[key]?.interval);
+    else rem--;
+  };
+  update();
+  _bhyveZoneCountdowns[key] = { remaining: rem, interval: setInterval(update, 1000) };
+}
+
+function renderBhyve(bhyve) {
+  if (!bhyve) return;
+  _bhyveState = bhyve;
+  const status = bhyve.status || 'unconfigured';
+  const badge = document.getElementById('bhyve-badge');
+  const cfgBadge = document.getElementById('bhyve-cfg-badge');
+  if (badge)    { badge.textContent = status; badge.className = 'badge ' + statusColor(status); }
+  if (cfgBadge) { cfgBadge.textContent = status; cfgBadge.className = 'badge ' + statusColor(status); }
+
+  const setupCard   = document.getElementById('bhyve-setup-card');
+  const devInfo     = document.getElementById('bhyve-device-info');
+  const zonesSection = document.getElementById('bhyve-zones-section');
+
+  const isOnline = status === 'online';
+  if (setupCard)    setupCard.style.display    = isOnline ? 'none' : 'block';
+  if (devInfo)      devInfo.style.display      = isOnline ? 'block' : 'none';
+  if (zonesSection) zonesSection.style.display = isOnline ? 'block' : 'none';
+
+  if (!isOnline) return;
+
+  // Render devices
+  const devList = document.getElementById('bhyve-devices-list');
+  if (devList) {
+    devList.innerHTML = (bhyve.devices || []).map(d => `
+      <div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:18px">💧</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:13px">${d.name||'Controller'}</div>
+          <div style="font-size:10px;color:var(--text-dim)">FW ${d.firmware||'?'} · ${d.type||'sprinkler'} · Mode: ${d.run_mode||'?'}</div>
+        </div>
+        <span class="badge ${d.connected ? 'online' : 'offline'}">${d.connected ? 'connected' : 'offline'}</span>
+      </div>
+    `).join('') || '<div style="color:var(--text-dim);font-size:11px">No devices found</div>';
+  }
+
+  // Render zones
+  const zoneGrid = document.getElementById('bhyve-zone-grid');
+  if (!zoneGrid) return;
+  const zones = bhyve.zones || [];
+  if (!zones.length) {
+    zoneGrid.innerHTML = '<div style="color:var(--text-dim);font-size:12px">No zones found — check credentials</div>';
+    return;
+  }
+
+  zoneGrid.innerHTML = zones.map(z => {
+    const key = bhyveZoneKey(z.device_id, z.zone_id);
+    const isRunning = z.is_running;
+    const statusBadge = isRunning
+      ? '<span class="badge badge-running">RUNNING</span>'
+      : (z.next_run ? '<span class="badge badge-scheduled">SCHEDULED</span>' : '<span class="badge offline">IDLE</span>');
+    const countdownHtml = isRunning
+      ? `<div class="zone-countdown" id="countdown-${key}">—:—</div>`
+      : '';
+    const nextHtml = z.next_run
+      ? `<div class="zone-next">Next: ${z.next_run}</div>`
+      : '<div class="zone-next">No schedule</div>';
+    const stopBtn = isRunning
+      ? `<button class="btn-stop" onclick="bhyveStop('${z.device_id}')">⏹ Stop</button>`
+      : '';
+    return `
+      <div class="zone-tile ${isRunning ? 'running' : ''}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+          <div class="zone-name">${z.name}</div>
+          ${statusBadge}
+        </div>
+        ${countdownHtml}
+        ${nextHtml}
+        <div class="zone-btns">
+          <button class="btn-run" onclick="openBhyveModal('${z.device_id}',${z.zone_id},'${z.name.replace(/'/g,"\\'")}')">▶ Run</button>
+          ${stopBtn}
+        </div>
+      </div>`;
+  }).join('');
+
+  // Start countdowns for running zones
+  zones.filter(z => z.is_running).forEach(z => {
+    const key = bhyveZoneKey(z.device_id, z.zone_id);
+    startZoneCountdown(key, z.remaining_s || 0);
+  });
+  // Stop timers for zones that stopped running
+  Object.keys(_bhyveZoneCountdowns).forEach(key => {
+    const stillRunning = zones.some(z => z.is_running && bhyveZoneKey(z.device_id, z.zone_id) === key);
+    if (!stillRunning && _bhyveZoneCountdowns[key]) {
+      clearInterval(_bhyveZoneCountdowns[key].interval);
+      delete _bhyveZoneCountdowns[key];
+    }
+  });
+}
+
 // ══ Settings save functions ════════════════════════════════════════════════════
 function saveWyze() {
   const body = {
@@ -2689,6 +3278,19 @@ function saveNest() {
       statusEl.textContent = d.ok ? '✓ Saved' : ('✗ ' + (d.error||'Error'));
       statusEl.style.color = d.ok ? 'var(--online)' : 'var(--error)';
       if (d.ok) toast('✓ Nest token saved');
+    }).catch(e => { statusEl.textContent = '✗ ' + e; statusEl.style.color = 'var(--error)'; });
+}
+
+function saveBhyve() {
+  const email = document.getElementById('bhyve-email').value.trim();
+  const pw    = document.getElementById('bhyve-password').value.trim();
+  const statusEl = document.getElementById('bhyve-save-status');
+  statusEl.textContent = 'Saving…';
+  fetch('/api/settings/bhyve', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,password:pw})})
+    .then(r=>r.json()).then(d => {
+      statusEl.textContent = d.ok ? '✓ Saved' : ('✗ ' + (d.error||'Error'));
+      statusEl.style.color = d.ok ? 'var(--online)' : 'var(--error)';
+      if (d.ok) toast('✓ B-Hyve credentials saved');
     }).catch(e => { statusEl.textContent = '✗ ' + e; statusEl.style.color = 'var(--error)'; });
 }
 

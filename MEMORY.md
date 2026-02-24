@@ -101,3 +101,51 @@ All 6 pass Lucid gates. Phase 3 Tier 1: momentum + orb.
 - **Kanban discipline**: spawn → PATCH In Progress → update status.json — must happen atomically. Rob called this out.
 - **Dispatch immediately**: don't wait for "ideal conditions" — when data supports a test, run it. Rob called out delay on ML exit re-run.
 - **CPU spikes 85°C at 6 AM**: ambient temps + sustained multi-process load; transient, not persistent
+
+## NQ Live Trading Architecture (Feb 24, 2026)
+
+### Final Architecture (locked)
+```
+DATA:       Tradovate API WS → wss://md.tradovateapi.com/v1/websocket
+            → pipeline/data_feed/tradovate_feed.py
+            → processed_data/NQ_continuous_1min.csv (single source of truth)
+
+EXECUTION:  Signal engine → TradersPost webhook → Tradovate → Lucid prop accounts
+            Webhook: https://webhooks.traderspost.io/trading/webhook/51e37934-7a18-4e37-9dc5-33416a36d579/...
+            NOTE: Rotate webhook URL — was shared in chat Feb 24
+
+INTERIM:    IBKR paper account (DUH860616) used for delayed (~15 min) data via
+            pipeline/data_feed/ib_gap_fill.py → nq-bar-feed.service (active)
+            Switch to Tradovate when live creds arrive
+```
+
+### Key Architecture Decisions
+- **Data and execution are decoupled**: Tradovate for data (personal acct), TradersPost→Tradovate for execution (Lucid prop accts)
+- **TradersPost is execution-only**: does NOT provide market data outward. Tradovate integration only routes orders, no data feed
+- **IBKR direct API**: requires partner approval (gated). Don't pursue for personal accounts
+- **TradeStation API**: also gated. Rob doesn't qualify as individual developer
+- **Tradovate data feed**: open to account holders. Needs CID (int) + SEC (str) from developer portal + username/password
+- **signalPrice is MANDATORY** in TradersPost webhooks when using Tradovate broker — Tradovate doesn't provide quotes to TradersPost
+
+### Tradovate Credentials Needed (Rob getting tomorrow Feb 25)
+- `TRADOVATE_CID`  — integer, from tradovate.com → Settings → Developer → API Keys
+- `TRADOVATE_SEC`  — string, same location
+- `TRADOVATE_USER` — Tradovate email
+- `TRADOVATE_PASS` — Tradovate password
+- Store in: `ninja_trader_strategies/config_live.py` (gitignored)
+
+### Services
+- `nq-bar-feed.service`       — IB delayed feed (active, interim)
+- `nq-tradovate-feed.service` — Tradovate live feed (pre-built, disabled until creds)
+- Switch: `systemctl --user stop nq-bar-feed && systemctl --user enable --now nq-tradovate-feed`
+
+### Data File
+- `processed_data/NQ_continuous_1min.csv` — 400K+ rows, Jan 2025→present, updated every 60s (IB) or real-time (Tradovate)
+- Schema: datetime(UTC ISO), open, high, low, close, volume, contract
+- Contracts: NQ_2025H/M/U/Z, NQ_2026H (rolls quarterly, next: NQM6 on March 13 2026)
+
+### Execution Details
+- Lucid 100K Flex eval: max DD $3K, daily DD $2K, min 10 trades
+- Top Phase 2 strategies ready: momentum PF 2.91, orb PF 2.55, gap_fill PF 2.43
+- TradersPost webhook fires: {ticker: "NQH6", action: "buy"/"sell"/"exit", signalPrice: float, stopLoss: {...}, takeProfit: {...}}
+- Tradovate execution NOT through TradersPost for data — only for order routing on prop accounts

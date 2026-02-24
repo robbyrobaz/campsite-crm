@@ -8,6 +8,7 @@ Zero extra API calls. Uses data already collected by OpenClaw.
 
 import json
 import os
+import re
 import glob
 import time
 import subprocess
@@ -161,10 +162,29 @@ def fetch_anthropic_usage():
         return None
 
 
+def read_existing_rate_limits():
+    """Read the existing rate limits block from token_usage.md if API call fails.
+    Returns the raw lines of the section, or None if not found."""
+    try:
+        if not os.path.exists(OUTPUT_FILE):
+            return None
+        content = open(OUTPUT_FILE).read()
+        # Extract the rate limits section between ## ⚡ Anthropic Rate Limits and the next ##
+        m = re.search(r'(## ⚡ Anthropic Rate Limits.*?)(?=\n## |\Z)', content, re.DOTALL)
+        if m:
+            block = m.group(1).strip()
+            # Only preserve if it has real numbers (not ?%)
+            if re.search(r'\*\*\d+\.?\d*%\*\*', block):
+                return block
+    except Exception:
+        pass
+    return None
+
+
 def write_report():
     now = datetime.now(MST)
     
-    # Fetch real Anthropic utilization
+    # Fetch real Anthropic utilization — use existing values if API temporarily unavailable
     usage_api = fetch_anthropic_usage()
     
     # 5-hour window
@@ -214,6 +234,11 @@ def write_report():
             f"| 7-day (Sonnet) | **{sd_sonnet_pct}%** | {fmt_reset(sd_reset)} |",
             "",
         ])
+    else:
+        # API unavailable — preserve last known good values from existing file
+        preserved = read_existing_rate_limits()
+        if preserved:
+            lines.extend([preserved, ""])
     
     lines.extend([
         "## Rolling 5-Hour Window",

@@ -1,17 +1,16 @@
 {
-  "updated": "2026-02-23T23:14:00-07:00",
-  "pulse": "2026-02-23T23:13:00-07:00",
+  "updated": "2026-02-23T23:44:00-07:00",
+  "pulse": "2026-02-23T23:43:00-07:00",
   "activeTasks": [
     {
-      "id": "c_2ba38295a037e_19c8e365204",
-      "title": "NQ Pipeline: ML Exit God-Model (entry + exit both ML)",
+      "id": "c_10b0dd3aa3905_19c8e3d1557",
+      "title": "Energy Cockpit: animated SVG power flow diagram (SRP→Gateway→CT+SPAN→House)",
       "status": "In Progress",
       "assignee": "claude",
-      "project": "ninja_trader_strategies",
-      "pid": 1517578,
-      "dispatched": "2026-02-23T23:14:00-07:00",
-      "stale_at": "2026-02-23T23:44:00-07:00",
-      "note": "Runner never started (no log). Fixed: POST /run executed. Log confirmed at 23:14."
+      "project": "jarvis-home-energy",
+      "pid": 1554729,
+      "dispatched": "2026-02-23T23:44:00-07:00",
+      "stale_at": "2026-02-24T00:14:00-07:00"
     }
   ],
   "board": {
@@ -21,23 +20,23 @@
     "inbox": 4
   },
   "health": {
-    "cpu_temp": "61C",
+    "cpu_temp": "62C",
     "disk_pct": 37,
     "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active"],
     "critical_monitor": "EXIT:0"
   },
   "recentlyCompleted": [
     {
-      "id": "c_dc114298dfb45_19c8d7e254b",
-      "title": "Tesla Gateway + Cybertruck dashboard pages (jarvis-home-energy)",
-      "completed": "2026-02-23T22:53:00-07:00",
-      "result": "Built /tesla-energy page with site name, grid state, backup reserve, live power flow. Cybertruck page also added."
+      "id": "c_2ba38295a037e_19c8e365204",
+      "title": "NQ Pipeline: ML Exit God-Model (entry + exit both ML)",
+      "completed": "2026-02-23T23:17:00-07:00",
+      "result": "XGBClassifier trained on 12,087 trades / 49,743 per-bar samples. 10 exit features. exit_ml_god_model.pkl live. Dashboard updated."
     },
     {
-      "id": "c_975c70e34d647_19c8d1cccaf",
-      "title": "Home Energy OS dashboard Phase 1",
-      "completed": "2026-02-23T22:18:00-07:00",
-      "result": "Live at :8892, SPAN panel showing 21 circuits, grid/solar/load real-time."
+      "id": "c_dc114298dfb45_19c8d7e254b",
+      "title": "Tesla Gateway + Cybertruck dashboard pages",
+      "completed": "2026-02-23T22:53:00-07:00",
+      "result": "Tesla Energy + Cybertruck pages live on jarvis-home-energy :8793."
     }
   ],
   "inboxQueue": [
@@ -47,9 +46,9 @@
     "c_57eff3238cdd4 — NQ Phase 4 (blocked)"
   ],
   "notes": [
-    "QUIET HOURS (23:00-08:00 MST) — no new discretionary dispatch",
-    "Stale recovery active: NQ ML Exit God-Model runner was never started (no log), fixed with POST /run",
-    "Assignee null fixed on IP card",
-    "Morning queue: Cameras+Ring, B-Hyve sprinkler"
+    "Late-night dispatch (23:43 MST) — NON-NEGOTIABLE no quiet mode, continuing",
+    "New Inbox card (c_10b0dd3aa3905) added by Rob, dispatched immediately",
+    "NQ ML Exit God-Model done — XGBoost exit timing model trained and live",
+    "Tomorrow: Cameras+Ring, B-Hyve when this slot clears"
   ]
 }

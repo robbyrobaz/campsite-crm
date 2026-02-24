@@ -1,39 +1,52 @@
 {
-  "updated": "2026-02-24T00:04:00-07:00",
-  "pulse": "2026-02-24T00:04:00-07:00",
-  "activeTasks": [],
-  "board": { "inProgress": 0, "planned": 0, "reviewTest": 0, "inbox": 5 },
+  "updated": "2026-02-24T00:14:00-07:00",
+  "pulse": "2026-02-24T00:13:00-07:00",
+  "activeTasks": [
+    {
+      "id": "c_c731788cfcfd1_19c8daedbf5",
+      "title": "Cameras + Nest + Ring integration for jarvis-home-energy dashboard",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "jarvis-home-energy",
+      "pid": 1593675,
+      "dispatched": "2026-02-24T00:14:00-07:00",
+      "stale_at": "2026-02-24T00:44:00-07:00"
+    }
+  ],
+  "board": {
+    "inProgress": 1,
+    "planned": 0,
+    "reviewTest": 0,
+    "inbox": 3
+  },
   "health": {
-    "cpu_temp": "68C",
+    "cpu_temp": "59C",
     "disk_pct": 37,
-    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active","nq-dashboard:active","jarvis-home-energy:active"],
+    "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active"],
     "critical_monitor": "EXIT:0"
   },
   "recentlyCompleted": [
     {
-      "id": "nq-exit-ml",
-      "title": "NQ ML Exit God-Model",
-      "completed": "2026-02-23T23:12:00-07:00",
-      "result": "Built but no improvement on losing test period. ORB saves $17K in losses. Model=trailing stop (73% weight on drawdown_from_peak). Park until vwap_fade Phase 3."
+      "id": "c_10b0dd3aa3905_19c8e3d1557",
+      "title": "Energy Cockpit: animated SVG power flow diagram",
+      "completed": "2026-02-23T23:55:00-07:00",
+      "result": "Bezier curved paths, animateMotion particle dots (3 staggered per path), rounded nodes. Live on jarvis-home-energy."
     },
     {
-      "id": "home-energy-flow",
-      "title": "Energy Cockpit animated SVG power flow",
-      "completed": "2026-02-23T23:06:00-07:00",
-      "result": "Live. ct_charging_w + total_load_w added to summary. SRP→Gateway→CT+SPAN animated flow diagram with speed/width scaling by watts."
+      "id": "c_2ba38295a037e_19c8e365204",
+      "title": "NQ ML Exit God-Model",
+      "completed": "2026-02-23T23:17:00-07:00",
+      "result": "XGBClassifier on 12,087 trades / 49,743 bars. exit_ml_god_model.pkl live."
     }
   ],
   "inboxQueue": [
-    "c_dc114298dfb45 — Tesla Gateway + Cybertruck dashboard pages",
-    "c_c731788cfcfd1 — Cameras + Ring integration (Wyze done, Ring invite pending)",
-    "c_a642d17ac5cd9 — B-Hyve sprinkler integration",
+    "c_a642d17ac5cd9 — B-Hyve sprinkler integration (jarvis-home-energy)",
     "c_4d4df8a920da3 — NQ Phase 3 (blocked)",
     "c_57eff3238cdd4 — NQ Phase 4 (blocked)"
   ],
   "notes": [
-    "CPU spike to 85C at 11:04PM resolved — ML training completed, back to 68C",
-    "Git backlog: blofin-stack 6 unpushed, master-dashboard 2, ai-workshop 7 — push next session",
-    "Ring invite pending in jarvis Gmail (14-day window)",
-    "NQ exit-ml: code on pipeline/session-trading, needs re-test on profitable strategy"
+    "Overnight run active — dispatching continuously per NON-NEGOTIABLE rule",
+    "Home energy dashboard cluster nearly complete: Cameras/Ring running now, B-Hyve queued",
+    "jarvis-home-energy :8793 now has: SPAN, Tesla, Cybertruck, Energy Cockpit SVG — Cameras/Ring next"
   ]
 }

@@ -65,3 +65,39 @@
 - `openclaw health`
 - `openclaw cron run 36f47279-520f-4ce7-8f9c-a7c44be0771a --expect-final --timeout 180000`
 - Post-fix validation: Jarvis cron resumed with `status=ok` and model `gpt-5.3-codex`.
+
+## NQ Pipeline Reference (Updated Feb 24, 2026)
+
+### Definitive Phase 2 Leaderboard (All Filters Corrected)
+1. momentum: PF 2.91, Sharpe 7.68, Calmar 808, ~9 trades/day
+2. orb: PF 2.55, Sharpe 6.62, ~3 trades/day
+3. gap_fill: PF 2.10, Sharpe 5.56, ~5.6 trades/day
+4. vwap_fade: PF 2.08, Sharpe 5.56, ~8.6 trades/day
+5. prev_day: PF 2.03, Sharpe 5.33, ~0.84 trades/day
+6. vol_contraction: PF 1.86, Sharpe 4.70, ~4.1 trades/day
+All 6 pass Lucid gates. Phase 3 Tier 1: momentum + orb.
+
+### NQ Filter Inflation Bug (Fixed)
+- `_CANDIDATE_CFG` in `run_phase2.py` was overriding `max_trades_per_session=100` for all strategies
+- gap_fill: 49K → 6.9K signals after fix (+25% PF)
+- momentum: 18K → 7.5K signals (+2.4% PF)
+- Any new strategy must have correct session cap in `_CANDIDATE_CFG`, not 100
+
+### ML Exit God-Model — Key Findings
+- Dominant feature: `pnl_drawdown_from_peak` at 73% — model IS a trailing stop
+- Failed to improve PF on test period (losing regime for all strategies)
+- Better alternative: ATR trailing stop (simpler, same behavior)
+- Code is in `pipeline/exit_ml_engine.py` + `strategies/exit_ml_strategy.py` for future reference
+
+### Home Energy Dashboard Credentials (jarvis-home-energy/config.py)
+- Wyze: KEY_ID=ec0dd323-1db4-4e81-8cd4-a4feab256bae, API_KEY=Fn1phBRix8ifLx0t5f3ktIyVfz2uRBSWdipswwjAiEJ0Z8SIAmVnaCNZLoOL
+- Nest SDM project_id=edc12ede-0076-42d4-86d8-c87f49aec4b4, refresh_token saved in config.py
+- 3 Wyze cameras: Front Side (D03F275A9799), Upstairs (2CAA8E813AE9), Downstairs (2CAA8E813B36)
+- 2 Nest thermostats: Downstairs + Loft upstairs (both COOLING)
+- wyze-sdk 2.2.0 has NO snapshot method — cameras show status only, no live feed
+- Ring invite: jarvis.is.my.coo@gmail.com — 14-day window (received Feb 23 9:50 PM)
+
+## Ops Lessons (Feb 24, 2026)
+- **Kanban discipline**: spawn → PATCH In Progress → update status.json — must happen atomically. Rob called this out.
+- **Dispatch immediately**: don't wait for "ideal conditions" — when data supports a test, run it. Rob called out delay on ML exit re-run.
+- **CPU spikes 85°C at 6 AM**: ambient temps + sustained multi-process load; transient, not persistent

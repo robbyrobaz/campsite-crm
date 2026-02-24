@@ -1,0 +1,147 @@
+.contacts-layout {
+  display: grid;
+  gap: 10px;
+}
+
+.contacts-actions-row {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.contacts-actions-row label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #35506d;
+}
+
+.contacts-actions-row input {
+  min-width: 110px;
+  max-width: 140px;
+}
+
+.contacts-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.contacts-search {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.contacts-search input {
+  min-width: 260px;
+}
+
+.contacts-grid {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 10px;
+}
+
+.contacts-list {
+  min-width: 0;
+}
+
+.contacts-details {
+  border: 1px solid #dbe5f1;
+  border-radius: 10px;
+  padding: 10px;
+  background: #f9fcff;
+}
+
+.contact-meta {
+  display: grid;
+  gap: 5px;
+  margin: 8px 0;
+  font-size: 0.9rem;
+}
+
+.conversation-list {
+  display: grid;
+  gap: 8px;
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.conversation-item {
+  border: 1px solid #d8e5f4;
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 8px;
+}
+
+.conversation-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.conversation-head span {
+  color: #4f6882;
+}
+
+.link-btn {
+  border: none;
+  background: transparent;
+  color: #0f5f97;
+  cursor: pointer;
+  font-weight: 700;
+  text-align: left;
+  padding: 0;
+}
+
+.link-btn:hover {
+  text-decoration: underline;
+}
+
+.row-selected {
+  background: #edf6ff;
+}
+
+.contacts-table td {
+  vertical-align: top;
+}
+
+.error-text {
+  color: #9a2c2c;
+  font-weight: 600;
+}
+
+@media (max-width: 980px) {
+  .contacts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .contacts-search {
+    width: 100%;
+  }
+
+  .contacts-search input {
+    min-width: 0;
+    flex: 1;
+  }
+}
+
+.gmail-notice {
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+}
+.gmail-notice--warn {
+  background: #fff3cd;
+  border: 1px solid #ffe08a;
+  color: #6e4a00;
+}

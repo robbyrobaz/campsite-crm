@@ -1,12 +1,12 @@
 {
-  "updated": "2026-02-24T03:56:00-07:00",
-  "pulse": "2026-02-24T03:56:00-07:00",
+  "updated": "2026-02-24T04:30:00-07:00",
+  "pulse": "2026-02-24T04:30:00-07:00",
   "activeTasks": [],
   "board": { "inProgress": 0, "planned": 0, "reviewTest": 0, "inbox": 4 },
   "health": {
-    "cpu_temp": "77C",
+    "cpu_temp": "55C",
     "disk_pct": 38,
-    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active","nq-dashboard:active","jarvis-home-energy:active","claw-kanban:active"],
+    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active","blofin-dashboard:active"],
     "critical_monitor": "EXIT:0"
   },
   "recentlyCompleted": [
@@ -14,7 +14,7 @@
       "id": "c_86962a39967eb_19c8ed5e645",
       "title": "NQ: Expand feature set — volume profile, VWAP distance, ES/YM correlation",
       "completed": "2026-02-24T03:56:00-07:00",
-      "result": "Done per kanban. Features added."
+      "result": "Done per kanban."
     },
     {
       "id": "c_6b609758ab776",
@@ -30,8 +30,12 @@
     "c_dc114298dfb45 — Tesla Gateway + Cybertruck dashboard pages"
   ],
   "notes": [
-    "Numerai daily bot fires at 6:32 AM MST (~2.5h away)",
-    "blofin-stack: 8+ commits ahead of remote — push needed when Rob active",
-    "Tokens: 5h just reset (1%), 7-day 54%"
+    "Numerai daily bot fires at 6:32 AM MST (~2h away) — last run 02-23 success (all 3 models)",
+    "blofin-stack: 10 commits ahead of remote, 1 uncommitted file — push needed",
+    "master-dashboard: 2 commits ahead of remote — push needed",
+    "ai-workshop: on branch sports-betting/phase2-real-apps (not main)",
+    "BTC dip trader: ran successfully ~11:08 UTC (no trade, confidence 0.006 < 0.97)",
+    "Tokens: 5h at 3.0% (resets 07:59 AM), 7-day at 54%",
+    "NQ pipeline files present. No agent teams running."
   ]
 }

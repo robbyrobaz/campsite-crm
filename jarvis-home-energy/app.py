@@ -31,6 +31,7 @@ try:
         SPAN_HOST, SPAN_TOKEN,
         ENPHASE_HOST, ENPHASE_SERIAL, ENPHASE_TOKEN, ENPHASE_EMAIL, ENPHASE_PASSWORD,
         PENTAIR_HOST, PENTAIR_PORT,
+        TESLA_WC_HOST,
         TESLA_HOST, TESLA_EMAIL, TESLA_PASSWORD,
         DASHBOARD_PORT, POLL_INTERVAL_SECONDS,
     )
@@ -39,6 +40,7 @@ except ImportError:
     ENPHASE_HOST = "192.168.68.63"; ENPHASE_SERIAL = "202324023651"
     ENPHASE_TOKEN = ""; ENPHASE_EMAIL = ""; ENPHASE_PASSWORD = ""
     PENTAIR_HOST = "192.168.68.91"; PENTAIR_PORT = 6681
+    TESLA_WC_HOST = "192.168.68.87"
     TESLA_HOST = ""; TESLA_EMAIL = ""; TESLA_PASSWORD = ""
     DASHBOARD_PORT = 8793; POLL_INTERVAL_SECONDS = 5
 
@@ -52,6 +54,7 @@ _state = {
     "enphase": {"status": "unconfigured", "production_w": 0, "consumption_w": 0, "net_w": 0, "firmware": "D8.3.5167"},
     "pentair": {"status": "offline", "pool": {}, "spa": {}, "pump": {}, "heater": {}, "circuits": []},
     "tesla": {"status": "unconfigured", "soe": 0, "solar_w": 0, "battery_w": 0, "grid_w": 0, "load_w": 0},
+    "wall_connector": {"status": "unconfigured", "vehicle_connected": False, "charging_w": 0, "session_energy_wh": 0, "grid_v": 0, "pcba_temp_c": 0},
     "summary": {"solar_w": 0, "load_w": 0, "battery_w": 0, "grid_w": 0, "net_savings_today": 0},
 }
 _sse_subscribers = []
@@ -381,6 +384,54 @@ def pentair_set(objnam, params):
     return resp
 
 
+# ── Tesla Wall Connector Gen 3 Adapter ────────────────────────────────────────
+
+def poll_wall_connector():
+    """Poll Tesla Wall Connector Gen 3 local API (no auth required)."""
+    if not TESLA_WC_HOST:
+        with _state_lock:
+            _state["wall_connector"]["status"] = "unconfigured"
+        return False
+    try:
+        url = f"http://{TESLA_WC_HOST}/api/1/vitals"
+        req = urllib.request.Request(url)
+        with urllib.request.urlopen(req, timeout=5) as r:
+            v = json.loads(r.read())
+
+        # charging_w = grid_v × currentA (single-phase: phase A is active leg)
+        grid_v = v.get("grid_v", 0)
+        current_a = v.get("currentA_a", 0)
+        charging_w = round(grid_v * current_a, 0)
+
+        # evse_state: 4=charging, 5=complete/ready, 9=not charging, 0=booting
+        evse_state = v.get("evse_state", 0)
+        state_map = {0: "booting", 1: "auth_required", 4: "charging", 5: "complete",
+                     6: "fault", 7: "disconnected", 8: "wait_car", 9: "standby"}
+        charge_status = state_map.get(evse_state, f"state_{evse_state}")
+
+        with _state_lock:
+            _state["wall_connector"] = {
+                "status": "online",
+                "charge_status": charge_status,
+                "vehicle_connected": v.get("vehicle_connected", False),
+                "charging_w": charging_w,
+                "session_energy_wh": round(v.get("session_energy_wh", 0), 1),
+                "session_s": v.get("session_s", 0),
+                "grid_v": round(grid_v, 1),
+                "current_a": round(current_a, 1),
+                "pcba_temp_c": round(v.get("pcba_temp_c", 0), 1),
+                "handle_temp_c": round(v.get("handle_temp_c", 0), 1),
+                "uptime_s": v.get("uptime_s", 0),
+                "alerts": v.get("current_alerts", []),
+            }
+        return True
+    except Exception as e:
+        log.warning("Wall Connector poll error: %s", e)
+        with _state_lock:
+            _state["wall_connector"]["status"] = "error"
+        return False
+
+
 # ── Tesla Gateway Adapter ─────────────────────────────────────────────────────
 
 _tesla_token = None
@@ -503,8 +554,8 @@ def _poll_loop():
     log.info("Polling loop started (interval=%ds, parallel)", POLL_INTERVAL_SECONDS)
     while True:
         # Run all device polls concurrently — Pentair can take 45s, don't let it block solar/SPAN
-        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
-            futs = [ex.submit(f) for f in (poll_pentair, poll_span, poll_enphase, poll_tesla)]
+        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as ex:
+            futs = [ex.submit(f) for f in (poll_pentair, poll_span, poll_enphase, poll_tesla, poll_wall_connector)]
             concurrent.futures.wait(futs, timeout=60)
         _update_summary()
         _broadcast_sse()
@@ -600,6 +651,42 @@ def api_span_circuit(circuit_id):
             return jsonify({"ok": True, "response": json.loads(r.read())})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/tesla/set_password", methods=["POST"])
+def api_tesla_set_password():
+    global TESLA_PASSWORD
+    body = request.get_json()
+    password = (body.get("password") or "").strip()
+    if not password:
+        return jsonify({"ok": False, "error": "password is required"}), 400
+
+    # Write new password into config.py in-place
+    config_path = Path(__file__).parent / "config.py"
+    try:
+        import re as _re
+        text = config_path.read_text()
+        new_text = _re.sub(
+            r'^TESLA_PASSWORD\s*=\s*.*$',
+            f'TESLA_PASSWORD = "{password}"',
+            text,
+            flags=_re.MULTILINE,
+        )
+        config_path.write_text(new_text)
+        TESLA_PASSWORD = password
+    except Exception as e:
+        return jsonify({"ok": False, "error": f"Failed to write config: {e}"}), 500
+
+    # Attempt a fresh login with the new password
+    try:
+        _tesla_login()
+        with _state_lock:
+            status = _state["tesla"]["status"]
+        return jsonify({"ok": True, "status": status})
+    except Exception as e:
+        with _state_lock:
+            _state["tesla"]["status"] = "error"
+        return jsonify({"ok": False, "error": str(e)}), 500
 
 
 @app.route("/api/devices")
@@ -776,12 +863,15 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <button onclick="showView('span')">SPAN Circuits</button>
     <button onclick="showView('pool')">Pool Control</button>
     <button onclick="showView('devices')">Devices</button>
+    <button onclick="showView('tesla-energy')">Tesla Energy</button>
+    <button onclick="showView('cybertruck')">Cybertruck</button>
   </nav>
   <div class="status-bar">
     <div id="span-dot" class="dot offline" title="SPAN Panel"></div>
     <div id="enphase-dot" class="dot offline" title="Enphase"></div>
     <div id="pentair-dot" class="dot offline" title="Pentair"></div>
-    <div id="tesla-dot" class="dot offline" title="Tesla"></div>
+    <div id="tesla-dot" class="dot offline" title="Tesla Gateway"></div>
+    <div id="wc-dot" class="dot offline" title="Wall Connector"></div>
     <span class="ts" id="ts">—</span>
   </div>
 </header>
@@ -1044,10 +1134,21 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <div class="device-card">
         <div class="device-icon">🔋</div>
         <div class="device-info">
-          <div class="device-name">Tesla Gateway V2 <span class="badge offline">not found</span></div>
-          <div class="device-detail">Not found on 192.168.68.0/22 scan</div>
-          <div class="device-detail">Set TESLA_HOST in config.py when available</div>
-          <div class="device-detail">Auth: Bearer token (last 5 of serial as password)</div>
+          <div class="device-name">Tesla Gateway V2 <span class="badge offline" id="tesla-gw-badge">not found</span></div>
+          <div class="device-detail" id="tesla-gw-detail">Not found on 192.168.68.0/22 — set TESLA_HOST in config.py</div>
+          <div class="device-detail">Auth: Bearer token · username=customer · password=last-5 of serial</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="device-card">
+        <div class="device-icon">⚡</div>
+        <div class="device-info">
+          <div class="device-name">Tesla Wall Connector Gen 3 <span class="badge offline" id="wc-badge">—</span></div>
+          <div class="device-detail">TeslaWallConnector_OEB496 · 192.168.68.87 · No auth</div>
+          <div class="device-detail" id="wc-detail">—</div>
+          <div class="device-detail" id="wc-session">—</div>
         </div>
       </div>
     </div>
@@ -1110,11 +1211,191 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   </div>
 </div><!-- /devices -->
 
+
+<!-- ═══ TESLA ENERGY ════════════════════════════════════════════════════════ -->
+<div id="view-tesla-energy" class="view">
+
+  <div class="row">
+    <div class="card" style="flex:2;min-width:300px">
+      <div class="card-header">
+        <span class="card-title" style="font-size:13px;font-weight:700">⚡ Tesla Energy Gateway V2</span>
+        <span class="badge" id="tesla-energy-badge">—</span>
+      </div>
+      <div class="device-detail">192.168.68.86 · MAC: dc:f3:1c:25:1e:cc</div>
+      <div class="device-detail">Serial: GF2240460002D2 · Firmware: 25.26.0</div>
+      <div class="device-detail">Backup: Whole Home · Utility: SRP</div>
+    </div>
+    <div class="card" style="flex:1;min-width:200px">
+      <div class="card-header"><span class="card-title">Gateway Info</span></div>
+      <div class="device-detail">IP: 192.168.68.86</div>
+      <div class="device-detail">Serial: GF2240460002D2</div>
+      <div class="device-detail">Firmware: 25.26.0</div>
+      <div class="device-detail">Backup: Whole Home</div>
+      <div class="device-detail">Utility: SRP</div>
+    </div>
+  </div>
+
+  <!-- Setup card — shown when password not set or status != online -->
+  <div id="tesla-setup-card" class="card" style="border-color:var(--warning);margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">⚙️ Setup Required</span>
+      <span class="badge warning">unconfigured</span>
+    </div>
+    <div style="color:var(--text-dim);font-size:12px;margin-bottom:12px">
+      Local password required — enter the password you set during Tesla app commissioning.<br>
+      This is the local gateway password created in the Tesla app when setting up the Powerwall (not your Tesla account password).
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <input type="password" id="tesla-pw-input" placeholder="Gateway local password…"
+        style="flex:1;min-width:200px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+               padding:8px 12px;color:var(--text);font-family:inherit;font-size:13px;outline:none">
+      <button class="btn primary" onclick="saveTeslaPassword()" style="white-space:nowrap">Save &amp; Connect</button>
+    </div>
+    <div id="tesla-pw-status" style="font-size:11px;margin-top:8px;color:var(--text-dim)"></div>
+  </div>
+
+  <!-- Energy flow tiles — shown only when online -->
+  <div id="tesla-energy-tiles" style="display:none">
+    <div class="section-title">Live Energy Flow</div>
+    <div class="grid grid-4" style="margin-bottom:12px">
+      <div class="card energy-solar">
+        <div class="card-header"><span class="card-title">Solar</span></div>
+        <div class="big-val c-solar" id="te-solar">—</div><span class="big-unit">W</span>
+      </div>
+      <div class="card energy-battery">
+        <div class="card-header">
+          <span class="card-title">Battery SOC</span>
+          <span id="te-bat-dir" style="font-size:18px;color:var(--battery)">—</span>
+        </div>
+        <div class="big-val c-battery" id="te-soe">—</div><span class="big-unit">%</span>
+        <div class="sub-val" id="te-bat-w">— W</div>
+      </div>
+      <div class="card energy-grid">
+        <div class="card-header">
+          <span class="card-title">Grid</span>
+          <span class="badge" id="te-grid-badge">—</span>
+        </div>
+        <div class="big-val c-grid" id="te-grid">—</div><span class="big-unit">W</span>
+        <div class="sub-val" id="te-grid-dir">—</div>
+      </div>
+      <div class="card energy-load">
+        <div class="card-header"><span class="card-title">Home Load</span></div>
+        <div class="big-val c-load" id="te-load">—</div><span class="big-unit">W</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Current Tesla state raw display -->
+  <div class="card">
+    <div class="card-header"><span class="card-title">Current State</span></div>
+    <div id="tesla-state-raw" style="font-size:11px;color:var(--text-dim);line-height:2.2">Waiting for data…</div>
+  </div>
+
+</div><!-- /tesla-energy -->
+
+
+<!-- ═══ CYBERTRUCK ════════════════════════════════════════════════════════════ -->
+<div id="view-cybertruck" class="view">
+
+  <div class="row">
+    <div class="card" style="flex:2;min-width:300px">
+      <div class="card-header">
+        <span class="card-title" style="font-size:14px;font-weight:700">🚚 Cybertruck</span>
+        <span class="badge" id="ct-connection-badge">—</span>
+      </div>
+      <div class="device-detail">Wall Connector Gen 3 · 192.168.68.87 · No auth required</div>
+      <div class="device-detail">Vehicle telemetry via Fleet API — Phase 2</div>
+    </div>
+  </div>
+
+  <div class="section-title">Wall Connector</div>
+  <div class="row">
+    <div class="card" style="flex:2;min-width:280px">
+      <div class="card-header">
+        <span class="card-title">Tesla Wall Connector Gen 3</span>
+        <span class="badge" id="ct-wc-badge">—</span>
+      </div>
+      <div style="display:flex;gap:24px;flex-wrap:wrap;margin-bottom:16px">
+        <div>
+          <div class="sub-val">Charge Status</div>
+          <div style="font-size:20px;font-weight:700" id="ct-charge-status">—</div>
+        </div>
+        <div>
+          <div class="sub-val">Vehicle Connected</div>
+          <div style="font-size:20px;font-weight:700" id="ct-vehicle">—</div>
+        </div>
+        <div>
+          <div class="sub-val">Charging Rate</div>
+          <div class="big-val" id="ct-rate-w" style="color:var(--battery)">—</div><span class="big-unit">W</span>
+          <div class="sub-val" id="ct-rate-a">— A</div>
+        </div>
+        <div>
+          <div class="sub-val">Session Energy</div>
+          <div class="big-val" id="ct-session" style="color:var(--solar)">—</div><span class="big-unit">Wh</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:24px;flex-wrap:wrap">
+        <div>
+          <div class="sub-val">Grid Voltage</div>
+          <div style="font-size:16px;font-weight:600" id="ct-grid-v">— V</div>
+        </div>
+        <div>
+          <div class="sub-val">Board Temp</div>
+          <div style="font-size:16px;font-weight:600" id="ct-temp">— °C</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="flex:1;min-width:200px">
+      <div class="card-header"><span class="card-title">Device Details</span></div>
+      <div class="device-detail">Model: Universal Wall Connector</div>
+      <div class="device-detail">Max Amperage: 48A</div>
+      <div class="device-detail">Serial: B7S24058J22706</div>
+      <div class="device-detail">Firmware: 25.42.1</div>
+      <div class="device-detail">IP: 192.168.68.87</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="margin-top:16px">Vehicle Telemetry</div>
+  <div class="card" style="border-color:var(--border)">
+    <div class="card-header">
+      <span class="card-title">Cybertruck Fleet Data</span>
+      <span class="badge warning">Phase 2</span>
+    </div>
+    <div style="color:var(--text-dim);font-size:11px;margin-bottom:16px">
+      Fleet API integration — requires Tesla Fleet API credentials (Phase 2)
+    </div>
+    <div class="grid grid-4">
+      <div class="card" style="opacity:.4;pointer-events:none;background:var(--surface2)">
+        <div class="card-title" style="margin-bottom:8px">Battery SOC</div>
+        <div class="big-val" style="color:var(--battery)">—</div><span class="big-unit">%</span>
+        <div class="sub-val">Fleet API · Phase 2</div>
+      </div>
+      <div class="card" style="opacity:.4;pointer-events:none;background:var(--surface2)">
+        <div class="card-title" style="margin-bottom:8px">Range</div>
+        <div class="big-val" style="color:var(--text-dim)">—</div><span class="big-unit">mi</span>
+        <div class="sub-val">Fleet API · Phase 2</div>
+      </div>
+      <div class="card" style="opacity:.4;pointer-events:none;background:var(--surface2)">
+        <div class="card-title" style="margin-bottom:8px">Charge Limit</div>
+        <div class="big-val" style="color:var(--text-dim)">—</div><span class="big-unit">%</span>
+        <div class="sub-val">Fleet API · Phase 2</div>
+      </div>
+      <div class="card" style="opacity:.4;pointer-events:none;background:var(--surface2)">
+        <div class="card-title" style="margin-bottom:8px">Plug Status</div>
+        <div class="big-val" style="color:var(--text-dim);font-size:18px">—</div>
+        <div class="sub-val">Fleet API · Phase 2</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /cybertruck -->
+
 </main>
 <div id="toast"></div>
 
 <script>
-const views = ['cockpit','span','pool','devices'];
+const views = ['cockpit','span','pool','devices','tesla-energy','cybertruck'];
 function showView(v) {
   views.forEach(id => {
     document.getElementById('view-'+id).classList.toggle('active', id===v);
@@ -1162,16 +1443,74 @@ function pentairSet(objnam, params) {
   }).catch(e => toast('✗ ' + e, 5000));
 }
 
+function saveTeslaPassword() {
+  const pw = document.getElementById('tesla-pw-input').value.trim();
+  if (!pw) { toast('Enter a password first'); return; }
+  const statusEl = document.getElementById('tesla-pw-status');
+  statusEl.textContent = 'Saving…';
+  statusEl.style.color = 'var(--text-dim)';
+  fetch('/api/tesla/set_password', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({password: pw})
+  }).then(r => r.json()).then(d => {
+    if (d.ok) {
+      statusEl.textContent = '✓ Connected — status: ' + d.status;
+      statusEl.style.color = 'var(--online)';
+      toast('✓ Tesla password saved · status: ' + d.status);
+      document.getElementById('tesla-pw-input').value = '';
+    } else {
+      statusEl.textContent = '✗ ' + (d.error || 'Failed');
+      statusEl.style.color = 'var(--error)';
+      toast('✗ ' + (d.error || 'Error'), 5000);
+    }
+  }).catch(e => {
+    statusEl.textContent = '✗ Network error: ' + e;
+    statusEl.style.color = 'var(--error)';
+    toast('✗ Network error', 5000);
+  });
+}
+
 function renderState(s) {
   const ts = s.ts ? new Date(s.ts*1000).toLocaleTimeString() : '—';
   document.getElementById('ts').textContent = ts;
 
   // Status dots
-  const sd = s.span||{};  const ed = s.enphase||{}; const pd = s.pentair||{}; const td = s.tesla||{};
-  document.getElementById('span-dot').className   = 'dot ' + dotClass(sd.status);
+  const sd = s.span||{};  const ed = s.enphase||{}; const pd = s.pentair||{}; const td = s.tesla||{}; const wc = s.wall_connector||{};
+  document.getElementById('span-dot').className    = 'dot ' + dotClass(sd.status);
   document.getElementById('enphase-dot').className = 'dot ' + dotClass(ed.status);
   document.getElementById('pentair-dot').className = 'dot ' + dotClass(pd.status);
   document.getElementById('tesla-dot').className   = 'dot ' + dotClass(td.status);
+  document.getElementById('wc-dot').className      = 'dot ' + dotClass(wc.status);
+
+  // ── Wall Connector ──
+  const wcBadge = document.getElementById('wc-badge');
+  if (wcBadge) {
+    wcBadge.textContent = wc.status||'—';
+    wcBadge.className = 'badge ' + statusColor(wc.status);
+    const wcStatus = wc.charge_status||'—';
+    const wcDetail = document.getElementById('wc-detail');
+    const wcSession = document.getElementById('wc-session');
+    if (wcDetail) wcDetail.textContent = wc.vehicle_connected
+      ? (wcStatus==='charging'
+          ? `Charging · ${wc.charging_w}W · ${wc.current_a}A · ${wc.grid_v}V`
+          : `Vehicle connected · ${wcStatus} · ${wc.grid_v}V grid`)
+      : 'No vehicle connected';
+    if (wcSession) wcSession.textContent = wc.session_energy_wh
+      ? `Session: ${wc.session_energy_wh} Wh · PCBA ${wc.pcba_temp_c}°C`
+      : '—';
+  }
+
+  // ── Tesla Gateway ──
+  const gwBadge = document.getElementById('tesla-gw-badge');
+  const gwDetail = document.getElementById('tesla-gw-detail');
+  if (gwBadge) {
+    gwBadge.textContent = td.status||'not found';
+    gwBadge.className = 'badge ' + statusColor(td.status);
+  }
+  if (gwDetail && td.status==='online') {
+    gwDetail.textContent = `SoE: ${td.soe}% · Solar: ${td.solar_w}W · Grid: ${td.grid_w}W · Battery: ${td.battery_w}W`;
+  }
 
   // ── Cockpit ──
   const sum = s.summary||{};
@@ -1283,6 +1622,73 @@ function renderState(s) {
   db2.textContent = ed.status||'?'; db2.className = 'badge ' + statusColor(ed.status);
   document.getElementById('dev-enphase-prod').textContent =
     `Production: ${fmt(ed.production_w)} · Consumption: ${fmt(ed.consumption_w)}`;
+
+  // ── Tesla Energy View ──
+  const teBadge = document.getElementById('tesla-energy-badge');
+  const teSetup = document.getElementById('tesla-setup-card');
+  const teTiles = document.getElementById('tesla-energy-tiles');
+  const teRaw   = document.getElementById('tesla-state-raw');
+
+  if (teBadge) {
+    teBadge.textContent = td.status || '—';
+    teBadge.className   = 'badge ' + statusColor(td.status);
+  }
+
+  const teslaOnline = td.status === 'online';
+  if (teSetup) teSetup.style.display = teslaOnline ? 'none' : 'block';
+  if (teTiles) teTiles.style.display = teslaOnline ? 'block' : 'none';
+
+  if (teslaOnline) {
+    const batW  = td.battery_w || 0;
+    const gridW2 = td.grid_w || 0;
+    if (document.getElementById('te-solar')) {
+      document.getElementById('te-solar').textContent = Math.round(td.solar_w || 0);
+      document.getElementById('te-soe').textContent   = Math.round(td.soe || 0);
+      document.getElementById('te-bat-w').textContent  = fmt(Math.abs(batW));
+      document.getElementById('te-bat-dir').textContent = batW > 50 ? '↓ discharging' : (batW < -50 ? '↑ charging' : '○ idle');
+      document.getElementById('te-grid').textContent  = Math.round(Math.abs(gridW2));
+      document.getElementById('te-grid-dir').textContent = gridW2 > 50 ? 'Importing' : (gridW2 < -50 ? 'Exporting' : 'Balanced');
+      const tgb = document.getElementById('te-grid-badge');
+      tgb.textContent  = td.islanded ? 'islanded' : 'grid-tie';
+      tgb.className    = 'badge ' + (td.islanded ? 'warning' : 'online');
+      document.getElementById('te-load').textContent  = Math.round(td.load_w || 0);
+    }
+  }
+
+  if (teRaw) {
+    teRaw.innerHTML = `
+      Status: <strong>${td.status || '—'}</strong> &nbsp;|&nbsp;
+      SoE: <strong>${td.soe != null ? td.soe + '%' : '—'}</strong> &nbsp;|&nbsp;
+      Solar: <strong>${fmt(td.solar_w)}</strong> &nbsp;|&nbsp;
+      Battery: <strong>${fmt(td.battery_w)}</strong> &nbsp;|&nbsp;
+      Grid: <strong>${fmt(td.grid_w)}</strong> &nbsp;|&nbsp;
+      Load: <strong>${fmt(td.load_w)}</strong> &nbsp;|&nbsp;
+      Grid state: <strong>${td.grid_state || '—'}</strong>
+    `;
+  }
+
+  // ── Cybertruck View ──
+  const ctConnBadge = document.getElementById('ct-connection-badge');
+  const ctWcBadge   = document.getElementById('ct-wc-badge');
+
+  if (ctConnBadge) {
+    ctConnBadge.textContent = wc.status || '—';
+    ctConnBadge.className   = 'badge ' + statusColor(wc.status);
+  }
+  if (ctWcBadge) {
+    ctWcBadge.textContent = wc.charge_status || wc.status || '—';
+    const csMap = {charging:'online', complete:'partial', standby:'offline', fault:'error'};
+    ctWcBadge.className = 'badge ' + (csMap[wc.charge_status] || statusColor(wc.status));
+  }
+
+  const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  setEl('ct-charge-status', wc.charge_status || '—');
+  setEl('ct-vehicle',       wc.vehicle_connected ? '🔌 connected' : '— disconnected');
+  setEl('ct-rate-w',        wc.charging_w != null ? Math.round(wc.charging_w) : '—');
+  setEl('ct-rate-a',        wc.current_a  != null ? wc.current_a + ' A' : '— A');
+  setEl('ct-session',       wc.session_energy_wh != null ? wc.session_energy_wh : '—');
+  setEl('ct-grid-v',        wc.grid_v     != null ? wc.grid_v + ' V' : '— V');
+  setEl('ct-temp',          wc.pcba_temp_c != null ? wc.pcba_temp_c + ' °C' : '— °C');
 }
 
 // Flag for SPAN token (set by Python template)

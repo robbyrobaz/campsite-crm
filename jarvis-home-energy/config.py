@@ -24,12 +24,16 @@ ENPHASE_PASSWORD = "-pAQRDz?8$!%,25"
 PENTAIR_HOST = "192.168.68.91"
 PENTAIR_PORT = 6681  # Use raw TCP; WebSocket on 6680 as fallback
 
-# ─── Tesla Gateway V2 ─────────────────────────────────────────────────────────
-# Device: not yet found on 192.168.68.0/22 — set IP when available
-# Auth: Bearer token (email + last-5 of serial as password)
-TESLA_HOST = ""  # e.g. "192.168.68.XXX"
-TESLA_EMAIL = ""
-TESLA_PASSWORD = ""  # Last 5 digits of Gateway serial number
+# ─── Tesla Wall Connector Gen 3 ───────────────────────────────────────────────
+# Device: TeslaWallConnector_OEB496 | 192.168.68.87 | No auth required
+TESLA_WC_HOST = "192.168.68.87"
+
+# ─── Tesla Gateway V2 (Powerwall) ─────────────────────────────────────────────
+# Device: not yet on LAN — check Deco app device list for "gateway" / Tesla MAC
+# Auth: POST /api/login/Basic  username=customer  password=last-5 of gateway serial
+TESLA_HOST = "192.168.68.86"  # Tesla Gateway V2 (serial GF2240460002D2, fw 25.26.0)
+TESLA_EMAIL = "rob.hartwig@gmail.com"
+TESLA_PASSWORD = ""  # Local access password set during Tesla app commissioning — ask Rob
 
 # ─── SRP Utility (cloud polling — future) ─────────────────────────────────────
 SRP_ACCOUNT = ""

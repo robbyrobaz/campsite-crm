@@ -1,20 +1,12 @@
 {
-  "updated": "2026-02-24T14:43:00-07:00",
-  "pulse": "2026-02-24T14:43:00-07:00",
   "activeTasks": [],
-  "board": { "inProgress": 0, "planned": 0, "reviewTest": 0, "inbox": 0, "done": 205 },
+  "lastPulse": "2026-02-24T15:13:00-07:00",
   "health": {
-    "cpu_temp": "53C",
-    "disk_pct": 39,
-    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active"],
-    "critical_monitor": "EXIT:0"
-  },
-  "notes": [
-    "IBKR credentials saved to /home/rob/.ibkr/config.env (chmod 600, not in git)",
-    "TradersPost webhook: 51e37934-7a18-4e37-9dc5-33416a36d579 (needs rotation — was shared in chat)",
-    "Execution chain: TradersPost -> Tradovate -> Lucid prop accounts",
-    "Data chain: IB Gateway (paper, port 4002) -> ib_insync -> NQ pipeline",
-    "IB Gateway: fixed IBC tws-path symlink issue, service now active (paper mode, auto-login running)",
-    "campsite-crm: 12 uncommitted files — needs git push when ready"
-  ]
+    "cpu_temp": "54.0°C",
+    "disk_used": "39%",
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
+    "critical_alert_monitor": "EXIT:0"
+  }
 }

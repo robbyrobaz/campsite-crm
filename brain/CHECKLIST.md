@@ -54,6 +54,7 @@
 - ❌ Wait idle between Rob's messages — be a COO, pick up work
 - ❌ Forget about spawned builders — check sessions_list
 - ❌ Write code directly in main session (delegate it)
+- ❌ **See "In Progress" on a kanban card and assume work is happening** — "In Progress" is a label, not proof a builder exists. If YOU didn't spawn the agent this session, spawn it NOW.
 
 ## Heartbeat checks (every hour, automated):
 - Server health (CPU, disk, services)

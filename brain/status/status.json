@@ -1,8 +1,15 @@
 {
-  "activeTasks": [],
-  "lastPulse": "2026-02-24T15:13:00-07:00",
+  "activeTasks": [
+    {
+      "id": "c_6aba2a19c9d12_19c91c92573",
+      "title": "MASTER STATUS DASHBOARD missing Anthropic stats on the right.",
+      "status": "In Progress",
+      "age_minutes": 5.4
+    }
+  ],
+  "lastPulse": "2026-02-24T15:43:00-07:00",
   "health": {
-    "cpu_temp": "54.0°C",
+    "cpu_temp": "65.0°C",
     "disk_used": "39%",
     "openclaw-gateway": "active",
     "blofin-stack-ingestor": "active",

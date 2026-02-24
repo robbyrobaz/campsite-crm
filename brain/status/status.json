@@ -1,13 +1,1 @@
-{
-  "lastUpdated": "2026-02-24T02:13:00Z",
-  "activeTasks": [],
-  "boardStatus": "CLEAR \u2014 IP=0, Planned=0",
-  "systemHealth": {
-    "cpuTemp": "74C",
-    "diskUsage": "38%",
-    "services": "all active"
-  },
-  "nextActions": [
-    "Board clear \u2014 awaiting new cards"
-  ]
-}
+{"lastUpdated":"2026-02-24T02:43:00Z","activeTasks":[],"boardStatus":"CLEAR","systemHealth":{"cpuTemp":"80C — elevated, check background tasks","diskUsage":"38%","services":"all active"}}

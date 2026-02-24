@@ -1,36 +1,31 @@
 {
-  "updated": "2026-02-23T22:14:00-07:00",
-  "pulse": "2026-02-23T22:13:00-07:00",
-  "activeTasks": [
-    {
-      "id": "c_975c70e34d647_19c8d1cccaf",
-      "title": "Build Home Energy OS dashboard — SPAN panel live, start Phase 1",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project": "home-energy-os",
-      "pid": 1442107,
-      "dispatched": "2026-02-23T22:14:00-07:00",
-      "stale_at": "2026-02-23T22:44:00-07:00"
-    }
-  ],
+  "updated": "2026-02-23T22:25:00-07:00",
+  "pulse": "2026-02-23T22:25:00-07:00",
+  "activeTasks": [],
   "board": {
-    "inProgress": 1,
+    "inProgress": 0,
     "planned": 0,
     "reviewTest": 0,
     "inbox": 5
   },
   "health": {
-    "cpu_temp": "57C",
+    "cpu_temp": "68C",
     "disk_pct": 37,
-    "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active"],
+    "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active", "nq-dashboard:active", "jarvis-home-energy:active", "claw-kanban:active"],
     "critical_monitor": "EXIT:0"
   },
   "recentlyCompleted": [
     {
+      "id": "wyze-fix",
+      "title": "Wyze camera integration fixed — 3 cameras online (Front Side, Upstairs, Downstairs)",
+      "completed": "2026-02-23T22:24:00-07:00",
+      "result": "Wrong API key/key_id in config + double-login bug in poll_cameras(). Fixed both. All 3 cams online."
+    },
+    {
       "id": "c_a20294ae0f27_19c8cb08e2a",
       "title": "vwap_fade deep dive: validate signal quality and session distribution",
       "completed": "2026-02-23T21:49:00-07:00",
-      "result": "2,207 signals, WR=51.7%, PF=2.14, 10/10 CI folds pass. PostMarket best (PF=2.52), MidDay weakest (PF=1.70). Score non-monotonic — score filtering unhelpful."
+      "result": "2,207 signals, WR=51.7%, PF=2.14, 10/10 CI folds pass. PostMarket best (PF=2.52), MidDay weakest (PF=1.70)."
     },
     {
       "id": "c_cd20d497fdf76_19c8d34289d",
@@ -41,15 +36,16 @@
   ],
   "inboxQueue": [
     "c_dc114298dfb45 — Tesla Gateway + Cybertruck dashboard pages (jarvis-home-energy)",
-    "c_c731788cfcfd1 — Cameras + Nest + Ring integration (jarvis-home-energy)",
+    "c_c731788cfcfd1 — Cameras + Nest + Ring integration (jarvis-home-energy) [Wyze done manually, Ring invite pending]",
     "c_a642d17ac5cd9 — B-Hyve sprinkler integration (jarvis-home-energy)",
     "c_4d4df8a920da3 — NQ Phase 3 (blocked)",
     "c_57eff3238cdd4 — NQ Phase 4 (blocked)"
   ],
   "notes": [
-    "Approaching quiet time (23:00 MST) — dispatcher will continue but no new work after 23:00",
-    "Evening completed: vwap_reversion fix, VEB FT accel, ExperimentEngine fix, vwap_fade deep dive, Home Energy OS dispatched",
-    "Home energy cluster queued: Tesla, Cameras, B-Hyve after this card",
-    "NQ Phase 3/4 remain blocked until Phase 2 complete"
+    "Token usage: 7-day 51%, 5-hour just reset (0%). Weekly resets Mar 1 4PM MST.",
+    "Wyze: 3 cameras live. Ring invite pending acceptance (jarvis.is.my.coo@gmail.com).",
+    "GCP BTC dip trader: last run 10:07 PM MST, exit 0 — healthy.",
+    "All 3 Numerai model dirs exist. Daily bot fires 6:30 AM MST.",
+    "No active builders. 5 inbox cards queued."
   ]
 }

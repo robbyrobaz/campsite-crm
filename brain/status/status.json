@@ -1,12 +1,12 @@
 {
-  "updated": "2026-02-24T14:32:00-07:00",
-  "pulse": "2026-02-24T14:32:00-07:00",
+  "updated": "2026-02-24T14:43:00-07:00",
+  "pulse": "2026-02-24T14:43:00-07:00",
   "activeTasks": [],
   "board": { "inProgress": 0, "planned": 0, "reviewTest": 0, "inbox": 0, "done": 205 },
   "health": {
-    "cpu_temp": "77C",
+    "cpu_temp": "53C",
     "disk_pct": 39,
-    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active","blofin-dashboard:active","ibgateway:active"],
+    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active"],
     "critical_monitor": "EXIT:0"
   },
   "notes": [

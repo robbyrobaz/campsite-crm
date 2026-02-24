@@ -1,10 +1,10 @@
 {
-  "updated": "2026-02-24T05:43:00-07:00",
-  "pulse": "2026-02-24T05:43:00-07:00",
+  "updated": "2026-02-24T06:13:00-07:00",
+  "pulse": "2026-02-24T06:13:00-07:00",
   "activeTasks": [],
   "board": { "inProgress": 0, "planned": 0, "inbox": 3 },
   "health": {
-    "cpu_temp": "53C",
+    "cpu_temp": "55C",
     "disk_pct": 38,
     "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active"],
     "critical_monitor": "EXIT:0"
@@ -30,7 +30,7 @@
   ],
   "notes": [
     "Board idle — 0 In Progress, 0 Planned, 3 in Inbox awaiting promotion",
-    "Numerai daily bot fires ~6:32 AM MST (~50m away)",
-    "CPU cooling nicely — 53C, disk 38%, all services active"
+    "Numerai daily bot fires ~6:32 AM MST (~20m away)",
+    "CPU 55C, disk 38%, all services active"
   ]
 }

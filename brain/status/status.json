@@ -1,50 +1,56 @@
 {
-  "updated": "2026-02-23T20:44:00-07:00",
-  "pulse": "2026-02-23T20:43:00-07:00",
+  "updated": "2026-02-23T21:14:00-07:00",
+  "pulse": "2026-02-23T21:13:00-07:00",
   "activeTasks": [
     {
-      "id": "c_b54fffe9ee131_19c8c46b3f9",
-      "title": "Accelerate FT data collection for volatility_expansion_volume_breakout",
+      "id": "c_cd20d497fdf76_19c8d34289d",
+      "title": "Fix ExperimentEngine proxy PF bug — use real price-path TP/SL simulation for cross-R/R config sweeps",
       "status": "In Progress",
       "assignee": "claude",
-      "project": "blofin-stack",
-      "pid": 1328880,
-      "dispatched": "2026-02-23T20:44:00-07:00",
-      "stale_at": "2026-02-23T21:14:00-07:00"
+      "project": "ninja_trader_strategies",
+      "pid": 1365904,
+      "dispatched": "2026-02-23T21:14:00-07:00",
+      "stale_at": "2026-02-23T21:44:00-07:00"
     }
   ],
   "board": {
     "inProgress": 1,
     "planned": 0,
     "reviewTest": 0,
-    "inbox": 7
+    "inbox": 6
   },
   "health": {
-    "cpu_temp": "58C",
-    "disk_pct": 38,
+    "cpu_temp": "75C",
+    "disk_pct": 37,
     "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active"],
     "critical_monitor": "EXIT:0"
   },
   "recentlyCompleted": [
     {
+      "id": "c_b54fffe9ee131_19c8c46b3f9",
+      "title": "Accelerate FT for volatility_expansion_volume_breakout",
+      "completed": "2026-02-23T20:57:00-07:00",
+      "result": "CONFIRM_WINDOW_MIN 30→60min (doubles co-confirm window). Phase 4 7-day lookback fallback for new strategies with <10 trades since ft_started. VEB now credits 17 historical trades (70.6% WR, PF~2.2) in next pipeline run."
+    },
+    {
       "id": "c_c264400d324d6_19c8cad0c34",
       "title": "Fix vwap_reversion gate=pass durably",
       "completed": "2026-02-23T20:30:00-07:00",
-      "result": "FIXED: Phase 4 now uses _get_ft_metrics_from_active_coins (filters to tier=2 per-coin data). vwap_reversion tier=2, ft_pf=1.1883, ft_trades=251 — survives all future Phase 4 runs."
+      "result": "Phase 4 now uses _get_ft_metrics_from_active_coins — filters to tier=2 per-coin coins. vwap_reversion tier=2, ft_pf=1.1883, ft_trades=251, survives all Phase 4 runs."
     }
   ],
   "inboxQueue": [
-    "c_c731788cfcfd1 — Cameras + Nest + Ring integration (jarvis-home-energy) [assignee fixed]",
-    "c_a20294ae0f27 — vwap_fade deep dive (ninja_trader)",
+    "c_a20294ae0f27 — vwap_fade deep dive signal quality (ninja_trader)",
+    "c_dc114298dfb45 — Tesla Gateway + Cybertruck dashboard (jarvis-home-energy)",
     "c_975c70e34d647 — Build Home Energy OS dashboard (home-energy-os)",
-    "c_cd20d497fdf76 — Fix ExperimentEngine proxy PF bug (ninja_trader)",
-    "c_dc114298dfb45 — Tesla Gateway + Cybertruck dashboard pages (jarvis-home-energy)",
+    "c_c731788cfcfd1 — Cameras + Nest + Ring integration (jarvis-home-energy)",
     "c_4d4df8a920da3 — NQ Phase 3 (blocked: Phase 2 incomplete)",
     "c_57eff3238cdd4 — NQ Phase 4 (blocked: Phase 3 incomplete)"
   ],
   "notes": [
-    "vwap_reversion durable fix complete — no longer demoted by Phase 4",
-    "vol_expansion PF=2.207, WR=68.8% but only 16 FT trades vs 100 required — accelerate in progress",
-    "Fixed null assignee on new Cameras+Nest+Ring Inbox card"
+    "CPU at 75C — elevated, watch it. Down from 85C earlier.",
+    "Board cleared 3 cards in last 2 hours: vwap_reversion fix + VEB acceleration + now ExperimentEngine fix dispatched",
+    "vwap_reversion now durable at T2; vol_expansion (VEB) FT window fixed",
+    "Next priority after ExperimentEngine: vwap_fade deep dive or Tesla dashboard"
   ]
 }

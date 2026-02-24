@@ -1,7 +1,18 @@
 {
-  "updated": "2026-02-23T21:14:00-07:00",
-  "pulse": "2026-02-23T21:13:00-07:00",
-  "activeTasks": [],
+  "updated": "2026-02-23T21:44:00-07:00",
+  "pulse": "2026-02-23T21:43:00-07:00",
+  "activeTasks": [
+    {
+      "id": "c_a20294ae0f27_19c8cb08e2a",
+      "title": "vwap_fade deep dive: validate signal quality and session distribution",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "ninja_trader_strategies",
+      "pid": 1403911,
+      "dispatched": "2026-02-23T21:44:00-07:00",
+      "stale_at": "2026-02-23T22:14:00-07:00"
+    }
+  ],
   "board": {
     "inProgress": 1,
     "planned": 0,
@@ -9,43 +20,37 @@
     "inbox": 6
   },
   "health": {
-    "cpu_temp": "75C",
+    "cpu_temp": "58C",
     "disk_pct": 37,
-    "services": [
-      "openclaw-gateway:active",
-      "blofin-stack-ingestor:active",
-      "blofin-stack-paper:active"
-    ],
+    "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active"],
     "critical_monitor": "EXIT:0"
   },
   "recentlyCompleted": [
     {
-      "id": "c_b54fffe9ee131_19c8c46b3f9",
-      "title": "Accelerate FT for volatility_expansion_volume_breakout",
-      "completed": "2026-02-23T20:57:00-07:00",
-      "result": "CONFIRM_WINDOW_MIN 30\u219260min (doubles co-confirm window). Phase 4 7-day lookback fallback for new strategies with <10 trades since ft_started. VEB now credits 17 historical trades (70.6% WR, PF~2.2) in next pipeline run."
+      "id": "c_cd20d497fdf76_19c8d34289d",
+      "title": "Fix ExperimentEngine proxy PF bug",
+      "completed": "2026-02-23T21:21:00-07:00",
+      "result": "New _simulate_pnl_price_path() uses real OHLC to scan for TP/SL hit. Cross-R/R sweeps now produce valid PF comparisons."
     },
     {
-      "id": "c_c264400d324d6_19c8cad0c34",
-      "title": "Fix vwap_reversion gate=pass durably",
-      "completed": "2026-02-23T20:30:00-07:00",
-      "result": "Phase 4 now uses _get_ft_metrics_from_active_coins \u2014 filters to tier=2 per-coin coins. vwap_reversion tier=2, ft_pf=1.1883, ft_trades=251, survives all Phase 4 runs."
+      "id": "c_b54fffe9ee131_19c8c46b3f9",
+      "title": "Accelerate FT for vol_expansion",
+      "completed": "2026-02-23T20:57:00-07:00",
+      "result": "CONFIRM_WINDOW_MIN 30→60m, 7-day lookback fallback for new strategies."
     }
   ],
   "inboxQueue": [
-    "c_a20294ae0f27 \u2014 vwap_fade deep dive signal quality (ninja_trader)",
-    "c_dc114298dfb45 \u2014 Tesla Gateway + Cybertruck dashboard (jarvis-home-energy)",
-    "c_975c70e34d647 \u2014 Build Home Energy OS dashboard (home-energy-os)",
-    "c_c731788cfcfd1 \u2014 Cameras + Nest + Ring integration (jarvis-home-energy)",
-    "c_4d4df8a920da3 \u2014 NQ Phase 3 (blocked: Phase 2 incomplete)",
-    "c_57eff3238cdd4 \u2014 NQ Phase 4 (blocked: Phase 3 incomplete)"
+    "c_975c70e34d647 — Build Home Energy OS dashboard (home-energy-os)",
+    "c_dc114298dfb45 — Tesla Gateway + Cybertruck dashboard (jarvis-home-energy)",
+    "c_c731788cfcfd1 — Cameras + Nest + Ring integration (jarvis-home-energy)",
+    "c_a642d17ac5cd9 — B-Hyve sprinkler integration [assignee fixed]",
+    "c_4d4df8a920da3 — NQ Phase 3 (blocked)",
+    "c_57eff3238cdd4 — NQ Phase 4 (blocked)"
   ],
   "notes": [
-    "CPU at 75C \u2014 elevated, watch it. Down from 85C earlier.",
-    "Board cleared 3 cards in last 2 hours: vwap_reversion fix + VEB acceleration + now ExperimentEngine fix dispatched",
-    "vwap_reversion now durable at T2; vol_expansion (VEB) FT window fixed",
-    "Next priority after ExperimentEngine: vwap_fade deep dive or Tesla dashboard"
-  ],
-  "lastUpdated": "2026-02-23T21:24:00-07:00",
-  "note": "Cleared: ExperimentEngine task PID 1365904 died \u2014 process not found at 21:24 MST"
+    "Evening blitz: 3 cards done in ~2h (vwap_reversion fix, VEB FT accel, ExperimentEngine fix)",
+    "vwap_fade deep dive now running — checks NQ signal quality + session distribution",
+    "Fixed null assignee on new B-Hyve sprinkler card",
+    "Home-energy cluster (Tesla/Cameras/B-Hyve/SPAN) queued for next slots"
+  ]
 }

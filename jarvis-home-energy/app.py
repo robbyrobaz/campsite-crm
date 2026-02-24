@@ -16,6 +16,7 @@ import urllib.error
 import urllib.parse
 from datetime import datetime
 from pathlib import Path
+import requests as _requests
 from flask import Flask, Response, jsonify, render_template_string, request, stream_with_context
 
 logging.basicConfig(
@@ -44,6 +45,20 @@ except ImportError:
     TESLA_HOST = ""; TESLA_EMAIL = ""; TESLA_PASSWORD = ""
     DASHBOARD_PORT = 8793; POLL_INTERVAL_SECONDS = 5
 
+# New smart-home integrations — graceful fallback if not yet in config
+try:
+    from config import WYZE_EMAIL, WYZE_PASSWORD, WYZE_API_KEY, WYZE_KEY_ID
+except ImportError:
+    WYZE_EMAIL = ""; WYZE_PASSWORD = ""; WYZE_API_KEY = ""; WYZE_KEY_ID = ""
+try:
+    from config import RING_EMAIL, RING_PASSWORD
+except ImportError:
+    RING_EMAIL = ""; RING_PASSWORD = ""
+try:
+    from config import NEST_ACCESS_TOKEN
+except ImportError:
+    NEST_ACCESS_TOKEN = ""
+
 app = Flask(__name__)
 
 # ── Shared State ──────────────────────────────────────────────────────────────
@@ -56,6 +71,8 @@ _state = {
     "tesla": {"status": "unconfigured", "soe": 0, "solar_w": 0, "battery_w": 0, "grid_w": 0, "load_w": 0},
     "wall_connector": {"status": "unconfigured", "vehicle_connected": False, "charging_w": 0, "session_energy_wh": 0, "grid_v": 0, "pcba_temp_c": 0},
     "summary": {"solar_w": 0, "load_w": 0, "battery_w": 0, "grid_w": 0, "net_savings_today": 0},
+    "cameras": [],  # list of {name, mac, type, status, last_seen, last_motion, snapshot_path}
+    "nest": {"status": "unconfigured", "temp_f": 0, "setpoint_f": 0, "mode": "off", "hvac_state": "idle", "humidity": 0},
 }
 _sse_subscribers = []
 _sse_lock = threading.Lock()
@@ -519,8 +536,10 @@ def _update_summary():
         t = _state["tesla"]
         e = _state["enphase"]
         p = _state["pentair"]
+        s = _state["span"]
 
-        # Prefer Tesla for energy flows (more complete), fallback to Enphase
+        # Prefer Tesla for energy flows (most complete source)
+        # Fallback: SPAN grid_power is the real import/export; Enphase has solar production
         if t.get("status") == "online":
             solar = t["solar_w"]
             load = t["load_w"]
@@ -528,9 +547,12 @@ def _update_summary():
             grid = t["grid_w"]
         else:
             solar = e.get("production_w", 0)
-            load = e.get("consumption_w", 0)
+            # SPAN grid_power: positive = importing, negative = exporting
+            span_grid = s.get("grid_power", 0)
+            grid = span_grid
             battery = 0
-            grid = max(0, load - solar)
+            # Home load = solar production + grid import (or - grid export)
+            load = solar + span_grid
 
         pool_w = p.get("pump", {}).get("power_w", 0)
 
@@ -545,6 +567,86 @@ def _update_summary():
         _state["ts"] = time.time()
 
 
+# ── Wyze + Ring Camera Adapter ────────────────────────────────────────────────
+
+def poll_cameras():
+    cameras = []
+
+    # Wyze
+    if WYZE_API_KEY and WYZE_KEY_ID:
+        try:
+            from wyze_sdk import Client
+            client = Client(api_key=WYZE_API_KEY, key_id=WYZE_KEY_ID)
+            devices = client.cameras.list()
+            for cam in devices:
+                cameras.append({
+                    "name": cam.nickname or cam.mac,
+                    "mac": cam.mac,
+                    "type": "wyze",
+                    "status": "online" if cam.is_online else "offline",
+                    "last_seen": str(cam.last_seen) if hasattr(cam, 'last_seen') else "",
+                    "snapshot_path": f"/api/camera/{cam.mac}/snapshot",
+                })
+        except Exception as e:
+            log.warning("Wyze poll error: %s", e)
+
+    # Ring
+    if RING_EMAIL and RING_PASSWORD:
+        try:
+            from ring_doorbell import Ring, Auth
+            auth = Auth("JarvisHomeEnergy/1.0", None, lambda *args: None)
+            auth.fetch_token(RING_EMAIL, RING_PASSWORD)
+            ring = Ring(auth)
+            ring.update_data()
+            for device in ring.video_doorbell_devices():
+                cameras.append({
+                    "name": device.name or "Ring Doorbell",
+                    "mac": getattr(device, 'id', 'ring'),
+                    "type": "ring",
+                    "status": "online" if device.is_subscribed else "offline",
+                    "last_motion": str(device.last_motion) if hasattr(device, 'last_motion') else "",
+                    "snapshot_path": f"/api/camera/ring_{getattr(device, 'id', '0')}/snapshot",
+                })
+        except Exception as e:
+            log.warning("Ring poll error: %s", e)
+
+    with _state_lock:
+        _state["cameras"] = cameras
+    return True
+
+
+# ── Nest Thermostat Adapter ───────────────────────────────────────────────────
+
+def poll_nest():
+    if not NEST_ACCESS_TOKEN:
+        with _state_lock:
+            _state["nest"]["status"] = "unconfigured"
+        return False
+    try:
+        import nest_thermostat
+        napi = nest_thermostat.App(access_token=NEST_ACCESS_TOKEN)
+        thermostats = napi.thermostats
+        if not thermostats:
+            raise RuntimeError("No thermostats found")
+        t = list(thermostats.values())[0]
+        with _state_lock:
+            _state["nest"] = {
+                "status": "online",
+                "temp_f": t.temperature,
+                "setpoint_f": t.target,
+                "mode": t.mode,
+                "hvac_state": t.hvac_state,
+                "humidity": t.humidity,
+                "name": t.name,
+            }
+        return True
+    except Exception as e:
+        log.warning("Nest poll error: %s", e)
+        with _state_lock:
+            _state["nest"]["status"] = "error"
+        return False
+
+
 # ╔══════════════════════════════════════════════════════════════════════════════╗
 # ║  POLLING LOOP                                                                ║
 # ╚══════════════════════════════════════════════════════════════════════════════╝
@@ -554,8 +656,8 @@ def _poll_loop():
     log.info("Polling loop started (interval=%ds, parallel)", POLL_INTERVAL_SECONDS)
     while True:
         # Run all device polls concurrently — Pentair can take 45s, don't let it block solar/SPAN
-        with concurrent.futures.ThreadPoolExecutor(max_workers=5) as ex:
-            futs = [ex.submit(f) for f in (poll_pentair, poll_span, poll_enphase, poll_tesla, poll_wall_connector)]
+        with concurrent.futures.ThreadPoolExecutor(max_workers=7) as ex:
+            futs = [ex.submit(f) for f in (poll_pentair, poll_span, poll_enphase, poll_tesla, poll_wall_connector, poll_cameras, poll_nest)]
             concurrent.futures.wait(futs, timeout=60)
         _update_summary()
         _broadcast_sse()
@@ -686,6 +788,125 @@ def api_tesla_set_password():
     except Exception as e:
         with _state_lock:
             _state["tesla"]["status"] = "error"
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/camera/<cam_id>/snapshot")
+def camera_snapshot(cam_id):
+    try:
+        if cam_id.startswith('ring_'):
+            if not RING_EMAIL:
+                return '', 204
+            from ring_doorbell import Ring, Auth
+            auth = Auth("JarvisHomeEnergy/1.0", None, lambda *args: None)
+            auth.fetch_token(RING_EMAIL, RING_PASSWORD)
+            ring = Ring(auth)
+            ring.update_data()
+            device_id = cam_id[5:]
+            for d in ring.video_doorbell_devices():
+                if str(getattr(d, 'id', '')) == device_id:
+                    url = d.get_snapshot()
+                    r = _requests.get(url, timeout=5)
+                    return Response(r.content, mimetype='image/jpeg')
+        else:
+            if not WYZE_API_KEY:
+                return '', 204
+            from wyze_sdk import Client
+            client = Client(api_key=WYZE_API_KEY, key_id=WYZE_KEY_ID)
+            img = client.cameras.get_thumbnail(device_mac=cam_id)
+            if img:
+                r = _requests.get(img, timeout=5)
+                return Response(r.content, mimetype='image/jpeg')
+    except Exception as e:
+        log.warning("Snapshot error for %s: %s", cam_id, e)
+    return '', 204
+
+
+@app.route("/api/nest/setpoint", methods=["POST"])
+def nest_setpoint():
+    global NEST_ACCESS_TOKEN
+    if not NEST_ACCESS_TOKEN:
+        return jsonify({"ok": False, "error": "not configured"})
+    try:
+        data = request.get_json()
+        temp = float(data.get('temp', 70))
+        import nest_thermostat
+        napi = nest_thermostat.App(access_token=NEST_ACCESS_TOKEN)
+        t = list(napi.thermostats.values())[0]
+        t.target = temp
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)})
+
+
+@app.route("/api/settings/wyze", methods=["POST"])
+def api_settings_wyze():
+    global WYZE_API_KEY, WYZE_KEY_ID, WYZE_EMAIL, WYZE_PASSWORD
+    body = request.get_json()
+    api_key  = (body.get("api_key")  or "").strip()
+    key_id   = (body.get("key_id")   or "").strip()
+    email    = (body.get("email")    or "").strip()
+    password = (body.get("password") or "").strip()
+    config_path = Path(__file__).parent / "config.py"
+    try:
+        import re as _re
+        text = config_path.read_text()
+        if api_key:
+            text = _re.sub(r'^WYZE_API_KEY\s*=\s*.*$', f'WYZE_API_KEY = "{api_key}"', text, flags=_re.MULTILINE)
+            WYZE_API_KEY = api_key
+        if key_id:
+            text = _re.sub(r'^WYZE_KEY_ID\s*=\s*.*$', f'WYZE_KEY_ID = "{key_id}"', text, flags=_re.MULTILINE)
+            WYZE_KEY_ID = key_id
+        if email:
+            text = _re.sub(r'^WYZE_EMAIL\s*=\s*.*$', f'WYZE_EMAIL = "{email}"', text, flags=_re.MULTILINE)
+            WYZE_EMAIL = email
+        if password:
+            text = _re.sub(r'^WYZE_PASSWORD\s*=\s*.*$', f'WYZE_PASSWORD = "{password}"', text, flags=_re.MULTILINE)
+            WYZE_PASSWORD = password
+        config_path.write_text(text)
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/settings/ring", methods=["POST"])
+def api_settings_ring():
+    global RING_EMAIL, RING_PASSWORD
+    body  = request.get_json()
+    email = (body.get("email")    or "").strip()
+    pw    = (body.get("password") or "").strip()
+    config_path = Path(__file__).parent / "config.py"
+    try:
+        import re as _re
+        text = config_path.read_text()
+        if email:
+            text = _re.sub(r'^RING_EMAIL\s*=\s*.*$', f'RING_EMAIL = "{email}"', text, flags=_re.MULTILINE)
+            RING_EMAIL = email
+        if pw:
+            text = _re.sub(r'^RING_PASSWORD\s*=\s*.*$', f'RING_PASSWORD = "{pw}"', text, flags=_re.MULTILINE)
+            RING_PASSWORD = pw
+        config_path.write_text(text)
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/settings/nest", methods=["POST"])
+def api_settings_nest():
+    global NEST_ACCESS_TOKEN
+    body  = request.get_json()
+    token = (body.get("token") or "").strip()
+    if not token:
+        return jsonify({"ok": False, "error": "token is required"}), 400
+    config_path = Path(__file__).parent / "config.py"
+    try:
+        import re as _re
+        text = config_path.read_text()
+        text = _re.sub(r'^NEST_ACCESS_TOKEN\s*=\s*.*$', f'NEST_ACCESS_TOKEN = "{token}"', text, flags=_re.MULTILINE)
+        config_path.write_text(text)
+        NEST_ACCESS_TOKEN = token
+        return jsonify({"ok": True})
+    except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
 
 
@@ -852,7 +1073,37 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   /* Toasts */
   #toast { position: fixed; bottom: 20px; right: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 16px; font-size: 12px; opacity: 0; transition: opacity .3s; pointer-events: none; z-index: 999; }
   #toast.show { opacity: 1; }
+
+  /* ── SPAN Energy Visualization ── */
+  .span-viz { margin-bottom: 16px; }
+  .span-viz .card { background: #12121a; border-color: rgba(255,255,255,0.08); }
+  .chart-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .chart-row .chart-card { flex: 1; min-width: 240px; background: #12121a; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 14px; }
+  .chart-card-title { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: rgba(255,255,255,0.5); margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; }
+  .donut-total { text-align: center; font-size: 20px; font-weight: 700; color: #00d4ff; margin-top: 6px; }
+  .donut-sub { text-align: center; font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+  .sparkline-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .sparkline-stat { font-size: 10px; color: rgba(255,255,255,0.45); }
+  .sparkline-stat span { color: rgba(255,255,255,0.8); font-weight: 600; }
+  .circuit-tile { position: relative; overflow: hidden; }
+  .ct-mini-spark { position: absolute; bottom: 0; left: 0; right: 0; height: 18px; opacity: 0.7; }
+
+  /* ── Cameras ── */
+  .camera-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .camera-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--surface2); display: block; }
+  .camera-thumb-placeholder { width: 100%; aspect-ratio: 16/9; background: var(--surface2); display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 32px; }
+  .camera-info { padding: 10px 12px; }
+  .camera-name { font-weight: 700; font-size: 13px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .camera-meta { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .badge-wyze { background: rgba(0,212,255,.15); color: #00d4ff; }
+  .badge-ring { background: rgba(16,185,129,.15); color: var(--battery); }
+
+  /* ── Nest tile ── */
+  .nest-cockpit-tile { background: var(--surface2); border-radius: 8px; padding: 10px 14px; display: flex; gap: 12px; align-items: center; }
+  .nest-cockpit-temp { font-size: 24px; font-weight: 700; color: var(--pool); }
+  .nest-cockpit-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing:.05em; }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -865,6 +1116,9 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <button onclick="showView('devices')">Devices</button>
     <button onclick="showView('tesla-energy')">Tesla Energy</button>
     <button onclick="showView('cybertruck')">Cybertruck</button>
+    <button onclick="showView('cameras')">Cameras</button>
+    <button onclick="showView('home-control')">Home Control</button>
+    <button onclick="showView('settings')">Settings</button>
   </nav>
   <div class="status-bar">
     <div id="span-dot" class="dot offline" title="SPAN Panel"></div>
@@ -955,7 +1209,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     </div>
   </div>
 
-  <!-- Self-Powered + Pool -->
+  <!-- Self-Powered + Pool + Nest -->
   <div class="row">
     <div class="card">
       <div class="card-header"><span class="card-title">Solar Self-Powered</span></div>
@@ -985,6 +1239,16 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       </div>
       <div class="sub-val" id="pool-status-line" style="margin-top:8px">—</div>
     </div>
+
+    <div class="card" style="cursor:pointer" onclick="showView('home-control')" title="Click for thermostat control">
+      <div class="card-header">
+        <span class="card-title">🌡️ Thermostat</span>
+        <span class="badge" id="nest-cockpit-badge">unconfigured</span>
+      </div>
+      <div id="nest-cockpit-content">
+        <div style="color:var(--text-dim);font-size:11px">Not configured — click to set up</div>
+      </div>
+    </div>
   </div>
 
 </div><!-- /cockpit -->
@@ -1012,6 +1276,49 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       </ol>
     </div>
   </div>
+
+  <!-- ═══ SPAN ENERGY VISUALIZATION ════════════════════════════════════════ -->
+  <div id="span-charts" style="display:none" class="span-viz">
+
+    <!-- Row 1: Total Load Timeline + Power Donut -->
+    <div class="chart-row">
+      <div class="chart-card" style="flex:2;min-width:280px">
+        <div class="chart-card-title">⚡ Total Load — Last 5 min <span id="span-timeline-now" style="color:#00d4ff;font-size:13px;font-weight:700">—</span></div>
+        <div style="height:110px;position:relative"><canvas id="span-timeline-chart"></canvas></div>
+      </div>
+      <div class="chart-card" style="flex:0 0 260px">
+        <div class="chart-card-title">🍩 Power Breakdown</div>
+        <div style="height:170px;position:relative"><canvas id="span-donut-chart"></canvas></div>
+        <div class="donut-total" id="span-donut-total">— W</div>
+        <div class="donut-sub">total grid load</div>
+      </div>
+    </div>
+
+    <!-- Row 2: Live Circuit Power Bar -->
+    <div class="chart-card" style="margin-bottom:12px">
+      <div class="chart-card-title">📊 Live Circuit Power <span style="color:rgba(255,255,255,0.28);font-size:10px">click a bar to inspect</span></div>
+      <div id="span-bar-container" style="position:relative;height:320px"><canvas id="span-bar-chart"></canvas></div>
+    </div>
+
+    <!-- Row 3: Circuit Sparkline detail (shown on bar/tile click) -->
+    <div class="chart-card" id="span-sparkline-card" style="display:none;margin-bottom:12px">
+      <div class="sparkline-header">
+        <div class="chart-card-title" style="margin-bottom:0;flex:1" id="span-sparkline-title">Circuit Detail</div>
+        <div class="sparkline-stat">min: <span id="sk-min">—</span> W</div>
+        <div class="sparkline-stat">avg: <span id="sk-avg">—</span> W</div>
+        <div class="sparkline-stat">max: <span id="sk-max">—</span> W</div>
+        <div class="sparkline-stat"><a href="#" onclick="document.getElementById('span-sparkline-card').style.display='none';selectedCircuit=null;return false" style="color:rgba(255,255,255,0.28);text-decoration:none">✕</a></div>
+      </div>
+      <div style="height:110px;position:relative"><canvas id="span-sparkline-chart"></canvas></div>
+    </div>
+
+    <!-- Row 4: Circuit History 60-min multi-line -->
+    <div class="chart-card" style="margin-bottom:12px">
+      <div class="chart-card-title">📈 Circuit History — Last 60 min <span style="color:rgba(255,255,255,0.28);font-size:10px">legend: click to toggle</span></div>
+      <div style="height:300px;position:relative"><canvas id="span-history-chart"></canvas></div>
+    </div>
+
+  </div><!-- /span-charts -->
 
   <div class="section-title">Circuit Heatmap</div>
   <div id="span-no-token" style="display:none" class="card">
@@ -1391,11 +1698,198 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 </div><!-- /cybertruck -->
 
+
+<!-- ═══ CAMERAS ══════════════════════════════════════════════════════════════ -->
+<div id="view-cameras" class="view">
+  <div class="section-title">Security Cameras</div>
+  <div id="cameras-setup-card" class="card" style="border-color:var(--warning);display:none">
+    <div class="card-header">
+      <span class="card-title">📷 No cameras configured</span>
+      <span class="badge warning">setup needed</span>
+    </div>
+    <div style="color:var(--text-dim);font-size:12px;margin-bottom:12px">
+      Add your Wyze API key or Ring credentials in the <strong>Settings</strong> tab to connect cameras.
+    </div>
+    <button class="btn primary" onclick="showView('settings')">Go to Settings →</button>
+  </div>
+  <div id="camera-grid" class="grid grid-3" style="margin-bottom:16px"></div>
+</div><!-- /cameras -->
+
+
+<!-- ═══ HOME CONTROL ════════════════════════════════════════════════════════ -->
+<div id="view-home-control" class="view">
+  <div class="section-title">Home Control</div>
+
+  <!-- Nest Thermostat -->
+  <div class="row">
+    <div class="card" id="nest-card" style="min-width:320px;max-width:480px">
+      <div class="card-header">
+        <span class="card-title">🌡️ Nest Thermostat</span>
+        <span class="badge" id="nest-badge">unconfigured</span>
+      </div>
+
+      <!-- Unconfigured state -->
+      <div id="nest-setup-msg" style="color:var(--text-dim);font-size:12px">
+        Add your Nest access token in the <strong>Settings</strong> tab to connect.
+        <br><br>
+        <button class="btn primary" onclick="showView('settings')">Go to Settings →</button>
+      </div>
+
+      <!-- Configured state -->
+      <div id="nest-data" style="display:none">
+        <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-end;margin-bottom:16px">
+          <div>
+            <div class="sub-val">Current Temp</div>
+            <div class="big-val c-pool" id="nest-temp">—</div><span class="big-unit">°F</span>
+          </div>
+          <div>
+            <div class="sub-val">Setpoint</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+              <button class="btn" id="nest-down" onclick="nestAdjust(-1)" style="font-size:16px;padding:4px 12px">−</button>
+              <span class="big-val" id="nest-setpoint" style="font-size:26px">—</span>
+              <span class="big-unit">°F</span>
+              <button class="btn" id="nest-up" onclick="nestAdjust(1)" style="font-size:16px;padding:4px 12px">+</button>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div>
+            <div class="sub-val">Mode</div>
+            <span class="badge" id="nest-mode">—</span>
+          </div>
+          <div>
+            <div class="sub-val">HVAC State</div>
+            <span class="badge" id="nest-hvac">—</span>
+          </div>
+          <div>
+            <div class="sub-val">Humidity</div>
+            <span style="font-size:13px;font-weight:600" id="nest-humidity">—</span>
+          </div>
+          <div>
+            <div class="sub-val">Name</div>
+            <span style="font-size:12px;color:var(--text-dim)" id="nest-name">—</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /home-control -->
+
+
+<!-- ═══ SETTINGS ════════════════════════════════════════════════════════════ -->
+<div id="view-settings" class="view">
+  <div class="section-title">Integration Settings</div>
+
+  <!-- Wyze Cameras -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">📷 Wyze Cameras</span>
+      <span class="badge" id="wyze-cfg-badge">unconfigured</span>
+    </div>
+    <div style="color:var(--text-dim);font-size:11px;margin-bottom:12px">
+      Get your API Key and Key ID from <a href="https://developer.wyze.com" target="_blank" style="color:var(--solar)">developer.wyze.com</a>.
+      API key auth is preferred over username/password.
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">API Key (preferred)</div>
+        <input type="password" id="wyze-api-key" placeholder="wyze_api_key_…"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+      </div>
+      <div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Key ID</div>
+        <input type="password" id="wyze-key-id" placeholder="key_id_…"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+      </div>
+      <div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Email (optional)</div>
+        <input type="email" id="wyze-email" placeholder="you@example.com"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+      </div>
+      <div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Password (optional)</div>
+        <input type="password" id="wyze-password" placeholder="password"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn primary" onclick="saveWyze()">Save Wyze Credentials</button>
+      <span id="wyze-save-status" style="font-size:11px;color:var(--text-dim)"></span>
+    </div>
+  </div>
+
+  <!-- Ring Doorbell -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">🔔 Ring Doorbell</span>
+      <span class="badge" id="ring-cfg-badge">unconfigured</span>
+    </div>
+    <div style="color:var(--text-dim);font-size:11px;margin-bottom:12px">
+      Enter your Ring account credentials. MFA is not supported — disable it if active.
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Email</div>
+        <input type="email" id="ring-email" placeholder="you@example.com"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+      </div>
+      <div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Password</div>
+        <input type="password" id="ring-password" placeholder="Ring account password"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn primary" onclick="saveRing()">Save Ring Credentials</button>
+      <span id="ring-save-status" style="font-size:11px;color:var(--text-dim)"></span>
+    </div>
+  </div>
+
+  <!-- Nest Thermostat -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">🌡️ Nest Thermostat</span>
+      <span class="badge" id="nest-cfg-badge">unconfigured</span>
+    </div>
+    <div style="color:var(--text-dim);font-size:11px;margin-bottom:12px">
+      Provide a Nest access token from the Google Smart Device Management API or the legacy nest_thermostat auth flow.
+    </div>
+    <div style="margin-bottom:8px">
+      <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Access Token</div>
+      <input type="password" id="nest-token-input" placeholder="ya29.a0… or legacy token"
+        style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn primary" onclick="saveNest()">Save Nest Token</button>
+      <span id="nest-save-status" style="font-size:11px;color:var(--text-dim)"></span>
+    </div>
+  </div>
+
+  <!-- Tesla (existing) -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">⚡ Tesla Gateway</span>
+      <span class="badge" id="settings-tesla-badge">—</span>
+    </div>
+    <div style="color:var(--text-dim);font-size:11px;margin-bottom:12px">
+      Local gateway password — set during Tesla app commissioning. Not your Tesla account password.
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <input type="password" id="settings-tesla-pw" placeholder="Gateway local password…"
+        style="flex:1;min-width:200px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;
+               padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+      <button class="btn primary" onclick="saveTeslaPasswordFromSettings()">Save &amp; Connect</button>
+      <span id="settings-tesla-status" style="font-size:11px;color:var(--text-dim)"></span>
+    </div>
+  </div>
+
+</div><!-- /settings -->
+
 </main>
 <div id="toast"></div>
 
 <script>
-const views = ['cockpit','span','pool','devices','tesla-energy','cybertruck'];
+const views = ['cockpit','span','pool','devices','tesla-energy','cybertruck','cameras','home-control','settings'];
 function showView(v) {
   views.forEach(id => {
     document.getElementById('view-'+id).classList.toggle('active', id===v);
@@ -1570,16 +2064,20 @@ function renderState(s) {
   const circGrid = document.getElementById('circuit-grid');
   const circuits = sd.circuits||[];
   if (circuits.length) {
-    circGrid.innerHTML = circuits.map(c => `
-      <div class="circuit-tile ${c.relay==='CLOSED'?c.color:'off'}" title="${c.id}">
+    circGrid.innerHTML = circuits.map(c => {
+      const col = circuitColors.get(c.name) || '#00d4ff';
+      const svg = miniSparkSVG(history5.get(c.name), col);
+      return `<div class="circuit-tile ${c.relay==='CLOSED'?c.color:'off'}" data-name="${c.name}" title="${c.id}" style="cursor:pointer;padding-bottom:${svg?'22px':'10px'}" onclick="if(chartsReady)selectCircuit(this.dataset.name)">
         <div class="ct-name">${c.name}</div>
         <div><span class="ct-power">${Math.abs(c.power_w)||0}</span><span class="ct-unit"> W</span></div>
         <div class="ct-relay">${c.relay||'?'} · ${c.priority||'?'}</div>
-      </div>
-    `).join('');
+        ${svg}
+      </div>`;
+    }).join('');
   } else if (sd.status==='no_token') {
     circGrid.innerHTML = '';
   }
+  updateSpanCharts(sd);
 
   // ── Pool View ──
   const bpb = document.getElementById('pool-body-badge');
@@ -1689,7 +2187,525 @@ function renderState(s) {
   setEl('ct-session',       wc.session_energy_wh != null ? wc.session_energy_wh : '—');
   setEl('ct-grid-v',        wc.grid_v     != null ? wc.grid_v + ' V' : '— V');
   setEl('ct-temp',          wc.pcba_temp_c != null ? wc.pcba_temp_c + ' °C' : '— °C');
+
+  // ── Cameras ──
+  renderCameras(s.cameras || []);
+
+  // ── Nest ──
+  renderNest(s.nest || {});
+
+  // ── Settings badges ──
+  const settingsTeslaBadge = document.getElementById('settings-tesla-badge');
+  if (settingsTeslaBadge) { settingsTeslaBadge.textContent = td.status||'—'; settingsTeslaBadge.className = 'badge ' + statusColor(td.status); }
+  const wyzeBadge = document.getElementById('wyze-cfg-badge');
+  if (wyzeBadge) { const wyzeCfg = (s.cameras||[]).some(c=>c.type==='wyze'); wyzeBadge.textContent = wyzeCfg ? 'connected' : 'unconfigured'; wyzeBadge.className = 'badge ' + (wyzeCfg ? 'online' : 'offline'); }
+  const ringBadge = document.getElementById('ring-cfg-badge');
+  if (ringBadge) { const ringCfg = (s.cameras||[]).some(c=>c.type==='ring'); ringBadge.textContent = ringCfg ? 'connected' : 'unconfigured'; ringBadge.className = 'badge ' + (ringCfg ? 'online' : 'offline'); }
 }
+
+// ╔══════════════════════════════════════════════════════════════════════╗
+// ║  SPAN ENERGY VISUALIZATION — Charts                                  ║
+// ╚══════════════════════════════════════════════════════════════════════╝
+
+const CIRCUIT_PALETTE = [
+  '#00d4ff','#ff6b6b','#ffd93d','#6bcb77','#ff8c42','#c77dff',
+  '#4ecdc4','#ff6b9d','#95e1d3','#f38181','#aa96da','#fcbad3',
+  '#e8d5b7','#a8d8ea','#fd7272','#9de3d0','#ffb347','#87ceeb',
+  '#dda0dd','#90ee90','#f0e68c'
+];
+
+const MAX_HIST_5MIN  = 60;   // 5 min at ~5s intervals
+const MAX_HIST_60MIN = 720;  // 60 min at ~5s intervals
+
+const circuitColors = new Map();   // name → hex color
+const history5      = new Map();   // name → last 60 watts values
+const history60     = new Map();   // name → last 720 watts values
+const historyLabels = [];          // last 720 time labels (shared x-axis)
+const totalHistory5 = [];          // last 60 total-load values
+
+let selectedCircuit    = null;
+let spanBarChart       = null;
+let spanDonutChart     = null;
+let spanTimelineChart  = null;
+let spanSparklineChart = null;
+let spanHistoryChart   = null;
+let chartsReady        = false;
+
+function assignColor(name) {
+  if (!circuitColors.has(name)) {
+    circuitColors.set(name, CIRCUIT_PALETTE[circuitColors.size % CIRCUIT_PALETTE.length]);
+  }
+  return circuitColors.get(name);
+}
+
+function pushCapped(arr, val, max) {
+  arr.push(val);
+  if (arr.length > max) arr.shift();
+}
+
+// Tiny inline SVG sparkline for circuit tiles (last 10 points)
+function miniSparkSVG(hist, color) {
+  if (!hist || hist.length < 2) return '';
+  const pts = hist.slice(-10);
+  const max = Math.max(...pts, 1);
+  const coords = pts.map((v, i) => {
+    const x = ((i / (pts.length - 1)) * 100).toFixed(1);
+    const y = (17 - (v / max) * 16).toFixed(1);
+    return `${x},${y}`;
+  }).join(' ');
+  const poly = `0,18 ${coords} 100,18`;
+  return `<svg class="ct-mini-spark" viewBox="0 0 100 18" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">`
+       + `<polygon points="${poly}" fill="${color}" opacity="0.2"/>`
+       + `<polyline points="${coords}" fill="none" stroke="${color}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`
+       + `</svg>`;
+}
+
+function initSpanCharts() {
+  if (chartsReady || typeof Chart === 'undefined') return;
+
+  Chart.defaults.color          = 'rgba(255,255,255,0.6)';
+  Chart.defaults.borderColor    = 'rgba(255,255,255,0.07)';
+  Chart.defaults.font.family    = "'Segoe UI', system-ui, sans-serif";
+  Chart.defaults.font.size      = 11;
+
+  const grid = { color: 'rgba(255,255,255,0.07)' };
+  const wTick = { color: 'rgba(255,255,255,0.45)', maxTicksLimit: 5,
+                  callback: v => v >= 1000 ? (v/1000).toFixed(1)+'kW' : v+'W' };
+  const baseAnim = { duration: 400 };
+  const noLegend = { legend: { display: false } };
+
+  // ── Total Load Timeline ───────────────────────────────────────────────
+  spanTimelineChart = new Chart(
+    document.getElementById('span-timeline-chart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: Array(MAX_HIST_5MIN).fill(''),
+      datasets: [{ data: Array(MAX_HIST_5MIN).fill(null),
+        borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.13)',
+        fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, animation: baseAnim,
+      scales: { x: { display: false },
+                y: { min: 0, grid, ticks: wTick } },
+      plugins: { ...noLegend,
+        tooltip: { mode: 'index', intersect: false,
+          callbacks: { label: ctx => ` ${Math.round(ctx.raw||0)} W total` } } }
+    }
+  });
+
+  // ── Power Donut ───────────────────────────────────────────────────────
+  spanDonutChart = new Chart(
+    document.getElementById('span-donut-chart').getContext('2d'), {
+    type: 'doughnut',
+    data: { labels: [], datasets: [{ data: [],
+      backgroundColor: [], borderColor: '#12121a', borderWidth: 2 }] },
+    options: { responsive: true, maintainAspectRatio: false, animation: baseAnim,
+      cutout: '62%',
+      plugins: {
+        legend: { display: true, position: 'right',
+          labels: { color: 'rgba(255,255,255,0.65)', font: { size: 10 },
+                    boxWidth: 10, padding: 5 } },
+        tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${Math.round(ctx.raw)} W` } }
+      }
+    }
+  });
+
+  // ── Live Bar Chart ────────────────────────────────────────────────────
+  spanBarChart = new Chart(
+    document.getElementById('span-bar-chart').getContext('2d'), {
+    type: 'bar',
+    data: { labels: [], datasets: [{ data: [],
+      backgroundColor: [], borderColor: [], borderWidth: 1.5, borderRadius: 5 }] },
+    options: { responsive: true, maintainAspectRatio: false, animation: baseAnim,
+      indexAxis: 'y',
+      scales: {
+        x: { min: 0, grid, ticks: { ...wTick, color: 'rgba(255,255,255,0.4)' } },
+        y: { grid: { display: false },
+             ticks: { color: 'rgba(255,255,255,0.85)', font: { size: 11 } } }
+      },
+      onClick: (evt, elements) => {
+        if (elements.length) selectCircuit(spanBarChart.data.labels[elements[0].index]);
+      },
+      plugins: { ...noLegend,
+        tooltip: { callbacks: { label: ctx => ` ${Math.round(ctx.raw)} W` } }
+      }
+    }
+  });
+
+  // ── Selected Circuit Sparkline (5 min) ───────────────────────────────
+  spanSparklineChart = new Chart(
+    document.getElementById('span-sparkline-chart').getContext('2d'), {
+    type: 'line',
+    data: {
+      labels: Array(MAX_HIST_5MIN).fill(''),
+      datasets: [{ data: Array(MAX_HIST_5MIN).fill(null),
+        borderColor: '#00d4ff', backgroundColor: 'rgba(0,212,255,0.15)',
+        fill: true, tension: 0.4, pointRadius: 0, borderWidth: 2 }]
+    },
+    options: { responsive: true, maintainAspectRatio: false, animation: baseAnim,
+      scales: { x: { display: false },
+                y: { min: 0, grid, ticks: wTick } },
+      plugins: { ...noLegend }
+    }
+  });
+
+  // ── Circuit History — 60-min multi-line ──────────────────────────────
+  spanHistoryChart = new Chart(
+    document.getElementById('span-history-chart').getContext('2d'), {
+    type: 'line',
+    data: { labels: [], datasets: [] },
+    options: { responsive: true, maintainAspectRatio: false,
+      animation: false,   // skip animation on 60-min chart for performance
+      scales: {
+        x: { grid,
+          ticks: { color: 'rgba(255,255,255,0.4)', maxTicksLimit: 8,
+                   maxRotation: 0,
+                   callback: function(val, idx) {
+                     const lbs = this.chart.data.labels;
+                     if (!lbs || !lbs.length) return '';
+                     const step = Math.max(1, Math.floor(lbs.length / 7));
+                     return idx % step === 0 ? lbs[idx] : '';
+                   } } },
+        y: { min: 0, grid, ticks: wTick }
+      },
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: {
+          display: true, position: 'bottom',
+          labels: { color: 'rgba(255,255,255,0.7)', font: { size: 10 },
+                    boxWidth: 12, padding: 8, usePointStyle: true, pointStyleWidth: 10 },
+          onClick: function(e, item, legend) {
+            const ds = legend.chart.data.datasets[item.datasetIndex];
+            ds.hidden = !ds.hidden;
+            legend.chart.update();
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: ctx => ctx.dataset.hidden
+              ? null
+              : ` ${ctx.dataset.label}: ${Math.round(ctx.raw ?? 0)} W`
+          }
+        }
+      }
+    }
+  });
+
+  chartsReady = true;
+
+  // Resize charts when SPAN view becomes visible
+  const _sv = window.showView;
+  if (typeof _sv === 'function') {
+    window._spanChartsShowViewHooked = true;
+  }
+}
+
+function selectCircuit(name) {
+  if (!chartsReady) return;
+  selectedCircuit = name;
+  const hist  = history5.get(name) || [];
+  const color = circuitColors.get(name) || '#00d4ff';
+  const vals  = hist.filter(v => v > 0);
+  document.getElementById('sk-min').textContent = vals.length ? Math.min(...vals) : '—';
+  document.getElementById('sk-max').textContent = vals.length ? Math.max(...vals) : '—';
+  document.getElementById('sk-avg').textContent = vals.length
+    ? Math.round(vals.reduce((a, b) => a + b, 0) / vals.length) : '—';
+  document.getElementById('span-sparkline-title').textContent = name + ' — Last 5 min';
+  const padded = Array(MAX_HIST_5MIN - hist.length).fill(null).concat(hist);
+  spanSparklineChart.data.datasets[0].data            = padded;
+  spanSparklineChart.data.datasets[0].borderColor     = color;
+  spanSparklineChart.data.datasets[0].backgroundColor = color + '33';
+  document.getElementById('span-sparkline-card').style.display = 'block';
+  spanSparklineChart.update();
+}
+
+function updateSpanCharts(sd) {
+  if (typeof Chart === 'undefined') return;
+  if (!chartsReady) initSpanCharts();
+
+  const circuits = sd.circuits || [];
+  const active   = circuits.filter(c => c.relay === 'CLOSED');
+  if (!circuits.length) return;
+
+  // Assign stable colors to every circuit
+  circuits.forEach(c => assignColor(c.name));
+
+  const now = new Date();
+  const timeLabel = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const totalW = Math.abs(sd.grid_power) ||
+                 active.reduce((s, c) => s + (Math.abs(c.power_w) || 0), 0);
+
+  // Accumulate histories
+  circuits.forEach(c => {
+    if (!history5.has(c.name))  history5.set(c.name, []);
+    if (!history60.has(c.name)) history60.set(c.name, []);
+    pushCapped(history5.get(c.name),  Math.abs(c.power_w) || 0, MAX_HIST_5MIN);
+    pushCapped(history60.get(c.name), Math.abs(c.power_w) || 0, MAX_HIST_60MIN);
+  });
+  pushCapped(totalHistory5,  totalW,    MAX_HIST_5MIN);
+  pushCapped(historyLabels,  timeLabel, MAX_HIST_60MIN);
+
+  // Reveal charts section
+  document.getElementById('span-charts').style.display = 'block';
+
+  // Sorted active circuits by power desc
+  const sorted = [...active].sort((a, b) => (Math.abs(b.power_w)||0) - (Math.abs(a.power_w)||0));
+
+  // ── Bar chart ──────────────────────────────────────────────────────
+  spanBarChart.data.labels = sorted.map(c => c.name);
+  spanBarChart.data.datasets[0].data            = sorted.map(c => Math.abs(c.power_w) || 0);
+  spanBarChart.data.datasets[0].backgroundColor = sorted.map(c => circuitColors.get(c.name) + 'aa');
+  spanBarChart.data.datasets[0].borderColor     = sorted.map(c => circuitColors.get(c.name));
+  const barH = Math.max(260, sorted.length * 30);
+  document.getElementById('span-bar-container').style.height = barH + 'px';
+  spanBarChart.update();
+
+  // ── Timeline ───────────────────────────────────────────────────────
+  const tlData = Array(MAX_HIST_5MIN).fill(null);
+  totalHistory5.forEach((v, i) => { tlData[MAX_HIST_5MIN - totalHistory5.length + i] = v; });
+  spanTimelineChart.data.datasets[0].data = tlData;
+  document.getElementById('span-timeline-now').textContent = fmt(totalW);
+  spanTimelineChart.update();
+
+  // ── Donut ──────────────────────────────────────────────────────────
+  const allSorted = [...circuits].sort((a, b) => (Math.abs(b.power_w)||0) - (Math.abs(a.power_w)||0));
+  const top6      = allSorted.slice(0, 6);
+  const otherSum  = allSorted.slice(6).reduce((s, c) => s + (Math.abs(c.power_w) || 0), 0);
+  const dLabels   = top6.map(c => c.name);
+  const dData     = top6.map(c => Math.abs(c.power_w) || 0);
+  const dColors   = top6.map(c => circuitColors.get(c.name));
+  if (otherSum > 0) { dLabels.push('Other'); dData.push(otherSum); dColors.push('rgba(255,255,255,0.18)'); }
+  spanDonutChart.data.labels                       = dLabels;
+  spanDonutChart.data.datasets[0].data             = dData;
+  spanDonutChart.data.datasets[0].backgroundColor  = dColors;
+  document.getElementById('span-donut-total').textContent = fmt(totalW);
+  spanDonutChart.update();
+
+  // ── Sparkline (keep live if circuit selected) ──────────────────────
+  if (selectedCircuit && history5.has(selectedCircuit)) selectCircuit(selectedCircuit);
+
+  // ── 60-min History multi-line chart ───────────────────────────────
+  const top6Names  = new Set(sorted.slice(0, 6).map(c => c.name));
+  const labels60   = [...historyLabels];
+  const nPts       = labels60.length;
+
+  // Build dataset map from existing (preserve user-toggled hidden state)
+  const existingDs = new Map(spanHistoryChart.data.datasets.map(ds => [ds.label, ds]));
+  const newDatasets = [];
+
+  for (const [name, hist] of history60.entries()) {
+    const color   = circuitColors.get(name);
+    const padded  = Array(Math.max(0, nPts - hist.length)).fill(null).concat(hist.slice(-nPts));
+    const existing = existingDs.get(name);
+    if (existing) {
+      existing.data = padded;
+      // Preserve user-toggled visibility; don't reset it
+      newDatasets.push(existing);
+    } else {
+      // New circuit: default hidden unless in top 6
+      newDatasets.push({
+        label: name, data: padded,
+        borderColor: color + '99',   // 60% opacity
+        backgroundColor: 'transparent',
+        tension: 0.3, pointRadius: 0, borderWidth: 1.5,
+        hidden: !top6Names.has(name)
+      });
+    }
+  }
+
+  spanHistoryChart.data.labels   = labels60;
+  spanHistoryChart.data.datasets = newDatasets;
+  spanHistoryChart.update('none');  // no animation = snappy scrolling
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
+// ══ Camera helpers ════════════════════════════════════════════════════════════
+let _camRefreshTimers = {};
+
+function refreshCameraImg(mac) {
+  const img = document.getElementById('cam-img-' + mac);
+  if (img) img.src = '/api/camera/' + mac + '/snapshot?t=' + Date.now();
+}
+
+function renderCameras(cameras) {
+  const grid = document.getElementById('camera-grid');
+  const setupCard = document.getElementById('cameras-setup-card');
+  if (!grid) return;
+  if (!cameras || cameras.length === 0) {
+    grid.innerHTML = '';
+    if (setupCard) setupCard.style.display = 'block';
+    return;
+  }
+  if (setupCard) setupCard.style.display = 'none';
+
+  // Build HTML for each camera
+  grid.innerHTML = cameras.map(cam => {
+    const mac = cam.mac || cam.type;
+    const badgeClass = cam.type === 'wyze' ? 'badge-wyze' : 'badge-ring';
+    const icon = cam.type === 'wyze' ? '📷' : '🔔';
+    const lastInfo = cam.last_motion
+      ? `Last motion: ${cam.last_motion}`
+      : (cam.last_seen ? `Last seen: ${cam.last_seen}` : '');
+    return `<div class="camera-card">
+      <img id="cam-img-${mac}" class="camera-thumb"
+           src="/api/camera/${mac}/snapshot?t=${Date.now()}"
+           onerror="this.style.display='none';document.getElementById('cam-ph-${mac}').style.display='flex'"
+           onload="document.getElementById('cam-ph-${mac}').style.display='none';this.style.display='block'"
+           alt="${cam.name}">
+      <div id="cam-ph-${mac}" class="camera-thumb-placeholder">${icon}</div>
+      <div class="camera-info">
+        <div class="camera-name">
+          <span>${cam.name}</span>
+          <span class="badge ${cam.status==='online'?'online':'offline'}">${cam.status||'?'}</span>
+        </div>
+        <div class="camera-meta">
+          <span class="badge ${badgeClass}" style="margin-right:6px">${cam.type||'?'}</span>
+          ${lastInfo}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Set up auto-refresh intervals per camera
+  cameras.forEach(cam => {
+    const mac = cam.mac || cam.type;
+    if (!_camRefreshTimers[mac]) {
+      _camRefreshTimers[mac] = setInterval(() => refreshCameraImg(mac), 30000);
+    }
+  });
+}
+
+// ══ Nest helpers ══════════════════════════════════════════════════════════════
+let _nestSetpoint = 70;
+
+function nestAdjust(delta) {
+  _nestSetpoint += delta;
+  document.getElementById('nest-setpoint').textContent = _nestSetpoint;
+  fetch('/api/nest/setpoint', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({temp: _nestSetpoint})
+  }).then(r=>r.json()).then(d => {
+    if (d.ok) toast('✓ Setpoint → ' + _nestSetpoint + '°F');
+    else toast('✗ ' + (d.error||'Error'), 5000);
+  }).catch(e => toast('✗ ' + e, 5000));
+}
+
+function renderNest(nest) {
+  const badge    = document.getElementById('nest-badge');
+  const cockpitBadge = document.getElementById('nest-cockpit-badge');
+  const setupMsg = document.getElementById('nest-setup-msg');
+  const dataDiv  = document.getElementById('nest-data');
+  const cfgBadge = document.getElementById('nest-cfg-badge');
+  const cockpitContent = document.getElementById('nest-cockpit-content');
+
+  if (!nest) return;
+  const status = nest.status || 'unconfigured';
+
+  if (badge) { badge.textContent = status; badge.className = 'badge ' + statusColor(status); }
+  if (cockpitBadge) { cockpitBadge.textContent = status; cockpitBadge.className = 'badge ' + statusColor(status); }
+  if (cfgBadge) { cfgBadge.textContent = status; cfgBadge.className = 'badge ' + statusColor(status); }
+
+  const isOnline = status === 'online';
+  if (setupMsg) setupMsg.style.display = isOnline ? 'none' : 'block';
+  if (dataDiv)  dataDiv.style.display  = isOnline ? 'block' : 'none';
+
+  if (isOnline) {
+    const temp     = nest.temp_f    || 0;
+    const setpoint = nest.setpoint_f || 0;
+    _nestSetpoint  = setpoint;
+
+    const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    setEl('nest-temp',     Math.round(temp));
+    setEl('nest-setpoint', Math.round(setpoint));
+    setEl('nest-humidity', (nest.humidity || 0) + '%');
+    setEl('nest-name',     nest.name || '—');
+
+    const modeBadge = document.getElementById('nest-mode');
+    const hvacBadge = document.getElementById('nest-hvac');
+    const modeMap = { heat: 'online', cool: 'partial', off: 'offline', auto: 'warning' };
+    const hvacMap = { heating: 'online', cooling: 'partial', idle: 'offline' };
+    if (modeBadge) { modeBadge.textContent = nest.mode || 'off'; modeBadge.className = 'badge ' + (modeMap[nest.mode] || 'offline'); }
+    if (hvacBadge) { hvacBadge.textContent = nest.hvac_state || 'idle'; hvacBadge.className = 'badge ' + (hvacMap[nest.hvac_state] || 'offline'); }
+
+    // Cockpit tile
+    if (cockpitContent) {
+      cockpitContent.innerHTML = `
+        <div style="display:flex;gap:16px;align-items:center">
+          <div><div class="sub-val">Current</div><div class="nest-cockpit-temp">${Math.round(temp)}°</div></div>
+          <div><div class="sub-val">Set</div><div style="font-size:18px;font-weight:600">${Math.round(setpoint)}°</div></div>
+          <div>
+            <div class="sub-val">Mode</div>
+            <span class="badge ${modeMap[nest.mode]||'offline'}">${nest.mode||'off'}</span>
+          </div>
+        </div>
+      `;
+    }
+  } else if (cockpitContent) {
+    cockpitContent.innerHTML = `<div style="color:var(--text-dim);font-size:11px">${status} — click to configure</div>`;
+  }
+}
+
+// ══ Settings save functions ════════════════════════════════════════════════════
+function saveWyze() {
+  const body = {
+    api_key:  document.getElementById('wyze-api-key').value.trim(),
+    key_id:   document.getElementById('wyze-key-id').value.trim(),
+    email:    document.getElementById('wyze-email').value.trim(),
+    password: document.getElementById('wyze-password').value.trim(),
+  };
+  const statusEl = document.getElementById('wyze-save-status');
+  statusEl.textContent = 'Saving…';
+  fetch('/api/settings/wyze', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+    .then(r=>r.json()).then(d => {
+      statusEl.textContent = d.ok ? '✓ Saved' : ('✗ ' + (d.error||'Error'));
+      statusEl.style.color = d.ok ? 'var(--online)' : 'var(--error)';
+      if (d.ok) toast('✓ Wyze credentials saved');
+    }).catch(e => { statusEl.textContent = '✗ ' + e; statusEl.style.color = 'var(--error)'; });
+}
+
+function saveRing() {
+  const body = {
+    email:    document.getElementById('ring-email').value.trim(),
+    password: document.getElementById('ring-password').value.trim(),
+  };
+  const statusEl = document.getElementById('ring-save-status');
+  statusEl.textContent = 'Saving…';
+  fetch('/api/settings/ring', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+    .then(r=>r.json()).then(d => {
+      statusEl.textContent = d.ok ? '✓ Saved' : ('✗ ' + (d.error||'Error'));
+      statusEl.style.color = d.ok ? 'var(--online)' : 'var(--error)';
+      if (d.ok) toast('✓ Ring credentials saved');
+    }).catch(e => { statusEl.textContent = '✗ ' + e; statusEl.style.color = 'var(--error)'; });
+}
+
+function saveNest() {
+  const token = document.getElementById('nest-token-input').value.trim();
+  const statusEl = document.getElementById('nest-save-status');
+  statusEl.textContent = 'Saving…';
+  fetch('/api/settings/nest', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token})})
+    .then(r=>r.json()).then(d => {
+      statusEl.textContent = d.ok ? '✓ Saved' : ('✗ ' + (d.error||'Error'));
+      statusEl.style.color = d.ok ? 'var(--online)' : 'var(--error)';
+      if (d.ok) toast('✓ Nest token saved');
+    }).catch(e => { statusEl.textContent = '✗ ' + e; statusEl.style.color = 'var(--error)'; });
+}
+
+function saveTeslaPasswordFromSettings() {
+  const pw = document.getElementById('settings-tesla-pw').value.trim();
+  if (!pw) { toast('Enter a password first'); return; }
+  const statusEl = document.getElementById('settings-tesla-status');
+  statusEl.textContent = 'Saving…';
+  fetch('/api/tesla/set_password', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pw})})
+    .then(r=>r.json()).then(d => {
+      statusEl.textContent = d.ok ? ('✓ Connected — ' + d.status) : ('✗ ' + (d.error||'Error'));
+      statusEl.style.color = d.ok ? 'var(--online)' : 'var(--error)';
+      if (d.ok) toast('✓ Tesla password saved');
+    }).catch(e => { statusEl.textContent = '✗ ' + e; statusEl.style.color = 'var(--error)'; });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 // Flag for SPAN token (set by Python template)
 const SPAN_TOKEN_CONFIGURED = {{ 'true' if config_span_token else 'false' }};

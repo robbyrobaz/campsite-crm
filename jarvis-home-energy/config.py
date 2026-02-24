@@ -40,6 +40,19 @@ SRP_ACCOUNT = ""
 SRP_USERNAME = ""
 SRP_PASSWORD = ""
 
+# ─── Wyze Cameras ─────────────────────────────────────────────────────────────
+WYZE_EMAIL = ""
+WYZE_PASSWORD = ""
+WYZE_API_KEY = ""        # From developer.wyze.com (preferred over password)
+WYZE_KEY_ID = ""         # API key ID from developer.wyze.com
+
+# ─── Ring Doorbell ────────────────────────────────────────────────────────────
+RING_EMAIL = ""
+RING_PASSWORD = ""
+
+# ─── Nest Thermostat ─────────────────────────────────────────────────────────
+NEST_ACCESS_TOKEN = ""   # From nest_thermostat auth flow or Google SDM
+
 # ─── Dashboard ────────────────────────────────────────────────────────────────
 DASHBOARD_PORT = 8793
 POLL_INTERVAL_SECONDS = 5

@@ -138,26 +138,36 @@ def format_tokens(n):
     return str(n)
 
 
+def _try_fetch_usage(creds_path):
+    """Single attempt to fetch Anthropic usage with token from creds_path."""
+    with open(creds_path, 'r') as f:
+        creds = json.load(f)
+    token = creds.get("claudeAiOauth", {}).get("accessToken", "")
+    if not token:
+        return None
+    result = subprocess.run(
+        ["curl", "-s", "-H", f"Authorization: Bearer {token}",
+         "-H", "anthropic-beta: oauth-2025-04-20",
+         "https://api.anthropic.com/api/oauth/usage"],
+        capture_output=True, text=True, timeout=10
+    )
+    data = json.loads(result.stdout)
+    if isinstance(data, dict) and data.get('type') == 'error':
+        return None
+    return data
+
+
 def fetch_anthropic_usage():
-    """Fetch real utilization % from Anthropic OAuth usage endpoint."""
+    """Fetch real utilization % from Anthropic OAuth usage endpoint.
+    Retries once after 10s to allow gateway to refresh an expired token."""
     creds_path = os.path.expanduser("~/.claude/.credentials.json")
     try:
-        with open(creds_path, 'r') as f:
-            creds = json.load(f)
-        token = creds.get("claudeAiOauth", {}).get("accessToken", "")
-        if not token:
-            return None
-        result = subprocess.run(
-            ["curl", "-s", "-H", f"Authorization: Bearer {token}",
-             "-H", "anthropic-beta: oauth-2025-04-20",
-             "https://api.anthropic.com/api/oauth/usage"],
-            capture_output=True, text=True, timeout=10
-        )
-        data = json.loads(result.stdout)
-        # If API returned an error object, treat as no data
-        if isinstance(data, dict) and data.get('type') == 'error':
-            return None
-        return data
+        data = _try_fetch_usage(creds_path)
+        if data is not None:
+            return data
+        # First attempt failed — wait for gateway to refresh token, then retry
+        time.sleep(10)
+        return _try_fetch_usage(creds_path)
     except Exception:
         return None
 

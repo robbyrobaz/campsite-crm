@@ -1,33 +1,17 @@
 {
-  "lastUpdated": "2026-02-23T23:43:00Z",
-  "activeTasks": [
-    {
-      "cardId": "c_f1d36e5aea577_19c8c0145ae",
-      "title": "Investigate volatility_expansion_volume_breakout for tier promotion",
-      "status": "In Progress",
-      "project": "blofin-stack",
-      "pid": 1018557,
-      "note": "Dispatched 4:43 PM MST. tier=0 gate=fail, ft_pf=2.207, WR=68.8%, 16 FT trades. Sole blocker likely GATE_MIN_TRADES=100. Stale threshold: 5:13 PM MST."
-    }
-  ],
+  "lastUpdated": "2026-02-23T00:19:00Z",
+  "activeTasks": [],
   "recentlyDone": [
     {
-      "title": "NQ ETB equal_tops_bottoms expert strategy",
-      "completedAt": "2026-02-23T23:40Z",
-      "note": "Done. Cleaned up prior SIGTERM sessions. State correct."
+      "title": "NQ Research Scientist run #1",
+      "completedAt": "2026-02-23T00:19Z",
+      "note": "vwap_fade candidate filter fixed (40%→2.3% bars, 82K→3.2K trades). PF held at 2.08. Edge confirmed real. ExperimentEngine threshold bug fixed. 6/6 pass gates."
     }
   ],
-  "blofin": {
-    "gatePassStrategies": 1,
-    "note": "cross_asset_correlation gate=pass. vwap_reversion durable fix card in Inbox (c_c264400d324d6). Paper engine needs 2nd gate=pass."
-  },
   "systemHealth": {
-    "cpuTemp": "68C",
+    "services": "all active",
+    "cpuTemp": "65C",
     "diskUsage": "38%",
-    "services": "all active"
-  },
-  "nextActions": [
-    "Monitor vol_expansion — stale threshold 5:13 PM MST",
-    "After vol_expansion: dispatch vwap_reversion durable fix (c_c264400d324d6)"
-  ]
+    "tokenUsage7d": "47%"
+  }
 }

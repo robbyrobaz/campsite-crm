@@ -1,54 +1,55 @@
 {
-  "updated": "2026-02-23T22:44:00-07:00",
-  "pulse": "2026-02-23T22:43:00-07:00",
+  "updated": "2026-02-23T22:53:00-07:00",
+  "pulse": "2026-02-23T22:53:00-07:00",
   "activeTasks": [
     {
-      "id": "c_dc114298dfb45_19c8d7e254b",
-      "title": "Tesla Gateway + Cybertruck dashboard pages on jarvis-home-energy (port 8793)",
+      "id": "c_2ba38295a037e_19c8e365204",
+      "title": "NQ Pipeline: ML Exit God-Model (entry + exit both ML)",
       "status": "In Progress",
-      "assignee": "claude",
-      "project": "jarvis-home-energy",
-      "pid": 1479834,
-      "dispatched": "2026-02-23T22:44:00-07:00",
-      "stale_at": "2026-02-23T23:14:00-07:00"
+      "assignee": "nq-exit-ml-builder (sonnet)",
+      "sessionKey": "agent:main:subagent:75360bc9-f8d5-4c97-9b7d-e897cd314c7f",
+      "project": "ninja_trader_strategies",
+      "dispatched": "2026-02-23T22:53:00-07:00",
+      "stale_at": "2026-02-23T23:23:00-07:00"
     }
   ],
   "board": {
     "inProgress": 1,
     "planned": 0,
     "reviewTest": 0,
-    "inbox": 4
+    "inbox": 5
   },
   "health": {
-    "cpu_temp": "60C",
+    "cpu_temp": "68C",
     "disk_pct": 37,
-    "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active"],
+    "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active", "nq-dashboard:active", "jarvis-home-energy:active", "claw-kanban:active"],
     "critical_monitor": "EXIT:0"
   },
   "recentlyCompleted": [
     {
-      "id": "c_975c70e34d647_19c8d1cccaf",
-      "title": "Build Home Energy OS dashboard — SPAN panel live, Phase 1",
-      "completed": "2026-02-23T22:18:00-07:00",
-      "result": "Live at http://localhost:8892. Grid=7154W import, Solar=37.9kWh today, 21 circuits tracked. SPAN panel authenticated and serving live data."
+      "id": "nest-integration",
+      "title": "Nest thermostat integration via Google SDM API — 2 thermostats online",
+      "completed": "2026-02-23T22:51:00-07:00",
+      "result": "Downstairs 70°F + Loft Upstairs 72.4°F, both COOLING. Token auto-refreshes. Both thermostat cards with ± controls in Home Control view."
     },
     {
-      "id": "c_a20294ae0f27_19c8cb08e2a",
-      "title": "vwap_fade deep dive",
-      "completed": "2026-02-23T21:49:00-07:00",
-      "result": "WR=51.7%, PF=2.14, 2207 signals, 10/10 CI folds pass. PostMarket best (PF=2.52), MidDay weakest (PF=1.70)."
+      "id": "wyze-fix",
+      "title": "Wyze camera integration fixed — 3 cameras online",
+      "completed": "2026-02-23T22:24:00-07:00",
+      "result": "Wrong API key + double-login bug fixed. 3 cameras: Front Side, Upstairs, Downstairs. No snapshots (wyze-sdk 2.2.0 dropped that method)."
     }
   ],
   "inboxQueue": [
-    "c_c731788cfcfd1 — Cameras + Nest + Ring integration (jarvis-home-energy)",
-    "c_a642d17ac5cd9 — B-Hyve sprinkler integration (jarvis-home-energy)",
-    "c_4d4df8a920da3 — NQ Phase 3 (blocked)",
+    "c_dc114298dfb45 — Tesla Gateway + Cybertruck dashboard pages",
+    "c_c731788cfcfd1 — Cameras + Ring integration (Wyze done, Ring invite pending)",
+    "c_a642d17ac5cd9 — B-Hyve sprinkler integration",
+    "c_4d4df8a920da3 — NQ Phase 3 (blocked pending Phase 2 complete)",
     "c_57eff3238cdd4 — NQ Phase 4 (blocked)"
   ],
   "notes": [
-    "Quiet time starts 23:00 MST — Tesla card dispatched as last task of the evening",
-    "Full evening run: 6 cards completed (vwap_reversion, VEB FT, ExperimentEngine, vwap_fade, Home Energy OS Phase 1, Tesla dispatched)",
-    "Home energy cluster: Cameras+Ring + B-Hyve queued for morning",
-    "Blofin stack healthy — vwap_reversion tier=2 durable, VEB FT window fixed"
+    "NQ exit-ml builder running (sonnet) — ETA 20-30 min for full WF run on 397K bars",
+    "Wyze cameras: no snapshots possible without RTSP firmware flash (SDK limitation)",
+    "Ring invite: still pending acceptance in jarvis Gmail",
+    "Nest: client_id, client_secret, refresh_token, project_id all saved in config.py"
   ]
 }

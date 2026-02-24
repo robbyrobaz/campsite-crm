@@ -1,14 +1,26 @@
 {
-  "updatedAt": "2026-02-24T23:30:00Z",
-  "activeTasks": [],
+  "updatedAt": "2026-02-24T23:43:00Z",
+  "activeTasks": [
+    {
+      "id": "c_7bd48301a6b37_19c92059f46",
+      "title": "NQ ML: add permanent blacklist column to strategy_registry",
+      "status": "In Progress",
+      "ageMin": 3
+    },
+    {
+      "id": "c_67d58a271fce8_19c92059b22",
+      "title": "NQ Pipeline: backtest all 6 strategies on latest IBKR data",
+      "status": "In Progress",
+      "ageMin": 3
+    }
+  ],
   "health": {
-    "cpu_temp": "52°C",
-    "disk": "39% used (171G/468G)",
+    "cpu_temp": "85°C",
+    "disk": "39% used (172G/468G)",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "blofin-dashboard": "active"
+      "blofin-stack-paper": "active"
     },
     "critical_alerts": "clean (exit 0)"
   }

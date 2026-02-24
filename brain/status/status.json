@@ -1,21 +1,12 @@
 {
-  "updated": "2026-02-24T14:25:00-07:00",
-  "pulse": "2026-02-24T14:25:00-07:00",
-  "activeTasks": [
-    {
-      "id": "c_cce423409d8d5_19c913d6663",
-      "title": "NQ Phase 3: IB Gateway install + ib_insync streaming client",
-      "status": "in-progress",
-      "startedAt": "2026-02-24T14:25:00-07:00",
-      "subagentSession": "agent:main:subagent:a4d6aacc-18a3-4e8f-a6f4-2f8314eb91ab",
-      "notes": "Builder spawned. Installing IB Gateway + IBC on omen-claw. Paper mode port 4002."
-    }
-  ],
-  "board": { "inProgress": 1, "planned": 2, "reviewTest": 0, "inbox": 1, "done": 97 },
+  "updated": "2026-02-24T14:32:00-07:00",
+  "pulse": "2026-02-24T14:32:00-07:00",
+  "activeTasks": [],
+  "board": { "inProgress": 0, "planned": 0, "reviewTest": 0, "inbox": 0, "done": 205 },
   "health": {
-    "cpu_temp": "52C",
-    "disk_pct": 38,
-    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active","blofin-dashboard:active"],
+    "cpu_temp": "77C",
+    "disk_pct": 39,
+    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active","blofin-dashboard:active","ibgateway:active"],
     "critical_monitor": "EXIT:0"
   },
   "notes": [
@@ -23,6 +14,7 @@
     "TradersPost webhook: 51e37934-7a18-4e37-9dc5-33416a36d579 (needs rotation — was shared in chat)",
     "Execution chain: TradersPost -> Tradovate -> Lucid prop accounts",
     "Data chain: IB Gateway (paper, port 4002) -> ib_insync -> NQ pipeline",
-    "Rob: may need to fund IBKR account to $500 before paper gateway works"
+    "IB Gateway: fixed IBC tws-path symlink issue, service now active (paper mode, auto-login running)",
+    "campsite-crm: 12 uncommitted files — needs git push when ready"
   ]
 }

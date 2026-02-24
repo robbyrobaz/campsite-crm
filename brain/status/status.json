@@ -1,12 +1,12 @@
 {
-  "updated": "2026-02-24T06:30:00-07:00",
-  "pulse": "2026-02-24T06:30:00-07:00",
+  "updated": "2026-02-24T06:43:00-07:00",
+  "pulse": "2026-02-24T06:43:00-07:00",
   "activeTasks": [],
-  "board": { "inProgress": 0, "planned": 0, "reviewTest": 0, "inbox": 0, "done": 97 },
+  "board": { "inProgress": 0, "planned": 0, "inbox": 3 },
   "health": {
-    "cpu_temp": "54C",
+    "cpu_temp": "51C",
     "disk_pct": 38,
-    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active","blofin-dashboard:active"],
+    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active"],
     "critical_monitor": "EXIT:0"
   },
   "recentlyCompleted": [
@@ -14,7 +14,7 @@
       "id": "c_86962a39967eb_19c8ed5e645",
       "title": "NQ: Expand feature set — volume profile, VWAP distance, ES/YM correlation",
       "completed": "2026-02-24T03:56:00-07:00",
-      "result": "Done per kanban."
+      "result": "Done per kanban. Features added."
     },
     {
       "id": "c_6b609758ab776",
@@ -23,14 +23,14 @@
       "result": "LightGBM beat XGBoost 8/10 WF folds — promoted to champion."
     }
   ],
-  "inboxQueue": [],
+  "inboxQueue": [
+    "NQ: Cyclical time encoding (hour_sin/hour_cos)",
+    "NQ: ATR trailing stop vs ML exit",
+    "NQ: Phase 3 paper trading setup"
+  ],
   "notes": [
-    "Numerai daily bot firing at 06:32 AM MST (imminent) — all 3 model dirs confirmed",
-    "blofin-stack: 12 commits ahead of remote, 3 uncommitted files — push needed",
-    "master-dashboard: 2 commits ahead of remote",
-    "ai-workshop: on branch sports-betting/phase2-real-apps (not main)",
-    "BTC dip trader: ran successfully today at ~11:08 UTC (exit 0)",
-    "Kanban fully clear: 0 In Progress / Planned / Review. 97 Done cards.",
-    "Token rate limit % unavailable in token_usage.md (fetch issue); 24h: Sonnet 1273 req, Opus 344 req"
+    "Board idle — 0 In Progress, 0 Planned, 3 in Inbox awaiting promotion",
+    "Numerai daily bot should have fired at ~6:32 AM MST (11 min ago)",
+    "CPU 51C, disk 38%, all services active — system quiet overnight"
   ]
 }

@@ -43,15 +43,20 @@ SRP_PASSWORD = ""
 # ─── Wyze Cameras ─────────────────────────────────────────────────────────────
 WYZE_EMAIL = "rob.hartwig@gmail.com"
 WYZE_PASSWORD = "5Acq3ce3#8s$uHS"
-WYZE_API_KEY = "RI650dYTN7toI4Fa7e9670Qwg4qY3OURDborqbMHqgaCbaOFk6EC047GqlHs"
-WYZE_KEY_ID = "3cc27d1a-1083-4ebc-acf6-bfed5ab05a65"
+WYZE_API_KEY = "Fn1phBRix8ifLx0t5f3ktIyVfz2uRBSWdipswwjAiEJ0Z8SIAmVnaCNZLoOL"
+WYZE_KEY_ID = "ec0dd323-1db4-4e81-8cd4-a4feab256bae"
 
 # ─── Ring Doorbell ────────────────────────────────────────────────────────────
 RING_EMAIL = ""
 RING_PASSWORD = ""
 
-# ─── Nest Thermostat ─────────────────────────────────────────────────────────
-NEST_ACCESS_TOKEN = ""   # From nest_thermostat auth flow or Google SDM
+# ─── Nest Thermostat (Google SDM API) ────────────────────────────────────────
+# OAuth app: Google Cloud project 574885630755
+NEST_CLIENT_ID = "574885630755-q50rqpgonjsr603ccjkgl5ra25mmp97e.apps.googleusercontent.com"
+NEST_CLIENT_SECRET = "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"
+NEST_REFRESH_TOKEN = "1//06gPKGWopgVBUCgYIARAAGAYSNwF-L9IrCgnJ43ttjwJ9aok18HwaH_QSG1GxA-hDYo1g5JOxjIRcGO3lAcFpDnOfRCnOggM0_RU"
+NEST_PROJECT_ID = "edc12ede-0076-42d4-86d8-c87f49aec4b4"
+NEST_ACCESS_TOKEN = ""  # Auto-refreshed at runtime — leave blank
 
 # ─── B-Hyve Sprinkler ─────────────────────────────────────────────────────────
 # Device: 192.168.68.66 (Orbit B-Hyve controller) — cloud API only via api.orbitbhyve.com

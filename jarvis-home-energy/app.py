@@ -55,9 +55,43 @@ try:
 except ImportError:
     RING_EMAIL = ""; RING_PASSWORD = ""
 try:
-    from config import NEST_ACCESS_TOKEN
+    from config import NEST_CLIENT_ID, NEST_CLIENT_SECRET, NEST_REFRESH_TOKEN, NEST_PROJECT_ID
+    NEST_ACCESS_TOKEN = ""  # refreshed at runtime
 except ImportError:
+    NEST_CLIENT_ID = ""; NEST_CLIENT_SECRET = ""; NEST_REFRESH_TOKEN = ""; NEST_PROJECT_ID = ""
     NEST_ACCESS_TOKEN = ""
+
+# Cached SDM access token (expires in 1h — auto-refreshed)
+_nest_access_token = ""
+_nest_token_expiry = 0.0
+_nest_token_lock = threading.Lock()
+
+def _get_nest_access_token():
+    """Return a valid SDM access token, refreshing if expired."""
+    global _nest_access_token, _nest_token_expiry
+    if not NEST_REFRESH_TOKEN:
+        return None
+    with _nest_token_lock:
+        if _nest_access_token and time.time() < _nest_token_expiry - 60:
+            return _nest_access_token
+        try:
+            import urllib.request, urllib.parse
+            data = urllib.parse.urlencode({
+                "client_id": NEST_CLIENT_ID,
+                "client_secret": NEST_CLIENT_SECRET,
+                "refresh_token": NEST_REFRESH_TOKEN,
+                "grant_type": "refresh_token",
+            }).encode()
+            req = urllib.request.Request("https://oauth2.googleapis.com/token", data=data, method="POST")
+            with urllib.request.urlopen(req, timeout=10) as r:
+                resp = json.loads(r.read())
+            _nest_access_token = resp["access_token"]
+            _nest_token_expiry = time.time() + resp.get("expires_in", 3600)
+            log.info("Nest SDM token refreshed OK")
+            return _nest_access_token
+        except Exception as e:
+            log.warning("Nest token refresh error: %s", e)
+            return None
 try:
     from config import BHYVE_EMAIL, BHYVE_PASSWORD
 except ImportError:
@@ -81,6 +115,38 @@ _state = {
 }
 _sse_subscribers = []
 _sse_lock = threading.Lock()
+
+# Wyze — single cached client (login once, reuse across polls + snapshots)
+_wyze_client = None
+_wyze_client_lock = threading.Lock()
+_wyze_next_retry = 0   # epoch seconds — don't retry auth before this time
+_camera_poll_counter = 0  # throttle: refresh camera list every 60s (every 12 ticks at 5s)
+
+def _get_wyze_client(force_refresh=False):
+    """Return a cached Wyze Client, creating/refreshing only when needed.
+    Implements backoff: after a failed auth, wait 5 min before retrying."""
+    global _wyze_client, _wyze_next_retry
+    if not (WYZE_API_KEY and WYZE_KEY_ID and WYZE_EMAIL and WYZE_PASSWORD):
+        return None
+    with _wyze_client_lock:
+        if _wyze_client is not None and not force_refresh:
+            return _wyze_client
+        # Respect backoff window
+        if time.time() < _wyze_next_retry:
+            return None
+        try:
+            from wyze_sdk import Client
+            _wyze_client = Client(
+                email=WYZE_EMAIL, password=WYZE_PASSWORD,
+                api_key=WYZE_API_KEY, key_id=WYZE_KEY_ID
+            )
+            _wyze_next_retry = 0
+            log.info("Wyze client authenticated OK")
+        except Exception as e:
+            log.warning("Wyze auth error: %s — backing off 5 min", e)
+            _wyze_client = None
+            _wyze_next_retry = time.time() + 300  # retry in 5 min
+        return _wyze_client
 
 
 # ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -525,6 +591,20 @@ def poll_tesla():
         soe = soe_data.get("percentage", 0)
         grid_state = grid_status.get("grid_status", "?")
 
+        # Best-effort: backup reserve % and site name
+        backup_reserve = 0
+        site_name = ""
+        try:
+            op_data = _tesla_get("/api/operation")
+            backup_reserve = op_data.get("backup_reserve_percent", 0)
+        except Exception:
+            pass
+        try:
+            site_data = _tesla_get("/api/site_info/site_name")
+            site_name = site_data.get("site_name", "")
+        except Exception:
+            pass
+
         with _state_lock:
             _state["tesla"] = {
                 "status": "online",
@@ -535,6 +615,8 @@ def poll_tesla():
                 "load_w": round(load_w, 0),
                 "grid_state": grid_state,
                 "islanded": grid_state == "SystemIslandedActive",
+                "backup_reserve_percent": round(backup_reserve, 1),
+                "site_name": site_name,
             }
         return True
     except Exception as e:
@@ -587,13 +669,10 @@ def _update_summary():
 def poll_cameras():
     cameras = []
 
-    # Wyze — requires email + password + api_key + key_id
-    if WYZE_API_KEY and WYZE_KEY_ID and WYZE_EMAIL and WYZE_PASSWORD:
+    # Wyze — uses cached client (login once, reuse)
+    client = _get_wyze_client()
+    if client:
         try:
-            from wyze_sdk import Client
-            client = Client(email=WYZE_EMAIL, password=WYZE_PASSWORD,
-                            api_key=WYZE_API_KEY, key_id=WYZE_KEY_ID)
-            client.login()
             devices = client.cameras.list()
             for cam in devices:
                 cameras.append({
@@ -605,7 +684,9 @@ def poll_cameras():
                     "snapshot_path": f"/api/camera/{cam.mac}/snapshot",
                 })
         except Exception as e:
-            log.warning("Wyze poll error: %s", e)
+            log.warning("Wyze poll error: %s — forcing client refresh next cycle", e)
+            global _wyze_client
+            _wyze_client = None  # force re-auth next cycle
 
     # Ring
     if RING_EMAIL and RING_PASSWORD:
@@ -634,27 +715,62 @@ def poll_cameras():
 
 # ── Nest Thermostat Adapter ───────────────────────────────────────────────────
 
+def _c_to_f(c):
+    return round(c * 9 / 5 + 32, 1)
+
 def poll_nest():
-    if not NEST_ACCESS_TOKEN:
+    if not NEST_PROJECT_ID or not NEST_REFRESH_TOKEN:
         with _state_lock:
             _state["nest"]["status"] = "unconfigured"
         return False
+    token = _get_nest_access_token()
+    if not token:
+        with _state_lock:
+            _state["nest"]["status"] = "error"
+        return False
     try:
-        import nest_thermostat
-        napi = nest_thermostat.App(access_token=NEST_ACCESS_TOKEN)
-        thermostats = napi.thermostats
-        if not thermostats:
-            raise RuntimeError("No thermostats found")
-        t = list(thermostats.values())[0]
+        import urllib.request
+        url = f"https://smartdevicemanagement.googleapis.com/v1/enterprises/{NEST_PROJECT_ID}/devices"
+        req = urllib.request.Request(url, headers={"Authorization": f"Bearer {token}"})
+        with urllib.request.urlopen(req, timeout=10) as r:
+            data = json.loads(r.read())
+        devices = data.get("devices", [])
+        thermostats = []
+        for d in devices:
+            if d.get("type") != "sdm.devices.types.THERMOSTAT":
+                continue
+            tr = d.get("traits", {})
+            room = (d.get("parentRelations") or [{}])[0].get("displayName", "Thermostat")
+            connectivity = tr.get("sdm.devices.traits.Connectivity", {}).get("status", "OFFLINE")
+            temp_c = tr.get("sdm.devices.traits.Temperature", {}).get("ambientTemperatureCelsius", 0)
+            sp = tr.get("sdm.devices.traits.ThermostatTemperatureSetpoint", {})
+            mode = tr.get("sdm.devices.traits.ThermostatMode", {}).get("mode", "OFF")
+            hvac = tr.get("sdm.devices.traits.ThermostatHvac", {}).get("status", "OFF")
+            humidity = tr.get("sdm.devices.traits.Humidity", {}).get("ambientHumidityPercent", 0)
+            thermostats.append({
+                "id": d["name"].split("/")[-1],
+                "device_name": d["name"],
+                "name": room,
+                "status": "online" if connectivity == "ONLINE" else "offline",
+                "temp_f": _c_to_f(temp_c),
+                "cool_setpoint_f": _c_to_f(sp.get("coolCelsius", 0)) if sp.get("coolCelsius") else None,
+                "heat_setpoint_f": _c_to_f(sp.get("heatCelsius", 0)) if sp.get("heatCelsius") else None,
+                "mode": mode,
+                "hvac_state": hvac,
+                "humidity": humidity,
+            })
+        primary = thermostats[0] if thermostats else {}
         with _state_lock:
             _state["nest"] = {
-                "status": "online",
-                "temp_f": t.temperature,
-                "setpoint_f": t.target,
-                "mode": t.mode,
-                "hvac_state": t.hvac_state,
-                "humidity": t.humidity,
-                "name": t.name,
+                "status": "online" if thermostats else "error",
+                "thermostats": thermostats,
+                # backward-compat fields from primary thermostat
+                "name": primary.get("name", ""),
+                "temp_f": primary.get("temp_f", 0),
+                "setpoint_f": primary.get("cool_setpoint_f") or primary.get("heat_setpoint_f") or 0,
+                "mode": primary.get("mode", "OFF"),
+                "hvac_state": primary.get("hvac_state", "OFF"),
+                "humidity": primary.get("humidity", 0),
             }
         return True
     except Exception as e:
@@ -852,11 +968,19 @@ def poll_bhyve():
 
 def _poll_loop():
     import concurrent.futures
+    global _camera_poll_counter
     log.info("Polling loop started (interval=%ds, parallel)", POLL_INTERVAL_SECONDS)
+    _camera_poll_counter = 11  # trigger camera poll on first tick
     while True:
+        # Cameras: poll every 60s (every 12 ticks at 5s) — Wyze login is rate-limited
+        _camera_poll_counter += 1
+        poll_fns = [poll_pentair, poll_span, poll_enphase, poll_tesla, poll_wall_connector, poll_nest, poll_bhyve]
+        if _camera_poll_counter >= 12:
+            poll_fns.append(poll_cameras)
+            _camera_poll_counter = 0
         # Run all device polls concurrently — Pentair can take 45s, don't let it block solar/SPAN
         with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
-            futs = [ex.submit(f) for f in (poll_pentair, poll_span, poll_enphase, poll_tesla, poll_wall_connector, poll_cameras, poll_nest, poll_bhyve)]
+            futs = [ex.submit(f) for f in poll_fns]
             concurrent.futures.wait(futs, timeout=60)
         _update_summary()
         _broadcast_sse()
@@ -1008,16 +1132,8 @@ def camera_snapshot(cam_id):
                     r = _requests.get(url, timeout=5)
                     return Response(r.content, mimetype='image/jpeg')
         else:
-            if not WYZE_API_KEY or not WYZE_EMAIL or not WYZE_PASSWORD:
-                return '', 204
-            from wyze_sdk import Client
-            client = Client(email=WYZE_EMAIL, password=WYZE_PASSWORD,
-                            api_key=WYZE_API_KEY, key_id=WYZE_KEY_ID)
-            client.login()
-            img = client.cameras.get_thumbnail(device_mac=cam_id)
-            if img:
-                r = _requests.get(img, timeout=5)
-                return Response(r.content, mimetype='image/jpeg')
+            # wyze-sdk 2.2.0 has no snapshot/thumbnail method — return 204
+            return '', 204
     except Exception as e:
         log.warning("Snapshot error for %s: %s", cam_id, e)
     return '', 204
@@ -1025,16 +1141,43 @@ def camera_snapshot(cam_id):
 
 @app.route("/api/nest/setpoint", methods=["POST"])
 def nest_setpoint():
-    global NEST_ACCESS_TOKEN
-    if not NEST_ACCESS_TOKEN:
+    """Set cool and/or heat setpoint. Body: {device_name, cool_f, heat_f}"""
+    if not NEST_PROJECT_ID or not NEST_REFRESH_TOKEN:
         return jsonify({"ok": False, "error": "not configured"})
+    token = _get_nest_access_token()
+    if not token:
+        return jsonify({"ok": False, "error": "token refresh failed"})
     try:
-        data = request.get_json()
-        temp = float(data.get('temp', 70))
-        import nest_thermostat
-        napi = nest_thermostat.App(access_token=NEST_ACCESS_TOKEN)
-        t = list(napi.thermostats.values())[0]
-        t.target = temp
+        import urllib.request
+        body = request.get_json() or {}
+        # Use first thermostat if device_name not specified
+        with _state_lock:
+            thermostats = _state["nest"].get("thermostats", [])
+        if not thermostats:
+            return jsonify({"ok": False, "error": "no thermostats found"})
+        device_name = body.get("device_name") or thermostats[0]["device_name"]
+        cool_f = body.get("cool_f")
+        heat_f = body.get("heat_f")
+
+        def f_to_c(f): return (float(f) - 32) * 5 / 9
+
+        if cool_f and heat_f:
+            payload = {"command": "sdm.devices.commands.ThermostatTemperatureSetpoint.SetRange",
+                       "params": {"coolCelsius": f_to_c(cool_f), "heatCelsius": f_to_c(heat_f)}}
+        elif cool_f:
+            payload = {"command": "sdm.devices.commands.ThermostatTemperatureSetpoint.SetCool",
+                       "params": {"coolCelsius": f_to_c(cool_f)}}
+        else:
+            payload = {"command": "sdm.devices.commands.ThermostatTemperatureSetpoint.SetHeat",
+                       "params": {"heatCelsius": f_to_c(heat_f)}}
+
+        url = f"https://smartdevicemanagement.googleapis.com/v1/{device_name}:executeCommand"
+        req = urllib.request.Request(url,
+            data=json.dumps(payload).encode(),
+            headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"},
+            method="POST")
+        with urllib.request.urlopen(req, timeout=10) as r:
+            r.read()
         return jsonify({"ok": True})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)})
@@ -1834,23 +1977,24 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <!-- ═══ TESLA ENERGY ════════════════════════════════════════════════════════ -->
 <div id="view-tesla-energy" class="view">
 
+  <!-- Header row -->
   <div class="row">
     <div class="card" style="flex:2;min-width:300px">
       <div class="card-header">
         <span class="card-title" style="font-size:13px;font-weight:700">⚡ Tesla Energy Gateway V2</span>
         <span class="badge" id="tesla-energy-badge">—</span>
       </div>
-      <div class="device-detail">192.168.68.86 · MAC: dc:f3:1c:25:1e:cc</div>
-      <div class="device-detail">Serial: GF2240460002D2 · Firmware: 25.26.0</div>
+      <div id="te-site-name" style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px">—</div>
+      <div class="device-detail">192.168.68.86 · Serial: GF2240460002D2 · Firmware: 25.26.0</div>
       <div class="device-detail">Backup: Whole Home · Utility: SRP</div>
     </div>
-    <div class="card" style="flex:1;min-width:200px">
-      <div class="card-header"><span class="card-title">Gateway Info</span></div>
-      <div class="device-detail">IP: 192.168.68.86</div>
-      <div class="device-detail">Serial: GF2240460002D2</div>
-      <div class="device-detail">Firmware: 25.26.0</div>
-      <div class="device-detail">Backup: Whole Home</div>
-      <div class="device-detail">Utility: SRP</div>
+    <div class="card" style="flex:1;min-width:180px">
+      <div class="card-header"><span class="card-title">Grid State</span></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:4px">
+        <div id="te-grid-state-dot" style="width:12px;height:12px;border-radius:50%;background:var(--offline);flex-shrink:0"></div>
+        <span style="font-size:15px;font-weight:700" id="te-grid-state-text">—</span>
+      </div>
+      <div class="device-detail" style="margin-top:6px" id="te-grid-state-detail">Waiting for gateway…</div>
     </div>
   </div>
 
@@ -1873,34 +2017,72 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <div id="tesla-pw-status" style="font-size:11px;margin-top:8px;color:var(--text-dim)"></div>
   </div>
 
-  <!-- Energy flow tiles — shown only when online -->
+  <!-- Live gauges — shown only when online -->
   <div id="tesla-energy-tiles" style="display:none">
     <div class="section-title">Live Energy Flow</div>
-    <div class="grid grid-4" style="margin-bottom:12px">
-      <div class="card energy-solar">
-        <div class="card-header"><span class="card-title">Solar</span></div>
-        <div class="big-val c-solar" id="te-solar">—</div><span class="big-unit">W</span>
-      </div>
-      <div class="card energy-battery">
-        <div class="card-header">
-          <span class="card-title">Battery SOC</span>
-          <span id="te-bat-dir" style="font-size:18px;color:var(--battery)">—</span>
+
+    <!-- Gauge row: Battery SOC ring · Solar arc · Grid + Load -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+
+      <!-- Battery SOC ring -->
+      <div class="card energy-battery" style="flex:1;min-width:210px;display:flex;flex-direction:column;align-items:center;padding:20px 16px">
+        <div class="card-title" style="margin-bottom:10px;align-self:flex-start">Battery SOC</div>
+        <svg viewBox="0 0 120 120" style="width:130px;height:130px">
+          <circle cx="60" cy="60" r="50" fill="none" stroke="var(--surface2)" stroke-width="12"/>
+          <circle id="te-soc-arc" cx="60" cy="60" r="50" fill="none" stroke="var(--battery)" stroke-width="12"
+            stroke-dasharray="314" stroke-dashoffset="314"
+            stroke-linecap="round" transform="rotate(-90 60 60)"
+            style="transition:stroke-dashoffset .8s ease,stroke .4s"/>
+          <text id="te-soc-text" x="60" y="56" text-anchor="middle" dominant-baseline="central"
+            fill="#10b981" font-size="26" font-weight="700" font-family="monospace">—</text>
+          <text x="60" y="76" text-anchor="middle" fill="#64748b" font-size="11" font-family="monospace">% SOC</text>
+        </svg>
+        <span id="te-soe" style="display:none"></span>
+        <div class="sub-val" id="te-bat-w" style="margin-top:4px;font-size:13px">— W</div>
+        <div class="sub-val" id="te-bat-dir" style="color:var(--battery);margin-top:2px">—</div>
+        <div style="width:100%;margin-top:12px">
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-dim);margin-bottom:4px">
+            <span>Backup Reserve</span>
+            <span id="te-reserve-pct" style="color:var(--grid);font-weight:600">—</span>
+          </div>
+          <div class="bar-bg"><div class="bar-fill" id="te-reserve-bar" style="width:0%;background:var(--grid)"></div></div>
         </div>
-        <div class="big-val c-battery" id="te-soe">—</div><span class="big-unit">%</span>
-        <div class="sub-val" id="te-bat-w">— W</div>
       </div>
-      <div class="card energy-grid">
+
+      <!-- Solar arc gauge (half-circle, max 10 kW) -->
+      <!-- viewBox 0 0 140 90; center=(70,80) r=56 → half-circle arc length≈176 -->
+      <div class="card energy-solar" style="flex:1;min-width:210px;display:flex;flex-direction:column;align-items:center;padding:20px 16px">
+        <div class="card-title" style="margin-bottom:10px;align-self:flex-start">Solar Production</div>
+        <svg viewBox="0 0 140 90" style="width:150px;height:96px">
+          <path d="M 14,80 A 56,56 0 0 1 126,80" fill="none" stroke="var(--surface2)" stroke-width="12" stroke-linecap="round"/>
+          <path id="te-solar-arc" d="M 14,80 A 56,56 0 0 1 126,80" fill="none" stroke="var(--solar)" stroke-width="12"
+            stroke-linecap="round" stroke-dasharray="176" stroke-dashoffset="176"
+            style="transition:stroke-dashoffset .8s ease"/>
+          <text id="te-solar-text" x="70" y="68" text-anchor="middle"
+            fill="#f59e0b" font-size="22" font-weight="700" font-family="monospace">—</text>
+          <text x="70" y="83" text-anchor="middle" fill="#64748b" font-size="10" font-family="monospace">WATTS</text>
+        </svg>
+        <div style="display:flex;align-items:baseline;gap:4px;margin-top:8px">
+          <div class="big-val c-solar" id="te-solar" style="font-size:32px">—</div>
+          <span class="big-unit" style="font-size:16px">W</span>
+        </div>
+        <div class="sub-val" style="margin-top:6px">max 10 kW</div>
+      </div>
+
+      <!-- Grid + Home Load -->
+      <div class="card" style="flex:1;min-width:200px">
         <div class="card-header">
           <span class="card-title">Grid</span>
           <span class="badge" id="te-grid-badge">—</span>
         </div>
         <div class="big-val c-grid" id="te-grid">—</div><span class="big-unit">W</span>
-        <div class="sub-val" id="te-grid-dir">—</div>
-      </div>
-      <div class="card energy-load">
-        <div class="card-header"><span class="card-title">Home Load</span></div>
+        <div class="sub-val" id="te-grid-dir" style="margin-top:4px">—</div>
+        <div style="height:1px;background:var(--border);margin:14px 0"></div>
+        <div class="card-title" style="margin-bottom:8px">Home Load</div>
         <div class="big-val c-load" id="te-load">—</div><span class="big-unit">W</span>
+        <div class="sub-val" style="margin-top:4px">Total consumption</div>
       </div>
+
     </div>
   </div>
 
@@ -1961,6 +2143,10 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         <div>
           <div class="sub-val">Board Temp</div>
           <div style="font-size:16px;font-weight:600" id="ct-temp">— °C</div>
+        </div>
+        <div>
+          <div class="sub-val">Session Duration</div>
+          <div style="font-size:16px;font-weight:600;font-variant-numeric:tabular-nums" id="ct-session-dur">—</div>
         </div>
       </div>
     </div>
@@ -2032,58 +2218,18 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <div id="view-home-control" class="view">
   <div class="section-title">Home Control</div>
 
-  <!-- Nest Thermostat -->
-  <div class="row">
-    <div class="card" id="nest-card" style="min-width:320px;max-width:480px">
-      <div class="card-header">
-        <span class="card-title">🌡️ Nest Thermostat</span>
-        <span class="badge" id="nest-badge">unconfigured</span>
-      </div>
-
-      <!-- Unconfigured state -->
-      <div id="nest-setup-msg" style="color:var(--text-dim);font-size:12px">
-        Add your Nest access token in the <strong>Settings</strong> tab to connect.
-        <br><br>
-        <button class="btn primary" onclick="showView('settings')">Go to Settings →</button>
-      </div>
-
-      <!-- Configured state -->
-      <div id="nest-data" style="display:none">
-        <div style="display:flex;gap:24px;flex-wrap:wrap;align-items:flex-end;margin-bottom:16px">
-          <div>
-            <div class="sub-val">Current Temp</div>
-            <div class="big-val c-pool" id="nest-temp">—</div><span class="big-unit">°F</span>
-          </div>
-          <div>
-            <div class="sub-val">Setpoint</div>
-            <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
-              <button class="btn" id="nest-down" onclick="nestAdjust(-1)" style="font-size:16px;padding:4px 12px">−</button>
-              <span class="big-val" id="nest-setpoint" style="font-size:26px">—</span>
-              <span class="big-unit">°F</span>
-              <button class="btn" id="nest-up" onclick="nestAdjust(1)" style="font-size:16px;padding:4px 12px">+</button>
-            </div>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;flex-wrap:wrap">
-          <div>
-            <div class="sub-val">Mode</div>
-            <span class="badge" id="nest-mode">—</span>
-          </div>
-          <div>
-            <div class="sub-val">HVAC State</div>
-            <span class="badge" id="nest-hvac">—</span>
-          </div>
-          <div>
-            <div class="sub-val">Humidity</div>
-            <span style="font-size:13px;font-weight:600" id="nest-humidity">—</span>
-          </div>
-          <div>
-            <div class="sub-val">Name</div>
-            <span style="font-size:12px;color:var(--text-dim)" id="nest-name">—</span>
-          </div>
-        </div>
-      </div>
+  <!-- Nest Thermostats (dynamically rendered per device) -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-header">
+      <span class="card-title">🌡️ Nest Thermostats</span>
+      <span class="badge" id="nest-badge">unconfigured</span>
     </div>
+    <div id="nest-setup-msg" style="color:var(--text-dim);font-size:12px">
+      Configure Nest in the <strong>Settings</strong> tab to connect.
+      <br><br>
+      <button class="btn primary" onclick="showView('settings')">Go to Settings →</button>
+    </div>
+    <div id="nest-cards-container" style="display:none;display:flex;gap:16px;flex-wrap:wrap"></div>
   </div>
 </div><!-- /home-control -->
 
@@ -2538,24 +2684,68 @@ function renderState(s) {
     teBadge.className   = 'badge ' + statusColor(td.status);
   }
 
+  // Site name
+  const teNameEl = document.getElementById('te-site-name');
+  if (teNameEl && td.site_name) teNameEl.textContent = td.site_name;
+
+  // Grid state dot + label (always updated regardless of online status)
+  const teGridDot    = document.getElementById('te-grid-state-dot');
+  const teGridTxt    = document.getElementById('te-grid-state-text');
+  const teGridDetail = document.getElementById('te-grid-state-detail');
+  if (teGridDot && td.status === 'online') {
+    const islanded = td.islanded;
+    teGridDot.style.background = islanded ? 'var(--warning)' : 'var(--online)';
+    teGridDot.style.boxShadow  = islanded ? '0 0 6px var(--warning)' : '0 0 6px var(--online)';
+    if (teGridTxt)    teGridTxt.textContent    = islanded ? 'Islanded' : 'Grid-Tied';
+    if (teGridDetail) teGridDetail.textContent = islanded ? 'Operating on backup power' : 'Connected to SRP utility grid';
+  }
+
   const teslaOnline = td.status === 'online';
   if (teSetup) teSetup.style.display = teslaOnline ? 'none' : 'block';
   if (teTiles) teTiles.style.display = teslaOnline ? 'block' : 'none';
 
   if (teslaOnline) {
-    const batW  = td.battery_w || 0;
-    const gridW2 = td.grid_w || 0;
-    if (document.getElementById('te-solar')) {
-      document.getElementById('te-solar').textContent = Math.round(td.solar_w || 0);
-      document.getElementById('te-soe').textContent   = Math.round(td.soe || 0);
-      document.getElementById('te-bat-w').textContent  = fmt(Math.abs(batW));
-      document.getElementById('te-bat-dir').textContent = batW > 50 ? '↓ discharging' : (batW < -50 ? '↑ charging' : '○ idle');
-      document.getElementById('te-grid').textContent  = Math.round(Math.abs(gridW2));
-      document.getElementById('te-grid-dir').textContent = gridW2 > 50 ? 'Importing' : (gridW2 < -50 ? 'Exporting' : 'Balanced');
-      const tgb = document.getElementById('te-grid-badge');
-      tgb.textContent  = td.islanded ? 'islanded' : 'grid-tie';
-      tgb.className    = 'badge ' + (td.islanded ? 'warning' : 'online');
-      document.getElementById('te-load').textContent  = Math.round(td.load_w || 0);
+    const batW   = td.battery_w || 0;
+    const gridW2 = td.grid_w    || 0;
+    const soe    = td.soe       != null ? td.soe : 0;
+    const solarW = td.solar_w   || 0;
+
+    // Text metrics
+    const setT = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+    setT('te-solar',    Math.round(solarW));
+    setT('te-soe',      Math.round(soe));   // hidden span — compat
+    setT('te-bat-w',    fmt(Math.abs(batW)) + ' W');
+    setT('te-bat-dir',  batW > 50 ? '↓ discharging' : (batW < -50 ? '↑ charging' : '○ idle'));
+    setT('te-grid',     Math.round(Math.abs(gridW2)));
+    setT('te-grid-dir', gridW2 > 50 ? 'Importing from grid' : (gridW2 < -50 ? 'Exporting to grid' : 'Grid balanced'));
+    setT('te-load',     Math.round(td.load_w || 0));
+    const tgb = document.getElementById('te-grid-badge');
+    if (tgb) { tgb.textContent = td.islanded ? 'islanded' : 'grid-tie'; tgb.className = 'badge ' + (td.islanded ? 'warning' : 'online'); }
+
+    // Battery SOC ring (circumference 2π×50 ≈ 314)
+    const socArc  = document.getElementById('te-soc-arc');
+    const socText = document.getElementById('te-soc-text');
+    if (socArc) {
+      socArc.setAttribute('stroke-dashoffset', (314 * (1 - soe / 100)).toFixed(1));
+      const socColor = soe > 40 ? '#10b981' : (soe > 20 ? '#f59e0b' : '#ef4444');
+      socArc.setAttribute('stroke', socColor);
+      if (socText) { socText.textContent = Math.round(soe); socText.setAttribute('fill', socColor); }
+    }
+
+    // Solar arc gauge (half-circle arc length ≈ 176, max 10 kW)
+    const solarArc  = document.getElementById('te-solar-arc');
+    const solarText = document.getElementById('te-solar-text');
+    if (solarArc) {
+      solarArc.setAttribute('stroke-dashoffset', (176 * (1 - Math.min(solarW, 10000) / 10000)).toFixed(1));
+      if (solarText) solarText.textContent = solarW >= 1000 ? (solarW / 1000).toFixed(1) + 'k' : Math.round(solarW);
+    }
+
+    // Backup reserve bar
+    if (td.backup_reserve_percent != null) {
+      const rb  = document.getElementById('te-reserve-bar');
+      const rp2 = document.getElementById('te-reserve-pct');
+      if (rb)  rb.style.width  = td.backup_reserve_percent + '%';
+      if (rp2) rp2.textContent = td.backup_reserve_percent + '%';
     }
   }
 
@@ -2567,7 +2757,8 @@ function renderState(s) {
       Battery: <strong>${fmt(td.battery_w)}</strong> &nbsp;|&nbsp;
       Grid: <strong>${fmt(td.grid_w)}</strong> &nbsp;|&nbsp;
       Load: <strong>${fmt(td.load_w)}</strong> &nbsp;|&nbsp;
-      Grid state: <strong>${td.grid_state || '—'}</strong>
+      Grid state: <strong>${td.grid_state || '—'}</strong> &nbsp;|&nbsp;
+      Backup reserve: <strong>${td.backup_reserve_percent != null ? td.backup_reserve_percent + '%' : '—'}</strong>
     `;
   }
 
@@ -2593,6 +2784,14 @@ function renderState(s) {
   setEl('ct-session',       wc.session_energy_wh != null ? wc.session_energy_wh : '—');
   setEl('ct-grid-v',        wc.grid_v     != null ? wc.grid_v + ' V' : '— V');
   setEl('ct-temp',          wc.pcba_temp_c != null ? wc.pcba_temp_c + ' °C' : '— °C');
+  // Session duration h:mm:ss
+  const wcSessS = wc.session_s || 0;
+  if (wcSessS > 0) {
+    const sh = Math.floor(wcSessS / 3600), sm = Math.floor((wcSessS % 3600) / 60), ssc = wcSessS % 60;
+    setEl('ct-session-dur', sh + ':' + String(sm).padStart(2,'0') + ':' + String(ssc).padStart(2,'0'));
+  } else {
+    setEl('ct-session-dur', '—');
+  }
 
   // ── Cameras ──
   renderCameras(s.cameras || []);
@@ -2957,13 +3156,15 @@ function renderCameras(cameras) {
     const lastInfo = cam.last_motion
       ? `Last motion: ${cam.last_motion}`
       : (cam.last_seen ? `Last seen: ${cam.last_seen}` : '');
+    // Wyze SDK 2.x has no snapshot endpoint — show placeholder only
+    const hasSnapshot = cam.type !== 'wyze';
     return `<div class="camera-card">
-      <img id="cam-img-${mac}" class="camera-thumb"
+      ${hasSnapshot ? `<img id="cam-img-${mac}" class="camera-thumb"
            src="/api/camera/${mac}/snapshot?t=${Date.now()}"
            onerror="this.style.display='none';document.getElementById('cam-ph-${mac}').style.display='flex'"
            onload="document.getElementById('cam-ph-${mac}').style.display='none';this.style.display='block'"
-           alt="${cam.name}">
-      <div id="cam-ph-${mac}" class="camera-thumb-placeholder">${icon}</div>
+           alt="${cam.name}">` : ''}
+      <div id="cam-ph-${mac}" class="camera-thumb-placeholder" style="display:flex">${icon}<div style="font-size:10px;margin-top:4px;color:var(--text-dim)">No live feed</div></div>
       <div class="camera-info">
         <div class="camera-name">
           <span>${cam.name}</span>
@@ -2977,8 +3178,9 @@ function renderCameras(cameras) {
     </div>`;
   }).join('');
 
-  // Set up auto-refresh intervals per camera
+  // Set up auto-refresh intervals per camera (skip Wyze — no snapshot endpoint)
   cameras.forEach(cam => {
+    if (cam.type === 'wyze') return;
     const mac = cam.mac || cam.type;
     if (!_camRefreshTimers[mac]) {
       _camRefreshTimers[mac] = setInterval(() => refreshCameraImg(mac), 30000);
@@ -2987,73 +3189,97 @@ function renderCameras(cameras) {
 }
 
 // ══ Nest helpers ══════════════════════════════════════════════════════════════
-let _nestSetpoint = 70;
+let _nestSetpoints = {};  // device_name → current cool setpoint
 
-function nestAdjust(delta) {
-  _nestSetpoint += delta;
-  document.getElementById('nest-setpoint').textContent = _nestSetpoint;
+function nestAdjust(delta, deviceName) {
+  if (!_nestSetpoints[deviceName]) _nestSetpoints[deviceName] = 70;
+  _nestSetpoints[deviceName] += delta;
+  const sp = _nestSetpoints[deviceName];
+  const safeId = deviceName.replace(/[^a-z0-9]/gi, '_');
+  const el = document.getElementById('nest-sp-' + safeId);
+  if (el) el.textContent = sp;
   fetch('/api/nest/setpoint', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({temp: _nestSetpoint})
+    body: JSON.stringify({device_name: deviceName, cool_f: sp})
   }).then(r=>r.json()).then(d => {
-    if (d.ok) toast('✓ Setpoint → ' + _nestSetpoint + '°F');
+    if (d.ok) toast('✓ ' + sp + '°F → ' + deviceName.split('/').pop().slice(0,8));
     else toast('✗ ' + (d.error||'Error'), 5000);
   }).catch(e => toast('✗ ' + e, 5000));
 }
 
 function renderNest(nest) {
-  const badge    = document.getElementById('nest-badge');
+  const badge        = document.getElementById('nest-badge');
   const cockpitBadge = document.getElementById('nest-cockpit-badge');
-  const setupMsg = document.getElementById('nest-setup-msg');
-  const dataDiv  = document.getElementById('nest-data');
-  const cfgBadge = document.getElementById('nest-cfg-badge');
+  const cfgBadge     = document.getElementById('nest-cfg-badge');
+  const setupMsg     = document.getElementById('nest-setup-msg');
+  const container    = document.getElementById('nest-cards-container');
   const cockpitContent = document.getElementById('nest-cockpit-content');
+  const modeMap = { HEAT: 'online', COOL: 'partial', HEATCOOL: 'warning', OFF: 'offline' };
+  const hvacMap = { HEATING: 'online', COOLING: 'partial', OFF: 'offline' };
 
   if (!nest) return;
   const status = nest.status || 'unconfigured';
-
-  if (badge) { badge.textContent = status; badge.className = 'badge ' + statusColor(status); }
-  if (cockpitBadge) { cockpitBadge.textContent = status; cockpitBadge.className = 'badge ' + statusColor(status); }
-  if (cfgBadge) { cfgBadge.textContent = status; cfgBadge.className = 'badge ' + statusColor(status); }
-
   const isOnline = status === 'online';
-  if (setupMsg) setupMsg.style.display = isOnline ? 'none' : 'block';
-  if (dataDiv)  dataDiv.style.display  = isOnline ? 'block' : 'none';
 
-  if (isOnline) {
-    const temp     = nest.temp_f    || 0;
-    const setpoint = nest.setpoint_f || 0;
-    _nestSetpoint  = setpoint;
+  if (badge)        { badge.textContent = status;  badge.className = 'badge ' + statusColor(status); }
+  if (cockpitBadge) { cockpitBadge.textContent = status; cockpitBadge.className = 'badge ' + statusColor(status); }
+  if (cfgBadge)     { cfgBadge.textContent = status;     cfgBadge.className = 'badge ' + statusColor(status); }
+  if (setupMsg)     setupMsg.style.display = isOnline ? 'none' : 'block';
+  if (container)    container.style.display = isOnline ? 'flex' : 'none';
 
-    const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-    setEl('nest-temp',     Math.round(temp));
-    setEl('nest-setpoint', Math.round(setpoint));
-    setEl('nest-humidity', (nest.humidity || 0) + '%');
-    setEl('nest-name',     nest.name || '—');
+  if (!isOnline) {
+    if (cockpitContent) cockpitContent.innerHTML = `<div style="color:var(--text-dim);font-size:11px">${status} — click to configure</div>`;
+    return;
+  }
 
-    const modeBadge = document.getElementById('nest-mode');
-    const hvacBadge = document.getElementById('nest-hvac');
-    const modeMap = { heat: 'online', cool: 'partial', off: 'offline', auto: 'warning' };
-    const hvacMap = { heating: 'online', cooling: 'partial', idle: 'offline' };
-    if (modeBadge) { modeBadge.textContent = nest.mode || 'off'; modeBadge.className = 'badge ' + (modeMap[nest.mode] || 'offline'); }
-    if (hvacBadge) { hvacBadge.textContent = nest.hvac_state || 'idle'; hvacBadge.className = 'badge ' + (hvacMap[nest.hvac_state] || 'offline'); }
+  const thermostats = nest.thermostats || [];
 
-    // Cockpit tile
-    if (cockpitContent) {
-      cockpitContent.innerHTML = `
-        <div style="display:flex;gap:16px;align-items:center">
-          <div><div class="sub-val">Current</div><div class="nest-cockpit-temp">${Math.round(temp)}°</div></div>
-          <div><div class="sub-val">Set</div><div style="font-size:18px;font-weight:600">${Math.round(setpoint)}°</div></div>
+  // Build cockpit summary (all thermostats inline)
+  if (cockpitContent) {
+    cockpitContent.innerHTML = thermostats.map(t => `
+      <div style="display:flex;gap:10px;align-items:center;margin-right:16px">
+        <div><div class="sub-val">${t.name}</div><div class="nest-cockpit-temp">${Math.round(t.temp_f)}°</div></div>
+        <div><div class="sub-val">Set</div><div style="font-size:15px;font-weight:600">${Math.round(t.cool_setpoint_f||t.heat_setpoint_f||0)}°</div></div>
+        <span class="badge ${hvacMap[t.hvac_state]||'offline'}" style="font-size:10px">${t.hvac_state||'OFF'}</span>
+      </div>`).join('');
+  }
+
+  // Build one card per thermostat
+  if (container) {
+    container.innerHTML = thermostats.map(t => {
+      const safeId   = t.device_name.replace(/[^a-z0-9]/gi, '_');
+      const spVal    = t.cool_setpoint_f || t.heat_setpoint_f || 70;
+      if (!_nestSetpoints[t.device_name]) _nestSetpoints[t.device_name] = Math.round(spVal);
+      const devEnc   = encodeURIComponent(t.device_name).replace(/'/g, '%27');
+      return `
+      <div class="card" style="min-width:280px;flex:1">
+        <div class="card-header">
+          <span class="card-title">🌡️ ${t.name}</span>
+          <span class="badge ${statusColor(t.status)}">${t.status}</span>
+        </div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px">
           <div>
-            <div class="sub-val">Mode</div>
-            <span class="badge ${modeMap[nest.mode]||'offline'}">${nest.mode||'off'}</span>
+            <div class="sub-val">Current Temp</div>
+            <div class="big-val c-pool" style="font-size:36px">${Math.round(t.temp_f)}<span class="big-unit">°F</span></div>
+          </div>
+          <div>
+            <div class="sub-val">Cool Setpoint</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+              <button class="btn" onclick="nestAdjust(-1, decodeURIComponent('${devEnc}'))" style="font-size:16px;padding:4px 12px">−</button>
+              <span class="big-val" id="nest-sp-${safeId}" style="font-size:26px">${Math.round(spVal)}</span>
+              <span class="big-unit">°F</span>
+              <button class="btn" onclick="nestAdjust(1, decodeURIComponent('${devEnc}'))" style="font-size:16px;padding:4px 12px">+</button>
+            </div>
           </div>
         </div>
-      `;
-    }
-  } else if (cockpitContent) {
-    cockpitContent.innerHTML = `<div style="color:var(--text-dim);font-size:11px">${status} — click to configure</div>`;
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <div><div class="sub-val">Mode</div><span class="badge ${modeMap[t.mode]||'offline'}">${t.mode||'OFF'}</span></div>
+          <div><div class="sub-val">HVAC</div><span class="badge ${hvacMap[t.hvac_state]||'offline'}">${t.hvac_state||'OFF'}</span></div>
+          <div><div class="sub-val">Humidity</div><span style="font-size:13px;font-weight:600">${t.humidity}%</span></div>
+        </div>
+      </div>`;
+    }).join('');
   }
 }
 

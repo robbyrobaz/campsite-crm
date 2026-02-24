@@ -1,1 +1,44 @@
-{"lastUpdated":"2026-02-24T02:43:00Z","activeTasks":[],"boardStatus":"CLEAR","systemHealth":{"cpuTemp":"80C — elevated, check background tasks","diskUsage":"38%","services":"all active"}}
+{
+  "updated": "2026-02-23T20:14:00-07:00",
+  "pulse": "2026-02-23T20:13:00-07:00",
+  "activeTasks": [
+    {
+      "id": "c_c264400d324d6_19c8cad0c34",
+      "title": "Fix vwap_reversion gate=pass durably: direct DB updates get overwritten by Phase 4 re-scoring",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "blofin-stack",
+      "pid": 1291048,
+      "dispatched": "2026-02-23T20:13:00-07:00",
+      "stale_at": "2026-02-23T20:43:00-07:00"
+    }
+  ],
+  "board": {
+    "inProgress": 1,
+    "planned": 0,
+    "reviewTest": 0,
+    "inbox": 8
+  },
+  "health": {
+    "cpu_temp": "56C",
+    "disk_pct": 38,
+    "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active"],
+    "critical_monitor": "EXIT:0"
+  },
+  "inboxQueue": [
+    "c_dc114298dfb45 — Tesla Gateway + Cybertruck dashboard pages (jarvis-home-energy)",
+    "c_cd20d497fdf76 — Fix ExperimentEngine proxy PF bug (ninja_trader)",
+    "c_975c70e34d647 — Build Home Energy OS dashboard (home-energy-os)",
+    "c_a20294ae0f27 — vwap_fade deep dive (ninja_trader)",
+    "c_b54fffe9ee131 — Accelerate FT for vol_expansion (blofin)",
+    "c_4d4df8a920da3 — NQ Phase 3 (blocked: Phase 2 incomplete)",
+    "c_57eff3238cdd4 — NQ Phase 4 (blocked: Phase 3 incomplete)"
+  ],
+  "notes": [
+    "Board was empty (IP=0, Planned=0) at pulse start — all prior tasks completed",
+    "Fixed null assignees on 5 Inbox cards",
+    "Dispatched top priority blofin fix: vwap_reversion durable gate=pass",
+    "Max 1 IP enforced per pulse rules",
+    "NQ Phase 3/4 remain blocked until Phase 2 NQ work completes"
+  ]
+}

@@ -152,7 +152,11 @@ def fetch_anthropic_usage():
              "https://api.anthropic.com/api/oauth/usage"],
             capture_output=True, text=True, timeout=10
         )
-        return json.loads(result.stdout)
+        data = json.loads(result.stdout)
+        # If API returned an error object, treat as no data
+        if isinstance(data, dict) and data.get('type') == 'error':
+            return None
+        return data
     except Exception:
         return None
 

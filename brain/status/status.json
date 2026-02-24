@@ -1,6 +1,6 @@
 {
-  "updated": "2026-02-24T12:13:00-07:00",
-  "pulse": "2026-02-24T12:13:00-07:00",
+  "updated": "2026-02-24T12:43:00-07:00",
+  "pulse": "2026-02-24T12:43:00-07:00",
   "activeTasks": [],
   "board": {
     "inProgress": 0,
@@ -8,8 +8,8 @@
     "inbox": 3
   },
   "health": {
-    "cpu_temp": "54C",
-    "disk_pct": 38,
+    "cpu_temp": "71C",
+    "disk_pct": 39,
     "services": [
       "openclaw-gateway:active",
       "blofin-stack-ingestor:active",
@@ -38,7 +38,7 @@
   ],
   "notes": [
     "Board idle — 0 In Progress, 0 Planned, 3 in Inbox",
-    "CPU 54C — nominal",
-    "Disk 38%, all services active"
+    "CPU 71C — elevated but nominal (high=100C)",
+    "Disk 39%, all services active"
   ]
 }

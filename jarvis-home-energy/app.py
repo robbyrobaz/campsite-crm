@@ -122,6 +122,73 @@ _wyze_client_lock = threading.Lock()
 _wyze_next_retry = 0   # epoch seconds — don't retry auth before this time
 _camera_poll_counter = 0  # throttle: refresh camera list every 60s (every 12 ticks at 5s)
 
+# Ring — cached token data (persisted across calls to avoid repeated re-auth)
+# ring_doorbell 0.9.x is fully async; we wrap with a fresh event loop
+_ring_token_data = {}
+_ring_next_retry = 0
+_ring_lock = threading.Lock()
+
+
+def _ring_token_updater(token_data):
+    global _ring_token_data
+    _ring_token_data = token_data
+
+
+def _run_async(coro):
+    """Run an async coroutine synchronously in a fresh event loop (thread-safe)."""
+    import asyncio
+    loop = asyncio.new_event_loop()
+    try:
+        return loop.run_until_complete(coro)
+    finally:
+        loop.close()
+
+
+async def _ring_build(update=True):
+    """Authenticate with Ring and optionally fetch device data."""
+    from ring_doorbell import Ring, Auth
+    auth = Auth("JarvisHomeEnergy/1.0", _ring_token_data or None, _ring_token_updater)
+    if not _ring_token_data:
+        await auth.async_fetch_token(RING_EMAIL, RING_PASSWORD)
+    ring = Ring(auth)
+    await ring.async_create_session()
+    if update:
+        await ring.async_update_data()
+    return ring
+
+
+async def _ring_poll_cameras_async():
+    """Async: return list of camera dicts from Ring."""
+    ring = await _ring_build(update=True)
+    cameras = []
+    for device in ring.video_devices():
+        last_motion = ""
+        try:
+            hist = device.last_history
+            if hist:
+                last_motion = str(hist[0].get("created_at", ""))
+        except Exception:
+            pass
+        cameras.append({
+            "name": device.name or "Ring Doorbell",
+            "mac": str(getattr(device, 'id', 'ring')),
+            "type": "ring",
+            "status": "online" if getattr(device, 'subscribed', False) else "offline",
+            "last_motion": last_motion,
+            "snapshot_path": f"/api/camera/ring_{getattr(device, 'id', '0')}/snapshot",
+            "thumbnail_url": "",
+        })
+    return cameras
+
+
+async def _ring_get_snapshot_async(device_id):
+    """Async: return raw JPEG bytes for a Ring doorbell, or None."""
+    ring = await _ring_build(update=True)
+    for device in ring.video_devices():
+        if str(getattr(device, 'id', '')) == device_id:
+            return await device.async_get_snapshot()
+    return None
+
 def _get_wyze_client(force_refresh=False):
     """Return a cached Wyze Client, creating/refreshing only when needed.
     Implements backoff: after a failed auth, wait 5 min before retrying."""
@@ -680,38 +747,53 @@ def poll_cameras():
         try:
             devices = client.cameras.list()
             for cam in devices:
+                # cameras.list() returns abbreviated data; call info() for event files
+                thumb_url = ""
+                last_motion = ""
+                try:
+                    detail = client.cameras.info(device_mac=cam.mac)
+                    for ev in (detail.latest_events or []):
+                        # timestamp (milliseconds epoch)
+                        ts = getattr(ev, 'time', None)
+                        if ts and not last_motion:
+                            last_motion = datetime.fromtimestamp(ts / 1000).strftime("%Y-%m-%d %H:%M")
+                        # image file URL
+                        if not thumb_url:
+                            for f in (getattr(ev, 'files', []) or []):
+                                url = getattr(f, 'url', None)
+                                if url:
+                                    thumb_url = str(url)
+                                    break
+                        if thumb_url and last_motion:
+                            break
+                except Exception as e_info:
+                    log.debug("Wyze info error for %s: %s", cam.mac, e_info)
                 cameras.append({
                     "name": cam.nickname or cam.mac,
                     "mac": cam.mac,
                     "type": "wyze",
                     "status": "online" if cam.is_online else "offline",
                     "last_seen": str(cam.last_seen) if hasattr(cam, 'last_seen') else "",
+                    "last_motion": last_motion,
                     "snapshot_path": f"/api/camera/{cam.mac}/snapshot",
+                    "thumbnail_url": thumb_url,
                 })
         except Exception as e:
             log.warning("Wyze poll error: %s — forcing client refresh next cycle", e)
             global _wyze_client
             _wyze_client = None  # force re-auth next cycle
 
-    # Ring
-    if RING_EMAIL and RING_PASSWORD:
+    # Ring — fully async in ring_doorbell 0.9.x; use cached token + backoff
+    global _ring_next_retry
+    if RING_EMAIL and RING_PASSWORD and time.time() >= _ring_next_retry:
         try:
-            from ring_doorbell import Ring, Auth
-            auth = Auth("JarvisHomeEnergy/1.0", None, lambda *args: None)
-            auth.fetch_token(RING_EMAIL, RING_PASSWORD)
-            ring = Ring(auth)
-            ring.update_data()
-            for device in ring.video_doorbell_devices():
-                cameras.append({
-                    "name": device.name or "Ring Doorbell",
-                    "mac": getattr(device, 'id', 'ring'),
-                    "type": "ring",
-                    "status": "online" if device.is_subscribed else "offline",
-                    "last_motion": str(device.last_motion) if hasattr(device, 'last_motion') else "",
-                    "snapshot_path": f"/api/camera/ring_{getattr(device, 'id', '0')}/snapshot",
-                })
+            ring_cameras = _run_async(_ring_poll_cameras_async())
+            cameras.extend(ring_cameras)
+            _ring_next_retry = 0
+            log.info("Ring poll OK — %d devices", len(ring_cameras))
         except Exception as e:
-            log.warning("Ring poll error: %s", e)
+            log.warning("Ring poll error: %s — backing off 5 min", e)
+            _ring_next_retry = time.time() + 300
 
     with _state_lock:
         _state["cameras"] = cameras
@@ -790,15 +872,29 @@ def poll_nest():
 BHYVE_API = "https://api.orbitbhyve.com"
 _bhyve_token = None
 _bhyve_token_lock = threading.Lock()
+_bhyve_next_retry = 0  # epoch seconds — back off after auth failures
+
+_BHYVE_HEADERS = {
+    "Accept": "application/json, text/plain, */*",
+    "Host": "api.orbitbhyve.com",
+    "Content-Type": "application/json; charset=utf-8;",
+    "Referer": "https://api.orbitbhyve.com",
+    "Orbit-Session-Token": "",
+    "User-Agent": (
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36"
+    ),
+}
 
 
 def _bhyve_login():
     """Login to B-Hyve cloud and return session token."""
     global _bhyve_token
+    hdrs = dict(_BHYVE_HEADERS)
     resp = _requests.post(
         f"{BHYVE_API}/v1/session",
         json={"session": {"email": BHYVE_EMAIL, "password": BHYVE_PASSWORD}},
-        headers={"Content-Type": "application/json", "Accept": "application/json"},
+        headers=hdrs,
         timeout=10,
     )
     resp.raise_for_status()
@@ -807,24 +903,22 @@ def _bhyve_login():
     if not token:
         raise RuntimeError(f"No token in login response: {data}")
     _bhyve_token = token
+    log.info("B-Hyve login OK")
     return token
 
 
 def _bhyve_get(path, token=None):
     """Make authenticated GET to B-Hyve REST API."""
     tok = token or _bhyve_token
-    headers = {
-        "Orbit-Session-Token": tok or "",
-        "Accept": "application/json",
-        "User-Agent": "Mozilla/5.0",
-    }
-    resp = _requests.get(f"{BHYVE_API}{path}", headers=headers, params={"t": str(time.time())}, timeout=10)
+    hdrs = dict(_BHYVE_HEADERS)
+    hdrs["Orbit-Session-Token"] = tok or ""
+    resp = _requests.get(f"{BHYVE_API}{path}", headers=hdrs, params={"t": str(time.time())}, timeout=10)
     resp.raise_for_status()
     return resp.json()
 
 
 def _bhyve_ws_command(device_id, payload, token=None):
-    """Send a command to B-Hyve via WebSocket."""
+    """Send a command to B-Hyve via WebSocket (websockets 11+)."""
     import asyncio
     import json as _json
     tok = token or _bhyve_token
@@ -832,32 +926,53 @@ def _bhyve_ws_command(device_id, payload, token=None):
     async def _send():
         import websockets
         ws_url = "wss://api.orbitbhyve.com/v1/events"
-        async with websockets.connect(
-            ws_url,
-            extra_headers={"Orbit-Session-Token": tok or ""},
-            ping_interval=None,
-            open_timeout=10,
-        ) as ws:
-            # First message is a hello/subscribe
-            hello = _json.loads(await asyncio.wait_for(ws.recv(), timeout=5))
-            log.debug("B-Hyve WS hello: %s", hello)
-            # Send command
-            await ws.send(_json.dumps(payload))
-            # Wait briefly for acknowledgement
-            try:
-                ack = _json.loads(await asyncio.wait_for(ws.recv(), timeout=5))
-                log.debug("B-Hyve WS ack: %s", ack)
-            except asyncio.TimeoutError:
-                pass  # No ack required
+        # websockets >=11: additional_headers replaces extra_headers
+        connect_kwargs = {
+            "ping_interval": None,
+            "open_timeout": 10,
+        }
+        try:
+            # websockets >= 11 uses additional_headers
+            async with websockets.connect(
+                ws_url,
+                additional_headers={"Orbit-Session-Token": tok or ""},
+                **connect_kwargs,
+            ) as ws:
+                hello = _json.loads(await asyncio.wait_for(ws.recv(), timeout=5))
+                log.debug("B-Hyve WS hello: %s", hello)
+                await ws.send(_json.dumps(payload))
+                try:
+                    ack = _json.loads(await asyncio.wait_for(ws.recv(), timeout=5))
+                    log.debug("B-Hyve WS ack: %s", ack)
+                except asyncio.TimeoutError:
+                    pass
+        except TypeError:
+            # Fallback for older websockets API using extra_headers
+            async with websockets.connect(
+                ws_url,
+                extra_headers={"Orbit-Session-Token": tok or ""},
+                **connect_kwargs,
+            ) as ws:
+                hello = _json.loads(await asyncio.wait_for(ws.recv(), timeout=5))
+                log.debug("B-Hyve WS hello: %s", hello)
+                await ws.send(_json.dumps(payload))
+                try:
+                    ack = _json.loads(await asyncio.wait_for(ws.recv(), timeout=5))
+                    log.debug("B-Hyve WS ack: %s", ack)
+                except asyncio.TimeoutError:
+                    pass
 
     asyncio.run(_send())
 
 
 def poll_bhyve():
-    global _bhyve_token
+    global _bhyve_token, _bhyve_next_retry
     if not BHYVE_EMAIL or not BHYVE_PASSWORD:
         with _state_lock:
             _state["bhyve"]["status"] = "unconfigured"
+        return False
+    # Backoff: don't retry login within 5 min of a previous auth failure
+    if not _bhyve_token and time.time() < _bhyve_next_retry:
         return False
     try:
         with _bhyve_token_lock:
@@ -962,6 +1077,8 @@ def poll_bhyve():
         # Token may have expired — clear it for next poll
         with _bhyve_token_lock:
             _bhyve_token = None
+        # Back off 5 minutes after auth failure to avoid account lockout
+        _bhyve_next_retry = time.time() + 300
         with _state_lock:
             _state["bhyve"]["status"] = "error"
         return False
@@ -1125,20 +1242,25 @@ def camera_snapshot(cam_id):
         if cam_id.startswith('ring_'):
             if not RING_EMAIL:
                 return '', 204
-            from ring_doorbell import Ring, Auth
-            auth = Auth("JarvisHomeEnergy/1.0", None, lambda *args: None)
-            auth.fetch_token(RING_EMAIL, RING_PASSWORD)
-            ring = Ring(auth)
-            ring.update_data()
             device_id = cam_id[5:]
-            for d in ring.video_doorbell_devices():
-                if str(getattr(d, 'id', '')) == device_id:
-                    url = d.get_snapshot()
-                    r = _requests.get(url, timeout=5)
-                    return Response(r.content, mimetype='image/jpeg')
+            img_bytes = _run_async(_ring_get_snapshot_async(device_id))
+            if img_bytes:
+                return Response(img_bytes, mimetype='image/jpeg')
         else:
-            # wyze-sdk 2.2.0 has no snapshot/thumbnail method — return 204
-            return '', 204
+            # Wyze — proxy thumbnail URL cached during last poll
+            with _state_lock:
+                cam_data = next((c for c in _state['cameras']
+                                 if c.get('mac') == cam_id and c.get('type') == 'wyze'), None)
+            if cam_data and cam_data.get('thumbnail_url'):
+                # Wyze CDN may require auth; try with no-verify first then accept any 2xx
+                try:
+                    r = _requests.get(cam_data['thumbnail_url'], timeout=8,
+                                      headers={"User-Agent": "WyzeAndroid/2.47.0"})
+                    if r.status_code == 200 and r.content:
+                        ct = r.headers.get('Content-Type', 'image/jpeg')
+                        return Response(r.content, mimetype=ct if 'image' in ct else 'image/jpeg')
+                except Exception:
+                    pass
     except Exception as e:
         log.warning("Snapshot error for %s: %s", cam_id, e)
     return '', 204
@@ -1522,14 +1644,26 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .ct-mini-spark { position: absolute; bottom: 0; left: 0; right: 0; height: 18px; opacity: 0.7; }
 
   /* ── Cameras ── */
-  .camera-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .camera-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; cursor: pointer; transition: border-color .2s; }
+  .camera-card:hover { border-color: rgba(255,255,255,.25); }
   .camera-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--surface2); display: block; }
-  .camera-thumb-placeholder { width: 100%; aspect-ratio: 16/9; background: var(--surface2); display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 32px; }
+  .camera-thumb-placeholder { width: 100%; aspect-ratio: 16/9; background: var(--surface2); display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 32px; flex-direction: column; gap: 4px; }
   .camera-info { padding: 10px 12px; }
   .camera-name { font-weight: 700; font-size: 13px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
   .camera-meta { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
   .badge-wyze { background: rgba(0,212,255,.15); color: #00d4ff; }
   .badge-ring { background: rgba(16,185,129,.15); color: var(--battery); }
+  .cam-live-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--online); box-shadow:0 0 5px var(--online); margin-right:4px; animation:pulse-run 1.5s infinite; vertical-align:middle; }
+  /* ── Camera Modal ── */
+  #cam-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.88); z-index:2000; align-items:center; justify-content:center; flex-direction:column; gap:14px; }
+  #cam-modal.show { display:flex; }
+  #cam-modal-close { position:fixed; top:14px; right:18px; font-size:28px; cursor:pointer; color:rgba(255,255,255,.5); background:none; border:none; line-height:1; transition:color .15s; }
+  #cam-modal-close:hover { color:#fff; }
+  #cam-modal-img { max-width:92vw; max-height:78vh; border-radius:10px; border:1px solid var(--border); object-fit:contain; display:block; }
+  #cam-modal-placeholder { width:640px; max-width:92vw; height:360px; background:var(--surface2); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:56px; }
+  #cam-modal-info { display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center; }
+  #cam-modal-title { font-size:14px; font-weight:700; }
+  #cam-modal-meta { font-size:12px; color:var(--text-dim); }
 
   /* ── Nest tile ── */
   .nest-cockpit-tile { background: var(--surface2); border-radius: 8px; padding: 10px 14px; display: flex; gap: 12px; align-items: center; }
@@ -2383,8 +2517,20 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     </div>
     <button class="btn primary" onclick="showView('settings')">Go to Settings →</button>
   </div>
-  <div id="camera-grid" class="grid grid-3" style="margin-bottom:16px"></div>
+  <div id="camera-grid" class="grid grid-2" style="margin-bottom:16px"></div>
 </div><!-- /cameras -->
+
+<!-- ── Camera Enlarge Modal ────────────────────────────────────────────── -->
+<div id="cam-modal" onclick="if(event.target===this)closeCameraModal()">
+  <button id="cam-modal-close" onclick="closeCameraModal()">✕</button>
+  <img id="cam-modal-img" src="" alt="" style="display:none" onerror="this.style.display='none';document.getElementById('cam-modal-placeholder').style.display='flex'">
+  <div id="cam-modal-placeholder" style="display:none">📷</div>
+  <div id="cam-modal-info">
+    <span id="cam-modal-title"></span>
+    <span id="cam-modal-badge" class="badge"></span>
+    <span id="cam-modal-meta"></span>
+  </div>
+</div>
 
 
 <!-- ═══ HOME CONTROL ════════════════════════════════════════════════════════ -->
@@ -3423,10 +3569,58 @@ function updateSpanCharts(sd) {
 
 // ══ Camera helpers ════════════════════════════════════════════════════════════
 let _camRefreshTimers = {};
+let _camDataCache = {};  // mac → cam data for modal
 
 function refreshCameraImg(mac) {
   const img = document.getElementById('cam-img-' + mac);
-  if (img) img.src = '/api/camera/' + mac + '/snapshot?t=' + Date.now();
+  if (img) {
+    img.src = '/api/camera/' + mac + '/snapshot?t=' + Date.now();
+    // Also refresh modal if this camera is open
+    const mImg = document.getElementById('cam-modal-img');
+    if (mImg && mImg.dataset.mac === mac) {
+      mImg.src = '/api/camera/' + mac + '/snapshot?t=' + Date.now();
+    }
+  }
+}
+
+function openCameraModal(mac) {
+  const cam = _camDataCache[mac];
+  if (!cam) return;
+  const modal    = document.getElementById('cam-modal');
+  const mImg     = document.getElementById('cam-modal-img');
+  const mPh      = document.getElementById('cam-modal-placeholder');
+  const mTitle   = document.getElementById('cam-modal-title');
+  const mBadge   = document.getElementById('cam-modal-badge');
+  const mMeta    = document.getElementById('cam-modal-meta');
+  const icon     = cam.type === 'wyze' ? '📷' : '🔔';
+  const lastInfo = cam.last_motion
+    ? 'Last motion: ' + cam.last_motion
+    : (cam.last_seen ? 'Last seen: ' + cam.last_seen : '');
+
+  mTitle.textContent = cam.name;
+  mBadge.textContent = cam.type || '?';
+  mBadge.className   = 'badge ' + (cam.type === 'wyze' ? 'badge-wyze' : 'badge-ring');
+  mMeta.textContent  = lastInfo;
+
+  // Load snapshot
+  mImg.dataset.mac  = mac;
+  mImg.style.display = 'none';
+  mPh.style.display  = 'flex';
+  mPh.innerHTML      = icon;
+
+  const src = '/api/camera/' + mac + '/snapshot?t=' + Date.now();
+  mImg.onload  = () => { mImg.style.display='block'; mPh.style.display='none'; };
+  mImg.onerror = () => { mImg.style.display='none'; mPh.style.display='flex'; };
+  mImg.src = src;
+
+  modal.classList.add('show');
+}
+
+function closeCameraModal() {
+  const modal = document.getElementById('cam-modal');
+  modal.classList.remove('show');
+  const mImg = document.getElementById('cam-modal-img');
+  if (mImg) { mImg.src = ''; mImg.dataset.mac = ''; }
 }
 
 function renderCameras(cameras) {
@@ -3440,27 +3634,31 @@ function renderCameras(cameras) {
   }
   if (setupCard) setupCard.style.display = 'none';
 
+  // Update cache for modal
+  cameras.forEach(cam => { _camDataCache[cam.mac || cam.type] = cam; });
+
   // Build HTML for each camera
   grid.innerHTML = cameras.map(cam => {
-    const mac = cam.mac || cam.type;
+    const mac        = cam.mac || cam.type;
     const badgeClass = cam.type === 'wyze' ? 'badge-wyze' : 'badge-ring';
-    const icon = cam.type === 'wyze' ? '📷' : '🔔';
-    const lastInfo = cam.last_motion
+    const icon       = cam.type === 'wyze' ? '📷' : '🔔';
+    const isOnline   = cam.status === 'online';
+    const lastInfo   = cam.last_motion
       ? `Last motion: ${cam.last_motion}`
       : (cam.last_seen ? `Last seen: ${cam.last_seen}` : '');
-    // Wyze SDK 2.x has no snapshot endpoint — show placeholder only
-    const hasSnapshot = cam.type !== 'wyze';
-    return `<div class="camera-card">
-      ${hasSnapshot ? `<img id="cam-img-${mac}" class="camera-thumb"
+    const liveDot = isOnline ? '<span class="cam-live-dot" title="Live"></span>' : '';
+    const statusBadge = `<span class="badge ${isOnline?'online':'offline'}">${cam.status||'?'}</span>`;
+    return `<div class="camera-card" onclick="openCameraModal('${mac}')">
+      <img id="cam-img-${mac}" class="camera-thumb"
            src="/api/camera/${mac}/snapshot?t=${Date.now()}"
            onerror="this.style.display='none';document.getElementById('cam-ph-${mac}').style.display='flex'"
            onload="document.getElementById('cam-ph-${mac}').style.display='none';this.style.display='block'"
-           alt="${cam.name}">` : ''}
-      <div id="cam-ph-${mac}" class="camera-thumb-placeholder" style="display:flex">${icon}<div style="font-size:10px;margin-top:4px;color:var(--text-dim)">No live feed</div></div>
+           alt="${cam.name}">
+      <div id="cam-ph-${mac}" class="camera-thumb-placeholder" style="display:flex">${icon}<div style="font-size:10px;color:var(--text-dim)">No snapshot</div></div>
       <div class="camera-info">
         <div class="camera-name">
-          <span>${cam.name}</span>
-          <span class="badge ${cam.status==='online'?'online':'offline'}">${cam.status||'?'}</span>
+          <span>${liveDot}${cam.name}</span>
+          ${statusBadge}
         </div>
         <div class="camera-meta">
           <span class="badge ${badgeClass}" style="margin-right:6px">${cam.type||'?'}</span>
@@ -3470,12 +3668,19 @@ function renderCameras(cameras) {
     </div>`;
   }).join('');
 
-  // Set up auto-refresh intervals per camera (skip Wyze — no snapshot endpoint)
+  // Auto-refresh intervals for all cameras (Wyze now has thumbnails too)
   cameras.forEach(cam => {
-    if (cam.type === 'wyze') return;
     const mac = cam.mac || cam.type;
     if (!_camRefreshTimers[mac]) {
       _camRefreshTimers[mac] = setInterval(() => refreshCameraImg(mac), 30000);
+    }
+  });
+
+  // Cancel timers for cameras that disappeared
+  Object.keys(_camRefreshTimers).forEach(mac => {
+    if (!cameras.some(c => (c.mac || c.type) === mac)) {
+      clearInterval(_camRefreshTimers[mac]);
+      delete _camRefreshTimers[mac];
     }
   });
 }

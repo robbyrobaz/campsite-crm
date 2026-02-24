@@ -1,6 +1,6 @@
 {
-  "updated": "2026-02-24T11:43:00-07:00",
-  "pulse": "2026-02-24T12:06:00-07:00",
+  "updated": "2026-02-24T12:13:00-07:00",
+  "pulse": "2026-02-24T12:13:00-07:00",
   "activeTasks": [],
   "board": {
     "inProgress": 0,
@@ -8,8 +8,7 @@
     "inbox": 3
   },
   "health": {
-    "cpu_temp": "82C",
-    "cpu_temp_note": "Back to normal \u2014 previous 83C spike at 11:13 was transient (ingestor+gnome+Firefox burst)",
+    "cpu_temp": "54C",
     "disk_pct": 38,
     "services": [
       "openclaw-gateway:active",
@@ -21,7 +20,7 @@
   "recentlyCompleted": [
     {
       "id": "c_86962a39967eb_19c8ed5e645",
-      "title": "NQ: Expand feature set \u2014 volume profile, VWAP distance, ES/YM correlation",
+      "title": "NQ: Expand feature set — volume profile, VWAP distance, ES/YM correlation",
       "completed": "2026-02-24T03:56:00-07:00",
       "result": "Done per kanban. Features added."
     },
@@ -29,7 +28,7 @@
       "id": "c_6b609758ab776",
       "title": "NQ: LightGBM champion for vwap_fade",
       "completed": "2026-02-24T02:30:00-07:00",
-      "result": "LightGBM beat XGBoost 8/10 WF folds \u2014 promoted to champion."
+      "result": "LightGBM beat XGBoost 8/10 WF folds — promoted to champion."
     }
   ],
   "inboxQueue": [
@@ -38,8 +37,8 @@
     "NQ: Phase 3 paper trading setup"
   ],
   "notes": [
-    "Board idle 7.5h+ \u2014 0 In Progress, 0 Planned, 3 in Inbox",
-    "CPU back to 52C \u2014 83C spike at 11:13 was transient, resolved",
+    "Board idle — 0 In Progress, 0 Planned, 3 in Inbox",
+    "CPU 54C — nominal",
     "Disk 38%, all services active"
   ]
 }

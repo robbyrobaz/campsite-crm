@@ -1,25 +1,13 @@
 {
-  "lastUpdated": "2026-02-24T01:43:00Z",
+  "lastUpdated": "2026-02-24T02:13:00Z",
   "activeTasks": [],
-  "boardStatus": "CLEAR — IP=0, Planned=0",
-  "recentlyDone": [
-    {"title": "Live Agent Work — broader agent/subagent search (master-dashboard)", "completedAt": "~01:30Z"},
-    {"title": "Numerai section column fitting (master-dashboard)", "completedAt": "~00:30Z"},
-    {"title": "vol_expansion investigation (blofin-stack)", "completedAt": "~23:30Z"},
-    {"title": "vwap_reversion durable fix (blofin-stack)", "completedAt": "~23:30Z"},
-    {"title": "FT_MAX_MDD 50%->85% fix (blofin-stack)", "completedAt": "2026-02-23T22:30Z"}
-  ],
-  "blofin": {
-    "gatePassStrategies": 1,
-    "note": "cross_asset_correlation tier=2 gate=pass pf=1.091. Paper engine limited (CONFIRM_MIN_STRATEGIES=2 needs 2nd gate=pass). Monitor vwap_reversion state."
-  },
+  "boardStatus": "CLEAR \u2014 IP=0, Planned=0",
   "systemHealth": {
-    "cpuTemp": "61C",
+    "cpuTemp": "74C",
     "diskUsage": "38%",
     "services": "all active"
   },
   "nextActions": [
-    "Board is clear — nothing to dispatch",
-    "Next pulse: check Inbox for new cards or human-queued tasks"
+    "Board clear \u2014 awaiting new cards"
   ]
 }

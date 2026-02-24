@@ -1,26 +1,37 @@
 {
-  "updated": "2026-02-24T11:15:00-07:00",
-  "pulse": "2026-02-24T11:15:00-07:00",
+  "updated": "2026-02-24T11:43:00-07:00",
+  "pulse": "2026-02-24T11:43:00-07:00",
   "activeTasks": [],
-  "board": { "inProgress": 0, "planned": 0, "reviewTest": 0, "inbox": 2, "done": 205 },
+  "board": { "inProgress": 0, "planned": 0, "inbox": 3 },
   "health": {
-    "cpu_temp": "67C",
+    "cpu_temp": "52C",
+    "cpu_temp_note": "Back to normal — previous 83C spike at 11:13 was transient (ingestor+gnome+Firefox burst)",
     "disk_pct": 38,
-    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active","blofin-dashboard:active","nq-dashboard:active","jarvis-home-energy:active"],
+    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active"],
     "critical_monitor": "EXIT:0"
   },
-  "recentlyCompleted": [],
+  "recentlyCompleted": [
+    {
+      "id": "c_86962a39967eb_19c8ed5e645",
+      "title": "NQ: Expand feature set — volume profile, VWAP distance, ES/YM correlation",
+      "completed": "2026-02-24T03:56:00-07:00",
+      "result": "Done per kanban. Features added."
+    },
+    {
+      "id": "c_6b609758ab776",
+      "title": "NQ: LightGBM champion for vwap_fade",
+      "completed": "2026-02-24T02:30:00-07:00",
+      "result": "LightGBM beat XGBoost 8/10 WF folds — promoted to champion."
+    }
+  ],
   "inboxQueue": [
-    "NQ Phase 3: Forward Testing Setup",
-    "NQ: ATR trailing stop vs ML exit comparison"
+    "NQ: Cyclical time encoding (hour_sin/hour_cos)",
+    "NQ: ATR trailing stop vs ML exit",
+    "NQ: Phase 3 paper trading setup"
   ],
   "notes": [
-    "All systems healthy — 67C, disk 38%, 0 failed units",
-    "Numerai: all 3 models submitted successfully at 06:33 MST",
-    "GCP BTC Dip Trader: ran at 11:08 AM MST, exit(0), no trade (confidence 0.943 < 0.97 threshold)",
-    "Token usage: 5h 3%, 7-day 56%, reset Mar 1 4PM MST",
-    "Git: all repos pushed (blofin-stack, master-dashboard pushed at 10:30 check)",
-    "ETB: re-fixed to tier=0/gate=fail after phase2-rerun builder overwrote it (3rd time)",
-    "Inbox: NQ Phase 3 FT setup + ATR trailing stop comparison awaiting dispatch"
+    "Board idle 7.5h+ — 0 In Progress, 0 Planned, 3 in Inbox",
+    "CPU back to 52C — 83C spike at 11:13 was transient, resolved",
+    "Disk 38%, all services active"
   ]
 }

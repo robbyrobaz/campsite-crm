@@ -1,6 +1,6 @@
 {
-  "updated": "2026-02-24T01:47:00-07:00",
-  "pulse": "2026-02-24T01:47:00-07:00",
+  "updated": "2026-02-24T01:53:00-07:00",
+  "pulse": "2026-02-24T01:53:00-07:00",
   "activeTasks": [
     {
       "id": "c_461e82fa1b81b_19c8ed38598",
@@ -11,36 +11,27 @@
       "project": "ninja_trader_strategies",
       "dispatched": "2026-02-24T01:45:00-07:00",
       "stale_at": "2026-02-24T02:15:00-07:00"
-    },
-    {
-      "id": "c_812bcdaf0b725_19c8ed385bc",
-      "title": "NQ: Full Phase 2 re-run with all candidate filter overrides fixed",
-      "status": "In Progress",
-      "assignee": "nq-phase2-rerun (sonnet)",
-      "sessionKey": "agent:main:subagent:388d0fe1-1271-4a60-86d5-1242a93dfe14",
-      "project": "ninja_trader_strategies",
-      "dispatched": "2026-02-24T01:45:00-07:00",
-      "stale_at": "2026-02-24T02:25:00-07:00"
     }
   ],
-  "board": { "inProgress": 2, "planned": 0, "reviewTest": 0, "inbox": 5 },
+  "board": { "inProgress": 1, "planned": 0, "reviewTest": 0, "inbox": 5 },
   "health": {
-    "cpu_temp": "65C",
-    "disk_pct": 37,
+    "cpu_temp": "83C",
+    "disk_pct": 38,
     "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active","nq-dashboard:active","jarvis-home-energy:active","claw-kanban:active"],
     "critical_monitor": "EXIT:0"
   },
   "recentlyCompleted": [
     {
-      "id": "nq-research-filter-fix",
-      "title": "NQ Research: gap_fill PF 1.95→2.43, momentum PF 2.86→2.93",
-      "completed": "2026-02-24T00:10:00-07:00",
-      "result": "Candidate filter inflation fixed. Research Scientist confirmed edges stronger with selectivity."
+      "id": "c_812bcdaf0b725_19c8ed385bc",
+      "title": "NQ Phase 2 full re-run — all 6 strategies corrected",
+      "completed": "2026-02-24T01:53:00-07:00",
+      "result": "All 6 pass Lucid gates. Final: momentum 2.91, orb 2.49, gap_fill 2.10, vwap_fade 2.08, prev_day 2.03, vol_contraction 1.86. Phase 3 Tier 1: momentum + orb."
     }
   ],
   "notes": [
-    "Two NQ builders running in parallel — DB safe (different output files/tables)",
-    "Kanban discipline: always PATCH to In Progress immediately after spawn",
-    "blofin-stack: 18 modified files + 6 commits ahead of remote — push needed"
+    "Holding combined user update until ML exit sweep also completes",
+    "Phase 3 ready — Tier 1: momentum+orb, Tier 2: gap_fill+vwap_fade",
+    "ETB filter still broken (21K trades) — exclude from Phase 3",
+    "5 new NQ improvement cards in inbox queue"
   ]
 }

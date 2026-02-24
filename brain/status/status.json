@@ -1,36 +1,30 @@
 {
-  "updated": "2026-02-24T08:13:00-07:00",
-  "pulse": "2026-02-24T08:13:00-07:00",
+  "updated": "2026-02-24T08:30:00-07:00",
+  "pulse": "2026-02-24T08:30:00-07:00",
   "activeTasks": [],
-  "board": { "inProgress": 0, "planned": 0, "inbox": 3 },
+  "board": { "inProgress": 0, "planned": 0, "reviewTest": 0, "inbox": 0, "done": 97 },
   "health": {
-    "cpu_temp": "52C",
+    "cpu_temp": "51C",
     "disk_pct": 38,
-    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active"],
+    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active","blofin-dashboard:active"],
     "critical_monitor": "EXIT:0"
   },
   "recentlyCompleted": [
     {
-      "id": "c_86962a39967eb_19c8ed5e645",
-      "title": "NQ: Expand feature set — volume profile, VWAP distance, ES/YM correlation",
-      "completed": "2026-02-24T03:56:00-07:00",
-      "result": "Done per kanban. Features added."
-    },
-    {
-      "id": "c_6b609758ab776",
-      "title": "NQ: LightGBM champion for vwap_fade",
-      "completed": "2026-02-24T02:30:00-07:00",
-      "result": "LightGBM beat XGBoost 8/10 WF folds — promoted to champion."
+      "id": "numerai-daily-2026-02-24",
+      "title": "Numerai daily submission — all 3 models",
+      "completed": "2026-02-24T06:33:28-07:00",
+      "result": "SUCCESS in 72s (robbyrobml, robbyrob2, robbyrob3)"
     }
   ],
-  "inboxQueue": [
-    "NQ: Cyclical time encoding (hour_sin/hour_cos)",
-    "NQ: ATR trailing stop vs ML exit",
-    "NQ: Phase 3 paper trading setup"
-  ],
+  "inboxQueue": [],
   "notes": [
-    "Board idle — 0 In Progress, 0 Planned, 3 in Inbox awaiting promotion",
-    "Morning window — Rob active, ready for tasking",
-    "CPU 52C, disk 38%, all services active"
+    "Numerai daily bot ran successfully at 06:33 MST — all 3 models submitted (72s)",
+    "blofin-stack: 14 commits ahead of remote, 1 uncommitted file — push needed when Rob active",
+    "master-dashboard: 2 commits ahead of remote",
+    "ai-workshop: on branch sports-betting/phase2-real-apps, 3 uncommitted files",
+    "Kanban fully clear: 0 In Progress / Planned / Review",
+    "Tokens: 5h at 0.0% (reset 1:00 PM), 7-day at 55%",
+    "BTC dip trader: last run this morning, exit(0)"
   ]
 }

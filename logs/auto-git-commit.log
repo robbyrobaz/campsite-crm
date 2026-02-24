@@ -915,3 +915,23 @@ COMMITTED master-dashboard
 [main 7d7e161] auto: snapshot 2026-02-24T02:00:01Z
  1 file changed, 154 insertions(+), 139 deletions(-)
 COMMITTED blofin-stack
+[main 9c663a7] auto: snapshot 2026-02-24T02:00:01Z
+ 20 files changed, 1529 insertions(+), 14 deletions(-)
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_180025-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_180525-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_181025-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_181525-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_182025-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_182525-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_183025-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_183525-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_184025-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_184525-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_185025-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_185525-auto.json
+ create mode 100644 home-energy-os/enphase_auth.py
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)

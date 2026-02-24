@@ -1,48 +1,53 @@
 {
-  "updated": "2026-02-24T02:44:00-07:00",
-  "pulse": "2026-02-24T02:43:00-07:00",
+  "updated": "2026-02-24T03:14:00-07:00",
+  "pulse": "2026-02-24T03:13:00-07:00",
   "activeTasks": [
     {
-      "id": "c_ea3cf9bf1b393_19c8ed5e660",
-      "title": "NQ: Phase 3 paper trading setup — run top 3 strategies (momentum, orb, gap_fill)",
+      "id": "c_297a0d8662449_19c8ed5e60c",
+      "title": "NQ: Cyclical time encoding (hour_sin/hour_cos) for all strategies — ORB especially time-sensitive",
       "status": "In Progress",
       "assignee": "claude",
       "project": "ninja_trader_strategies",
-      "pid": 1785818,
-      "dispatched": "2026-02-24T02:44:00-07:00",
-      "stale_at": "2026-02-24T03:14:00-07:00"
+      "pid": 1823251,
+      "dispatched": "2026-02-24T03:14:00-07:00",
+      "stale_at": "2026-02-24T03:44:00-07:00"
     }
   ],
   "board": {
     "inProgress": 1,
     "planned": 0,
     "reviewTest": 0,
-    "inbox": 5
+    "inbox": 4
   },
   "health": {
-    "cpu_temp": "63C",
+    "cpu_temp": "65C",
     "disk_pct": 38,
     "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active"],
     "critical_monitor": "EXIT:0"
   },
   "recentlyCompleted": [
     {
+      "id": "c_ea3cf9bf1b393_19c8ed5e660",
+      "title": "NQ Phase 3 paper trading setup",
+      "completed": "2026-02-24T02:55:00-07:00",
+      "result": "Built pipeline/db.py (paper_runs + paper_trades tables), ml/run_phase3.py orchestrator. XGBoost trains on 325-day history, scores Jan-Feb 2026 window, bar-by-bar forward sim with realistic fills."
+    },
+    {
       "id": "c_6b609758ab776_19c8ed5e5e9",
       "title": "NQ: LightGBM champion for vwap_fade",
       "completed": "2026-02-24T02:18:00-07:00",
-      "result": "LightGBM promoted to champion: 485-542 trades/fold vs XGB 192-367, +54% total PnL ($1.03M vs $667K), similar PF ~2.1. ml/models/ updated."
+      "result": "+54% PnL vs XGBoost, 485-542 trades/fold. LightGBM is new champion."
     }
   ],
   "inboxQueue": [
     "c_86962a39967eb — NQ: Expand feature set (volume profile, VWAP distance, ES/YM corr)",
     "c_b32755e27bdc7 — NQ: ATR trailing stop vs ML exit — compare PF",
-    "c_297a0d8662449 — NQ: Cyclical time encoding (hour_sin/hour_cos, ORB especially)",
-    "c_4d4df8a920da3 — NQ Phase 3 PRD (blocked: prerequisites)",
+    "c_4d4df8a920da3 — NQ Phase 3 PRD (blocked)",
     "c_57eff3238cdd4 — NQ Phase 4 (blocked)"
   ],
   "notes": [
-    "Overnight NQ research sprint underway: LightGBM champion done, Phase 3 paper trading running",
-    "Remaining: feature expansion, ATR vs ML exit, cyclical encoding",
-    "CPU normalized to 63C after ingestor spike"
+    "Overnight NQ sprint: LightGBM champ + Phase3 paper trading + cyclical encoding running",
+    "After cyclical encoding: feature expansion + ATR vs ML exit remain",
+    "Board will reach natural end of NQ research sprint when ATR card completes"
   ]
 }

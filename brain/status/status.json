@@ -1,21 +1,22 @@
 {
-  "lastUpdated": "2026-02-24T00:43:00Z",
-  "activeTasks": [
+  "lastUpdated": "2026-02-23T18:06:00-07:00",
+  "activeTasks": [],
+  "planned": [
     {
-      "cardId": "c_7b06ecc7b41a7_19c8c7ca2ea",
-      "title": "Numerai section of master status dashboard — column fitting fix",
-      "status": "In Progress",
-      "project": "master-dashboard",
-      "pid": 1081347,
-      "note": "Dispatched 5:43 PM MST. Fix column layout in numerai section. Stale threshold: 6:13 PM MST."
+      "id": "c_11821c89f01f1",
+      "title": "Live Agent Work \u2014 broader agent/subagent search",
+      "note": "master-dashboard; waits for numerai slot to free"
     }
   ],
-  "planned": [
-    {"id": "c_11821c89f01f1", "title": "Live Agent Work — broader agent/subagent search", "note": "master-dashboard; waits for numerai slot to free"}
-  ],
   "recentlyDone": [
-    {"title": "vol_expansion investigation", "completedAt": "~17:30Z"},
-    {"title": "vwap_reversion durable fix", "completedAt": "~17:30Z"}
+    {
+      "title": "vol_expansion investigation",
+      "completedAt": "~17:30Z"
+    },
+    {
+      "title": "vwap_reversion durable fix",
+      "completedAt": "~17:30Z"
+    }
   ],
   "blofin": {
     "note": "cross_asset_correlation gate=pass. Monitor vwap_reversion state after durable fix runner completed."
@@ -26,7 +27,8 @@
     "services": "all active"
   },
   "nextActions": [
-    "Monitor numerai dashboard runner — stale threshold 6:13 PM MST",
+    "Monitor numerai dashboard runner \u2014 stale threshold 6:13 PM MST",
     "After numerai done: dispatch Live Agent Work card"
-  ]
+  ],
+  "note": "Cleared stale task (Numerai dashboard fix is Done on kanban)"
 }

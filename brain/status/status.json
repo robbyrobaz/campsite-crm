@@ -1,54 +1,46 @@
 {
-  "updated": "2026-02-24T01:14:00-07:00",
-  "pulse": "2026-02-24T01:13:00-07:00",
-  "activeTasks": [],
-  "board": {
-    "inProgress": 0,
-    "planned": 0,
-    "reviewTest": 0,
-    "inbox": 2,
-    "inboxNote": "Both remaining Inbox cards blocked (NQ Phase 3 requires Phase 2 completion, Phase 4 requires Phase 3)"
-  },
+  "updated": "2026-02-24T01:47:00-07:00",
+  "pulse": "2026-02-24T01:47:00-07:00",
+  "activeTasks": [
+    {
+      "id": "c_461e82fa1b81b_19c8ed38598",
+      "title": "NQ: ML exit re-run on filter-corrected strategies (threshold sweep 0.5-0.8)",
+      "status": "In Progress",
+      "assignee": "nq-exit-ml-sweep (sonnet)",
+      "sessionKey": "agent:main:subagent:233b351d-bdf1-4489-b11a-72c77f3a326a",
+      "project": "ninja_trader_strategies",
+      "dispatched": "2026-02-24T01:45:00-07:00",
+      "stale_at": "2026-02-24T02:15:00-07:00"
+    },
+    {
+      "id": "c_812bcdaf0b725_19c8ed385bc",
+      "title": "NQ: Full Phase 2 re-run with all candidate filter overrides fixed",
+      "status": "In Progress",
+      "assignee": "nq-phase2-rerun (sonnet)",
+      "sessionKey": "agent:main:subagent:388d0fe1-1271-4a60-86d5-1242a93dfe14",
+      "project": "ninja_trader_strategies",
+      "dispatched": "2026-02-24T01:45:00-07:00",
+      "stale_at": "2026-02-24T02:25:00-07:00"
+    }
+  ],
+  "board": { "inProgress": 2, "planned": 0, "reviewTest": 0, "inbox": 5 },
   "health": {
-    "cpu_temp": "58C",
-    "disk_pct": 38,
-    "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active"],
+    "cpu_temp": "65C",
+    "disk_pct": 37,
+    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active","nq-dashboard:active","jarvis-home-energy:active","claw-kanban:active"],
     "critical_monitor": "EXIT:0"
-  },
-  "blofinPipelineStatus": {
-    "confirmedSignals_last1h": 68,
-    "lastSignal": "2026-02-24T08:13:02Z",
-    "paperEngineActive": true,
-    "gatePassingStrategies": [
-      "cross_asset_correlation: T2 gate=pass pf=2.52 trades=354 wr=57.6%",
-      "volume_volatility_mean_reversion: T2 gate=pass pf=1.85 trades=85 wr=56.5%",
-      "vwap_volatility_rebound: T2 gate=pass pf=2.80 trades=2 (VERY LOW SAMPLE)"
-    ],
-    "watchlist": [
-      "vwap_reversion: T2 gate=FAIL pf=1.1883 — durable fix set T2 but gate still fails (pf<1.35 BT threshold). FT winner override path may not be persisting gate=pass.",
-      "volatility_regime_switch: T2 gate=fail trades=None — needs 50+ FT trades",
-      "momentum_v1: T2 gate=pass but pf=0.0 trades=1 — anomalous, needs investigation"
-    ]
   },
   "recentlyCompleted": [
     {
-      "id": "c_a642d17ac5cd9_19c8de69022",
-      "title": "B-Hyve sprinkler integration",
-      "completed": "2026-02-24T00:52:00-07:00",
-      "result": "Fixed websockets 16.x API (extra_headers→additional_headers), 5-min retry backoff on auth failure."
-    },
-    {
-      "id": "c_c731788cfcfd1_19c8daedbf5",
-      "title": "Cameras + Nest + Ring integration",
-      "completed": "2026-02-24T00:36:00-07:00",
-      "result": "Async Ring auth, token caching, snapshot support. All camera types live."
+      "id": "nq-research-filter-fix",
+      "title": "NQ Research: gap_fill PF 1.95→2.43, momentum PF 2.86→2.93",
+      "completed": "2026-02-24T00:10:00-07:00",
+      "result": "Candidate filter inflation fixed. Research Scientist confirmed edges stronger with selectivity."
     }
   ],
-  "dispatcherState": "IDLE — no actionable cards. Monitoring health every 30min. Waiting for new cards or NQ Phase 2 completion to unblock Phase 3/4.",
   "notes": [
-    "jarvis-home-energy :8793 full suite COMPLETE: SPAN + Tesla + Cybertruck + Energy Cockpit + Cameras/Ring/Nest + B-Hyve",
-    "Paper engine producing 68 signals/hour — healthy",
-    "vwap_reversion gate=fail worth investigating next session — pf=1.1883 below 1.35 gate",
-    "momentum_v1 gate=pass anomaly (pf=0.0, 1 trade) — should be investigated"
+    "Two NQ builders running in parallel — DB safe (different output files/tables)",
+    "Kanban discipline: always PATCH to In Progress immediately after spawn",
+    "blofin-stack: 18 modified files + 6 commits ahead of remote — push needed"
   ]
 }

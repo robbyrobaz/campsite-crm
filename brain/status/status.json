@@ -1,44 +1,50 @@
 {
-  "updated": "2026-02-23T20:14:00-07:00",
-  "pulse": "2026-02-23T20:13:00-07:00",
+  "updated": "2026-02-23T20:44:00-07:00",
+  "pulse": "2026-02-23T20:43:00-07:00",
   "activeTasks": [
     {
-      "id": "c_c264400d324d6_19c8cad0c34",
-      "title": "Fix vwap_reversion gate=pass durably: direct DB updates get overwritten by Phase 4 re-scoring",
+      "id": "c_b54fffe9ee131_19c8c46b3f9",
+      "title": "Accelerate FT data collection for volatility_expansion_volume_breakout",
       "status": "In Progress",
       "assignee": "claude",
       "project": "blofin-stack",
-      "pid": 1291048,
-      "dispatched": "2026-02-23T20:13:00-07:00",
-      "stale_at": "2026-02-23T20:43:00-07:00"
+      "pid": 1328880,
+      "dispatched": "2026-02-23T20:44:00-07:00",
+      "stale_at": "2026-02-23T21:14:00-07:00"
     }
   ],
   "board": {
     "inProgress": 1,
     "planned": 0,
     "reviewTest": 0,
-    "inbox": 8
+    "inbox": 7
   },
   "health": {
-    "cpu_temp": "56C",
+    "cpu_temp": "58C",
     "disk_pct": 38,
     "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active"],
     "critical_monitor": "EXIT:0"
   },
+  "recentlyCompleted": [
+    {
+      "id": "c_c264400d324d6_19c8cad0c34",
+      "title": "Fix vwap_reversion gate=pass durably",
+      "completed": "2026-02-23T20:30:00-07:00",
+      "result": "FIXED: Phase 4 now uses _get_ft_metrics_from_active_coins (filters to tier=2 per-coin data). vwap_reversion tier=2, ft_pf=1.1883, ft_trades=251 — survives all future Phase 4 runs."
+    }
+  ],
   "inboxQueue": [
-    "c_dc114298dfb45 — Tesla Gateway + Cybertruck dashboard pages (jarvis-home-energy)",
-    "c_cd20d497fdf76 — Fix ExperimentEngine proxy PF bug (ninja_trader)",
-    "c_975c70e34d647 — Build Home Energy OS dashboard (home-energy-os)",
+    "c_c731788cfcfd1 — Cameras + Nest + Ring integration (jarvis-home-energy) [assignee fixed]",
     "c_a20294ae0f27 — vwap_fade deep dive (ninja_trader)",
-    "c_b54fffe9ee131 — Accelerate FT for vol_expansion (blofin)",
+    "c_975c70e34d647 — Build Home Energy OS dashboard (home-energy-os)",
+    "c_cd20d497fdf76 — Fix ExperimentEngine proxy PF bug (ninja_trader)",
+    "c_dc114298dfb45 — Tesla Gateway + Cybertruck dashboard pages (jarvis-home-energy)",
     "c_4d4df8a920da3 — NQ Phase 3 (blocked: Phase 2 incomplete)",
     "c_57eff3238cdd4 — NQ Phase 4 (blocked: Phase 3 incomplete)"
   ],
   "notes": [
-    "Board was empty (IP=0, Planned=0) at pulse start — all prior tasks completed",
-    "Fixed null assignees on 5 Inbox cards",
-    "Dispatched top priority blofin fix: vwap_reversion durable gate=pass",
-    "Max 1 IP enforced per pulse rules",
-    "NQ Phase 3/4 remain blocked until Phase 2 NQ work completes"
+    "vwap_reversion durable fix complete — no longer demoted by Phase 4",
+    "vol_expansion PF=2.207, WR=68.8% but only 16 FT trades vs 100 required — accelerate in progress",
+    "Fixed null assignee on new Cameras+Nest+Ring Inbox card"
   ]
 }

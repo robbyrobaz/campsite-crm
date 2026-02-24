@@ -1041,3 +1041,27 @@ CLEAN master-dashboard (nothing to commit)
 [main 90acd61] auto: snapshot 2026-02-24T06:00:01Z
  1 file changed, 146 insertions(+), 146 deletions(-)
 COMMITTED blofin-stack
+[main 7243271] auto: snapshot 2026-02-24T06:00:01Z
+ 22 files changed, 2619 insertions(+), 187 deletions(-)
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_220026-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_220526-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_221026-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_221526-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_222026-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_222526-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_223026-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_223526-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_224026-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_224526-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_225026-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260223_225526-auto.json
+ create mode 100644 home-energy-os/app.py
+ create mode 100644 home-energy-os/enphase.py
+ create mode 100644 home-energy-os/requirements.txt
+ create mode 100644 home-energy-os/span.py
+ create mode 100644 home-energy-os/static/index.html
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)

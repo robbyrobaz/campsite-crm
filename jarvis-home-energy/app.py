@@ -102,9 +102,10 @@ def poll_span():
             panel = _span_get("/api/v1/panel")
             grid_power = panel.get("instantGridPowerW", 0)
             circuits_raw = _span_get("/api/v1/circuits")
-            # Normalize circuit list
+            # API returns {"circuits": {"uuid": {...}, ...}} — extract the inner dict values
             if isinstance(circuits_raw, dict):
-                circuits_raw = list(circuits_raw.values())
+                inner = circuits_raw.get("circuits", circuits_raw)
+                circuits_raw = list(inner.values()) if isinstance(inner, dict) else (inner or [])
 
         circuits = []
         for c in circuits_raw:
@@ -498,12 +499,13 @@ def _update_summary():
 # ╚══════════════════════════════════════════════════════════════════════════════╝
 
 def _poll_loop():
-    log.info("Polling loop started (interval=%ds)", POLL_INTERVAL_SECONDS)
+    import concurrent.futures
+    log.info("Polling loop started (interval=%ds, parallel)", POLL_INTERVAL_SECONDS)
     while True:
-        poll_pentair()
-        poll_span()
-        poll_enphase()
-        poll_tesla()
+        # Run all device polls concurrently — Pentair can take 45s, don't let it block solar/SPAN
+        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
+            futs = [ex.submit(f) for f in (poll_pentair, poll_span, poll_enphase, poll_tesla)]
+            concurrent.futures.wait(futs, timeout=60)
         _update_summary()
         _broadcast_sse()
         time.sleep(POLL_INTERVAL_SECONDS)

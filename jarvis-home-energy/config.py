@@ -7,16 +7,16 @@ Edit credentials here after initial setup.
 # Device: span-nj-2307-006gl.local | 192.168.68.93
 # Auth: Bearer token (one-time registration — open door, press button 3x)
 SPAN_HOST = "192.168.68.93"
-SPAN_TOKEN = ""  # Set after running: python3 -c "from app import span_register; span_register()"
+SPAN_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJqYXJ2aXMtaG9tZS1vcyIsImlhdCI6MTc3MTg5MzkyNH0.4LO1WESRaJSRb9sgtlGjP1ZPnLl9zZ0qLrsVQyKwBec"
 
 # ─── Enphase IQ Gateway (Envoy) ───────────────────────────────────────────────
 # Device: envoy.local | 192.168.68.63  Serial: 202324023651  FW: D8.3.5167
 # Auth: JWT (generated from Enphase cloud — valid 1 year)
 ENPHASE_HOST = "192.168.68.63"
 ENPHASE_SERIAL = "202324023651"
-ENPHASE_TOKEN = ""  # Set after running: python3 -c "from app import enphase_get_token; enphase_get_token()"
-ENPHASE_EMAIL = ""  # Your Enphase Enlighten account email
-ENPHASE_PASSWORD = ""  # Your Enphase Enlighten account password
+ENPHASE_TOKEN = "eyJraWQiOiI3ZDEwMDA1ZC03ODk5LTRkMGQtYmNiNC0yNDRmOThlZTE1NmIiLCJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NiJ9.eyJhdWQiOiIyMDIzMjQwMjM2NTEiLCJpc3MiOiJFbnRyZXoiLCJlbnBoYXNlVXNlciI6Im93bmVyIiwiZXhwIjoxODAzNDMxMzYwLCJpYXQiOjE3NzE4OTUzNjAsImp0aSI6IjQ0NDM2NWRmLTllMTQtNDU3YS04MjhlLThiY2NiMGQ2MTUzNiIsInVzZXJuYW1lIjoicm9iLmhhcnR3aWdAZ21haWwuY29tIn0.Sk7aVeDMCf0DsE1NG4ehOb2d_r7gZ5Fc8sUgk8Em5AXbiMY27p5ruzTjoVPfxEEVJWPASW5n6LB3PZL_mSqGjw"  # Expires ~March 2027
+ENPHASE_EMAIL = "rob.hartwig@gmail.com"
+ENPHASE_PASSWORD = "-pAQRDz?8$!%,25"
 
 # ─── Pentair IntelliCenter ────────────────────────────────────────────────────
 # Device: pentair.local | 192.168.68.91  Ports: 6680 (WS), 6681 (TCP)

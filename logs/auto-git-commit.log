@@ -1257,3 +1257,22 @@ CLEAN master-dashboard (nothing to commit)
 [main d4dce89] auto: snapshot 2026-02-24T13:00:01Z
  1 file changed, 120 insertions(+), 120 deletions(-)
 COMMITTED blofin-stack
+[main c146d52] auto: snapshot 2026-02-24T13:00:01Z
+ 15 files changed, 1353 insertions(+), 1 deletion(-)
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_050027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_050527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_051027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_051527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_052027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_052527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_053027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_053527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_054027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_054527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_055027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260224_055527-auto.json
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)

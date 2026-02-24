@@ -1,37 +1,43 @@
 {
-  "updated": "2026-02-24T01:53:00-07:00",
-  "pulse": "2026-02-24T01:53:00-07:00",
+  "updated": "2026-02-24T02:14:00-07:00",
+  "pulse": "2026-02-24T02:13:00-07:00",
   "activeTasks": [
     {
-      "id": "c_461e82fa1b81b_19c8ed38598",
-      "title": "NQ: ML exit re-run on filter-corrected strategies (threshold sweep 0.5-0.8)",
+      "id": "c_6b609758ab776_19c8ed5e5e9",
+      "title": "NQ: LightGBM champion for vwap_fade — challenger beat XGBoost 8/10 folds",
       "status": "In Progress",
-      "assignee": "nq-exit-ml-sweep (sonnet)",
-      "sessionKey": "agent:main:subagent:233b351d-bdf1-4489-b11a-72c77f3a326a",
+      "assignee": "claude",
       "project": "ninja_trader_strategies",
-      "dispatched": "2026-02-24T01:45:00-07:00",
-      "stale_at": "2026-02-24T02:15:00-07:00"
+      "pid": 1748099,
+      "dispatched": "2026-02-24T02:14:00-07:00",
+      "stale_at": "2026-02-24T02:44:00-07:00"
     }
   ],
-  "board": { "inProgress": 1, "planned": 0, "reviewTest": 0, "inbox": 5 },
+  "board": {
+    "inProgress": 1,
+    "planned": 0,
+    "reviewTest": 0,
+    "inbox": 6
+  },
   "health": {
-    "cpu_temp": "83C",
+    "cpu_temp": "79C",
+    "cpu_note": "Elevated — blofin ingestor 16.6% CPU (normal), gnome-shell + firefox background. Not alarming.",
     "disk_pct": 38,
-    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active","nq-dashboard:active","jarvis-home-energy:active","claw-kanban:active"],
+    "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active"],
     "critical_monitor": "EXIT:0"
   },
-  "recentlyCompleted": [
-    {
-      "id": "c_812bcdaf0b725_19c8ed385bc",
-      "title": "NQ Phase 2 full re-run — all 6 strategies corrected",
-      "completed": "2026-02-24T01:53:00-07:00",
-      "result": "All 6 pass Lucid gates. Final: momentum 2.91, orb 2.49, gap_fill 2.10, vwap_fade 2.08, prev_day 2.03, vol_contraction 1.86. Phase 3 Tier 1: momentum + orb."
-    }
+  "inboxQueue": [
+    "c_ea3cf9bf1b393 — NQ Phase 3 paper trading: run top 3 strategies (momentum...)",
+    "c_86962a39967eb — NQ: Expand feature set (volume profile, VWAP distance, ES/YM corr)",
+    "c_b32755e27bdc7 — NQ: ATR trailing stop vs ML exit — implement + compare PnL",
+    "c_297a0d8662449 — NQ: Cyclical time encoding (hour_sin/hour_cos) for all strategies",
+    "c_4d4df8a920da3 — NQ Phase 3 PRD (blocked: prerequisites not met)",
+    "c_57eff3238cdd4 — NQ Phase 4 (blocked)"
   ],
   "notes": [
-    "Holding combined user update until ML exit sweep also completes",
-    "Phase 3 ready — Tier 1: momentum+orb, Tier 2: gap_fill+vwap_fade",
-    "ETB filter still broken (21K trades) — exclude from Phase 3",
-    "5 new NQ improvement cards in inbox queue"
+    "5 new NQ cards appeared at ~2:13 AM — all assignees fixed to claude, project_path set",
+    "LightGBM challenger already beat XGBoost 8/10 folds per card description — promote to champion",
+    "Remaining queue: phase 3 paper trading setup, feature engineering, ATR vs ML exit, cyclical encoding",
+    "CPU 79C from ingestor + background apps — monitor but not alarming"
   ]
 }

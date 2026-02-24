@@ -1,52 +1,37 @@
 {
-  "updated": "2026-02-24T03:44:00-07:00",
-  "pulse": "2026-02-24T03:43:00-07:00",
-  "activeTasks": [
-    {
-      "id": "c_86962a39967eb_19c8ed5e645",
-      "title": "NQ: Expand feature set — add volume profile, VWAP distance, ES/YM correlation as market breadth inputs",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project": "ninja_trader_strategies",
-      "pid": 1860693,
-      "dispatched": "2026-02-24T03:44:00-07:00",
-      "stale_at": "2026-02-24T04:14:00-07:00"
-    }
-  ],
-  "board": {
-    "inProgress": 1,
-    "planned": 0,
-    "reviewTest": 0,
-    "inbox": 3
-  },
+  "updated": "2026-02-24T03:56:00-07:00",
+  "pulse": "2026-02-24T03:56:00-07:00",
+  "activeTasks": [],
+  "board": { "inProgress": 0, "planned": 0, "reviewTest": 0, "inbox": 4 },
   "health": {
-    "cpu_temp": "56C",
+    "cpu_temp": "77C",
     "disk_pct": 38,
-    "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active"],
+    "services": ["openclaw-gateway:active","blofin-stack-ingestor:active","blofin-stack-paper:active","nq-dashboard:active","jarvis-home-energy:active","claw-kanban:active"],
     "critical_monitor": "EXIT:0"
   },
   "recentlyCompleted": [
     {
-      "id": "c_297a0d8662449_19c8ed5e60c",
-      "title": "NQ: Cyclical time encoding",
-      "completed": "2026-02-24T03:17:00-07:00",
-      "result": "287 tests pass. hour_sin/cos, minute_of_day_sin/cos, dow_sin/cos added to all feature builders (ml/features.py, ml/orb_features.py). ORB especially benefits."
+      "id": "c_86962a39967eb_19c8ed5e645",
+      "title": "NQ: Expand feature set — volume profile, VWAP distance, ES/YM correlation",
+      "completed": "2026-02-24T03:56:00-07:00",
+      "result": "Done per kanban. Features added."
     },
     {
-      "id": "c_ea3cf9bf1b393_19c8ed5e660",
-      "title": "NQ Phase 3 paper trading setup",
-      "completed": "2026-02-24T02:55:00-07:00",
-      "result": "pipeline/db.py paper_runs+paper_trades tables. ml/run_phase3.py full forward-test orchestrator. XGBoost 325-day train."
+      "id": "c_6b609758ab776",
+      "title": "NQ: LightGBM champion for vwap_fade",
+      "completed": "2026-02-24T02:30:00-07:00",
+      "result": "LightGBM beat XGBoost 8/10 WF folds — promoted to champion."
     }
   ],
   "inboxQueue": [
-    "c_b32755e27bdc7 — NQ: ATR trailing stop vs ML exit — last actionable NQ research card",
-    "c_4d4df8a920da3 — NQ Phase 3 PRD (blocked)",
-    "c_57eff3238cdd4 — NQ Phase 4 (blocked)"
+    "c_297a0d8662449 — NQ: Cyclical time encoding (hour_sin/hour_cos)",
+    "c_b32755e27bdc7 — NQ: ATR trailing stop vs ML exit",
+    "c_ea3cf9bf1b393 — NQ: Phase 3 paper trading setup",
+    "c_dc114298dfb45 — Tesla Gateway + Cybertruck dashboard pages"
   ],
   "notes": [
-    "NQ sprint nearing end: feature expansion running, ATR vs ML exit is last actionable card",
-    "After ATR card: only blocked Phase 3/4 PRD remain — dispatcher returns to idle",
-    "CPU 56C — very cool overnight"
+    "Numerai daily bot fires at 6:32 AM MST (~2.5h away)",
+    "blofin-stack: 8+ commits ahead of remote — push needed when Rob active",
+    "Tokens: 5h just reset (1%), 7-day 54%"
   ]
 }

@@ -1,56 +1,55 @@
 {
-  "updated": "2026-02-23T21:44:00-07:00",
-  "pulse": "2026-02-23T21:43:00-07:00",
+  "updated": "2026-02-23T22:14:00-07:00",
+  "pulse": "2026-02-23T22:13:00-07:00",
   "activeTasks": [
     {
-      "id": "c_a20294ae0f27_19c8cb08e2a",
-      "title": "vwap_fade deep dive: validate signal quality and session distribution",
+      "id": "c_975c70e34d647_19c8d1cccaf",
+      "title": "Build Home Energy OS dashboard — SPAN panel live, start Phase 1",
       "status": "In Progress",
       "assignee": "claude",
-      "project": "ninja_trader_strategies",
-      "pid": 1403911,
-      "dispatched": "2026-02-23T21:44:00-07:00",
-      "stale_at": "2026-02-23T22:14:00-07:00"
+      "project": "home-energy-os",
+      "pid": 1442107,
+      "dispatched": "2026-02-23T22:14:00-07:00",
+      "stale_at": "2026-02-23T22:44:00-07:00"
     }
   ],
   "board": {
     "inProgress": 1,
     "planned": 0,
     "reviewTest": 0,
-    "inbox": 6
+    "inbox": 5
   },
   "health": {
-    "cpu_temp": "58C",
+    "cpu_temp": "57C",
     "disk_pct": 37,
     "services": ["openclaw-gateway:active", "blofin-stack-ingestor:active", "blofin-stack-paper:active"],
     "critical_monitor": "EXIT:0"
   },
   "recentlyCompleted": [
     {
+      "id": "c_a20294ae0f27_19c8cb08e2a",
+      "title": "vwap_fade deep dive: validate signal quality and session distribution",
+      "completed": "2026-02-23T21:49:00-07:00",
+      "result": "2,207 signals, WR=51.7%, PF=2.14, 10/10 CI folds pass. PostMarket best (PF=2.52), MidDay weakest (PF=1.70). Score non-monotonic — score filtering unhelpful."
+    },
+    {
       "id": "c_cd20d497fdf76_19c8d34289d",
       "title": "Fix ExperimentEngine proxy PF bug",
       "completed": "2026-02-23T21:21:00-07:00",
-      "result": "New _simulate_pnl_price_path() uses real OHLC to scan for TP/SL hit. Cross-R/R sweeps now produce valid PF comparisons."
-    },
-    {
-      "id": "c_b54fffe9ee131_19c8c46b3f9",
-      "title": "Accelerate FT for vol_expansion",
-      "completed": "2026-02-23T20:57:00-07:00",
-      "result": "CONFIRM_WINDOW_MIN 30→60m, 7-day lookback fallback for new strategies."
+      "result": "Real price-path TP/SL simulation via _simulate_pnl_price_path(). Cross-R/R sweeps now valid."
     }
   ],
   "inboxQueue": [
-    "c_975c70e34d647 — Build Home Energy OS dashboard (home-energy-os)",
-    "c_dc114298dfb45 — Tesla Gateway + Cybertruck dashboard (jarvis-home-energy)",
+    "c_dc114298dfb45 — Tesla Gateway + Cybertruck dashboard pages (jarvis-home-energy)",
     "c_c731788cfcfd1 — Cameras + Nest + Ring integration (jarvis-home-energy)",
-    "c_a642d17ac5cd9 — B-Hyve sprinkler integration [assignee fixed]",
+    "c_a642d17ac5cd9 — B-Hyve sprinkler integration (jarvis-home-energy)",
     "c_4d4df8a920da3 — NQ Phase 3 (blocked)",
     "c_57eff3238cdd4 — NQ Phase 4 (blocked)"
   ],
   "notes": [
-    "Evening blitz: 3 cards done in ~2h (vwap_reversion fix, VEB FT accel, ExperimentEngine fix)",
-    "vwap_fade deep dive now running — checks NQ signal quality + session distribution",
-    "Fixed null assignee on new B-Hyve sprinkler card",
-    "Home-energy cluster (Tesla/Cameras/B-Hyve/SPAN) queued for next slots"
+    "Approaching quiet time (23:00 MST) — dispatcher will continue but no new work after 23:00",
+    "Evening completed: vwap_reversion fix, VEB FT accel, ExperimentEngine fix, vwap_fade deep dive, Home Energy OS dispatched",
+    "Home energy cluster queued: Tesla, Cameras, B-Hyve after this card",
+    "NQ Phase 3/4 remain blocked until Phase 2 complete"
   ]
 }

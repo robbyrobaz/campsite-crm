@@ -1,17 +1,8 @@
 {
-  "updated_at": "2026-02-24T18:13:00-07:00",
-  "activeTasks": [
-    {
-      "card_id": "c_12c27c3f5bb55_19c92059c83",
-      "title": "NQ ML: add CatBoost as challenger model in tournament",
-      "status": "In Progress",
-      "project_path": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
-      "pid": 2679518,
-      "started_at": "2026-02-24T18:13:00-07:00"
-    }
-  ],
+  "updated_at": "2026-02-24T18:30:00-07:00",
+  "activeTasks": [],
   "health": {
-    "cpu_temp": "54.0°C",
+    "cpu_temp": "55.0°C",
     "disk_used": "172G/468G (39%)",
     "services": {
       "openclaw-gateway": "active",

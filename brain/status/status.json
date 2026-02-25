@@ -1,46 +1,27 @@
 {
-  "updatedAt": "2026-02-24T17:35:00Z",
+  "updatedAt": "2026-02-24T17:45:00Z",
   "activeTasks": [
     {
-      "id": "c_7bd48301a6b37_19c92059f46",
-      "title": "NQ ML: add permanent blacklist column enforcement to strategy_registry",
+      "id": "c_b32755e27bdc7_19c8ed5e628",
+      "title": "NQ: ATR trailing stop — implement + compare vs fixed SL/TP",
       "status": "In Progress",
       "project_path": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
       "assignee": "claude",
-      "startedAt": "2026-02-24T17:35:00Z",
-      "subagentKey": "agent:main:subagent:fc18feb2-24bc-4e16-8a44-39a11cb3e34d"
-    },
-    {
-      "id": "c_09271f003738c_19c9205a20e",
-      "title": "NQ ML: feature importance audit and dead feature pruning",
-      "status": "In Progress",
-      "project_path": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
-      "assignee": "claude",
-      "startedAt": "2026-02-24T17:35:00Z",
-      "subagentKey": "agent:main:subagent:97cada15-fd1c-49d4-92ad-2a93a987ca46"
+      "startedAt": "2026-02-24T17:45:00Z",
+      "subagentKey": "agent:main:subagent:8f2fa091-525e-452e-ba0b-d4a83363d281"
     }
   ],
   "queued": [
-    {
-      "id": "c_b32755e27bdc7_19c8ed5e628",
-      "title": "NQ: ATR trailing stop vs ML exit",
-      "status": "Planned"
-    },
-    {
-      "id": "c_f2e844c1f2abd_19c9205a0a9",
-      "title": "NQ ML: test longer target horizons for momentum and gap_fill",
-      "status": "Planned"
-    },
-    {
-      "id": "c_12c27c3f5bb55_19c92059c83",
-      "title": "NQ ML: add CatBoost as challenger model in tournament",
-      "status": "Planned"
-    },
-    {
-      "id": "c_5ca1854edd46d_19c92397f3f",
-      "title": "NQ: Rename run_phase3.py to run_holdout_backtest.py",
-      "status": "Inbox"
-    }
+    {"id": "c_f2e844c1f2abd_19c9205a0a9", "title": "NQ ML: test longer target horizons for momentum and gap_fill", "status": "Planned"},
+    {"id": "c_12c27c3f5bb55_19c92059c83", "title": "NQ ML: add CatBoost as challenger model in tournament", "status": "Planned"},
+    {"id": "c_9b41599d8fd2_19c92452252", "title": "NQ Expert Strategy: Fair Value Gap", "status": "Inbox"},
+    {"id": "c_51951f2ceb405_19c9245227c", "title": "NQ Expert Strategy: Liquidity Sweep + Reversal", "status": "Inbox"},
+    {"id": "c_aa853ac0a2321_19c9245229b", "title": "NQ Expert Strategy: EMA Pullback", "status": "Inbox"},
+    {"id": "c_3bb91581529b9_19c924522b7", "title": "NQ Expert Strategy: Initial Balance Extension", "status": "Inbox"},
+    {"id": "c_640d25ea62847_19c924522d3", "title": "NQ Expert Strategy: Overnight Range Breakout", "status": "Inbox"},
+    {"id": "c_28f09eee89028_19c924522ee", "title": "NQ Expert Strategy: London Killzone", "status": "Inbox"},
+    {"id": "c_a7c791d674194_19c92452309", "title": "NQ Expert Strategy: Power Hour Continuation", "status": "Inbox"},
+    {"id": "c_727f55fa903ae_19c92452325", "title": "NQ Expert Strategy: Measured Move / Fib Continuation", "status": "Inbox"}
   ],
   "health": {
     "cpu_temp": "57°C",

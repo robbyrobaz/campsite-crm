@@ -1759,6 +1759,9 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         <marker id="arr-house" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
           <path d="M0,0 L6,3 L0,6 Z" fill="#6b7280"/>
         </marker>
+        <marker id="arr-pool" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#06b6d4"/>
+        </marker>
       </defs>
 
       <!-- ── PATHS (behind nodes) ── -->
@@ -1783,10 +1786,10 @@ DASHBOARD_HTML = """<!DOCTYPE html>
             stroke="#f59e0b" stroke-width="3" fill="none" opacity="0.9"
             stroke-dasharray="10 5" marker-end="url(#arr-solar)"/>
 
-      <!-- SPAN Panel → House Load -->
-      <path id="path-span-house" d="M 190,218 L 190,264"
-            stroke="#6b7280" stroke-width="3" fill="none" opacity="0.9"
-            stroke-dasharray="10 5" marker-end="url(#arr-house)"/>
+      <!-- Home Panel → Pool -->
+      <path id="path-home-pool" d="M 190,218 C 190,238 95,238 95,248"
+            stroke="#06b6d4" stroke-width="3" fill="none" opacity="0.9"
+            stroke-dasharray="10 5" marker-end="url(#arr-pool)"/>
 
       <!-- Tesla Gateway → CT Charger (bezier) -->
       <path id="path-gw-ct" d="M 395,202 C 435,228 476,242 515,248"
@@ -1837,12 +1840,12 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         </circle>
       </g>
 
-      <g id="part-span-house" visibility="hidden">
-        <circle r="4" fill="#6b7280" filter="url(#pf-glow)">
-          <animateMotion dur="1.5s" begin="0s" repeatCount="indefinite"><mpath href="#path-span-house"/></animateMotion>
+      <g id="part-home-pool" visibility="hidden">
+        <circle r="4" fill="#06b6d4" filter="url(#pf-glow)">
+          <animateMotion dur="1.5s" begin="0s" repeatCount="indefinite"><mpath href="#path-home-pool"/></animateMotion>
         </circle>
-        <circle r="2.5" fill="#6b7280" opacity="0.55">
-          <animateMotion dur="1.5s" begin="-0.5s" repeatCount="indefinite"><mpath href="#path-span-house"/></animateMotion>
+        <circle r="2.5" fill="#06b6d4" opacity="0.55">
+          <animateMotion dur="1.5s" begin="-0.5s" repeatCount="indefinite"><mpath href="#path-home-pool"/></animateMotion>
         </circle>
       </g>
 
@@ -1858,7 +1861,8 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <!-- ── NODES ── -->
 
       <!-- Solar node (top-left) -->
-      <g id="node-solar" transform="translate(75,22)">
+      <g id="node-solar" transform="translate(75,22)" style="cursor:pointer" onclick="showView('cockpit')"
+         onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
         <rect rx="12" ry="12" width="110" height="60" fill="#1c1917" stroke="#f59e0b" stroke-width="1.5"/>
         <text x="55" y="20" text-anchor="middle" font-size="17" fill="#f59e0b">&#x2600;&#xFE0F;</text>
         <text x="55" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">SOLAR</text>
@@ -1866,7 +1870,8 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       </g>
 
       <!-- SRP Grid node (top-right) -->
-      <g id="node-grid" transform="translate(480,22)">
+      <g id="node-grid" transform="translate(480,22)" style="cursor:pointer" onclick="showView('tesla-energy')"
+         onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
         <rect id="rect-grid" rx="12" ry="12" width="110" height="60" fill="#1c1917" stroke="#f97316" stroke-width="1.5"/>
         <text x="55" y="20" text-anchor="middle" font-size="17" fill="#f97316">&#x1F50C;</text>
         <text x="55" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">SRP GRID</text>
@@ -1874,7 +1879,8 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       </g>
 
       <!-- Tesla Gateway node (center) -->
-      <g id="node-gateway" transform="translate(328,130)">
+      <g id="node-gateway" transform="translate(328,130)" style="cursor:pointer" onclick="showView('tesla-energy')"
+         onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
         <rect rx="12" ry="12" width="134" height="72" fill="#1c1917" stroke="#3b82f6" stroke-width="1.5"/>
         <text x="67" y="20" text-anchor="middle" font-size="17" fill="#3b82f6">&#x1F50B;</text>
         <text x="67" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">TESLA GATEWAY V2</text>
@@ -1882,28 +1888,31 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         <text id="lbl-gw-soe" x="67" y="66" text-anchor="middle" font-size="10" fill="#60a5fa" font-family="sans-serif">&#x2014;</text>
       </g>
 
-      <!-- SPAN Panel node (mid-left) -->
-      <g id="node-span" transform="translate(132,150)">
+      <!-- Home Panel node (mid-left) — merged SPAN + House Load -->
+      <g id="node-home" transform="translate(132,150)" style="cursor:pointer" onclick="showView('span')"
+         onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
         <rect rx="12" ry="12" width="116" height="68" fill="#1c1917" stroke="#8b5cf6" stroke-width="1.5"/>
-        <text x="58" y="20" text-anchor="middle" font-size="17" fill="#8b5cf6">&#x1F4CA;</text>
-        <text x="58" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">SPAN PANEL</text>
-        <text id="lbl-span" x="58" y="55" text-anchor="middle" font-size="13" fill="#8b5cf6" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
+        <text x="58" y="20" text-anchor="middle" font-size="17" fill="#8b5cf6">&#x1F3E0;</text>
+        <text x="58" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">HOME PANEL</text>
+        <text id="lbl-home" x="58" y="55" text-anchor="middle" font-size="13" fill="#8b5cf6" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
       </g>
 
       <!-- CT Charger node (mid-right-bottom) -->
-      <g id="node-ct" transform="translate(455,248)">
+      <g id="node-ct" transform="translate(455,248)" style="cursor:pointer" onclick="showView('cybertruck')"
+         onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
         <rect rx="12" ry="12" width="120" height="60" fill="#1c1917" stroke="#22d3ee" stroke-width="1.5"/>
         <text x="60" y="20" text-anchor="middle" font-size="17" fill="#22d3ee">&#x1F697;</text>
         <text x="60" y="34" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">CYBERTRUCK CT</text>
         <text id="lbl-ct" x="60" y="52" text-anchor="middle" font-size="12" fill="#22d3ee" font-weight="bold" font-family="sans-serif">idle</text>
       </g>
 
-      <!-- House Load node (bottom-left) -->
-      <g id="node-house" transform="translate(132,264)">
-        <rect rx="12" ry="12" width="116" height="52" fill="#1c1917" stroke="#6b7280" stroke-width="1.5"/>
-        <text x="58" y="19" text-anchor="middle" font-size="17" fill="#e5e7eb">&#x1F3E0;</text>
-        <text x="58" y="33" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">HOUSE LOAD</text>
-        <text id="lbl-house" x="58" y="50" text-anchor="middle" font-size="13" fill="#e5e7eb" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
+      <!-- Pool node (bottom-left) -->
+      <g id="node-pool" transform="translate(40,248)" style="cursor:pointer" onclick="showView('pool')"
+         onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
+        <rect rx="12" ry="12" width="110" height="60" fill="#1c1917" stroke="#06b6d4" stroke-width="1.5"/>
+        <text x="55" y="20" text-anchor="middle" font-size="17" fill="#06b6d4">&#x1F3CA;</text>
+        <text x="55" y="34" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">POOL</text>
+        <text id="lbl-pool" x="55" y="52" text-anchor="middle" font-size="12" fill="#06b6d4" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
       </g>
 
       <!-- Bridge mode label (shown when Tesla offline) -->
@@ -2786,6 +2795,9 @@ function updateFlowDiagram(s) {
   const gridW       = Math.abs(rawGrid);
   const spanW       = span.total_load_w || sum.load_w || 0;
   const ctW         = sum.ct_charging_w || wc.charging_w || 0;
+  const circuits    = (span.circuits || []);
+  const poolCircuit = circuits.find(c => (c.name || '').includes('Pool'));
+  const poolW       = poolCircuit ? Math.abs(poolCircuit.power_w || 0) : 0;
   const totalW      = spanW + ctW;
   const teslaOnline = td.status === 'online';
   const batW        = td.battery_w || 0;  // + discharging, - charging
@@ -2795,9 +2807,9 @@ function updateFlowDiagram(s) {
   // Labels
   setLbl('lbl-solar', fmt(solarW));
   setLbl('lbl-grid',  fmt(gridW) + (rawGrid >= 0 ? ' \u2193' : ' \u2191'));
-  setLbl('lbl-span',  fmt(spanW));
+  setLbl('lbl-home',  fmt(spanW));
   setLbl('lbl-ct',    ctW > 50 ? fmt(ctW) + ' chg' : 'idle');
-  setLbl('lbl-house', fmt(spanW));
+  setLbl('lbl-pool',  poolW > 30 ? fmt(poolW) : 'off');
   if (teslaOnline) {
     setLbl('lbl-gw',    fmt(Math.abs(batW)) + (batW > 50 ? ' dchg' : batW < -50 ? ' chg' : ' idle'));
     setLbl('lbl-gw-soe', td.soe != null ? td.soe + '% SOE' : '\u2014');
@@ -2856,8 +2868,8 @@ function updateFlowDiagram(s) {
     if (p2) p2.setAttribute('visibility', 'hidden');
     setParticle('part-grid-span', gridW, 15000);
   }
-  setParticle('part-span-house', spanW, 15000);
-  setParticle('part-gw-ct',      ctW,  11500);
+  setParticle('part-home-pool', poolW, 5000);
+  setParticle('part-gw-ct',    ctW,   11500);
 
   // Stroke width scaling (power proportional)
   function setPathWidth(id, watts, maxW) {
@@ -2869,8 +2881,8 @@ function updateFlowDiagram(s) {
   setPathWidth('path-grid-gw',    teslaOnline ? gridW : 0, 15000);
   setPathWidth('path-gw-span',    teslaOnline ? spanW : 0, 15000);
   setPathWidth('path-grid-span',  teslaOnline ? 0 : gridW, 15000);
-  setPathWidth('path-span-house', spanW, 15000);
-  setPathWidth('path-gw-ct',      ctW,  11500);
+  setPathWidth('path-home-pool', poolW, 5000);
+  setPathWidth('path-gw-ct',    ctW,   11500);
 
   // CSS dash animation class (speed tiers)
   function setPathAnim(id, watts) {
@@ -2885,7 +2897,7 @@ function updateFlowDiagram(s) {
   setPathAnim('path-solar-span', solarW);
   setPathAnim('path-grid-gw',    teslaOnline ? gridW : 0);
   setPathAnim('path-gw-span',    teslaOnline ? spanW : 0);
-  setPathAnim('path-span-house', spanW);
+  setPathAnim('path-home-pool',  poolW);
   setPathAnim('path-gw-ct',      ctW);
   // Bridge path animation handled above via inline style; clear class conflicts
   if (elGridSpan) elGridSpan.classList.remove('flow-path-animated','flow-path-slow','flow-path-fast','flow-path-idle','flow-path-bridge');

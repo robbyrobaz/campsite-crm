@@ -28,12 +28,12 @@ PENTAIR_PORT = 6681  # Use raw TCP; WebSocket on 6680 as fallback
 # Device: TeslaWallConnector_OEB496 | 192.168.68.87 | No auth required
 TESLA_WC_HOST = "192.168.68.87"
 
-# ─── Tesla Gateway V2 (Powerwall) ─────────────────────────────────────────────
-# Device: not yet on LAN — check Deco app device list for "gateway" / Tesla MAC
-# Auth: POST /api/login/Basic  username=customer  password=last-5 of gateway serial
-TESLA_HOST = "192.168.68.86"  # Tesla Gateway V2 (serial GF2240460002D2, fw 25.26.0)
+# ─── Tesla Gateway 3 (grid management — NO battery/Powerwall) ─────────────────
+# Device: Tesla Energy Gateway 3 | 192.168.68.86 | Serial GF2240460002D2 | FW 25.26.0
+# Auth: Fleet API OAuth (via teslapy) — local API endpoints return 403/404
+TESLA_HOST = "192.168.68.86"  # Tesla Gateway 3 (serial GF2240460002D2, fw 25.26.0)
 TESLA_EMAIL = "rob.hartwig@gmail.com"
-TESLA_PASSWORD = ""  # Not needed — using Fleet API OAuth  # Local access password set during Tesla app commissioning — ask Rob
+TESLA_PASSWORD = ""  # Not needed — using Fleet API OAuth
 
 # ─── SRP Utility (cloud polling — future) ─────────────────────────────────────
 SRP_ACCOUNT = ""
@@ -67,4 +67,4 @@ BHYVE_PASSWORD = "1978philly"
 DASHBOARD_PORT = 8793
 POLL_INTERVAL_SECONDS = 5
 
-TESLA_ENERGY_SITE_ID = 2252397277512276  # "My Home" Powerwall site
+TESLA_ENERGY_SITE_ID = 2252397277512276  # "My Home" energy site (Gateway 3, no Powerwall)

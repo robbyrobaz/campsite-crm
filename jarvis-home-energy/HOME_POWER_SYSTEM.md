@@ -31,7 +31,7 @@
 ```
 
 **Combined solar capacity: ~11.8 kW**
-**No battery storage.** The Tesla Gateway 3 manages grid interconnect and backup switching only — there is no Powerwall or any other battery in this system.
+**No stationary battery storage (no Powerwall).** The Tesla Gateway 3 manages grid interconnect and backup switching. Emergency backup power comes from the **Cybertruck via Powershare** (bidirectional V2H) when the truck is home.
 
 ### Power Flow
 
@@ -147,9 +147,10 @@
 | **API** | Tesla Fleet API (OAuth via `teslapy`) |
 | **Local API status** | `/api/meters/aggregates` → 403, most others → 404 |
 
-**How it works:** Sits between the SRP grid and the SPAN panel. Manages grid interconnection and provides whole-home backup switching capability. There is **no battery storage** (no Powerwall) — the Gateway manages solar-to-grid flows and can island the house during outages using solar only. All control and monitoring through the Tesla Fleet API; local endpoints are locked down.
+**How it works:** Sits between the SRP grid and the SPAN panel. Manages grid interconnection and provides whole-home backup switching capability. There is **no Powerwall or stationary battery** — the Gateway manages solar-to-grid flows and coordinates with the SPAN panel during outages. All control and monitoring through the Tesla Fleet API; local endpoints are locked down.
 
-**⚠️ No Powerwall. No battery. Solar + grid only.**
+**⚠️ No Powerwall. No stationary battery. Solar + grid only.**
+**Emergency backup power is provided by the Cybertruck via Powershare (see EV section).**
 
 ---
 
@@ -159,12 +160,20 @@
 
 | Detail | Value |
 |--------|-------|
-| **Powershare capable** | Yes |
+| **Powershare capable** | Yes — bidirectional V2H (vehicle-to-home) |
 | **Primary use** | Turo rental (>50% of time) |
 | **Target renter return SoC** | ~50% |
 | **Home charging cost** | ~$0.18/kWh |
 | **Supercharger cost** | ~$0.42/kWh |
 | **Optimal charge band** | 0–50% (fastest) |
+
+#### Powershare (Emergency Backup)
+
+The Cybertruck supports **bidirectional power (V2H)** through the Tesla Universal Wall Connector. During a grid outage, the Cybertruck can back-feed power to the home through the Gateway 3 and SPAN panel.
+
+**This is emergency/outage backup only — not for daily battery cycling.** The Cybertruck is frequently out on Turo, so it's not a reliable daily energy source. When it is home and the grid goes down, Powershare provides whole-home backup power from the truck's battery (~123 kWh usable on Cybertruck).
+
+**Powershare + SPAN interaction:** During a Powershare event, SPAN's essential/non-essential circuit priority determines which loads are kept powered. The Gateway 3 coordinates the islanding, SPAN handles load management.
 
 ### Tesla Universal Wall Connector
 
@@ -259,6 +268,30 @@
 | Other EV charger | 26, 28 | 240V | Tesla Universal Wall Connector |
 
 **Circuit label audit needed:** "Dryer not dryer", "Downstairs AC not sure", and "Unknown" (tab 19) need physical verification.
+
+### Essential vs Non-Essential (Backup Mode)
+
+SPAN supports circuit priority classification for backup/outage scenarios:
+
+| Priority | Behavior during outage |
+|----------|----------------------|
+| **MUST_HAVE** | Always powered — never shed |
+| **NICE_TO_HAVE** | Powered if capacity allows, shed first under load pressure |
+| **NON_ESSENTIAL** | Shed immediately when backup power is limited |
+
+**Current state:** All 21 circuits are set to `NON_ESSENTIAL` (factory default). This needs to be configured for Powershare/outage scenarios.
+
+**Recommended priority assignments:**
+
+| Priority | Circuits |
+|----------|----------|
+| **MUST_HAVE** | Master bedroom, Office Front, Entry Hallway Dining, Patio/Kitchen GFCI, Bedroom 2-3-4 |
+| **NICE_TO_HAVE** | AC condenser 1, Air handler #2, Garage 15W, Microwave oven, Dishwasher/Disposal, Master bathroom |
+| **NON_ESSENTIAL** | Pool sub panel, Oven, Dryer circuit, CyberTruck 220v (inactive), AC condenser 2, Washer/Landscape |
+
+*Rob should review and adjust these priorities based on actual household needs.*
+
+**How it works in an outage:** When the grid goes down and Powershare activates (or solar-only islanding), the Gateway 3 islands the home. SPAN then manages available power capacity by keeping MUST_HAVE circuits on, adding NICE_TO_HAVE if there's headroom, and shedding NON_ESSENTIAL loads. All circuits are remotely controllable (`isUserControllable: true`) — priorities can be changed via the SPAN API or app at any time.
 
 ---
 
@@ -449,5 +482,7 @@ Solar feeds upstream into gateway/panel:
     • SolarEdge array (~5.8 kWp) — SE5000H-US string inverter
     Combined: ~11.8 kW total solar capacity
 
-NO BATTERY STORAGE — solar excess goes to grid via net metering
+NO STATIONARY BATTERY — solar excess goes to grid via net metering
+Emergency backup: Cybertruck Powershare (V2H, ~123 kWh) when truck is home
+SPAN priority mode manages essential vs non-essential loads during outage
 ```

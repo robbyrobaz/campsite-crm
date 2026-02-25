@@ -1,23 +1,11 @@
 {
-  "updated_at": "2026-02-24T18:43:00-07:00",
-  "activeTasks": [
-    {
-      "id": "c_f2e844c1f2abd_19c9205a0a9",
-      "title": "NQ ML: test longer target horizons for momentum and gap_fill",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "started_at": "2026-02-24T18:43:00-07:00"
-    }
-  ],
+  "updatedAt": "2026-02-24T19:14:00Z",
+  "activeTasks": [],
+  "queued": [],
   "health": {
-    "cpu_temp": "54.0°C",
-    "disk_used": "173G/468G (39%)",
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active"
-    },
-    "critical_alerts": "none"
+    "cpu_temp": "55°C",
+    "disk": "39% used",
+    "services": {"openclaw-gateway": "active", "blofin-stack-ingestor": "active", "blofin-stack-paper": "active"},
+    "critical_alerts": "clean"
   }
 }

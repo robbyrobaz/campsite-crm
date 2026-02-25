@@ -702,13 +702,16 @@ def _update_summary():
         p = _state["pentair"]
         s = _state["span"]
 
+        tesla_online = t.get("status") == "online"
+
         # Prefer Tesla for energy flows (most complete source)
         # Fallback: SPAN grid_power is the real import/export; Enphase has solar production
-        if t.get("status") == "online":
+        if tesla_online:
             solar = t["solar_w"]
             load = t["load_w"]
             battery = t["battery_w"]
             grid = t["grid_w"]
+            span_grid = grid  # Tesla already aggregates both SPAN and CT circuits
         else:
             solar = e.get("production_w", 0)
             # SPAN grid_power: positive = importing, negative = exporting
@@ -723,11 +726,17 @@ def _update_summary():
         wc = _state["wall_connector"]
         ct_w = wc.get("charging_w", 0) if wc.get("status") == "online" else 0
 
+        # True SRP grid draw = SPAN grid + CyberTruck charging (CT is on a dedicated circuit
+        # bypassing SPAN; Tesla GW sees both when online, must be summed manually when offline)
+        srp_grid_w = grid if tesla_online else span_grid + ct_w
+
         _state["summary"] = {
             "solar_w": solar,
             "load_w": load,
             "battery_w": battery,
-            "grid_w": grid,
+            "grid_w": round(srp_grid_w, 0),      # true total SRP draw (includes CT when offline)
+            "span_grid_w": round(span_grid, 0),  # SPAN-only grid power (for Home Panel node)
+            "srp_grid_w": round(srp_grid_w, 0),  # explicit alias for SRP Grid node
             "pool_w": pool_w,
             "ct_charging_w": ct_w,
             "total_load_w": load + ct_w,   # SPAN load + CT charging = true home consumption
@@ -1796,6 +1805,11 @@ DASHBOARD_HTML = """<!DOCTYPE html>
             stroke="#22d3ee" stroke-width="3" fill="none" opacity="0.9"
             stroke-dasharray="10 5" marker-end="url(#arr-ev)"/>
 
+      <!-- Bridge: SRP Grid → CT Charger direct (Tesla GW offline fallback) -->
+      <path id="path-grid-ct" d="M 535,82 C 535,160 515,200 515,248"
+            stroke="#22d3ee" stroke-width="2" fill="none" opacity="0"
+            stroke-dasharray="6 8" marker-end="url(#arr-ev)"/>
+
       <!-- ── PARTICLE GROUPS (animateMotion dots, staggered) ── -->
 
       <g id="part-solar-span" visibility="hidden">
@@ -1858,6 +1872,15 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         </circle>
       </g>
 
+      <g id="part-grid-ct" visibility="hidden">
+        <circle r="4" fill="#22d3ee" filter="url(#pf-glow)">
+          <animateMotion dur="1.5s" begin="0s" repeatCount="indefinite"><mpath href="#path-grid-ct"/></animateMotion>
+        </circle>
+        <circle r="2.5" fill="#22d3ee" opacity="0.55">
+          <animateMotion dur="1.5s" begin="-0.5s" repeatCount="indefinite"><mpath href="#path-grid-ct"/></animateMotion>
+        </circle>
+      </g>
+
       <!-- ── NODES ── -->
 
       <!-- Solar node (top-left) -->
@@ -1876,6 +1899,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         <text x="55" y="20" text-anchor="middle" font-size="17" fill="#f97316">&#x1F50C;</text>
         <text x="55" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">SRP GRID</text>
         <text id="lbl-grid" x="55" y="53" text-anchor="middle" font-size="13" fill="#f97316" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
+        <text id="lbl-grid-sub" x="55" y="70" text-anchor="middle" font-size="8" fill="#a3a3a3" font-family="sans-serif" visibility="hidden">&#x2014;</text>
       </g>
 
       <!-- Tesla Gateway node (center) -->
@@ -2791,8 +2815,11 @@ function updateFlowDiagram(s) {
   const td   = s.tesla || {};
 
   const solarW      = sum.solar_w || 0;
-  const rawGrid     = sum.grid_w  || 0;  // signed: + importing, - exporting
-  const gridW       = Math.abs(rawGrid);
+  const srpGridW    = sum.srp_grid_w != null ? sum.srp_grid_w : (sum.grid_w || 0); // true SRP total (signed)
+  const spanGridW   = sum.span_grid_w != null ? sum.span_grid_w : srpGridW;         // SPAN-only grid (signed)
+  const rawGrid     = srpGridW;          // signed: + importing, - exporting
+  const gridW       = Math.abs(srpGridW);
+  const spanGridAbs = Math.abs(spanGridW);
   const spanW       = span.total_load_w || sum.load_w || 0;
   const ctW         = sum.ct_charging_w || wc.charging_w || 0;
   const circuits    = (span.circuits || []);
@@ -2807,6 +2834,16 @@ function updateFlowDiagram(s) {
   // Labels
   setLbl('lbl-solar', fmt(solarW));
   setLbl('lbl-grid',  fmt(gridW) + (rawGrid >= 0 ? ' \u2193' : ' \u2191'));
+  // Breakdown subtitle on SRP Grid node: home load + CT when bridge mode + CT charging
+  const gridSubEl = document.getElementById('lbl-grid-sub');
+  if (gridSubEl) {
+    if (!teslaOnline && ctW > 50) {
+      gridSubEl.textContent = '(home ' + fmt(spanGridAbs) + ' + CT ' + fmt(ctW) + ')';
+      gridSubEl.setAttribute('visibility', 'visible');
+    } else {
+      gridSubEl.setAttribute('visibility', 'hidden');
+    }
+  }
   setLbl('lbl-home',  fmt(spanW));
   setLbl('lbl-ct',    ctW > 50 ? fmt(ctW) + ' chg' : 'idle');
   setLbl('lbl-pool',  poolW > 30 ? fmt(poolW) : 'off');
@@ -2824,12 +2861,14 @@ function updateFlowDiagram(s) {
   const elGridGw    = document.getElementById('path-grid-gw');
   const elGwSpan    = document.getElementById('path-gw-span');
   const elGridSpan  = document.getElementById('path-grid-span');
+  const elGridCt    = document.getElementById('path-grid-ct');
   const elBridgeLbl = document.getElementById('pf-bridge-label');
   const elSrcLbl    = document.getElementById('pf-source-label');
   if (teslaOnline) {
     if (elGridGw)    elGridGw.setAttribute('opacity', '0.9');
     if (elGwSpan)    elGwSpan.setAttribute('opacity', '0.9');
     if (elGridSpan)  elGridSpan.setAttribute('opacity', '0');
+    if (elGridCt)  { elGridCt.setAttribute('opacity', '0'); elGridCt.style.animation = 'none'; }
     if (elBridgeLbl) elBridgeLbl.setAttribute('visibility', 'hidden');
     if (elSrcLbl)    elSrcLbl.setAttribute('visibility', 'visible');
   } else {
@@ -2838,10 +2877,21 @@ function updateFlowDiagram(s) {
     if (elGridSpan)  elGridSpan.setAttribute('opacity', '0.88');
     if (elBridgeLbl) elBridgeLbl.setAttribute('visibility', 'visible');
     if (elSrcLbl)    elSrcLbl.setAttribute('visibility', 'hidden');
-    // Animate bridge path speed via inline style
+    // Animate bridge home path speed via inline style (SPAN-only grid, not total SRP)
     if (elGridSpan) {
-      const dur = gridW > 3000 ? '0.75s' : gridW > 500 ? '1.4s' : '2.8s';
-      elGridSpan.style.animation = gridW > 30 ? ('flowDash ' + dur + ' linear infinite') : 'none';
+      const dur = spanGridAbs > 3000 ? '0.75s' : spanGridAbs > 500 ? '1.4s' : '2.8s';
+      elGridSpan.style.animation = spanGridAbs > 30 ? ('flowDash ' + dur + ' linear infinite') : 'none';
+    }
+    // Grid → CT direct path (bridge mode: CT on dedicated circuit separate from SPAN)
+    if (elGridCt) {
+      if (ctW > 30) {
+        elGridCt.setAttribute('opacity', '0.88');
+        const ctDur = ctW > 3000 ? '0.75s' : ctW > 500 ? '1.4s' : '2.8s';
+        elGridCt.style.animation = 'flowDash ' + ctDur + ' linear infinite';
+      } else {
+        elGridCt.setAttribute('opacity', '0');
+        elGridCt.style.animation = 'none';
+      }
     }
   }
 
@@ -2859,17 +2909,20 @@ function updateFlowDiagram(s) {
   if (teslaOnline) {
     setParticle('part-grid-gw',  gridW, 15000);
     setParticle('part-gw-span',  spanW, 15000);
-    const pg = document.getElementById('part-grid-span');
-    if (pg) pg.setAttribute('visibility', 'hidden');
+    const pg   = document.getElementById('part-grid-span');
+    const pgct = document.getElementById('part-grid-ct');
+    if (pg)   pg.setAttribute('visibility', 'hidden');
+    if (pgct) pgct.setAttribute('visibility', 'hidden');
   } else {
     const p1 = document.getElementById('part-grid-gw');
     const p2 = document.getElementById('part-gw-span');
     if (p1) p1.setAttribute('visibility', 'hidden');
     if (p2) p2.setAttribute('visibility', 'hidden');
-    setParticle('part-grid-span', gridW, 15000);
+    setParticle('part-grid-span', spanGridAbs, 15000);  // SPAN-only home grid flow
+    setParticle('part-grid-ct',   ctW,         11500);  // CT charging direct from grid
   }
   setParticle('part-home-pool', poolW, 5000);
-  setParticle('part-gw-ct',    ctW,   11500);
+  setParticle('part-gw-ct', teslaOnline ? ctW : 0, 11500);  // Gateway→CT only when Tesla online
 
   // Stroke width scaling (power proportional)
   function setPathWidth(id, watts, maxW) {
@@ -2878,11 +2931,12 @@ function updateFlowDiagram(s) {
     el.setAttribute('stroke-width', Math.max(1.5, Math.min(1, watts / maxW) * 7).toFixed(1));
   }
   setPathWidth('path-solar-span', solarW, 8000);
-  setPathWidth('path-grid-gw',    teslaOnline ? gridW : 0, 15000);
-  setPathWidth('path-gw-span',    teslaOnline ? spanW : 0, 15000);
-  setPathWidth('path-grid-span',  teslaOnline ? 0 : gridW, 15000);
-  setPathWidth('path-home-pool', poolW, 5000);
-  setPathWidth('path-gw-ct',    ctW,   11500);
+  setPathWidth('path-grid-gw',    teslaOnline ? gridW : 0,         15000);
+  setPathWidth('path-gw-span',    teslaOnline ? spanW : 0,         15000);
+  setPathWidth('path-grid-span',  teslaOnline ? 0 : spanGridAbs,   15000);  // SPAN-only home flow
+  setPathWidth('path-home-pool',  poolW, 5000);
+  setPathWidth('path-gw-ct',      teslaOnline ? ctW : 0,           11500);  // Tesla online only
+  setPathWidth('path-grid-ct',    teslaOnline ? 0 : ctW,           11500);  // bridge mode only
 
   // CSS dash animation class (speed tiers)
   function setPathAnim(id, watts) {
@@ -2898,9 +2952,11 @@ function updateFlowDiagram(s) {
   setPathAnim('path-grid-gw',    teslaOnline ? gridW : 0);
   setPathAnim('path-gw-span',    teslaOnline ? spanW : 0);
   setPathAnim('path-home-pool',  poolW);
-  setPathAnim('path-gw-ct',      ctW);
-  // Bridge path animation handled above via inline style; clear class conflicts
+  setPathAnim('path-gw-ct',      teslaOnline ? ctW : 0);   // Gateway→CT only when Tesla online
+  setPathAnim('path-grid-ct',    teslaOnline ? 0 : ctW);   // Grid→CT direct in bridge mode
+  // Bridge paths animation handled above via inline style; clear class conflicts
   if (elGridSpan) elGridSpan.classList.remove('flow-path-animated','flow-path-slow','flow-path-fast','flow-path-idle','flow-path-bridge');
+  if (elGridCt)   elGridCt.classList.remove('flow-path-animated','flow-path-slow','flow-path-fast','flow-path-idle','flow-path-bridge');
 }
 
 function statusColor(s) {

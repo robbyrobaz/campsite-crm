@@ -2329,3 +2329,25 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 2 committed, 7 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+[main 26e3de7] auto: snapshot 2026-02-25T04:00:01Z
+ 7 files changed, 96 insertions(+), 44 deletions(-)
+ create mode 100644 jarvis-home-energy/.claude/settings.json
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+[main 807a814] auto: snapshot 2026-02-25T04:00:01Z
+ 4 files changed, 712 insertions(+)
+COMMITTED kanban-dashboard
+CLEAN numerai-tournament (nothing to commit)
+[sports-betting/phase2-real-apps 4ac7749] auto: snapshot 2026-02-25T04:00:01Z
+ 3 files changed, 263 insertions(+)
+ create mode 100644 projects/sports-betting/analysis/arb_opportunities_20260224_200002.json
+ create mode 100644 projects/sports-betting/analysis/daily_report_20260224_200002.json
+ create mode 100644 projects/sports-betting/analysis/sportsbook_data_20260224_200002.json
+COMMITTED ai-workshop
+[main 9ef5d046] auto: snapshot 2026-02-25T04:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 4 committed, 5 skipped
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

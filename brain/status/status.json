@@ -1,21 +1,25 @@
 {
-  "updatedAt": "2026-02-24T23:43:00Z",
+  "updatedAt": "2026-02-25T00:13:00Z",
   "activeTasks": [
-    {
-      "id": "c_7bd48301a6b37_19c92059f46",
-      "title": "NQ ML: add permanent blacklist column to strategy_registry",
-      "status": "In Progress",
-      "ageMin": 3
-    },
     {
       "id": "c_67d58a271fce8_19c92059b22",
       "title": "NQ Pipeline: backtest all 6 strategies on latest IBKR data",
       "status": "In Progress",
-      "ageMin": 3
+      "project_path": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
+      "assignee": "claude",
+      "startedAt": "2026-02-25T00:13:30Z"
+    }
+  ],
+  "queued": [
+    {
+      "id": "c_7bd48301a6b37_19c92059f46",
+      "title": "NQ ML: add permanent blacklist column to strategy_registry",
+      "status": "Planned",
+      "project_path": "/home/rob/.openclaw/workspace/ninja_trader_strategies"
     }
   ],
   "health": {
-    "cpu_temp": "85°C",
+    "cpu_temp": "57°C",
     "disk": "39% used (172G/468G)",
     "services": {
       "openclaw-gateway": "active",

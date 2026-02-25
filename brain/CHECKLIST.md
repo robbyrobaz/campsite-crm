@@ -66,6 +66,10 @@
 - ❌ Forget about spawned builders — check sessions_list
 - ❌ Write code directly in main session (delegate it)
 - ❌ **See "In Progress" on a kanban card and assume work is happening** — "In Progress" is a label, not proof a builder exists. If YOU didn't spawn the agent this session, spawn it NOW.
+- ❌ Ask Rob how something works — read the code/configs/logs yourself first
+- ❌ Ask Rob for permission on things within your authority — just do it and report
+- ❌ Kill or reassign work that's already in progress — check agent status FIRST
+- ❌ Launch duplicate agents for work that's already running
 
 ## Heartbeat checks (every hour, automated):
 - Server health (CPU, disk, services)

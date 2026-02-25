@@ -1,14 +1,15 @@
 {
-  "lastUpdated": "2026-02-25T12:04:00-07:00",
+  "updatedAt": "2026-02-25T12:13:00-07:00",
   "activeTasks": [],
   "health": {
-    "cpu_temp": "67.0°C",
-    "disk_usage": "37% (162G/468G)",
+    "cpu_temp": "65.0°C",
+    "disk": "37% used (282G free)",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
       "blofin-stack-paper": "active"
     },
     "critical_alerts": "none"
-  }
+  },
+  "notes": "All services healthy. Board empty — no In Progress or Planned cards."
 }

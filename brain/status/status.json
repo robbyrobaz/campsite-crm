@@ -1,14 +1,15 @@
 {
-  "lastUpdated": "2026-02-25T07:43:00-07:00",
+  "lastUpdated": "2026-02-25T08:15:00-07:00",
   "activeTasks": [],
   "health": {
-    "cpu_temp": "60.0°C",
+    "cpu_temp": "89.0°C ⚠️ ABOVE ALERT THRESHOLD",
     "disk_usage": "37% (161G/468G)",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active"
+      "blofin-stack-paper": "active",
+      "numerai-daily-bot": "inactive"
     },
-    "critical_alerts": "none"
+    "critical_alerts": "CPU temp 89°C (>85°C threshold)"
   }
 }

@@ -1,23 +1,22 @@
 {
-  "lastUpdated": "2026-02-24T23:43:00-07:00",
+  "updated_at": "2026-02-25T00:13:00-07:00",
   "activeTasks": [
     {
-      "id": "c_57eff3238cdd4_19c8bc67cbf",
-      "title": "NQ Phase 4: Lucid Eval Preparation",
+      "id": "c_328457d3131a2_19c9354858c",
+      "title": "Redesign Energy Cockpit SVG flow diagram — better layout",
       "status": "In Progress",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
-      "startedAt": "2026-02-24T23:43:00-07:00",
-      "note": "Dispatched by pulse at 23:43 MST. Prerequisites: Phase 3 forward test >3 strategies on live data."
+      "project": "jarvis-home-energy",
+      "pid": 3009411,
+      "started_at": "2026-02-25T00:13:26-07:00"
     }
   ],
   "health": {
-    "cpuTemp": "76°C",
-    "diskUsed": "39%",
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active"
-    }
-  }
+    "cpu_temp": "71.0°C",
+    "disk_used": "173G/468G (39%)",
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
+    "critical_alert_monitor": "OK"
+  },
+  "plannedQueue": 11
 }

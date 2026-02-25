@@ -1,14 +1,23 @@
 {
-  "lastUpdated": "2026-02-25T10:15:00Z",
-  "activeTasks": [],
+  "updatedAt": "2026-02-25T10:43:30-07:00",
+  "activeTasks": [
+    {
+      "cardId": "c_aa853ac0a2321_19c9245229b",
+      "title": "NQ Expert Strategy: EMA Pullback (Trend Continuation)",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
+      "pid": 3197391,
+      "logPath": "/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_aa853ac0a2321_19c9245229b.log",
+      "dispatchedAt": "2026-02-25T10:43:28-07:00"
+    }
+  ],
   "health": {
-    "cpu_temp": "54°C",
-    "disk_used_pct": "40%",
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active"
-    },
+    "cpu_temp": "71.0°C",
+    "disk_used": "40%",
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
     "critical_alerts": "none"
   }
 }

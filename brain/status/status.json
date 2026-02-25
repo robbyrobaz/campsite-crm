@@ -1,14 +1,28 @@
 {
-  "updatedAt": "2026-02-25T11:30:00Z",
-  "activeTasks": [],
+  "updatedAt": "2026-02-25T04:43:00-07:00",
+  "activeTasks": [
+    {
+      "cardId": "c_640d25ea62847_19c924522d3",
+      "title": "NQ Expert Strategy: Overnight Range Breakout (ORN)",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
+      "pid": 3251098,
+      "startedAt": "2026-02-25T04:43:00-07:00"
+    }
+  ],
+  "plannedTasks": [
+    "c_a7c791d674194_19c92452309 — NQ Expert Strategy: Power Hour Continuation",
+    "c_727f55fa903ae_19c92452325 — NQ Expert Strategy: Measured Move / Fibonacci Continuation"
+  ],
   "health": {
-    "cpu_temp": "58.0°C",
-    "disk_used": "40%",
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "critical_alert_monitor": "ok",
-    "backup": "FAILED - LFS quota exceeded"
-  },
-  "notes": "IBE task cleared: card not found on kanban, initial_balance_ext.py exists in strategies/ (built at 04:17). Backup failing since 02:37 AM - GH LFS budget exceeded."
+    "cpu_temp": "80°C",
+    "disk": "40% used (270G free)",
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active"
+    },
+    "critical_alerts": "clean"
+  }
 }

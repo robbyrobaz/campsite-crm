@@ -1,23 +1,24 @@
 {
-  "updatedAt": "2026-02-25T02:13:00-07:00",
-  "activeTasks": [
+  "updatedAt": "2026-02-25T02:30:00-07:00",
+  "activeTasks": [],
+  "pendingInput": [
     {
       "cardId": "c_c3d77fca1f6cd_19c913d6683",
       "title": "NQ Phase 3: Live signal engine — TradersPost → Tradovate → Lucid execution",
-      "status": "In Progress",
-      "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
-      "startedAt": "2026-02-25T02:13:00-07:00",
-      "note": "Dispatched by pulse. Builds live trading harness: 1-min bar ingestion, ML inference per bar, TradersPost webhook on signal, position tracking, RTH session filter, systemd service nq-live-trader.service. Awaiting TradersPost webhook URL from Rob."
+      "status": "Done (kanban) — AWAITING ROB INPUT",
+      "note": "live_engine.py + traderspost_client.py built. nq-live-trader.service is inactive. Blocked on: TradersPost webhook URL from Rob. Once provided, wire into config_live.py and start the service."
     }
   ],
   "health": {
-    "cpu_temp": "58°C",
+    "cpu_temp": "56°C",
     "disk_usage": "39%",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active"
+      "blofin-stack-paper": "active",
+      "blofin-dashboard": "active"
     },
-    "critical_alerts": "none"
+    "critical_alerts": "none",
+    "token_7day": "67%"
   }
 }

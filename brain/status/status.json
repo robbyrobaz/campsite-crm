@@ -1,33 +1,24 @@
 {
-  "lastUpdated": "2026-02-25T10:21:00-07:00",
+  "lastUpdated": "2026-02-25T10:35:00-07:00",
   "activeTasks": [
     {
-      "id": "c_74b9073ebff74_19c95be049b",
-      "title": "NQ Dashboard: Truncate all tables to 10 rows with expand button",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
-      "started_at": "2026-02-25T09:59:00-07:00",
-      "pid": 3544448
-    },
-    {
       "id": "c_ddcb2879baa4e_19c95d3676f",
-      "title": "NQ Pipeline: Trail-only exit sweep across top strategies",
+      "title": "NQ Pipeline: Trail-only exit sweep (python3 pid 3574276, running independently)",
       "status": "In Progress",
       "assignee": "claude",
       "project_path": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
-      "started_at": "2026-02-25T10:21:00-07:00",
-      "pid": 3565180
+      "started_at": "2026-02-25T10:31:00-07:00",
+      "pid": 3574276
     }
   ],
   "health": {
-    "cpu_temp": "54.0°C",
+    "cpu_temp": "88.0°C ⚠️ ABOVE THRESHOLD — trail sweep load",
     "disk_usage": "37% (162G/468G)",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
       "blofin-stack-paper": "active"
     },
-    "critical_alerts": "none"
+    "critical_alerts": "CPU 88°C (sweep load, transient)"
   }
 }

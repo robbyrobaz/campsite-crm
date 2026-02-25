@@ -812,7 +812,8 @@ function renderPipelineCards() {
     const sharpe = tier >= 2 ? s.ft_sharpe : s.bt_sharpe;
     const pnl = tier >= 2 ? s.ft_pnl_pct : s.bt_pnl_pct;
     const wr = tier >= 2 ? s.ft_win_rate : s.bt_win_rate;
-    const pf = s.bt_profit_factor ?? 0;
+    const pfRaw = tier >= 2 ? (s.ft_profit_factor ?? null) : (s.bt_profit_factor ?? null);
+    const pf = pfRaw ?? 0;
     const gatePass = s.gate_status === 'pass';
     const rank = s.pnl_rank;
     const gateCls = gatePass ? 'pos' : 'neg';
@@ -834,7 +835,7 @@ function renderPipelineCards() {
           <div class="strat-card-metric-label">Rank</div>
         </div>
         <div class="strat-card-metric">
-          <div class="strat-card-metric-val neutral">${pf.toFixed(2)}</div>
+          <div class="strat-card-metric-val neutral">${pfRaw != null && pfRaw > 0 ? pf.toFixed(2) : '—'}</div>
           <div class="strat-card-metric-label">PF</div>
         </div>
       </div>
@@ -953,7 +954,7 @@ function renderTable() {
     else if (col === 'tier') { av = at; bv = bt2; }
     else if (col === 'pnl_rank') { av = a.pnl_rank ?? 0; bv = b.pnl_rank ?? 0; }
     else if (col === 'pf') {
-      // Use ft_pf if tier 2, else bt (no PF in registry schema — use pnl as proxy)
+      // Use ft_pf if tier 2, else bt
       av = at >= 2 ? (a.ft_pnl_pct ?? 0) : (a.bt_pnl_pct ?? 0);
       bv = bt2 >= 2 ? (b.ft_pnl_pct ?? 0) : (b.bt_pnl_pct ?? 0);
     }
@@ -1005,7 +1006,7 @@ function renderTable() {
     const ddCls = maxdd > 20 ? 'td-neg' : '';
     const statusLabel = tier === 2 ? 'active' : tier === 1 ? 'testing' : 'library';
 
-    const pfVal = isFT ? null : (s.bt_profit_factor ?? null);
+    const pfVal = isFT ? (s.ft_profit_factor ?? null) : (s.bt_profit_factor ?? null);
     const pfDisplay = pfVal != null && pfVal > 0 ? fmt(pfVal, 2) : '—';
     const pfCls = pfVal != null ? (pfVal >= 1.5 ? 'td-pos' : pfVal < 1.0 ? 'td-neg' : '') : '';
 

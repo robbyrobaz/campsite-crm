@@ -1,8 +1,8 @@
 {
-  "lastUpdated": "2026-02-25T11:43:00-07:00",
+  "lastUpdated": "2026-02-25T12:04:00-07:00",
   "activeTasks": [],
   "health": {
-    "cpu_temp": "59.0°C",
+    "cpu_temp": "67.0°C",
     "disk_usage": "37% (162G/468G)",
     "services": {
       "openclaw-gateway": "active",

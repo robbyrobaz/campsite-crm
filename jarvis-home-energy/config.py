@@ -33,7 +33,7 @@ TESLA_WC_HOST = "192.168.68.87"
 # Auth: POST /api/login/Basic  username=customer  password=last-5 of gateway serial
 TESLA_HOST = "192.168.68.86"  # Tesla Gateway V2 (serial GF2240460002D2, fw 25.26.0)
 TESLA_EMAIL = "rob.hartwig@gmail.com"
-TESLA_PASSWORD = ""  # Local access password set during Tesla app commissioning — ask Rob
+TESLA_PASSWORD = ""  # Not needed — using Fleet API OAuth  # Local access password set during Tesla app commissioning — ask Rob
 
 # ─── SRP Utility (cloud polling — future) ─────────────────────────────────────
 SRP_ACCOUNT = ""
@@ -66,3 +66,5 @@ BHYVE_PASSWORD = "1978philly"
 # ─── Dashboard ────────────────────────────────────────────────────────────────
 DASHBOARD_PORT = 8793
 POLL_INTERVAL_SECONDS = 5
+
+TESLA_ENERGY_SITE_ID = 2252397277512276  # "My Home" Powerwall site

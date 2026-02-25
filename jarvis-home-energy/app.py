@@ -17,6 +17,7 @@ import urllib.parse
 from datetime import datetime
 from pathlib import Path
 import requests as _requests
+import teslapy
 from flask import Flask, Response, jsonify, render_template_string, request, stream_with_context
 
 logging.basicConfig(
@@ -35,6 +36,7 @@ try:
         TESLA_WC_HOST,
         TESLA_HOST, TESLA_EMAIL, TESLA_PASSWORD,
         DASHBOARD_PORT, POLL_INTERVAL_SECONDS,
+        TESLA_ENERGY_SITE_ID,
     )
 except ImportError:
     SPAN_HOST = "192.168.68.93"; SPAN_TOKEN = ""
@@ -44,6 +46,7 @@ except ImportError:
     TESLA_WC_HOST = "192.168.68.87"
     TESLA_HOST = ""; TESLA_EMAIL = ""; TESLA_PASSWORD = ""
     DASHBOARD_PORT = 8793; POLL_INTERVAL_SECONDS = 5
+    TESLA_ENERGY_SITE_ID = 2252397277512276
 
 # New smart-home integrations — graceful fallback if not yet in config
 try:
@@ -256,9 +259,19 @@ def poll_span():
 
         circuits_raw = []
         grid_power = 0
+        enphase_w  = 0.0   # branches 29+31 (Enphase IQ8PLUS)
+        solaredge_w = 0.0  # branches 30+32 (SolarEdge SE5000H)
         if SPAN_TOKEN:
             panel = _span_get("/api/v1/panel")
             grid_power = panel.get("instantGridPowerW", 0)
+            # Parse solar branch data — positive instantPowerW = power flowing into panel
+            branches = panel.get("branches", [])
+            branch_map = {b.get("id"): b.get("instantPowerW", 0) for b in branches}
+            enphase_w   = max(0.0, branch_map.get(29, 0)) + max(0.0, branch_map.get(31, 0))
+            solaredge_w = max(0.0, branch_map.get(30, 0)) + max(0.0, branch_map.get(32, 0))
+            if enphase_w > 10 or solaredge_w > 10:
+                log.info("SPAN solar branches — Enphase(29+31): %.0fW  SolarEdge(30+32): %.0fW",
+                         enphase_w, solaredge_w)
             circuits_raw = _span_get("/api/v1/circuits")
             # API returns {"circuits": {"uuid": {...}, ...}} — extract the inner dict values
             if isinstance(circuits_raw, dict):
@@ -284,6 +297,8 @@ def poll_span():
                 "door": door,
                 "uptime": uptime,
                 "grid_power": grid_power,
+                "enphase_w": round(enphase_w, 1),    # branches 29+31 — Enphase IQ8PLUS
+                "solaredge_w": round(solaredge_w, 1), # branches 30+32 — SolarEdge SE5000H
                 "circuits": circuits,
             }
         return True
@@ -375,6 +390,7 @@ def poll_enphase():
                 status = "no_token"
 
         with _state_lock:
+            existing_inverters = _state["enphase"].get("inverters", [])
             _state["enphase"] = {
                 "status": status,
                 "production_w": round(prod_w, 0),
@@ -382,7 +398,32 @@ def poll_enphase():
                 "net_w": round(prod_w - cons_w, 0),
                 "firmware": "D8.3.5167",
                 "serial": ENPHASE_SERIAL,
+                "inverters": existing_inverters,
             }
+
+        # Per-inverter data (IQ8PLUS microinverters) — only when token available
+        if token:
+            try:
+                inv_url = f"https://{ENPHASE_HOST}/api/v1/production/inverters"
+                req_inv = urllib.request.Request(inv_url, headers={"Authorization": f"Bearer {token}"})
+                with urllib.request.urlopen(req_inv, timeout=10, context=_ssl_ctx) as r:
+                    inverters_raw = json.loads(r.read())
+                inverters = [
+                    {
+                        "serial": i["serialNumber"],
+                        "reportDate": i["lastReportDate"],
+                        "watts": i["lastReportWatts"],
+                        "maxWatts": i["maxReportWatts"],
+                    }
+                    for i in inverters_raw
+                ]
+                with _state_lock:
+                    _state["enphase"]["inverters"] = inverters
+                log.debug("Enphase inverters: %d units", len(inverters))
+            except Exception as inv_e:
+                log.warning("Enphase inverter fetch error: %s", inv_e)
+                # Keep existing inverters list — don't wipe it on error
+
         return True
     except Exception as e:
         log.warning("Enphase poll error: %s", e)
@@ -597,80 +638,66 @@ def poll_wall_connector():
         return False
 
 
-# ── Tesla Gateway Adapter ─────────────────────────────────────────────────────
+# ── Tesla Fleet API Adapter ───────────────────────────────────────────────────
+# Uses teslapy (OAuth already completed) — no local Gateway credentials needed.
+# Cache: /home/rob/.openclaw/workspace/jarvis-home-energy/tesla_cache.json
 
-_tesla_token = None
-_tesla_token_ts = 0
-
-
-def _tesla_login():
-    global _tesla_token, _tesla_token_ts
-    if not TESLA_HOST or not TESLA_EMAIL:
-        return None
-    url = f"https://{TESLA_HOST}/api/login/Basic"
-    data = json.dumps({
-        "username": "customer",
-        "email": TESLA_EMAIL,
-        "password": TESLA_PASSWORD,
-        "force_sm_off": False,
-    }).encode()
-    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"}, method="POST")
-    with urllib.request.urlopen(req, timeout=5, context=_ssl_ctx) as r:
-        resp = json.loads(r.read())
-    token = resp.get("token", "")
-    _tesla_token = token
-    _tesla_token_ts = time.time()
-    # CRITICAL: Re-enable Sitemaster after login
-    _tesla_get("/api/sitemaster/run", token=token)
-    return token
+_TESLA_CACHE_FILE = "/home/rob/.openclaw/workspace/jarvis-home-energy/tesla_cache.json"
+_TESLA_FLEET_BASE = "https://owner-api.teslamotors.com/api/1"
+_tesla_fleet_lock = threading.Lock()
 
 
-def _tesla_get(path, token=None):
-    if not TESLA_HOST:
-        raise RuntimeError("Tesla host not configured")
-    token = token or _tesla_token
-    url = f"https://{TESLA_HOST}{path}"
-    headers = {}
-    if token:
-        headers["Authorization"] = f"Bearer {token}"
-    req = urllib.request.Request(url, headers=headers)
-    with urllib.request.urlopen(req, timeout=5, context=_ssl_ctx) as r:
-        return json.loads(r.read())
+def _get_tesla_fleet_token():
+    """Return a valid Fleet API access_token, auto-refreshing via teslapy if expired."""
+    with _tesla_fleet_lock:
+        t = teslapy.Tesla("rob.hartwig@gmail.com", cache_file=_TESLA_CACHE_FILE)
+        try:
+            # teslapy.fetch_token() refreshes automatically when the access_token is expired
+            if not t.authorized:
+                raise RuntimeError("Tesla OAuth not authorized — run oauth flow first")
+            # Touch the token to trigger refresh if needed
+            t.fetch_token()
+            token = t.token["access_token"]
+        finally:
+            t.close()
+        return token
 
 
 def poll_tesla():
-    global _tesla_token
-    if not TESLA_HOST:
-        with _state_lock:
-            _state["tesla"]["status"] = "unconfigured"
-        return False
     try:
-        if not _tesla_token or (time.time() - _tesla_token_ts) > 3600:
-            _tesla_login()
-        aggregates = _tesla_get("/api/meters/aggregates")
-        soe_data = _tesla_get("/api/system_status/soe")
-        grid_status = _tesla_get("/api/system_status/grid_status")
+        token = _get_tesla_fleet_token()
+        headers = {"Authorization": f"Bearer {token}"}
+        base = f"{_TESLA_FLEET_BASE}/energy_sites/{TESLA_ENERGY_SITE_ID}"
 
-        solar_w = aggregates.get("solar", {}).get("instant_power", 0)
-        battery_w = aggregates.get("battery", {}).get("instant_power", 0)
-        grid_w = aggregates.get("site", {}).get("instant_power", 0)
-        load_w = aggregates.get("load", {}).get("instant_power", 0)
-        soe = soe_data.get("percentage", 0)
-        grid_state = grid_status.get("grid_status", "?")
+        # Live status — primary energy flow data
+        r_live = _requests.get(f"{base}/live_status", headers=headers, timeout=10)
+        r_live.raise_for_status()
+        live = r_live.json().get("response", r_live.json())
 
-        # Best-effort: backup reserve % and site name
+        solar_w = live.get("solar_power", 0)
+        battery_w = live.get("battery_power", 0)
+        grid_w = live.get("grid_power", 0)
+        load_w = live.get("load_power", 0)
+        soe = live.get("percentage_charged", 0)
+        grid_state = live.get("grid_status", "Unknown")
+        island_status = live.get("island_status", "on_grid")
+        islanded = island_status != "on_grid"
+        storm_mode_active = live.get("storm_mode_active", False)
+
+        # Site info — backup reserve percent and site name (best-effort)
         backup_reserve = 0
         site_name = ""
         try:
-            op_data = _tesla_get("/api/operation")
-            backup_reserve = op_data.get("backup_reserve_percent", 0)
-        except Exception:
-            pass
-        try:
-            site_data = _tesla_get("/api/site_info/site_name")
-            site_name = site_data.get("site_name", "")
-        except Exception:
-            pass
+            r_info = _requests.get(f"{base}/site_info", headers=headers, timeout=10)
+            r_info.raise_for_status()
+            info = r_info.json().get("response", r_info.json())
+            backup_reserve = (
+                info.get("user_settings", {}).get("backup_reserve_percent", 0)
+                or info.get("backup_reserve_percent", 0)
+            )
+            site_name = info.get("site_name", "")
+        except Exception as e_info:
+            log.debug("Tesla site_info fetch error (non-fatal): %s", e_info)
 
         with _state_lock:
             _state["tesla"] = {
@@ -681,13 +708,16 @@ def poll_tesla():
                 "grid_w": round(grid_w, 0),
                 "load_w": round(load_w, 0),
                 "grid_state": grid_state,
-                "islanded": grid_state == "SystemIslandedActive",
+                "islanded": islanded,
                 "backup_reserve_percent": round(backup_reserve, 1),
                 "site_name": site_name,
+                "storm_mode_active": storm_mode_active,
             }
+        log.info("Tesla Fleet API poll OK — solar=%.0fW battery=%.0fW grid=%.0fW soe=%.1f%%",
+                 solar_w, battery_w, grid_w, soe)
         return True
     except Exception as e:
-        log.warning("Tesla poll error: %s", e)
+        log.warning("Tesla Fleet API poll error: %s", e)
         with _state_lock:
             _state["tesla"]["status"] = "error"
         return False
@@ -708,10 +738,10 @@ def _update_summary():
         # Fallback: SPAN grid_power is the real import/export; Enphase has solar production
         if tesla_online:
             solar = t["solar_w"]
-            load = t["load_w"]
             battery = t["battery_w"]
-            grid = t["grid_w"]
-            span_grid = grid  # Tesla already aggregates both SPAN and CT circuits
+            grid = t["grid_w"]   # True SRP total (SPAN + CT) — used for SRP Grid node
+            span_grid = s.get("grid_power", 0)  # SPAN-only home circuits — used for Home Panel node
+            load = span_grid  # Home Panel shows SPAN load, not Tesla total
         else:
             solar = e.get("production_w", 0)
             # SPAN grid_power: positive = importing, negative = exporting
@@ -723,24 +753,44 @@ def _update_summary():
 
         pool_w = p.get("pump", {}).get("power_w", 0)
 
+        # Solar from SPAN branch data (ground truth — branches 29/31 = Enphase, 30/32 = SolarEdge)
+        # Solar circuits do NOT appear in the named circuits list; only in /api/v1/panel branches.
+        enphase_solar_w  = s.get("enphase_w", 0)    # branches 29+31
+        solaredge_solar_w = s.get("solaredge_w", 0) # branches 30+32
+        span_solar_w = enphase_solar_w + solaredge_solar_w  # combined (for reference)
+        total_solar_w = enphase_solar_w + solaredge_solar_w
+
+        # SPAN home consumption: abs sum of consuming circuits (power_w < -10W)
+        span_circuits = s.get('circuits', [])
+        span_home_w = abs(sum(c.get('power_w', 0) for c in span_circuits if (c.get('power_w', 0) or 0) < -10))
+
         wc = _state["wall_connector"]
-        ct_w = wc.get("charging_w", 0) if wc.get("status") == "online" else 0
+        # V2H: CT is feeding power to home (source, not sink)
+        ct_v2h = wc.get('charge_status', '') in ('powersharing', 'vehicle_powersharing') or \
+                 (wc.get('charging_w', 0) or 0) < -100
+        ct_w = wc.get("charging_w", 0) if wc.get("status") == "online" and not ct_v2h else 0
+        ct_v2h_w = abs(wc.get("charging_w", 0)) if ct_v2h else 0
 
         # True SRP grid draw = SPAN grid + CyberTruck charging (CT is on a dedicated circuit
         # bypassing SPAN; Tesla GW sees both when online, must be summed manually when offline)
         srp_grid_w = grid if tesla_online else span_grid + ct_w
 
         _state["summary"] = {
-            "solar_w": solar,
-            "load_w": load,
+            "solar_w": round(total_solar_w, 0),            # total: Enphase + SolarEdge (for path animations)
+            "enphase_solar_w": round(enphase_solar_w, 0),  # Solar 1 — Enphase IQ8 (from Enphase API)
+            "solaredge_solar_w": round(solaredge_solar_w, 0),  # Solar 2 — SolarEdge SE5000H (SPAN minus Enphase)
+            "span_solar_w": round(span_solar_w, 0),        # SPAN total positive circuits (both systems raw)
+            "load_w": round(span_home_w, 0),               # pure SPAN circuit consumption (negative circuits)
             "battery_w": battery,
             "grid_w": round(srp_grid_w, 0),      # true total SRP draw (includes CT when offline)
             "span_grid_w": round(span_grid, 0),  # SPAN-only grid power (for Home Panel node)
             "srp_grid_w": round(srp_grid_w, 0),  # explicit alias for SRP Grid node
             "pool_w": pool_w,
             "ct_charging_w": ct_w,
-            "total_load_w": load + ct_w,   # SPAN load + CT charging = true home consumption
-            "self_powered_pct": round(min(100, solar / max(load + ct_w, 1) * 100), 1) if (load + ct_w) > 0 else 0,
+            "ct_v2h": ct_v2h,
+            "ct_v2h_w": round(ct_v2h_w, 0),
+            "total_load_w": round(span_home_w + ct_w, 0),   # SPAN consumption + CT charging = true home consumption
+            "self_powered_pct": round(min(100, total_solar_w / max(span_home_w + ct_w, 1) * 100), 1) if (span_home_w + ct_w) > 0 else 0,
         }
         _state["ts"] = time.time()
 
@@ -1113,7 +1163,10 @@ def _poll_loop():
         with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
             futs = [ex.submit(f) for f in poll_fns]
             concurrent.futures.wait(futs, timeout=60)
-        _update_summary()
+        try:
+            _update_summary()
+        except Exception as _sum_err:
+            log.error("_update_summary() crashed: %s", _sum_err, exc_info=True)
         _broadcast_sse()
         time.sleep(POLL_INTERVAL_SECONDS)
 
@@ -1712,6 +1765,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   <div class="logo">⚡ JARVIS <span>Home Energy OS</span></div>
   <nav>
     <button class="active" onclick="showView('cockpit')">Energy Cockpit</button>
+    <button onclick="showView('solar')">☀️ Solar</button>
     <button onclick="showView('span')">SPAN Circuits</button>
     <button onclick="showView('pool')">Pool Control</button>
     <button onclick="showView('devices')">Devices</button>
@@ -1790,8 +1844,13 @@ DASHBOARD_HTML = """<!DOCTYPE html>
             stroke="#f97316" stroke-width="2" fill="none" opacity="0"
             stroke-dasharray="6 8" marker-end="url(#arr-bridge)"/>
 
-      <!-- Solar → SPAN Panel (bezier) -->
+      <!-- Solar 1 (Enphase) → SPAN Panel (bezier) -->
       <path id="path-solar-span" d="M 130,82 C 130,115 190,118 190,150"
+            stroke="#f59e0b" stroke-width="3" fill="none" opacity="0.9"
+            stroke-dasharray="10 5" marker-end="url(#arr-solar)"/>
+
+      <!-- Solar 2 (SolarEdge) → SPAN Panel (bezier) -->
+      <path id="path-solar2-span" d="M 130,160 C 150,165 175,160 190,150"
             stroke="#f59e0b" stroke-width="3" fill="none" opacity="0.9"
             stroke-dasharray="10 5" marker-end="url(#arr-solar)"/>
 
@@ -1821,6 +1880,18 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         </circle>
         <circle r="2" fill="#f59e0b" opacity="0.4">
           <animateMotion dur="1.5s" begin="-1s" repeatCount="indefinite"><mpath href="#path-solar-span"/></animateMotion>
+        </circle>
+      </g>
+
+      <g id="part-solar2-span" visibility="hidden">
+        <circle r="4.5" fill="#f59e0b" filter="url(#pf-glow)">
+          <animateMotion dur="1.5s" begin="0s" repeatCount="indefinite"><mpath href="#path-solar2-span"/></animateMotion>
+        </circle>
+        <circle r="3" fill="#f59e0b" opacity="0.65">
+          <animateMotion dur="1.5s" begin="-0.5s" repeatCount="indefinite"><mpath href="#path-solar2-span"/></animateMotion>
+        </circle>
+        <circle r="2" fill="#f59e0b" opacity="0.4">
+          <animateMotion dur="1.5s" begin="-1s" repeatCount="indefinite"><mpath href="#path-solar2-span"/></animateMotion>
         </circle>
       </g>
 
@@ -1883,13 +1954,22 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
       <!-- ── NODES ── -->
 
-      <!-- Solar node (top-left) -->
-      <g id="node-solar" transform="translate(75,22)" style="cursor:pointer" onclick="showView('cockpit')"
+      <!-- Solar 1: Enphase node (top-left) -->
+      <g id="node-solar" transform="translate(75,22)" style="cursor:pointer" onclick="showView('solar')"
          onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
         <rect rx="12" ry="12" width="110" height="60" fill="#1c1917" stroke="#f59e0b" stroke-width="1.5"/>
         <text x="55" y="20" text-anchor="middle" font-size="17" fill="#f59e0b">&#x2600;&#xFE0F;</text>
-        <text x="55" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">SOLAR</text>
+        <text x="55" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">ENPHASE</text>
         <text id="lbl-solar" x="55" y="53" text-anchor="middle" font-size="13" fill="#f59e0b" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
+      </g>
+
+      <!-- Solar 2: SolarEdge node (below Enphase) -->
+      <g id="node-solar2" transform="translate(75,100)" style="cursor:pointer" onclick="showView('solar')"
+         onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
+        <rect rx="12" ry="12" width="110" height="60" fill="#1c1917" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="55" y="20" text-anchor="middle" font-size="17" fill="#f59e0b">&#x2600;&#xFE0F;</text>
+        <text x="55" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">SOLAREDGE</text>
+        <text id="lbl-solar2" x="55" y="53" text-anchor="middle" font-size="13" fill="#f59e0b" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
       </g>
 
       <!-- SRP Grid node (top-right) -->
@@ -2047,6 +2127,37 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   </div>
 
 </div><!-- /cockpit -->
+
+
+<!-- ═══ SOLAR PRODUCTION ═════════════════════════════════════════════════════ -->
+<div id="view-solar" class="view">
+  <h2 style="color:var(--solar)">☀️ Solar Production</h2>
+
+  <!-- Enphase section -->
+  <div class="card energy-solar" style="margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h3 style="margin:0;color:var(--solar)">Enphase IQ8PLUS</h3>
+      <span id="solar-enphase-total" style="font-size:24px;font-weight:700;color:var(--solar)">— W</span>
+    </div>
+    <div style="font-size:12px;color:#94a3b8;margin-bottom:16px">
+      20 microinverters · 5,961W capacity · SPAN branches 29+31
+    </div>
+    <!-- Inverter grid: 20 cards, 4 or 5 per row -->
+    <div id="solar-inverter-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px">
+      <!-- populated by JS -->
+    </div>
+    <div id="solar-inverter-status" style="margin-top:12px;font-size:12px;color:#94a3b8">Loading inverters...</div>
+  </div>
+
+  <!-- SolarEdge section -->
+  <div class="card energy-solar">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <h3 style="margin:0;color:var(--solar)">SolarEdge SE5000H</h3>
+      <span id="solar-se-total" style="font-size:24px;font-weight:700;color:var(--solar)">— W</span>
+    </div>
+    <div style="font-size:12px;color:#94a3b8">5kW string inverter · SPAN branches 30+32</div>
+  </div>
+</div><!-- /solar -->
 
 
 <!-- ═══ SPAN CIRCUITS ════════════════════════════════════════════════════════ -->
@@ -2793,7 +2904,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <div id="toast"></div>
 
 <script>
-const views = ['cockpit','span','pool','devices','tesla-energy','cybertruck','cameras','home-control','sprinklers','settings'];
+const views = ['cockpit','solar','span','pool','devices','tesla-energy','cybertruck','cameras','home-control','sprinklers','settings'];
 function showView(v) {
   views.forEach(id => {
     document.getElementById('view-'+id).classList.toggle('active', id===v);
@@ -2814,14 +2925,19 @@ function updateFlowDiagram(s) {
   const span = s.span || {};
   const td   = s.tesla || {};
 
-  const solarW      = sum.solar_w || 0;
+  const enphaseW    = sum.enphase_solar_w || 0;       // Solar 1 — Enphase IQ8 (API)
+  const solarEdgeW  = sum.solaredge_solar_w || 0;    // Solar 2 — SolarEdge SE5000H (SPAN − Enphase)
+  const spanSolarW  = sum.span_solar_w || 0;         // SPAN raw positive circuits (both systems)
+  const solarW      = sum.solar_w || (enphaseW + solarEdgeW); // total for path animations
   const srpGridW    = sum.srp_grid_w != null ? sum.srp_grid_w : (sum.grid_w || 0); // true SRP total (signed)
   const spanGridW   = sum.span_grid_w != null ? sum.span_grid_w : srpGridW;         // SPAN-only grid (signed)
   const rawGrid     = srpGridW;          // signed: + importing, - exporting
   const gridW       = Math.abs(srpGridW);
   const spanGridAbs = Math.abs(spanGridW);
-  const spanW       = span.total_load_w || sum.load_w || 0;
+  const spanW       = sum.load_w || span.total_load_w || 0;  // pure SPAN circuit consumption
   const ctW         = sum.ct_charging_w || wc.charging_w || 0;
+  const ctV2H       = sum.ct_v2h || false;
+  const ctV2HW      = sum.ct_v2h_w || 0;
   const circuits    = (span.circuits || []);
   const poolCircuit = circuits.find(c => (c.name || '').includes('Pool'));
   const poolW       = poolCircuit ? Math.abs(poolCircuit.power_w || 0) : 0;
@@ -2831,8 +2947,11 @@ function updateFlowDiagram(s) {
 
   const setLbl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
 
-  // Labels
-  setLbl('lbl-solar', fmt(solarW));
+  // Labels — two separate solar systems
+  // lbl-solar  = Enphase IQ8 (Solar 1) on node-solar
+  // lbl-solar2 = SolarEdge SE5000H (Solar 2) on node-solar2
+  setLbl('lbl-solar', fmt(enphaseW));
+  setLbl('lbl-solar2', fmt(solarEdgeW));
   setLbl('lbl-grid',  fmt(gridW) + (rawGrid >= 0 ? ' \u2193' : ' \u2191'));
   // Breakdown subtitle on SRP Grid node: home load + CT when bridge mode + CT charging
   const gridSubEl = document.getElementById('lbl-grid-sub');
@@ -2844,12 +2963,23 @@ function updateFlowDiagram(s) {
       gridSubEl.setAttribute('visibility', 'hidden');
     }
   }
-  setLbl('lbl-home',  fmt(spanW));
-  setLbl('lbl-ct',    ctW > 50 ? fmt(ctW) + ' chg' : 'idle');
+  setLbl('lbl-home',  fmt(spanW));  // pure SPAN circuit consumption
+  // CT label: show V2H mode if active, otherwise charging status
+  if (ctV2H) {
+    setLbl('lbl-ct', fmt(ctV2HW) + ' V2H');
+    const ctEl = document.getElementById('lbl-ct');
+    if (ctEl) ctEl.style.fill = '#a78bfa';  // purple for V2H
+  } else {
+    setLbl('lbl-ct', ctW > 50 ? fmt(ctW) + ' chg' : 'idle');
+    const ctEl = document.getElementById('lbl-ct');
+    if (ctEl) ctEl.style.fill = '';  // reset color
+  }
   setLbl('lbl-pool',  poolW > 30 ? fmt(poolW) : 'off');
   if (teslaOnline) {
-    setLbl('lbl-gw',    fmt(Math.abs(batW)) + (batW > 50 ? ' dchg' : batW < -50 ? ' chg' : ' idle'));
-    setLbl('lbl-gw-soe', td.soe != null ? td.soe + '% SOE' : '\u2014');
+    // No battery in this setup — Gateway 3V is just the meter/gateway
+    const stormMode = td.storm_mode_active;
+    setLbl('lbl-gw',    stormMode ? 'storm mode' : 'on-grid');
+    setLbl('lbl-gw-soe', stormMode ? 'Storm Mode ON' : 'Gateway 3V');
   } else {
     setLbl('lbl-gw',    'offline');
     setLbl('lbl-gw-soe', '\u2014');
@@ -2860,20 +2990,26 @@ function updateFlowDiagram(s) {
   // Bridge mode: switch between Gateway route and direct Grid→SPAN
   const elGridGw    = document.getElementById('path-grid-gw');
   const elGwSpan    = document.getElementById('path-gw-span');
+  const elGwCt      = document.getElementById('path-gw-ct');    // Gateway → CT (Tesla online)
   const elGridSpan  = document.getElementById('path-grid-span');
-  const elGridCt    = document.getElementById('path-grid-ct');
+  const elGridCt    = document.getElementById('path-grid-ct');  // Direct Grid → CT (bridge fallback)
   const elBridgeLbl = document.getElementById('pf-bridge-label');
   const elSrcLbl    = document.getElementById('pf-source-label');
   if (teslaOnline) {
+    // SRP → Gateway → SPAN always visible; Gateway → CT visible only when charging
     if (elGridGw)    elGridGw.setAttribute('opacity', '0.9');
     if (elGwSpan)    elGwSpan.setAttribute('opacity', '0.9');
+    if (elGwCt)      elGwCt.setAttribute('opacity', ctW > 50 ? '0.88' : '0.25');
+    // Hide bridge-mode paths
     if (elGridSpan)  elGridSpan.setAttribute('opacity', '0');
     if (elGridCt)  { elGridCt.setAttribute('opacity', '0'); elGridCt.style.animation = 'none'; }
     if (elBridgeLbl) elBridgeLbl.setAttribute('visibility', 'hidden');
     if (elSrcLbl)    elSrcLbl.setAttribute('visibility', 'visible');
   } else {
+    // Bridge mode: Gateway offline, grid connects directly to SPAN and CT
     if (elGridGw)    elGridGw.setAttribute('opacity', '0.1');
     if (elGwSpan)    elGwSpan.setAttribute('opacity', '0.1');
+    if (elGwCt)      elGwCt.setAttribute('opacity', '0');
     if (elGridSpan)  elGridSpan.setAttribute('opacity', '0.88');
     if (elBridgeLbl) elBridgeLbl.setAttribute('visibility', 'visible');
     if (elSrcLbl)    elSrcLbl.setAttribute('visibility', 'hidden');
@@ -2884,7 +3020,7 @@ function updateFlowDiagram(s) {
     }
     // Grid → CT direct path (bridge mode: CT on dedicated circuit separate from SPAN)
     if (elGridCt) {
-      if (ctW > 30) {
+      if (ctW > 30 && !ctV2H) {
         elGridCt.setAttribute('opacity', '0.88');
         const ctDur = ctW > 3000 ? '0.75s' : ctW > 500 ? '1.4s' : '2.8s';
         elGridCt.style.animation = 'flowDash ' + ctDur + ' linear infinite';
@@ -2905,7 +3041,8 @@ function updateFlowDiagram(s) {
     g.querySelectorAll('animateMotion').forEach(a => a.setAttribute('dur', dur));
   }
 
-  setParticle('part-solar-span', solarW, 8000);
+  setParticle('part-solar-span',  enphaseW,   6000);  // Enphase → Home
+  setParticle('part-solar2-span', solarEdgeW, 6000);  // SolarEdge → Home
   if (teslaOnline) {
     setParticle('part-grid-gw',  gridW, 15000);
     setParticle('part-gw-span',  spanW, 15000);
@@ -2919,10 +3056,21 @@ function updateFlowDiagram(s) {
     if (p1) p1.setAttribute('visibility', 'hidden');
     if (p2) p2.setAttribute('visibility', 'hidden');
     setParticle('part-grid-span', spanGridAbs, 15000);  // SPAN-only home grid flow
-    setParticle('part-grid-ct',   ctW,         11500);  // CT charging direct from grid
+    // CT charging direct from grid only when NOT in V2H mode
+    setParticle('part-grid-ct', ctV2H ? 0 : ctW, 11500);
   }
   setParticle('part-home-pool', poolW, 5000);
-  setParticle('part-gw-ct', teslaOnline ? ctW : 0, 11500);  // Gateway→CT only when Tesla online
+  // Gateway→CT only when Tesla online and CT not in V2H mode
+  setParticle('part-gw-ct', teslaOnline && !ctV2H ? ctW : 0, 11500);
+  // V2H: CT feeding home — use part-ct-home if it exists, otherwise part-gw-ct reversed
+  const partCtHome = document.getElementById('part-ct-home');
+  if (partCtHome) {
+    partCtHome.setAttribute('visibility', ctV2H && ctV2HW > 50 ? 'visible' : 'hidden');
+    if (ctV2H && ctV2HW > 50) {
+      const dur = ctV2HW > 3000 ? '0.75s' : ctV2HW > 500 ? '1.4s' : '2.8s';
+      partCtHome.querySelectorAll('animateMotion').forEach(a => a.setAttribute('dur', dur));
+    }
+  }
 
   // Stroke width scaling (power proportional)
   function setPathWidth(id, watts, maxW) {
@@ -2930,7 +3078,8 @@ function updateFlowDiagram(s) {
     if (!el) return;
     el.setAttribute('stroke-width', Math.max(1.5, Math.min(1, watts / maxW) * 7).toFixed(1));
   }
-  setPathWidth('path-solar-span', solarW, 8000);
+  setPathWidth('path-solar-span',  enphaseW,   6000);
+  setPathWidth('path-solar2-span', solarEdgeW, 6000);
   setPathWidth('path-grid-gw',    teslaOnline ? gridW : 0,         15000);
   setPathWidth('path-gw-span',    teslaOnline ? spanW : 0,         15000);
   setPathWidth('path-grid-span',  teslaOnline ? 0 : spanGridAbs,   15000);  // SPAN-only home flow
@@ -2948,7 +3097,8 @@ function updateFlowDiagram(s) {
     else if (watts < 3000) el.classList.add('flow-path-animated');
     else                   el.classList.add('flow-path-fast');
   }
-  setPathAnim('path-solar-span', solarW);
+  setPathAnim('path-solar-span',  enphaseW);
+  setPathAnim('path-solar2-span', solarEdgeW);
   setPathAnim('path-grid-gw',    teslaOnline ? gridW : 0);
   setPathAnim('path-gw-span',    teslaOnline ? spanW : 0);
   setPathAnim('path-home-pool',  poolW);
@@ -2957,6 +3107,48 @@ function updateFlowDiagram(s) {
   // Bridge paths animation handled above via inline style; clear class conflicts
   if (elGridSpan) elGridSpan.classList.remove('flow-path-animated','flow-path-slow','flow-path-fast','flow-path-idle','flow-path-bridge');
   if (elGridCt)   elGridCt.classList.remove('flow-path-animated','flow-path-slow','flow-path-fast','flow-path-idle','flow-path-bridge');
+}
+
+function updateSolarView(s) {
+  const sum  = s.summary || {};
+  const enph = s.enphase || {};
+  const enphaseW = sum.enphase_solar_w || 0;
+  const seW      = sum.solaredge_solar_w || 0;
+
+  const el = (id) => document.getElementById(id);
+  if (el('solar-enphase-total')) el('solar-enphase-total').textContent = fmt(enphaseW) + ' W';
+  if (el('solar-se-total'))      el('solar-se-total').textContent      = fmt(seW) + ' W';
+
+  // Inverter grid
+  const inverters = enph.inverters || [];
+  const grid = el('solar-inverter-grid');
+  const now = Math.floor(Date.now() / 1000);
+  if (grid && inverters.length > 0) {
+    const isDaytime = (new Date().getHours() >= 6 && new Date().getHours() < 20);
+    grid.innerHTML = inverters.map(inv => {
+      const ageMin = Math.round((now - inv.reportDate) / 60);
+      const ageStr = ageMin < 60 ? ageMin + 'm ago' : Math.round(ageMin/60) + 'h ago';
+      const health = (!isDaytime)  ? '#94a3b8' :
+                     (ageMin < 30) ? '#22c55e' :
+                                     '#ef4444';
+      const shortSerial = inv.serial.slice(-6);
+      return `<div style="background:#1e293b;border:1px solid ${health};border-radius:8px;padding:8px;text-align:center">
+        <div style="font-size:11px;color:#94a3b8;font-family:monospace">${shortSerial}</div>
+        <div style="font-size:16px;font-weight:700;color:${health}">${inv.watts}W</div>
+        <div style="font-size:10px;color:#64748b">${inv.maxWatts}W max</div>
+        <div style="font-size:10px;color:#64748b">${ageStr}</div>
+      </div>`;
+    }).join('');
+
+    const stale = isDaytime ? inverters.filter(i => (now - i.reportDate) > 1800).length : 0;
+    const statusEl = el('solar-inverter-status');
+    if (statusEl) {
+      statusEl.textContent = stale > 0
+        ? `⚠️ ${stale} inverter(s) not reporting`
+        : isDaytime ? `✅ All ${inverters.length} inverters reporting` : `🌙 Nighttime — all inverters sleeping`;
+      statusEl.style.color = stale > 0 ? '#ef4444' : '#94a3b8';
+    }
+  }
 }
 
 function statusColor(s) {
@@ -3084,6 +3276,9 @@ function renderState(s) {
 
   // Update animated SVG power flow diagram
   updateFlowDiagram(s);
+
+  // Update Solar view (inverter grid + totals)
+  updateSolarView(s);
 
   // Badges
   document.getElementById('enphase-badge').textContent = ed.status||'—';

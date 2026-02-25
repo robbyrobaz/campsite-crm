@@ -1,22 +1,21 @@
 {
-  "updatedAt": "2026-02-25T04:43:00-07:00",
+  "updatedAt": "2026-02-25T05:13:00-07:00",
   "activeTasks": [
     {
-      "cardId": "c_640d25ea62847_19c924522d3",
-      "title": "NQ Expert Strategy: Overnight Range Breakout (ORN)",
+      "cardId": "c_a7c791d674194_19c92452309",
+      "title": "NQ Expert Strategy: Power Hour Continuation",
       "status": "In Progress",
       "assignee": "claude",
       "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
-      "pid": 3251098,
-      "startedAt": "2026-02-25T04:43:00-07:00"
+      "pid": 3277846,
+      "startedAt": "2026-02-25T05:13:00-07:00"
     }
   ],
   "plannedTasks": [
-    "c_a7c791d674194_19c92452309 — NQ Expert Strategy: Power Hour Continuation",
     "c_727f55fa903ae_19c92452325 — NQ Expert Strategy: Measured Move / Fibonacci Continuation"
   ],
   "health": {
-    "cpu_temp": "80°C",
+    "cpu_temp": "54°C",
     "disk": "40% used (270G free)",
     "services": {
       "openclaw-gateway": "active",

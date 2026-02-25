@@ -1797,8 +1797,8 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <span style="font-size:13px;font-weight:600;color:var(--text)">&#x26A1; Live Power Flow</span>
       <span style="font-size:11px;color:var(--text-dim)" id="flow-total-label">Total load: &#x2014; W</span>
     </div>
-    <svg id="power-flow-svg" viewBox="0 0 700 320" preserveAspectRatio="xMidYMid meet"
-         style="width:100%;max-height:320px;display:block">
+    <svg id="power-flow-svg" viewBox="0 0 700 440" preserveAspectRatio="xMidYMid meet"
+         style="width:100%;max-height:440px;display:block">
 
       <defs>
         <!-- Glow for active particles -->
@@ -1820,52 +1820,62 @@ DASHBOARD_HTML = """<!DOCTYPE html>
           <path d="M0,0 L6,3 L0,6 Z" fill="#22d3ee"/>
         </marker>
         <marker id="arr-house" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-          <path d="M0,0 L6,3 L0,6 Z" fill="#6b7280"/>
+          <path d="M0,0 L6,3 L0,6 Z" fill="#8b5cf6"/>
         </marker>
         <marker id="arr-pool" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
           <path d="M0,0 L6,3 L0,6 Z" fill="#06b6d4"/>
         </marker>
       </defs>
 
+      <!--
+        LAYOUT (all coords absolute):
+        ROW 1 (y=20–84):   [SRP GRID cx=85]  [ENPHASE cx=350]  [SOLAREDGE cx=615]
+        bus y=123 — sources converge horizontally then drop to gateway
+        ROW 2 (y=162–234): [TESLA GATEWAY 3V cx=350] — centered hub
+        bus y=252 — gateway distributes left→Home, right→CT
+        ROW 3 (y=270–334): [HOME PANEL cx=170]              [CYBERTRUCK cx=530]
+        ROW 4 (y=362–426): [POOL cx=170] — directly below Home
+      -->
+
       <!-- ── PATHS (behind nodes) ── -->
 
-      <!-- SRP Grid → Tesla Gateway (bezier) -->
-      <path id="path-grid-gw" d="M 535,82 C 535,118 462,130 462,148"
-            stroke="#f97316" stroke-width="3" fill="none" opacity="0.9"
-            stroke-dasharray="10 5" marker-end="url(#arr-grid)"/>
-
-      <!-- Tesla Gateway → SPAN Panel (bezier) -->
-      <path id="path-gw-span" d="M 328,166 C 295,166 270,180 248,182"
-            stroke="#f97316" stroke-width="3" fill="none" opacity="0.9"
-            stroke-dasharray="10 5" marker-end="url(#arr-grid)"/>
-
-      <!-- Bridge: SRP Grid → SPAN direct (Tesla offline fallback) -->
-      <path id="path-grid-span" d="M 533,82 C 510,107 310,103 250,160"
-            stroke="#f97316" stroke-width="2" fill="none" opacity="0"
-            stroke-dasharray="6 8" marker-end="url(#arr-bridge)"/>
-
-      <!-- Solar 1 (Enphase) → SPAN Panel (bezier) -->
-      <path id="path-solar-span" d="M 130,82 C 130,115 190,118 190,150"
+      <!-- Enphase → Tesla Gateway (straight vertical — center aligned) -->
+      <path id="path-solar-span" d="M 350,84 L 350,162"
             stroke="#f59e0b" stroke-width="3" fill="none" opacity="0.9"
             stroke-dasharray="10 5" marker-end="url(#arr-solar)"/>
 
-      <!-- Solar 2 (SolarEdge) → SPAN Panel (bezier) -->
-      <path id="path-solar2-span" d="M 130,160 C 150,165 175,160 190,150"
+      <!-- SolarEdge → bus → Tesla Gateway (right-angle bends) -->
+      <path id="path-solar2-span" d="M 615,84 L 615,123 L 350,123 L 350,162"
             stroke="#f59e0b" stroke-width="3" fill="none" opacity="0.9"
             stroke-dasharray="10 5" marker-end="url(#arr-solar)"/>
 
-      <!-- Home Panel → Pool -->
-      <path id="path-home-pool" d="M 190,218 C 190,238 95,238 95,248"
-            stroke="#06b6d4" stroke-width="3" fill="none" opacity="0.9"
-            stroke-dasharray="10 5" marker-end="url(#arr-pool)"/>
+      <!-- SRP Grid → bus → Tesla Gateway (right-angle bends) -->
+      <path id="path-grid-gw" d="M 85,84 L 85,123 L 350,123 L 350,162"
+            stroke="#f97316" stroke-width="3" fill="none" opacity="0.9"
+            stroke-dasharray="10 5" marker-end="url(#arr-grid)"/>
 
-      <!-- Tesla Gateway → CT Charger (bezier) -->
-      <path id="path-gw-ct" d="M 395,202 C 435,228 476,242 515,248"
+      <!-- Tesla Gateway → Home Panel (center → left, right-angle) -->
+      <path id="path-gw-span" d="M 350,234 L 350,252 L 170,252 L 170,270"
+            stroke="#8b5cf6" stroke-width="3" fill="none" opacity="0.9"
+            stroke-dasharray="10 5" marker-end="url(#arr-house)"/>
+
+      <!-- Tesla Gateway → Cybertruck CT (center → right, right-angle) -->
+      <path id="path-gw-ct" d="M 350,234 L 350,252 L 530,252 L 530,270"
             stroke="#22d3ee" stroke-width="3" fill="none" opacity="0.9"
             stroke-dasharray="10 5" marker-end="url(#arr-ev)"/>
 
-      <!-- Bridge: SRP Grid → CT Charger direct (Tesla GW offline fallback) -->
-      <path id="path-grid-ct" d="M 535,82 C 535,160 515,200 515,248"
+      <!-- Home Panel → Pool (straight vertical) -->
+      <path id="path-home-pool" d="M 170,334 L 170,362"
+            stroke="#06b6d4" stroke-width="3" fill="none" opacity="0.9"
+            stroke-dasharray="10 5" marker-end="url(#arr-pool)"/>
+
+      <!-- Bridge: SRP Grid → Home Panel direct (Tesla GW offline — routes above gateway) -->
+      <path id="path-grid-span" d="M 85,84 L 85,140 L 170,140 L 170,270"
+            stroke="#f97316" stroke-width="2" fill="none" opacity="0"
+            stroke-dasharray="6 8" marker-end="url(#arr-bridge)"/>
+
+      <!-- Bridge: SRP Grid → CT Charger direct (Tesla GW offline — routes above gateway) -->
+      <path id="path-grid-ct" d="M 85,84 L 85,140 L 530,140 L 530,270"
             stroke="#22d3ee" stroke-width="2" fill="none" opacity="0"
             stroke-dasharray="6 8" marker-end="url(#arr-ev)"/>
 
@@ -1908,10 +1918,10 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       </g>
 
       <g id="part-gw-span" visibility="hidden">
-        <circle r="4.5" fill="#f97316" filter="url(#pf-glow)">
+        <circle r="4.5" fill="#8b5cf6" filter="url(#pf-glow)">
           <animateMotion dur="1.5s" begin="0s" repeatCount="indefinite"><mpath href="#path-gw-span"/></animateMotion>
         </circle>
-        <circle r="3" fill="#f97316" opacity="0.65">
+        <circle r="3" fill="#8b5cf6" opacity="0.65">
           <animateMotion dur="1.5s" begin="-0.5s" repeatCount="indefinite"><mpath href="#path-gw-span"/></animateMotion>
         </circle>
       </g>
@@ -1954,80 +1964,86 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
       <!-- ── NODES ── -->
 
-      <!-- Solar 1: Enphase node (top-left) -->
-      <g id="node-solar" transform="translate(75,22)" style="cursor:pointer" onclick="showView('solar')"
+      <!-- ROW 1: Sources — evenly spaced (gap=135px each side) -->
+
+      <!-- SRP Grid node (top-left, cx=85) -->
+      <g id="node-grid" transform="translate(20,20)" style="cursor:pointer" onclick="showView('tesla-energy')"
          onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
-        <rect rx="12" ry="12" width="110" height="60" fill="#1c1917" stroke="#f59e0b" stroke-width="1.5"/>
-        <text x="55" y="20" text-anchor="middle" font-size="17" fill="#f59e0b">&#x2600;&#xFE0F;</text>
-        <text x="55" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">ENPHASE</text>
-        <text id="lbl-solar" x="55" y="53" text-anchor="middle" font-size="13" fill="#f59e0b" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
+        <rect id="rect-grid" rx="12" ry="12" width="130" height="64" fill="#1c1917" stroke="#f97316" stroke-width="1.5"/>
+        <text x="65" y="20" text-anchor="middle" font-size="17" fill="#f97316">&#x1F50C;</text>
+        <text x="65" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">SRP GRID</text>
+        <text id="lbl-grid" x="65" y="53" text-anchor="middle" font-size="13" fill="#f97316" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
+        <text id="lbl-grid-sub" x="65" y="72" text-anchor="middle" font-size="8" fill="#a3a3a3" font-family="sans-serif" visibility="hidden">&#x2014;</text>
       </g>
 
-      <!-- Solar 2: SolarEdge node (below Enphase) -->
-      <g id="node-solar2" transform="translate(75,100)" style="cursor:pointer" onclick="showView('solar')"
+      <!-- Enphase Solar node (top-center, cx=350 — directly above gateway) -->
+      <g id="node-solar" transform="translate(285,20)" style="cursor:pointer" onclick="showView('solar')"
          onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
-        <rect rx="12" ry="12" width="110" height="60" fill="#1c1917" stroke="#f59e0b" stroke-width="1.5"/>
-        <text x="55" y="20" text-anchor="middle" font-size="17" fill="#f59e0b">&#x2600;&#xFE0F;</text>
-        <text x="55" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">SOLAREDGE</text>
-        <text id="lbl-solar2" x="55" y="53" text-anchor="middle" font-size="13" fill="#f59e0b" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
+        <rect rx="12" ry="12" width="130" height="64" fill="#1c1917" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="65" y="20" text-anchor="middle" font-size="17" fill="#f59e0b">&#x2600;&#xFE0F;</text>
+        <text x="65" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">ENPHASE</text>
+        <text id="lbl-solar" x="65" y="53" text-anchor="middle" font-size="13" fill="#f59e0b" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
       </g>
 
-      <!-- SRP Grid node (top-right) -->
-      <g id="node-grid" transform="translate(480,22)" style="cursor:pointer" onclick="showView('tesla-energy')"
+      <!-- SolarEdge node (top-right, cx=615) -->
+      <g id="node-solar2" transform="translate(550,20)" style="cursor:pointer" onclick="showView('solar')"
          onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
-        <rect id="rect-grid" rx="12" ry="12" width="110" height="60" fill="#1c1917" stroke="#f97316" stroke-width="1.5"/>
-        <text x="55" y="20" text-anchor="middle" font-size="17" fill="#f97316">&#x1F50C;</text>
-        <text x="55" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">SRP GRID</text>
-        <text id="lbl-grid" x="55" y="53" text-anchor="middle" font-size="13" fill="#f97316" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
-        <text id="lbl-grid-sub" x="55" y="70" text-anchor="middle" font-size="8" fill="#a3a3a3" font-family="sans-serif" visibility="hidden">&#x2014;</text>
+        <rect rx="12" ry="12" width="130" height="64" fill="#1c1917" stroke="#f59e0b" stroke-width="1.5"/>
+        <text x="65" y="20" text-anchor="middle" font-size="17" fill="#f59e0b">&#x2600;&#xFE0F;</text>
+        <text x="65" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">SOLAREDGE</text>
+        <text id="lbl-solar2" x="65" y="53" text-anchor="middle" font-size="13" fill="#f59e0b" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
       </g>
 
-      <!-- Tesla Gateway node (center) -->
-      <g id="node-gateway" transform="translate(328,130)" style="cursor:pointer" onclick="showView('tesla-energy')"
+      <!-- ROW 2: Tesla Gateway — centered hub (cx=350) -->
+      <g id="node-gateway" transform="translate(280,162)" style="cursor:pointer" onclick="showView('tesla-energy')"
          onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
-        <rect rx="12" ry="12" width="134" height="72" fill="#1c1917" stroke="#3b82f6" stroke-width="1.5"/>
-        <text x="67" y="20" text-anchor="middle" font-size="17" fill="#3b82f6">&#x1F50B;</text>
-        <text x="67" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">TESLA GATEWAY V2</text>
-        <text id="lbl-gw" x="67" y="53" text-anchor="middle" font-size="12" fill="#94a3b8" font-family="sans-serif">&#x2014;</text>
-        <text id="lbl-gw-soe" x="67" y="66" text-anchor="middle" font-size="10" fill="#60a5fa" font-family="sans-serif">&#x2014;</text>
+        <rect rx="12" ry="12" width="140" height="72" fill="#1c1917" stroke="#3b82f6" stroke-width="1.5"/>
+        <text x="70" y="20" text-anchor="middle" font-size="17" fill="#3b82f6">&#x1F50B;</text>
+        <text x="70" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">TESLA GATEWAY 3V</text>
+        <text id="lbl-gw" x="70" y="52" text-anchor="middle" font-size="12" fill="#94a3b8" font-family="sans-serif">&#x2014;</text>
+        <text id="lbl-gw-soe" x="70" y="65" text-anchor="middle" font-size="10" fill="#60a5fa" font-family="sans-serif">&#x2014;</text>
       </g>
 
-      <!-- Home Panel node (mid-left) — merged SPAN + House Load -->
-      <g id="node-home" transform="translate(132,150)" style="cursor:pointer" onclick="showView('span')"
+      <!-- ROW 3: Loads -->
+
+      <!-- Home Panel node (left, cx=170) -->
+      <g id="node-home" transform="translate(105,270)" style="cursor:pointer" onclick="showView('span')"
          onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
-        <rect rx="12" ry="12" width="116" height="68" fill="#1c1917" stroke="#8b5cf6" stroke-width="1.5"/>
-        <text x="58" y="20" text-anchor="middle" font-size="17" fill="#8b5cf6">&#x1F3E0;</text>
-        <text x="58" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">HOME PANEL</text>
-        <text id="lbl-home" x="58" y="55" text-anchor="middle" font-size="13" fill="#8b5cf6" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
+        <rect rx="12" ry="12" width="130" height="64" fill="#1c1917" stroke="#8b5cf6" stroke-width="1.5"/>
+        <text x="65" y="20" text-anchor="middle" font-size="17" fill="#8b5cf6">&#x1F3E0;</text>
+        <text x="65" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">HOME PANEL</text>
+        <text id="lbl-home" x="65" y="53" text-anchor="middle" font-size="13" fill="#8b5cf6" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
       </g>
 
-      <!-- CT Charger node (mid-right-bottom) -->
-      <g id="node-ct" transform="translate(455,248)" style="cursor:pointer" onclick="showView('cybertruck')"
+      <!-- Cybertruck CT node (right, cx=530) -->
+      <g id="node-ct" transform="translate(465,270)" style="cursor:pointer" onclick="showView('cybertruck')"
          onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
-        <rect rx="12" ry="12" width="120" height="60" fill="#1c1917" stroke="#22d3ee" stroke-width="1.5"/>
-        <text x="60" y="20" text-anchor="middle" font-size="17" fill="#22d3ee">&#x1F697;</text>
-        <text x="60" y="34" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">CYBERTRUCK CT</text>
-        <text id="lbl-ct" x="60" y="52" text-anchor="middle" font-size="12" fill="#22d3ee" font-weight="bold" font-family="sans-serif">idle</text>
+        <rect rx="12" ry="12" width="130" height="64" fill="#1c1917" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="65" y="20" text-anchor="middle" font-size="17" fill="#22d3ee">&#x1F697;</text>
+        <text x="65" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">CYBERTRUCK CT</text>
+        <text id="lbl-ct" x="65" y="53" text-anchor="middle" font-size="12" fill="#22d3ee" font-weight="bold" font-family="sans-serif">idle</text>
       </g>
 
-      <!-- Pool node (bottom-left) -->
-      <g id="node-pool" transform="translate(40,248)" style="cursor:pointer" onclick="showView('pool')"
+      <!-- ROW 4: Sub-loads -->
+
+      <!-- Pool node (below Home Panel, cx=170 — straight vertical path) -->
+      <g id="node-pool" transform="translate(105,362)" style="cursor:pointer" onclick="showView('pool')"
          onmouseover="this.style.opacity=0.75" onmouseout="this.style.opacity=1">
-        <rect rx="12" ry="12" width="110" height="60" fill="#1c1917" stroke="#06b6d4" stroke-width="1.5"/>
-        <text x="55" y="20" text-anchor="middle" font-size="17" fill="#06b6d4">&#x1F3CA;</text>
-        <text x="55" y="34" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">POOL</text>
-        <text id="lbl-pool" x="55" y="52" text-anchor="middle" font-size="12" fill="#06b6d4" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
+        <rect rx="12" ry="12" width="130" height="64" fill="#1c1917" stroke="#06b6d4" stroke-width="1.5"/>
+        <text x="65" y="20" text-anchor="middle" font-size="17" fill="#06b6d4">&#x1F3CA;</text>
+        <text x="65" y="35" text-anchor="middle" font-size="9" fill="#a3a3a3" font-family="sans-serif" letter-spacing="1">POOL</text>
+        <text id="lbl-pool" x="65" y="53" text-anchor="middle" font-size="12" fill="#06b6d4" font-weight="bold" font-family="sans-serif">&#x2014; W</text>
       </g>
 
       <!-- Bridge mode label (shown when Tesla offline) -->
       <g id="pf-bridge-label" visibility="hidden">
-        <rect x="248" y="89" rx="6" ry="6" width="165" height="17" fill="#1c1917" stroke="#f97316" stroke-width="0.8" stroke-dasharray="3 2" opacity="0.85"/>
-        <text x="330" y="101" text-anchor="middle" font-size="8.5" fill="#f97316" font-family="sans-serif">&#x26A1; SPAN-bridged &#xB7; no Tesla GW</text>
+        <rect x="250" y="144" rx="6" ry="6" width="200" height="17" fill="#1c1917" stroke="#f97316" stroke-width="0.8" stroke-dasharray="3 2" opacity="0.85"/>
+        <text x="350" y="156" text-anchor="middle" font-size="8.5" fill="#f97316" font-family="sans-serif">&#x26A1; SPAN-bridged &#xB7; no Tesla GW</text>
       </g>
 
       <!-- Normal source label (shown when Tesla online) -->
       <g id="pf-source-label" visibility="visible">
-        <text x="350" y="312" text-anchor="middle" font-size="9" fill="#4b5563" font-family="sans-serif">Jarvis bridges SPAN + Tesla Gateway data</text>
+        <text x="350" y="432" text-anchor="middle" font-size="9" fill="#4b5563" font-family="sans-serif">Jarvis bridges SPAN + Tesla Gateway data</text>
       </g>
 
     </svg>

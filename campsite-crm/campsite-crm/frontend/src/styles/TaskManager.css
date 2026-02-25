@@ -1,0 +1,23 @@
+.task-form {
+  margin-top: 14px;
+  background: linear-gradient(160deg, #f8fbff 0%, #f2f8f5 100%);
+  border: 1px solid #d8e5f2;
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.task-form-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 10px;
+}
+
+.task-form textarea {
+  min-height: 90px;
+}
+
+@media (max-width: 960px) {
+  .task-form-grid {
+    grid-template-columns: 1fr;
+  }
+}

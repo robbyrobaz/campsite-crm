@@ -1,0 +1,12 @@
+.section-subtext {
+  color: var(--text-light);
+  margin-bottom: 14px;
+}
+
+.table-responsive {
+  overflow-x: auto;
+}
+
+.empty-text {
+  color: var(--text-light);
+}

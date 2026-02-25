@@ -1,0 +1,43 @@
+.contract-card .section-header p {
+  color: var(--text-light);
+  margin-top: 4px;
+}
+
+.contract-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.contract-row {
+  border: 1px solid #e5eef5;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.contract-name {
+  font-weight: 700;
+}
+
+.contract-group,
+.contract-dates {
+  color: var(--text-light);
+  font-size: 0.9em;
+}
+
+.contract-stats {
+  text-align: right;
+}
+
+.contract-status {
+  display: inline-block;
+  margin-top: 6px;
+  border-radius: 999px;
+  padding: 3px 10px;
+  font-size: 0.8em;
+  text-transform: capitalize;
+  background: rgba(6, 214, 160, 0.18);
+}

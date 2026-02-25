@@ -2608,3 +2608,22 @@ CLEAN master-dashboard (nothing to commit)
 [main 67a3b6a] auto: snapshot 2026-02-25T22:00:01Z
  2 files changed, 3 insertions(+), 3 deletions(-)
 COMMITTED blofin-stack
+[main e4c79da] auto: snapshot 2026-02-25T22:00:01Z
+ 4 files changed, 47 insertions(+), 7 deletions(-)
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+[sports-betting/phase2-real-apps 9d591f8] auto: snapshot 2026-02-25T22:00:01Z
+ 3 files changed, 228 insertions(+)
+ create mode 100644 projects/sports-betting/analysis/arb_opportunities_20260225_140002.json
+ create mode 100644 projects/sports-betting/analysis/daily_report_20260225_140002.json
+ create mode 100644 projects/sports-betting/analysis/sportsbook_data_20260225_140002.json
+COMMITTED ai-workshop
+[main 63377fcf] auto: snapshot 2026-02-25T22:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 4 committed, 5 skipped
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

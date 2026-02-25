@@ -1201,6 +1201,13 @@ def api_state():
         return jsonify(_state)
 
 
+@app.route("/api/energy-state")
+def api_energy_state():
+    """Snapshot endpoint for tablet dashboard modes."""
+    with _state_lock:
+        return jsonify(_state)
+
+
 @app.route("/api/stream")
 def api_stream():
     import queue
@@ -1756,6 +1763,76 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .dur-btn { background:var(--surface2); border:1px solid var(--border); color:var(--text); cursor:pointer; padding:8px 16px; border-radius:8px; font-family:inherit; font-size:12px; transition:all .15s; }
   .dur-btn:hover, .dur-btn.selected { background:rgba(16,185,129,.2); border-color:var(--online); color:var(--online); }
   .modal-actions { display:flex; gap:8px; justify-content:flex-end; }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     TABLET DASHBOARD MODES — Glassmorphism Design System
+     ══════════════════════════════════════════════════════════════════════ */
+  .tablet-view { height: calc(100vh - 52px); overflow: hidden; background: #0a0e1a; padding: 0; display: flex; flex-direction: column; }
+  .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.10); box-shadow: 0 0 20px rgba(0,200,255,0.05); border-radius: 16px; padding: 16px; }
+  .glass-card.glow-solar { border-color: rgba(255,215,0,0.35); box-shadow: 0 0 24px rgba(255,215,0,0.12); }
+  .glass-card.glow-grid  { border-color: rgba(255,140,0,0.35); box-shadow: 0 0 24px rgba(255,140,0,0.12); }
+  .glass-card.glow-truck { border-color: rgba(0,255,255,0.35); box-shadow: 0 0 24px rgba(0,255,255,0.12); }
+  .glass-card.glow-load  { border-color: rgba(155,89,182,0.35); box-shadow: 0 0 24px rgba(155,89,182,0.12); }
+  @keyframes island-pulse { 0%,100% { box-shadow: 0 0 20px rgba(245,158,11,.35); } 50% { box-shadow: 0 0 48px rgba(245,158,11,.7); } }
+  .island-glow { animation: island-pulse 2s ease-in-out infinite; border-color: rgba(245,158,11,0.8) !important; }
+  .hero-num { font-size: 2.8rem; font-weight: 800; line-height: 1; font-variant-numeric: tabular-nums; font-family: system-ui, -apple-system, sans-serif; }
+  .label-sm { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.38); margin-bottom: 3px; display: block; }
+  .value-md { font-size: 1.3rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .tab-status-bar { display: flex; align-items: center; gap: 12px; padding: 6px 16px; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 11px; color: rgba(255,255,255,0.55); flex-shrink: 0; }
+  .tab-status-bar .sb-time { font-size: 1rem; font-weight: 700; color: rgba(255,255,255,0.9); font-variant-numeric: tabular-nums; }
+  .sb-rate { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+  .sb-rate.off-peak { background: rgba(16,185,129,.18); color: #10b981; }
+  .sb-rate.shoulder  { background: rgba(245,158,11,.18); color: #f59e0b; }
+  .sb-rate.peak      { background: rgba(239,68,68,.2);   color: #ef4444; }
+  .sb-grid { padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; }
+  .sb-grid.up      { background: rgba(16,185,129,.15);  color: #10b981; }
+  .sb-grid.islanded{ background: rgba(245,158,11,.2);   color: #f59e0b; }
+  .island-badge { display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; border-radius: 10px; background: rgba(239,68,68,.22); color: #ef4444; font-size: 10px; font-weight: 700; animation: island-pulse 2s infinite; }
+  /* Mode 1 — Microgrid */
+  .mc-layout { display: grid; grid-template-columns: 200px 1fr 200px; gap: 10px; flex: 1; padding: 10px; min-height: 0; }
+  .mc-left, .mc-right { display: flex; flex-direction: column; gap: 8px; justify-content: center; overflow: hidden; }
+  .mc-center { position: relative; min-height: 0; }
+  .mc-center canvas { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 16px; display: block; }
+  .mc-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; }
+  .mc-hero { pointer-events: auto; text-align: center; min-width: 200px; max-width: 260px; }
+  /* Mode 2 — Trading */
+  .td-layout { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+  .td-top { display: grid; grid-template-columns: 190px 1fr 230px; gap: 10px; padding: 10px 12px 6px; flex: 1; min-height: 0; overflow: hidden; }
+  .td-bottom { padding: 0 12px 10px; flex-shrink: 0; }
+  .td-col { display: flex; flex-direction: column; gap: 8px; overflow: hidden; min-height: 0; }
+  .sparkline { width: 100%; height: 34px; display: block; }
+  .circuit-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .circuit-bar-label { font-size: 10px; color: rgba(255,255,255,.6); width: 96px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+  .circuit-bar-track { flex: 1; height: 6px; background: rgba(255,255,255,.08); border-radius: 3px; overflow: hidden; }
+  .circuit-bar-fill  { height: 100%; border-radius: 3px; background: linear-gradient(90deg,#7c3aed,#9B59B6); transition: width .5s; }
+  .circuit-bar-val   { font-size: 10px; color: rgba(255,255,255,.4); width: 38px; text-align: right; flex-shrink: 0; }
+  .shed-btn { font-size: 9px; padding: 1px 5px; border-radius: 4px; cursor: pointer; border: 1px solid rgba(239,68,68,.5); background: rgba(239,68,68,.1); color: #ef4444; font-family: inherit; flex-shrink: 0; transition: background .15s; }
+  .shed-btn:hover { background: rgba(239,68,68,.25); }
+  /* Mode 3 — Backup */
+  .bi-layout { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 10px; flex: 1; padding: 10px 12px; min-height: 0; }
+  .bi-primary   { grid-column: 1; grid-row: 1 / 3; display: flex; flex-direction: column; gap: 8px; min-height: 0; overflow: hidden; }
+  .bi-secondary { grid-column: 2; grid-row: 1; min-height: 0; overflow: hidden; }
+  .bi-log       { grid-column: 2; grid-row: 2; min-height: 0; overflow: hidden; }
+  .scenario-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 10px; background: rgba(255,255,255,.04); border-radius: 8px; margin-bottom: 5px; }
+  .scenario-label { font-size: 11px; color: rgba(255,255,255,.6); }
+  .scenario-hours { font-size: 1.5rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .priority-item { display: flex; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 8px; margin-bottom: 5px; }
+  .priority-item.shed-first  { background: rgba(239,68,68,.1);  border: 1px solid rgba(239,68,68,.22); }
+  .priority-item.shed-second { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.22); }
+  .priority-item.shed-third  { background: rgba(99,102,241,.1); border: 1px solid rgba(99,102,241,.22); }
+  .priority-item.shed-nc     { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); }
+  .priority-num  { font-size: 0.85rem; font-weight: 700; width: 18px; flex-shrink: 0; }
+  .priority-name { font-size: 11px; flex: 1; }
+  .priority-kw   { font-size: 10px; color: rgba(255,255,255,.4); }
+  .event-log { font-size: 10px; line-height: 1.85; color: rgba(255,255,255,.55); overflow-y: auto; height: calc(100% - 24px); }
+  .event-log .ev-time { color: rgba(255,255,255,.28); margin-right: 6px; }
+  .event-log .ev-type { color: #f59e0b; font-weight: 600; }
+  .event-log .ev-solar { color: #FFD700; }
+  @media (max-width: 900px) {
+    .mc-layout { grid-template-columns: 1fr; grid-template-rows: auto 260px auto; }
+    .td-top    { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+    .bi-layout { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
+  }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 </head>
@@ -1775,6 +1852,10 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <button onclick="showView('home-control')">Home Control</button>
     <button onclick="showView('sprinklers')">Sprinklers</button>
     <button onclick="showView('settings')">Settings</button>
+    <span style="width:1px;height:24px;background:rgba(255,255,255,0.12);margin:0 4px;flex-shrink:0"></span>
+    <button onclick="showView('microgrid')" style="color:#FFD700">⚡ Microgrid</button>
+    <button onclick="showView('trading')" style="color:#00d4ff">📊 Trading</button>
+    <button onclick="showView('backup')" style="color:#00FFFF">🔋 Backup</button>
   </nav>
   <div class="status-bar">
     <div id="span-dot" class="dot offline" title="SPAN Panel"></div>
@@ -2916,11 +2997,243 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 </div><!-- /settings -->
 
+<!-- ═══════════════════════════════════════════════════════════════════════
+     TABLET MODE 1 — MICROGRID COMMAND CORE
+     ═══════════════════════════════════════════════════════════════════════ -->
+<div id="view-microgrid" class="view tablet-view">
+  <div class="tab-status-bar">
+    <span class="sb-time" id="mc-time">--:--</span>
+    <span class="sb-rate off-peak" id="mc-rate">Off-Peak</span>
+    <span id="mc-weather" style="opacity:0.7">☀️ —</span>
+    <span style="flex:1"></span>
+    <span class="sb-grid up" id="mc-grid-status">Grid ✓</span>
+    <span id="mc-island-badge" class="island-badge" style="display:none">⚡ ISLANDED</span>
+  </div>
+  <div class="mc-layout">
+    <!-- LEFT — Sources -->
+    <div class="mc-left">
+      <div class="glass-card" id="mc-enphase-card">
+        <span class="label-sm">Enphase Solar</span>
+        <div class="hero-num" id="mc-enphase-kw" style="color:#FFD700">—</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
+        <span class="label-sm" style="margin-top:10px">SolarEdge</span>
+        <div class="value-md" id="mc-solaredge-kw" style="color:#FFC200">— <span style="font-size:0.8rem;opacity:0.5">kW</span></div>
+      </div>
+      <div class="glass-card" id="mc-grid-card">
+        <span class="label-sm">SRP Grid</span>
+        <div class="hero-num" id="mc-grid-kw" style="color:#FF8C00">—</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
+        <div id="mc-grid-direction" style="font-size:10px;opacity:0.5;margin-top:4px">—</div>
+      </div>
+      <div class="glass-card" id="mc-truck-source-card">
+        <span class="label-sm">Cybertruck</span>
+        <div class="hero-num" id="mc-truck-kw" style="color:#00FFFF">—</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
+        <div id="mc-truck-mode" style="font-size:10px;opacity:0.5;margin-top:4px">Idle</div>
+      </div>
+    </div>
+    <!-- CENTER — Topology canvas + hero overlay -->
+    <div class="mc-center">
+      <canvas id="mc-canvas"></canvas>
+      <div class="mc-overlay">
+        <div class="glass-card mc-hero">
+          <span class="label-sm" style="text-align:center;display:block;margin-bottom:6px">NET FLOW</span>
+          <div style="font-size:2.6rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums" id="mc-net-kw">—</div>
+          <div style="font-size:0.85rem;opacity:0.45;margin-top:2px" id="mc-net-direction">kW</div>
+          <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;text-align:left">
+            <div><span class="label-sm">Home Load</span><div class="value-md" id="mc-home-kw">—</div></div>
+            <div><span class="label-sm">Cost/hr</span><div class="value-md" id="mc-cost-hr" style="color:#10b981">—</div></div>
+            <div><span class="label-sm">Solar Cover</span><div class="value-md" id="mc-solar-pct">—</div></div>
+            <div><span class="label-sm">Site SoE</span><div class="value-md" id="mc-soc" style="color:#00FFFF">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- RIGHT — Loads -->
+    <div class="mc-right">
+      <div class="glass-card" id="mc-home-card">
+        <span class="label-sm">Home Panel</span>
+        <div class="hero-num" id="mc-home-load-kw" style="color:#9B59B6">—</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
+      </div>
+      <div class="glass-card" id="mc-pool-card">
+        <span class="label-sm">Pool Sub-Panel</span>
+        <div class="hero-num" id="mc-pool-kw" style="color:#06b6d4">—</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
+        <div id="mc-pool-status" style="font-size:10px;opacity:0.5;margin-top:4px">—</div>
+      </div>
+      <div class="glass-card" id="mc-ev-card">
+        <span class="label-sm">EV Charging</span>
+        <div class="hero-num" id="mc-ev-kw" style="color:#22d3ee">—</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
+        <div id="mc-ev-status" style="font-size:10px;opacity:0.5;margin-top:4px">—</div>
+      </div>
+    </div>
+  </div>
+</div><!-- /microgrid -->
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     TABLET MODE 2 — ENERGY TRADING DESK
+     ═══════════════════════════════════════════════════════════════════════ -->
+<div id="view-trading" class="view tablet-view">
+  <div class="tab-status-bar">
+    <span style="font-size:12px;font-weight:700">📊 Energy Trading Desk</span>
+    <span style="flex:1"></span>
+    <span style="font-size:10px;opacity:0.45" id="td-last-update">—</span>
+  </div>
+  <div class="td-layout">
+    <div class="td-top">
+      <!-- LEFT — Solar Production -->
+      <div class="td-col">
+        <div class="glass-card" style="flex-shrink:0">
+          <span class="label-sm">Enphase Production</span>
+          <div class="value-md" id="td-enphase-kw" style="color:#FFD700;font-size:1.8rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          <canvas class="sparkline" id="td-enphase-spark"></canvas>
+        </div>
+        <div class="glass-card" style="flex-shrink:0">
+          <span class="label-sm">SolarEdge Production</span>
+          <div class="value-md" id="td-solaredge-kw" style="color:#FFC200;font-size:1.8rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          <canvas class="sparkline" id="td-solaredge-spark"></canvas>
+        </div>
+        <div class="glass-card" style="flex-shrink:0">
+          <span class="label-sm">Combined Solar</span>
+          <div class="value-md" id="td-total-solar-kw" style="font-size:2rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          <div style="font-size:10px;opacity:0.45;margin-top:4px" id="td-solar-capacity-pct">— % of 11.8 kW</div>
+        </div>
+      </div>
+      <!-- CENTER — Sankey Distribution -->
+      <div class="td-col" style="overflow:hidden">
+        <div class="glass-card" style="flex:1;padding:12px;min-height:0;display:flex;flex-direction:column">
+          <span class="label-sm" style="margin-bottom:6px">Live Energy Distribution</span>
+          <canvas id="td-sankey-canvas" style="flex:1;width:100%;display:block;min-height:0"></canvas>
+        </div>
+      </div>
+      <!-- RIGHT — Load Intelligence -->
+      <div class="td-col" style="overflow:hidden">
+        <div class="glass-card" style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+          <span class="label-sm" style="margin-bottom:8px;flex-shrink:0">Top Circuit Loads</span>
+          <div id="td-circuit-bars" style="overflow-y:auto;flex:1;min-height:0"></div>
+        </div>
+      </div>
+    </div><!-- /td-top -->
+    <!-- BOTTOM — Demand strip -->
+    <div class="td-bottom">
+      <div class="glass-card" style="padding:10px 14px">
+        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+          <div>
+            <span class="label-sm">15-min Demand</span>
+            <div class="value-md" id="td-demand-15m" style="font-size:1.6rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          </div>
+          <div>
+            <span class="label-sm">Session Peak</span>
+            <div class="value-md" id="td-peak-proj" style="font-size:1.6rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          </div>
+          <div style="flex:1;min-width:120px">
+            <span class="label-sm" style="margin-bottom:3px">Demand Exposure</span>
+            <div style="height:7px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden">
+              <div id="td-demand-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#10b981,#f59e0b,#ef4444);border-radius:3px;transition:width 0.5s"></div>
+            </div>
+          </div>
+          <canvas id="td-demand-chart" style="width:260px;height:42px;flex-shrink:0"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /trading -->
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     TABLET MODE 3 — BACKUP INTELLIGENCE
+     ═══════════════════════════════════════════════════════════════════════ -->
+<div id="view-backup" class="view tablet-view">
+  <div class="tab-status-bar" id="bi-statusbar">
+    <span style="font-size:12px;font-weight:700">🔋 Backup Intelligence</span>
+    <span id="bi-island-badge" class="island-badge" style="display:none">⚡ ISLANDED</span>
+    <span style="flex:1"></span>
+    <span style="font-size:10px;opacity:0.45" id="bi-last-update">—</span>
+  </div>
+  <div class="bi-layout">
+    <!-- LEFT — Primary backup card -->
+    <div class="bi-primary">
+      <div class="glass-card" id="bi-main-card">
+        <span class="label-sm" style="margin-bottom:8px">Backup Status — Cybertruck Powershare</span>
+        <div style="display:flex;align-items:center;gap:14px">
+          <canvas id="bi-soc-ring" width="110" height="110" style="flex-shrink:0"></canvas>
+          <div>
+            <div style="font-size:3rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums" id="bi-soc-pct"><span style="font-size:1rem;opacity:0.35">No data</span></div>
+            <div style="font-size:11px;opacity:0.4;margin-top:3px">Cybertruck SoC</div>
+            <div style="margin-top:8px"><span class="badge offline" id="bi-readiness-badge">No Data</span></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+          <div><span class="label-sm">Discharge Rate</span><div class="value-md" id="bi-discharge-kw">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div></div>
+          <div><span class="label-sm">Est. Runtime</span><div class="value-md" id="bi-runtime-hr" style="color:#10b981">— <span style="font-size:0.8rem;opacity:0.4">hrs</span></div></div>
+        </div>
+      </div>
+      <!-- Runtime Scenarios -->
+      <div class="glass-card" style="flex-shrink:0">
+        <span class="label-sm" style="margin-bottom:8px">Runtime Scenarios (~95 kWh usable)</span>
+        <div class="scenario-row">
+          <div><div class="scenario-label">Critical Loads Only</div><div style="font-size:9px;opacity:0.4">~1.5 kW — bedroom, office, hallway</div></div>
+          <div class="scenario-hours" style="color:#10b981" id="bi-rt-critical">— <span style="font-size:0.8rem;opacity:0.4">h</span></div>
+        </div>
+        <div class="scenario-row">
+          <div><div class="scenario-label">Current Load</div><div style="font-size:9px;opacity:0.4" id="bi-current-load-label">—</div></div>
+          <div class="scenario-hours" style="color:#f59e0b" id="bi-rt-current">— <span style="font-size:0.8rem;opacity:0.4">h</span></div>
+        </div>
+        <div class="scenario-row" style="margin-bottom:0">
+          <div><div class="scenario-label">Peak (session max)</div><div style="font-size:9px;opacity:0.4" id="bi-peak-load-label">—</div></div>
+          <div class="scenario-hours" style="color:#ef4444" id="bi-rt-peak">— <span style="font-size:0.8rem;opacity:0.4">h</span></div>
+        </div>
+      </div>
+    </div><!-- /bi-primary -->
+
+    <!-- RIGHT TOP — Load Shedding -->
+    <div class="bi-secondary">
+      <div class="glass-card" style="height:100%;overflow:hidden">
+        <span class="label-sm" style="margin-bottom:8px">Load Shedding Priority</span>
+        <div class="priority-item shed-first">
+          <div class="priority-num" style="color:#ef4444">1</div>
+          <div class="priority-name">Pool Sub-Panel</div>
+          <div class="priority-kw" id="bi-pool-kw">—</div>
+          <button class="shed-btn" onclick="shedCircuit('pool')">Shed</button>
+        </div>
+        <div class="priority-item shed-second">
+          <div class="priority-num" style="color:#f59e0b">2</div>
+          <div class="priority-name">EV Charging (Wall Connector)</div>
+          <div class="priority-kw" id="bi-ev-kw">—</div>
+          <button class="shed-btn" onclick="shedCircuit('ev')">Shed</button>
+        </div>
+        <div class="priority-item shed-third">
+          <div class="priority-num" style="color:#6366f1">3</div>
+          <div class="priority-name">AC Condenser 2</div>
+          <div class="priority-kw" id="bi-ac2-kw">—</div>
+          <button class="shed-btn" onclick="shedCircuit('ac2')">Shed</button>
+        </div>
+        <div class="priority-item shed-nc">
+          <div class="priority-num" style="color:rgba(255,255,255,0.3)">4</div>
+          <div class="priority-name" style="opacity:0.45">Non-critical circuits</div>
+          <div class="priority-kw">—</div>
+        </div>
+      </div>
+    </div><!-- /bi-secondary -->
+
+    <!-- RIGHT BOTTOM — Island Event Log -->
+    <div class="bi-log">
+      <div class="glass-card" style="height:100%;overflow:hidden">
+        <span class="label-sm" style="margin-bottom:6px">Island Event Log</span>
+        <div class="event-log" id="bi-event-log">
+          <div><span class="ev-time">—</span>No events recorded</div>
+        </div>
+      </div>
+    </div><!-- /bi-log -->
+  </div>
+</div><!-- /backup -->
+
 </main>
 <div id="toast"></div>
 
 <script>
-const views = ['cockpit','solar','span','pool','devices','tesla-energy','cybertruck','cameras','home-control','sprinklers','settings'];
+const views = ['cockpit','solar','span','pool','devices','tesla-energy','cybertruck','cameras','home-control','sprinklers','settings','microgrid','trading','backup'];
 function showView(v) {
   views.forEach(id => {
     document.getElementById('view-'+id).classList.toggle('active', id===v);
@@ -3229,6 +3542,7 @@ function saveTeslaPassword() {
 }
 
 function renderState(s) {
+  window._lastState = s;
   const ts = s.ts ? new Date(s.ts*1000).toLocaleTimeString() : '—';
   document.getElementById('ts').textContent = ts;
 
@@ -3527,6 +3841,11 @@ function renderState(s) {
   const ringBadge = document.getElementById('ring-cfg-badge');
   if (ringBadge) { const ringCfg = (s.cameras||[]).some(c=>c.type==='ring'); ringBadge.textContent = ringCfg ? 'connected' : 'unconfigured'; ringBadge.className = 'badge ' + (ringCfg ? 'online' : 'offline'); }
   // bhyve badge in settings is handled by renderBhyve() above
+
+  // ── Tablet dashboard modes ──
+  try { updateMicrogrid(s); } catch(e) { console.warn('Microgrid update error:', e); }
+  try { updateTrading(s);   } catch(e) { console.warn('Trading update error:',   e); }
+  try { updateBackup(s);    } catch(e) { console.warn('Backup update error:',    e); }
 }
 
 // ╔══════════════════════════════════════════════════════════════════════╗
@@ -4311,6 +4630,475 @@ function saveTeslaPasswordFromSettings() {
 
 // ─────────────────────────────────────────────────────────────────────────────
 
+// ═══════════════════════════════════════════════════════════════════════════
+// TABLET DASHBOARD MODES — Microgrid, Trading, Backup
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ── SRP Rate Period ──────────────────────────────────────────────────────────
+function getSRPRatePeriod() {
+  const now = new Date(); const h = now.getHours();
+  const dow = now.getDay(); const month = now.getMonth();
+  const isWeekday = dow >= 1 && dow <= 5;
+  const isSummer  = month >= 5 && month <= 8; // Jun-Sep
+  if (isSummer && isWeekday) {
+    if (h >= 15 && h < 20) return { label:'On-Peak',   cls:'peak',     rate:0.23 };
+    if ((h >= 9 && h < 15) || (h >= 20 && h < 23)) return { label:'Shoulder', cls:'shoulder',  rate:0.18 };
+    return { label:'Off-Peak', cls:'off-peak', rate:0.10 };
+  }
+  if (!isSummer && isWeekday) {
+    if (h >= 5 && h < 21) return { label:'On-Peak', cls:'shoulder', rate:0.18 };
+    return { label:'Off-Peak', cls:'off-peak', rate:0.10 };
+  }
+  return { label:'Off-Peak', cls:'off-peak', rate:0.10 };
+}
+
+// ── MODE 1: Particle Animation ────────────────────────────────────────────────
+let mcParticles = [];
+let mcFlowPaths = [];
+let mcAnimFrame = null;
+
+function mcNodePositions(W, H) {
+  const cx = W/2, cy = H/2;
+  return {
+    enphase:   {x: 28,   y: cy - 120},
+    solaredge: {x: 28,   y: cy},
+    srpGrid:   {x: 28,   y: cy + 120},
+    truck:     {x: cx,   y: H - 30},
+    core:      {x: cx,   y: cy},
+    home:      {x: W-28, y: cy - 90},
+    pool:      {x: W-28, y: cy + 40},
+    ev:        {x: W-28, y: cy + 140},
+  };
+}
+
+function mcBezierPt(p0, p1, p2, t) {
+  const m = 1-t;
+  return { x: m*m*p0.x + 2*m*t*p1.x + t*t*p2.x, y: m*m*p0.y + 2*m*t*p1.y + t*t*p2.y };
+}
+
+function mcCtrl(from, to) {
+  return { x:(from.x*0.3 + to.x*0.3 + (from.x+to.x)/2*0.4), y:(from.y*0.3 + to.y*0.3 + (from.y+to.y)/2*0.4) };
+}
+
+function mcUpdateFlowPaths(s) {
+  const sum = s.summary || {}, wc = s.wall_connector || {}, span = s.span || {};
+  const circuits = span.circuits || [];
+  const enphW  = (sum.enphase_solar_w || 0)/1000;
+  const seW    = (sum.solaredge_solar_w || 0)/1000;
+  const gridW  = (sum.srp_grid_w || 0)/1000;   // signed: + import
+  const homeW  = (sum.load_w || 0)/1000;
+  const ctRaw  = (wc.charging_w || 0)/1000;
+  const ctV2H  = sum.ct_v2h || false;
+  const poolCirc = circuits.find(c => (c.name||'').toLowerCase().includes('pool'));
+  const poolW  = poolCirc ? Math.abs(poolCirc.power_w||0)/1000 : 0;
+  const evW    = ctV2H ? 0 : Math.abs(ctRaw);
+  const truckW = ctV2H ? Math.abs(ctRaw) : 0;
+  mcFlowPaths = [
+    {from:'enphase',   to:'core',    kw:enphW,              color:'#FFD700', active:enphW>0.05},
+    {from:'solaredge', to:'core',    kw:seW,                color:'#FFC200', active:seW>0.05},
+    {from:'srpGrid',   to:'core',    kw:gridW>0?gridW:0,    color:'#FF8C00', active:gridW>0.05},
+    {from:'core',      to:'srpGrid', kw:gridW<0?-gridW:0,   color:'#FF6600', active:gridW<-0.05},
+    {from:'truck',     to:'core',    kw:truckW,             color:'#00FFFF', active:truckW>0.05},
+    {from:'core',      to:'home',    kw:homeW,              color:'#9B59B6', active:homeW>0.05},
+    {from:'core',      to:'pool',    kw:poolW,              color:'#06b6d4', active:poolW>0.05},
+    {from:'core',      to:'ev',      kw:evW,                color:'#22d3ee', active:evW>0.05},
+  ];
+}
+
+function mcDrawFrame() {
+  const canvas = document.getElementById('mc-canvas');
+  const viewEl = document.getElementById('view-microgrid');
+  if (!canvas || !viewEl || !viewEl.classList.contains('active')) {
+    mcAnimFrame = requestAnimationFrame(mcDrawFrame); return;
+  }
+  const W = canvas.parentElement.clientWidth;
+  const H = canvas.parentElement.clientHeight;
+  if (!W || !H) { mcAnimFrame = requestAnimationFrame(mcDrawFrame); return; }
+  if (canvas.width !== W || canvas.height !== H) { canvas.width = W; canvas.height = H; }
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  const nodes = mcNodePositions(W, H);
+
+  // Draw node halos
+  Object.entries(nodes).forEach(([k, pos]) => {
+    const colors = {enphase:'#FFD700',solaredge:'#FFC200',srpGrid:'#FF8C00',truck:'#00FFFF',
+                    core:'rgba(0,200,255,0.4)',home:'#9B59B6',pool:'#06b6d4',ev:'#22d3ee'};
+    const r = k==='core' ? 50 : 20;
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2);
+    ctx.strokeStyle = colors[k] || '#fff'; ctx.lineWidth = k==='core' ? 2 : 1.5;
+    ctx.globalAlpha = k==='core' ? 0.35 : 0.25; ctx.stroke(); ctx.globalAlpha = 1;
+  });
+
+  // Draw flow paths + spawn particles
+  mcFlowPaths.forEach(path => {
+    const f = nodes[path.from], t2 = nodes[path.to];
+    if (!f || !t2) return;
+    const cp = mcCtrl(f, t2);
+    ctx.beginPath(); ctx.moveTo(f.x, f.y); ctx.quadraticCurveTo(cp.x, cp.y, t2.x, t2.y);
+    ctx.strokeStyle = path.color; ctx.lineWidth = Math.max(1, path.kw * 2.5);
+    ctx.globalAlpha = path.active ? 0.2 : 0.06; ctx.setLineDash([]); ctx.stroke(); ctx.globalAlpha = 1;
+    // Spawn
+    if (path.active && mcParticles.length < 180 && Math.random() < Math.min(0.6, path.kw * 0.18)) {
+      mcParticles.push({path, t:Math.random()*0.3, speed: 0.005 + path.kw * 0.002});
+    }
+  });
+
+  // Update + draw particles
+  const live = [];
+  mcParticles.forEach(p => {
+    p.t += p.speed;
+    if (p.t > 1) return;
+    const f = nodes[p.path.from], t2 = nodes[p.path.to];
+    if (!f || !t2) return;
+    const cp = mcCtrl(f, t2);
+    const pos = mcBezierPt(f, cp, t2, p.t);
+    const grad = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 6);
+    grad.addColorStop(0, p.path.color); grad.addColorStop(1, 'transparent');
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, 5, 0, Math.PI*2);
+    ctx.fillStyle = grad; ctx.globalAlpha = 0.55; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, 2, 0, Math.PI*2);
+    ctx.fillStyle = p.path.color; ctx.fill();
+    live.push(p);
+  });
+  mcParticles = live;
+  mcAnimFrame = requestAnimationFrame(mcDrawFrame);
+}
+
+function updateMicrogrid(s) {
+  const sum = s.summary || {}, wc = s.wall_connector || {}, tesla = s.tesla || {}, span = s.span || {};
+  const circuits = span.circuits || [];
+  const enphKW  = (sum.enphase_solar_w   || 0) / 1000;
+  const seKW    = (sum.solaredge_solar_w  || 0) / 1000;
+  const gridW   = sum.srp_grid_w || 0;
+  const homeW   = sum.load_w     || 0;
+  const ctRaw   = wc.charging_w  || 0;
+  const ctV2H   = sum.ct_v2h     || false;
+  const totalSW = (sum.solar_w   || 0);
+  const poolCirc = circuits.find(c => (c.name||'').toLowerCase().includes('pool'));
+  const poolKW  = poolCirc ? Math.abs(poolCirc.power_w||0)/1000 : 0;
+  const evKW    = Math.abs(ctRaw)/1000;
+  const loadW   = homeW + Math.abs(ctRaw);
+  const netW    = totalSW - loadW;
+  const rp      = getSRPRatePeriod();
+  const importW = Math.max(0, gridW);
+  const costHr  = (importW/1000 * rp.rate).toFixed(2);
+  const solarPct= loadW > 0 ? Math.min(100, Math.round(totalSW/loadW*100)) : 0;
+  let truckMode = 'Idle';
+  if (ctV2H)             truckMode = 'Discharging (V2H)';
+  else if (evKW > 0.1)   truckMode = 'Charging';
+  else if (!wc.vehicle_connected) truckMode = 'Away';
+  const soe = tesla.status === 'online' ? tesla.soe : null;
+  const islanded = tesla.islanded || false;
+
+  const setText = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
+  const setHTML = (id, v) => { const el = document.getElementById(id); if(el) el.innerHTML  = v; };
+
+  setText('mc-enphase-kw',       enphKW.toFixed(2));
+  setHTML('mc-solaredge-kw',     seKW.toFixed(2) + ' <span style="font-size:0.8rem;opacity:0.5">kW</span>');
+  setText('mc-grid-kw',          (Math.abs(gridW)/1000).toFixed(2));
+  setText('mc-grid-direction',   gridW > 50 ? '▼ importing' : gridW < -50 ? '▲ exporting' : 'balanced');
+  setText('mc-truck-kw',         evKW.toFixed(2));
+  setText('mc-truck-mode',       truckMode);
+  const netEl = document.getElementById('mc-net-kw');
+  if(netEl){ netEl.textContent = (Math.abs(netW)/1000).toFixed(2); netEl.style.color = netW>=0?'#10b981':'#ef4444'; }
+  setText('mc-net-direction',    (netW>=0?'▲ exporting':'▼ importing') + ' kW');
+  setText('mc-home-kw',          (homeW/1000).toFixed(2) + ' kW');
+  setText('mc-cost-hr',          '$' + costHr);
+  setText('mc-solar-pct',        solarPct + '%');
+  setText('mc-soc',              soe !== null ? Math.round(soe) + '%' : '—');
+  setText('mc-home-load-kw',     (homeW/1000).toFixed(2));
+  setText('mc-pool-kw',          poolKW.toFixed(2));
+  setText('mc-pool-status',      poolCirc ? poolCirc.relay : '—');
+  setText('mc-ev-kw',            evKW.toFixed(2));
+  setText('mc-ev-status',        truckMode);
+  setText('mc-weather',          '☀️ Solar: ' + (totalSW/1000).toFixed(1) + ' kW');
+
+  const rateEl = document.getElementById('mc-rate');
+  if(rateEl){ rateEl.textContent = rp.label; rateEl.className = 'sb-rate ' + rp.cls; }
+  const now = new Date();
+  setText('mc-time', now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
+  const gsEl = document.getElementById('mc-grid-status'), ibEl = document.getElementById('mc-island-badge');
+  if(gsEl){ gsEl.textContent = islanded?'Islanded':'Grid ✓'; gsEl.className = 'sb-grid ' + (islanded?'islanded':'up'); }
+  if(ibEl) ibEl.style.display = islanded ? 'inline-flex' : 'none';
+
+  // Card glow
+  const setGlow = (id, cls) => { const el=document.getElementById(id); if(el) el.className='glass-card'+(cls?' '+cls:''); };
+  setGlow('mc-enphase-card',     enphKW > 0.1 ? 'glow-solar' : '');
+  setGlow('mc-grid-card',        importW > 100 ? 'glow-grid' : '');
+  setGlow('mc-truck-source-card',ctV2H ? 'glow-truck' : '');
+  setGlow('mc-home-card',        homeW > 500 ? 'glow-load' : '');
+
+  mcUpdateFlowPaths(s);
+}
+
+// ── MODE 2: Trading Desk ─────────────────────────────────────────────────────
+const SPARK_LEN = 72;
+const tdEnphHist   = new Array(SPARK_LEN).fill(0);
+const tdSEHist     = new Array(SPARK_LEN).fill(0);
+const tdDemandHist = new Array(SPARK_LEN).fill(0);
+let   tdPeak24h    = 0;
+
+function pushHist(arr, v) { arr.push(v); if(arr.length > SPARK_LEN) arr.shift(); }
+
+function drawSparkline(id, data, color) {
+  const canvas = document.getElementById(id); if(!canvas) return;
+  const W = canvas.parentElement ? canvas.parentElement.clientWidth : 200;
+  const H = 34; canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,W,H);
+  const max = Math.max(...data, 0.01);
+  ctx.beginPath();
+  data.forEach((v,i) => {
+    const x = (i/(data.length-1))*W, y = H - (v/max)*H*0.88;
+    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.stroke();
+  const last = ctx.getLineDash ? data[data.length-1] : 0;
+  ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath();
+  const g = ctx.createLinearGradient(0,0,0,H);
+  const rgb = color.replace('#','');
+  const r=parseInt(rgb.slice(0,2),16),gv=parseInt(rgb.slice(2,4),16),b=parseInt(rgb.slice(4,6),16);
+  g.addColorStop(0, `rgba(${r},${gv},${b},0.3)`); g.addColorStop(1, 'transparent');
+  ctx.fillStyle = g; ctx.fill();
+}
+
+function drawSankey(s) {
+  const canvas = document.getElementById('td-sankey-canvas'); if(!canvas) return;
+  const W = canvas.parentElement ? canvas.parentElement.clientWidth : 0;
+  const H = canvas.parentElement ? canvas.parentElement.clientHeight : 0;
+  if(!W || !H) return;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d'); ctx.clearRect(0,0,W,H);
+  const sum = s.summary || {}, wc = s.wall_connector || {};
+  const enW  = sum.enphase_solar_w   || 0;
+  const seW  = sum.solaredge_solar_w || 0;
+  const giW  = Math.max(0,  sum.srp_grid_w || 0);
+  const geW  = Math.max(0, -(sum.srp_grid_w || 0));
+  const homeW = sum.load_w || 0;
+  const ctW  = Math.abs(wc.charging_w || 0);
+  const poolW = sum.pool_w || 0;
+  const sources = [{label:'Enphase', w:enW, c:'#FFD700'},{label:'SolarEdge', w:seW, c:'#FFC200'},{label:'Grid Import', w:giW, c:'#FF8C00'}].filter(x=>x.w>10);
+  const sinks   = [{label:'Home',      w:homeW, c:'#9B59B6'},{label:'Pool',       w:poolW, c:'#06b6d4'},
+                   {label:'EV Charge', w:ctW,   c:'#22d3ee'},{label:'Grid Export',w:geW,   c:'#FF6600'}].filter(x=>x.w>10);
+  if(!sources.length && !sinks.length) {
+    ctx.fillStyle='rgba(255,255,255,0.15)'; ctx.font='11px system-ui'; ctx.textAlign='center';
+    ctx.fillText('No significant flows', W/2, H/2); return;
+  }
+  const pad=20, nw=14, total=Math.max(sources.reduce((a,x)=>a+x.w,0), 1);
+  const maxH = H - pad*2;
+  let sy=pad;
+  sources.forEach(src => {
+    src._h = Math.max(4,(src.w/total)*maxH); src._y = sy;
+    ctx.fillStyle=src.c; ctx.globalAlpha=0.75; ctx.fillRect(pad, sy, nw, src._h);
+    ctx.globalAlpha=1; ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.font='9px system-ui'; ctx.textAlign='left';
+    ctx.fillText(src.label, pad+nw+4, sy+src._h/2+3);
+    sy += src._h + 5;
+  });
+  let dy=pad;
+  sinks.forEach(snk => {
+    snk._h = Math.max(4,(snk.w/total)*maxH); snk._y = dy;
+    ctx.fillStyle=snk.c; ctx.globalAlpha=0.75; ctx.fillRect(W-pad-nw, dy, nw, snk._h);
+    ctx.globalAlpha=1; ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.textAlign='right';
+    ctx.fillText(snk.label, W-pad-nw-4, dy+snk._h/2+3);
+    dy += snk._h + 5;
+  });
+  const x0=pad+nw, x1=W-pad-nw, cpx=(x0+x1)/2;
+  sources.forEach(src => {
+    sinks.forEach(snk => {
+      const fw = Math.min(src._h, snk._h) * 0.6; if(fw < 2) return;
+      ctx.beginPath(); ctx.moveTo(x0, src._y+src._h/2);
+      ctx.bezierCurveTo(cpx, src._y+src._h/2, cpx, snk._y+snk._h/2, x1, snk._y+snk._h/2);
+      const g = ctx.createLinearGradient(x0,0,x1,0);
+      g.addColorStop(0, src.c); g.addColorStop(1, snk.c);
+      ctx.strokeStyle=g; ctx.lineWidth=Math.max(1.5, fw*0.35); ctx.globalAlpha=0.3; ctx.stroke(); ctx.globalAlpha=1;
+    });
+  });
+}
+
+function updateCircuitBars(s) {
+  const el = document.getElementById('td-circuit-bars'); if(!el) return;
+  const circuits = ((s.span||{}).circuits||[]);
+  const sorted = [...circuits].filter(c=>Math.abs(c.power_w||0)>10)
+    .sort((a,b)=>Math.abs(b.power_w)-Math.abs(a.power_w)).slice(0,12);
+  const maxW = Math.max(...sorted.map(c=>Math.abs(c.power_w||0)), 1);
+  el.innerHTML = sorted.map(c => {
+    const w=Math.abs(c.power_w||0), pct=(w/maxW*100).toFixed(0);
+    const canShed = c.relay && c.relay !== 'CLOSED_COMMITTED' && w > 100;
+    return `<div class="circuit-bar-row">
+      <div class="circuit-bar-label" title="${c.name||c.id}">${c.name||c.id}</div>
+      <div class="circuit-bar-track"><div class="circuit-bar-fill" style="width:${pct}%"></div></div>
+      <div class="circuit-bar-val">${(w/1000).toFixed(2)}k</div>
+      ${canShed ? `<button class="shed-btn" onclick="shedSpanCircuit('${c.id}')">Shed</button>` : '<div style="width:36px"></div>'}
+    </div>`;
+  }).join('');
+}
+
+function updateTrading(s) {
+  const sum = s.summary||{}, wc = s.wall_connector||{};
+  const enW = sum.enphase_solar_w||0, seW = sum.solaredge_solar_w||0;
+  const totalSW = enW + seW;
+  const loadW   = (sum.load_w||0) + Math.abs(wc.charging_w||0);
+  if(loadW > tdPeak24h) tdPeak24h = loadW;
+  pushHist(tdEnphHist,   enW/1000);
+  pushHist(tdSEHist,     seW/1000);
+  pushHist(tdDemandHist, loadW/1000);
+
+  const setText=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
+  setText('td-enphase-kw',       (enW/1000).toFixed(2)+'<span style="font-size:0.8rem;opacity:0.4"> kW</span>');
+  setText('td-solaredge-kw',     (seW/1000).toFixed(2)+'<span style="font-size:0.8rem;opacity:0.4"> kW</span>');
+  setText('td-total-solar-kw',   (totalSW/1000).toFixed(2)+'<span style="font-size:0.8rem;opacity:0.4"> kW</span>');
+  const capEl = document.getElementById('td-solar-capacity-pct');
+  if(capEl) capEl.textContent = (totalSW/11800*100).toFixed(0) + '% of 11.8 kW capacity';
+  setText('td-demand-15m',       (loadW/1000).toFixed(2)+'<span style="font-size:0.8rem;opacity:0.4"> kW</span>');
+  setText('td-peak-proj',        (tdPeak24h/1000).toFixed(2)+'<span style="font-size:0.8rem;opacity:0.4"> kW</span>');
+  const demBar = document.getElementById('td-demand-bar');
+  if(demBar) demBar.style.width = Math.min(100, loadW/15000*100).toFixed(0) + '%';
+  const lu = document.getElementById('td-last-update');
+  if(lu) lu.textContent = new Date().toLocaleTimeString();
+
+  drawSparkline('td-enphase-spark',  tdEnphHist,   '#FFD700');
+  drawSparkline('td-solaredge-spark',tdSEHist,     '#FFC200');
+  drawSparkline('td-demand-chart',   tdDemandHist, '#9B59B6');
+  drawSankey(s);
+  updateCircuitBars(s);
+}
+
+// ── MODE 3: Backup Intelligence ───────────────────────────────────────────────
+const BI_TRUCK_KWH = 95;
+let biEventLog  = [];
+let biLastIsland= false;
+let biPeak24h   = 0;
+
+function drawSoCRing(id, pct) {
+  const canvas = document.getElementById(id); if(!canvas) return;
+  const W=canvas.width, H=canvas.height, cx=W/2, cy=H/2, r=Math.min(W,H)/2-8;
+  const ctx=canvas.getContext('2d'); ctx.clearRect(0,0,W,H);
+  ctx.beginPath(); ctx.arc(cx,cy,r,-Math.PI/2,Math.PI*1.5);
+  ctx.strokeStyle='rgba(255,255,255,0.1)'; ctx.lineWidth=10; ctx.stroke();
+  if(pct <= 0) return;
+  const end = -Math.PI/2 + (pct/100)*Math.PI*2;
+  ctx.beginPath(); ctx.arc(cx,cy,r,-Math.PI/2,end);
+  ctx.strokeStyle = pct>50?'#00FFFF':pct>20?'#f59e0b':'#ef4444';
+  ctx.lineWidth=10; ctx.lineCap='round'; ctx.stroke();
+}
+
+function biAddEvent(msg, type) {
+  const t = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  biEventLog.unshift({t,msg,type});
+  if(biEventLog.length>20) biEventLog.pop();
+  const el = document.getElementById('bi-event-log');
+  if(el) el.innerHTML = biEventLog.slice(0,10).map(e=>{
+    const cls = e.type==='island'?'ev-type':e.type==='solar'?'ev-solar':'';
+    return `<div><span class="ev-time">${e.t}</span><span class="${cls}">${e.msg}</span></div>`;
+  }).join('');
+}
+
+function updateBackup(s) {
+  const sum=s.summary||{}, wc=s.wall_connector||{}, tesla=s.tesla||{};
+  const span=s.span||{}, circuits=span.circuits||[];
+  const islanded = tesla.islanded || false;
+  if(islanded&&!biLastIsland) biAddEvent('Grid outage detected — Island mode active','island');
+  if(!islanded&&biLastIsland) biAddEvent('Grid restored — connected','info');
+  biLastIsland = islanded;
+  const ctW   = Math.abs(wc.charging_w||0);
+  const ctV2H = sum.ct_v2h||false;
+  const loadW = (sum.load_w||0) + ctW;
+  if(loadW > biPeak24h) biPeak24h = loadW;
+  const soe = tesla.status==='online' ? (tesla.soe||0) : null;
+  const truckSoC = soe; // No direct Cybertruck SoC yet — using site SoE as proxy
+  const poolCirc = circuits.find(c=>(c.name||'').toLowerCase().includes('pool'));
+  const ac2Circ  = circuits.find(c=>{const n=(c.name||'').toLowerCase();return n.includes('ac')&&(n.includes('2')||n.includes('cond'));});
+  const evCirc   = circuits.find(c=>{const n=(c.name||'').toLowerCase();return n.includes('wall')||n.includes('charger')||n.includes('ev');});
+  const poolW = poolCirc ? Math.abs(poolCirc.power_w||0) : 0;
+  const ac2W  = ac2Circ  ? Math.abs(ac2Circ.power_w||0) : 0;
+
+  function calcHr(soc, kw) { if(!soc||kw<=0) return '—'; return (BI_TRUCK_KWH*(soc/100)/kw).toFixed(1); }
+  const curKW  = loadW/1000, peakKW = biPeak24h/1000, critKW = 1.5;
+
+  // SoC ring + readout
+  if(truckSoC !== null) {
+    document.getElementById('bi-soc-pct').innerHTML = Math.round(truckSoC)+'<span style="font-size:1rem;opacity:0.4">%</span>';
+    drawSoCRing('bi-soc-ring', truckSoC);
+  }
+
+  // Runtime
+  const setText=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
+  const sfx = '<span style="font-size:0.8rem;opacity:0.4"> h</span>';
+  setText('bi-rt-critical', calcHr(truckSoC,critKW)+sfx);
+  setText('bi-rt-current',  calcHr(truckSoC,curKW)+sfx);
+  setText('bi-rt-peak',     calcHr(truckSoC,peakKW)+sfx);
+  const cll=document.getElementById('bi-current-load-label'); if(cll) cll.textContent=curKW.toFixed(2)+' kW live';
+  const pll=document.getElementById('bi-peak-load-label');    if(pll) pll.textContent=peakKW.toFixed(2)+' kW peak';
+  const rtHr = calcHr(truckSoC, curKW);
+  setText('bi-runtime-hr', rtHr + '<span style="font-size:0.8rem;opacity:0.4"> hrs</span>');
+  setText('bi-discharge-kw', (ctV2H?(ctW/1000).toFixed(2):'0.00') + '<span style="font-size:0.8rem;opacity:0.4"> kW</span>');
+
+  // Readiness
+  const rb = document.getElementById('bi-readiness-badge');
+  if(rb) {
+    if (wc.vehicle_connected===false)     { rb.textContent='Not Home';  rb.className='badge offline'; }
+    else if(truckSoC!==null&&truckSoC<20) { rb.textContent='Low SoC';   rb.className='badge warning'; }
+    else if(ctW>100&&!ctV2H)              { rb.textContent='Charging';  rb.className='badge partial'; }
+    else if(truckSoC!==null)              { rb.textContent='Ready';     rb.className='badge online';  }
+    else                                   { rb.textContent='No Data';  rb.className='badge offline'; }
+  }
+
+  // Priority kW
+  const p=(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
+  p('bi-pool-kw', (poolW/1000).toFixed(2)+' kW');
+  p('bi-ev-kw',   (ctW/1000).toFixed(2)+' kW');
+  p('bi-ac2-kw',  (ac2W/1000).toFixed(2)+' kW');
+
+  // Island styling
+  const mc=document.getElementById('bi-main-card'), ib=document.getElementById('bi-island-badge');
+  if(mc) { mc.className = islanded ? 'glass-card island-glow' : 'glass-card'; }
+  if(ib) ib.style.display = islanded ? 'inline-flex' : 'none';
+
+  const lu=document.getElementById('bi-last-update'); if(lu) lu.textContent=new Date().toLocaleTimeString();
+}
+
+// ── Shed helpers ────────────────────────────────────────────────────────────
+function shedSpanCircuit(id) {
+  if(!SPAN_TOKEN_CONFIGURED) { toast('SPAN token not configured'); return; }
+  fetch('/api/span/circuit/'+id, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({relayState:'OPEN'})
+  }).then(r=>r.json()).then(d=>toast(d.ok?('✓ Shed: '+id):('✗ '+(d.error||'Error')))).catch(e=>toast('✗ '+e));
+}
+function shedCircuit(type) {
+  const circuits = ((window._lastState||{}).span||{}).circuits||[];
+  let target = null;
+  if(type==='pool') target=circuits.find(c=>(c.name||'').toLowerCase().includes('pool'));
+  if(type==='ev')   target=circuits.find(c=>{const n=(c.name||'').toLowerCase();return n.includes('wall')||n.includes('charger')||n.includes('ev');});
+  if(type==='ac2')  target=circuits.find(c=>{const n=(c.name||'').toLowerCase();return n.includes('ac')&&(n.includes('2')||n.includes('cond'));});
+  if(target) shedSpanCircuit(target.id);
+  else toast('Circuit not found in SPAN data');
+}
+
+// Swipe gesture support for mode switching
+(function() {
+  let ts=0, tx=0;
+  const tabletViews = ['microgrid','trading','backup'];
+  document.addEventListener('touchstart', e=>{ts=e.touches[0].clientX; tx=e.touches[0].clientY;}, {passive:true});
+  document.addEventListener('touchend', e=>{
+    const dx=e.changedTouches[0].clientX-ts, dy=e.changedTouches[0].clientY-tx;
+    if(Math.abs(dx)<60||Math.abs(dy)>Math.abs(dx)*0.7) return;
+    const cur = tabletViews.find(v=>document.getElementById('view-'+v).classList.contains('active'));
+    if(!cur) return;
+    const idx=tabletViews.indexOf(cur);
+    if(dx<0&&idx<tabletViews.length-1) showView(tabletViews[idx+1]);
+    if(dx>0&&idx>0) showView(tabletViews[idx-1]);
+  }, {passive:true});
+  // Keyboard arrow keys for mode switching
+  document.addEventListener('keydown', e=>{
+    const cur = tabletViews.find(v=>document.getElementById('view-'+v).classList.contains('active'));
+    if(!cur) return;
+    const idx=tabletViews.indexOf(cur);
+    if(e.key==='ArrowRight'&&idx<tabletViews.length-1) showView(tabletViews[idx+1]);
+    if(e.key==='ArrowLeft'&&idx>0) showView(tabletViews[idx-1]);
+  });
+})();
+
 // Flag for SPAN token (set by Python template)
 const SPAN_TOKEN_CONFIGURED = {{ 'true' if config_span_token else 'false' }};
 
@@ -4321,6 +5109,9 @@ evtSrc.onerror = () => console.warn('SSE disconnected — retrying...');
 
 // Initial load
 fetch('/api/state').then(r=>r.json()).then(renderState).catch(console.error);
+
+// Start particle animation loop (runs continuously, draws only when microgrid mode active)
+mcDrawFrame();
 </script>
 </body>
 </html>

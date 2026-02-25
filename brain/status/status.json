@@ -1,17 +1,8 @@
 {
-  "lastUpdated": "2026-02-24T21:13:00-07:00",
-  "activeTasks": [
-    {
-      "id": "c_7c6f7dfc3047f_19c92ff0415",
-      "title": "Jarvis Home Energy: Fix SRP Grid total to include CyberTruck + SPAN bridged load",
-      "status": "In Progress",
-      "project": "/home/rob/.openclaw/workspace/jarvis-home-energy",
-      "assignee": "claude",
-      "minutesSinceUpdate": 1
-    }
-  ],
+  "lastUpdated": "2026-02-24T21:43:00-07:00",
+  "activeTasks": [],
   "health": {
-    "cpu_temp": "54°C",
+    "cpu_temp": "65°C",
     "disk": "39% used (172G/468G)",
     "services": {
       "openclaw-gateway": "active",

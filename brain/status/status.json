@@ -1,27 +1,14 @@
 {
-  "updatedAt": "2026-02-25T03:30:00Z",
-  "activeTasks": [
-    {
-      "id": "c_28f09eee89028_19c924522ee",
-      "title": "NQ Expert Strategy: London Killzone Momentum",
-      "status": "In Progress",
-      "startedAt": "2026-02-25T03:26:00Z",
-      "assignee": "sonnet-builder",
-      "note": "Builder spawned at 20:26 MST. Creating strategies/london_killzone.py + pipeline/session_features.py additions."
-    }
-  ],
-  "queued": [],
+  "lastUpdated": "2026-02-24T20:43:00-07:00",
+  "activeTasks": [],
   "health": {
-    "cpu_temp": "72°C",
-    "disk": "40% used",
+    "cpu_temp": "69°C",
+    "disk": "40% used (174G/468G)",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "blofin-dashboard": "active"
+      "blofin-stack-paper": "active"
     },
-    "critical_alerts": "clean",
-    "numerai": "all 3 model dirs present, last run 06:33 MST success"
-  },
-  "tokenUsage7d": "63%"
+    "critical_alerts": "none"
+  }
 }

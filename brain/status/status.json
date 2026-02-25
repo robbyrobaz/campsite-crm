@@ -1,18 +1,18 @@
 {
-  "lastUpdated": "2026-02-25T01:43:00-07:00",
+  "updatedAt": "2026-02-25T02:13:00-07:00",
   "activeTasks": [
     {
-      "cardId": "c_51951f2ceb405_19c9245227c",
-      "title": "NQ Expert Strategy: Liquidity Sweep + Reversal",
+      "cardId": "c_c3d77fca1f6cd_19c913d6683",
+      "title": "NQ Phase 3: Live signal engine — TradersPost → Tradovate → Lucid execution",
       "status": "In Progress",
-      "pid": 3090123,
-      "startedAt": "2026-02-25T01:43:00-07:00",
-      "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies"
+      "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
+      "startedAt": "2026-02-25T02:13:00-07:00",
+      "note": "Dispatched by pulse. Builds live trading harness: 1-min bar ingestion, ML inference per bar, TradersPost webhook on signal, position tracking, RTH session filter, systemd service nq-live-trader.service. Awaiting TradersPost webhook URL from Rob."
     }
   ],
   "health": {
-    "cpu_temp": "51°C",
-    "disk_used": "39%",
+    "cpu_temp": "58°C",
+    "disk_usage": "39%",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",

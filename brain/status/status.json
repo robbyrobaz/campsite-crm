@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-25T11:13:00-07:00",
+  "lastUpdated": "2026-02-25T11:22:00-07:00",
   "activeTasks": [
     {
       "id": "c_0ba78545abfd1_19c9600814c",
@@ -9,10 +9,19 @@
       "project_path": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
       "started_at": "2026-02-25T11:11:00-07:00",
       "pid": 3609273
+    },
+    {
+      "id": "c_e8a6587d953ce_19c960a488f",
+      "title": "NQ Pipeline: Integrate trail sweep into DB + dashboard panel",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
+      "started_at": "2026-02-25T11:22:00-07:00",
+      "pid": 3618904
     }
   ],
   "health": {
-    "cpu_temp": "66.0°C",
+    "cpu_temp": "61.0°C",
     "disk_usage": "37% (162G/468G)",
     "services": {
       "openclaw-gateway": "active",

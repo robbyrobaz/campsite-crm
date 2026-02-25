@@ -687,9 +687,8 @@ Two team-specific hooks:
 **Model Routing (already sophisticated):**
 | Alias | Model | Use |
 |-------|-------|-----|
-| `opus` | claude-opus-4-6 | Main agent: planning, orchestration, chat |
-| `sonnet` | claude-sonnet-4-5 | Builder subagents: code gen, refactors |
-| `haiku` | claude-haiku-4-5 | Lightweight fallback |
+| `sonnet` | claude-sonnet-4-6 | **Primary agent**: planning, orchestration, chat, code gen |
+| `haiku` | claude-haiku-4-5 | Dispatch pulse, cron jobs, lightweight tasks |
 | `mini` | gpt-5.1-codex-mini | Build loops, log parsing, cron |
 | `codex` | gpt-5.3-codex | Fallback coding model |
 

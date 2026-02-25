@@ -1,18 +1,8 @@
 {
-  "lastUpdated": "2026-02-25T09:43:00Z",
-  "activeTasks": [
-    {
-      "id": "c_78be8cef1baf9_19c913d669c",
-      "title": "NQ Phase 3: Live Trades Dashboard Panel",
-      "status": "In Progress",
-      "project": "ninja_trader_strategies",
-      "startedAt": "2026-02-25T09:43:00Z",
-      "pid": 3143825,
-      "logPath": "/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_78be8cef1baf9_19c913d669c.log"
-    }
-  ],
+  "lastUpdated": "2026-02-25T10:15:00Z",
+  "activeTasks": [],
   "health": {
-    "cpu_temp": "50.0°C",
+    "cpu_temp": "54°C",
     "disk_used_pct": "40%",
     "services": {
       "openclaw-gateway": "active",

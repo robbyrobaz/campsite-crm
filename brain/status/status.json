@@ -1,15 +1,17 @@
 {
-  "lastUpdated": "2026-02-25T08:15:00-07:00",
+  "lastUpdated": "2026-02-25T08:30:00-07:00",
   "activeTasks": [],
   "health": {
-    "cpu_temp": "89.0°C ⚠️ ABOVE ALERT THRESHOLD",
+    "cpu_temp": "65.0°C ✅",
     "disk_usage": "37% (161G/468G)",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
       "blofin-stack-paper": "active",
-      "numerai-daily-bot": "inactive"
+      "blofin-dashboard": "active",
+      "numerai-daily-bot": "inactive (completed 06:34, status=0, all 3 models OK)"
     },
-    "critical_alerts": "CPU temp 89°C (>85°C threshold)"
-  }
+    "critical_alerts": "none"
+  },
+  "notes": "8:30 AM check. CPU temp recovered to 65C (was 89C at 8:15). Numerai daily submission succeeded. 7-day token quota at 70%."
 }

@@ -1,21 +1,14 @@
 {
-  "updatedAt": "2026-02-25T11:13:00Z",
-  "activeTasks": [
-    {
-      "cardId": "c_3bb91581529b9_19c924522b7",
-      "title": "NQ Expert Strategy: Initial Balance Extension (IBE)",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
-      "startedAt": "2026-02-25T11:13:00Z"
-    }
-  ],
+  "updatedAt": "2026-02-25T11:30:00Z",
+  "activeTasks": [],
   "health": {
-    "cpu_temp": "55.0°C",
+    "cpu_temp": "58.0°C",
     "disk_used": "40%",
     "openclaw-gateway": "active",
     "blofin-stack-ingestor": "active",
     "blofin-stack-paper": "active",
-    "critical_alert_monitor": "ok"
-  }
+    "critical_alert_monitor": "ok",
+    "backup": "FAILED - LFS quota exceeded"
+  },
+  "notes": "IBE task cleared: card not found on kanban, initial_balance_ext.py exists in strategies/ (built at 04:17). Backup failing since 02:37 AM - GH LFS budget exceeded."
 }

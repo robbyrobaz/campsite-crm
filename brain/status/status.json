@@ -1,9 +1,9 @@
 {
-  "updatedAt": "2026-02-25T05:08:00Z",
+  "updatedAt": "2026-02-25T05:13:00Z",
   "activeTasks": [],
   "queued": [],
   "health": {
-    "cpu_temp": "78°C",
+    "cpu_temp": "67°C",
     "disk": "39% used",
     "services": {"openclaw-gateway": "active", "blofin-stack-ingestor": "active", "blofin-stack-paper": "active"},
     "critical_alerts": "clean"

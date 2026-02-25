@@ -9,6 +9,14 @@
   - Valid assignees: `claude`, `codex`, `gemini`, `opencode`, `copilot`, `antigravity`
 - [ ] If task involves code AND you're in main session → DELEGATE via kanban runner, do NOT write code yourself
 
+## ❌ HARD RULE — NO CARD = NO SPAWN:
+**NEVER call `sessions_spawn` without a kanban card ID in hand.**
+The sequence is non-negotiable:
+1. Create card → get card ID
+2. Set assignee + project_path + description on the card
+3. Run via `POST /api/cards/<id>/run` ONLY
+Directly spawning subagents via `sessions_spawn` bypasses tracking entirely. Rob cannot see the work, cannot audit it, cannot cancel it. This is a process violation. If you did it without a card, backfill the card immediately and flag it.
+
 ## Delegation — USE THE KANBAN RUNNER:
 **Always use `POST /api/cards/<id>/run`** to launch agents. This:
 - Spawns the agent with the card title+description as prompt
@@ -76,6 +84,7 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - ❌ Wait idle between Rob's messages — be a COO, pick up work
 - ❌ Forget about spawned builders — check sessions_list
 - ❌ Write code directly in main session (delegate it)
+- ❌ Call `sessions_spawn` without a kanban card ID — no card = no spawn, no exceptions
 - ❌ **See "In Progress" on a kanban card and assume work is happening** — "In Progress" is a label, not proof a builder exists. If YOU didn't spawn the agent this session, spawn it NOW.
 - ❌ Ask Rob how something works — read the code/configs/logs yourself first
 - ❌ Ask Rob for permission on things within your authority — just do it and report

@@ -1,17 +1,8 @@
 {
-  "updated_at": "2026-02-25T00:13:00-07:00",
-  "activeTasks": [
-    {
-      "id": "c_328457d3131a2_19c9354858c",
-      "title": "Redesign Energy Cockpit SVG flow diagram — better layout",
-      "status": "In Progress",
-      "project": "jarvis-home-energy",
-      "pid": 3009411,
-      "started_at": "2026-02-25T00:13:26-07:00"
-    }
-  ],
+  "updated_at": "2026-02-25T00:30:00-07:00",
+  "activeTasks": [],
   "health": {
-    "cpu_temp": "71.0°C",
+    "cpu_temp": "52.0°C",
     "disk_used": "173G/468G (39%)",
     "openclaw-gateway": "active",
     "blofin-stack-ingestor": "active",

@@ -4,20 +4,31 @@
 > This is the SINGLE canonical workflow. SOUL.md and AGENTS.md reference this.
 
 ## Before ANY work:
-- [ ] Create kanban card (POST to http://127.0.0.1:8787/api/inbox)
-- [ ] Move card to "In Progress"
-- [ ] If task involves code AND you're in main session → DELEGATE, do NOT write code yourself
+- [ ] Create kanban card (POST to http://127.0.0.1:8787/api/inbox) with `text`, `source`, `project_path`
+- [ ] Set assignee (PATCH with `{"assignee":"claude"}`)
+  - Valid assignees: `claude`, `codex`, `gemini`, `opencode`, `copilot`, `antigravity`
+- [ ] If task involves code AND you're in main session → DELEGATE via kanban runner, do NOT write code yourself
 
-## Delegation decision tree:
-- Code changes → `sessions_spawn` with `model=sonnet`
-- 3+ parallel tasks in same repo → Claude Code Agent Teams
-- Research/analysis → spawn crypto-researcher
-- QA review → spawn qa-sentinel
-- Max 3 atomic tasks per builder
+## Delegation — USE THE KANBAN RUNNER:
+**Always use `POST /api/cards/<id>/run`** to launch agents. This:
+- Spawns the agent with the card title+description as prompt
+- Pipes output to a log file (visible via terminal button on kanban UI + master dashboard)
+- Auto-sets card to "In Progress", tracks PID in card_runs table
+- Handles deployment instructions per project path
+- DO NOT manually spawn agents via `exec` — that bypasses logging and terminal feed
+
+**Before running:** Make sure the card has:
+- `assignee` set (e.g. `claude`)
+- `project_path` set (required — agent won't run without it)
+- `description` with full task details (this IS the prompt the agent receives)
+
+**To run:** `curl -X POST http://127.0.0.1:8787/api/cards/<id>/run`
+
+**To check status:** `curl http://127.0.0.1:8787/api/cards/<id>` — check card_runs for pid/status
 
 ## When delegating:
-- [ ] Spawn builder — NEVER block main session
-- [ ] Verify builder started (check sessions_list)
+- [ ] Run agent via kanban — NEVER block main session
+- [ ] Verify agent started (check response for `ok:true` + pid)
 - [ ] Stay available to Rob while builder works
 
 ## When builder completes:

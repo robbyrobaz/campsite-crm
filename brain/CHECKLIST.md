@@ -22,6 +22,17 @@
 - `project_path` set (required — agent won't run without it)
 - `description` with full task details (this IS the prompt the agent receives)
 
+## Kanban Model Configuration (CRITICAL):
+The kanban runner reads the model from settings (`GET /api/settings` → `providerModelConfig.claude.model`).
+- **Claude Code CLI format:** `claude-sonnet-4-6` (NO `anthropic/` prefix)
+- **OpenClaw/API format:** `anthropic/claude-sonnet-4-6` (WITH prefix)
+- **The kanban runner uses Claude Code CLI** → model string must be CLI format
+- **NEVER use the API format** (`anthropic/...`) in kanban settings — it will fail with "model not found"
+- **NEVER use bare aliases** like `sonnet` — use the full CLI model name
+- To update: `PUT /api/settings` with full settings body including `providerModelConfig.claude.model`
+- Current correct value: `claude-sonnet-4-6`
+- To verify: `curl -s http://127.0.0.1:8787/api/settings | python3 -m json.tool`
+
 **To run:** `curl -X POST http://127.0.0.1:8787/api/cards/<id>/run`
 
 **To check status:** `curl http://127.0.0.1:8787/api/cards/<id>` — check card_runs for pid/status

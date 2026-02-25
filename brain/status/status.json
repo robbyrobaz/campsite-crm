@@ -1,6 +1,14 @@
 {
-  "updatedAt": "2026-02-24T19:43:00Z",
-  "activeTasks": [],
+  "updatedAt": "2026-02-25T02:50:00Z",
+  "activeTasks": [
+    {
+      "id": "c_452205d02f04e_19c92b4c670",
+      "title": "Energy Cockpit: Add pool to animated flow, merge SPAN+House Load, clickable icons",
+      "status": "In Progress",
+      "builder": "fast-fjord (sonnet)",
+      "project": "jarvis-home-energy"
+    }
+  ],
   "queued": [],
   "health": {
     "cpu_temp": "57°C",

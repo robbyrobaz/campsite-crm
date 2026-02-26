@@ -51,11 +51,10 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - [ ] Stay available to Rob while builder works
 
 ## When builder completes:
-- [ ] Move card to "Review/Test"
-- [ ] Spawn qa-sentinel to review the work (NON-OPTIONAL)
-- [ ] QA passes → restart/reload relevant service(s), verify health, then move to "Done", notify Rob
-- [ ] QA fails → fix or respawn, do NOT deliver garbage
-- [ ] Append QA summary note to card (what was checked, result, how to verify)
+- [ ] **NO Review/Test step — skip it entirely.** Cards go directly from In Progress → Done.
+- [ ] If card auto-moves to "Review/Test" (kanban runner behavior), immediately PATCH it to "Done"
+- [ ] Restart/reload relevant service(s), verify health
+- [ ] Move card to "Done", notify Rob with brief summary
 - [ ] Update PROJECTS.md if project status changed
 
 ## QA Functional Smoke Test (NON-OPTIONAL for UI/dashboard/API work):

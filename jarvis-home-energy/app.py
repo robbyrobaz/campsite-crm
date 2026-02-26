@@ -901,23 +901,44 @@ def poll_cameras():
 ROKU_IPS = []  # auto-discovered at startup
 
 def _discover_roku_devices():
-    """Scan local subnet for Roku devices via ECP on port 8060."""
-    import concurrent.futures, requests as _req
-    def _check(ip):
+    """Discover Roku devices via SSDP multicast (official Roku method)."""
+    import socket as _sock
+    SSDP_ADDR = "239.255.255.250"
+    SSDP_PORT = 1900
+    MSG = b"M-SEARCH * HTTP/1.1\r\nHOST: 239.255.255.250:1900\r\nMAN: \"ssdp:discover\"\r\nMX: 3\r\nST: roku:ecp\r\n\r\n"
+    found = []
+    try:
+        s = _sock.socket(_sock.AF_INET, _sock.SOCK_DGRAM, _sock.IPPROTO_UDP)
+        s.settimeout(4)
+        s.sendto(MSG, (SSDP_ADDR, SSDP_PORT))
+        seen = set()
         try:
-            r = _req.get(f"http://{ip}:8060/query/device-info", timeout=0.5)
-            if r.status_code == 200 and b'<device-info>' in r.content:
-                return ip
-        except Exception:
+            while True:
+                data, addr = s.recvfrom(1024)
+                ip = addr[0]
+                if ip not in seen:
+                    seen.add(ip)
+                    found.append(ip)
+        except _sock.timeout:
             pass
-        return None
-    subnet = [f"192.168.68.{i}" for i in range(1, 255)]
-    with concurrent.futures.ThreadPoolExecutor(max_workers=50) as ex:
-        results = ex.map(_check, subnet)
-    return [ip for ip in results if ip]
+        finally:
+            s.close()
+    except Exception as e:
+        log.warning(f"[Roku] SSDP discovery failed: {e}")
+    # fallback: also try known IPs from last successful discovery
+    return found or ROKU_IPS
+
+def _roku_rediscover_loop():
+    global ROKU_IPS
+    while True:
+        time.sleep(60)
+        found = _discover_roku_devices()
+        if found:
+            ROKU_IPS = found
+            log.info("[Roku] Re-discovery: %d device(s): %s", len(found), found)
 
 _roku_cache = {'data': [], 'ts': 0.0}
-_ROKU_TTL = 30.0
+_ROKU_TTL = 15.0
 
 def _roku_get(ip, path):
     import requests as _req
@@ -949,18 +970,26 @@ def poll_roku():
         ROKU_IPS = _discover_roku_devices()
     devices = []
     for ip in ROKU_IPS:
-        info = _roku_get(ip, '/query/device-info')
-        app  = _roku_get(ip, '/query/active-app')
+        info  = _roku_get(ip, '/query/device-info')
+        app   = _roku_get(ip, '/query/active-app')
+        media = _roku_get(ip, '/query/media-player')
         name       = _parse_xml_tag(info, 'friendly-device-name') or _parse_xml_tag(info, 'user-device-name') or ip
         model      = _parse_xml_tag(info, 'model-name')
         power      = _parse_xml_tag(info, 'power-mode')
         serial     = _parse_xml_tag(info, 'serial-number')
         active_app = _parse_xml_tag(app, 'name') or 'Unknown'
         active_id  = _parse_xml_tag(app, 'id')
+        play_state  = _parse_xml_tag(media, 'state') or _parse_xml_tag(media, 'State') or 'none'
+        position_ms = _parse_xml_tag(media, 'position') or ''
+        duration_ms = _parse_xml_tag(media, 'duration') or ''
         devices.append({
             'ip': ip, 'name': name, 'model': model,
             'power': power, 'active_app': active_app, 'active_id': active_id,
             'serial': serial, 'online': bool(info),
+            'is_on': power == 'PowerOn',
+            'play_state': play_state,
+            'position_ms': position_ms,
+            'duration_ms': duration_ms,
         })
     _roku_cache['data'] = devices
     _roku_cache['ts'] = now
@@ -2540,13 +2569,27 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   body { background: var(--bg); color: var(--text); font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; min-height: 100vh; }
 
   /* Nav */
-  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0 20px; display: flex; align-items: center; gap: 20px; height: 52px; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0; position: sticky; top: 0; z-index: 100; }
+  .header-top { display: flex; align-items: center; gap: 20px; padding: 0 20px; height: 52px; }
   .logo { font-size: 16px; font-weight: 700; letter-spacing: .05em; color: var(--solar); }
   .logo span { color: var(--text-dim); }
-  nav { display: flex; gap: 4px; flex: 1; }
-  nav button { background: transparent; border: none; color: var(--text-dim); cursor: pointer; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-family: inherit; transition: all .15s; }
+  .nav-hamburger { display: none; background: none; border: 1px solid #444; color: var(--text); font-size: 1.4rem; padding: 4px 10px; border-radius: 6px; cursor: pointer; margin-left: auto; }
+  nav { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px 20px 8px; }
+  nav button { background: transparent; border: none; color: var(--text-dim); cursor: pointer; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-family: inherit; transition: all .15s; min-height: 36px; }
   nav button.active, nav button:hover { background: var(--surface2); color: var(--text); }
   .status-bar { display: flex; gap: 14px; align-items: center; }
+  @media (max-width: 768px) {
+    .nav-hamburger { display: block; }
+    nav { display: none; flex-direction: column; align-items: stretch; padding: 0.5rem 1rem 1rem; }
+    nav.open { display: flex; }
+    nav button { width: 100%; text-align: left; min-height: 44px; font-size: 1rem; padding: 10px 14px; }
+    .status-bar { display: none; }
+    body { padding: 0; }
+    #main-content, [id$="-view"], .view { padding: 0.75rem; }
+    .card, .panel, .metric-card, .roku-card { min-width: unset !important; width: 100% !important; max-width: 100% !important; }
+    table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    main { padding: 0.5rem; }
+  }
   .dot { width: 8px; height: 8px; border-radius: 50%; }
   .dot.online { background: var(--online); box-shadow: 0 0 6px var(--online); }
   .dot.error { background: var(--error); }
@@ -2912,8 +2955,19 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <body>
 
 <header>
-  <div class="logo">⚡ JARVIS <span>Home Energy OS</span></div>
-  <nav>
+  <div class="header-top">
+    <div class="logo">⚡ JARVIS <span>Home Energy OS</span></div>
+    <div class="status-bar">
+      <div id="span-dot" class="dot offline" title="SPAN Panel"></div>
+      <div id="enphase-dot" class="dot offline" title="Enphase"></div>
+      <div id="pentair-dot" class="dot offline" title="Pentair"></div>
+      <div id="tesla-dot" class="dot offline" title="Tesla Gateway"></div>
+      <div id="wc-dot" class="dot offline" title="Wall Connector"></div>
+      <span class="ts" id="ts">—</span>
+    </div>
+    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
+  </div>
+  <nav id="nav-links">
     <button class="active" onclick="showView('cockpit')">Energy Cockpit</button>
     <button onclick="showView('solar')">☀️ Solar</button>
     <button onclick="showView('span')">SPAN Circuits</button>
@@ -2928,14 +2982,6 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <button onclick="showView('appliances')">Appliances</button>
     <button onclick="showView('settings')">Settings</button>
   </nav>
-  <div class="status-bar">
-    <div id="span-dot" class="dot offline" title="SPAN Panel"></div>
-    <div id="enphase-dot" class="dot offline" title="Enphase"></div>
-    <div id="pentair-dot" class="dot offline" title="Pentair"></div>
-    <div id="tesla-dot" class="dot offline" title="Tesla Gateway"></div>
-    <div id="wc-dot" class="dot offline" title="Wall Connector"></div>
-    <span class="ts" id="ts">—</span>
-  </div>
 </header>
 
 <main>
@@ -3533,23 +3579,26 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <div class="bi-secondary">
       <div class="glass-card" style="height:100%;overflow:hidden">
         <span class="label-sm" style="margin-bottom:8px">Load Shedding Priority</span>
-        <div class="priority-item shed-first">
+        <div class="priority-item shed-first" id="shed-row-pool">
           <div class="priority-num" style="color:#ef4444">1</div>
-          <div class="priority-name">Pool Sub-Panel</div>
+          <div class="priority-name">Pool Sub-Panel <span id="shed-badge-pool" style="display:none;font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(239,68,68,.25);color:#ef4444;margin-left:4px;">OFF</span></div>
           <div class="priority-kw" id="bi-pool-kw">—</div>
-          <button class="shed-btn" onclick="shedCircuit('pool')">Shed</button>
+          <button id="shed-btn-pool" class="shed-btn" onclick="shedCircuit('pool')">Shed</button>
+          <button id="restore-btn-pool" class="shed-btn" onclick="restoreCircuit('pool')" style="display:none;border-color:rgba(74,222,128,.5);background:rgba(74,222,128,.1);color:#4ade80;">Restore</button>
         </div>
-        <div class="priority-item shed-second">
+        <div class="priority-item shed-second" id="shed-row-ev">
           <div class="priority-num" style="color:#f59e0b">2</div>
-          <div class="priority-name">EV Charging (Wall Connector)</div>
+          <div class="priority-name">EV Charging (Wall Connector) <span id="shed-badge-ev" style="display:none;font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(239,68,68,.25);color:#ef4444;margin-left:4px;">OFF</span></div>
           <div class="priority-kw" id="bi-ev-kw">—</div>
-          <button class="shed-btn" onclick="shedCircuit('ev')">Shed</button>
+          <button id="shed-btn-ev" class="shed-btn" onclick="shedCircuit('ev')">Shed</button>
+          <button id="restore-btn-ev" class="shed-btn" onclick="restoreCircuit('ev')" style="display:none;border-color:rgba(74,222,128,.5);background:rgba(74,222,128,.1);color:#4ade80;">Restore</button>
         </div>
-        <div class="priority-item shed-third">
+        <div class="priority-item shed-third" id="shed-row-ac2">
           <div class="priority-num" style="color:#6366f1">3</div>
-          <div class="priority-name">AC Condenser 2</div>
+          <div class="priority-name">AC Condenser 2 <span id="shed-badge-ac2" style="display:none;font-size:9px;padding:1px 5px;border-radius:3px;background:rgba(239,68,68,.25);color:#ef4444;margin-left:4px;">OFF</span></div>
           <div class="priority-kw" id="bi-ac2-kw">—</div>
-          <button class="shed-btn" onclick="shedCircuit('ac2')">Shed</button>
+          <button id="shed-btn-ac2" class="shed-btn" onclick="shedCircuit('ac2')">Shed</button>
+          <button id="restore-btn-ac2" class="shed-btn" onclick="restoreCircuit('ac2')" style="display:none;border-color:rgba(74,222,128,.5);background:rgba(74,222,128,.1);color:#4ade80;">Restore</button>
         </div>
         <div class="priority-item shed-nc">
           <div class="priority-num" style="color:rgba(255,255,255,0.3)">4</div>
@@ -4550,6 +4599,18 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 <script>
 const views = ['cockpit','solar','span','pool','devices','tesla-energy','cybertruck','cameras','roku','home-control','sprinklers','appliances','settings'];
+function toggleNav() {
+  const nav = document.getElementById('nav-links');
+  nav.classList.toggle('open');
+}
+// Close nav when a view is selected (mobile UX)
+document.addEventListener('click', function(e) {
+  if (e.target.closest('#nav-links') && e.target.tagName === 'BUTTON') {
+    const nav = document.getElementById('nav-links');
+    if (window.innerWidth <= 768) nav.classList.remove('open');
+  }
+});
+
 function showView(v) {
   views.forEach(id => {
     document.getElementById('view-'+id).classList.toggle('active', id===v);
@@ -4970,10 +5031,12 @@ function renderState(s) {
     circGrid.innerHTML = circuits.map(c => {
       const col = circuitColors.get(c.name) || '#00d4ff';
       const svg = miniSparkSVG(history5.get(c.name), col);
-      return `<div class="circuit-tile ${c.relay==='CLOSED'?c.color:'off'}" data-name="${c.name}" title="${c.id}" style="cursor:pointer;padding-bottom:${svg?'22px':'10px'}" onclick="if(chartsReady)selectCircuit(this.dataset.name)">
+      const isOff = c.relay === 'OPEN';
+      return `<div class="circuit-tile ${c.relay==='CLOSED'?c.color:'off'}" data-name="${c.name}" title="${c.id}" style="cursor:pointer;padding-bottom:${svg?'22px':'10px'};position:relative;" onclick="if(chartsReady)selectCircuit(this.dataset.name)">
         <div class="ct-name">${c.name}</div>
         <div><span class="ct-power">${Math.abs(c.power_w)||0}</span><span class="ct-unit"> W</span></div>
         <div class="ct-relay">${c.relay||'?'} · ${c.priority||'?'}</div>
+        ${isOff ? `<button onclick="event.stopPropagation();restoreSpanCircuit('${c.id}','${c.name}')" style="margin-top:4px;width:100%;padding:3px 0;border-radius:4px;border:1px solid rgba(74,222,128,.5);background:rgba(74,222,128,.1);color:#4ade80;font-size:9px;cursor:pointer;">⚡ Restore</button>` : ''}
         ${svg}
       </div>`;
     }).join('');
@@ -5711,31 +5774,100 @@ function renderRoku(devices) {
   const grid = document.getElementById('roku-grid');
   if (!grid) return;
   if (!devices || devices.length === 0) {
-    grid.innerHTML = '<div style="color:#888;font-size:0.9rem;">No Roku devices found on network.</div>';
+    grid.innerHTML = '<div style="color:#888;font-size:0.9rem;">No Roku devices found on network. Discovery runs every 60s.</div>';
     return;
   }
+  const BTN = 'min-height:44px;padding:8px 14px;font-size:1rem;border-radius:6px;border:1px solid #444;background:#2a2a3e;color:#fff;cursor:pointer;';
+  const APP_BTN = 'min-height:36px;padding:6px 10px;font-size:0.8rem;border-radius:6px;border:1px solid #555;background:#2a2a3e;color:#ccc;cursor:pointer;';
   grid.innerHTML = devices.map(tv => {
-    const on = tv.power === 'PowerOn';
-    const dot = `<span style="width:10px;height:10px;border-radius:50%;background:${on?'#4caf50':'#555'};display:inline-block;flex-shrink:0;"></span>`;
-    const btns = [['⏮','Rev'],['⏯','Play'],['⏭','Fwd'],['🔇','VolumeMute'],['🔉','VolumeDown'],['🔊','VolumeUp']].map(([lbl,key]) =>
-      `<button onclick="rokuKey('${tv.ip}','${key}')" style="padding:4px 8px;border-radius:4px;border:1px solid #444;background:#2a2a3e;color:#fff;cursor:pointer;font-size:0.9rem;">${lbl}</button>`
+    const on = tv.is_on || tv.power === 'PowerOn';
+    const dotColor = on ? '#4caf50' : '#555';
+    const stateLabel = tv.play_state && tv.play_state !== 'none' ? tv.play_state : (on ? 'on' : tv.power || 'off');
+
+    // Progress bar
+    let progressBar = '';
+    const pos = parseInt(tv.position_ms) || 0;
+    const dur = parseInt(tv.duration_ms) || 0;
+    if (pos > 0 && dur > 0) {
+      const pct = Math.min(100, Math.round(pos / dur * 100));
+      const posStr = Math.floor(pos/1000/60) + ':' + String(Math.floor(pos/1000%60)).padStart(2,'0');
+      const durStr = Math.floor(dur/1000/60) + ':' + String(Math.floor(dur/1000%60)).padStart(2,'0');
+      progressBar = `<div style="margin-bottom:0.6rem;">
+        <div style="background:#333;border-radius:3px;height:4px;overflow:hidden;">
+          <div style="background:#7c4dff;width:${pct}%;height:100%;"></div>
+        </div>
+        <div style="font-size:0.7rem;color:#888;text-align:right;margin-top:2px;">${posStr} / ${durStr}</div>
+      </div>`;
+    }
+
+    // D-pad
+    const dpad = `<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-bottom:0.6rem;max-width:160px;margin-left:auto;margin-right:auto;">
+      <div></div>
+      <button onclick="rokuKey('${tv.ip}','Up')" style="${BTN}text-align:center;">▲</button>
+      <div></div>
+      <button onclick="rokuKey('${tv.ip}','Left')" style="${BTN}text-align:center;">◀</button>
+      <button onclick="rokuKey('${tv.ip}','Select')" style="${BTN}text-align:center;background:#3a3a5e;">OK</button>
+      <button onclick="rokuKey('${tv.ip}','Right')" style="${BTN}text-align:center;">▶</button>
+      <div></div>
+      <button onclick="rokuKey('${tv.ip}','Down')" style="${BTN}text-align:center;">▼</button>
+      <div></div>
+    </div>`;
+
+    // Playback row
+    const playback = `<div style="display:flex;gap:6px;margin-bottom:0.6rem;flex-wrap:wrap;justify-content:center;">
+      <button onclick="rokuKey('${tv.ip}','Rev')" style="${BTN}" title="Rewind">⏮</button>
+      <button onclick="rokuKey('${tv.ip}','Play')" style="${BTN}" title="Play/Pause">⏯</button>
+      <button onclick="rokuKey('${tv.ip}','Fwd')" style="${BTN}" title="Forward">⏭</button>
+      <button onclick="rokuKey('${tv.ip}','Home')" style="${BTN}" title="Home">🏠</button>
+      <button onclick="rokuKey('${tv.ip}','Back')" style="${BTN}" title="Back">⬅</button>
+      <button onclick="rokuKey('${tv.ip}','Power')" style="${BTN}border-color:#e53935;color:#e53935;" title="Power">⏻</button>
+    </div>`;
+
+    // Volume row
+    const volume = `<div style="display:flex;gap:6px;margin-bottom:0.75rem;justify-content:center;">
+      <button onclick="rokuKey('${tv.ip}','VolumeDown')" style="${BTN}">🔉</button>
+      <button onclick="rokuKey('${tv.ip}','VolumeMute')" style="${BTN}">🔇</button>
+      <button onclick="rokuKey('${tv.ip}','VolumeUp')" style="${BTN}">🔊</button>
+    </div>`;
+
+    // App launchers
+    const apps = [
+      ['Netflix','rokuLaunch','12','#e50914'],
+      ['YouTube','rokuLaunch','195','#ff0000'],
+      ['Hulu','rokuLaunch','2285','#3dbb61'],
+      ['Disney+','rokuLaunch','291097','#1a78c2'],
+      ['Prime','rokuLaunch','13','#00a8e0'],
+      ['Peacock','rokuLaunch','593099','#ff7700'],
+      ['Tubi','rokuLaunch','41468','#f97316'],
+      ['Spotify','rokuLaunch','22297','#1db954'],
+      ['Plex','rokuLaunch','13535','#e5a00d'],
+    ].map(([lbl,fn,id,col]) =>
+      `<button onclick="${fn}('${tv.ip}','${id}')" style="${APP_BTN}border-color:${col};color:${col};">${lbl}</button>`
     ).join('');
-    return `<div style="background:var(--bg-card,#1e1e2e);border-radius:8px;padding:1rem;min-width:220px;flex:1;border:1px solid #333;">
-      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">${dot}<strong>${tv.name}</strong></div>
-      <div style="font-size:0.8rem;color:#888;margin-bottom:0.75rem;">${tv.model} · ${on?'ON':tv.power}</div>
-      <div style="font-size:0.85rem;margin-bottom:0.75rem;">▶ ${tv.active_app}</div>
-      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:0.5rem;">
-        ${btns}
-        <button onclick="rokuKey('${tv.ip}','Home')" style="padding:4px 8px;border-radius:4px;border:1px solid #444;background:#2a2a3e;color:#fff;cursor:pointer;">🏠</button>
-        <button onclick="rokuKey('${tv.ip}','Back')" style="padding:4px 8px;border-radius:4px;border:1px solid #444;background:#2a2a3e;color:#fff;cursor:pointer;">⬅</button>
-        <button onclick="rokuKey('${tv.ip}','PowerOff')" style="padding:4px 8px;border-radius:4px;border:1px solid #e53935;background:#2a2a3e;color:#e53935;cursor:pointer;">⏻</button>
+
+    // Input switchers (keypress-based)
+    const inputs = [
+      ['HDMI 1','InputHDMI1'],
+      ['HDMI 2','InputHDMI2'],
+      ['HDMI 3','InputHDMI3'],
+      ['Antenna','InputATV'],
+    ].map(([lbl,key]) =>
+      `<button onclick="rokuKey('${tv.ip}','${key}')" style="${APP_BTN}">${lbl}</button>`
+    ).join('');
+
+    return `<div style="background:#1a1a2e;border-radius:12px;padding:1.25rem;min-width:280px;flex:1;max-width:420px;border:1px solid #2a2a4e;">
+      <div style="display:flex;align-items:center;gap:0.6rem;margin-bottom:0.4rem;">
+        <span style="width:12px;height:12px;border-radius:50%;background:${dotColor};display:inline-block;flex-shrink:0;"></span>
+        <strong style="font-size:1.05rem;">${tv.name}</strong>
+        <span style="margin-left:auto;font-size:0.75rem;color:#888;">${tv.model}</span>
       </div>
-      <div style="display:flex;gap:4px;flex-wrap:wrap;">
-        <button onclick="rokuLaunch('${tv.ip}','12')" style="padding:3px 7px;border-radius:4px;border:1px solid #e50914;background:transparent;color:#e50914;font-size:0.75rem;cursor:pointer;">Netflix</button>
-        <button onclick="rokuLaunch('${tv.ip}','28')" style="padding:3px 7px;border-radius:4px;border:1px solid #ff0000;background:transparent;color:#ff0000;font-size:0.75rem;cursor:pointer;">YouTube</button>
-        <button onclick="rokuLaunch('${tv.ip}','2285')" style="padding:3px 7px;border-radius:4px;border:1px solid #3dbb61;background:transparent;color:#3dbb61;font-size:0.75rem;cursor:pointer;">Hulu</button>
-        <button onclick="rokuLaunch('${tv.ip}','tvinput.hdmi1')" style="padding:3px 7px;border-radius:4px;border:1px solid #888;background:transparent;color:#888;font-size:0.75rem;cursor:pointer;">HDMI 1</button>
-      </div>
+      <div style="font-size:0.82rem;color:#aaa;margin-bottom:0.6rem;">${tv.active_app} · <span style="color:${tv.play_state==='play'?'#4caf50':'#888'}">${stateLabel}</span></div>
+      ${progressBar}
+      ${dpad}
+      ${playback}
+      ${volume}
+      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:0.5rem;">${apps}</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap;">${inputs}</div>
     </div>`;
   }).join('');
 }
@@ -5748,13 +5880,13 @@ function rokuLaunch(ip, appId) {
     .then(r => r.json()).then(d => { if(!d.ok) console.warn('Roku launch failed'); });
 }
 
-// Auto-refresh Roku panel every 30s when visible
+// Auto-refresh Roku panel every 15s when visible
 setInterval(() => {
   const view = document.getElementById('view-roku');
   if (view && view.classList.contains('active')) {
     fetch('/api/roku').then(r=>r.json()).then(renderRoku).catch(()=>{});
   }
-}, 30000);
+}, 15000);
 
 
 function renderCameras(cameras) {
@@ -6984,7 +7116,7 @@ function updateCircuitBars(s, extraCircuits) {
       <div class="circuit-bar-label"${nameStyle} title="${c.name||c.id}">${c.name||c.id}</div>
       <div class="circuit-bar-track"><div class="circuit-bar-fill" style="${fillStyle}width:${pct}%"></div></div>
       <div class="circuit-bar-val"${valStyle}>${(w/1000).toFixed(2)}k</div>
-      ${canShed ? `<button class="shed-btn" onclick="shedSpanCircuit('${c.id}')">Shed</button>` : '<div style="width:36px"></div>'}
+      ${c.relay==='OPEN' ? `<button class="shed-btn" onclick="restoreSpanCircuit('${c.id}','${c.name}')" style="border-color:rgba(74,222,128,.5);background:rgba(74,222,128,.1);color:#4ade80;">Restore</button>` : canShed ? `<button class="shed-btn" onclick="shedSpanCircuit('${c.id}')">Shed</button>` : '<div style="width:36px"></div>'}
     </div>`;
   }).join('');
 }
@@ -7140,6 +7272,24 @@ function updateBackup(s) {
   p('bi-ev-kw',   (ctW/1000).toFixed(2)+' kW');
   p('bi-ac2-kw',  (ac2W/1000).toFixed(2)+' kW');
 
+  // Shed/restore button visibility — reflect live relay state
+  const spanCircuits = ((window._lastState||s).span||{}).circuits||[];
+  function _updateShedRow(type, keywords) {
+    const c = spanCircuits.find(c => keywords.some(k => (c.name||'').toLowerCase().includes(k)));
+    if (!c) return;
+    const isOff = c.relay === 'OPEN';
+    const badge = document.getElementById('shed-badge-'+type);
+    const shedBtn = document.getElementById('shed-btn-'+type);
+    const restoreBtn = document.getElementById('restore-btn-'+type);
+    if (badge) badge.style.display = isOff ? 'inline' : 'none';
+    if (shedBtn) shedBtn.style.display = isOff ? 'none' : 'inline-block';
+    if (restoreBtn) restoreBtn.style.display = isOff ? 'inline-block' : 'none';
+  }
+  _updateShedRow('pool', ['pool']);
+  _updateShedRow('ev',   ['wall', 'charger', 'ev']);
+  _updateShedRow('ac2',  ['ac']);
+
+
   // Island styling
   const mc=document.getElementById('bi-main-card'), ib=document.getElementById('bi-island-badge');
   if(mc) { mc.className = islanded ? 'glass-card island-glow' : 'glass-card'; }
@@ -7155,6 +7305,22 @@ function shedSpanCircuit(id) {
     method:'POST', headers:{'Content-Type':'application/json'},
     body: JSON.stringify({relayState:'OPEN'})
   }).then(r=>r.json()).then(d=>toast(d.ok?('✓ Shed: '+id):('✗ '+(d.error||'Error')))).catch(e=>toast('✗ '+e));
+}
+function restoreSpanCircuit(id, label) {
+  if(!SPAN_TOKEN_CONFIGURED) { toast('SPAN token not configured'); return; }
+  fetch('/api/span/circuit/'+id, {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({relayState:'CLOSED'})
+  }).then(r=>r.json()).then(d=>toast(d.ok?('✓ Restored: '+(label||id)):('✗ '+(d.error||'Error')))).catch(e=>toast('✗ '+e));
+}
+function restoreCircuit(type) {
+  const circuits = ((window._lastState||{}).span||{}).circuits||[];
+  let target = null;
+  if(type==='pool') target=circuits.find(c=>(c.name||'').toLowerCase().includes('pool'));
+  if(type==='ev')   target=circuits.find(c=>{const n=(c.name||'').toLowerCase();return n.includes('wall')||n.includes('charger')||n.includes('ev');});
+  if(type==='ac2')  target=circuits.find(c=>{const n=(c.name||'').toLowerCase();return n.includes('ac')&&(n.includes('2')||n.includes('cond'));});
+  if(target) restoreSpanCircuit(target.id, target.name);
+  else toast('Circuit not found in SPAN data');
 }
 function shedCircuit(type) {
   const circuits = ((window._lastState||{}).span||{}).circuits||[];
@@ -7290,12 +7456,14 @@ if __name__ == "__main__":
 
     _start_rtsp_threads()   # start background RTSP frame capture
 
-    log.info("Discovering Roku devices on 192.168.68.0/24 ...")
+    log.info("Discovering Roku devices via SSDP ...")
     import threading as _threading
     def _roku_startup():
         global ROKU_IPS
         ROKU_IPS = _discover_roku_devices()
         log.info("Roku discovery complete: %d device(s) found: %s", len(ROKU_IPS), ROKU_IPS)
+        # Start background re-discovery loop
+        _threading.Thread(target=_roku_rediscover_loop, daemon=True).start()
     _threading.Thread(target=_roku_startup, daemon=True).start()
 
     app.run(host="0.0.0.0", port=DASHBOARD_PORT, debug=False, threaded=True)

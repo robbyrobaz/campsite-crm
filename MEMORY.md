@@ -128,8 +128,8 @@ ORB improvement: target_horizon 5→10 bars = +14.6% PF, +14.6% Sharpe, +2.9pp W
 
 ## NQ Live Trading Architecture (Feb 24, 2026)
 
-### ⛔ LIVE TRADING REQUIRES EXPLICIT ROB APPROVAL — NEVER ACTIVATE AUTONOMOUSLY
-Never enable live trading, fire TradersPost webhooks, or place real orders without Rob explicitly saying "go live."
+### ⛔ LIVE TRADING & PROP FIRM EVALS REQUIRE EXPLICIT ROB APPROVAL — NEVER ACTIVATE AUTONOMOUSLY
+Never enable live trading, fire TradersPost webhooks, place real orders, or start any prop firm eval (Lucid, FTMO, etc.) without Rob explicitly saying "go live." This includes all future prop firm accounts.
 
 ### NQ Live Strategy: GOD MODEL
 - NOT individual strategies (momentum, orb, etc.) — those are components

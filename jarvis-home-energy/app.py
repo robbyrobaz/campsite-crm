@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Jarvis Home Energy OS — Unified Home Energy Dashboard
-Covers: SPAN Panel · Enphase Solar · Pentair Pool · Tesla Powerwall
+Covers: SPAN Panel · Enphase Solar · Pentair Pool · Tesla Energy Gateway 3V · Tesla Wall Connector Gen 3
 """
 
 import json
@@ -638,29 +638,50 @@ def poll_wall_connector():
         return False
 
 
-# ── Tesla Fleet API Adapter ───────────────────────────────────────────────────
-# Uses teslapy (OAuth already completed) — no local Gateway credentials needed.
+# ── Tesla Fleet API Adapter — Energy Gateway 3V ───────────────────────────────
+# Auth: OAuth via teslapy browser flow → approve callback URL → token in cache under 'sso' key.
+# Refresh: auth.tesla.com directly (teslapy's own .refresh_token() returns 404 — do NOT use it).
+# Re-auth if needed: run teslapy interactively, open the browser URL it prints, approve, done.
 # Cache: /home/rob/.openclaw/workspace/jarvis-home-energy/tesla_cache.json
 
 _TESLA_CACHE_FILE = "/home/rob/.openclaw/workspace/jarvis-home-energy/tesla_cache.json"
 _TESLA_FLEET_BASE = "https://owner-api.teslamotors.com/api/1"
+_TESLA_AUTH_URL   = "https://auth.tesla.com/oauth2/v3/token"
 _tesla_fleet_lock = threading.Lock()
 
 
 def _get_tesla_fleet_token():
-    """Return a valid Fleet API access_token, auto-refreshing via teslapy if expired."""
+    """Return a valid Fleet API access_token, auto-refreshing via auth.tesla.com if expired."""
     with _tesla_fleet_lock:
-        t = teslapy.Tesla("rob.hartwig@gmail.com", cache_file=_TESLA_CACHE_FILE)
-        try:
-            # teslapy.fetch_token() refreshes automatically when the access_token is expired
-            if not t.authorized:
-                raise RuntimeError("Tesla OAuth not authorized — run oauth flow first")
-            # Touch the token to trigger refresh if needed
-            t.fetch_token()
-            token = t.token["access_token"]
-        finally:
-            t.close()
-        return token
+        cache = json.load(open(_TESLA_CACHE_FILE))
+        sso   = cache.get("rob.hartwig@gmail.com", {}).get("sso", {})
+        access_token  = sso.get("access_token", "")
+        refresh_token = sso.get("refresh_token", "")
+        expires_at    = sso.get("expires_at", 0)
+
+        if not refresh_token:
+            raise RuntimeError("Tesla OAuth not authorized — run browser auth flow first")
+
+        # Refresh if expired or within 5 min of expiry
+        if time.time() >= expires_at - 300:
+            log.info("Tesla token expired/near-expiry — refreshing via auth.tesla.com")
+            r = _requests.post(_TESLA_AUTH_URL, json={
+                "grant_type":    "refresh_token",
+                "client_id":     "ownerapi",
+                "refresh_token": refresh_token,
+                "scope":         "openid email offline_access",
+            }, timeout=15)
+            r.raise_for_status()
+            new_tok = r.json()
+            new_tok["expires_at"] = time.time() + new_tok.get("expires_in", 28800)
+            sso.update(new_tok)
+            cache["rob.hartwig@gmail.com"]["sso"] = sso
+            json.dump(cache, open(_TESLA_CACHE_FILE, "w"))
+            access_token = new_tok["access_token"]
+            log.info("Tesla token refreshed — valid for %.0f hours",
+                     new_tok.get("expires_in", 0) / 3600)
+
+        return access_token
 
 
 def poll_tesla():
@@ -1583,7 +1604,7 @@ def api_bhyve_stop():
 
 @app.route("/api/settings/bhyve", methods=["POST"])
 def api_settings_bhyve():
-    global BHYVE_EMAIL, BHYVE_PASSWORD, _bhyve_token
+    global BHYVE_EMAIL, BHYVE_PASSWORD, _bhyve_token, _bhyve_next_retry
     body  = request.get_json() or {}
     email = (body.get("email")    or "").strip()
     pw    = (body.get("password") or "").strip()
@@ -1598,9 +1619,10 @@ def api_settings_bhyve():
             text = _re.sub(r'^BHYVE_PASSWORD\s*=\s*.*$', f'BHYVE_PASSWORD = "{pw}"', text, flags=_re.MULTILINE)
             BHYVE_PASSWORD = pw
         config_path.write_text(text)
-        # Reset token so next poll re-authenticates
+        # Reset token and backoff so next poll re-authenticates immediately
         with _bhyve_token_lock:
             _bhyve_token = None
+        _bhyve_next_retry = 0
         return jsonify({"ok": True})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
@@ -2827,9 +2849,9 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <div class="device-card">
         <div class="device-icon">🔋</div>
         <div class="device-info">
-          <div class="device-name">Tesla Gateway V2 <span class="badge offline" id="tesla-gw-badge">not found</span></div>
-          <div class="device-detail" id="tesla-gw-detail">Not found on 192.168.68.0/22 — set TESLA_HOST in config.py</div>
-          <div class="device-detail">Auth: Bearer token · username=customer · password=last-5 of serial</div>
+          <div class="device-name">Tesla Energy Gateway 3V <span class="badge offline" id="tesla-gw-badge">not found</span></div>
+          <div class="device-detail" id="tesla-gw-detail">192.168.68.86 · Serial: GF2240460002D2 · FW: 25.26.0</div>
+          <div class="device-detail">Auth: Fleet API OAuth · auto-refreshes via auth.tesla.com</div>
         </div>
       </div>
     </div>
@@ -2898,7 +2920,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <div>✅ Pentair IntelliCenter — live (TCP 6681 responding)</div>
       <div>✅ Enphase IQ Gateway — found (needs Enphase account JWT in ENPHASE_TOKEN)</div>
       <div>⚠️ SPAN Panel — found (needs one-time physical token registration)</div>
-      <div>❌ Tesla Gateway — not on network (set TESLA_HOST when IP known)</div>
+      <div>✅ Tesla Energy Gateway 3V — Fleet API OAuth · auto-refresh enabled</div>
       <div>📋 SRP Utility — future (cloud polling, set SRP credentials)</div>
     </div>
   </div>
@@ -2912,7 +2934,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   <div class="row">
     <div class="card" style="flex:2;min-width:300px">
       <div class="card-header">
-        <span class="card-title" style="font-size:13px;font-weight:700">⚡ Tesla Energy Gateway V2</span>
+        <span class="card-title" style="font-size:13px;font-weight:700">⚡ Tesla Energy Gateway 3V</span>
         <span class="badge" id="tesla-energy-badge">—</span>
       </div>
       <div id="te-site-name" style="font-size:15px;font-weight:600;color:var(--text);margin-bottom:4px">—</div>
@@ -2929,23 +2951,16 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     </div>
   </div>
 
-  <!-- Setup card — shown when password not set or status != online -->
+  <!-- Offline card — shown when Tesla Fleet API is not polling -->
   <div id="tesla-setup-card" class="card" style="border-color:var(--warning);margin-bottom:12px">
     <div class="card-header">
-      <span class="card-title">⚙️ Setup Required</span>
-      <span class="badge warning">unconfigured</span>
+      <span class="card-title">⚠️ Tesla Gateway 3V — Offline</span>
+      <span class="badge warning">no data</span>
     </div>
-    <div style="color:var(--text-dim);font-size:12px;margin-bottom:12px">
-      Local password required — enter the password you set during Tesla app commissioning.<br>
-      This is the local gateway password created in the Tesla app when setting up the Powerwall (not your Tesla account password).
+    <div style="color:var(--text-dim);font-size:12px">
+      Auth: Fleet API OAuth via <code>auth.tesla.com</code> · tokens auto-refresh every 8h.<br>
+      If offline, check <code>jarvis-home-energy/tesla_cache.json</code> — refresh_token may have expired (re-run teslapy browser auth flow to re-authorize).
     </div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <input type="password" id="tesla-pw-input" placeholder="Gateway local password…"
-        style="flex:1;min-width:200px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;
-               padding:8px 12px;color:var(--text);font-family:inherit;font-size:13px;outline:none">
-      <button class="btn primary" onclick="saveTeslaPassword()" style="white-space:nowrap">Save &amp; Connect</button>
-    </div>
-    <div id="tesla-pw-status" style="font-size:11px;margin-top:8px;color:var(--text-dim)"></div>
   </div>
 
   <!-- Live gauges — shown only when online -->
@@ -3360,21 +3375,19 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     </div>
   </div>
 
-  <!-- Tesla (existing) -->
+  <!-- Tesla (Fleet API OAuth) -->
   <div class="card">
     <div class="card-header">
-      <span class="card-title">⚡ Tesla Gateway</span>
+      <span class="card-title">⚡ Tesla Energy Gateway 3V</span>
       <span class="badge" id="settings-tesla-badge">—</span>
     </div>
-    <div style="color:var(--text-dim);font-size:11px;margin-bottom:12px">
-      Local gateway password — set during Tesla app commissioning. Not your Tesla account password.
+    <div style="color:var(--text-dim);font-size:11px;margin-bottom:6px">
+      <strong>Auth: Fleet API OAuth</strong> — token cached in <code>tesla_cache.json</code>, auto-refreshes every 8h via <code>auth.tesla.com</code>.<br>
+      192.168.68.86 · Serial: GF2240460002D2 · FW: 25.26.0 · Part: 1841000-02-B<br>
+      To re-authorize: run teslapy browser flow → approve callback URL → token auto-saved.
     </div>
-    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-      <input type="password" id="settings-tesla-pw" placeholder="Gateway local password…"
-        style="flex:1;min-width:200px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;
-               padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
-      <button class="btn primary" onclick="saveTeslaPasswordFromSettings()">Save &amp; Connect</button>
-      <span id="settings-tesla-status" style="font-size:11px;color:var(--text-dim)"></span>
+    <div style="color:var(--text-dim);font-size:11px">
+      No stationary battery — backup power via Cybertruck Powershare (V2H)
     </div>
   </div>
 
@@ -3786,7 +3799,7 @@ function renderState(s) {
   // Solar sub
   document.getElementById('solar-sub').textContent =
     ed.status==='online'||ed.status==='partial' ? `Enphase D8.3.5167 · ${ed.serial||'202324023651'}` : 'Enphase · needs token';
-  document.getElementById('battery-sub').textContent = td.status==='online' ? 'Tesla Gateway V2 · online' : 'Tesla Gateway · not configured';
+  document.getElementById('battery-sub').textContent = td.status==='online' ? 'Tesla Gateway 3V · online' : 'Tesla Gateway 3V · offline';
 
   // Grid badge
   const gb = document.getElementById('grid-badge');

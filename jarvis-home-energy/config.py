@@ -28,10 +28,10 @@ PENTAIR_PORT = 6681  # Use raw TCP; WebSocket on 6680 as fallback
 # Device: TeslaWallConnector_OEB496 | 192.168.68.87 | No auth required
 TESLA_WC_HOST = "192.168.68.87"
 
-# ─── Tesla Gateway 3 (grid management — NO battery/Powerwall) ─────────────────
-# Device: Tesla Energy Gateway 3 | 192.168.68.86 | Serial GF2240460002D2 | FW 25.26.0
-# Auth: Fleet API OAuth (via teslapy) — local API endpoints return 403/404
-TESLA_HOST = "192.168.68.86"  # Tesla Gateway 3 (serial GF2240460002D2, fw 25.26.0)
+# ─── Tesla Energy Gateway 3V ──────────────────────────────────────────────────
+# Device: Tesla Energy Gateway 3V | 192.168.68.86 | Serial GF2240460002D2 | FW 25.26.0 | Part 1841000-02-B
+# Auth: Fleet API OAuth — tokens in tesla_cache.json, auto-refresh via auth.tesla.com (NOT teslapy refresh)
+TESLA_HOST = "192.168.68.86"  # Tesla Energy Gateway 3V
 TESLA_EMAIL = "rob.hartwig@gmail.com"
 TESLA_PASSWORD = ""  # Not needed — using Fleet API OAuth
 
@@ -61,7 +61,7 @@ NEST_ACCESS_TOKEN = ""  # Auto-refreshed at runtime — leave blank
 # ─── B-Hyve Sprinkler ─────────────────────────────────────────────────────────
 # Device: 192.168.68.66 (Orbit B-Hyve controller) — cloud API only via api.orbitbhyve.com
 BHYVE_EMAIL = "rob.hartwig@gmail.com"
-BHYVE_PASSWORD = "Now the cameras card. The Wyze source you pasted is just a Next.js shell — their actual streaming is proprietary WebRTC. Can't duplicate that directly. But there's a well-established open source approach: docker-wyze-bridge — a community container that authenticates with Wyze and converts your cameras to local RTSP/HLS/WebRTC streams. That's what I'd use to power real live feeds in the dashboard."
+BHYVE_PASSWORD = "fjyaJAZ8!TRjLLq"
 
 # ─── Dashboard ────────────────────────────────────────────────────────────────
 DASHBOARD_PORT = 8793

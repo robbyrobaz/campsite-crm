@@ -99,6 +99,27 @@ ORB improvement: target_horizon 5→10 bars = +14.6% PF, +14.6% Sharpe, +2.9pp W
 - wyze-sdk 2.2.0 has NO snapshot method — cameras show status only, no live feed
 - Ring invite: jarvis.is.my.coo@gmail.com — 14-day window (received Feb 23 9:50 PM)
 
+## Camera Setup (Feb 25, 2026)
+
+### Jarvis Home Energy — Cameras Page
+- **Upstairs Cam** (2CAA8E813AE9, 192.168.68.51): direct RTSP `rtsp://Camera:Feed@192.168.68.51/live`
+- **Downstairs Cam** (2CAA8E813B36, 192.168.68.82): direct RTSP `rtsp://Camera:Feed@192.168.68.82/live`
+- **Front Side Cam** (D03F275A9799, 192.168.68.76): newer firmware blocks RTSP → uses **docker-wyze-bridge**
+  - wyze-bridge RTSP: `rtsp://127.0.0.1:8554/front-side-cam`
+  - docker-wyze-bridge v2.10.3, host network mode, compose at `workspace/wyze-bridge/docker-compose.yml`
+  - Creds in `wyze-bridge/.env` (single-quoted password for $ and # chars)
+- **Frame serving**: background ffmpeg threads per camera → cache latest JPEG → `/api/camera/<id>/frame` responds in ~11ms
+- **JS polling**: 500ms refresh per camera via `_camRefreshTimers`; `_getRtspId()` maps cam name → stream id
+- **Blofin dashboard moved** to port 8892 (was 8888) to free port 8888 for wyze-bridge mediamtx
+
+### Tesla Gateway Local API
+- Gateway at 192.168.68.86, local API on port 443 (self-signed cert, use `-k`)
+- Auth endpoint: `POST /api/login/Basic` with `{"username":"customer","email":"rob.hartwig@gmail.com","password":"<install password>"}`
+- Returns `AuthCookie` — use in subsequent requests
+- Key endpoints (need auth): `/api/meters/aggregates`, `/api/system_status/soe`, `/api/system_status/grid_status`
+- Current status: 403 on all data endpoints — need installation password to unlock local API
+- Cloud Fleet API is returning 401 (pre-existing issue, unresolved)
+
 ## Ops Lessons (Feb 24, 2026)
 - **Kanban discipline**: spawn → PATCH In Progress → update status.json — must happen atomically. Rob called this out.
 - **Dispatch immediately**: don't wait for "ideal conditions" — when data supports a test, run it. Rob called out delay on ML exit re-run.

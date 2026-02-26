@@ -1,15 +1,6 @@
 {
-  "updatedAt": "2026-02-25T21:15:00-07:00",
-  "activeTasks": [
-    {
-      "id": "c_82e0864010d0e_19c981452a6",
-      "title": "Wyze Live Camera Feeds — RTSP MJPEG proxy",
-      "status": "in-progress",
-      "startedAt": "2026-02-25T21:15:00-07:00",
-      "assignee": "claude",
-      "notes": "PID 4164570. ffmpeg installed. RTSP confirmed: Upstairs 1920x1080, Downstairs TBD. Front Side snapshot fallback."
-    }
-  ],
+  "updatedAt": "2026-02-25T21:25:00-07:00",
+  "activeTasks": [],
   "health": {
     "cpu_temp": "61.0°C",
     "disk": "37% used (281G free)",
@@ -21,5 +12,5 @@
     },
     "critical_alerts": "none"
   },
-  "notes": "Cockpit sub-nav deployed and verified. Camera MJPEG builder running."
+  "notes": "Wyze RTSP MJPEG proxy shipped and committed. Camera feeds live for Upstairs/Downstairs. Board is clear."
 }

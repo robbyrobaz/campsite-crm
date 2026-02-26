@@ -14,6 +14,8 @@
 
 **The loop:** Global model → per-coin FT data shows which coins respond → eligibility enables/disables pairs → only winning coin+strategy combos trade.
 
+**Dashboard rule (Feb 25 2026):** NEVER show aggregate/system-wide PF, WR, or PnL on any dashboard. It lumps winners with losers and is meaningless. Always show **Top 10 pairs by FT profit factor** (min 20 FT trades). The system-wide numbers look terrible because they include hundreds of bad pairs — the signal is in the top performers only.
+
 ### Blofin Stack
 - Feature library: 95+ technical indicators
 - Backtester: 7-day historical replay, multi-timeframe

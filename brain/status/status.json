@@ -1,25 +1,25 @@
 {
-  "updatedAt": "2026-02-25T17:56:00-07:00",
+  "updatedAt": "2026-02-25T18:13:00-07:00",
   "activeTasks": [
     {
-      "id": "c_34eb81c6ce1d7_19c976db929",
-      "title": "Energy Dashboard: Mode Switcher — Dot Navigation",
-      "status": "in-progress",
-      "startedAt": "2026-02-25T17:56:00-07:00",
+      "cardId": "c_7a0e845c90f4f_19c977fd875",
+      "title": "NQ Pipeline: Per-strategy target_horizon support in run_phase2.py + retrain ORB at horizon=10",
+      "status": "In Progress",
       "assignee": "claude",
-      "notes": "PID 3972014. Sticky dot-button switcher, Mode 1 default, localStorage persistence. Round 3 confirmed complete before this fired."
+      "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
+      "pid": 3995510,
+      "restartedAt": "2026-02-25T18:13:00-07:00",
+      "note": "Stale recovery — was stuck >5h, restarted by dispatch pulse"
     }
   ],
   "health": {
-    "cpu_temp": "61.0°C",
-    "disk": "37% used (281G free)",
+    "cpu_temp": "83°C",
+    "disk_root": "37% (164G/468G used)",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "jarvis-home-energy": "active"
+      "blofin-stack-paper": "active"
     },
     "critical_alerts": "none"
-  },
-  "notes": "Mode switcher builder active. All other systems nominal."
+  }
 }

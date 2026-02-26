@@ -148,6 +148,6 @@ INTERIM:    IBKR paper account (DUH860616) used for delayed (~15 min) data via
 
 ### Execution Details
 - Lucid 100K Flex eval: max DD $3K, daily DD $2K, min 10 trades
-- Top Phase 2 strategies ready: momentum PF 2.91, orb PF 2.55, gap_fill PF 2.43
+- Top Phase 2 strategies ready: momentum PF 2.91, orb PF 2.92 (target_horizon=10), gap_fill PF 2.43
 - TradersPost webhook fires: {ticker: "NQH6", action: "buy"/"sell"/"exit", signalPrice: float, stopLoss: {...}, takeProfit: {...}}
 - Tradovate execution NOT through TradersPost for data — only for order routing on prop accounts

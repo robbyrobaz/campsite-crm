@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-02-26T12:13:00-07:00",
+  "timestamp": "2026-02-26T12:43:00-07:00",
   "activeTasks": [],
   "health": {
-    "cpu_temp": "61.0°C",
+    "cpu_temp": "97.0°C",
     "disk_usage": "39%",
     "services": "all active",
     "alerts": "none"

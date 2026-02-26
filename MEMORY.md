@@ -112,13 +112,14 @@ ORB improvement: target_horizon 5→10 bars = +14.6% PF, +14.6% Sharpe, +2.9pp W
 - **JS polling**: 500ms refresh per camera via `_camRefreshTimers`; `_getRtspId()` maps cam name → stream id
 - **Blofin dashboard moved** to port 8892 (was 8888) to free port 8888 for wyze-bridge mediamtx
 
-### Tesla Gateway Local API
-- Gateway at 192.168.68.86, local API on port 443 (self-signed cert, use `-k`)
-- Auth endpoint: `POST /api/login/Basic` with `{"username":"customer","email":"rob.hartwig@gmail.com","password":"<install password>"}`
-- Returns `AuthCookie` — use in subsequent requests
-- Key endpoints (need auth): `/api/meters/aggregates`, `/api/system_status/soe`, `/api/system_status/grid_status`
-- Current status: 403 on all data endpoints — need installation password to unlock local API
-- Cloud Fleet API is returning 401 (pre-existing issue, unresolved)
+### Tesla Fleet API Token Refresh (Feb 25, 2026)
+- Cache file: `jarvis-home-energy/tesla_cache.json` — tokens under `["rob.hartwig@gmail.com"]["sso"]`
+- teslapy's own `.refresh_token()` returns 404 — do NOT use it
+- **Working refresh**: `POST https://auth.tesla.com/oauth2/v3/token` with `{grant_type, client_id:"ownerapi", refresh_token, scope}`
+- Token expires every 8 hours — `_get_tesla_fleet_token()` in app.py auto-refreshes 5 min before expiry
+- Fleet API base: `https://owner-api.teslamotors.com/api/1/energy_sites/2252397277512276/`
+- Key endpoint: `/live_status` → solar_power, battery_power, grid_power, load_power, grid_status
+- **Status as of Feb 25 night**: grid=7065W (house load), solar=0W (dark), soe=0% (Gateway 3, no Powerwall)
 
 ## Ops Lessons (Feb 24, 2026)
 - **Kanban discipline**: spawn → PATCH In Progress → update status.json — must happen atomically. Rob called this out.

@@ -1,28 +1,24 @@
 {
-  "updatedAt": "2026-02-25T22:10:00-07:00",
+  "updatedAt": "2026-02-25T22:13:00-07:00",
   "activeTasks": [
     {
       "id": "c_8943547595525_19c98335808",
-      "title": "Numerai era-boost — all 3 models",
-      "status": "in-progress",
+      "title": "Numerai era-boost — full run, all 3 models",
+      "status": "In Progress",
       "startedAt": "2026-02-25T22:08:00-07:00",
       "assignee": "claude",
-      "pid": 43155,
-      "notes": "2nd attempt. Builder runs training directly (no TaskOutput). v2_equivalent features only."
+      "notes": "2nd attempt. Direct training, no TaskOutput spawn. v2_equivalent (304) features only. ETA 30-60 min."
     }
   ],
   "health": {
-    "cpu_temp": "71.0°C",
-    "disk": "38% used",
+    "cpu_temp": "73.0°C",
+    "disk": "38% used (166G/468G)",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
-      "blofin-dashboard": "active (port 8892)",
-      "blofin-stack-paper": "active",
-      "jarvis-home-energy": "active",
-      "wyze-bridge": "running (docker, host-network)"
+      "blofin-stack-paper": "active"
     },
     "critical_alerts": "none"
   },
-  "notes": "All cameras live. wyze-bridge persists via docker restart:unless-stopped. Numerai re-dispatched. Tesla local gateway needs installation password from Rob."
+  "notes": "Numerai era-boost training in progress. No stale cards. No planned cards queued."
 }

@@ -1,11 +1,12 @@
 {
-  "timestamp": "2026-02-26T08:13:00-07:00",
+  "timestamp": "2026-02-26T08:43:00-07:00",
   "activeTasks": [],
   "health": {
-    "cpu_temp": "57.0°C",
-    "disk_usage": "39% (275G free)",
+    "cpu_temp": "53.0°C",
+    "disk_usage": "39% (274G free)",
     "services": "all active",
     "critical_alerts": 0
   },
-  "lastDispatch": "2026-02-26T08:13:00-07:00"
+  "lastDispatch": "2026-02-26T08:43:00-07:00",
+  "notes": "Board has 1 Planned card (Roku integration) — incomplete setup (missing project_path). Waiting on project definition."
 }

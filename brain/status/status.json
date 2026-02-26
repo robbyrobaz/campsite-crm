@@ -1,10 +1,11 @@
 {
-  "lastPulse": "2026-02-26T07:13:00-07:00",
+  "timestamp": "2026-02-26T07:43:00-07:00",
   "activeTasks": [],
   "health": {
-    "cpu_temp": "53°C",
+    "cpu_temp": "54.0°C",
     "disk_usage": "39% (275G free)",
     "services": "all active",
-    "critical_alerts": "clean"
-  }
+    "critical_alerts": 0
+  },
+  "lastDispatch": "2026-02-26T07:43:00-07:00"
 }

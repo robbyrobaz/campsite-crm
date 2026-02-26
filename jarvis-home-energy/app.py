@@ -1595,6 +1595,9 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   main { padding: 16px 20px; }
   .view { display: none; }
   .view.active { display: block; }
+  /* Cockpit is a flex column so sub-panels fill remaining height */
+  #view-cockpit.active { display: flex; flex-direction: column; }
+  #view-cockpit .tablet-view { flex: 1; min-height: 0; height: auto; }
 
   /* Grid */
   .grid { display: grid; gap: 12px; }
@@ -1842,97 +1845,37 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     #view-microgrid .tab-status-bar { font-size: 0.7rem !important; flex-wrap: wrap !important; gap: 4px 8px !important; min-height: auto !important; padding: 6px 8px !important; }
   }
 
-  /* ── Mode Switcher ─────────────────────────────────────────────────── */
-  .mode-switcher {
-    display: flex;
-    justify-content: center;
-    gap: 8px;
-    padding: 8px 16px;
-    background: rgba(0,0,0,0.4);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    flex-shrink: 0;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .mode-btn {
+  /* ── Cockpit Sub-Nav ────────────────────────────────────────────────── */
+  .csub-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    padding: 8px 20px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.08);
-    background: rgba(255,255,255,0.04);
+    gap: 3px;
+    padding: 7px 18px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: rgba(255,255,255,0.03);
     cursor: pointer;
-    transition: all 0.25s ease;
-    min-width: 110px;
+    transition: all 0.2s ease;
+    min-width: 100px;
     user-select: none;
+    color: rgba(255,255,255,0.35);
   }
-  .mode-btn:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(255,255,255,0.15);
-  }
-  .mode-btn.active {
-    background: rgba(255,255,255,0.07);
-  }
-  .mode-btn .mode-label {
-    font-size: 0.72rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    font-weight: 700;
-    opacity: 0.45;
-    transition: opacity 0.25s;
-  }
-  .mode-btn.active .mode-label {
-    opacity: 1;
-  }
-  .mode-btn .mode-icon {
-    font-size: 1.1rem;
-    line-height: 1;
-  }
-  .mode-btn .mode-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    border: 1.5px solid currentColor;
-    background: transparent;
-    transition: all 0.25s ease;
-  }
-  .mode-btn.active .mode-dot {
-    background: currentColor;
-    box-shadow: 0 0 8px currentColor;
-  }
-  .mode-btn[data-mode='microgrid'] { color: #FFD700; }
-  .mode-btn[data-mode='trading']   { color: #3B82F6; }
-  .mode-btn[data-mode='backup']    { color: #00FFFF; }
-  .mode-btn:not(.active) { color: rgba(255,255,255,0.35); }
-  .mode-btn.active[data-mode='microgrid'] { border-color: rgba(255,215,0,0.3); box-shadow: 0 0 12px rgba(255,215,0,0.08); }
-  .mode-btn.active[data-mode='trading']   { border-color: rgba(59,130,246,0.3); box-shadow: 0 0 12px rgba(59,130,246,0.08); }
-  .mode-btn.active[data-mode='backup']    { border-color: rgba(0,255,255,0.3);  box-shadow: 0 0 12px rgba(0,255,255,0.08); }
+  .csub-btn:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.7); }
+  .csub-btn.active { background: rgba(255,255,255,0.06); color: #fff; }
+  .csub-btn .csub-icon { font-size: 1rem; line-height: 1; }
+  .csub-btn .csub-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 700; opacity: 0.7; transition: opacity 0.2s; }
+  .csub-btn.active .csub-label { opacity: 1; }
+  .csub-btn .csub-dot { width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid currentColor; background: transparent; transition: all 0.2s ease; }
+  .csub-btn.active .csub-dot { background: currentColor; box-shadow: 0 0 6px currentColor; }
+  .csub-btn.active[data-csub='live']      { color: #10b981; border-color: rgba(16,185,129,0.25); box-shadow: 0 0 10px rgba(16,185,129,0.07); }
+  .csub-btn.active[data-csub='microgrid'] { color: #FFD700; border-color: rgba(255,215,0,0.25);  box-shadow: 0 0 10px rgba(255,215,0,0.07);  }
+  .csub-btn.active[data-csub='trading']   { color: #3B82F6; border-color: rgba(59,130,246,0.25); box-shadow: 0 0 10px rgba(59,130,246,0.07); }
+  .csub-btn.active[data-csub='backup']    { color: #00FFFF; border-color: rgba(0,255,255,0.25);  box-shadow: 0 0 10px rgba(0,255,255,0.07);  }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 </head>
 <body>
-
-<div class="mode-switcher" id="mode-switcher">
-  <button class="mode-btn active" data-mode="microgrid" onclick="switchMode('microgrid')">
-    <span class="mode-icon">⚡</span>
-    <span class="mode-label">Microgrid</span>
-    <span class="mode-dot"></span>
-  </button>
-  <button class="mode-btn" data-mode="trading" onclick="switchMode('trading')">
-    <span class="mode-icon">📊</span>
-    <span class="mode-label">Trading</span>
-    <span class="mode-dot"></span>
-  </button>
-  <button class="mode-btn" data-mode="backup" onclick="switchMode('backup')">
-    <span class="mode-icon">🔋</span>
-    <span class="mode-label">Backup</span>
-    <span class="mode-dot"></span>
-  </button>
-</div>
 
 <header>
   <div class="logo">⚡ JARVIS <span>Home Energy OS</span></div>
@@ -1948,10 +1891,6 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <button onclick="showView('home-control')">Home Control</button>
     <button onclick="showView('sprinklers')">Sprinklers</button>
     <button onclick="showView('settings')">Settings</button>
-    <span style="width:1px;height:24px;background:rgba(255,255,255,0.12);margin:0 4px;flex-shrink:0"></span>
-    <button onclick="showView('microgrid')" style="color:#FFD700;display:none">⚡ Microgrid</button>
-    <button onclick="showView('trading')" style="color:#00d4ff;display:none">📊 Trading</button>
-    <button onclick="showView('backup')" style="color:#00FFFF;display:none">🔋 Backup</button>
   </nav>
   <div class="status-bar">
     <div id="span-dot" class="dot offline" title="SPAN Panel"></div>
@@ -1967,6 +1906,31 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 <!-- ═══ ENERGY COCKPIT ═══════════════════════════════════════════════════════ -->
 <div id="view-cockpit" class="view active">
+
+<div id="cockpit-subnav" style="display:flex;justify-content:center;gap:12px;padding:10px 16px;background:rgba(0,0,0,0.3);border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0">
+  <button class="csub-btn" data-csub="live" onclick="setCockpitSub('live')">
+    <span class="csub-icon">⚡</span>
+    <span class="csub-label">Live Power Flow</span>
+    <span class="csub-dot"></span>
+  </button>
+  <button class="csub-btn" data-csub="microgrid" onclick="setCockpitSub('microgrid')">
+    <span class="csub-icon">🔆</span>
+    <span class="csub-label">Microgrid</span>
+    <span class="csub-dot"></span>
+  </button>
+  <button class="csub-btn" data-csub="trading" onclick="setCockpitSub('trading')">
+    <span class="csub-icon">📊</span>
+    <span class="csub-label">Trading</span>
+    <span class="csub-dot"></span>
+  </button>
+  <button class="csub-btn" data-csub="backup" onclick="setCockpitSub('backup')">
+    <span class="csub-icon">🔋</span>
+    <span class="csub-label">Backup</span>
+    <span class="csub-dot"></span>
+  </button>
+</div>
+
+<div id="csub-live" style="display:none">
 
   <!-- Animated Power Flow -->
   <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
@@ -2318,6 +2282,258 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       </div>
     </div>
   </div>
+
+</div><!-- /csub-live -->
+
+<div id="csub-microgrid" class="tablet-view" style="display:none">
+  <div class="tab-status-bar" style="min-height:48px;gap:16px">
+    <span class="sb-time" id="mc-time" style="font-size:1.4rem;font-weight:800">--:--</span>
+    <span class="sb-rate off-peak" id="mc-rate" style="font-size:1.4rem">Off-Peak</span>
+    <span id="mc-weather" style="opacity:0.7;font-size:1.4rem">Queen Creek, AZ</span>
+    <span style="flex:1"></span>
+    <span id="mc-banner-solar" style="color:#FFD700;font-weight:700;font-size:1.4rem">☀ — kW</span>
+    <span id="mc-banner-load" style="color:#9B59B6;font-weight:700;font-size:1.4rem">🏠 — kW</span>
+    <span id="mc-banner-grid" style="color:#3B82F6;font-weight:700;font-size:1.4rem">⚡ — kW</span>
+    <span id="mc-banner-cost" style="color:#10b981;font-weight:700;font-size:1.4rem">$—/hr</span>
+    <span id="mc-banner-coverage" style="color:#FFD700;font-weight:700;font-size:1.4rem">—% ☀</span>
+    <span class="sb-grid up" id="mc-grid-status" style="font-size:1.4rem">Grid ✓</span>
+    <span id="mc-island-badge" class="island-badge" style="display:none;font-size:1.4rem">⚡ ISLANDED</span>
+  </div>
+  <div class="mc-layout">
+    <!-- LEFT — Sources -->
+    <div class="mc-left">
+      <div class="glass-card" id="mc-solar-card" style="border-color:rgba(255,215,0,0.3)">
+        <span class="label-sm">Solar Production</span>
+        <div class="hero-num" id="mc-solar-total-kw" style="color:#FFD700">--</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW total</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin-top:10px;font-size:0.78rem">
+          <div style="opacity:0.55">Enphase</div><div style="opacity:0.55">SolarEdge</div>
+          <div id="mc-enphase-sub" style="color:#FFD700;font-weight:600">--</div>
+          <div id="mc-solaredge-sub" style="color:#FFC200;font-weight:600">--</div>
+        </div>
+        <canvas id="mc-solar-spark" class="sparkline" style="margin-top:8px"></canvas>
+      </div>
+      <div class="glass-card" id="mc-grid-card" style="border-color:rgba(59,130,246,0.3)">
+        <span class="label-sm">SRP Grid</span>
+        <div class="hero-num" id="mc-grid-kw" style="color:#3B82F6">—</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
+        <div id="mc-grid-direction" style="font-size:10px;opacity:0.5;margin-top:4px">—</div>
+        <canvas id="mc-grid-spark" class="sparkline" style="margin-top:8px"></canvas>
+      </div>
+    </div>
+    <!-- CENTER — Topology canvas + hero overlay -->
+    <div class="mc-center">
+      <canvas id="mc-canvas"></canvas>
+      <div class="mc-overlay">
+        <div class="glass-card mc-hero" style="min-width:240px;padding:20px">
+          <span class="label-sm" style="text-align:center;display:block;margin-bottom:6px">NET FLOW</span>
+          <div style="font-size:3rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums" id="mc-net-kw">—</div>
+          <div style="font-size:0.85rem;opacity:0.45;margin-top:2px" id="mc-net-direction">kW</div>
+          <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;text-align:left">
+            <div><span class="label-sm">Home Load</span><div class="value-md" id="mc-home-kw">—</div></div>
+            <div><span class="label-sm">Cost/hr</span><div class="value-md" id="mc-cost-hr" style="color:#10b981">—</div></div>
+            <div><span class="label-sm">Solar Cover</span><div class="value-md" id="mc-solar-pct">—</div></div>
+            <div><span class="label-sm">15-min Demand</span><div class="value-md" id="mc-demand-15m">—</div></div>
+            <div style="grid-column:1/-1"><span class="label-sm">Session Peak</span><div class="value-md" id="mc-session-peak">—</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- RIGHT — Loads -->
+    <div class="mc-right">
+      <div class="glass-card" id="mc-home-card" style="flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column">
+        <span class="label-sm">Home Panel</span>
+        <div class="hero-num" id="mc-home-load-kw" style="color:#9B59B6">—</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW total</div>
+        <canvas id="mc-home-spark" class="sparkline" style="margin-top:8px;flex-shrink:0"></canvas>
+        <div id="mc-home-circuits" style="margin-top:8px;font-size:0.75rem;overflow:hidden;flex:1"></div>
+      </div>
+      <div class="glass-card" id="mc-pool-card">
+        <span class="label-sm">Pool Sub-Panel</span>
+        <div class="hero-num" id="mc-pool-kw" style="color:#06b6d4">—</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
+        <div id="mc-pool-status" style="font-size:10px;opacity:0.5;margin-top:4px">—</div>
+        <canvas id="mc-pool-spark" class="sparkline" style="margin-top:8px"></canvas>
+      </div>
+      <div class="glass-card" id="mc-truck-card" style="border-color:rgba(0,255,255,0.3)">
+        <span class="label-sm">Cybertruck</span>
+        <div class="hero-num" id="mc-truck-kw" style="color:#00FFFF">—</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
+        <div id="mc-truck-mode" style="font-size:10px;opacity:0.5;margin-top:4px">Idle</div>
+        <canvas id="mc-truck-spark" class="sparkline" style="margin-top:8px"></canvas>
+      </div>
+    </div>
+  </div>
+</div><!-- /csub-microgrid -->
+
+<div id="csub-trading" class="tablet-view" style="display:none">
+  <div class="tab-status-bar" style="font-size:1.4rem;padding:6px 14px;gap:16px;min-height:48px;flex-wrap:wrap">
+    <span id="td-time" style="font-weight:800">--:--</span>
+    <span class="sb-rate off-peak" id="td-rate" style="font-size:1.1rem;padding:3px 8px">Off-Peak</span>
+    <span id="td-weather" style="opacity:0.85">☀ --</span>
+    <span style="flex:1"></span>
+    <span style="font-size:0.85rem;opacity:0.45" id="td-last-update">--</span>
+  </div>
+  <div id="td-totals-bar" style="display:flex;gap:24px;padding:8px 16px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;flex-wrap:wrap;align-items:center">
+    <div style="text-align:center"><div class="label-sm">Total Solar</div><div id="td-total-solar" style="color:#FFD700;font-size:1.2rem;font-weight:800">--</div></div>
+    <div style="text-align:center"><div class="label-sm">Home Load</div><div id="td-total-load" style="color:#9B59B6;font-size:1.2rem;font-weight:800">--</div></div>
+    <div style="text-align:center"><div class="label-sm">SRP Grid</div><div id="td-total-grid" style="color:#3B82F6;font-size:1.2rem;font-weight:800">--</div></div>
+    <div style="text-align:center"><div class="label-sm">Solar Coverage</div><div id="td-total-coverage" style="color:#10b981;font-size:1.2rem;font-weight:800">--</div></div>
+    <div style="text-align:center"><div class="label-sm">Cost/hr</div><div id="td-total-cost" style="color:#10b981;font-size:1.2rem;font-weight:800">--</div></div>
+    <div style="text-align:center"><div class="label-sm">$/kWh</div><div style="color:#10b981;font-size:1.2rem;font-weight:800">$0.18</div></div>
+  </div>
+  <div class="td-layout">
+    <div class="td-top">
+      <!-- LEFT — Solar Production -->
+      <div class="td-col">
+        <div class="glass-card" style="flex-shrink:0">
+          <span class="label-sm">Enphase Production</span>
+          <div class="value-md" id="td-enphase-kw" style="color:#FFD700;font-size:2.4rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          <canvas class="sparkline" id="td-enphase-spark"></canvas>
+        </div>
+        <div class="glass-card" style="flex-shrink:0">
+          <span class="label-sm">SolarEdge Production</span>
+          <div class="value-md" id="td-solaredge-kw" style="color:#FFC200;font-size:2.4rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          <canvas class="sparkline" id="td-solaredge-spark"></canvas>
+        </div>
+        <div class="glass-card" style="flex-shrink:0">
+          <span class="label-sm">Combined Solar</span>
+          <div class="value-md" id="td-total-solar-kw" style="font-size:2.4rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          <div style="font-size:10px;opacity:0.45;margin-top:4px" id="td-solar-capacity-pct">— % of 11.8 kW</div>
+        </div>
+      </div>
+      <!-- CENTER — Sankey Distribution -->
+      <div class="td-col" style="overflow:hidden">
+        <div class="glass-card" style="flex:1;padding:12px;min-height:0;display:flex;flex-direction:column">
+          <span class="label-sm" style="margin-bottom:6px">Live Energy Distribution</span>
+          <canvas id="td-sankey-canvas" style="flex:1;width:100%;display:block;min-height:0"></canvas>
+        </div>
+      </div>
+      <!-- RIGHT — Load Intelligence -->
+      <div class="td-col" style="overflow:hidden">
+        <div class="glass-card" style="flex:1;overflow:hidden;display:flex;flex-direction:column">
+          <span class="label-sm" style="margin-bottom:8px;flex-shrink:0">Top Circuit Loads</span>
+          <div id="td-circuit-bars" style="overflow-y:auto;flex:1;min-height:0"></div>
+        </div>
+      </div>
+    </div><!-- /td-top -->
+    <!-- BOTTOM — Demand strip -->
+    <div class="td-bottom">
+      <div class="glass-card" style="padding:10px 14px">
+        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+          <div>
+            <span class="label-sm">15-min Demand</span>
+            <div class="value-md" id="td-demand-15m" style="font-size:2.2rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          </div>
+          <div>
+            <span class="label-sm">Session Peak</span>
+            <div class="value-md" id="td-peak-proj" style="font-size:2.2rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          </div>
+          <div style="text-align:center">
+            <span class="label-sm">Cost/hr</span>
+            <div id="td-cost-hr" style="color:#10b981;font-size:2.2rem;font-weight:700">--</div>
+          </div>
+          <div style="text-align:center">
+            <span class="label-sm">Solar Coverage</span>
+            <div id="td-solar-coverage" style="color:#FFD700;font-size:2.2rem;font-weight:700">--</div>
+          </div>
+          <div style="flex:1;min-width:120px">
+            <span class="label-sm" style="margin-bottom:3px">Demand Exposure</span>
+            <div style="height:7px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden">
+              <div id="td-demand-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#10b981,#f59e0b,#ef4444);border-radius:3px;transition:width 0.5s"></div>
+            </div>
+          </div>
+          <canvas id="td-demand-chart" style="width:260px;height:42px;flex-shrink:0"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div><!-- /csub-trading -->
+
+<div id="csub-backup" class="tablet-view" style="display:none">
+  <div class="tab-status-bar" id="bi-statusbar">
+    <span style="font-size:12px;font-weight:700">🔋 Backup Intelligence</span>
+    <span id="bi-island-badge" class="island-badge" style="display:none">⚡ ISLANDED</span>
+    <span style="flex:1"></span>
+    <span style="font-size:10px;opacity:0.45" id="bi-last-update">—</span>
+  </div>
+  <div class="bi-layout">
+    <!-- LEFT — Primary backup card -->
+    <div class="bi-primary">
+      <div class="glass-card" id="bi-main-card">
+        <span class="label-sm" style="margin-bottom:8px">Backup Status — Cybertruck Powershare</span>
+        <div style="display:flex;align-items:center;gap:14px">
+          <canvas id="bi-soc-ring" width="110" height="110" style="flex-shrink:0"></canvas>
+          <div>
+            <div style="font-size:3rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums" id="bi-soc-pct"><span style="font-size:1rem;opacity:0.35">No data</span></div>
+            <div style="font-size:11px;opacity:0.4;margin-top:3px">Cybertruck SoC</div>
+            <div style="margin-top:8px"><span class="badge offline" id="bi-readiness-badge">No Data</span></div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
+          <div><span class="label-sm">Discharge Rate</span><div class="value-md" id="bi-discharge-kw">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div></div>
+          <div><span class="label-sm">Est. Runtime</span><div class="value-md" id="bi-runtime-hr" style="color:#10b981">— <span style="font-size:0.8rem;opacity:0.4">hrs</span></div></div>
+        </div>
+      </div>
+      <!-- Runtime Scenarios -->
+      <div class="glass-card" style="flex-shrink:0">
+        <span class="label-sm" style="margin-bottom:8px">Runtime Scenarios (~95 kWh usable)</span>
+        <div class="scenario-row">
+          <div><div class="scenario-label">Critical Loads Only</div><div style="font-size:9px;opacity:0.4">~1.5 kW — bedroom, office, hallway</div></div>
+          <div class="scenario-hours" style="color:#10b981" id="bi-rt-critical">— <span style="font-size:0.8rem;opacity:0.4">h</span></div>
+        </div>
+        <div class="scenario-row">
+          <div><div class="scenario-label">Current Load</div><div style="font-size:9px;opacity:0.4" id="bi-current-load-label">—</div></div>
+          <div class="scenario-hours" style="color:#f59e0b" id="bi-rt-current">— <span style="font-size:0.8rem;opacity:0.4">h</span></div>
+        </div>
+        <div class="scenario-row" style="margin-bottom:0">
+          <div><div class="scenario-label">Peak (session max)</div><div style="font-size:9px;opacity:0.4" id="bi-peak-load-label">—</div></div>
+          <div class="scenario-hours" style="color:#ef4444" id="bi-rt-peak">— <span style="font-size:0.8rem;opacity:0.4">h</span></div>
+        </div>
+      </div>
+    </div><!-- /bi-primary -->
+
+    <!-- RIGHT TOP — Load Shedding -->
+    <div class="bi-secondary">
+      <div class="glass-card" style="height:100%;overflow:hidden">
+        <span class="label-sm" style="margin-bottom:8px">Load Shedding Priority</span>
+        <div class="priority-item shed-first">
+          <div class="priority-num" style="color:#ef4444">1</div>
+          <div class="priority-name">Pool Sub-Panel</div>
+          <div class="priority-kw" id="bi-pool-kw">—</div>
+          <button class="shed-btn" onclick="shedCircuit('pool')">Shed</button>
+        </div>
+        <div class="priority-item shed-second">
+          <div class="priority-num" style="color:#f59e0b">2</div>
+          <div class="priority-name">EV Charging (Wall Connector)</div>
+          <div class="priority-kw" id="bi-ev-kw">—</div>
+          <button class="shed-btn" onclick="shedCircuit('ev')">Shed</button>
+        </div>
+        <div class="priority-item shed-third">
+          <div class="priority-num" style="color:#6366f1">3</div>
+          <div class="priority-name">AC Condenser 2</div>
+          <div class="priority-kw" id="bi-ac2-kw">—</div>
+          <button class="shed-btn" onclick="shedCircuit('ac2')">Shed</button>
+        </div>
+        <div class="priority-item shed-nc">
+          <div class="priority-num" style="color:rgba(255,255,255,0.3)">4</div>
+          <div class="priority-name" style="opacity:0.45">Non-critical circuits</div>
+          <div class="priority-kw">—</div>
+        </div>
+      </div>
+    </div><!-- /bi-secondary -->
+
+    <!-- RIGHT BOTTOM — Island Event Log -->
+    <div class="bi-log">
+      <div class="glass-card" style="height:100%;overflow:hidden">
+        <span class="label-sm" style="margin-bottom:6px">Island Event Log</span>
+        <div class="event-log" id="bi-event-log">
+          <div><span class="ev-time">—</span>No events recorded</div>
+        </div>
+      </div>
+    </div><!-- /bi-log -->
+  </div>
+</div><!-- /csub-backup -->
 
 </div><!-- /cockpit -->
 
@@ -3093,275 +3309,21 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 </div><!-- /settings -->
 
-<!-- ═══════════════════════════════════════════════════════════════════════
-     TABLET MODE 1 — MICROGRID COMMAND CORE
-     ═══════════════════════════════════════════════════════════════════════ -->
-<div id="view-microgrid" class="view tablet-view">
-  <div class="tab-status-bar" style="min-height:48px;gap:16px">
-    <span class="sb-time" id="mc-time" style="font-size:1.4rem;font-weight:800">--:--</span>
-    <span class="sb-rate off-peak" id="mc-rate" style="font-size:1.4rem">Off-Peak</span>
-    <span id="mc-weather" style="opacity:0.7;font-size:1.4rem">Queen Creek, AZ</span>
-    <span style="flex:1"></span>
-    <span id="mc-banner-solar" style="color:#FFD700;font-weight:700;font-size:1.4rem">☀ — kW</span>
-    <span id="mc-banner-load" style="color:#9B59B6;font-weight:700;font-size:1.4rem">🏠 — kW</span>
-    <span id="mc-banner-grid" style="color:#3B82F6;font-weight:700;font-size:1.4rem">⚡ — kW</span>
-    <span id="mc-banner-cost" style="color:#10b981;font-weight:700;font-size:1.4rem">$—/hr</span>
-    <span id="mc-banner-coverage" style="color:#FFD700;font-weight:700;font-size:1.4rem">—% ☀</span>
-    <span class="sb-grid up" id="mc-grid-status" style="font-size:1.4rem">Grid ✓</span>
-    <span id="mc-island-badge" class="island-badge" style="display:none;font-size:1.4rem">⚡ ISLANDED</span>
-  </div>
-  <div class="mc-layout">
-    <!-- LEFT — Sources -->
-    <div class="mc-left">
-      <div class="glass-card" id="mc-solar-card" style="border-color:rgba(255,215,0,0.3)">
-        <span class="label-sm">Solar Production</span>
-        <div class="hero-num" id="mc-solar-total-kw" style="color:#FFD700">--</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW total</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin-top:10px;font-size:0.78rem">
-          <div style="opacity:0.55">Enphase</div><div style="opacity:0.55">SolarEdge</div>
-          <div id="mc-enphase-sub" style="color:#FFD700;font-weight:600">--</div>
-          <div id="mc-solaredge-sub" style="color:#FFC200;font-weight:600">--</div>
-        </div>
-        <canvas id="mc-solar-spark" class="sparkline" style="margin-top:8px"></canvas>
-      </div>
-      <div class="glass-card" id="mc-grid-card" style="border-color:rgba(59,130,246,0.3)">
-        <span class="label-sm">SRP Grid</span>
-        <div class="hero-num" id="mc-grid-kw" style="color:#3B82F6">—</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
-        <div id="mc-grid-direction" style="font-size:10px;opacity:0.5;margin-top:4px">—</div>
-        <canvas id="mc-grid-spark" class="sparkline" style="margin-top:8px"></canvas>
-      </div>
-    </div>
-    <!-- CENTER — Topology canvas + hero overlay -->
-    <div class="mc-center">
-      <canvas id="mc-canvas"></canvas>
-      <div class="mc-overlay">
-        <div class="glass-card mc-hero" style="min-width:240px;padding:20px">
-          <span class="label-sm" style="text-align:center;display:block;margin-bottom:6px">NET FLOW</span>
-          <div style="font-size:3rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums" id="mc-net-kw">—</div>
-          <div style="font-size:0.85rem;opacity:0.45;margin-top:2px" id="mc-net-direction">kW</div>
-          <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;text-align:left">
-            <div><span class="label-sm">Home Load</span><div class="value-md" id="mc-home-kw">—</div></div>
-            <div><span class="label-sm">Cost/hr</span><div class="value-md" id="mc-cost-hr" style="color:#10b981">—</div></div>
-            <div><span class="label-sm">Solar Cover</span><div class="value-md" id="mc-solar-pct">—</div></div>
-            <div><span class="label-sm">15-min Demand</span><div class="value-md" id="mc-demand-15m">—</div></div>
-            <div style="grid-column:1/-1"><span class="label-sm">Session Peak</span><div class="value-md" id="mc-session-peak">—</div></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- RIGHT — Loads -->
-    <div class="mc-right">
-      <div class="glass-card" id="mc-home-card" style="flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column">
-        <span class="label-sm">Home Panel</span>
-        <div class="hero-num" id="mc-home-load-kw" style="color:#9B59B6">—</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW total</div>
-        <canvas id="mc-home-spark" class="sparkline" style="margin-top:8px;flex-shrink:0"></canvas>
-        <div id="mc-home-circuits" style="margin-top:8px;font-size:0.75rem;overflow:hidden;flex:1"></div>
-      </div>
-      <div class="glass-card" id="mc-pool-card">
-        <span class="label-sm">Pool Sub-Panel</span>
-        <div class="hero-num" id="mc-pool-kw" style="color:#06b6d4">—</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
-        <div id="mc-pool-status" style="font-size:10px;opacity:0.5;margin-top:4px">—</div>
-        <canvas id="mc-pool-spark" class="sparkline" style="margin-top:8px"></canvas>
-      </div>
-      <div class="glass-card" id="mc-truck-card" style="border-color:rgba(0,255,255,0.3)">
-        <span class="label-sm">Cybertruck</span>
-        <div class="hero-num" id="mc-truck-kw" style="color:#00FFFF">—</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
-        <div id="mc-truck-mode" style="font-size:10px;opacity:0.5;margin-top:4px">Idle</div>
-        <canvas id="mc-truck-spark" class="sparkline" style="margin-top:8px"></canvas>
-      </div>
-    </div>
-  </div>
-</div><!-- /microgrid -->
-
-<!-- ═══════════════════════════════════════════════════════════════════════
-     TABLET MODE 2 — ENERGY TRADING DESK
-     ═══════════════════════════════════════════════════════════════════════ -->
-<div id="view-trading" class="view tablet-view">
-  <div class="tab-status-bar" style="font-size:1.4rem;padding:6px 14px;gap:16px;min-height:48px;flex-wrap:wrap">
-    <span id="td-time" style="font-weight:800">--:--</span>
-    <span class="sb-rate off-peak" id="td-rate" style="font-size:1.1rem;padding:3px 8px">Off-Peak</span>
-    <span id="td-weather" style="opacity:0.85">☀ --</span>
-    <span style="flex:1"></span>
-    <span style="font-size:0.85rem;opacity:0.45" id="td-last-update">--</span>
-  </div>
-  <div id="td-totals-bar" style="display:flex;gap:24px;padding:8px 16px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;flex-wrap:wrap;align-items:center">
-    <div style="text-align:center"><div class="label-sm">Total Solar</div><div id="td-total-solar" style="color:#FFD700;font-size:1.2rem;font-weight:800">--</div></div>
-    <div style="text-align:center"><div class="label-sm">Home Load</div><div id="td-total-load" style="color:#9B59B6;font-size:1.2rem;font-weight:800">--</div></div>
-    <div style="text-align:center"><div class="label-sm">SRP Grid</div><div id="td-total-grid" style="color:#3B82F6;font-size:1.2rem;font-weight:800">--</div></div>
-    <div style="text-align:center"><div class="label-sm">Solar Coverage</div><div id="td-total-coverage" style="color:#10b981;font-size:1.2rem;font-weight:800">--</div></div>
-    <div style="text-align:center"><div class="label-sm">Cost/hr</div><div id="td-total-cost" style="color:#10b981;font-size:1.2rem;font-weight:800">--</div></div>
-    <div style="text-align:center"><div class="label-sm">$/kWh</div><div style="color:#10b981;font-size:1.2rem;font-weight:800">$0.18</div></div>
-  </div>
-  <div class="td-layout">
-    <div class="td-top">
-      <!-- LEFT — Solar Production -->
-      <div class="td-col">
-        <div class="glass-card" style="flex-shrink:0">
-          <span class="label-sm">Enphase Production</span>
-          <div class="value-md" id="td-enphase-kw" style="color:#FFD700;font-size:2.4rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
-          <canvas class="sparkline" id="td-enphase-spark"></canvas>
-        </div>
-        <div class="glass-card" style="flex-shrink:0">
-          <span class="label-sm">SolarEdge Production</span>
-          <div class="value-md" id="td-solaredge-kw" style="color:#FFC200;font-size:2.4rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
-          <canvas class="sparkline" id="td-solaredge-spark"></canvas>
-        </div>
-        <div class="glass-card" style="flex-shrink:0">
-          <span class="label-sm">Combined Solar</span>
-          <div class="value-md" id="td-total-solar-kw" style="font-size:2.4rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
-          <div style="font-size:10px;opacity:0.45;margin-top:4px" id="td-solar-capacity-pct">— % of 11.8 kW</div>
-        </div>
-      </div>
-      <!-- CENTER — Sankey Distribution -->
-      <div class="td-col" style="overflow:hidden">
-        <div class="glass-card" style="flex:1;padding:12px;min-height:0;display:flex;flex-direction:column">
-          <span class="label-sm" style="margin-bottom:6px">Live Energy Distribution</span>
-          <canvas id="td-sankey-canvas" style="flex:1;width:100%;display:block;min-height:0"></canvas>
-        </div>
-      </div>
-      <!-- RIGHT — Load Intelligence -->
-      <div class="td-col" style="overflow:hidden">
-        <div class="glass-card" style="flex:1;overflow:hidden;display:flex;flex-direction:column">
-          <span class="label-sm" style="margin-bottom:8px;flex-shrink:0">Top Circuit Loads</span>
-          <div id="td-circuit-bars" style="overflow-y:auto;flex:1;min-height:0"></div>
-        </div>
-      </div>
-    </div><!-- /td-top -->
-    <!-- BOTTOM — Demand strip -->
-    <div class="td-bottom">
-      <div class="glass-card" style="padding:10px 14px">
-        <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-          <div>
-            <span class="label-sm">15-min Demand</span>
-            <div class="value-md" id="td-demand-15m" style="font-size:2.2rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
-          </div>
-          <div>
-            <span class="label-sm">Session Peak</span>
-            <div class="value-md" id="td-peak-proj" style="font-size:2.2rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
-          </div>
-          <div style="text-align:center">
-            <span class="label-sm">Cost/hr</span>
-            <div id="td-cost-hr" style="color:#10b981;font-size:2.2rem;font-weight:700">--</div>
-          </div>
-          <div style="text-align:center">
-            <span class="label-sm">Solar Coverage</span>
-            <div id="td-solar-coverage" style="color:#FFD700;font-size:2.2rem;font-weight:700">--</div>
-          </div>
-          <div style="flex:1;min-width:120px">
-            <span class="label-sm" style="margin-bottom:3px">Demand Exposure</span>
-            <div style="height:7px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden">
-              <div id="td-demand-bar" style="height:100%;width:0%;background:linear-gradient(90deg,#10b981,#f59e0b,#ef4444);border-radius:3px;transition:width 0.5s"></div>
-            </div>
-          </div>
-          <canvas id="td-demand-chart" style="width:260px;height:42px;flex-shrink:0"></canvas>
-        </div>
-      </div>
-    </div>
-  </div>
-</div><!-- /trading -->
-
-<!-- ═══════════════════════════════════════════════════════════════════════
-     TABLET MODE 3 — BACKUP INTELLIGENCE
-     ═══════════════════════════════════════════════════════════════════════ -->
-<div id="view-backup" class="view tablet-view">
-  <div class="tab-status-bar" id="bi-statusbar">
-    <span style="font-size:12px;font-weight:700">🔋 Backup Intelligence</span>
-    <span id="bi-island-badge" class="island-badge" style="display:none">⚡ ISLANDED</span>
-    <span style="flex:1"></span>
-    <span style="font-size:10px;opacity:0.45" id="bi-last-update">—</span>
-  </div>
-  <div class="bi-layout">
-    <!-- LEFT — Primary backup card -->
-    <div class="bi-primary">
-      <div class="glass-card" id="bi-main-card">
-        <span class="label-sm" style="margin-bottom:8px">Backup Status — Cybertruck Powershare</span>
-        <div style="display:flex;align-items:center;gap:14px">
-          <canvas id="bi-soc-ring" width="110" height="110" style="flex-shrink:0"></canvas>
-          <div>
-            <div style="font-size:3rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums" id="bi-soc-pct"><span style="font-size:1rem;opacity:0.35">No data</span></div>
-            <div style="font-size:11px;opacity:0.4;margin-top:3px">Cybertruck SoC</div>
-            <div style="margin-top:8px"><span class="badge offline" id="bi-readiness-badge">No Data</span></div>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px">
-          <div><span class="label-sm">Discharge Rate</span><div class="value-md" id="bi-discharge-kw">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div></div>
-          <div><span class="label-sm">Est. Runtime</span><div class="value-md" id="bi-runtime-hr" style="color:#10b981">— <span style="font-size:0.8rem;opacity:0.4">hrs</span></div></div>
-        </div>
-      </div>
-      <!-- Runtime Scenarios -->
-      <div class="glass-card" style="flex-shrink:0">
-        <span class="label-sm" style="margin-bottom:8px">Runtime Scenarios (~95 kWh usable)</span>
-        <div class="scenario-row">
-          <div><div class="scenario-label">Critical Loads Only</div><div style="font-size:9px;opacity:0.4">~1.5 kW — bedroom, office, hallway</div></div>
-          <div class="scenario-hours" style="color:#10b981" id="bi-rt-critical">— <span style="font-size:0.8rem;opacity:0.4">h</span></div>
-        </div>
-        <div class="scenario-row">
-          <div><div class="scenario-label">Current Load</div><div style="font-size:9px;opacity:0.4" id="bi-current-load-label">—</div></div>
-          <div class="scenario-hours" style="color:#f59e0b" id="bi-rt-current">— <span style="font-size:0.8rem;opacity:0.4">h</span></div>
-        </div>
-        <div class="scenario-row" style="margin-bottom:0">
-          <div><div class="scenario-label">Peak (session max)</div><div style="font-size:9px;opacity:0.4" id="bi-peak-load-label">—</div></div>
-          <div class="scenario-hours" style="color:#ef4444" id="bi-rt-peak">— <span style="font-size:0.8rem;opacity:0.4">h</span></div>
-        </div>
-      </div>
-    </div><!-- /bi-primary -->
-
-    <!-- RIGHT TOP — Load Shedding -->
-    <div class="bi-secondary">
-      <div class="glass-card" style="height:100%;overflow:hidden">
-        <span class="label-sm" style="margin-bottom:8px">Load Shedding Priority</span>
-        <div class="priority-item shed-first">
-          <div class="priority-num" style="color:#ef4444">1</div>
-          <div class="priority-name">Pool Sub-Panel</div>
-          <div class="priority-kw" id="bi-pool-kw">—</div>
-          <button class="shed-btn" onclick="shedCircuit('pool')">Shed</button>
-        </div>
-        <div class="priority-item shed-second">
-          <div class="priority-num" style="color:#f59e0b">2</div>
-          <div class="priority-name">EV Charging (Wall Connector)</div>
-          <div class="priority-kw" id="bi-ev-kw">—</div>
-          <button class="shed-btn" onclick="shedCircuit('ev')">Shed</button>
-        </div>
-        <div class="priority-item shed-third">
-          <div class="priority-num" style="color:#6366f1">3</div>
-          <div class="priority-name">AC Condenser 2</div>
-          <div class="priority-kw" id="bi-ac2-kw">—</div>
-          <button class="shed-btn" onclick="shedCircuit('ac2')">Shed</button>
-        </div>
-        <div class="priority-item shed-nc">
-          <div class="priority-num" style="color:rgba(255,255,255,0.3)">4</div>
-          <div class="priority-name" style="opacity:0.45">Non-critical circuits</div>
-          <div class="priority-kw">—</div>
-        </div>
-      </div>
-    </div><!-- /bi-secondary -->
-
-    <!-- RIGHT BOTTOM — Island Event Log -->
-    <div class="bi-log">
-      <div class="glass-card" style="height:100%;overflow:hidden">
-        <span class="label-sm" style="margin-bottom:6px">Island Event Log</span>
-        <div class="event-log" id="bi-event-log">
-          <div><span class="ev-time">—</span>No events recorded</div>
-        </div>
-      </div>
-    </div><!-- /bi-log -->
-  </div>
-</div><!-- /backup -->
 
 </main>
 <div id="toast"></div>
 
 <script>
-const views = ['cockpit','solar','span','pool','devices','tesla-energy','cybertruck','cameras','home-control','sprinklers','settings','microgrid','trading','backup'];
+const views = ['cockpit','solar','span','pool','devices','tesla-energy','cybertruck','cameras','home-control','sprinklers','settings'];
 function showView(v) {
   views.forEach(id => {
     document.getElementById('view-'+id).classList.toggle('active', id===v);
   });
   document.querySelectorAll('nav button').forEach((b,i) => b.classList.toggle('active', views[i]===v));
+  if (v === 'cockpit') {
+    var savedSub = localStorage.getItem('jarvis-cockpit-sub') || 'microgrid';
+    setTimeout(function() { setCockpitSub(savedSub); }, 0);
+  }
 }
 
 function fmt(w, unit='W') {
@@ -4829,7 +4791,7 @@ function mcUpdateFlowPaths(s) {
 
 function mcDrawFrame() {
   const canvas = document.getElementById('mc-canvas');
-  const viewEl = document.getElementById('view-microgrid');
+  const viewEl = document.getElementById('csub-microgrid');
   if (!canvas || !viewEl) {
     mcAnimFrame = requestAnimationFrame(mcDrawFrame); return;
   }
@@ -5321,27 +5283,32 @@ function shedCircuit(type) {
   else toast('Circuit not found in SPAN data');
 }
 
-// Swipe gesture support for mode switching
+// Swipe gesture support for cockpit sub-view switching
 (function() {
   let ts=0, tx=0;
-  const tabletViews = ['microgrid','trading','backup'];
+  const cockpitSubs = ['live','microgrid','trading','backup'];
+  function curSub() {
+    return cockpitSubs.find(s => { var el=document.getElementById('csub-'+s); return el && el.style.display !== 'none'; });
+  }
   document.addEventListener('touchstart', e=>{ts=e.touches[0].clientX; tx=e.touches[0].clientY;}, {passive:true});
   document.addEventListener('touchend', e=>{
     const dx=e.changedTouches[0].clientX-ts, dy=e.changedTouches[0].clientY-tx;
     if(Math.abs(dx)<60||Math.abs(dy)>Math.abs(dx)*0.7) return;
-    const cur = tabletViews.find(v=>document.getElementById('view-'+v).classList.contains('active'));
-    if(!cur) return;
-    const idx=tabletViews.indexOf(cur);
-    if(dx<0&&idx<tabletViews.length-1) showView(tabletViews[idx+1]);
-    if(dx>0&&idx>0) showView(tabletViews[idx-1]);
+    const cockpitEl = document.getElementById('view-cockpit');
+    if(!cockpitEl || !cockpitEl.classList.contains('active')) return;
+    const cur = curSub(); if(!cur) return;
+    const idx = cockpitSubs.indexOf(cur);
+    if(dx<0 && idx<cockpitSubs.length-1) setCockpitSub(cockpitSubs[idx+1]);
+    if(dx>0 && idx>0) setCockpitSub(cockpitSubs[idx-1]);
   }, {passive:true});
-  // Keyboard arrow keys for mode switching
+  // Keyboard arrow keys for cockpit sub-view switching
   document.addEventListener('keydown', e=>{
-    const cur = tabletViews.find(v=>document.getElementById('view-'+v).classList.contains('active'));
-    if(!cur) return;
-    const idx=tabletViews.indexOf(cur);
-    if(e.key==='ArrowRight'&&idx<tabletViews.length-1) showView(tabletViews[idx+1]);
-    if(e.key==='ArrowLeft'&&idx>0) showView(tabletViews[idx-1]);
+    const cockpitEl = document.getElementById('view-cockpit');
+    if(!cockpitEl || !cockpitEl.classList.contains('active')) return;
+    const cur = curSub(); if(!cur) return;
+    const idx = cockpitSubs.indexOf(cur);
+    if(e.key==='ArrowRight' && idx<cockpitSubs.length-1) setCockpitSub(cockpitSubs[idx+1]);
+    if(e.key==='ArrowLeft' && idx>0) setCockpitSub(cockpitSubs[idx-1]);
   });
 })();
 
@@ -5384,27 +5351,25 @@ fetch('/api/state').then(r=>r.json()).then(renderState).catch(console.error);
 // Start particle animation loop (runs continuously, draws only when microgrid mode active)
 mcDrawFrame();
 
-// ── Mode Switcher ────────────────────────────────────────────────────
-function switchMode(mode) {
-  // Update switcher button states
-  document.querySelectorAll('.mode-btn').forEach(function(btn) {
-    btn.classList.toggle('active', btn.dataset.mode === mode);
+// ── Cockpit Sub-Nav ──────────────────────────────────────────────────
+function setCockpitSub(sub) {
+  // Update sub-nav buttons
+  document.querySelectorAll('.csub-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.csub === sub);
   });
-  // Show only the selected tablet view
-  ['microgrid', 'trading', 'backup'].forEach(function(m) {
-    var el = document.getElementById('view-' + m);
-    if (el) el.style.display = (m === mode) ? '' : 'none';
+  // Show/hide sub-content panels
+  ['live', 'microgrid', 'trading', 'backup'].forEach(function(s) {
+    var el = document.getElementById('csub-' + s);
+    if (el) el.style.display = s === sub ? '' : 'none';
   });
-  // Persist selection
-  localStorage.setItem('jarvis-energy-mode', mode);
-  // Sync the underlying showView so nav button active states work
-  if (typeof showView === 'function') showView(mode);
+  // Persist
+  localStorage.setItem('jarvis-cockpit-sub', sub);
 }
 
-// Init: restore last mode or default to microgrid
+// Init: restore last sub or default to microgrid
 (function() {
-  var _initMode = localStorage.getItem('jarvis-energy-mode') || 'microgrid';
-  switchMode(_initMode);
+  var _initSub = localStorage.getItem('jarvis-cockpit-sub') || 'microgrid';
+  setCockpitSub(_initSub);
 })();
 </script>
 </body>

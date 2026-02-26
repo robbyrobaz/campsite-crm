@@ -61,7 +61,7 @@ NEST_ACCESS_TOKEN = ""  # Auto-refreshed at runtime — leave blank
 # ─── B-Hyve Sprinkler ─────────────────────────────────────────────────────────
 # Device: 192.168.68.66 (Orbit B-Hyve controller) — cloud API only via api.orbitbhyve.com
 BHYVE_EMAIL = "rob.hartwig@gmail.com"
-BHYVE_PASSWORD = "1978philly"
+BHYVE_PASSWORD = "Now the cameras card. The Wyze source you pasted is just a Next.js shell — their actual streaming is proprietary WebRTC. Can't duplicate that directly. But there's a well-established open source approach: docker-wyze-bridge — a community container that authenticates with Wyze and converts your cameras to local RTSP/HLS/WebRTC streams. That's what I'd use to power real live feeds in the dashboard."
 
 # ─── Dashboard ────────────────────────────────────────────────────────────────
 DASHBOARD_PORT = 8793

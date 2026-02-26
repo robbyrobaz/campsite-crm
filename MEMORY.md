@@ -81,6 +81,12 @@
 
 ## NQ Pipeline Reference (Updated Feb 24, 2026)
 
+### equal_tops_bottoms — REHABILITATED (Feb 26 2026)
+Was wrongly blacklisted with "PF 0.68 no edge" — that eval was broken. Actual WF data:
+10/10 folds pass prop sim, PF 2.78–3.27, Sharpe 7.34–8.62, ~2000+ OOS trades/fold. Unblacklisted.
+Pattern: tweezer tops/bottoms (ICT equal highs/lows) on 5-min NQ. Rob sees this in live trading.
+ML feature research card dispatched to find best entry conditions + add as God Model expert #7.
+
 ### Definitive Phase 2 Leaderboard (All Filters Corrected)
 1. momentum: PF 2.91, Sharpe 7.68, Calmar 808, ~9 trades/day
 1. orb: PF 2.92, Sharpe 7.59, ~3 trades/day  ← TIED #1 (target_horizon=10, confirmed Feb 25)

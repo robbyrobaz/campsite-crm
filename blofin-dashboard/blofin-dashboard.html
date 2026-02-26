@@ -458,18 +458,28 @@ td { padding: 7px 10px; white-space: nowrap; }
 <!-- ── Pipeline Strategy Cards ─────────────────────────────────────────── -->
 <div id="pipeline-cards"></div>
 
-<!-- ── Summary Stats ────────────────────────────────────────────────────── -->
+<!-- ── Top 10 Performing Pairs ────────────────────────────────────────── -->
 <div class="section-header">
-  <div class="section-title">Performance Overview</div>
+  <div class="section-title">Top 10 Performing Pairs</div>
   <div class="section-line"></div>
+  <div class="section-badge" id="top-pairs-badge">min 20 FT trades · ranked by FT Profit Factor</div>
 </div>
-<div class="stats-row" id="stats-row">
-  <div class="stat-card"><div class="stat-label">Total Trades</div><div class="stat-val" id="stat-trades">—</div></div>
-  <div class="stat-card"><div class="stat-label">Win Rate</div><div class="stat-val" id="stat-wr">—</div></div>
-  <div class="stat-card"><div class="stat-label">Profit Factor</div><div class="stat-val" id="stat-pf">—</div></div>
-  <div class="stat-card"><div class="stat-label">Avg PnL%</div><div class="stat-val" id="stat-pnl">—</div></div>
-  <div class="stat-card"><div class="stat-label">Sortino</div><div class="stat-val" id="stat-sortino">—</div></div>
-  <div class="stat-card"><div class="stat-label">Max Drawdown</div><div class="stat-val" id="stat-dd">—</div></div>
+<div class="table-wrap">
+  <table id="top-pairs-table">
+    <thead>
+      <tr>
+        <th>Strategy</th>
+        <th>Coin</th>
+        <th>FT Profit Factor</th>
+        <th>FT Win Rate</th>
+        <th>FT Trades</th>
+        <th>FT PnL%</th>
+      </tr>
+    </thead>
+    <tbody id="top-pairs-tbody">
+      <tr><td colspan="6" class="loading">Loading…</td></tr>
+    </tbody>
+  </table>
 </div>
 
 <!-- ── Strategy Detail Table ────────────────────────────────────────────── -->
@@ -586,6 +596,7 @@ const state = {
   metrics: null,
   summary: null,
   coinPerf: null,
+  topPairs: null,
   sortCol: 'pnl_rank',
   sortAsc: false,
   tierFilter: 'all',
@@ -666,24 +677,26 @@ async function refreshAll() {
   state.mlLimit = 10;
   state.sigLimit = 10;
   state.tradeLimit = 10;
-  const [registry, mlModels, metrics, summary, coinPerf] = await Promise.all([
+  const [registry, mlModels, metrics, summary, coinPerf, topPairs] = await Promise.all([
     safeFetch('/api/registry'),
     safeFetch('/api/ml_models'),
     safeFetch('/api/advanced_metrics'),
     safeFetch('/api/summary'),
     safeFetch('/api/coin_performance'),
+    safeFetch('/api/top_pairs'),
   ]);
   state.registry = registry;
   state.mlModels = mlModels;
   state.metrics = metrics;
   state.summary = summary;
   state.coinPerf = coinPerf;
+  state.topPairs = topPairs;
 
   renderHeader();
   renderHealthBar();
   renderPipeline();
   renderPipelineCards();
-  renderStatsRow();
+  renderTopPairsTable();
   renderTable();
   renderCoinPerf();
   renderMLModels();
@@ -888,34 +901,27 @@ function renderPipelineCards() {
   document.getElementById('pipeline-cards').innerHTML = html;
 }
 
-// ─── Stats Row ───────────────────────────────────────────────────────────────
-function renderStatsRow() {
-  const m = state.metrics;
-  const ps = state.summary?.paper_stats;
-  if (!m && !ps) return;
-
-  const tm = m?.trading_metrics;
-  const rm = m?.risk_metrics;
-
-  const totalTrades = tm?.total_trades ?? ps?.closed ?? 0;
-  const wr = tm?.win_rate ?? ps?.win_rate_pct ?? 0;
-  const pf = tm?.profit_factor ?? ps?.profit_factor ?? 0;
-  const avgPnl = tm?.expectancy ?? ps?.avg_pnl_pct ?? 0;
-  const sortino = rm?.sortino_ratio ?? 0;
-  const dd = rm?.max_drawdown_pct ?? 0;
-
-  const el = (id) => document.getElementById(id);
-  el('stat-trades').textContent = fmtK(totalTrades);
-  el('stat-wr').textContent = fmtPct(wr, 1);
-  el('stat-wr').className = 'stat-val ' + (wr >= 50 ? 'pos' : wr >= 40 ? '' : 'neg');
-  el('stat-pf').textContent = fmt(pf, 2);
-  el('stat-pf').className = 'stat-val ' + (pf >= 1.5 ? 'pos' : pf >= 1.0 ? '' : 'neg');
-  el('stat-pnl').textContent = fmtPct(avgPnl, 3);
-  el('stat-pnl').className = 'stat-val ' + (avgPnl > 0 ? 'pos' : avgPnl < 0 ? 'neg' : '');
-  el('stat-sortino').textContent = fmt(sortino, 2);
-  el('stat-sortino').className = 'stat-val ' + (sortino >= 1 ? 'pos' : sortino >= 0 ? '' : 'neg');
-  el('stat-dd').textContent = fmtPct(dd, 1);
-  el('stat-dd').className = 'stat-val ' + (dd >= 20 ? 'neg' : '');
+// ─── Top 10 Pairs Table ───────────────────────────────────────────────────────
+function renderTopPairsTable() {
+  const pairs = state.topPairs?.pairs;
+  const tbody = document.getElementById('top-pairs-tbody');
+  if (!tbody) return;
+  if (!pairs || pairs.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="loading">No pairs with ≥20 FT trades yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = pairs.map((p, i) => {
+    const pfCls = p.ft_pf >= 1.5 ? 'pos' : p.ft_pf >= 1.0 ? '' : 'neg';
+    const pnlCls = p.ft_pnl_pct > 0 ? 'pos' : p.ft_pnl_pct < 0 ? 'neg' : '';
+    return `<tr>
+      <td><span style="color:var(--text-muted);font-size:11px;margin-right:4px;">#${i+1}</span>${p.strategy}</td>
+      <td>${p.symbol}</td>
+      <td class="${pfCls}">${p.ft_pf.toFixed(3)}</td>
+      <td>${p.ft_wr_pct.toFixed(1)}%</td>
+      <td>${p.ft_trades}</td>
+      <td class="${pnlCls}">${p.ft_pnl_pct >= 0 ? '+' : ''}${p.ft_pnl_pct.toFixed(2)}%</td>
+    </tr>`;
+  }).join('');
 }
 
 // ─── Strategy Table ──────────────────────────────────────────────────────────

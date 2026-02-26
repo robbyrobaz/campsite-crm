@@ -1313,6 +1313,52 @@ def api_coin_performance(conn):
     })
 
 
+@app.route('/api/top_pairs')
+@cache_response(ttl_seconds=30)
+@safe_query
+def api_top_pairs(conn):
+    """
+    Top 10 coin-strategy pairs by FT profit factor (min 20 FT trades).
+    Source: strategy_coin_performance.
+    """
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='strategy_coin_performance'"
+    )
+    if not cursor.fetchone():
+        return jsonify({"pairs": [], "count": 0, "timestamp": datetime.utcnow().isoformat() + "Z"})
+
+    cursor.execute("""
+        SELECT
+            strategy_name,
+            symbol,
+            ROUND(ft_profit_factor, 3)                       AS ft_pf,
+            ROUND(COALESCE(ft_win_rate, 0) * 100, 1)         AS ft_wr_pct,
+            ft_trades,
+            ROUND(COALESCE(ft_pnl_pct, 0), 2)               AS ft_pnl_pct
+        FROM strategy_coin_performance
+        WHERE ft_profit_factor IS NOT NULL
+          AND ft_trades >= 20
+        ORDER BY ft_profit_factor DESC
+        LIMIT 10
+    """)
+    pairs = []
+    for row in cursor.fetchall():
+        pairs.append({
+            "strategy":    row['strategy_name'],
+            "symbol":      row['symbol'],
+            "ft_pf":       float(row['ft_pf'] or 0),
+            "ft_wr_pct":   float(row['ft_wr_pct'] or 0),
+            "ft_trades":   int(row['ft_trades'] or 0),
+            "ft_pnl_pct":  float(row['ft_pnl_pct'] or 0),
+        })
+    return jsonify({
+        "pairs":     pairs,
+        "count":     len(pairs),
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+    })
+
+
 @app.route('/health')
 def health():
     """Health check endpoint."""

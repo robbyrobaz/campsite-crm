@@ -1,15 +1,10 @@
 {
-  "lastPulse": "2026-02-26T06:13:00-07:00",
+  "lastPulse": "2026-02-26T06:43:00-07:00",
   "activeTasks": [],
   "health": {
-    "cpu": "51°C",
-    "disk": "39%",
+    "cpu_temp": "54°C",
+    "disk_usage": "39% (275G free)",
     "services": "all active",
-    "monitor": "clean"
-  },
-  "queueStatus": {
-    "inProgress": 0,
-    "planned": 0
-  },
-  "notes": "Idle. No work queued."
+    "critical_alerts": "clean"
+  }
 }

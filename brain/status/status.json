@@ -1,10 +1,11 @@
 {
-  "lastPulse": "2026-02-26T10:15:00-07:00",
+  "timestamp": "2026-02-26T10:43:00-07:00",
   "activeTasks": [],
+  "lastCheck": "2026-02-26T10:43:00-07:00",
   "health": {
-    "cpu_temp": "78°C (elevated, no runaway process — ambient heat)",
-    "disk_usage": "39%",
+    "cpu": "60°C",
+    "disk": "39%",
     "services": "all active",
-    "critical_alerts": "clean"
+    "alerts": "none"
   }
 }

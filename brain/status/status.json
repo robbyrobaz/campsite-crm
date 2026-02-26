@@ -1,24 +1,16 @@
 {
-  "timestamp": "2026-02-26T02:13:00-07:00",
-  "activeTasks": [
-    {
-      "id": "c_680de2ea36ec8_19c9933d2a8",
-      "title": "GE SmartHQ — Full Appliance Dashboard with Rich Telemetry + Controls",
-      "status": "In Progress",
-      "project": "/home/rob/.openclaw/workspace/jarvis-home-energy",
-      "assignee": "claude"
-    }
-  ],
+  "timestamp": "2026-02-26T02:43:00-07:00",
+  "activeTasks": [],
   "health": {
-    "cpu_temp": "59.0°C",
+    "cpu_temp": "70.0°C",
     "disk_usage": "38%",
     "services_active": 3,
     "alert_monitor": "clean"
   },
   "board": {
-    "in_progress": 1,
+    "in_progress": 0,
     "planned": 0,
-    "total": 1
+    "total": 0
   },
-  "status": "working"
+  "status": "idle"
 }

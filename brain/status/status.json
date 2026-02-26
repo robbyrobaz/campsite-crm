@@ -1,14 +1,11 @@
 {
-  "timestamp": "2026-02-26T13:43:00-07:00",
+  "timestamp": "2026-02-26T14:13:00-07:00",
   "activeTasks": [],
+  "lastDispatch": "2026-02-26T14:13:00-07:00",
   "health": {
     "cpu_temp": "84.0°C",
     "disk_usage": "39%",
     "services": "all active",
     "alerts": "none"
-  },
-  "board": {
-    "inProgress": 0,
-    "planned": 0
   }
 }

@@ -1,6 +1,15 @@
 {
-  "updatedAt": "2026-02-25T16:43:00-07:00",
-  "activeTasks": [],
+  "updatedAt": "2026-02-25T17:13:00-07:00",
+  "activeTasks": [
+    {
+      "id": "c_301d2db3ac4dd_19c97489cc1",
+      "title": "Energy Dashboard: Mode 1 + Mode 2 UI Fixes (Round 2)",
+      "status": "in-progress",
+      "startedAt": "2026-02-25T17:06:00-07:00",
+      "assignee": "claude",
+      "notes": "14x Mode 1 fixes + 6x Mode 2 fixes. Last updated 2.6 min ago — agent actively running."
+    }
+  ],
   "health": {
     "cpu_temp": "65.0°C",
     "disk": "37% used (281G free)",
@@ -11,5 +20,5 @@
     },
     "critical_alerts": "none"
   },
-  "notes": "Pulse 4:43 PM. Board clear — no In Progress or Planned cards. All services healthy. Idle."
+  "notes": "Builder actively running on jarvis-home-energy tablet UI round 2. No stale cards."
 }

@@ -1,11 +1,28 @@
 {
-  "timestamp": "2026-02-26T16:13:00-07:00",
+  "timestamp": "2026-02-26T16:30:00-07:00",
   "activeTasks": [],
-  "lastDispatch": "2026-02-26T16:13:00-07:00",
+  "lastDispatch": "2026-02-26T16:30:00-07:00",
+  "lastHeartbeat": "2026-02-26T16:30:00-07:00",
   "health": {
-    "cpu_temp": "58.0°C",
+    "cpu_temp": "59.0°C",
     "disk_usage": "39%",
     "services": "all active",
-    "alerts": "none"
-  }
+    "alerts": "none",
+    "gateway": "active",
+    "blofin_services": "all active",
+    "nq_smb_watcher": "active",
+    "wyze_bridge": "running"
+  },
+  "kanban": {
+    "in_progress": 0,
+    "planned": 0,
+    "review_test": 0,
+    "done_total": 1
+  },
+  "token_usage_5h": {
+    "percent": "1.0%",
+    "total_tokens": "41.4M",
+    "cost_est": "$30.76"
+  },
+  "notes": "All systems nominal. Numerai models all present. No critical alerts. master-dashboard has pending path update (NQ repo rename). campsite-crm has backup file uncommitted (expected)."
 }

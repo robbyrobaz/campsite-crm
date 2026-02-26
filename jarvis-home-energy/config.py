@@ -2,6 +2,7 @@
 Jarvis Home Energy OS — Device Configuration
 Edit credentials here after initial setup.
 """
+import os
 
 # ─── SPAN Panel ───────────────────────────────────────────────────────────────
 # Device: span-nj-2307-006gl.local | 192.168.68.93
@@ -63,8 +64,22 @@ NEST_ACCESS_TOKEN = ""  # Auto-refreshed at runtime — leave blank
 BHYVE_EMAIL = "rob.hartwig@gmail.com"
 BHYVE_PASSWORD = "fjyaJAZ8!TRjLLq"
 
+# ─── MyQ Garage Door ──────────────────────────────────────────────────────────
+# Chamberlain/LiftMaster MyQ — cloud API via pymyq
+# Set MYQ_EMAIL and MYQ_PASSWORD environment variables (do NOT hardcode here)
+MYQ_EMAIL    = os.getenv("MYQ_EMAIL", "")
+MYQ_PASSWORD = os.getenv("MYQ_PASSWORD", "")
+
 # ─── Dashboard ────────────────────────────────────────────────────────────────
 DASHBOARD_PORT = 8793
 POLL_INTERVAL_SECONDS = 5
 
 TESLA_ENERGY_SITE_ID = 2252397277512276  # "My Home" energy site (Gateway 3, no Powerwall)
+
+# ─── GE SmartHQ Appliances ────────────────────────────────────────────────────
+# Register at https://developers.smarthq.com to obtain client credentials.
+# Use OAuth2 Resource Owner Password Credentials grant (client_id + username/password).
+GE_CLIENT_ID = ""         # SmartHQ developer app client ID
+GE_CLIENT_SECRET = ""     # SmartHQ developer app client secret
+GE_USERNAME = ""          # GE/SmartHQ account email
+GE_PASSWORD = ""          # GE/SmartHQ account password

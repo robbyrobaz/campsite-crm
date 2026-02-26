@@ -99,6 +99,10 @@ try:
     from config import BHYVE_EMAIL, BHYVE_PASSWORD
 except ImportError:
     BHYVE_EMAIL = ""; BHYVE_PASSWORD = ""
+try:
+    from config import GE_CLIENT_ID, GE_CLIENT_SECRET, GE_USERNAME, GE_PASSWORD
+except ImportError:
+    GE_CLIENT_ID = ""; GE_CLIENT_SECRET = ""; GE_USERNAME = ""; GE_PASSWORD = ""
 
 app = Flask(__name__)
 
@@ -106,15 +110,16 @@ app = Flask(__name__)
 _state_lock = threading.Lock()
 _state = {
     "ts": 0,
-    "span": {"status": "unconfigured", "door": "?", "uptime": 0, "grid_power": 0, "circuits": []},
-    "enphase": {"status": "unconfigured", "production_w": 0, "consumption_w": 0, "net_w": 0, "firmware": "D8.3.5167"},
-    "pentair": {"status": "offline", "pool": {}, "spa": {}, "pump": {}, "heater": {}, "circuits": []},
-    "tesla": {"status": "unconfigured", "soe": 0, "solar_w": 0, "battery_w": 0, "grid_w": 0, "load_w": 0},
-    "wall_connector": {"status": "unconfigured", "vehicle_connected": False, "charging_w": 0, "session_energy_wh": 0, "grid_v": 0, "pcba_temp_c": 0},
+    "span": {"status": "unconfigured", "door": "?", "uptime": 0, "grid_power": 0, "circuits": [], "last_seen": 0},
+    "enphase": {"status": "unconfigured", "production_w": 0, "consumption_w": 0, "net_w": 0, "firmware": "D8.3.5167", "last_seen": 0},
+    "pentair": {"status": "offline", "pool": {}, "spa": {}, "pump": {}, "heater": {}, "circuits": [], "last_seen": 0},
+    "tesla": {"status": "unconfigured", "soe": 0, "solar_w": 0, "battery_w": 0, "grid_w": 0, "load_w": 0, "last_seen": 0},
+    "wall_connector": {"status": "unconfigured", "vehicle_connected": False, "charging_w": 0, "session_energy_wh": 0, "grid_v": 0, "pcba_temp_c": 0, "last_seen": 0},
     "summary": {"solar_w": 0, "load_w": 0, "battery_w": 0, "grid_w": 0, "net_savings_today": 0},
     "cameras": [],  # list of {name, mac, type, status, last_seen, last_motion, snapshot_path}
-    "nest": {"status": "unconfigured", "temp_f": 0, "setpoint_f": 0, "mode": "off", "hvac_state": "idle", "humidity": 0},
-    "bhyve": {"status": "unconfigured", "devices": [], "zones": []},
+    "nest": {"status": "unconfigured", "temp_f": 0, "setpoint_f": 0, "mode": "off", "hvac_state": "idle", "humidity": 0, "last_seen": 0},
+    "bhyve": {"status": "unconfigured", "devices": [], "zones": [], "last_seen": 0},
+    "ge_appliances": {"status": "unconfigured", "appliances": [], "last_seen": 0},
 }
 _sse_subscribers = []
 _sse_lock = threading.Lock()
@@ -124,6 +129,7 @@ _wyze_client = None
 _wyze_client_lock = threading.Lock()
 _wyze_next_retry = 0   # epoch seconds — don't retry auth before this time
 _camera_poll_counter = 0  # throttle: refresh camera list every 60s (every 12 ticks at 5s)
+_ge_poll_counter = 0      # throttle: poll GE appliances every 60s
 
 # Ring — cached token data (persisted across calls to avoid repeated re-auth)
 # ring_doorbell 0.9.x is fully async; we wrap with a fresh event loop
@@ -300,6 +306,7 @@ def poll_span():
                 "enphase_w": round(enphase_w, 1),    # branches 29+31 — Enphase IQ8PLUS
                 "solaredge_w": round(solaredge_w, 1), # branches 30+32 — SolarEdge SE5000H
                 "circuits": circuits,
+                "last_seen": time.time(),
             }
         return True
     except Exception as e:
@@ -399,6 +406,7 @@ def poll_enphase():
                 "firmware": "D8.3.5167",
                 "serial": ENPHASE_SERIAL,
                 "inverters": existing_inverters,
+                "last_seen": time.time(),
             }
 
         # Per-inverter data (IQ8PLUS microinverters) — only when token available
@@ -559,6 +567,7 @@ def poll_pentair():
                     "status": heater.get("STATUS", "?"),
                 },
                 "circuits": circuits,
+                "last_seen": time.time(),
             }
         return True
     except Exception as e:
@@ -629,6 +638,7 @@ def poll_wall_connector():
                 "handle_temp_c": round(v.get("handle_temp_c", 0), 1),
                 "uptime_s": v.get("uptime_s", 0),
                 "alerts": v.get("current_alerts", []),
+                "last_seen": time.time(),
             }
         return True
     except Exception as e:
@@ -733,6 +743,7 @@ def poll_tesla():
                 "backup_reserve_percent": round(backup_reserve, 1),
                 "site_name": site_name,
                 "storm_mode_active": storm_mode_active,
+                "last_seen": time.time(),
             }
         log.info("Tesla Fleet API poll OK — solar=%.0fW battery=%.0fW grid=%.0fW soe=%.1f%%",
                  solar_w, battery_w, grid_w, soe)
@@ -938,6 +949,7 @@ def poll_nest():
                 "mode": primary.get("mode", "OFF"),
                 "hvac_state": primary.get("hvac_state", "OFF"),
                 "humidity": primary.get("humidity", 0),
+                "last_seen": time.time(),
             }
         return True
     except Exception as e:
@@ -1149,6 +1161,7 @@ def poll_bhyve():
                 "devices": out_devices,
                 "zones": out_zones,
                 "ts": time.time(),
+                "last_seen": time.time(),
             }
         return True
 
@@ -1161,6 +1174,151 @@ def poll_bhyve():
         _bhyve_next_retry = time.time() + 300
         with _state_lock:
             _state["bhyve"]["status"] = "error"
+        return False
+
+
+# ── GE SmartHQ Appliances Adapter ────────────────────────────────────────────
+
+GE_AUTH_URL = "https://accounts.brillion.geappliances.com/oauth2/token"
+GE_API_BASE = "https://api.brillion.geappliances.com"
+
+_ge_access_token = ""
+_ge_token_expiry = 0.0
+_ge_token_lock = threading.Lock()
+_ge_next_retry = 0.0
+
+# Map numeric appliance state codes → human-readable labels
+_GE_STATE_MAP = {
+    "0": "disconnected", "1": "idle", "2": "running",
+    "3": "delay start",  "4": "paused", "5": "end of cycle",
+    "6": "downloading",  "7": "remote start", "8": "standby",
+}
+
+# Map common GE appliance type tokens → emoji
+_GE_TYPE_ICON = {
+    "Washer": "🫧", "Dryer": "♨️", "Dishwasher": "🍽️",
+    "Refrigerator": "🧊", "Oven": "🔥", "Range": "🔥",
+    "Microwave": "📡", "Freezer": "🧊", "AirConditioner": "❄️",
+    "WashDryer": "🫧", "Hood": "💨",
+}
+
+
+def _ge_get_token():
+    """Return a valid GE SmartHQ access token, refreshing if needed."""
+    global _ge_access_token, _ge_token_expiry
+    with _ge_token_lock:
+        if _ge_access_token and time.time() < _ge_token_expiry - 60:
+            return _ge_access_token
+        try:
+            data = urllib.parse.urlencode({
+                "grant_type": "password",
+                "username": GE_USERNAME,
+                "password": GE_PASSWORD,
+                "client_id": GE_CLIENT_ID,
+                "client_secret": GE_CLIENT_SECRET,
+            }).encode()
+            req = urllib.request.Request(
+                GE_AUTH_URL, data=data, method="POST",
+                headers={"Content-Type": "application/x-www-form-urlencoded"},
+            )
+            with urllib.request.urlopen(req, timeout=10) as r:
+                resp = json.loads(r.read())
+            _ge_access_token = resp["access_token"]
+            _ge_token_expiry = time.time() + resp.get("expires_in", 3600)
+            log.info("GE SmartHQ token acquired OK")
+            return _ge_access_token
+        except Exception as e:
+            log.warning("GE SmartHQ auth error: %s", e)
+            _ge_access_token = ""
+            return None
+
+
+def poll_ge_appliances():
+    global _ge_next_retry
+    if not (GE_CLIENT_ID and GE_USERNAME and GE_PASSWORD):
+        with _state_lock:
+            _state["ge_appliances"]["status"] = "unconfigured"
+        return False
+    if time.time() < _ge_next_retry:
+        return False
+    try:
+        token = _ge_get_token()
+        if not token:
+            raise RuntimeError("no token")
+
+        # List all appliances registered to the account
+        req = urllib.request.Request(
+            f"{GE_API_BASE}/v1/appliance",
+            headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
+        )
+        with urllib.request.urlopen(req, timeout=10) as r:
+            items = json.loads(r.read())
+        if not isinstance(items, list):
+            items = items.get("items", []) if isinstance(items, dict) else []
+
+        appliances = []
+        for item in items:
+            aid = item.get("applianceId") or item.get("id", "")
+            if not aid:
+                continue
+
+            # Fetch per-appliance attributes for live state
+            attrs = {}
+            try:
+                req2 = urllib.request.Request(
+                    f"{GE_API_BASE}/v1/appliance/{aid}/attribute",
+                    headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
+                )
+                with urllib.request.urlopen(req2, timeout=8) as r2:
+                    raw = json.loads(r2.read())
+                # Normalise: list of {"erd": "0x...", "value": "..."} or plain dict
+                if isinstance(raw, list):
+                    attrs = {a.get("erd", a.get("name", "")): a.get("value", "") for a in raw}
+                elif isinstance(raw, dict):
+                    attrs = raw
+            except Exception:
+                pass
+
+            # Decode appliance state (ERD 0x2000 = ApplianceState)
+            state_raw = attrs.get("0x2000") or attrs.get("applianceState") or ""
+            state_str = _GE_STATE_MAP.get(str(state_raw), str(state_raw) if state_raw else "idle")
+
+            # Cycle name (ERD 0x0405 = CycleList / 0x0418 CycleState)
+            cycle = (attrs.get("0x0405") or attrs.get("0x0418")
+                     or attrs.get("cycleStatus") or attrs.get("cycleName") or "")
+            door = attrs.get("0x0003") or attrs.get("doorStatus") or ""
+            if door in ("0", "00"): door = "closed"
+            elif door in ("1", "01"): door = "open"
+
+            app_type = item.get("type", "")
+            icon = _GE_TYPE_ICON.get(app_type, "🏠")
+
+            appliances.append({
+                "id": aid,
+                "name": item.get("nickname") or item.get("name") or item.get("modelNumber", "GE Appliance"),
+                "type": app_type,
+                "icon": icon,
+                "model": item.get("modelNumber", ""),
+                "brand": item.get("brand", "GE"),
+                "state": state_str,
+                "cycle": cycle,
+                "door": door,
+            })
+
+        with _state_lock:
+            _state["ge_appliances"] = {
+                "status": "online",
+                "appliances": appliances,
+                "last_seen": time.time(),
+            }
+        log.info("GE SmartHQ polled OK — %d appliance(s)", len(appliances))
+        return True
+
+    except Exception as e:
+        log.warning("GE SmartHQ poll error: %s", e)
+        _ge_next_retry = time.time() + 120  # 2-min backoff
+        with _state_lock:
+            _state["ge_appliances"]["status"] = "error"
         return False
 
 
@@ -1755,11 +1913,36 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .ct-unit { font-size: 11px; color: var(--text-dim); }
   .ct-relay { font-size: 10px; color: var(--text-dim); margin-top: 4px; }
 
-  /* Pool */
-  .pool-body { display: flex; gap: 12px; flex-wrap: wrap; }
-  .pool-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 16px; flex: 1; min-width: 160px; }
-  .pool-temp { font-size: 36px; font-weight: 700; color: var(--pool); }
-  .pool-meta { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+  /* Pool — redesigned */
+  .pc-grid { display: grid; grid-template-columns: 260px 1fr; gap: 12px; }
+  @media (max-width: 700px) { .pc-grid { grid-template-columns: 1fr; } }
+  .pc-hero-card { background: rgba(255,120,0,0.07); border: 1.5px solid rgba(255,120,0,0.22); border-radius: 14px; padding: 20px 16px; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: border-color .3s, box-shadow .3s; }
+  .pc-hero-card.spa-on { border-color: rgba(255,120,0,0.75); box-shadow: 0 0 30px rgba(255,120,0,0.25); }
+  .pc-section-lbl { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: rgba(255,255,255,0.35); text-transform: uppercase; }
+  .pc-hero-temp { font-size: 76px; font-weight: 800; color: #FF7820; line-height: 1; margin: 8px 0 2px; }
+  .pc-hero-setpt { font-size: 13px; color: rgba(255,255,255,0.45); }
+  .pc-hero-actions { display: flex; gap: 10px; margin-top: 18px; width: 100%; }
+  .pc-action-btn { flex: 1; padding: 15px 0; border-radius: 10px; border: none; font-size: 15px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; font-family: inherit; transition: filter .15s, background .15s; }
+  .pc-btn-on  { background: linear-gradient(135deg,#FF7820,#FF4500); color: #fff; }
+  .pc-btn-on:hover  { filter: brightness(1.15); }
+  .pc-btn-off { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.65); }
+  .pc-btn-off:hover { background: rgba(255,255,255,0.12); }
+  .pc-right { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; align-content: start; }
+  @media (max-width: 500px) { .pc-right { grid-template-columns: 1fr; } }
+  .pc-stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+  .pc-stat-hdr  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .pc-stat-temp { font-size: 34px; font-weight: 700; color: var(--pool); margin: 4px 0; }
+  .pc-stat-sub  { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
+  .pc-pump-big  { font-size: 30px; font-weight: 700; color: var(--pool); }
+  .pc-pump-unit { font-size: 12px; color: var(--text-dim); }
+  .pc-pump-row  { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
+  .pc-circ-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(118px,1fr)); gap: 8px; }
+  .pc-circ-tile { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 11px 9px; text-align: center; transition: border-color .2s, background .2s; }
+  .pc-circ-tile.circ-on { border-color: rgba(6,182,212,0.45); background: rgba(6,182,212,0.06); }
+  .pc-circ-nm   { font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+  .pc-circ-st   { font-size: 10px; font-weight: 700; letter-spacing: 1px; }
+  .pc-circ-tile.circ-on .pc-circ-st { color: var(--online); }
+  .pc-circ-tile.circ-off .pc-circ-st { color: var(--text-dim); }
   .btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text); cursor: pointer; padding: 7px 14px; border-radius: 6px; font-size: 11px; font-family: inherit; transition: all .15s; }
   .btn:hover { background: var(--border); }
   .btn.danger { border-color: var(--error); color: var(--error); }
@@ -1778,6 +1961,30 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .device-info { flex: 1; }
   .device-name { font-size: 13px; font-weight: 600; }
   .device-detail { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+  /* Device status grid (new) */
+  .dev-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  @media (max-width: 1100px) { .dev-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px)  { .dev-grid { grid-template-columns: 1fr; } }
+  .dev-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 12px 14px; display: flex; align-items: flex-start; gap: 10px; position: relative; transition: border-color .2s; }
+  .dev-card:hover { border-color: rgba(255,255,255,0.15); }
+  .dev-card.status-online  { border-left: 3px solid var(--online); }
+  .dev-card.status-error   { border-left: 3px solid var(--error); }
+  .dev-card.status-offline { border-left: 3px solid var(--offline); }
+  .dev-card.status-warning { border-left: 3px solid var(--warning); }
+  .dev-sdot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .dev-sdot.online  { background: var(--online); box-shadow: 0 0 5px var(--online); }
+  .dev-sdot.error   { background: var(--error); }
+  .dev-sdot.offline { background: var(--offline); }
+  .dev-sdot.warning { background: var(--warning); }
+  .dev-body { flex: 1; min-width: 0; }
+  .dev-header { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .dev-dicon { font-size: 16px; }
+  .dev-dname { font-size: 12px; font-weight: 700; color: var(--text); }
+  .dev-ip { font-size: 10px; color: var(--text-dim); margin-top: 2px; font-family: monospace; }
+  .dev-metric { font-size: 13px; font-weight: 600; color: var(--text); margin-top: 5px; }
+  .dev-metric span { color: var(--text-dim); font-size: 10px; font-weight: 400; }
+  .dev-lastseen { font-size: 10px; color: var(--text-dim); margin-top: 3px; }
 
   /* Section title */
   .section-title { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--text-dim); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
@@ -1981,7 +2188,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <button onclick="showView('tesla-energy')">Tesla Energy</button>
     <button onclick="showView('cybertruck')">Cybertruck</button>
     <button onclick="showView('cameras')">Cameras</button>
-    <button onclick="showView('home-control')">Home Control</button>
+    <button onclick="showView('home-control')">Controls</button>
     <button onclick="showView('sprinklers')">Sprinklers</button>
     <button onclick="showView('settings')">Settings</button>
   </nav>
@@ -2739,190 +2946,267 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 <!-- ═══ POOL CONTROL ═════════════════════════════════════════════════════════ -->
 <div id="view-pool" class="view">
-  <div class="section-title">Pentair IntelliCenter · 192.168.68.91</div>
 
-  <div class="pool-body">
-    <!-- Pool body -->
-    <div class="pool-card">
-      <div class="card-header">
-        <span class="card-title">Pool</span>
-        <span class="badge online" id="pool-body-badge">—</span>
-      </div>
-      <div class="pool-temp" id="pc-pool-temp">—°F</div>
-      <div class="pool-meta" id="pc-pool-setpoint">Setpoint: — / — °F</div>
-      <div class="pool-meta" id="pc-pool-heat">Heat: —</div>
-    </div>
-
-    <!-- Spa body -->
-    <div class="pool-card">
-      <div class="card-header">
-        <span class="card-title">Spa</span>
-        <span class="badge online" id="spa-body-badge">—</span>
-      </div>
-      <div class="pool-temp" id="pc-spa-temp">—°F</div>
-      <div class="pool-meta" id="pc-spa-setpoint">Setpoint: — / — °F</div>
-    </div>
-
-    <!-- Pump -->
-    <div class="pool-card">
-      <div class="card-header"><span class="card-title">VSF Pump · PMP01</span></div>
-      <div class="pool-temp c-pool" id="pc-pump-rpm">— RPM</div>
-      <div class="pool-meta" id="pc-pump-gpm">— GPM · — W</div>
-      <div class="pool-meta" id="pc-pump-status">—</div>
-    </div>
-
-    <!-- Heater -->
-    <div class="pool-card">
-      <div class="card-header"><span class="card-title">Gas Heater · H0001</span></div>
-      <div class="pool-temp" id="pc-heater-status" style="font-size:22px">—</div>
-      <div class="pool-meta">Status from IntelliCenter</div>
-      <div style="margin-top:10px;display:flex;gap:8px">
-        <button class="btn primary" onclick="pentairSet('H0001',{STATUS:'ON'})">Enable</button>
-        <button class="btn danger" onclick="pentairSet('H0001',{STATUS:'OFF'})">Disable</button>
-      </div>
-    </div>
+  <!-- Header -->
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+    <div style="font-size:13px;font-weight:600;color:var(--text-dim)">Pentair IntelliCenter · 192.168.68.91</div>
+    <span class="badge" id="pc-pentair-badge">—</span>
   </div>
 
-  <!-- Circuit Control -->
-  <div class="section-title" style="margin-top:16px">Circuits</div>
-  <div class="card">
-    <div id="pool-circuits"></div>
-  </div>
+  <!-- 2-column main layout: Hot Tub hero | Pool / Pump / Heater / Lights -->
+  <div class="pc-grid">
 
-  <!-- Quick Actions -->
-  <div class="section-title" style="margin-top:12px">Quick Actions</div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button class="btn primary" onclick="pentairSet('C0006',{STATUS:'ON'})">Pool ON</button>
-    <button class="btn danger" onclick="pentairSet('C0006',{STATUS:'OFF'})">Pool OFF</button>
-    <button class="btn primary" onclick="pentairSet('C0001',{STATUS:'ON'})">Spa ON</button>
-    <button class="btn danger" onclick="pentairSet('C0001',{STATUS:'OFF'})">Spa OFF</button>
-    <button class="btn" onclick="pentairSet('GRP01',{STATUS:'ON'})">All Lights ON</button>
-    <button class="btn" onclick="pentairSet('GRP01',{STATUS:'OFF'})">All Lights OFF</button>
-    <button class="btn primary" onclick="pentairSet('FTR01',{STATUS:'ON'})">Cleaner ON</button>
-    <button class="btn danger" onclick="pentairSet('FTR01',{STATUS:'OFF'})">Cleaner OFF</button>
-  </div>
+    <!-- LEFT — Hot Tub Hero Card -->
+    <div class="pc-hero-card" id="pc-spa-hero">
+      <div class="pc-section-lbl">HOT TUB</div>
+      <span class="badge" id="pc-spa-badge" style="margin-top:4px">—</span>
+      <div class="pc-hero-temp" id="pc-spa-temp">—<sup>°F</sup></div>
+      <div class="pc-hero-setpt" id="pc-spa-setpoint">Target: — °F</div>
+      <div class="pc-hero-actions">
+        <button class="pc-action-btn pc-btn-on"  onclick="pentairSet('C0001',{STATUS:'ON'})">SPA ON</button>
+        <button class="pc-action-btn pc-btn-off" onclick="pentairSet('C0001',{STATUS:'OFF'})">SPA OFF</button>
+      </div>
+      <!-- Air Blower quick toggle -->
+      <div style="margin-top:10px;display:flex;gap:8px;width:100%">
+        <button class="btn" style="flex:1;font-size:11px" onclick="pentairSet('C0009',{STATUS:'ON'})">Blower ON</button>
+        <button class="btn danger" style="flex:1;font-size:11px" onclick="pentairSet('C0009',{STATUS:'OFF'})">Blower OFF</button>
+      </div>
+    </div>
+
+    <!-- RIGHT — status grid (2 cols) -->
+    <div class="pc-right">
+
+      <!-- Pool body -->
+      <div class="pc-stat-card">
+        <div class="pc-stat-hdr">
+          <span class="pc-section-lbl">POOL</span>
+          <span class="badge" id="pool-body-badge">—</span>
+        </div>
+        <div class="pc-stat-temp" id="pc-pool-temp">—°F</div>
+        <div class="pc-stat-sub" id="pc-pool-setpoint">Setpoint: —</div>
+        <div class="pc-stat-sub" id="pc-pool-heat">Heat: —</div>
+        <div style="margin-top:10px;display:flex;gap:6px">
+          <button class="btn primary" onclick="pentairSet('C0006',{STATUS:'ON'})">Pool ON</button>
+          <button class="btn danger"  onclick="pentairSet('C0006',{STATUS:'OFF'})">Pool OFF</button>
+        </div>
+      </div>
+
+      <!-- VSF Pump -->
+      <div class="pc-stat-card">
+        <div class="pc-stat-hdr">
+          <span class="pc-section-lbl">VSF PUMP</span>
+          <span class="badge" id="pc-pump-badge">—</span>
+        </div>
+        <div><span class="pc-pump-big" id="pc-pump-rpm">—</span><span class="pc-pump-unit"> RPM</span></div>
+        <div class="pc-pump-row"><span id="pc-pump-gpm-val">—</span> GPM &nbsp;·&nbsp; <span id="pc-pump-w-val">—</span> W</div>
+        <!-- hidden compat element for old JS refs -->
+        <span id="pc-pump-status" style="display:none"></span>
+        <span id="pc-pump-gpm"    style="display:none"></span>
+      </div>
+
+      <!-- Gas Heater -->
+      <div class="pc-stat-card">
+        <div class="pc-stat-hdr">
+          <span class="pc-section-lbl">GAS HEATER</span>
+          <span class="badge" id="pc-heater-badge">—</span>
+        </div>
+        <div class="pc-stat-sub" id="pc-heater-status">Status: —</div>
+        <div style="margin-top:10px;display:flex;gap:6px">
+          <button class="btn primary" onclick="pentairSet('H0001',{STATUS:'ON'})">Enable</button>
+          <button class="btn danger"  onclick="pentairSet('H0001',{STATUS:'OFF'})">Disable</button>
+        </div>
+      </div>
+
+      <!-- Lights & Cleaner -->
+      <div class="pc-stat-card">
+        <div class="pc-section-lbl" style="margin-bottom:10px">LIGHTS &amp; CLEANER</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn" style="font-size:10px" onclick="pentairSet('GRP01',{STATUS:'ON'})">All ON</button>
+          <button class="btn danger" style="font-size:10px" onclick="pentairSet('GRP01',{STATUS:'OFF'})">All OFF</button>
+          <button class="btn" style="font-size:10px" onclick="pentairSet('C0003',{STATUS:'ON'})">Deep</button>
+          <button class="btn" style="font-size:10px" onclick="pentairSet('C0004',{STATUS:'ON'})">Spa Lt</button>
+          <button class="btn" style="font-size:10px" onclick="pentairSet('C0002',{STATUS:'ON'})">Shallow</button>
+          <button class="btn" style="font-size:10px" onclick="pentairSet('C0008',{STATUS:'ON'})">Tree</button>
+        </div>
+        <div style="margin-top:8px;display:flex;gap:6px">
+          <button class="btn primary" style="flex:1;font-size:10px" onclick="pentairSet('FTR01',{STATUS:'ON'})">Cleaner ON</button>
+          <button class="btn danger"  style="flex:1;font-size:10px" onclick="pentairSet('FTR01',{STATUS:'OFF'})">Cleaner OFF</button>
+        </div>
+      </div>
+
+    </div><!-- /pc-right -->
+  </div><!-- /pc-grid -->
+
+  <!-- Circuit Status tiles -->
+  <div class="section-title" style="margin-top:18px">Circuit Status</div>
+  <div class="pc-circ-grid" id="pool-circuits"></div>
+
 </div><!-- /pool -->
 
 
 <!-- ═══ DEVICES ══════════════════════════════════════════════════════════════ -->
 <div id="view-devices" class="view">
-  <div class="section-title">Discovered Devices</div>
-  <div class="grid grid-2">
+  <div class="section-title">Connected Devices <span id="dev-online-count" style="font-size:10px;color:var(--online);font-weight:600;text-transform:none;letter-spacing:0;margin-left:4px"></span></div>
 
-    <div class="card">
-      <div class="device-card">
-        <div class="device-icon">⚡</div>
-        <div class="device-info">
-          <div class="device-name">SPAN Panel <span class="badge" id="dev-span-badge">—</span></div>
-          <div class="device-detail">span-nj-2307-006gl.local · 192.168.68.93:80</div>
-          <div class="device-detail">Serial: nj-2307-006gl · FW: spanos2/r202603/05 · Model: 00200</div>
-          <div class="device-detail" id="dev-span-door">Door: — · Uptime: —</div>
+  <!-- Hidden compat spans for old renderState refs that use direct assignment -->
+  <span id="dev-span-door"    style="display:none"></span>
+  <span id="dev-enphase-prod" style="display:none"></span>
+  <span id="tesla-gw-detail"  style="display:none"></span>
+  <span id="wc-detail"        style="display:none"></span>
+  <span id="wc-session"       style="display:none"></span>
+
+  <div class="dev-grid">
+
+    <!-- SPAN Panel -->
+    <div class="dev-card status-offline" id="dc-span">
+      <div class="dev-sdot offline" id="dc-span-dot"></div>
+      <div class="dev-body">
+        <div class="dev-header">
+          <span class="dev-dicon">⚡</span>
+          <span class="dev-dname">SPAN Panel</span>
+          <span class="badge offline" id="dev-span-badge">—</span>
         </div>
+        <div class="dev-ip">192.168.68.93 · nj-2307-006gl</div>
+        <div class="dev-metric" id="dc-span-metric">—<span> W grid</span></div>
+        <div class="dev-lastseen" id="dc-span-lastseen">last seen: —</div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="device-card">
-        <div class="device-icon">☀️</div>
-        <div class="device-info">
-          <div class="device-name">Enphase IQ Gateway <span class="badge" id="dev-enphase-badge">—</span></div>
-          <div class="device-detail">envoy.local · 192.168.68.63:443</div>
-          <div class="device-detail">Serial: 202324023651 · FW: D8.3.5167 · imeter: true</div>
-          <div class="device-detail" id="dev-enphase-prod">Production: —</div>
+    <!-- Enphase IQ Gateway -->
+    <div class="dev-card status-offline" id="dc-enphase">
+      <div class="dev-sdot offline" id="dc-enphase-dot"></div>
+      <div class="dev-body">
+        <div class="dev-header">
+          <span class="dev-dicon">☀️</span>
+          <span class="dev-dname">Enphase IQ Gateway</span>
+          <span class="badge offline" id="dev-enphase-badge">—</span>
         </div>
+        <div class="dev-ip">192.168.68.63 · S/N 202324023651</div>
+        <div class="dev-metric" id="dc-enphase-metric">—<span> W solar</span></div>
+        <div class="dev-lastseen" id="dc-enphase-lastseen">last seen: —</div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="device-card">
-        <div class="device-icon">🏊</div>
-        <div class="device-info">
-          <div class="device-name">Pentair IntelliCenter <span class="badge online">online</span></div>
-          <div class="device-detail">pentair.local · 192.168.68.91:6681 (TCP) / :6680 (WS)</div>
-          <div class="device-detail">Bodies: Pool (B1101), Spa (B1202)</div>
-          <div class="device-detail">Pump: VSF (PMP01) · Heater: Gas (H0001) · SWG: IntelliChlor</div>
+    <!-- Tesla Energy Gateway 3V -->
+    <div class="dev-card status-offline" id="dc-tesla">
+      <div class="dev-sdot offline" id="dc-tesla-dot"></div>
+      <div class="dev-body">
+        <div class="dev-header">
+          <span class="dev-dicon">🔋</span>
+          <span class="dev-dname">Tesla Gateway 3V</span>
+          <span class="badge offline" id="tesla-gw-badge">—</span>
         </div>
+        <div class="dev-ip">192.168.68.86 · Fleet API OAuth</div>
+        <div class="dev-metric" id="dc-tesla-metric">—<span>% SoE</span></div>
+        <div class="dev-lastseen" id="dc-tesla-lastseen">last seen: —</div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="device-card">
-        <div class="device-icon">🔋</div>
-        <div class="device-info">
-          <div class="device-name">Tesla Energy Gateway 3V <span class="badge offline" id="tesla-gw-badge">not found</span></div>
-          <div class="device-detail" id="tesla-gw-detail">192.168.68.86 · Serial: GF2240460002D2 · FW: 25.26.0</div>
-          <div class="device-detail">Auth: Fleet API OAuth · auto-refreshes via auth.tesla.com</div>
+    <!-- Tesla Wall Connector Gen 3 -->
+    <div class="dev-card status-offline" id="dc-wc">
+      <div class="dev-sdot offline" id="dc-wc-dot"></div>
+      <div class="dev-body">
+        <div class="dev-header">
+          <span class="dev-dicon">🔌</span>
+          <span class="dev-dname">Wall Connector Gen 3</span>
+          <span class="badge offline" id="wc-badge">—</span>
         </div>
+        <div class="dev-ip">192.168.68.87 · no auth</div>
+        <div class="dev-metric" id="dc-wc-metric">—</div>
+        <div class="dev-lastseen" id="dc-wc-lastseen">last seen: —</div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="device-card">
-        <div class="device-icon">⚡</div>
-        <div class="device-info">
-          <div class="device-name">Tesla Wall Connector Gen 3 <span class="badge offline" id="wc-badge">—</span></div>
-          <div class="device-detail">TeslaWallConnector_OEB496 · 192.168.68.87 · No auth</div>
-          <div class="device-detail" id="wc-detail">—</div>
-          <div class="device-detail" id="wc-session">—</div>
+    <!-- Pentair IntelliCenter -->
+    <div class="dev-card status-offline" id="dc-pentair">
+      <div class="dev-sdot offline" id="dc-pentair-dot"></div>
+      <div class="dev-body">
+        <div class="dev-header">
+          <span class="dev-dicon">🏊</span>
+          <span class="dev-dname">Pentair IntelliCenter</span>
+          <span class="badge offline" id="dev-pentair-badge">—</span>
         </div>
+        <div class="dev-ip">192.168.68.91:6681 TCP</div>
+        <div class="dev-metric" id="dc-pentair-metric">—</div>
+        <div class="dev-lastseen" id="dc-pentair-lastseen">last seen: —</div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="device-card">
-        <div class="device-icon">📷</div>
-        <div class="device-info">
-          <div class="device-name">Wyze Camera</div>
-          <div class="device-detail">192.168.68.88 · MAC: 28:df:eb:d0:dc:ca</div>
-          <div class="device-detail">Occupancy inference — future integration</div>
+    <!-- Nest Thermostat -->
+    <div class="dev-card status-offline" id="dc-nest">
+      <div class="dev-sdot offline" id="dc-nest-dot"></div>
+      <div class="dev-body">
+        <div class="dev-header">
+          <span class="dev-dicon">🌡️</span>
+          <span class="dev-dname">Nest Thermostat</span>
+          <span class="badge offline" id="dev-nest-badge">—</span>
         </div>
+        <div class="dev-ip">192.168.68.65 · Google SDM API</div>
+        <div class="dev-metric" id="dc-nest-metric">—<span>°F</span></div>
+        <div class="dev-lastseen" id="dc-nest-lastseen">last seen: —</div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="device-card">
-        <div class="device-icon">🌡️</div>
-        <div class="device-info">
-          <div class="device-name">Nest Thermostat</div>
-          <div class="device-detail">192.168.68.65 · MAC: 18:b4:30:7a:f3:b5 (Nest Labs/Google)</div>
-          <div class="device-detail">HVAC integration — future milestone</div>
+    <!-- B-Hyve Sprinklers -->
+    <div class="dev-card status-offline" id="dc-bhyve">
+      <div class="dev-sdot offline" id="dc-bhyve-dot"></div>
+      <div class="dev-body">
+        <div class="dev-header">
+          <span class="dev-dicon">💧</span>
+          <span class="dev-dname">B-Hyve Sprinklers</span>
+          <span class="badge offline" id="dev-bhyve-badge">—</span>
         </div>
+        <div class="dev-ip">cloud API · Orbit B-Hyve</div>
+        <div class="dev-metric" id="dc-bhyve-metric">—<span> zones</span></div>
+        <div class="dev-lastseen" id="dc-bhyve-lastseen">last seen: —</div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="device-card">
-        <div class="device-icon">🌐</div>
-        <div class="device-info">
-          <div class="device-name">TP-Link Deco Network</div>
-          <div class="device-detail">Router: 192.168.68.1 · Nodes: .74, .83 · Subnet: 192.168.68.0/22</div>
-          <div class="device-detail">Presence detection — future integration via Deco API</div>
+    <!-- Wyze Cam — Front Side -->
+    <div class="dev-card status-offline" id="dc-cam-front">
+      <div class="dev-sdot offline" id="dc-cam-front-dot"></div>
+      <div class="dev-body">
+        <div class="dev-header">
+          <span class="dev-dicon">📷</span>
+          <span class="dev-dname">Wyze — Front Side</span>
+          <span class="badge offline" id="dc-cam-front-badge">—</span>
         </div>
+        <div class="dev-ip">192.168.68.76 · RTSP :8554</div>
+        <div class="dev-metric" id="dc-cam-front-metric">—</div>
+        <div class="dev-lastseen" id="dc-cam-front-lastseen">last seen: —</div>
       </div>
     </div>
 
-    <div class="card">
-      <div class="device-card">
-        <div class="device-icon">📦</div>
-        <div class="device-info">
-          <div class="device-name">NAS</div>
-          <div class="device-detail">192.168.68.54 · NAS.local</div>
-          <div class="device-detail">Network attached storage</div>
+    <!-- Wyze Cam — Upstairs -->
+    <div class="dev-card status-offline" id="dc-cam-up">
+      <div class="dev-sdot offline" id="dc-cam-up-dot"></div>
+      <div class="dev-body">
+        <div class="dev-header">
+          <span class="dev-dicon">📷</span>
+          <span class="dev-dname">Wyze — Upstairs</span>
+          <span class="badge offline" id="dc-cam-up-badge">—</span>
         </div>
+        <div class="dev-ip">192.168.68.51 · Wyze Cloud</div>
+        <div class="dev-metric" id="dc-cam-up-metric">—</div>
+        <div class="dev-lastseen" id="dc-cam-up-lastseen">last seen: —</div>
       </div>
     </div>
 
-  </div>
-
-  <div class="section-title" style="margin-top:16px">Setup Checklist</div>
-  <div class="card">
-    <div style="line-height:2.2;font-size:12px">
-      <div>✅ Pentair IntelliCenter — live (TCP 6681 responding)</div>
-      <div>✅ Enphase IQ Gateway — found (needs Enphase account JWT in ENPHASE_TOKEN)</div>
-      <div>⚠️ SPAN Panel — found (needs one-time physical token registration)</div>
-      <div>✅ Tesla Energy Gateway 3V — Fleet API OAuth · auto-refresh enabled</div>
-      <div>📋 SRP Utility — future (cloud polling, set SRP credentials)</div>
+    <!-- Wyze Cam — Downstairs -->
+    <div class="dev-card status-offline" id="dc-cam-down">
+      <div class="dev-sdot offline" id="dc-cam-down-dot"></div>
+      <div class="dev-body">
+        <div class="dev-header">
+          <span class="dev-dicon">📷</span>
+          <span class="dev-dname">Wyze — Downstairs</span>
+          <span class="badge offline" id="dc-cam-down-badge">—</span>
+        </div>
+        <div class="dev-ip">192.168.68.82 · Wyze Cloud</div>
+        <div class="dev-metric" id="dc-cam-down-metric">—</div>
+        <div class="dev-lastseen" id="dc-cam-down-lastseen">last seen: —</div>
+      </div>
     </div>
+
   </div>
 </div><!-- /devices -->
 
@@ -3174,7 +3458,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 <!-- ═══ HOME CONTROL ════════════════════════════════════════════════════════ -->
 <div id="view-home-control" class="view">
-  <div class="section-title">Home Control</div>
+  <div class="section-title">Controls</div>
 
   <!-- Nest Thermostats (dynamically rendered per device) -->
   <div class="card" style="margin-bottom:16px">
@@ -3832,46 +4116,155 @@ function renderState(s) {
   updateSpanCharts(sd);
 
   // ── Pool View ──
+  // Pentair system badge
+  const pcBadge = document.getElementById('pc-pentair-badge');
+  if (pcBadge) { pcBadge.textContent = pd.status||'?'; pcBadge.className = 'badge ' + statusColor(pd.status); }
+
+  // Pool body card
   const bpb = document.getElementById('pool-body-badge');
-  bpb.textContent = pool.status||'?';
-  bpb.className = 'badge ' + (pool.status==='ON'?'online':'offline');
-  document.getElementById('pc-pool-temp').textContent = pool.temp ? pool.temp+'°F' : '—°F';
-  document.getElementById('pc-pool-setpoint').textContent = `Setpoint: ${pool.setpoint_lo||'?'} / ${pool.setpoint_hi||'?'} °F`;
-  document.getElementById('pc-pool-heat').textContent = `Heat: ${pool.heat_source||'?'}`;
+  if (bpb) { bpb.textContent = pool.status||'?'; bpb.className = 'badge ' + (pool.status==='ON'?'online':'offline'); }
+  const pcPoolTemp = document.getElementById('pc-pool-temp');
+  if (pcPoolTemp) pcPoolTemp.textContent = pool.temp ? pool.temp+'°F' : '—°F';
+  const pcPoolSp = document.getElementById('pc-pool-setpoint');
+  if (pcPoolSp) pcPoolSp.textContent = `Setpoint: ${pool.setpoint_lo||'?'} / ${pool.setpoint_hi||'?'} °F`;
+  const pcPoolHeat = document.getElementById('pc-pool-heat');
+  if (pcPoolHeat) pcPoolHeat.textContent = `Heat: ${pool.heat_source||'?'}`;
 
+  // Spa hero card
   const spa = pd.spa||{};
-  const spab = document.getElementById('spa-body-badge');
-  spab.textContent = spa.status||'?';
-  spab.className = 'badge ' + (spa.status==='ON'?'online':'offline');
-  document.getElementById('pc-spa-temp').textContent = spa.temp ? spa.temp+'°F' : '—°F';
-  document.getElementById('pc-spa-setpoint').textContent = `Setpoint: ${spa.setpoint_lo||'?'} / ${spa.setpoint_hi||'?'} °F`;
+  const spaOn = spa.status === 'ON';
+  const spaHero = document.getElementById('pc-spa-hero');
+  if (spaHero) { spaHero.classList.toggle('spa-on', spaOn); }
+  const pcSpaBadge = document.getElementById('pc-spa-badge');
+  if (pcSpaBadge) { pcSpaBadge.textContent = spa.status||'?'; pcSpaBadge.className = 'badge ' + (spaOn?'online':'offline'); }
+  const pcSpaTemp = document.getElementById('pc-spa-temp');
+  if (pcSpaTemp) pcSpaTemp.innerHTML = spa.temp ? spa.temp+'<sup>°F</sup>' : '—<sup>°F</sup>';
+  const pcSpaSp = document.getElementById('pc-spa-setpoint');
+  if (pcSpaSp) pcSpaSp.textContent = `Target: ${spa.setpoint_lo||'?'} °F`;
 
-  document.getElementById('pc-pump-rpm').textContent = pump.rpm != null ? pump.rpm+' RPM' : '— RPM';
-  document.getElementById('pc-pump-gpm').textContent = pump.gpm != null ? `${pump.gpm} GPM · ${pump.power_w} W` : '— GPM';
-  document.getElementById('pc-pump-status').textContent = `Status: ${pump.status||'?'}`;
-  document.getElementById('pc-heater-status').textContent = (pd.heater||{}).status||'—';
+  // Pump card
+  const pumpOn = pump.status && pump.status !== 'OFF' && pump.status !== '?';
+  const pcPumpBadge = document.getElementById('pc-pump-badge');
+  if (pcPumpBadge) { pcPumpBadge.textContent = pump.status||'?'; pcPumpBadge.className = 'badge ' + (pumpOn?'online':'offline'); }
+  const pcPumpRpm = document.getElementById('pc-pump-rpm');
+  if (pcPumpRpm) pcPumpRpm.textContent = pump.rpm != null ? pump.rpm : '—';
+  const pcPumpGpm = document.getElementById('pc-pump-gpm-val');
+  if (pcPumpGpm) pcPumpGpm.textContent = pump.gpm != null ? pump.gpm : '—';
+  const pcPumpW = document.getElementById('pc-pump-w-val');
+  if (pcPumpW) pcPumpW.textContent = pump.power_w != null ? pump.power_w : '—';
 
+  // Heater card
+  const heaterSt = (pd.heater||{}).status||'—';
+  const heaterOn = heaterSt === 'ON';
+  const pcHeaterBadge = document.getElementById('pc-heater-badge');
+  if (pcHeaterBadge) { pcHeaterBadge.textContent = heaterSt; pcHeaterBadge.className = 'badge ' + (heaterOn?'online':'offline'); }
+  const pcHeaterSt = document.getElementById('pc-heater-status');
+  if (pcHeaterSt) pcHeaterSt.textContent = `Status: ${heaterSt}`;
+
+  // Circuit tiles
   const poolCirc = document.getElementById('pool-circuits');
-  poolCirc.innerHTML = (pd.circuits||[]).map(c => `
-    <div class="circuit-row">
-      <div class="circuit-status ${c.status}"></div>
-      <div class="circuit-name-col">${c.name} <span class="circuit-id">(${c.id})</span></div>
-      <div style="display:flex;gap:6px">
-        <button class="btn" style="padding:3px 10px;font-size:10px" onclick="pentairSet('${c.id}',{STATUS:'ON'})">ON</button>
-        <button class="btn" style="padding:3px 10px;font-size:10px" onclick="pentairSet('${c.id}',{STATUS:'OFF'})">OFF</button>
-      </div>
-    </div>
-  `).join('');
+  if (poolCirc) {
+    poolCirc.innerHTML = (pd.circuits||[]).map(c => {
+      const on = c.status === 'ON';
+      return `<div class="pc-circ-tile ${on?'circ-on':'circ-off'}">
+        <div class="pc-circ-nm">${c.name}</div>
+        <div class="pc-circ-st">${c.status||'?'}</div>
+        <div style="display:flex;gap:4px;margin-top:6px">
+          <button class="btn" style="flex:1;padding:4px 0;font-size:10px" onclick="pentairSet('${c.id}',{STATUS:'ON'})">ON</button>
+          <button class="btn" style="flex:1;padding:4px 0;font-size:10px" onclick="pentairSet('${c.id}',{STATUS:'OFF'})">OFF</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
 
   // ── Devices View ──
-  const db1 = document.getElementById('dev-span-badge');
-  db1.textContent = sd.status||'?'; db1.className = 'badge ' + statusColor(sd.status);
-  document.getElementById('dev-span-door').textContent =
-    `Door: ${sd.door||'?'} · Uptime: ${sd.uptime ? Math.round(sd.uptime/3600)+'h' : '?'}`;
-  const db2 = document.getElementById('dev-enphase-badge');
-  db2.textContent = ed.status||'?'; db2.className = 'badge ' + statusColor(ed.status);
-  document.getElementById('dev-enphase-prod').textContent =
-    `Production: ${fmt(ed.production_w)} · Consumption: ${fmt(ed.consumption_w)}`;
+  function fmtLastSeen(ts) {
+    if (!ts) return 'never';
+    const ago = Math.round((Date.now()/1000) - ts);
+    if (ago < 15)  return 'just now';
+    if (ago < 60)  return ago + 's ago';
+    if (ago < 3600) return Math.round(ago/60) + 'm ago';
+    return Math.round(ago/3600) + 'h ago';
+  }
+  function dcUpdate(id, st, metric, lastseen) {
+    const card = document.getElementById('dc-' + id);
+    const dot  = document.getElementById('dc-' + id + '-dot');
+    const badge = document.getElementById('dev-' + id + '-badge') || document.getElementById('dc-' + id + '-badge') || (id==='wc'?document.getElementById('wc-badge'):null) || (id==='tesla'?document.getElementById('tesla-gw-badge'):null);
+    const metEl = document.getElementById('dc-' + id + '-metric');
+    const lsEl  = document.getElementById('dc-' + id + '-lastseen');
+    const cls = statusColor(st);
+    if (card) { card.className = 'dev-card status-' + (st==='online'?'online':st==='error'?'error':st==='no_token'||st==='warning'?'warning':'offline'); }
+    if (dot)  { dot.className  = 'dev-sdot ' + (st==='online'?'online':st==='error'?'error':st==='no_token'||st==='warning'?'warning':'offline'); }
+    if (badge){ badge.textContent = st||'—'; badge.className = 'badge ' + cls; }
+    if (metEl && metric != null) { metEl.innerHTML = metric; }
+    if (lsEl)  { lsEl.textContent = 'last seen: ' + fmtLastSeen(lastseen); }
+  }
+
+  dcUpdate('span',    sd.status, `${sd.grid_power!=null?Math.round(sd.grid_power):'—'}<span> W grid · door: ${sd.door||'?'}</span>`, sd.last_seen);
+  dcUpdate('enphase', ed.status, `${ed.production_w!=null?Math.round(ed.production_w):'—'}<span> W solar</span>`, ed.last_seen);
+  dcUpdate('tesla',   td.status, `${td.soe!=null?td.soe:'—'}<span>% SoE · ${td.solar_w!=null?Math.round(td.solar_w):'—'} W solar</span>`, td.last_seen);
+
+  // Wall Connector — show charge state + watts
+  const wcSt = wc.status;
+  let wcMetric = '—';
+  if (wcSt === 'online') {
+    wcMetric = wc.vehicle_connected
+      ? (wc.charge_status === 'charging'
+          ? `${wc.charging_w!=null?Math.round(wc.charging_w):'—'}<span> W · ${wc.current_a}A · charging</span>`
+          : `<span>vehicle connected · ${wc.charge_status||'—'}</span>`)
+      : '<span>no vehicle</span>';
+  }
+  dcUpdate('wc', wcSt, wcMetric, wc.last_seen);
+
+  // Pentair
+  const poolT = (pd.pool||{}).temp;
+  const pumpR = (pd.pump||{}).rpm;
+  dcUpdate('pentair', pd.status,
+    poolT ? `${poolT}<span>°F pool · ${pumpR||'—'} RPM</span>` : '<span>—</span>',
+    pd.last_seen);
+
+  // Nest
+  const nd = s.nest||{};
+  dcUpdate('nest', nd.status,
+    nd.temp_f ? `${nd.temp_f}<span>°F · ${nd.hvac_state||'—'}</span>` : '<span>—°F</span>',
+    nd.last_seen);
+
+  // B-Hyve
+  const bh = s.bhyve||{};
+  const bhZones = (bh.zones||[]).length;
+  const bhRunning = (bh.zones||[]).filter(z=>z.is_running).length;
+  dcUpdate('bhyve', bh.status,
+    bhZones ? `${bhZones}<span> zones${bhRunning?' · '+bhRunning+' running':''}</span>` : '<span>—</span>',
+    bh.last_seen);
+
+  // Wyze cameras — match by name fragment
+  const cams = s.cameras||[];
+  function camCard(cardSuffix, nameHint) {
+    const cam = cams.find(c=>c.name&&c.name.toLowerCase().includes(nameHint));
+    const card = document.getElementById('dc-cam-' + cardSuffix);
+    const dot   = document.getElementById('dc-cam-' + cardSuffix + '-dot');
+    const badge = document.getElementById('dc-cam-' + cardSuffix + '-badge');
+    const metEl = document.getElementById('dc-cam-' + cardSuffix + '-metric');
+    const lsEl  = document.getElementById('dc-cam-' + cardSuffix + '-lastseen');
+    const st = cam ? cam.status : (cams.length > 0 ? 'offline' : 'offline');
+    const cls = st === 'online' ? 'online' : 'offline';
+    if (card)  { card.className  = 'dev-card status-' + cls; }
+    if (dot)   { dot.className   = 'dev-sdot ' + cls; }
+    if (badge) { badge.textContent = st; badge.className = 'badge ' + cls; }
+    if (metEl) { metEl.innerHTML  = cam ? (cam.last_motion ? `<span>motion: ${cam.last_motion}</span>` : '<span>no recent motion</span>') : '<span>—</span>'; }
+    if (lsEl)  { lsEl.textContent = cam && cam.last_seen ? 'last seen: ' + cam.last_seen : 'last seen: —'; }
+  }
+  camCard('front', 'front');
+  camCard('up',    'upstairs');
+  camCard('down',  'downstairs');
+
+  // Online device count
+  const devStatuses = [sd.status, ed.status, td.status, wc.status, pd.status, nd.status, bh.status];
+  const onlineCount = devStatuses.filter(x=>x==='online'||x==='partial'||x==='no_token').length
+    + cams.filter(c=>c.status==='online').length;
+  const totalCount  = devStatuses.length + 3; // +3 wyze cams
+  const countEl = document.getElementById('dev-online-count');
+  if (countEl) countEl.textContent = `${onlineCount} / ${totalCount} online`;
 
   // ── Tesla Energy View ──
   const teBadge = document.getElementById('tesla-energy-badge');

@@ -2202,11 +2202,11 @@ def _rtsp_capture_loop(cam_id: str, rtsp_url: str):
                 'ffmpeg', '-loglevel', 'quiet',
                 '-rtsp_transport', 'tcp',
                 '-i', rtsp_url,
-                '-vf', 'scale=1280:-2',
+                '-vf', 'scale=640:-2',
                 '-f', 'image2pipe',
                 '-vcodec', 'mjpeg',
                 '-q:v', '4',   # quality
-                '-r', '2',     # 2 fps capture — lightweight, plenty for display
+                '-r', '0.2',   # 1 frame/5s — reduces CPU ~90% vs 2fps; plenty for dashboard tiles
                 'pipe:1',
             ]
             proc = _sp.Popen(cmd, stdout=_sp.PIPE, stderr=_sp.DEVNULL)

@@ -2713,3 +2713,24 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 2 committed, 7 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+[main 0c0009b] auto: snapshot 2026-02-26T05:00:01Z
+ 12 files changed, 320 insertions(+), 36 deletions(-)
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260225_214945-startup.json
+ create mode 100644 wyze-bridge/docker-compose.yml
+ create mode 100644 wyze-bridge/tokens/auth.pickle
+ create mode 100644 wyze-bridge/tokens/cameras.pickle
+ create mode 100644 wyze-bridge/tokens/user.pickle
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+[master 5ccea61] auto: snapshot 2026-02-26T05:00:01Z
+ 2 files changed, 541 insertions(+)
+ create mode 100644 experiments/era_boost_all_models.py
+COMMITTED numerai-tournament
+CLEAN ai-workshop (nothing to commit)
+[main 0d58a229] auto: snapshot 2026-02-26T05:00:01Z
+ 2 files changed, 111 insertions(+), 1 deletion(-)
+ create mode 100644 backend/backups/crm-backup-20260225_214945-startup.json
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 3 committed, 6 skipped

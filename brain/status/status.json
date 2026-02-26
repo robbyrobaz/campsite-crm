@@ -1,26 +1,28 @@
 {
-  "updatedAt": "2026-02-25T21:48:00-07:00",
+  "updatedAt": "2026-02-25T22:10:00-07:00",
   "activeTasks": [
     {
       "id": "c_8943547595525_19c98335808",
-      "title": "Numerai era-boost restart — all 3 models",
+      "title": "Numerai era-boost — all 3 models",
       "status": "in-progress",
-      "startedAt": "2026-02-25T21:27:00-07:00",
+      "startedAt": "2026-02-25T22:08:00-07:00",
       "assignee": "claude",
-      "notes": "Builder alive, waiting on training subtask (TaskOutput, up to 10min timeout). Last log write 21:43."
+      "pid": 43155,
+      "notes": "2nd attempt. Builder runs training directly (no TaskOutput). v2_equivalent features only."
     }
   ],
   "health": {
     "cpu_temp": "71.0°C",
-    "disk": "38% used (279G free)",
+    "disk": "38% used",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
-      "blofin-dashboard": "active",
+      "blofin-dashboard": "active (port 8892)",
       "blofin-stack-paper": "active",
-      "jarvis-home-energy": "active"
+      "jarvis-home-energy": "active",
+      "wyze-bridge": "running (docker, host-network)"
     },
     "critical_alerts": "none"
   },
-  "notes": "wyze-bridge stopped — mediamtx tries to bind port 8888 (Blofin). Needs port remapping fix before permanent deploy. Front Side Cam RTSP via wyze-bridge was confirmed working (stream connected, 180kb/s H264 via LAN). NQ Research done. Blofin dashboard was briefly down, now restored."
+  "notes": "All cameras live. wyze-bridge persists via docker restart:unless-stopped. Numerai re-dispatched. Tesla local gateway needs installation password from Rob."
 }

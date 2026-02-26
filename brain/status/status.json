@@ -1,20 +1,34 @@
 {
-  "timestamp": "2026-02-26T16:30:00-07:00",
-  "activeTasks": [],
-  "lastDispatch": "2026-02-26T16:30:00-07:00",
-  "lastHeartbeat": "2026-02-26T16:30:00-07:00",
+  "timestamp": "2026-02-26T16:43:00-07:00",
+  "activeTasks": [
+    {
+      "id": "c_c3e94299c5691_19c9c2a107d",
+      "title": "NQ: Audit strategy models for session coverage",
+      "minutes_running": 8,
+      "updated_at": "2026-02-26T16:35:09-07:00"
+    },
+    {
+      "id": "c_38a72201135a1_19c9c2a10aa",
+      "title": "NQ: Add Telegram alerts for key pipeline events",
+      "minutes_running": 8,
+      "updated_at": "2026-02-26T16:35:09-07:00"
+    }
+  ],
+  "lastDispatch": "2026-02-26T16:43:00-07:00",
+  "lastHeartbeat": "2026-02-26T16:43:00-07:00",
   "health": {
-    "cpu_temp": "59.0°C",
+    "cpu_temp": "75.0°C",
     "disk_usage": "39%",
     "services": "all active",
     "alerts": "none",
     "gateway": "active",
     "blofin_services": "all active",
+    "critical_alert_monitor": "clean",
     "nq_smb_watcher": "active",
     "wyze_bridge": "running"
   },
   "kanban": {
-    "in_progress": 0,
+    "in_progress": 2,
     "planned": 0,
     "review_test": 0,
     "done_total": 1
@@ -24,5 +38,5 @@
     "total_tokens": "41.4M",
     "cost_est": "$30.76"
   },
-  "notes": "All systems nominal. Numerai models all present. No critical alerts. master-dashboard has pending path update (NQ repo rename). campsite-crm has backup file uncommitted (expected)."
+  "notes": "Two NQ strategy tasks running (audit + alerts). No stale cards. No new dispatch. All systems nominal."
 }

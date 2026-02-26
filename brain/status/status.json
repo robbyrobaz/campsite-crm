@@ -1,21 +1,13 @@
 {
-  "updatedAt": "2026-02-25T22:43:00-07:00",
+  "updatedAt": "2026-02-25T23:13:00-07:00",
   "activeTasks": [
     {
-      "id": "c_e0f7c708adbf7_19c98359cd7",
-      "title": "Blofin per coin performance — promote backtest models to forward test",
+      "id": "c_8f4d671e9d7f9_19c9890d447",
+      "title": "Blofin + Master Dashboard: Replace aggregate stats with Top 10 winners everywhere",
       "status": "In Progress",
-      "startedAt": "2026-02-25T22:32:00-07:00",
+      "startedAt": "2026-02-25T23:09:00-07:00",
       "assignee": "claude",
-      "notes": "Fixing pipeline to run per-coin models forward from backtest. 11 min elapsed."
-    },
-    {
-      "id": "c_7517229eafe77_19c984cd65b",
-      "title": "Expand psych levels beyond x20/x80 — add confluence weighting",
-      "status": "In Progress",
-      "startedAt": "2026-02-25T22:32:00-07:00",
-      "assignee": "claude",
-      "notes": "NinjaTrader strategies. Adding VWAP/EMA/prev-day-H-L weighting. 11 min elapsed."
+      "notes": "4 min elapsed. Replacing aggregate PF/WR/PnL with Top 10 coin-strategy pairs ranked by FT PF. Surgical edits to dashboard server.py, master-dashboard, run_pipeline.py."
     },
     {
       "id": "c_8943547595525_19c98335808",
@@ -23,11 +15,11 @@
       "status": "In Progress",
       "startedAt": "2026-02-25T22:43:00-07:00",
       "assignee": "claude",
-      "notes": "3rd attempt. Was stale at 31 min — reset and restarted. Direct training, no TaskOutput spawn. v2_equivalent (304) features. PID 89930."
+      "notes": "29 min elapsed. Direct training run, no TaskOutput spawn. v2_equivalent (304) features. Approaching 30-min stale threshold — monitor next pulse."
     }
   ],
   "health": {
-    "cpu_temp": "85.0°C",
+    "cpu_temp": "82.0°C",
     "disk": "38% used (166G/468G)",
     "services": {
       "openclaw-gateway": "active",
@@ -36,5 +28,5 @@
     },
     "critical_alerts": "none"
   },
-  "notes": "3 cards In Progress. Planned queue empty. Numerai restarted after 31-min stale. No new dispatches needed."
+  "notes": "2 cards In Progress. Planned queue empty. Numerai at 29 min — will trigger stale recovery next pulse if not updated. CPU 82C nominal."
 }

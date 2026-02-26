@@ -4,6 +4,16 @@
 
 ## Architecture Reference
 
+### Blofin Stack — Per-Coin Strategy (Key Design Decision, Feb 25 2026)
+**Do NOT build per-coin ML models.** Global models (entry_classifier, direction_predictor, etc.) stay trained on all coins — that's correct.
+
+**The right approach:** Use FT performance data to find which coin+strategy pairs respond well to the global model. Enable only those pairs. Already built:
+- `strategy_coin_performance` — 32 coins × 26 strategies, BT + FT metrics per pair
+- `strategy_coin_eligibility` — 1,112 rows, live per-coin performance with blacklist
+- Pipeline fix (Feb 25 2026): ensures good per-coin BT results flow through to FT promotion
+
+**The loop:** Global model → per-coin FT data shows which coins respond → eligibility enables/disables pairs → only winning coin+strategy combos trade.
+
 ### Blofin Stack
 - Feature library: 95+ technical indicators
 - Backtester: 7-day historical replay, multi-timeframe

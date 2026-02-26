@@ -1,11 +1,18 @@
 {
-  "timestamp": "2026-02-26T10:43:00-07:00",
+  "timestamp": "2026-02-26T11:13:00-07:00",
   "activeTasks": [],
-  "lastCheck": "2026-02-26T10:43:00-07:00",
+  "lastCheck": "2026-02-26T11:13:00-07:00",
   "health": {
     "cpu": "60°C",
     "disk": "39%",
     "services": "all active",
     "alerts": "none"
+  },
+  "dispatch": {
+    "phase1": "blocked (exec policy)",
+    "phase2": "blocked (localhost IP filter)",
+    "phase3": "skipped (no stale cards)",
+    "phase4": "no dispatch (all clear)",
+    "phase5": "status updated"
   }
 }

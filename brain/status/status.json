@@ -1,12 +1,15 @@
 {
-  "lastPulse": "2026-02-26T05:43:00-07:00",
-  "health": {
-    "cpu": "52°C",
-    "disk": "39% (/)",
-    "services": ["openclaw-gateway: active", "blofin-stack-ingestor: active", "blofin-stack-paper: active"],
-    "alerts": "none"
-  },
+  "lastPulse": "2026-02-26T06:13:00-07:00",
   "activeTasks": [],
-  "queuedTasks": 0,
-  "nextDispatch": "2026-02-26T06:13:00-07:00"
+  "health": {
+    "cpu": "51°C",
+    "disk": "39%",
+    "services": "all active",
+    "monitor": "clean"
+  },
+  "queueStatus": {
+    "inProgress": 0,
+    "planned": 0
+  },
+  "notes": "Idle. No work queued."
 }

@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-02-25T17:13:00-07:00",
+  "updatedAt": "2026-02-25T17:20:00-07:00",
   "activeTasks": [
     {
       "id": "c_301d2db3ac4dd_19c97489cc1",
@@ -7,11 +7,19 @@
       "status": "in-progress",
       "startedAt": "2026-02-25T17:06:00-07:00",
       "assignee": "claude",
-      "notes": "14x Mode 1 fixes + 6x Mode 2 fixes. Last updated 2.6 min ago — agent actively running."
+      "notes": "14x Mode 1 + 6x Mode 2 fixes. PID 3929823."
+    },
+    {
+      "id": "c_b721b16e6d6db_19c974bac1f",
+      "title": "Blofin: Limit all long lists to 10, expand button",
+      "status": "in-progress",
+      "startedAt": "2026-02-25T17:20:00-07:00",
+      "assignee": "claude",
+      "notes": "Pipeline page long lists → 10 items + Show More. PID 3938824."
     }
   ],
   "health": {
-    "cpu_temp": "65.0°C",
+    "cpu_temp": "71.0°C",
     "disk": "37% used (281G free)",
     "services": {
       "openclaw-gateway": "active",
@@ -20,5 +28,5 @@
     },
     "critical_alerts": "none"
   },
-  "notes": "Builder actively running on jarvis-home-energy tablet UI round 2. No stale cards."
+  "notes": "Two builders active: energy dashboard UI + blofin list pagination."
 }

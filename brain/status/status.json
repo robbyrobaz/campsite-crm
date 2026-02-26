@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-26T00:13:00-07:00",
+  "lastUpdated": "2026-02-26T00:30:00-07:00",
   "activeTasks": [
     {
       "id": "c_99e25b714a3e1_19c987cb819",
@@ -7,31 +7,7 @@
       "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/numerai-tournament",
       "assignee": "claude",
-      "minutesSinceUpdate": 4
-    },
-    {
-      "id": "c_4e8b8d4904a1d_19c989a5ca7",
-      "title": "Update devices page on jarvis home website",
-      "status": "In Progress",
-      "project": "/home/rob/.openclaw/workspace/jarvis-home-energy",
-      "assignee": "claude",
-      "minutesSinceUpdate": 4
-    },
-    {
-      "id": "c_2d2d12cf63b8_19c9872f7c2",
-      "title": "Master status dashboard — GPU/CPU/disk/RAM live stats + 5-min histograms",
-      "status": "In Progress",
-      "project": "/home/rob/.openclaw/workspace/master-dashboard",
-      "assignee": "claude",
-      "minutesSinceUpdate": 4
-    },
-    {
-      "id": "c_1a0fddf98bea1_19c98a0384a",
-      "title": "Redesign pool control page in Jarvis Home Energy",
-      "status": "In Progress",
-      "project": "/home/rob/.openclaw/workspace/jarvis-home-energy",
-      "assignee": "claude",
-      "minutesSinceUpdate": 4
+      "minutesSinceUpdate": 0
     },
     {
       "id": "c_5a52658c795f8_19c98bebc64",
@@ -39,11 +15,11 @@
       "status": "In Progress",
       "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
       "assignee": "claude",
-      "minutesSinceUpdate": 13
+      "minutesSinceUpdate": 0
     }
   ],
   "health": {
-    "cpuTemp": "84°C",
+    "cpuTemp": "82°C",
     "disk": "38% (167G/468G)",
     "services": {
       "openclaw-gateway": "active",

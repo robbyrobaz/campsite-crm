@@ -1,12 +1,12 @@
 {
-  "lastPulse": "2026-02-26T05:13:00-07:00",
+  "lastPulse": "2026-02-26T05:43:00-07:00",
   "health": {
     "cpu": "52°C",
-    "disk": "38% (/)",
+    "disk": "39% (/)",
     "services": ["openclaw-gateway: active", "blofin-stack-ingestor: active", "blofin-stack-paper: active"],
     "alerts": "none"
   },
   "activeTasks": [],
   "queuedTasks": 0,
-  "nextDispatch": "2026-02-26T05:43:00-07:00"
+  "nextDispatch": "2026-02-26T06:13:00-07:00"
 }

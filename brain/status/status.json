@@ -1,25 +1,25 @@
 {
-  "updatedAt": "2026-02-25T18:13:00-07:00",
+  "updatedAt": "2026-02-25T18:31:00-07:00",
   "activeTasks": [
     {
-      "cardId": "c_7a0e845c90f4f_19c977fd875",
-      "title": "NQ Pipeline: Per-strategy target_horizon support in run_phase2.py + retrain ORB at horizon=10",
-      "status": "In Progress",
+      "id": "c_300a2a02f4718_19c974a050e",
+      "title": "NQ pipeline page: all long lists capped at 10 + expand button",
+      "status": "in-progress",
+      "startedAt": "2026-02-25T18:31:00-07:00",
       "assignee": "claude",
-      "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
-      "pid": 3995510,
-      "restartedAt": "2026-02-25T18:13:00-07:00",
-      "note": "Stale recovery — was stuck >5h, restarted by dispatch pulse"
+      "notes": "PID 4017949. Same pattern as Blofin dashboard fix."
     }
   ],
   "health": {
-    "cpu_temp": "83°C",
-    "disk_root": "37% (164G/468G used)",
+    "cpu_temp": "63.0°C",
+    "disk": "37% used (281G free)",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active"
+      "blofin-stack-paper": "active",
+      "jarvis-home-energy": "active"
     },
     "critical_alerts": "none"
-  }
+  },
+  "notes": "3 repos committed. NQ dashboard list fix running. 7-day quota at 73%, watching."
 }

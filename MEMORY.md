@@ -71,12 +71,13 @@
 
 ### Definitive Phase 2 Leaderboard (All Filters Corrected)
 1. momentum: PF 2.91, Sharpe 7.68, Calmar 808, ~9 trades/day
-2. orb: PF 2.55, Sharpe 6.62, ~3 trades/day
+1. orb: PF 2.92, Sharpe 7.59, ~3 trades/day  ← TIED #1 (target_horizon=10, confirmed Feb 25)
 3. gap_fill: PF 2.10, Sharpe 5.56, ~5.6 trades/day
 4. vwap_fade: PF 2.08, Sharpe 5.56, ~8.6 trades/day
 5. prev_day: PF 2.03, Sharpe 5.33, ~0.84 trades/day
 6. vol_contraction: PF 1.86, Sharpe 4.70, ~4.1 trades/day
 All 6 pass Lucid gates. Phase 3 Tier 1: momentum + orb.
+ORB improvement: target_horizon 5→10 bars = +14.6% PF, +14.6% Sharpe, +2.9pp WR. 10/10 folds pass Lucid sim.
 
 ### NQ Filter Inflation Bug (Fixed)
 - `_CANDIDATE_CFG` in `run_phase2.py` was overriding `max_trades_per_session=100` for all strategies

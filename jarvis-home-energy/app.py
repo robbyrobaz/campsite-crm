@@ -134,7 +134,7 @@ _wyze_client = None
 _wyze_client_lock = threading.Lock()
 _wyze_next_retry = 0   # epoch seconds — don't retry auth before this time
 _camera_poll_counter = 0  # throttle: refresh camera list every 60s (every 12 ticks at 5s)
-_ge_poll_counter = 0      # throttle: poll GE appliances every 60s
+_ge_poll_counter = 0      # throttle: poll GE appliances every 30s
 
 # Ring — cached token data (persisted across calls to avoid repeated re-auth)
 # ring_doorbell 0.9.x is fully async; we wrap with a fresh event loop
@@ -1185,7 +1185,7 @@ def poll_bhyve():
 # ── GE SmartHQ Appliances Adapter ────────────────────────────────────────────
 
 GE_AUTH_URL = "https://accounts.brillion.geappliances.com/oauth2/token"
-GE_API_BASE = "https://api.brillion.geappliances.com"
+GE_API_BASE = "https://client.mysmarthq.com"
 
 _ge_access_token = ""
 _ge_token_expiry = 0.0
@@ -1201,12 +1201,56 @@ _GE_STATE_MAP = {
 
 # Map common GE appliance type tokens → emoji
 _GE_TYPE_ICON = {
-    "Washer": "🫧", "Dryer": "♨️", "Dishwasher": "🍽️",
-    "Clothes Washer": "🫧", "Clothes Dryer": "♨️",
-    "Refrigerator": "🧊", "Oven": "🔥", "Range": "🔥",
-    "Microwave": "📡", "Freezer": "🧊", "AirConditioner": "❄️",
-    "WashDryer": "🫧", "Hood": "💨",
+    "Washer": "&#129783;", "Dryer": "&#9832;", "Dishwasher": "&#127869;",
+    "Clothes Washer": "&#129783;", "Clothes Dryer": "&#9832;",
+    "Refrigerator": "&#129398;", "Oven": "&#128293;", "Range": "&#128293;",
+    "Microwave": "&#128241;", "Freezer": "&#129398;", "AirConditioner": "&#10052;",
+    "WashDryer": "&#129783;", "Hood": "&#128168;",
 }
+
+# Typical wattage estimates by appliance type when actively running
+_GE_WATT_ESTIMATE = {
+    "Washer": 500, "Clothes Washer": 500,
+    "Dryer": 5000, "Clothes Dryer": 5000, "WashDryer": 5000,
+    "Dishwasher": 1800,
+    "Refrigerator": 150, "Freezer": 100,
+    "Oven": 4000, "Range": 3000,
+    "Microwave": 1200,
+    "AirConditioner": 1500,
+    "Hood": 200,
+}
+
+# Track per-appliance state transitions {appliance_id: {state, changed_at}}
+_ge_state_history: dict = {}
+
+
+def _ge_fetch_detail(token: str, aid: str) -> dict:
+    """Try to fetch per-appliance detail + attribute data from GE API.
+    Silently ignores HTTP 404 — those endpoints may not be available on all accounts.
+    Returns dict with optional 'detail' and 'attributes' keys."""
+    result: dict = {}
+    hdr = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
+    # Per-appliance detail
+    try:
+        req = urllib.request.Request(f"{GE_API_BASE}/v1/appliance/{aid}", headers=hdr)
+        with urllib.request.urlopen(req, timeout=8) as r:
+            result["detail"] = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        if e.code not in (404, 405):
+            log.debug("GE detail %s HTTP %d", aid, e.code)
+    except Exception as e:
+        log.debug("GE detail %s: %s", aid, e)
+    # Attribute list
+    try:
+        req = urllib.request.Request(f"{GE_API_BASE}/v1/appliance/{aid}/attribute", headers=hdr)
+        with urllib.request.urlopen(req, timeout=8) as r:
+            result["attributes"] = json.loads(r.read())
+    except urllib.error.HTTPError as e:
+        if e.code not in (404, 405):
+            log.debug("GE attr %s HTTP %d", aid, e.code)
+    except Exception as e:
+        log.debug("GE attr %s: %s", aid, e)
+    return result
 
 
 def _ge_get_token():
@@ -1255,6 +1299,229 @@ def _ge_get_token():
             return None
 
 
+_GE_SKIP_VALUES = {"disabled", "invalid", "na", "undefined", "none", "off", ""}
+
+def _ge_label(val, prefix="cloud.smarthq.type."):
+    """Strip smarthq prefix and prettify enum values."""
+    if not val:
+        return ""
+    v = str(val).replace(prefix, "").replace("cloud.smarthq.domain.", "").replace("cloud.smarthq.type.", "")
+    parts = v.split(".")
+    # Keep only the last meaningful segment(s)
+    label = parts[-1].replace("_", " ").title().strip()
+    # Multi-word cycles: rinseandspin → Rinse And Spin etc.
+    import re
+    label = re.sub(r'([a-z])([A-Z])', r'\1 \2', label)
+    return label
+
+
+def _ge_prettify_cycle(name):
+    """Convert smarthq cycle names like 'rinseandspin' → 'Rinse And Spin'."""
+    import re
+    # Insert space before uppercase letters (camelCase)
+    name = re.sub(r'([a-z])([A-Z])', r'\1 \2', name)
+    # Known compound words
+    replacements = [
+        ("rinseandspin","Rinse And Spin"),("quickwash","Quick Wash"),("quickdry","Quick Dry"),
+        ("coldwash","Cold Wash"),("bulkybedding","Bulky Bedding"),("powerclean","Power Clean"),
+        ("sanitizeandallergen","Sanitize & Allergen"),("ultrafreshvent","UltraFresh Vent"),
+        ("selfclean","Self Clean"),("activewear","Activewear"),("whitesandstuds","Whites"),
+        ("extrahigh","Extra High"),("extraheavy","Extra Heavy"),("extrarinseandspin","Extra Rinse And Spin"),
+    ]
+    low = name.lower().replace(" ","").replace("_","").replace("-","")
+    for key, label in replacements:
+        if low == key:
+            return label
+    return name.replace("_"," ").title()
+
+
+def _ge_secs_to_str(secs):
+    if not secs:
+        return ""
+    secs = int(secs)
+    if secs <= 0:
+        return ""
+    h, m = divmod(secs // 60, 60)
+    return f"{h}h {m}m" if h else f"{m}m"
+
+
+def _ge_parse_services(services, device_type):
+    """Parse Digital Twin service list into rich telemetry."""
+    is_fridge = "refrigerator" in device_type
+    is_washer = "washer" in device_type
+    is_dryer = "dryer" in device_type
+    is_dish = "dishwasher" in device_type
+
+    result = {"state": "idle", "cycle": "", "door": "", "temp": "", "attrs": [], "est_watts": 0}
+    attrs = []
+
+    # Index services by (serviceType_short, domainType_short, serviceDeviceType_short)
+    def _s(v): return str(v).replace("cloud.smarthq.service.", "").replace("cloud.smarthq.domain.", "").replace("cloud.smarthq.device.", "").replace("cloud.smarthq.type.", "")
+
+    for svc in services:
+        st = _s(svc.get("serviceType", ""))
+        dom = _s(svc.get("domainType", ""))
+        sdev = _s(svc.get("serviceDeviceType", ""))
+        state = svc.get("state", {})
+
+        # ── DISHWASHER ──────────────────────────────────────────
+        if is_dish:
+            if st == "dishwasher.state.v1" and "dishwasher" in dom:
+                run = _s(state.get("runStatus", ""))
+                result["state"] = "running" if run.endswith((".active", ".run")) else ("paused" if "pause" in run else "idle")
+                mode = _s(state.get("mode", "")).replace("dishwasher.", "").title()
+                wtemp = _s(state.get("washTemp", "")).replace("dishwasher.washtemp.", "").title()
+                hdry = _s(state.get("heatedDry", "")).replace("dishwasher.heateddry.", "").replace("addedheat", "Added Heat").title()
+                zone = _s(state.get("washZone", "")).replace("dishwasher.washzone.", "").title()
+                ci_raw = _s(state.get("cycleIndication", "")).replace("dishwasher.cycle.indication.", "").replace("cycle.", "")
+                ci = ci_raw.replace(".", " ").replace("_", " ").title() if ci_raw.lower() not in ("inactive","") else ""
+                result["cycle"] = mode
+                if wtemp: attrs.append({"label": "Wash Temp", "value": wtemp, "unit": ""})
+                if hdry: attrs.append({"label": "Heated Dry", "value": hdry, "unit": ""})
+                if zone and zone != "Both": attrs.append({"label": "Wash Zone", "value": zone, "unit": ""})
+                if ci and ci not in ("Inactive", ""): attrs.append({"label": "Phase", "value": ci, "unit": ""})
+                if state.get("steam"): attrs.append({"label": "Steam", "value": "On", "unit": ""})
+                if state.get("bottleWash"): attrs.append({"label": "Bottle Wash", "value": "On", "unit": ""})
+            elif st == "cycletimer" and dom == "cycle":
+                secs = state.get("secondsRemaining", 0)
+                if secs:
+                    attrs.append({"label": "Remaining", "value": _ge_secs_to_str(secs), "unit": ""})
+            elif st == "toggle" and dom == "door" and "dishwasher" in sdev:
+                result["door"] = "Open" if state.get("on") else "Closed"
+            elif st == "integer" and "inventory" in dom and "pod" in sdev:
+                pods = state.get("value", 0)
+                attrs.append({"label": "Pod Inventory", "value": str(pods) if pods else "⚠️ Empty", "unit": ""})
+            elif st == "meter" and dom == "energy":
+                kwh = round(state.get("meterValue", 0) / 1000, 1)
+                attrs.append({"label": "Energy Used", "value": str(kwh), "unit": "kWh"})
+            elif st == "toggle" and dom == "controls.lock" and "dishwasher" in sdev:
+                if state.get("on"): attrs.append({"label": "Controls", "value": "Locked", "unit": ""})
+            elif st == "toggle" and "fan.fresh" in dom:
+                attrs.append({"label": "Fresh Fan", "value": "On" if state.get("on") else "Off", "unit": ""})
+            elif st == "cycletimer" and dom == "delay":
+                secs = state.get("secondsRemaining", 0)
+                if secs: attrs.append({"label": "Delay Start", "value": _ge_secs_to_str(secs), "unit": ""})
+
+        # ── WASHER ───────────────────────────────────────────────
+        elif is_washer:
+            if st == "laundry.state.v1" and sdev == "washer":
+                run = _s(state.get("runStatus", ""))
+                result["state"] = "running" if run.endswith((".active", ".run")) else ("paused" if "pause" in run else "idle")
+                def _lc(v, strip): return _s(v).replace(strip, "").replace(".", " ").replace("_", " ").title().strip()
+                cycle = _lc(state.get("cycle",""), "laundry.cycle.")
+                spin  = _lc(state.get("laundrySpin",""), "laundry.spin.")
+                soil  = _lc(state.get("laundrySoil",""), "laundry.soil.")
+                temp  = _lc(state.get("laundryTemperature",""), "laundry.temperature.")
+                rinse = _lc(state.get("laundryRinse",""), "laundry.rinse.")
+                subcycle = _lc(state.get("subCycle",""), "laundry.subcycle.")
+                result["cycle"] = _ge_prettify_cycle(cycle) + (f" · {_ge_prettify_cycle(subcycle)}" if subcycle.lower() not in _GE_SKIP_VALUES | {"na"} else "")
+                if temp.lower() not in _GE_SKIP_VALUES: attrs.append({"label": "Water Temp", "value": _ge_prettify_cycle(temp), "unit": ""})
+                if spin.lower() not in _GE_SKIP_VALUES: attrs.append({"label": "Spin Speed", "value": _ge_prettify_cycle(spin), "unit": ""})
+                if soil.lower() not in _GE_SKIP_VALUES: attrs.append({"label": "Soil Level", "value": _ge_prettify_cycle(soil), "unit": ""})
+                if rinse.lower() not in _GE_SKIP_VALUES | {"off"}: attrs.append({"label": "Rinse", "value": _ge_prettify_cycle(rinse), "unit": ""})
+            elif st == "cycletimer" and dom == "cycle":
+                secs = state.get("secondsRemaining", 0)
+                if secs:
+                    attrs.append({"label": "Remaining", "value": _ge_secs_to_str(secs), "unit": ""})
+            elif st == "smartdispense":
+                level = _s(state.get("level", "")).replace("tanklevel.", "").title()
+                remaining = state.get("cyclesRemaining", 0)
+                attrs.append({"label": "Detergent Tank", "value": f"{level} ({remaining} cycles left)", "unit": ""})
+            elif st == "toggle" and dom == "laundry.powersteam":
+                if state.get("on"): attrs.append({"label": "Power Steam", "value": "On", "unit": ""})
+            elif st == "toggle" and dom == "door":
+                result["door"] = "Open" if state.get("on") else "Closed"
+            elif st == "integer" and dom == "delay" and not state.get("disabled"):
+                hrs = state.get("value", 0)
+                if hrs: attrs.append({"label": "Delay Start", "value": f"{hrs}h", "unit": ""})
+
+        # ── DRYER ────────────────────────────────────────────────
+        elif is_dryer:
+            if st == "laundry.state.v1" and sdev == "dryer":
+                run = _s(state.get("runStatus", ""))
+                result["state"] = "running" if run.endswith((".active", ".run")) else ("paused" if "pause" in run else "idle")
+                def _ld(v, strip): return _s(v).replace(strip, "").replace(".", " ").replace("_", " ").title().strip()
+                cycle   = _ld(state.get("cycle",""), "laundry.cycle.")
+                temp    = _ld(state.get("laundryTemperature",""), "laundry.temperature.")
+                dryness = _ld(state.get("laundryDrynessLevel",""), "laundry.dryness.level.")
+                subcycle_d = _ld(state.get("subCycle",""), "laundry.subcycle.")
+                result["cycle"] = _ge_prettify_cycle(cycle) + (f" · {_ge_prettify_cycle(subcycle_d)}" if subcycle_d.lower() not in _GE_SKIP_VALUES | {"na"} else "")
+                if temp.lower() not in _GE_SKIP_VALUES: attrs.append({"label": "Heat Level", "value": _ge_prettify_cycle(temp), "unit": ""})
+                if dryness.lower() not in _GE_SKIP_VALUES: attrs.append({"label": "Dryness", "value": _ge_prettify_cycle(dryness), "unit": ""})
+            elif st == "cycletimer" and dom == "cycle":
+                secs = state.get("secondsRemaining", 0)
+                if secs:
+                    attrs.append({"label": "Remaining", "value": _ge_secs_to_str(secs), "unit": ""})
+            elif st == "toggle" and "extendedtumble" in dom:
+                if state.get("on"): attrs.append({"label": "Extended Tumble", "value": "On", "unit": ""})
+            elif st == "laundry.toggle.v2" and "washerlink" in dom:
+                linked = state.get("on", False)
+                if linked:
+                    lc = _s(state.get("cycle", "")).replace("laundry.cycle.", "").title()
+                    attrs.append({"label": "Washer Link", "value": lc or "Linked", "unit": ""})
+            elif st == "integer" and "inventory" in dom and "sheet" in sdev and "consumed" not in dom:
+                sheets = state.get("value", 0)
+                attrs.append({"label": "Dryer Sheets", "value": str(sheets) if sheets else "⚠️ Empty", "unit": ""})
+            elif st == "integer" and dom == "delay" and not state.get("disabled"):
+                hrs = state.get("value", 0)
+                if hrs: attrs.append({"label": "Delay Start", "value": f"{hrs}h", "unit": ""})
+
+        # ── REFRIGERATOR ─────────────────────────────────────────
+        elif is_fridge:
+            if st == "temperature" and dom == "setpoint":
+                f = state.get("fahrenheit")
+                if f is not None and f < 90:  # ignore 100°F placeholder values
+                    if "freshfood" in sdev:
+                        result["temp_fresh"] = int(f)
+                    elif "freezer" in sdev and "convertibledrawer" not in sdev:
+                        result["temp_freezer"] = int(f)
+                    elif "convertibledrawer" in sdev and "mode3" in sdev:
+                        result["temp_drawer"] = int(f)
+            elif st == "mode" and dom == "door":
+                m = state.get("mode", "")
+                result["door"] = "Open" if "open" in m.lower() else "Closed"
+            elif st == "toggle" and dom == "power" and "icemaker" in sdev:
+                attrs.append({"label": "Ice Maker", "value": "On" if state.get("on") else "Off", "unit": ""})
+            elif st == "toggle" and dom == "full" and "icemaker" in sdev:
+                if state.get("on"): attrs.append({"label": "Ice Bin", "value": "Full", "unit": ""})
+            elif st == "integer" and "percent.usage.remaining" in dom:
+                pct = state.get("value", 0)
+                attrs.append({"label": "Water Filter", "value": f"{pct}% remaining" if pct > 0 else "⚠️ Replace filter", "unit": ""})
+            elif st == "string" and dom == "model" and "waterfilter" in sdev:
+                attrs.append({"label": "Filter Model", "value": state.get("stringValue", ""), "unit": ""})
+            elif st == "toggle" and dom == "turbo" and "freshfood" in sdev:
+                if state.get("on"): attrs.append({"label": "Turbo Cool", "value": "On", "unit": ""})
+            elif st == "toggle" and dom == "turbo" and "freezer" in sdev:
+                if state.get("on"): attrs.append({"label": "Turbo Freeze", "value": "On", "unit": ""})
+            elif st == "toggle" and dom == "power" and "autofill.pitcher" in sdev:
+                attrs.append({"label": "AutoFill Pitcher", "value": "On" if state.get("on") else "Off", "unit": ""})
+            elif st == "toggle" and dom == "full" and "autofill.pitcher" in sdev:
+                attrs.append({"label": "Pitcher", "value": "Full" if state.get("on") else "Not Full", "unit": ""})
+            elif st == "integer" and dom == "water" and "meter" in sdev:
+                oz = state.get("value", 0)
+                gal = round(oz / 128, 1)
+                attrs.append({"label": "Water Dispensed", "value": str(gal), "unit": "gal total"})
+            elif st == "mode" and "mode.selection" in dom and "convertibledrawer" in sdev:
+                # mode3=29°F (fresh), mode1=full freeze etc — already showing temp so skip
+                pass
+            elif st == "integer" and dom == "rssi":
+                rssi = state.get("value", 0)
+                attrs.append({"label": "WiFi Signal", "value": f"{rssi} dBm", "unit": ""})
+
+    # Build temp display for fridge
+    if is_fridge:
+        parts = []
+        if "temp_fresh" in result: parts.append(f"Fresh Food: {result.pop('temp_fresh')}°F")
+        if "temp_freezer" in result: parts.append(f"Freezer: {result.pop('temp_freezer')}°F")
+        if "temp_drawer" in result: parts.append(f"Flex Drawer: {result.pop('temp_drawer')}°F")
+        result["temp"] = " | ".join(parts)
+        if result["door"]:
+            attrs.insert(0, {"label": "Door", "value": result["door"], "unit": ""})
+
+    result["attrs"] = attrs[:12]
+    return result
+
+
 def poll_ge_appliances():
     global _ge_next_retry
     if not (GE_CLIENT_ID and GE_REFRESH_TOKEN):
@@ -1268,58 +1535,162 @@ def poll_ge_appliances():
         if not token:
             raise RuntimeError("no token")
 
-        # List all appliances on the account
-        req = urllib.request.Request(
-            f"{GE_API_BASE}/v1/appliance",
-            headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
-        )
+        hdr = {"Authorization": f"Bearer {token}", "Accept": "application/json"}
+
+        # GET /v2/device — returns all devices with services embedded
+        req = urllib.request.Request(f"{GE_API_BASE}/v2/device", headers=hdr)
         with urllib.request.urlopen(req, timeout=10) as r:
-            items = json.loads(r.read())
-        if not isinstance(items, list):
-            items = items.get("items", []) if isinstance(items, dict) else []
+            data = json.loads(r.read())
+        devices = data.get("devices", []) if isinstance(data, dict) else []
+
+        now = time.time()
+
+        # For each device, fetch full detail (includes all services with current state)
+        import concurrent.futures as _cf
+        def _fetch_device(dev):
+            did = dev.get("deviceId", "")
+            if not did:
+                return dev, []
+            result_dev = dev
+            alerts = []
+            try:
+                r2 = urllib.request.Request(f"{GE_API_BASE}/v2/device/{did}", headers=hdr)
+                with urllib.request.urlopen(r2, timeout=8) as resp:
+                    result_dev = json.loads(resp.read())
+            except Exception:
+                pass
+            try:
+                r3 = urllib.request.Request(f"{GE_API_BASE}/v2/device/{did}/alert", headers=hdr)
+                with urllib.request.urlopen(r3, timeout=8) as resp:
+                    alert_data = json.loads(resp.read())
+                    alerts = alert_data.get("alerts", [])
+            except Exception:
+                pass
+            return result_dev, alerts
+
+        with _cf.ThreadPoolExecutor(max_workers=4) as ex:
+            fetch_results = list(ex.map(_fetch_device, devices))
+        full_devices = [(r[0], r[1]) for r in fetch_results]
 
         appliances = []
-        for item in items:
-            aid = item.get("applianceId") or item.get("id", "")
-            if not aid:
-                continue
+        for dev, dev_alerts in full_devices:
+            did = dev.get("deviceId", "")
+            dev_type = dev.get("deviceType", "").lower()
+            nickname = dev.get("nickname") or dev.get("name") or "GE Appliance"
+            model = dev.get("model", "")
+            brand = dev.get("brand", "GE")
+            presence = dev.get("presence", "OFFLINE").upper()
+            services = dev.get("services", [])
 
-            # Derive state from "online" field ("ONLINE"/"OFFLINE" string or bool)
-            online_raw = item.get("online", "")
-            if isinstance(online_raw, str):
-                state_str = "idle" if online_raw.upper() == "ONLINE" else "disconnected"
-            elif isinstance(online_raw, bool):
-                state_str = "idle" if online_raw else "disconnected"
+            # Infer friendly type
+            if "refrigerator" in dev_type:
+                app_type = "Refrigerator"
+            elif "dishwasher" in dev_type:
+                app_type = "Dishwasher"
+            elif "washer" in dev_type:
+                app_type = "Clothes Washer"
+            elif "dryer" in dev_type:
+                app_type = "Clothes Dryer"
+            elif "range" in dev_type or "oven" in dev_type:
+                app_type = "Range"
             else:
-                state_str = "idle"
+                app_type = dev_type.split(".")[-1].replace("_", " ").title()
 
-            app_type = item.get("applianceType") or item.get("type", "")
-            icon = _GE_TYPE_ICON.get(app_type, "🏠")
+            icon = _GE_TYPE_ICON.get(app_type, "&#127968;")
+
+            if presence != "ONLINE":
+                telemetry = {"state": "disconnected", "cycle": "", "door": "", "temp": "",
+                             "attrs": [], "est_watts": 0}
+            else:
+                telemetry = _ge_parse_services(services, dev_type)
+
+            state_str = telemetry["state"]
+            # For refrigerators, show door state instead of "idle"
+            if "refrigerator" in dev_type and state_str == "idle":
+                state_str = "Door Open" if telemetry.get("door") == "Open" else "Online"
+            est_watts = _GE_WATT_ESTIMATE.get(app_type, 200) if state_str == "running" else 0
+            telemetry["est_watts"] = est_watts
+
+            # Track state transitions
+            prev = _ge_state_history.get(did, {})
+            if prev.get("state") != state_str:
+                _ge_state_history[did] = {"state": state_str, "changed_at": now}
+            changed_at = _ge_state_history.get(did, {}).get("changed_at", now)
+
+            # Parse active alerts
+            _GE_ALERT_LABELS = {
+                'door.open.freshfood': '🚪 Fresh Food Door Open',
+                'door.open.freezer': '🚪 Freezer Door Open',
+                'door.alarm.freshfood': '🔔 Fresh Food Door Alarm',
+                'door.alarm.freezer': '🔔 Freezer Door Alarm',
+                'door.alarm.convertiblecompartment': '🔔 Drawer Door Alarm',
+                'filter.replace.XWFE': '⚠️ Replace Water Filter (XWFE)',
+                'filter.order.XWFE': '🛒 Order Water Filter (XWFE)',
+                'icemaker.full.freezer': '🧊 Ice Bin Full',
+                'temperature.high.freezer': '🌡️ Freezer Temp High',
+                'temperature.high.freshfood': '🌡️ Fresh Food Temp High',
+                'leakdetected': '💧 Leak Detected',
+                'leakdetected.pitcher': '💧 Pitcher Leak Detected',
+            }
+            import time as _time
+            alert_attrs = []
+            _now = _time.time()
+            for al in dev_alerts:
+                atype = al.get("alertType","").replace("cloud.smarthq.alert.","")
+                # Only show alerts triggered in the last 24 hours
+                last_time_str = al.get("lastAlertTime","")
+                if last_time_str:
+                    try:
+                        import datetime as _dt
+                        lt = _dt.datetime.fromisoformat(last_time_str.replace("Z","+00:00")).timestamp()
+                        if (_now - lt) > 86400:
+                            continue  # skip stale alerts
+                    except Exception:
+                        pass
+                label = _GE_ALERT_LABELS.get(atype, None)
+                if label is None:
+                    # Skip generic notification subscriptions (endofcycle, ota, pausedcycle etc)
+                    _skip = {"endofcycle","ota","pausedcycle","cyclefeedback","selfclean",
+                             "endofcycle.minutesleft","endofcycle.minutesafter","damp",
+                             "tank.detergent.low","tank.detergent.empty"}
+                    atype_key = atype.lower().replace(".","").replace(" ","")
+                    if any(s in atype_key for s in ["endofcycle","otaupdate","pausedcycle","cyclefeedback",
+                                                     "selfclean","minutesleft","minutesafter","tankdetergent"]):
+                        continue
+                    label = "⚠️ " + atype.replace("."," ").title()
+                alert_attrs.append({"label": "🔔 Alert", "value": label, "unit": ""})
+
+            all_attrs = alert_attrs + telemetry.get("attrs", [])
 
             appliances.append({
-                "id": aid,
-                "name": item.get("nickname") or item.get("name") or item.get("modelNumber", "GE Appliance"),
+                "id": did,
+                "name": nickname,
                 "type": app_type,
                 "icon": icon,
-                "model": item.get("modelNumber", ""),
-                "brand": item.get("brand", "GE"),
+                "model": model,
+                "brand": brand,
                 "state": state_str,
-                "cycle": "",
-                "door": "",
+                "cycle": telemetry.get("cycle", ""),
+                "door": telemetry.get("door", ""),
+                "temp": telemetry.get("temp", ""),
+                "attrs": all_attrs[:12],
+                "est_watts": est_watts,
+                "state_changed_at": changed_at,
+                "remote_enabled": False,
             })
 
         with _state_lock:
             _state["ge_appliances"] = {
                 "status": "online",
                 "appliances": appliances,
-                "last_seen": time.time(),
+                "last_seen": now,
             }
         log.info("GE SmartHQ polled OK — %d appliance(s)", len(appliances))
         return True
 
     except Exception as e:
         log.warning("GE SmartHQ poll error: %s", e)
-        _ge_next_retry = time.time() + 120  # 2-min backoff
+        _ge_next_retry = time.time() + 120
         with _state_lock:
             _state["ge_appliances"]["status"] = "error"
         return False
@@ -1385,13 +1756,13 @@ def _poll_loop():
     while True:
         # Cameras: poll every 60s (every 12 ticks at 5s) — Wyze login is rate-limited
         _camera_poll_counter += 1
-        # GE SmartHQ: poll every 60s (appliances change slowly; avoid hammering cloud API)
+        # GE SmartHQ: poll every 30s
         _ge_poll_counter += 1
         poll_fns = [poll_pentair, poll_span, poll_enphase, poll_tesla, poll_wall_connector, poll_nest, poll_bhyve, poll_myq]
         if _camera_poll_counter >= 12:
             poll_fns.append(poll_cameras)
             _camera_poll_counter = 0
-        if _ge_poll_counter >= 12:
+        if _ge_poll_counter >= 6:
             poll_fns.append(poll_ge_appliances)
             _ge_poll_counter = 0
         # Run all device polls concurrently — Pentair can take 45s, don't let it block solar/SPAN
@@ -1909,6 +2280,54 @@ def api_settings_ge():
         _ge_next_retry = 0
         return jsonify({"ok": True})
     except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/ge/refresh", methods=["POST"])
+def api_ge_refresh():
+    """Force an immediate GE SmartHQ appliance re-poll on the next loop tick."""
+    global _ge_poll_counter
+    _ge_poll_counter = 99  # exceeds threshold — triggers on next tick
+    return jsonify({"ok": True, "message": "GE refresh queued"})
+
+
+@app.route("/api/ge/appliance/<aid>/command", methods=["POST"])
+def api_ge_command(aid: str):
+    """Send an attribute command to a GE SmartHQ appliance.
+    Body: {"attribute": "erdCodeOrName", "value": "hexOrStringValue"}
+    """
+    body = request.get_json() or {}
+    attribute = (body.get("attribute") or "").strip()
+    value = (body.get("value") or "").strip()
+    if not attribute:
+        return jsonify({"ok": False, "error": "attribute required"}), 400
+    try:
+        token = _ge_get_token()
+        if not token:
+            return jsonify({"ok": False, "error": "GE SmartHQ not authenticated"}), 401
+        payload = json.dumps({"attributes": [{"erd": attribute, "value": value}]}).encode()
+        req = urllib.request.Request(
+            f"{GE_API_BASE}/v1/appliance/{aid}/attribute",
+            data=payload,
+            method="POST",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=10) as r:
+            resp_body = r.read()
+        resp_data = json.loads(resp_body) if resp_body.strip() else {}
+        log.info("GE command OK — appliance=%s %s=%s", aid, attribute, value)
+        return jsonify({"ok": True, "response": resp_data})
+    except urllib.error.HTTPError as e:
+        err_bytes = e.read()
+        detail = err_bytes.decode(errors="replace")[:200] if err_bytes else str(e)
+        log.warning("GE command error %s: HTTP %d — %s", aid, e.code, detail)
+        return jsonify({"ok": False, "error": f"HTTP {e.code}", "detail": detail}), e.code
+    except Exception as e:
+        log.warning("GE command error %s: %s", aid, e)
         return jsonify({"ok": False, "error": str(e)}), 500
 
 
@@ -3702,23 +4121,47 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <!-- ═══ APPLIANCES ═══════════════════════════════════════════════════════════ -->
 <div id="view-appliances" class="view">
   <div class="section-title">GE SmartHQ Appliances
-    <span id="ge-online-count" style="font-size:10px;color:var(--online);font-weight:600;text-transform:none;letter-spacing:0;margin-left:6px"></span>
+    <span id="ge-online-count" style="font-size:10px;color:var(--online);font-weight:600;text-transform:none;letter-spacing:0"></span>
+    <button id="ge-refresh-btn" onclick="geForceRefresh()" title="Force immediate re-poll" style="margin-left:4px;padding:2px 9px;background:var(--surface2);border:1px solid var(--border);border-radius:5px;color:var(--text-dim);font-size:11px;cursor:pointer;font-family:inherit">&#8635; Refresh</button>
+  </div>
+
+  <!-- Summary strip — visible when configured & online -->
+  <div id="ge-summary-strip" style="display:none;gap:0;align-items:stretch;margin-bottom:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+    <div style="display:flex;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 20px;border-right:1px solid var(--border)">
+        <span style="font-size:26px;font-weight:800;color:var(--text);line-height:1" id="ge-sum-total">0</span>
+        <span style="font-size:11px;color:var(--text-dim);line-height:1.3">appliances<br>on account</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 20px;border-right:1px solid var(--border)">
+        <span class="dev-sdot online" style="flex-shrink:0"></span>
+        <span style="font-size:26px;font-weight:800;color:var(--online);line-height:1" id="ge-sum-running">0</span>
+        <span style="font-size:11px;color:var(--text-dim);line-height:1.3">currently<br>running</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 20px;border-right:1px solid var(--border)">
+        <span style="font-size:14px;color:#f59e0b">&#9889;</span>
+        <span style="font-size:22px;font-weight:800;color:#f59e0b;line-height:1" id="ge-sum-watts">0 W</span>
+        <span style="font-size:11px;color:var(--text-dim);line-height:1.3">estimated<br>draw</span>
+      </div>
+      <div style="display:flex;align-items:center;padding:12px 20px;margin-left:auto">
+        <span style="font-size:11px;color:var(--text-dim)" id="ge-sum-lastseen"></span>
+      </div>
+    </div>
   </div>
 
   <!-- Status / setup card -->
-  <div class="card" style="margin-bottom:12px" id="ge-header-card">
+  <div class="card" style="margin-bottom:14px" id="ge-header-card">
     <div class="card-header">
       <span class="card-title">&#127968; GE SmartHQ &mdash; Cloud Integration</span>
       <span class="badge unconfigured" id="ge-badge">unconfigured</span>
     </div>
-    <div id="ge-unconfigured-msg" style="color:var(--text-dim);font-size:12px;padding:8px 0">
+    <div id="ge-unconfigured-msg" style="display:none;color:var(--text-dim);font-size:12px;padding:8px 0">
       GE SmartHQ is not configured. Add <code>GE_CLIENT_ID</code>, <code>GE_CLIENT_SECRET</code>,
       and <code>GE_REFRESH_TOKEN</code> to <code>config.py</code> to enable live appliance status.
       Complete the OAuth2 Authorization Code flow at <strong>developers.smarthq.com</strong>
       to obtain a refresh token.
     </div>
     <div id="ge-error-msg" style="display:none;color:var(--error);font-size:12px;padding:8px 0">
-      Unable to reach the GE SmartHQ API. Check credentials and network connectivity.
+      &#9888; Unable to reach the GE SmartHQ API. Check credentials and network connectivity.
     </div>
     <div id="ge-status-line" style="display:none;font-size:12px;color:var(--text-dim)">
       Polling every 60 s &nbsp;&middot;&nbsp; OAuth2 refresh token (Authorization Code flow) &nbsp;&middot;&nbsp; api.brillion.geappliances.com
@@ -3726,7 +4169,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   </div>
 
   <!-- Appliance card grid — populated by renderAppliances() -->
-  <div id="ge-appliance-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px"></div>
+  <div id="ge-appliance-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px"></div>
 
 </div><!-- /appliances -->
 
@@ -4223,7 +4666,7 @@ function renderState(s) {
   document.getElementById('ts').textContent = ts;
 
   // Status dots
-  const sd = s.span||{};  const ed = s.enphase||{}; const pd = s.pentair||{}; const td = s.tesla||{}; const wc = s.wall_connector||{};
+  const sd = s.span||{};  const ed = s.enphase||{}; const pd = s.pentair||{}; const td = s.tesla||{}; const wc = s.wall_connector||{}; const ge = s.ge_appliances||{};
   document.getElementById('span-dot').className    = 'dot ' + dotClass(sd.status);
   document.getElementById('enphase-dot').className = 'dot ' + dotClass(ed.status);
   document.getElementById('pentair-dot').className = 'dot ' + dotClass(pd.status);
@@ -4518,7 +4961,6 @@ function renderState(s) {
   }
 
   // Online device count
-  const ge = s.ge_appliances||{};
   const devStatuses = [sd.status, ed.status, td.status, wc.status, pd.status, nd.status, bh.status, myq.status, ge.status];
   const onlineCount = devStatuses.filter(x=>x==='online'||x==='partial'||x==='no_token').length
     + cams.filter(c=>c.status==='online').length;
@@ -5434,74 +5876,214 @@ const GE_STATE_LABELS = {
   'end of cycle': 'End of Cycle', 'delay start': 'Delay Start',
   'disconnected': 'Disconnected', 'standby': 'Standby',
   'downloading': 'Downloading', 'remote start': 'Remote Start',
+  'Door Open': '🚪 Door Open', 'Online': 'Online',
 };
 const GE_STATE_COLORS = {
-  'running': 'var(--online)', 'end of cycle': 'var(--warning)',
-  'paused': 'var(--warning)', 'delay start': 'var(--warning)',
+  'running': '#10b981', 'end of cycle': '#f59e0b',
+  'paused': '#f59e0b', 'delay start': '#f59e0b',
   'idle': 'var(--text-dim)', 'standby': 'var(--text-dim)',
   'disconnected': 'var(--offline)', 'downloading': 'var(--solar)',
+  'remote start': '#6366f1',
+  'Door Open': '#f59e0b', 'Online': '#10b981',
 };
+// Appliance types that support cycle-stop command
+const GE_CONTROLLABLE_TYPES = new Set(['Washer','Clothes Washer','Dryer','Clothes Dryer','WashDryer','Dishwasher']);
+
+function _geStateAge(changedAt) {
+  if (!changedAt) return '';
+  const secs = Math.floor(Date.now() / 1000 - changedAt);
+  if (secs < 5) return 'just now';
+  if (secs < 60) return secs + 's in state';
+  if (secs < 3600) return Math.floor(secs / 60) + 'm in state';
+  const h = Math.floor(secs / 3600), m = Math.floor((secs % 3600) / 60);
+  return h + 'h ' + (m > 0 ? m + 'm ' : '') + 'in state';
+}
+
+function _geLastSeen(ts) {
+  if (!ts) return '';
+  const secs = Math.floor(Date.now() / 1000 - ts);
+  if (secs < 10) return 'just now';
+  if (secs < 60) return secs + 's ago';
+  if (secs < 3600) return Math.floor(secs / 60) + 'm ago';
+  return Math.floor(secs / 3600) + 'h ago';
+}
+
+function geForceRefresh() {
+  const btn = document.getElementById('ge-refresh-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '...'; }
+  fetch('/api/ge/refresh', {method:'POST'})
+    .then(r => r.json())
+    .then(d => { if (d.ok) toast('GE: refresh queued'); })
+    .catch(() => {})
+    .finally(() => {
+      setTimeout(() => {
+        if (btn) { btn.disabled = false; btn.textContent = '\u21bb Refresh'; }
+      }, 3000);
+    });
+}
+
+function geApplCommand(aid, appType, action) {
+  // Map action → ERD code + value
+  const cmds = {
+    'stop_washer':  {attribute: '0x0317', value: '00'},
+    'stop_dryer':   {attribute: '0x0317', value: '00'},
+    'stop_dish':    {attribute: '0x0317', value: '00'},
+    'remote_start': {attribute: '0x0317', value: '07'},
+  };
+  const cmd = cmds[action];
+  if (!cmd) { toast('Unknown command: ' + action); return; }
+  fetch('/api/ge/appliance/' + encodeURIComponent(aid) + '/command', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(cmd)
+  }).then(r => r.json()).then(d => {
+    if (d.ok) {
+      toast('Command sent to ' + appType);
+    } else {
+      const detail = d.detail || d.error || 'Unknown error';
+      toast('Command failed: ' + detail.slice(0, 80));
+    }
+  }).catch(e => toast('Command error: ' + e));
+}
 
 function renderAppliances(ge) {
   if (!ge) return;
   const status = ge.status || 'unconfigured';
   const appliances = ge.appliances || [];
 
-  // Update header card
+  // Update header card visibility
   const badge = document.getElementById('ge-badge');
   if (badge) { badge.textContent = status; badge.className = 'badge ' + statusColor(status); }
-
-  const uncfgMsg  = document.getElementById('ge-unconfigured-msg');
-  const errMsg    = document.getElementById('ge-error-msg');
+  const uncfgMsg   = document.getElementById('ge-unconfigured-msg');
+  const errMsg     = document.getElementById('ge-error-msg');
   const statusLine = document.getElementById('ge-status-line');
-  if (uncfgMsg)  uncfgMsg.style.display  = status === 'unconfigured' ? '' : 'none';
-  if (errMsg)    errMsg.style.display    = status === 'error' ? '' : 'none';
-  if (statusLine) statusLine.style.display = (status === 'online') ? '' : 'none';
+  if (uncfgMsg)   uncfgMsg.style.display   = status === 'unconfigured' ? '' : 'none';
+  if (errMsg)     errMsg.style.display     = status === 'error' ? '' : 'none';
+  if (statusLine) statusLine.style.display = status === 'online' ? '' : 'none';
 
-  // Count badge
+  // Summary strip
+  const strip = document.getElementById('ge-summary-strip');
+  if (strip) strip.style.display = status === 'online' ? 'block' : 'none';
+  if (status === 'online') {
+    const running = appliances.filter(a => a.state === 'running');
+    const totalW  = running.reduce((s, a) => s + (a.est_watts || 0), 0);
+    const el = id => document.getElementById(id);
+    if (el('ge-sum-total'))   el('ge-sum-total').textContent   = appliances.length;
+    if (el('ge-sum-running')) el('ge-sum-running').textContent = running.length;
+    if (el('ge-sum-watts'))   el('ge-sum-watts').textContent   = totalW >= 1000 ? (totalW/1000).toFixed(1)+' kW' : totalW+' W';
+    if (el('ge-sum-lastseen')) el('ge-sum-lastseen').textContent = ge.last_seen ? 'Updated ' + _geLastSeen(ge.last_seen) : '';
+  }
+
+  // Count chip beside section title
   const countEl = document.getElementById('ge-online-count');
   if (countEl && status === 'online') {
-    const running = appliances.filter(a => a.state === 'running').length;
-    countEl.textContent = `${appliances.length} appliance${appliances.length !== 1 ? 's' : ''}${running ? ' \xb7 ' + running + ' running' : ''}`;
+    const nRun = appliances.filter(a => a.state === 'running').length;
+    countEl.textContent = appliances.length + ' appliance' + (appliances.length !== 1 ? 's' : '') +
+      (nRun ? ' \xb7 ' + nRun + ' running' : '');
   } else if (countEl) {
     countEl.textContent = '';
   }
 
-  // Appliance grid
+  // Card grid
   const grid = document.getElementById('ge-appliance-grid');
   if (!grid) return;
-
   if (!appliances.length) {
-    if (status === 'online') {
-      grid.innerHTML = '<div style="color:var(--text-dim);font-size:13px;grid-column:1/-1">No appliances found on this account.</div>';
-    } else {
-      grid.innerHTML = '';
-    }
+    grid.innerHTML = status === 'online'
+      ? '<div style="color:var(--text-dim);font-size:13px;grid-column:1/-1">No appliances found on this account.</div>'
+      : '';
     return;
   }
 
   grid.innerHTML = appliances.map(a => {
-    const stLabel = GE_STATE_LABELS[a.state] || a.state || 'Unknown';
-    const stColor = GE_STATE_COLORS[a.state] || 'var(--text-dim)';
+    const stLabel   = GE_STATE_LABELS[a.state] || a.state || 'Unknown';
+    const stColor   = GE_STATE_COLORS[a.state]  || 'var(--text-dim)';
     const isRunning = a.state === 'running';
-    const dotCls = isRunning ? 'online' : (a.state === 'disconnected' ? 'offline' : 'dim');
+    const isEOC     = a.state === 'end of cycle';
+    const isDoorOpen = a.state === 'Door Open';
+    const isOffline = a.state === 'disconnected';
+    const dotCls    = isRunning ? 'online' : (isDoorOpen ? 'warning' : (isOffline ? 'offline' : 'dim'));
+    const borderCol = isRunning ? '#10b981' : ((isEOC||isDoorOpen) ? '#f59e0b' : 'var(--border)');
+    const cardBg    = isRunning ? 'rgba(16,185,129,0.04)' : ((isEOC||isDoorOpen) ? 'rgba(245,158,11,0.04)' : '');
 
-    let extras = '';
-    if (a.cycle) extras += `<div style="font-size:11px;color:var(--text-dim);margin-top:4px">Cycle: ${a.cycle}</div>`;
-    if (a.door)  extras += `<div style="font-size:11px;color:var(--text-dim);margin-top:2px">Door: ${a.door}</div>`;
-    if (a.model) extras += `<div style="font-size:10px;color:var(--text-dim);margin-top:4px;opacity:.6">${a.brand} ${a.model}</div>`;
+    // Energy estimate row (only when running + non-zero estimate)
+    let energyRow = '';
+    if (isRunning && a.est_watts > 0) {
+      const wStr = a.est_watts >= 1000 ? (a.est_watts/1000).toFixed(1)+' kW' : a.est_watts+' W';
+      energyRow = `<div style="display:flex;align-items:center;gap:8px;margin:8px 0;padding:6px 10px;background:rgba(16,185,129,0.08);border-radius:6px;border:1px solid rgba(16,185,129,0.18)">
+  <span style="color:#10b981;font-size:12px">&#9889;</span>
+  <span style="font-size:13px;font-weight:700;color:#10b981">~${wStr}</span>
+  <span style="font-size:10px;color:var(--text-dim)">estimated draw</span>
+</div>`;
+    }
 
-    return `<div class="card" style="padding:14px;position:relative;border-color:${isRunning ? 'var(--online)' : 'var(--border)'}">
-  <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-    <span style="font-size:24px;line-height:1">${a.icon || '&#127968;'}</span>
+    // Detail rows: cycle, door, temp
+    let detailRows = '';
+    if (a.cycle) detailRows += `<div style="font-size:11px;color:var(--text-dim);margin-top:3px">Cycle: <span style="color:var(--text)">${a.cycle}</span></div>`;
+    if (a.temp)  detailRows += `<div style="font-size:11px;color:var(--text-dim);margin-top:3px">Temp: <span style="color:var(--text)">${a.temp}</span></div>`;
+    if (a.door)  detailRows += `<div style="font-size:11px;color:var(--text-dim);margin-top:3px">Door: <span style="color:var(--text)">${a.door}</span></div>`;
+
+    // Extra attribute rows
+    let attrRows = '';
+    if (a.attrs && a.attrs.length) {
+      attrRows = '<div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">' +
+        a.attrs.map(attr => {
+          const valStr = attr.unit ? attr.value + ' ' + attr.unit : attr.value;
+          return `<div style="display:flex;justify-content:space-between;font-size:11px;margin-top:2px">
+  <span style="color:var(--text-dim)">${attr.label}</span>
+  <span style="color:var(--text)">${valStr}</span>
+</div>`;
+        }).join('') + '</div>';
+    }
+
+    // State age
+    const ageStr = (isRunning || isEOC || a.state === 'paused') ? _geStateAge(a.state_changed_at) : '';
+
+    // Controls (type-specific; only if not disconnected)
+    let ctrlRow = '';
+    if (!isOffline && GE_CONTROLLABLE_TYPES.has(a.type)) {
+      const typeKey = a.type.includes('Dish') ? 'dish' : (a.type.includes('Dry') ? 'dryer' : 'washer');
+      if (isRunning || a.state === 'paused') {
+        ctrlRow = `<div style="display:flex;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">
+  <button onclick="geApplCommand('${a.id}','${a.type}','stop_${typeKey}')"
+    style="flex:1;padding:5px 0;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:5px;color:#ef4444;font-size:11px;cursor:pointer;font-family:inherit">
+    &#9632; Cancel Cycle
+  </button>
+</div>`;
+      } else if (a.remote_enabled && a.state === 'idle') {
+        ctrlRow = `<div style="display:flex;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">
+  <button onclick="geApplCommand('${a.id}','${a.type}','remote_start')"
+    style="flex:1;padding:5px 0;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:5px;color:#6366f1;font-size:11px;cursor:pointer;font-family:inherit">
+    &#9654; Remote Start
+  </button>
+</div>`;
+      }
+    }
+
+    // Model footer
+    const modelStr = [a.brand, a.model].filter(Boolean).join(' ');
+    const modelFooter = modelStr
+      ? `<div style="font-size:10px;color:var(--text-dim);margin-top:8px;opacity:.55">${modelStr}</div>`
+      : '';
+
+    return `<div class="card" style="padding:14px;position:relative;border-color:${borderCol};background:var(--surface)${cardBg ? ';background:'+cardBg : ''}">
+  <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px">
+    <span style="font-size:28px;line-height:1;margin-top:3px">${a.icon || '&#127968;'}</span>
     <div style="flex:1;min-width:0">
-      <div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name}</div>
-      <div style="font-size:11px;color:var(--text-dim)">${a.type || 'Appliance'}</div>
+      <div style="font-size:14px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name}</div>
+      <div style="font-size:11px;color:var(--text-dim);margin-top:1px">${a.type || 'Appliance'}</div>
     </div>
-    <div class="dev-sdot ${dotCls}" style="flex-shrink:0"></div>
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+      <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;background:${stColor}18;color:${stColor}">
+        <span class="dev-sdot ${dotCls}" style="width:5px;height:5px;margin:0"></span>${stLabel}
+      </span>
+      ${ageStr ? `<span style="font-size:10px;color:var(--text-dim)">${ageStr}</span>` : ''}
+    </div>
   </div>
-  <div style="font-size:14px;font-weight:700;color:${stColor}">${stLabel}</div>
-  ${extras}
+  ${energyRow}
+  ${detailRows}
+  ${attrRows}
+  ${ctrlRow}
+  ${modelFooter}
 </div>`;
   }).join('');
 }

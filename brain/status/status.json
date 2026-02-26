@@ -1,26 +1,26 @@
 {
-  "updatedAt": "2026-02-25T23:13:00-07:00",
+  "updatedAt": "2026-02-25T23:43:00-07:00",
   "activeTasks": [
     {
-      "id": "c_8f4d671e9d7f9_19c9890d447",
-      "title": "Blofin + Master Dashboard: Replace aggregate stats with Top 10 winners everywhere",
+      "id": "c_866159a5ca46a_19c98ae2432",
+      "title": "NQ Dashboard: Fix Battle Pipeline data — stage assignment, God Model PF, equal_tops_bottoms",
       "status": "In Progress",
-      "startedAt": "2026-02-25T23:09:00-07:00",
+      "startedAt": "2026-02-25T23:41:00-07:00",
       "assignee": "claude",
-      "notes": "4 min elapsed. Replacing aggregate PF/WR/PnL with Top 10 coin-strategy pairs ranked by FT PF. Surgical edits to dashboard server.py, master-dashboard, run_pipeline.py."
+      "notes": "2 min elapsed. 3 surgical fixes: stage assignment (experts stay in Backtest, not God Model column), composite PF recompute from phase 2 backtest data, surface equal_tops_bottoms (PF 3.007)."
     },
     {
       "id": "c_8943547595525_19c98335808",
       "title": "Numerai era-boost restart — full run (2.7M rows, all 3 models)",
       "status": "In Progress",
-      "startedAt": "2026-02-25T22:43:00-07:00",
+      "startedAt": "2026-02-25T23:43:00-07:00",
       "assignee": "claude",
-      "notes": "29 min elapsed. Direct training run, no TaskOutput spawn. v2_equivalent (304) features. Approaching 30-min stale threshold — monitor next pulse."
+      "notes": "Restarted (PID 180651) after 59 min stale. Direct training, v2_equivalent (304) features. Training may take 30-60 min. Monitor for completion."
     }
   ],
   "health": {
     "cpu_temp": "82.0°C",
-    "disk": "38% used (166G/468G)",
+    "disk": "38% used (167G/468G)",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
@@ -28,5 +28,5 @@
     },
     "critical_alerts": "none"
   },
-  "notes": "2 cards In Progress. Planned queue empty. Numerai at 29 min — will trigger stale recovery next pulse if not updated. CPU 82C nominal."
+  "notes": "Pulse 23:43. 2 cards In Progress. Planned queue empty. Numerai restarted after 59 min stale — training run, expect 30-60 min to complete. CPU 82C nominal. Blofin Top 10 card from prior pulse no longer on board (likely completed)."
 }

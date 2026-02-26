@@ -1335,6 +1335,77 @@ def camera_snapshot(cam_id):
     return '', 204
 
 
+# ── RTSP camera frame cache (background ffmpeg threads) ───────────────────────
+_RTSP_CAM_URLS = {
+    "upstairs":   "rtsp://Camera:Feed@192.168.68.51/live",
+    "downstairs": "rtsp://Camera:Feed@192.168.68.82/live",
+    "front-side-cam": "rtsp://127.0.0.1:8554/front-side-cam",  # via docker-wyze-bridge
+}
+_rtsp_frame_cache: dict = {}   # cam_id → latest JPEG bytes
+_rtsp_capture_threads: dict = {}
+
+def _rtsp_capture_loop(cam_id: str, rtsp_url: str):
+    """Background thread: keep ffmpeg alive, update frame cache on every keyframe."""
+    import subprocess as _sp
+    log.info("RTSP capture thread starting for %s", cam_id)
+    while True:
+        try:
+            cmd = [
+                'ffmpeg', '-loglevel', 'quiet',
+                '-rtsp_transport', 'tcp',
+                '-i', rtsp_url,
+                '-vf', 'scale=1280:-2',
+                '-f', 'image2pipe',
+                '-vcodec', 'mjpeg',
+                '-q:v', '4',   # quality
+                '-r', '2',     # 2 fps capture — lightweight, plenty for display
+                'pipe:1',
+            ]
+            proc = _sp.Popen(cmd, stdout=_sp.PIPE, stderr=_sp.DEVNULL)
+            buf = b''
+            while True:
+                chunk = proc.stdout.read(65536)
+                if not chunk:
+                    break
+                buf += chunk
+                # Parse JPEG frames by SOI/EOI markers
+                while True:
+                    s = buf.find(b'\xff\xd8')
+                    if s == -1:
+                        buf = buf[-4:]
+                        break
+                    e = buf.find(b'\xff\xd9', s + 2)
+                    if e == -1:
+                        break
+                    _rtsp_frame_cache[cam_id] = buf[s:e + 2]
+                    buf = buf[e + 2:]
+            proc.wait()
+            log.info("RTSP ffmpeg exited for %s, reconnecting in 3s", cam_id)
+        except Exception as exc:
+            log.warning("RTSP capture error for %s: %s", cam_id, exc)
+        time.sleep(3)   # brief pause before reconnect
+
+def _start_rtsp_threads():
+    """Start background RTSP capture threads (called once on app startup)."""
+    for cam_id, rtsp_url in _RTSP_CAM_URLS.items():
+        if cam_id not in _rtsp_capture_threads:
+            t = threading.Thread(target=_rtsp_capture_loop, args=(cam_id, rtsp_url),
+                                 daemon=True, name=f"rtsp-{cam_id}")
+            t.start()
+            _rtsp_capture_threads[cam_id] = t
+            log.info("Started RTSP capture thread: %s", cam_id)
+
+@app.route("/api/camera/<cam_id>/frame")
+def camera_frame(cam_id):
+    """Return the latest cached JPEG frame for an RTSP camera."""
+    frame = _rtsp_frame_cache.get(cam_id)
+    if not frame:
+        return '', 204   # not ready yet — browser will retry
+    resp = Response(frame, mimetype='image/jpeg')
+    resp.headers['Cache-Control'] = 'no-cache, no-store'
+    return resp
+
+
 @app.route("/api/nest/setpoint", methods=["POST"])
 def nest_setpoint():
     """Set cool and/or heat setpoint. Body: {device_name, cool_f, heat_f}"""
@@ -4254,15 +4325,28 @@ function updateSpanCharts(sd) {
 let _camRefreshTimers = {};
 let _camDataCache = {};  // mac → cam data for modal
 
+const _FRONT_SIDE_MAC = 'D03F275A9799';
+
+function _getRtspId(cam) {
+  const n = (cam.name || '').toLowerCase();
+  if (n.includes('upstairs'))   return 'upstairs';
+  if (n.includes('downstairs')) return 'downstairs';
+  if (n.includes('front'))      return 'front-side-cam';  // via docker-wyze-bridge
+  return null;
+}
+
 function refreshCameraImg(mac) {
-  const img = document.getElementById('cam-img-' + mac);
+  const cam    = _camDataCache[mac];
+  const rtspId = cam ? _getRtspId(cam) : null;
+  const img    = document.getElementById('cam-img-' + mac);
   if (img) {
-    img.src = '/api/camera/' + mac + '/snapshot?t=' + Date.now();
+    const src = rtspId
+      ? '/api/camera/' + rtspId + '/frame?t=' + Date.now()
+      : '/api/camera/' + mac + '/snapshot?t=' + Date.now();
+    img.src = src;
     // Also refresh modal if this camera is open
     const mImg = document.getElementById('cam-modal-img');
-    if (mImg && mImg.dataset.mac === mac) {
-      mImg.src = '/api/camera/' + mac + '/snapshot?t=' + Date.now();
-    }
+    if (mImg && mImg.dataset.mac === mac) mImg.src = src;
   }
 }
 
@@ -4285,13 +4369,16 @@ function openCameraModal(mac) {
   mBadge.className   = 'badge ' + (cam.type === 'wyze' ? 'badge-wyze' : 'badge-ring');
   mMeta.textContent  = lastInfo;
 
-  // Load snapshot
+  // Load snapshot or MJPEG stream
   mImg.dataset.mac  = mac;
   mImg.style.display = 'none';
   mPh.style.display  = 'flex';
   mPh.innerHTML      = icon;
 
-  const src = '/api/camera/' + mac + '/snapshot?t=' + Date.now();
+  const rtspId = _getRtspId(cam);
+  const src = rtspId
+    ? '/api/camera/' + rtspId + '/mjpeg'
+    : '/api/camera/' + mac + '/snapshot?t=' + Date.now();
   mImg.onload  = () => { mImg.style.display='block'; mPh.style.display='none'; };
   mImg.onerror = () => { mImg.style.display='none'; mPh.style.display='flex'; };
   mImg.src = src;
@@ -4331,31 +4418,59 @@ function renderCameras(cameras) {
       : (cam.last_seen ? `Last seen: ${cam.last_seen}` : '');
     const liveDot = isOnline ? '<span class="cam-live-dot" title="Live"></span>' : '';
     const statusBadge = `<span class="badge ${isOnline?'online':'offline'}">${cam.status||'?'}</span>`;
-    return `<div class="camera-card" onclick="openCameraModal('${mac}')">
-      <img id="cam-img-${mac}" class="camera-thumb"
+    const rtspId    = _getRtspId(cam);
+    const isFront   = mac === _FRONT_SIDE_MAC;
+
+    let thumbHtml, sourceBadge;
+    if (rtspId) {
+      // RTSP — poll /frame every 500ms (single JPEG per request, no multipart needed)
+      thumbHtml = `<img id="cam-img-${mac}" class="camera-thumb"
+           src="/api/camera/${rtspId}/frame?t=${Date.now()}"
+           onerror="this.style.display='none';document.getElementById('cam-ph-${mac}').style.display='flex'"
+           onload="document.getElementById('cam-ph-${mac}').style.display='none';this.style.display='block'"
+           alt="${cam.name}">
+      <div id="cam-ph-${mac}" class="camera-thumb-placeholder" style="display:flex">${icon}<div style="font-size:10px;color:var(--text-dim)">Connecting…</div></div>`;
+      sourceBadge = `<span class="badge" style="background:rgba(0,255,128,.15);color:#00ff80;margin-right:6px">LIVE</span>`;
+    } else if (isFront) {
+      // No RTSP — snapshot with fast refresh every 5 s
+      thumbHtml = `<img id="cam-img-${mac}" class="camera-thumb"
            src="/api/camera/${mac}/snapshot?t=${Date.now()}"
            onerror="this.style.display='none';document.getElementById('cam-ph-${mac}').style.display='flex'"
            onload="document.getElementById('cam-ph-${mac}').style.display='none';this.style.display='block'"
            alt="${cam.name}">
-      <div id="cam-ph-${mac}" class="camera-thumb-placeholder" style="display:flex">${icon}<div style="font-size:10px;color:var(--text-dim)">No snapshot</div></div>
+      <div id="cam-ph-${mac}" class="camera-thumb-placeholder" style="display:none">${icon}<div style="font-size:10px;color:var(--text-dim)">No snapshot</div></div>`;
+      sourceBadge = `<span class="badge" style="background:rgba(255,165,0,.15);color:orange;margin-right:6px">Snapshot (no RTSP)</span>`;
+    } else {
+      thumbHtml = `<img id="cam-img-${mac}" class="camera-thumb"
+           src="/api/camera/${mac}/snapshot?t=${Date.now()}"
+           onerror="this.style.display='none';document.getElementById('cam-ph-${mac}').style.display='flex'"
+           onload="document.getElementById('cam-ph-${mac}').style.display='none';this.style.display='block'"
+           alt="${cam.name}">
+      <div id="cam-ph-${mac}" class="camera-thumb-placeholder" style="display:flex">${icon}<div style="font-size:10px;color:var(--text-dim)">No snapshot</div></div>`;
+      sourceBadge = `<span class="badge ${badgeClass}" style="margin-right:6px">${cam.type||'?'}</span>`;
+    }
+
+    return `<div class="camera-card" onclick="openCameraModal('${mac}')">
+      ${thumbHtml}
       <div class="camera-info">
         <div class="camera-name">
           <span>${liveDot}${cam.name}</span>
           ${statusBadge}
         </div>
         <div class="camera-meta">
-          <span class="badge ${badgeClass}" style="margin-right:6px">${cam.type||'?'}</span>
-          ${lastInfo}
+          ${sourceBadge}${lastInfo}
         </div>
       </div>
     </div>`;
   }).join('');
 
-  // Auto-refresh intervals for all cameras (Wyze now has thumbnails too)
+  // Auto-refresh intervals: 500ms for RTSP, 5s for front-side snapshot, 30s otherwise
   cameras.forEach(cam => {
-    const mac = cam.mac || cam.type;
+    const mac    = cam.mac || cam.type;
+    const rtspId = _getRtspId(cam);
     if (!_camRefreshTimers[mac]) {
-      _camRefreshTimers[mac] = setInterval(() => refreshCameraImg(mac), 30000);
+      const interval = rtspId ? 500 : (mac === _FRONT_SIDE_MAC ? 5000 : 30000);
+      _camRefreshTimers[mac] = setInterval(() => refreshCameraImg(mac), interval);
     }
   });
 
@@ -5398,5 +5513,7 @@ if __name__ == "__main__":
 
     t = threading.Thread(target=_poll_loop, daemon=True)
     t.start()
+
+    _start_rtsp_threads()   # start background RTSP frame capture
 
     app.run(host="0.0.0.0", port=DASHBOARD_PORT, debug=False, threaded=True)

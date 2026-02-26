@@ -1,32 +1,26 @@
 {
-  "updatedAt": "2026-02-25T17:20:00-07:00",
+  "updatedAt": "2026-02-25T17:47:00-07:00",
   "activeTasks": [
     {
-      "id": "c_301d2db3ac4dd_19c97489cc1",
-      "title": "Energy Dashboard: Mode 1 + Mode 2 UI Fixes (Round 2)",
+      "id": "c_60ad55cf0d1a3_19c976b95c3",
+      "title": "Energy Dashboard: Mode 1 + Mode 2 Polish (Round 3)",
       "status": "in-progress",
-      "startedAt": "2026-02-25T17:06:00-07:00",
+      "startedAt": "2026-02-25T17:47:00-07:00",
       "assignee": "claude",
-      "notes": "14x Mode 1 + 6x Mode 2 fixes. PID 3929823."
-    },
-    {
-      "id": "c_b721b16e6d6db_19c974bac1f",
-      "title": "Blofin: Limit all long lists to 10, expand button",
-      "status": "in-progress",
-      "startedAt": "2026-02-25T17:20:00-07:00",
-      "assignee": "claude",
-      "notes": "Pipeline page long lists → 10 items + Show More. PID 3938824."
+      "notes": "6 fixes: banner font sizing, sparklines on all Mode 1 cards, home panel half-size, capitalize Importing, trading header weather/time/rate, bigger Sankey text. PID 3964551. JS syntax check enforced before restart."
     }
   ],
   "health": {
-    "cpu_temp": "71.0°C",
+    "cpu_temp": "68.0°C",
     "disk": "37% used (281G free)",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active"
+      "blofin-stack-paper": "active",
+      "blofin-dashboard": "active",
+      "jarvis-home-energy": "active"
     },
     "critical_alerts": "none"
   },
-  "notes": "Two builders active: energy dashboard UI + blofin list pagination."
+  "notes": "Builder running on energy dashboard round 3 polish."
 }

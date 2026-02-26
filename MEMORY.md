@@ -182,7 +182,7 @@ INTERIM:    IBKR paper account (DUH860616) used for delayed (~15 min) data via
 - `TRADOVATE_SEC`  — string, same location
 - `TRADOVATE_USER` — Tradovate email
 - `TRADOVATE_PASS` — Tradovate password
-- Store in: `ninja_trader_strategies/config_live.py` (gitignored)
+- Store in: `NQ-Trading-PIPELINE/config_live.py` (gitignored)
 
 ### Services
 - `nq-smb-watcher.service`    — **ACTIVE LIVE FEED** (Feb 26 2026). Watches NinjaTrader SMB bridge at `/mnt/nt_bridge/bars.csv` (192.168.68.88), appends to `NQ_continuous_1min.csv`, runs signal engine in dry-run mode.

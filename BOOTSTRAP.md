@@ -24,7 +24,7 @@ If you skip these and get corrected, that's the most expensive thing that happen
 ---
 
 ## Active Projects (high-level — see brain/PROJECTS.md for full detail)
-- **NQ Futures Pipeline** — Phase 2 complete, Phase 3 (live trading) in progress. PRD: `ninja_trader_strategies/docs/PRD_SESSION_PIPELINE.md`
+- **NQ Futures Pipeline** — Phase 2 complete, Phase 3 (live trading) in progress. Repo: `NQ-Trading-PIPELINE` (path: `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/`). PRD: `docs/PRD.md`
 - **Blofin Stack** — paper trading active (84K+ trades), FT winner accumulating
 - **Numerai** — 3 models submitting daily (robbyrobml, robbyrob2, robbyrob3)
 - **Home Energy Dashboard** — port 8793, Nest/SPAN/Enphase/Wyze live

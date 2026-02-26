@@ -4708,7 +4708,7 @@ function mcUpdateFlowPaths(s) {
 function mcDrawFrame() {
   const canvas = document.getElementById('mc-canvas');
   const viewEl = document.getElementById('view-microgrid');
-  if (!canvas || !viewEl || !viewEl.classList.contains('active')) {
+  if (!canvas || !viewEl) {
     mcAnimFrame = requestAnimationFrame(mcDrawFrame); return;
   }
   const W = canvas.parentElement.clientWidth;

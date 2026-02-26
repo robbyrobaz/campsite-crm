@@ -896,6 +896,77 @@ def poll_cameras():
     return True
 
 
+# ── Roku ECP Integration ──────────────────────────────────────────────────────
+
+ROKU_IPS = []  # auto-discovered at startup
+
+def _discover_roku_devices():
+    """Scan local subnet for Roku devices via ECP on port 8060."""
+    import concurrent.futures, requests as _req
+    def _check(ip):
+        try:
+            r = _req.get(f"http://{ip}:8060/query/device-info", timeout=0.5)
+            if r.status_code == 200 and b'<device-info>' in r.content:
+                return ip
+        except Exception:
+            pass
+        return None
+    subnet = [f"192.168.68.{i}" for i in range(1, 255)]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=50) as ex:
+        results = ex.map(_check, subnet)
+    return [ip for ip in results if ip]
+
+_roku_cache = {'data': [], 'ts': 0.0}
+_ROKU_TTL = 30.0
+
+def _roku_get(ip, path):
+    import requests as _req
+    try:
+        r = _req.get(f"http://{ip}:8060{path}", timeout=1.5)
+        return r.content if r.status_code == 200 else b''
+    except Exception:
+        return b''
+
+def _roku_post(ip, path):
+    import requests as _req
+    try:
+        r = _req.post(f"http://{ip}:8060{path}", timeout=1.5)
+        return r.status_code == 200
+    except Exception:
+        return False
+
+def _parse_xml_tag(content, tag):
+    import re
+    m = re.search(rb'<' + tag.encode() + rb'[^>]*>(.*?)</' + tag.encode() + rb'>', content, re.DOTALL)
+    return m.group(1).decode('utf-8', errors='replace').strip() if m else ''
+
+def poll_roku():
+    global ROKU_IPS
+    now = time.monotonic()
+    if _roku_cache['data'] and now - _roku_cache['ts'] < _ROKU_TTL:
+        return _roku_cache['data']
+    if not ROKU_IPS:
+        ROKU_IPS = _discover_roku_devices()
+    devices = []
+    for ip in ROKU_IPS:
+        info = _roku_get(ip, '/query/device-info')
+        app  = _roku_get(ip, '/query/active-app')
+        name       = _parse_xml_tag(info, 'friendly-device-name') or _parse_xml_tag(info, 'user-device-name') or ip
+        model      = _parse_xml_tag(info, 'model-name')
+        power      = _parse_xml_tag(info, 'power-mode')
+        serial     = _parse_xml_tag(info, 'serial-number')
+        active_app = _parse_xml_tag(app, 'name') or 'Unknown'
+        active_id  = _parse_xml_tag(app, 'id')
+        devices.append({
+            'ip': ip, 'name': name, 'model': model,
+            'power': power, 'active_app': active_app, 'active_id': active_id,
+            'serial': serial, 'online': bool(info),
+        })
+    _roku_cache['data'] = devices
+    _roku_cache['ts'] = now
+    return devices
+
+
 # ── Nest Thermostat Adapter ───────────────────────────────────────────────────
 
 def _c_to_f(c):
@@ -1947,6 +2018,23 @@ def api_myq_close(serial):
         return jsonify({"error": str(e)}), 500
 
 
+@app.route("/api/roku")
+def api_roku():
+    return jsonify(poll_roku())
+
+@app.route("/api/roku/<ip>/keypress/<key>", methods=["POST"])
+def api_roku_keypress(ip, key):
+    ok = _roku_post(ip, f"/keypress/{key}")
+    _roku_cache['ts'] = 0
+    return jsonify({"ok": ok})
+
+@app.route("/api/roku/<ip>/launch/<app_id>", methods=["POST"])
+def api_roku_launch(ip, app_id):
+    ok = _roku_post(ip, f"/launch/{app_id}")
+    _roku_cache['ts'] = 0
+    return jsonify({"ok": ok})
+
+
 @app.route("/api/tesla/set_password", methods=["POST"])
 def api_tesla_set_password():
     global TESLA_PASSWORD
@@ -2834,6 +2922,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <button onclick="showView('tesla-energy')">Tesla Energy</button>
     <button onclick="showView('cybertruck')">Cybertruck</button>
     <button onclick="showView('cameras')">Cameras</button>
+    <button onclick="showView('roku');fetch('/api/roku').then(r=>r.json()).then(renderRoku).catch(()=>{})">📺 Roku</button>
     <button onclick="showView('home-control')">Controls</button>
     <button onclick="showView('sprinklers')">Sprinklers</button>
     <button onclick="showView('appliances')">Appliances</button>
@@ -4120,6 +4209,12 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   <div id="camera-grid" class="grid grid-2" style="margin-bottom:16px"></div>
 </div><!-- /cameras -->
 
+<!-- ═══ ROKU TVs ══════════════════════════════════════════════════════════════ -->
+<div id="view-roku" class="view">
+  <div class="section-title">📺 Roku TVs</div>
+  <div id="roku-grid" style="display:flex;gap:1rem;flex-wrap:wrap;padding:4px 0;"></div>
+</div><!-- /roku -->
+
 <!-- ── Camera Enlarge Modal ────────────────────────────────────────────── -->
 <div id="cam-modal" onclick="if(event.target===this)closeCameraModal()">
   <button id="cam-modal-close" onclick="closeCameraModal()">✕</button>
@@ -4454,7 +4549,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <div id="toast"></div>
 
 <script>
-const views = ['cockpit','solar','span','pool','devices','tesla-energy','cybertruck','cameras','home-control','sprinklers','appliances','settings'];
+const views = ['cockpit','solar','span','pool','devices','tesla-energy','cybertruck','cameras','roku','home-control','sprinklers','appliances','settings'];
 function showView(v) {
   views.forEach(id => {
     document.getElementById('view-'+id).classList.toggle('active', id===v);
@@ -5611,6 +5706,56 @@ function closeCameraModal() {
   const mImg = document.getElementById('cam-modal-img');
   if (mImg) { mImg.src = ''; mImg.dataset.mac = ''; }
 }
+
+function renderRoku(devices) {
+  const grid = document.getElementById('roku-grid');
+  if (!grid) return;
+  if (!devices || devices.length === 0) {
+    grid.innerHTML = '<div style="color:#888;font-size:0.9rem;">No Roku devices found on network.</div>';
+    return;
+  }
+  grid.innerHTML = devices.map(tv => {
+    const on = tv.power === 'PowerOn';
+    const dot = `<span style="width:10px;height:10px;border-radius:50%;background:${on?'#4caf50':'#555'};display:inline-block;flex-shrink:0;"></span>`;
+    const btns = [['⏮','Rev'],['⏯','Play'],['⏭','Fwd'],['🔇','VolumeMute'],['🔉','VolumeDown'],['🔊','VolumeUp']].map(([lbl,key]) =>
+      `<button onclick="rokuKey('${tv.ip}','${key}')" style="padding:4px 8px;border-radius:4px;border:1px solid #444;background:#2a2a3e;color:#fff;cursor:pointer;font-size:0.9rem;">${lbl}</button>`
+    ).join('');
+    return `<div style="background:var(--bg-card,#1e1e2e);border-radius:8px;padding:1rem;min-width:220px;flex:1;border:1px solid #333;">
+      <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.5rem;">${dot}<strong>${tv.name}</strong></div>
+      <div style="font-size:0.8rem;color:#888;margin-bottom:0.75rem;">${tv.model} · ${on?'ON':tv.power}</div>
+      <div style="font-size:0.85rem;margin-bottom:0.75rem;">▶ ${tv.active_app}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:0.5rem;">
+        ${btns}
+        <button onclick="rokuKey('${tv.ip}','Home')" style="padding:4px 8px;border-radius:4px;border:1px solid #444;background:#2a2a3e;color:#fff;cursor:pointer;">🏠</button>
+        <button onclick="rokuKey('${tv.ip}','Back')" style="padding:4px 8px;border-radius:4px;border:1px solid #444;background:#2a2a3e;color:#fff;cursor:pointer;">⬅</button>
+        <button onclick="rokuKey('${tv.ip}','PowerOff')" style="padding:4px 8px;border-radius:4px;border:1px solid #e53935;background:#2a2a3e;color:#e53935;cursor:pointer;">⏻</button>
+      </div>
+      <div style="display:flex;gap:4px;flex-wrap:wrap;">
+        <button onclick="rokuLaunch('${tv.ip}','12')" style="padding:3px 7px;border-radius:4px;border:1px solid #e50914;background:transparent;color:#e50914;font-size:0.75rem;cursor:pointer;">Netflix</button>
+        <button onclick="rokuLaunch('${tv.ip}','28')" style="padding:3px 7px;border-radius:4px;border:1px solid #ff0000;background:transparent;color:#ff0000;font-size:0.75rem;cursor:pointer;">YouTube</button>
+        <button onclick="rokuLaunch('${tv.ip}','2285')" style="padding:3px 7px;border-radius:4px;border:1px solid #3dbb61;background:transparent;color:#3dbb61;font-size:0.75rem;cursor:pointer;">Hulu</button>
+        <button onclick="rokuLaunch('${tv.ip}','tvinput.hdmi1')" style="padding:3px 7px;border-radius:4px;border:1px solid #888;background:transparent;color:#888;font-size:0.75rem;cursor:pointer;">HDMI 1</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+function rokuKey(ip, key) {
+  fetch('/api/roku/' + ip + '/keypress/' + key, {method:'POST'})
+    .then(r => r.json()).then(d => { if(!d.ok) console.warn('Roku keypress failed'); });
+}
+function rokuLaunch(ip, appId) {
+  fetch('/api/roku/' + ip + '/launch/' + appId, {method:'POST'})
+    .then(r => r.json()).then(d => { if(!d.ok) console.warn('Roku launch failed'); });
+}
+
+// Auto-refresh Roku panel every 30s when visible
+setInterval(() => {
+  const view = document.getElementById('view-roku');
+  if (view && view.classList.contains('active')) {
+    fetch('/api/roku').then(r=>r.json()).then(renderRoku).catch(()=>{});
+  }
+}, 30000);
+
 
 function renderCameras(cameras) {
   const grid = document.getElementById('camera-grid');
@@ -7144,5 +7289,13 @@ if __name__ == "__main__":
     t.start()
 
     _start_rtsp_threads()   # start background RTSP frame capture
+
+    log.info("Discovering Roku devices on 192.168.68.0/24 ...")
+    import threading as _threading
+    def _roku_startup():
+        global ROKU_IPS
+        ROKU_IPS = _discover_roku_devices()
+        log.info("Roku discovery complete: %d device(s) found: %s", len(ROKU_IPS), ROKU_IPS)
+    _threading.Thread(target=_roku_startup, daemon=True).start()
 
     app.run(host="0.0.0.0", port=DASHBOARD_PORT, debug=False, threaded=True)

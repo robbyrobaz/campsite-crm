@@ -42,7 +42,7 @@ except ImportError:
     SPAN_HOST = "192.168.68.93"; SPAN_TOKEN = ""
     ENPHASE_HOST = "192.168.68.63"; ENPHASE_SERIAL = "202324023651"
     ENPHASE_TOKEN = ""; ENPHASE_EMAIL = ""; ENPHASE_PASSWORD = ""
-    PENTAIR_HOST = "192.168.68.91"; PENTAIR_PORT = 6681
+    PENTAIR_HOST = "192.168.68.89"; PENTAIR_PORT = 6681
     TESLA_WC_HOST = "192.168.68.87"
     TESLA_HOST = ""; TESLA_EMAIL = ""; TESLA_PASSWORD = ""
     DASHBOARD_PORT = 8793; POLL_INTERVAL_SECONDS = 5
@@ -125,6 +125,7 @@ _state = {
     "bhyve": {"status": "unconfigured", "devices": [], "zones": [], "last_seen": 0},
     "ge_appliances": {"status": "unconfigured", "appliances": [], "last_seen": 0},
     "myq": {"status": "unconfigured", "doors": [], "last_seen": 0},
+    "roku": [],
 }
 _sse_subscribers = []
 _sse_lock = threading.Lock()
@@ -993,6 +994,8 @@ def poll_roku():
         })
     _roku_cache['data'] = devices
     _roku_cache['ts'] = now
+    with _state_lock:
+        _state['roku'] = devices
     return devices
 
 
@@ -1885,18 +1888,30 @@ def _poll_loop():
     log.info("Polling loop started (interval=%ds, parallel)", POLL_INTERVAL_SECONDS)
     _camera_poll_counter = 11  # trigger camera poll on first tick
     _ge_poll_counter = 11      # trigger GE appliance poll on first tick
+    _nest_poll_counter = 11    # trigger Nest poll on first tick (every 60s — SDM API rate limit)
+    _roku_poll_counter = 5     # trigger Roku poll every 30s (6 ticks × 5s)
     while True:
         # Cameras: poll every 60s (every 12 ticks at 5s) — Wyze login is rate-limited
         _camera_poll_counter += 1
         # GE SmartHQ: poll every 30s
         _ge_poll_counter += 1
-        poll_fns = [poll_pentair, poll_span, poll_enphase, poll_tesla, poll_wall_connector, poll_nest, poll_bhyve, poll_myq]
+        # Nest SDM: poll every 60s — Google rate-limits at >1 req/min per device
+        _nest_poll_counter += 1
+        # Roku: poll every 30s — local network, lightweight
+        _roku_poll_counter += 1
+        poll_fns = [poll_pentair, poll_span, poll_enphase, poll_tesla, poll_wall_connector, poll_bhyve, poll_myq]
+        if _nest_poll_counter >= 12:
+            poll_fns.append(poll_nest)
+            _nest_poll_counter = 0
         if _camera_poll_counter >= 12:
             poll_fns.append(poll_cameras)
             _camera_poll_counter = 0
         if _ge_poll_counter >= 6:
             poll_fns.append(poll_ge_appliances)
             _ge_poll_counter = 0
+        if _roku_poll_counter >= 6:
+            poll_fns.append(poll_roku)
+            _roku_poll_counter = 0
         # Run all device polls concurrently — Pentair can take 45s, don't let it block solar/SPAN
         with concurrent.futures.ThreadPoolExecutor(max_workers=9) as ex:
             futs = [ex.submit(f) for f in poll_fns]
@@ -2003,6 +2018,44 @@ def api_span_circuit(circuit_id):
     try:
         with urllib.request.urlopen(req, timeout=5) as r:
             return jsonify({"ok": True, "response": json.loads(r.read())})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/config/device-ip", methods=["POST"])
+def api_config_device_ip():
+    """Update a device IP address at runtime and persist to config.py."""
+    import re as _re
+    body = request.get_json() or {}
+    device = body.get("device", "").strip()
+    new_ip  = body.get("ip", "").strip()
+    if not _re.match(r'^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$', new_ip):
+        return jsonify({"error": "Invalid IP address"}), 400
+    device_map = {
+        "pentair": "PENTAIR_HOST",
+        "span":    "SPAN_HOST",
+    }
+    if device not in device_map:
+        return jsonify({"error": f"Unknown device: {device}"}), 400
+    var_name = device_map[device]
+    import sys as _sys
+    _mod = _sys.modules[__name__]
+    setattr(_mod, var_name, new_ip)
+    globals()[var_name] = new_ip
+    config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "config.py")
+    try:
+        with open(config_path, "r") as f:
+            content = f.read()
+        new_content = _re.sub(
+            rf'^({var_name}\s*=\s*")[^"]*(")',
+            rf'\g<1>{new_ip}\g<2>',
+            content,
+            flags=_re.MULTILINE
+        )
+        with open(config_path, "w") as f:
+            f.write(new_content)
+        log.info(f"[Config] Updated {var_name} → {new_ip}")
+        return jsonify({"ok": True, "device": device, "ip": new_ip})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -2546,7 +2599,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Jarvis — Home Energy OS</title>
+<title>Jarvis Home</title>
 <style>
   :root {
     --bg: #0a0c10;
@@ -2601,7 +2654,12 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   main { padding: 16px 20px; }
   .view { display: none; }
   .view.active { display: block; }
+  /* Sub-nav buttons */
+  .sub-nav-btn { padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #aaa; cursor: pointer; font-size: 0.9rem; min-height: 36px; transition: all 0.15s; }
+  .sub-nav-btn.active { background: rgba(99,102,241,0.2); border-color: rgba(99,102,241,0.4); color: #fff; }
+  .sub-nav-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
   /* Cockpit is a flex column so sub-panels fill remaining height */
+  #view-cockpit { display: none; flex-direction: column; }
   #view-cockpit.active { display: flex; flex-direction: column; }
   #view-cockpit .tablet-view { flex: 1; min-height: 0; height: auto; }
 
@@ -2956,7 +3014,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 <header>
   <div class="header-top">
-    <div class="logo">⚡ JARVIS <span>Home Energy OS</span></div>
+    <div class="logo">🏠 <span>Jarvis Home</span></div>
     <div class="status-bar">
       <div id="span-dot" class="dot offline" title="SPAN Panel"></div>
       <div id="enphase-dot" class="dot offline" title="Enphase"></div>
@@ -2968,26 +3026,50 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
   </div>
   <nav id="nav-links">
-    <button class="active" onclick="showView('cockpit')">Energy Cockpit</button>
-    <button onclick="showView('solar')">☀️ Solar</button>
-    <button onclick="showView('span')">SPAN Circuits</button>
-    <button onclick="showView('pool')">Pool Control</button>
-    <button onclick="showView('devices')">Devices</button>
-    <button onclick="showView('tesla-energy')">Tesla Energy</button>
-    <button onclick="showView('cybertruck')">Cybertruck</button>
-    <button onclick="showView('cameras')">Cameras</button>
-    <button onclick="showView('roku');fetch('/api/roku').then(r=>r.json()).then(renderRoku).catch(()=>{})">📺 Roku</button>
-    <button onclick="showView('home-control')">Controls</button>
-    <button onclick="showView('sprinklers')">Sprinklers</button>
-    <button onclick="showView('appliances')">Appliances</button>
-    <button onclick="showView('settings')">Settings</button>
+    <button class="active" onclick="showView('energy')">⚡ Energy</button>
+    <button onclick="showView('pool')">🏊 Pool</button>
+    <button onclick="showView('thermostat')">🌡️ Thermostat</button>
+    <button onclick="showView('sprinklers')">💧 Sprinklers</button>
+    <button onclick="showView('entertainment')">📺 Entertainment</button>
+    <button onclick="showView('cameras')">📷 Cameras</button>
+    <button onclick="showView('appliances')">🏠 Appliances</button>
+    <button onclick="showView('settings')">⚙️ Settings</button>
   </nav>
 </header>
 
 <main>
 
+<!-- ═══ HOME DASHBOARD ═══════════════════════════════════════════════════════ -->
+
+
+<!-- ═══ ENERGY WRAPPER ════════════════════════════════════════════════════════ -->
+<div id="view-energy" class="view active">
+  <div class="sub-nav" style="display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;">
+    <button class="sub-nav-btn active" onclick="showEnergySub('cockpit')">⚡ Cockpit</button>
+    <button class="sub-nav-btn" onclick="showEnergySub('solar')">☀️ Solar</button>
+    <button class="sub-nav-btn" onclick="showEnergySub('span')">🔌 SPAN</button>
+    <button class="sub-nav-btn" onclick="showEnergySub('tesla-energy')"><svg width="14" height="14" viewBox="0 0 342 512" fill="currentColor" style="vertical-align:middle;margin-right:3px"><path d="M0 58.8L171 512 342 58.8c-45.8 17-100.3 26.4-171 26.4S45.8 75.8 0 58.8zM171 0c59.9 0 114.4 8.2 152.4 21.2L342 0H0l18.6 21.2C56.6 8.2 111.1 0 171 0z"/></svg>Tesla</button>
+    <button class="sub-nav-btn" onclick="showEnergySub('cybertruck')"><svg width="26" height="14" viewBox="0 0 130 60" fill="none" style="vertical-align:middle;margin-right:3px"><g stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"><polygon points="8,48 14,22 32,10 72,8 96,18 118,20 122,48" fill="rgba(180,180,200,0.15)"/><line x1="32" y1="10" x2="35" y2="30"/><line x1="72" y1="8" x2="72" y2="20"/><line x1="96" y1="18" x2="96" y2="30"/><line x1="8" y1="48" x2="122" y2="48"/></g><circle cx="32" cy="48" r="9" fill="rgba(40,40,50,0.9)" stroke="currentColor" stroke-width="2.5"/><circle cx="32" cy="48" r="4" fill="rgba(200,200,210,0.6)"/><circle cx="95" cy="48" r="9" fill="rgba(40,40,50,0.9)" stroke="currentColor" stroke-width="2.5"/><circle cx="95" cy="48" r="4" fill="rgba(200,200,210,0.6)"/></svg>Cybertruck</button>
+  </div>
+</div>
+
+<!-- ═══ CLIMATE WRAPPER (legacy, hidden) ════════════════════════════════════ -->
+<div id="view-climate" class="view" style="display:none">
+  <div class="sub-nav" style="display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;">
+    <button class="sub-nav-btn active" onclick="showClimateSub('home-control')">🌡️ Thermostat</button>
+    <button class="sub-nav-btn" onclick="showClimateSub('sprinklers')">💧 Sprinklers</button>
+  </div>
+</div>
+
+<!-- ═══ ENTERTAINMENT WRAPPER ════════════════════════════════════════════════ -->
+<div id="view-entertainment" class="view">
+  <div class="sub-nav" style="display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;">
+    <button class="sub-nav-btn active" onclick="showEntertainmentSub('roku')">📺 Roku TVs</button>
+  </div>
+</div>
+
 <!-- ═══ ENERGY COCKPIT ═══════════════════════════════════════════════════════ -->
-<div id="view-cockpit" class="view active">
+<div id="view-cockpit" class="view" style="display:none">
 
 <div id="cockpit-subnav" style="display:flex;justify-content:center;gap:12px;padding:10px 16px;background:rgba(0,0,0,0.3);border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0">
   <button class="csub-btn" data-csub="live" onclick="setCockpitSub('live')">
@@ -3665,16 +3747,6 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <div class="device-detail" id="span-meta">Serial: nj-2307-006gl · 192.168.68.93</div>
       <div class="device-detail" id="span-grid-power" style="margin-top:6px">Grid: — W</div>
     </div>
-    <div class="card">
-      <div class="card-header"><span class="card-title">Setup</span></div>
-      <div class="sub-val" style="margin-bottom:8px">Token registration requires physical panel access:</div>
-      <ol style="color:var(--text-dim);font-size:11px;padding-left:16px;line-height:2">
-        <li>Open panel door</li>
-        <li>Press door sensor button 3×</li>
-        <li>Run: <code style="color:var(--solar)">python3 -c "from app import span_register; span_register()"</code></li>
-        <li>Paste token into config.py → SPAN_TOKEN</li>
-      </ol>
-    </div>
   </div>
 
   <!-- ═══ SPAN ENERGY VISUALIZATION ════════════════════════════════════════ -->
@@ -3734,7 +3806,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
   <!-- Header -->
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-    <div style="font-size:13px;font-weight:600;color:var(--text-dim)">Pentair IntelliCenter · 192.168.68.91</div>
+    <div style="font-size:13px;font-weight:600;color:var(--text-dim)">Pentair IntelliCenter · 192.168.68.89</div>
     <span class="badge" id="pc-pentair-badge">—</span>
   </div>
 
@@ -3830,7 +3902,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 
 <!-- ═══ DEVICES ══════════════════════════════════════════════════════════════ -->
-<div id="view-devices" class="view">
+<div id="view-devices" class="view" style="display:none">
   <div class="section-title">Connected Devices <span id="dev-online-count" style="font-size:10px;color:var(--online);font-weight:600;text-transform:none;letter-spacing:0;margin-left:4px"></span></div>
 
   <!-- Hidden compat spans for old renderState refs that use direct assignment -->
@@ -3911,7 +3983,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
           <span class="dev-dname">Pentair IntelliCenter</span>
           <span class="badge offline" id="dev-pentair-badge">—</span>
         </div>
-        <div class="dev-ip">192.168.68.91:6681 TCP</div>
+        <div class="dev-ip">192.168.68.89:6681 TCP</div>
         <div class="dev-metric" id="dc-pentair-metric">—</div>
         <div class="dev-lastseen" id="dc-pentair-lastseen">last seen: —</div>
       </div>
@@ -4426,7 +4498,120 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 <!-- ═══ SETTINGS ════════════════════════════════════════════════════════════ -->
 <div id="view-settings" class="view">
-  <div class="section-title">Integration Settings</div>
+  <div class="section-title">🔧 Devices &amp; Settings</div>
+  <p style="color:var(--text-dim);font-size:12px;margin-bottom:16px">All connected devices. Green = live data. Edit IPs or credentials inline.</p>
+
+  <!-- SPAN Panel -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">⚡ SPAN Panel</span>
+      <span class="badge offline" id="cfg-badge-span">checking...</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+      <span style="font-size:11px;color:var(--text-dim)">IP:</span>
+      <code style="font-size:11px" id="cfg-ip-span">192.168.68.93</code>
+      <button onclick="editDeviceIp('span')" style="font-size:10px;padding:2px 7px;border-radius:4px;border:1px solid #444;background:transparent;color:#aaa;cursor:pointer;">Edit</button>
+    </div>
+    <div id="cfg-edit-span" style="display:none;margin-bottom:8px;gap:8px;align-items:center">
+      <input type="text" id="cfg-ip-input-span" placeholder="192.168.68.x" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px;width:200px;outline:none">
+      <button onclick="saveDeviceIp('span')" class="btn primary" style="font-size:11px;padding:5px 12px">Save</button>
+      <button onclick="cancelDeviceIp('span')" class="btn" style="font-size:11px;padding:5px 12px">Cancel</button>
+      <span id="cfg-ip-status-span" style="font-size:11px;color:var(--text-dim)"></span>
+    </div>
+    <div id="cfg-stats-span" style="font-size:11px;color:var(--text-dim)">—</div>
+  </div>
+
+  <!-- Enphase Solar -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">☀️ Enphase IQ Gateway</span>
+      <span class="badge offline" id="cfg-badge-enphase">checking...</span>
+    </div>
+    <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">192.168.68.63 · S/N 202324023651 · local API (no token needed)</div>
+    <div id="cfg-stats-enphase" style="font-size:11px;color:var(--text-dim)">—</div>
+  </div>
+
+  <!-- SolarEdge Solar -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">☀️ SolarEdge SE5000H</span>
+      <span class="badge offline" id="cfg-badge-solaredge">checking...</span>
+    </div>
+    <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">Derived from SPAN circuits (SPAN net − Enphase)</div>
+    <div id="cfg-stats-solaredge" style="font-size:11px;color:var(--text-dim)">—</div>
+  </div>
+
+  <!-- Tesla Energy Gateway -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">🔋 Tesla Energy Gateway 3V</span>
+      <span class="badge" id="settings-tesla-badge">—</span>
+    </div>
+    <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">
+      192.168.68.86 · Serial: GF2240460002D2 · FW: 25.26.0 · Fleet API OAuth<br>
+      Token cached in <code>tesla_cache.json</code>, auto-refreshes every 8h.<br>
+      To re-authorize: run teslapy browser flow → approve callback → token auto-saved.
+    </div>
+    <div id="cfg-stats-tesla" style="font-size:11px;color:var(--text-dim)">—</div>
+  </div>
+
+  <!-- Tesla Wall Connector -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">🔌 Tesla Wall Connector Gen 3</span>
+      <span class="badge offline" id="cfg-badge-wallconnector">checking...</span>
+    </div>
+    <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">192.168.68.87 · No auth required · local API port 443</div>
+    <div id="cfg-stats-wallconnector" style="font-size:11px;color:var(--text-dim)">—</div>
+  </div>
+
+  <!-- Pentair Pool -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">🏊 Pentair IntelliCenter</span>
+      <span class="badge offline" id="cfg-badge-pentair">checking...</span>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:8px">
+      <span style="font-size:11px;color:var(--text-dim)">IP:</span>
+      <code style="font-size:11px" id="cfg-ip-pentair">192.168.68.89</code>
+      <button onclick="editDeviceIp('pentair')" style="font-size:10px;padding:2px 7px;border-radius:4px;border:1px solid #444;background:transparent;color:#aaa;cursor:pointer;">Edit</button>
+      <span style="font-size:11px;color:var(--text-dim)">Port: 6681 TCP</span>
+    </div>
+    <div id="cfg-edit-pentair" style="display:none;margin-bottom:8px;gap:8px;align-items:center">
+      <input type="text" id="cfg-ip-input-pentair" placeholder="192.168.68.x" style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:6px 10px;color:var(--text);font-size:12px;width:200px;outline:none">
+      <button onclick="saveDeviceIp('pentair')" class="btn primary" style="font-size:11px;padding:5px 12px">Save</button>
+      <button onclick="cancelDeviceIp('pentair')" class="btn" style="font-size:11px;padding:5px 12px">Cancel</button>
+      <span id="cfg-ip-status-pentair" style="font-size:11px;color:var(--text-dim)"></span>
+    </div>
+    <div id="cfg-stats-pentair" style="font-size:11px;color:var(--text-dim)">—</div>
+  </div>
+
+  <!-- Nest Thermostats -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">🌡️ Nest Thermostats</span>
+      <span class="badge" id="nest-cfg-badge">unconfigured</span>
+    </div>
+    <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">192.168.68.65 · Google Smart Device Management API</div>
+    <div id="cfg-stats-nest" style="font-size:11px;color:var(--text-dim)">—</div>
+    <details id="cfg-creds-nest" style="margin-top:8px">
+      <summary style="font-size:11px;color:var(--text-dim);cursor:pointer;list-style:none">⚙️ Credentials &amp; Setup</summary>
+      <div style="margin-top:8px">
+        <div style="color:var(--text-dim);font-size:11px;margin-bottom:8px">
+          Provide a Nest access token from the Google Smart Device Management API or the legacy nest_thermostat auth flow.
+        </div>
+        <div style="margin-bottom:8px">
+          <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Access Token</div>
+          <input type="password" id="nest-token-input" placeholder="ya29.a0… or legacy token"
+            style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn primary" onclick="saveNest()">Save Nest Token</button>
+          <span id="nest-save-status" style="font-size:11px;color:var(--text-dim)"></span>
+        </div>
+      </div>
+    </details>
+  </div>
 
   <!-- Wyze Cameras -->
   <div class="card" style="margin-bottom:12px">
@@ -4434,36 +4619,43 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <span class="card-title">📷 Wyze Cameras</span>
       <span class="badge" id="wyze-cfg-badge">unconfigured</span>
     </div>
-    <div style="color:var(--text-dim);font-size:11px;margin-bottom:12px">
-      Get your API Key and Key ID from <a href="https://developer.wyze.com" target="_blank" style="color:var(--solar)">developer.wyze.com</a>.
-      API key auth is preferred over username/password.
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <div>
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">API Key (preferred)</div>
-        <input type="password" id="wyze-api-key" placeholder="wyze_api_key_…"
-          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+    <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">Front Side 192.168.68.76 · Upstairs 192.168.68.51 · Downstairs 192.168.68.82</div>
+    <div id="cfg-stats-wyze" style="font-size:11px;color:var(--text-dim)">—</div>
+    <details id="cfg-creds-wyze" style="margin-top:8px">
+      <summary style="font-size:11px;color:var(--text-dim);cursor:pointer;list-style:none">⚙️ Credentials &amp; Setup</summary>
+      <div style="margin-top:8px">
+        <div style="color:var(--text-dim);font-size:11px;margin-bottom:8px">
+          Get your API Key and Key ID from <a href="https://developer.wyze.com" target="_blank" style="color:var(--solar)">developer.wyze.com</a>.
+          API key auth is preferred over username/password.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <div>
+            <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">API Key (preferred)</div>
+            <input type="password" id="wyze-api-key" placeholder="wyze_api_key_…"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Key ID</div>
+            <input type="password" id="wyze-key-id" placeholder="key_id_…"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Email <span style="color:var(--error)">*required</span></div>
+            <input type="email" id="wyze-email" placeholder="you@example.com"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Password <span style="color:var(--error)">*required</span></div>
+            <input type="password" id="wyze-password" placeholder="password"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn primary" onclick="saveWyze()">Save Wyze Credentials</button>
+          <span id="wyze-save-status" style="font-size:11px;color:var(--text-dim)"></span>
+        </div>
       </div>
-      <div>
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Key ID</div>
-        <input type="password" id="wyze-key-id" placeholder="key_id_…"
-          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
-      </div>
-      <div>
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Email <span style="color:var(--error)">*required</span></div>
-        <input type="email" id="wyze-email" placeholder="you@example.com"
-          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
-      </div>
-      <div>
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Password <span style="color:var(--error)">*required</span></div>
-        <input type="password" id="wyze-password" placeholder="password"
-          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <button class="btn primary" onclick="saveWyze()">Save Wyze Credentials</button>
-      <span id="wyze-save-status" style="font-size:11px;color:var(--text-dim)"></span>
-    </div>
+    </details>
   </div>
 
   <!-- Ring Doorbell -->
@@ -4472,123 +4664,117 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <span class="card-title">🔔 Ring Doorbell</span>
       <span class="badge" id="ring-cfg-badge">unconfigured</span>
     </div>
-    <div style="color:var(--text-dim);font-size:11px;margin-bottom:12px">
-      Enter your Ring account credentials. MFA is not supported — disable it if active.
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <div>
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Email</div>
-        <input type="email" id="ring-email" placeholder="you@example.com"
-          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+    <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">Cloud API · Ring account credentials</div>
+    <div id="cfg-stats-ring" style="font-size:11px;color:var(--text-dim)">—</div>
+    <details id="cfg-creds-ring" style="margin-top:8px">
+      <summary style="font-size:11px;color:var(--text-dim);cursor:pointer;list-style:none">⚙️ Credentials &amp; Setup</summary>
+      <div style="margin-top:8px">
+        <div style="color:var(--text-dim);font-size:11px;margin-bottom:8px">
+          Enter your Ring account credentials. MFA is not supported — disable it if active.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <div>
+            <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Email</div>
+            <input type="email" id="ring-email" placeholder="you@example.com"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Password</div>
+            <input type="password" id="ring-password" placeholder="Ring account password"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn primary" onclick="saveRing()">Save Ring Credentials</button>
+          <span id="ring-save-status" style="font-size:11px;color:var(--text-dim)"></span>
+        </div>
       </div>
-      <div>
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Password</div>
-        <input type="password" id="ring-password" placeholder="Ring account password"
-          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <button class="btn primary" onclick="saveRing()">Save Ring Credentials</button>
-      <span id="ring-save-status" style="font-size:11px;color:var(--text-dim)"></span>
-    </div>
+    </details>
   </div>
 
-  <!-- Nest Thermostat -->
+  <!-- B-Hyve Sprinklers -->
   <div class="card" style="margin-bottom:12px">
     <div class="card-header">
-      <span class="card-title">🌡️ Nest Thermostat</span>
-      <span class="badge" id="nest-cfg-badge">unconfigured</span>
-    </div>
-    <div style="color:var(--text-dim);font-size:11px;margin-bottom:12px">
-      Provide a Nest access token from the Google Smart Device Management API or the legacy nest_thermostat auth flow.
-    </div>
-    <div style="margin-bottom:8px">
-      <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Access Token</div>
-      <input type="password" id="nest-token-input" placeholder="ya29.a0… or legacy token"
-        style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
-    </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <button class="btn primary" onclick="saveNest()">Save Nest Token</button>
-      <span id="nest-save-status" style="font-size:11px;color:var(--text-dim)"></span>
-    </div>
-  </div>
-
-  <!-- B-Hyve Sprinkler -->
-  <div class="card" style="margin-bottom:12px">
-    <div class="card-header">
-      <span class="card-title">💧 B-Hyve Sprinkler</span>
+      <span class="card-title">💧 B-Hyve Sprinklers</span>
       <span class="badge" id="bhyve-cfg-badge">unconfigured</span>
     </div>
-    <div style="color:var(--text-dim);font-size:11px;margin-bottom:12px">
-      Orbit B-Hyve cloud account credentials. Used to authenticate with api.orbitbhyve.com.
-      Device: 192.168.68.66 (cloud-only, no local API).
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <div>
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Email</div>
-        <input type="email" id="bhyve-email" placeholder="orbit@email.com"
-          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+    <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">Cloud API · api.orbitbhyve.com · Device: 192.168.68.66 (cloud-only)</div>
+    <div id="cfg-stats-bhyve" style="font-size:11px;color:var(--text-dim)">—</div>
+    <details id="cfg-creds-bhyve" style="margin-top:8px">
+      <summary style="font-size:11px;color:var(--text-dim);cursor:pointer;list-style:none">⚙️ Credentials &amp; Setup</summary>
+      <div style="margin-top:8px">
+        <div style="color:var(--text-dim);font-size:11px;margin-bottom:8px">
+          Orbit B-Hyve cloud account credentials.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <div>
+            <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Email</div>
+            <input type="email" id="bhyve-email" placeholder="orbit@email.com"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Password</div>
+            <input type="password" id="bhyve-password" placeholder="B-Hyve account password"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn primary" onclick="saveBhyve()">Save B-Hyve Credentials</button>
+          <span id="bhyve-save-status" style="font-size:11px;color:var(--text-dim)"></span>
+        </div>
       </div>
-      <div>
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Password</div>
-        <input type="password" id="bhyve-password" placeholder="B-Hyve account password"
-          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <button class="btn primary" onclick="saveBhyve()">Save B-Hyve Credentials</button>
-      <span id="bhyve-save-status" style="font-size:11px;color:var(--text-dim)"></span>
-    </div>
+    </details>
   </div>
 
-  <!-- Tesla (Fleet API OAuth) -->
-  <div class="card">
-    <div class="card-header">
-      <span class="card-title">⚡ Tesla Energy Gateway 3V</span>
-      <span class="badge" id="settings-tesla-badge">—</span>
-    </div>
-    <div style="color:var(--text-dim);font-size:11px;margin-bottom:6px">
-      <strong>Auth: Fleet API OAuth</strong> — token cached in <code>tesla_cache.json</code>, auto-refreshes every 8h via <code>auth.tesla.com</code>.<br>
-      192.168.68.86 · Serial: GF2240460002D2 · FW: 25.26.0 · Part: 1841000-02-B<br>
-      To re-authorize: run teslapy browser flow → approve callback URL → token auto-saved.
-    </div>
-    <div style="color:var(--text-dim);font-size:11px">
-      No stationary battery — backup power via Cybertruck Powershare (V2H)
-    </div>
-  </div>
-
-  <!-- GE SmartHQ -->
-  <div class="card" style="margin-top:12px">
+  <!-- GE SmartHQ Appliances -->
+  <div class="card" style="margin-bottom:12px">
     <div class="card-header">
       <span class="card-title">&#127968; GE SmartHQ Appliances</span>
       <span class="badge" id="ge-cfg-badge">unconfigured</span>
     </div>
-    <div style="color:var(--text-dim);font-size:11px;margin-bottom:12px">
-      Uses OAuth2 Authorization Code flow. Complete auth at <strong>developers.smarthq.com</strong>
-      to obtain a refresh token, then save it here or directly in <code>config.py</code>.<br>
-      Keys: <code>GE_CLIENT_ID</code>, <code>GE_CLIENT_SECRET</code>, <code>GE_REFRESH_TOKEN</code>.
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
-      <div>
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Client ID</div>
-        <input type="text" id="ge-client-id" placeholder="GE SmartHQ client_id"
-          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+    <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">Cloud API · api.brillion.geappliances.com · OAuth2</div>
+    <div id="cfg-stats-ge" style="font-size:11px;color:var(--text-dim)">—</div>
+    <details id="cfg-creds-ge" style="margin-top:8px">
+      <summary style="font-size:11px;color:var(--text-dim);cursor:pointer;list-style:none">⚙️ Credentials &amp; Setup</summary>
+      <div style="margin-top:8px">
+        <div style="color:var(--text-dim);font-size:11px;margin-bottom:8px">
+          Uses OAuth2 Authorization Code flow. Complete auth at <strong>developers.smarthq.com</strong>
+          to obtain a refresh token, then save it here or directly in <code>config.py</code>.<br>
+          Keys: <code>GE_CLIENT_ID</code>, <code>GE_CLIENT_SECRET</code>, <code>GE_REFRESH_TOKEN</code>.
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+          <div>
+            <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Client ID</div>
+            <input type="text" id="ge-client-id" placeholder="GE SmartHQ client_id"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+          </div>
+          <div>
+            <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Client Secret</div>
+            <input type="password" id="ge-client-secret" placeholder="GE SmartHQ client_secret"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+          </div>
+          <div style="grid-column:1/-1">
+            <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Refresh Token</div>
+            <input type="password" id="ge-refresh-token" placeholder="refresh_token from OAuth2 Authorization Code flow"
+              style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn primary" onclick="saveGE()">Save GE SmartHQ Credentials</button>
+          <span id="ge-save-status" style="font-size:11px;color:var(--text-dim)"></span>
+        </div>
       </div>
-      <div>
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Client Secret</div>
-        <input type="password" id="ge-client-secret" placeholder="GE SmartHQ client_secret"
-          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
-      </div>
-      <div style="grid-column:1/-1">
-        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Refresh Token</div>
-        <input type="password" id="ge-refresh-token" placeholder="refresh_token from OAuth2 Authorization Code flow"
-          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
-      </div>
+    </details>
+  </div>
+
+  <!-- Roku TVs -->
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-header">
+      <span class="card-title">📺 Roku TVs</span>
+      <span class="badge offline" id="cfg-badge-roku">checking...</span>
     </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <button class="btn primary" onclick="saveGE()">Save GE SmartHQ Credentials</button>
-      <span id="ge-save-status" style="font-size:11px;color:var(--text-dim)"></span>
-    </div>
+    <div style="font-size:11px;color:var(--text-dim);margin-bottom:6px">Auto-discovered via SSDP on local network</div>
+    <div id="cfg-stats-roku" style="font-size:11px;color:var(--text-dim)">—</div>
   </div>
 
 </div><!-- /settings -->
@@ -4598,7 +4784,48 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <div id="toast"></div>
 
 <script>
-const views = ['cockpit','solar','span','pool','devices','tesla-energy','cybertruck','cameras','roku','home-control','sprinklers','appliances','settings'];
+const views = ['energy','climate','pool','entertainment','cameras','appliances','settings','devices','cockpit','solar','span','tesla-energy','cybertruck','home-control','sprinklers','roku'];
+const _energySubs = ['cockpit','solar','span','tesla-energy','cybertruck'];
+const _climateSubs = ['home-control','sprinklers'];
+let _curEnergySub = 'cockpit';
+let _curClimateSub = 'home-control';
+
+function showEnergySub(name) {
+  _curEnergySub = name;
+  _energySubs.forEach(s => {
+    const el = document.getElementById('view-'+s);
+    if (el) el.style.display = (s === name) ? 'block' : 'none';
+  });
+  // cockpit uses flex layout
+  const ckEl = document.getElementById('view-cockpit');
+  if (name === 'cockpit' && ckEl) ckEl.style.display = 'flex';
+  document.querySelectorAll('#view-energy .sub-nav-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'"+name+"'"));
+  });
+  if (name === 'cockpit') {
+    var savedSub = localStorage.getItem('jarvis-cockpit-sub') || 'microgrid';
+    setTimeout(function() { setCockpitSub(savedSub); }, 0);
+  }
+}
+
+function showClimateSub(name) {
+  _curClimateSub = name;
+  _climateSubs.forEach(s => {
+    const el = document.getElementById('view-'+s);
+    if (el) el.style.display = (s === name) ? 'block' : 'none';
+  });
+  document.querySelectorAll('#view-climate .sub-nav-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'"+name+"'"));
+  });
+}
+
+function showEntertainmentSub(name) {
+  const el = document.getElementById('view-roku');
+  if (el) el.style.display = 'block';
+  document.querySelectorAll('#view-entertainment .sub-nav-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'"+name+"'"));
+  });
+}
 function toggleNav() {
   const nav = document.getElementById('nav-links');
   nav.classList.toggle('open');
@@ -4612,14 +4839,37 @@ document.addEventListener('click', function(e) {
 });
 
 function showView(v) {
+  // Hide all top-level views
   views.forEach(id => {
-    document.getElementById('view-'+id).classList.toggle('active', id===v);
+    const el = document.getElementById('view-'+id);
+    if (el) el.style.display = 'none';
   });
-  document.querySelectorAll('nav button').forEach((b,i) => b.classList.toggle('active', views[i]===v));
-  if (v === 'cockpit') {
-    var savedSub = localStorage.getItem('jarvis-cockpit-sub') || 'microgrid';
-    setTimeout(function() { setCockpitSub(savedSub); }, 0);
+  // Also hide energy/climate subs
+  _energySubs.forEach(s => { const el = document.getElementById('view-'+s); if(el) el.style.display='none'; });
+  _climateSubs.forEach(s => { const el = document.getElementById('view-'+s); if(el) el.style.display='none'; });
+  const rokuEl = document.getElementById('view-roku');
+  if (rokuEl) rokuEl.style.display = 'none';
+
+  // Show requested view
+  const target = document.getElementById('view-'+v);
+  if (target) target.style.display = 'block';
+
+  // Handle grouped views
+  if (v === 'energy') showEnergySub(_curEnergySub);
+  if (v === 'climate') showClimateSub(_curClimateSub || 'home-control');
+  if (v === 'thermostat') { const el = document.getElementById('view-home-control'); if(el) el.style.display='block'; }
+  if (v === 'sprinklers') { const el = document.getElementById('view-sprinklers'); if(el) el.style.display='block'; }
+  if (v === 'entertainment') {
+    showEntertainmentSub('roku');
+    // Use already-loaded SSE state — no separate fetch
+    const _rk = (window._lastState||{}).roku || window._lastRoku || [];
+    if (_rk.length) try { renderRoku(_rk); } catch(e) {}
   }
+
+  // Update nav active state
+  document.querySelectorAll('#nav-links button').forEach(btn => {
+    btn.classList.toggle('active', btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'"+v+"'"));
+  });
 }
 
 function fmt(w, unit='W') {
@@ -5375,10 +5625,50 @@ function renderState(s) {
   const geCfgBadge = document.getElementById('ge-cfg-badge');
   if (geCfgBadge) { geCfgBadge.textContent = ge.status||'unconfigured'; geCfgBadge.className = 'badge ' + statusColor(ge.status||'unconfigured'); }
 
+  // ── Unified settings cfg-badges ──
+  function _cfgBadge(id, status, statsText) {
+    const b = document.getElementById('cfg-badge-'+id);
+    if (b) { b.textContent = status||'—'; b.className = 'badge ' + statusColor(status); }
+    const st = document.getElementById('cfg-stats-'+id);
+    if (st && statsText) st.textContent = statsText;
+  }
+  _cfgBadge('span', sd.status, sd.status==='online' ? `${sd.circuits?.length||0} circuits · ${(sd.grid_power||0).toFixed(0)}W grid` : null);
+  _cfgBadge('enphase', ed.status, ed.today_wh > 0 ? `${(ed.today_wh/1000).toFixed(1)} kWh today · ${ed.production_w||0}W now` : (ed.status==='online'?'Online · no production data':'—'));
+  _cfgBadge('solaredge', null, null);
+  const seBadgeEl = document.getElementById('cfg-badge-solaredge');
+  if (seBadgeEl) { const seW = (s.summary||{}).solaredge_solar_w||0; seBadgeEl.textContent = seW > 0 ? 'online' : ed.status==='online' ? 'online' : 'offline'; seBadgeEl.className = 'badge ' + (ed.status==='online'?'online':'offline'); const seSt = document.getElementById('cfg-stats-solaredge'); if(seSt) seSt.textContent = seW > 0 ? `${seW}W now (derived from SPAN − Enphase)` : '—'; }
+  const cfgTeslaSt = document.getElementById('cfg-stats-tesla');
+  if (cfgTeslaSt) cfgTeslaSt.textContent = td.status==='online' ? `SoE: ${td.soe}% · Solar: ${td.solar_w||0}W · Grid: ${td.grid_w||0}W` : (td.status||'offline');
+  _cfgBadge('wallconnector', wc.status, wc.status==='online' ? (wc.vehicle_connected ? `${wc.charge_status==='charging'?wc.charging_w+'W charging':'Vehicle connected · '+wc.charge_status}` : 'No vehicle') : null);
+  _cfgBadge('pentair', pd.status, pd.status==='online' ? `Pool ${(pd.pool||{}).temp||'—'}°F · Spa ${(pd.spa||{}).temp||'—'}°F · Pump ${(pd.pump||{}).rpm||'—'} RPM` : 'Check network connection');
+  // nest badge already handled by nest-cfg-badge; update cfg-stats
+  const nestCfgSt = document.getElementById('cfg-stats-nest');
+  if (nestCfgSt) { const _nd = s.nest||{}; const nts = _nd.thermostats||[]; nestCfgSt.textContent = nts.length ? nts.map(t=>t.name+' '+Math.round(t.temp_f||0)+'°F '+((t.hvac_state||'').toLowerCase())).join(' · ') : (_nd.temp_f ? Math.round(_nd.temp_f)+'°F' : '—'); }
+  // wyze/ring/bhyve/ge stats
+  const wyzeSt = document.getElementById('cfg-stats-wyze');
+  if (wyzeSt) { const cams = s.cameras||[]; const wyzeCams = cams.filter(c=>c.type==='wyze'); wyzeSt.textContent = wyzeCams.length ? wyzeCams.map(c=>c.name+' '+c.status).join(' · ') : '—'; }
+  const ringSt = document.getElementById('cfg-stats-ring');
+  if (ringSt) { const cams = s.cameras||[]; const ringCams = cams.filter(c=>c.type==='ring'); ringSt.textContent = ringCams.length ? ringCams.map(c=>c.name+' '+c.status).join(' · ') : '—'; }
+  const bhyveSt = document.getElementById('cfg-stats-bhyve');
+  if (bhyveSt) { const bh2 = s.bhyve||{}; const bz = (bh2.zones||[]).length; const br = (bh2.zones||[]).filter(z=>z.is_running).length; bhyveSt.textContent = bz ? `${bz} zones${br?' · '+br+' running':''}` : '—'; }
+  const geSt = document.getElementById('cfg-stats-ge');
+  if (geSt) { const geA = (ge.appliances||[]).length; const geR = (ge.appliances||[]).filter(a=>a.state==='running').length; geSt.textContent = geA ? `${geA} appliances${geR?' · '+geR+' running':''}` : '—'; }
+  const _rokuSt = s.roku || window._lastRoku || [];
+  _cfgBadge('roku', _rokuSt.length ? 'online' : 'offline', _rokuSt.length ? _rokuSt.map(t=>t.name).join(', ') : 'No TVs found');
+  // Auto-expand credentials when unconfigured
+  ['wyze','ring','nest','bhyve','ge'].forEach(d => {
+    const badge = document.getElementById(d==='nest'?'nest-cfg-badge':d==='ge'?'ge-cfg-badge':(d+'-cfg-badge'));
+    const details = document.getElementById('cfg-creds-'+d);
+    if (badge && details && (badge.textContent === 'unconfigured' || badge.textContent === 'offline')) details.open = true;
+  });
+
   // ── Tablet dashboard modes ──
   try { updateMicrogrid(s); } catch(e) { console.warn('Microgrid update error:', e); }
   try { updateTrading(s);   } catch(e) { console.warn('Trading update error:',   e); }
   try { updateBackup(s);    } catch(e) { console.warn('Backup update error:',    e); }
+  // Roku: update from SSE state — no separate fetch
+  if (s.roku && s.roku.length) { try { renderRoku(s.roku); } catch(e) { console.warn('Roku render error:', e); } }
+
 }
 
 // ╔══════════════════════════════════════════════════════════════════════╗
@@ -5771,6 +6061,7 @@ function closeCameraModal() {
 }
 
 function renderRoku(devices) {
+  window._lastRoku = devices;
   const grid = document.getElementById('roku-grid');
   if (!grid) return;
   if (!devices || devices.length === 0) {
@@ -5880,13 +6171,7 @@ function rokuLaunch(ip, appId) {
     .then(r => r.json()).then(d => { if(!d.ok) console.warn('Roku launch failed'); });
 }
 
-// Auto-refresh Roku panel every 15s when visible
-setInterval(() => {
-  const view = document.getElementById('view-roku');
-  if (view && view.classList.contains('active')) {
-    fetch('/api/roku').then(r=>r.json()).then(renderRoku).catch(()=>{});
-  }
-}, 15000);
+// Roku data comes from SSE state (s.roku) — no separate polling needed
 
 
 function renderCameras(cameras) {
@@ -6642,6 +6927,40 @@ function _geRenderCard(a, nowSec) {
 </div>`;
 }
 
+// ══ Device IP editing ═════════════════════════════════════════════════════════
+function editDeviceIp(device) {
+  const currentIp = document.getElementById('cfg-ip-'+device)?.textContent?.trim() || '';
+  const input = document.getElementById('cfg-ip-input-'+device);
+  if (input) input.value = currentIp;
+  const editDiv = document.getElementById('cfg-edit-'+device);
+  if (editDiv) { editDiv.style.display = 'flex'; editDiv.style.gap = '8px'; editDiv.style.alignItems = 'center'; }
+}
+function cancelDeviceIp(device) {
+  const editDiv = document.getElementById('cfg-edit-'+device);
+  if (editDiv) editDiv.style.display = 'none';
+}
+function saveDeviceIp(device) {
+  const input = document.getElementById('cfg-ip-input-'+device);
+  const status = document.getElementById('cfg-ip-status-'+device);
+  if (!input) return;
+  const ip = input.value.trim();
+  if (status) status.textContent = 'Saving...';
+  fetch('/api/config/device-ip', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({device, ip})
+  }).then(r=>r.json()).then(d => {
+    if (d.ok) {
+      const ipDisplay = document.getElementById('cfg-ip-'+device);
+      if (ipDisplay) ipDisplay.textContent = ip;
+      cancelDeviceIp(device);
+      toast('✓ IP updated — will take effect on next poll');
+    } else {
+      if (status) status.textContent = '✗ ' + (d.error || 'Error');
+    }
+  }).catch(e => { if (status) status.textContent = '✗ ' + e; });
+}
+
 // ══ Settings save functions ════════════════════════════════════════════════════
 function saveWyze() {
   const body = {
@@ -7350,7 +7669,7 @@ function myqCmd(serial, action) {
     const dx=e.changedTouches[0].clientX-ts, dy=e.changedTouches[0].clientY-tx;
     if(Math.abs(dx)<60||Math.abs(dy)>Math.abs(dx)*0.7) return;
     const cockpitEl = document.getElementById('view-cockpit');
-    if(!cockpitEl || !cockpitEl.classList.contains('active')) return;
+    if(!cockpitEl || cockpitEl.style.display==='none') return;
     const cur = curSub(); if(!cur) return;
     const idx = cockpitSubs.indexOf(cur);
     if(dx<0 && idx<cockpitSubs.length-1) setCockpitSub(cockpitSubs[idx+1]);
@@ -7359,7 +7678,7 @@ function myqCmd(serial, action) {
   // Keyboard arrow keys for cockpit sub-view switching
   document.addEventListener('keydown', e=>{
     const cockpitEl = document.getElementById('view-cockpit');
-    if(!cockpitEl || !cockpitEl.classList.contains('active')) return;
+    if(!cockpitEl || cockpitEl.style.display==='none') return;
     const cur = curSub(); if(!cur) return;
     const idx = cockpitSubs.indexOf(cur);
     if(e.key==='ArrowRight' && idx<cockpitSubs.length-1) setCockpitSub(cockpitSubs[idx+1]);
@@ -7375,7 +7694,8 @@ const evtSrc = new EventSource('/api/stream');
 evtSrc.onmessage = e => { try { renderState(JSON.parse(e.data)); } catch(err) { console.error(err); } };
 evtSrc.onerror = () => console.warn('SSE disconnected — retrying...');
 
-// Initial load
+// Initial load — start on Energy Cockpit
+showView('energy');
 fetch('/api/state').then(r=>r.json()).then(renderState).catch(console.error);
 
 // Weather fetch — Queen Creek, AZ (refresh every 10 min)

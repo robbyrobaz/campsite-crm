@@ -20,9 +20,9 @@ ENPHASE_EMAIL = "rob.hartwig@gmail.com"
 ENPHASE_PASSWORD = "-pAQRDz?8$!%,25"
 
 # ─── Pentair IntelliCenter ────────────────────────────────────────────────────
-# Device: pentair.local | 192.168.68.91  Ports: 6680 (WS), 6681 (TCP)
+# Device: pentair.local | 192.168.68.89  Ports: 6680 (WS), 6681 (TCP)
 # Auth: None required
-PENTAIR_HOST = "192.168.68.91"
+PENTAIR_HOST = "192.168.68.89"
 PENTAIR_PORT = 6681  # Use raw TCP; WebSocket on 6680 as fallback
 
 # ─── Tesla Wall Connector Gen 3 ───────────────────────────────────────────────

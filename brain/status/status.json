@@ -1,17 +1,17 @@
 {
-  "updatedAt": "2026-02-25T20:44:00-07:00",
+  "updatedAt": "2026-02-25T21:15:00-07:00",
   "activeTasks": [
     {
-      "id": "c_d8e63b2c0633b_19c980e6e80",
-      "title": "Energy Dashboard: Integrate Microgrid/Trading/Backup as Energy Cockpit sub-views",
+      "id": "c_82e0864010d0e_19c981452a6",
+      "title": "Wyze Live Camera Feeds — RTSP MJPEG proxy",
       "status": "in-progress",
-      "startedAt": "2026-02-25T20:44:00-07:00",
+      "startedAt": "2026-02-25T21:15:00-07:00",
       "assignee": "claude",
-      "notes": "PID 4135746. Remove floating mode switcher. 4-button sub-nav inside Energy Cockpit. Microgrid default. Live Power Flow is sub-view #1."
+      "notes": "PID 4164570. ffmpeg installed. RTSP confirmed: Upstairs 1920x1080, Downstairs TBD. Front Side snapshot fallback."
     }
   ],
   "health": {
-    "cpu_temp": "71.0°C",
+    "cpu_temp": "61.0°C",
     "disk": "37% used (281G free)",
     "services": {
       "openclaw-gateway": "active",
@@ -21,5 +21,5 @@
     },
     "critical_alerts": "none"
   },
-  "notes": "Git debt cleared (all repos pushed). kanban-dashboard blocked by 403 on GreenSheep01201 remote."
+  "notes": "Cockpit sub-nav deployed and verified. Camera MJPEG builder running."
 }

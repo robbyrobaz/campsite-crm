@@ -1386,6 +1386,7 @@ def _ge_parse_services(services, device_type):
                 secs = state.get("secondsRemaining", 0)
                 if secs:
                     attrs.append({"label": "Remaining", "value": _ge_secs_to_str(secs), "unit": ""})
+                    result["seconds_remaining"] = int(secs)
             elif st == "toggle" and dom == "door" and "dishwasher" in sdev:
                 result["door"] = "Open" if state.get("on") else "Closed"
             elif st == "integer" and "inventory" in dom and "pod" in sdev:
@@ -1423,6 +1424,7 @@ def _ge_parse_services(services, device_type):
                 secs = state.get("secondsRemaining", 0)
                 if secs:
                     attrs.append({"label": "Remaining", "value": _ge_secs_to_str(secs), "unit": ""})
+                    result["seconds_remaining"] = int(secs)
             elif st == "smartdispense":
                 level = _s(state.get("level", "")).replace("tanklevel.", "").title()
                 remaining = state.get("cyclesRemaining", 0)
@@ -1452,6 +1454,7 @@ def _ge_parse_services(services, device_type):
                 secs = state.get("secondsRemaining", 0)
                 if secs:
                     attrs.append({"label": "Remaining", "value": _ge_secs_to_str(secs), "unit": ""})
+                    result["seconds_remaining"] = int(secs)
             elif st == "toggle" and "extendedtumble" in dom:
                 if state.get("on"): attrs.append({"label": "Extended Tumble", "value": "On", "unit": ""})
             elif st == "laundry.toggle.v2" and "washerlink" in dom:
@@ -1611,11 +1614,35 @@ def poll_ge_appliances():
             est_watts = _GE_WATT_ESTIMATE.get(app_type, 200) if state_str == "running" else 0
             telemetry["est_watts"] = est_watts
 
-            # Track state transitions
+            # Track state transitions with cycle history
             prev = _ge_state_history.get(did, {})
-            if prev.get("state") != state_str:
-                _ge_state_history[did] = {"state": state_str, "changed_at": now}
-            changed_at = _ge_state_history.get(did, {}).get("changed_at", now)
+            prev_state = prev.get("state")
+            if did not in _ge_state_history:
+                _ge_state_history[did] = {
+                    "state": state_str, "changed_at": now,
+                    "cycle_events": [], "cycle_started": 0.0,
+                }
+            hist = _ge_state_history[did]
+            if prev_state != state_str:
+                hist["changed_at"] = now
+                hist["state"] = state_str
+                # Record completed cycle when transitioning out of running
+                if prev_state == "running" and state_str in ("idle", "end of cycle", "standby"):
+                    cs = hist.get("cycle_started", 0.0)
+                    if cs > 0:
+                        hist.setdefault("cycle_events", []).append({"started": cs, "ended": now})
+                        hist["cycle_events"] = hist["cycle_events"][-20:]
+                # Record cycle start
+                if state_str == "running":
+                    hist["cycle_started"] = now
+            changed_at = hist.get("changed_at", now)
+            # Compute daily stats (UTC day boundary)
+            today_start = now - (now % 86400)
+            today_events = [e for e in hist.get("cycle_events", []) if e["started"] >= today_start]
+            cycles_today = len(today_events)
+            daily_runtime_mins = int(sum((e["ended"] - e["started"]) / 60 for e in today_events))
+            all_ev = hist.get("cycle_events", [])
+            last_cycle_end = max((e["ended"] for e in all_ev), default=0.0) if all_ev else 0.0
 
             # Parse active alerts
             _GE_ALERT_LABELS = {
@@ -1677,6 +1704,11 @@ def poll_ge_appliances():
                 "est_watts": est_watts,
                 "state_changed_at": changed_at,
                 "remote_enabled": False,
+                "seconds_remaining": telemetry.get("seconds_remaining", 0),
+                "cycle_started": hist.get("cycle_started", 0.0) if state_str == "running" else 0.0,
+                "cycles_today": cycles_today,
+                "last_cycle_end": last_cycle_end,
+                "daily_runtime_mins": daily_runtime_mins,
             })
 
         with _state_lock:
@@ -2331,6 +2363,53 @@ def api_ge_command(aid: str):
         return jsonify({"ok": False, "error": str(e)}), 500
 
 
+@app.route("/api/ge/appliance/<aid>/v2service", methods=["POST"])
+def api_ge_v2service(aid: str):
+    """Send a v2 Digital Twin service state PATCH to a GE device.
+    Body: {"serviceType": "...", "domainType": "...", "serviceDeviceType": "...", "state": {...}}
+    """
+    body = request.get_json() or {}
+    service_type = (body.get("serviceType") or "").strip()
+    domain_type = (body.get("domainType") or "").strip()
+    sdev_type = (body.get("serviceDeviceType") or "").strip()
+    state_patch = body.get("state", {})
+    if not service_type:
+        return jsonify({"ok": False, "error": "serviceType required"}), 400
+    try:
+        token = _ge_get_token()
+        if not token:
+            return jsonify({"ok": False, "error": "GE SmartHQ not authenticated"}), 401
+        svc: dict = {"serviceType": service_type, "state": state_patch}
+        if domain_type:
+            svc["domainType"] = domain_type
+        if sdev_type:
+            svc["serviceDeviceType"] = sdev_type
+        payload = json.dumps({"services": [svc]}).encode()
+        req = urllib.request.Request(
+            f"{GE_API_BASE}/v2/device/{aid}",
+            data=payload,
+            method="PATCH",
+            headers={
+                "Authorization": f"Bearer {token}",
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+            },
+        )
+        with urllib.request.urlopen(req, timeout=10) as r:
+            resp_body = r.read()
+        resp_data = json.loads(resp_body) if resp_body.strip() else {}
+        log.info("GE v2 service OK — device=%s svcType=%s", aid, service_type)
+        return jsonify({"ok": True, "response": resp_data})
+    except urllib.error.HTTPError as e:
+        err_bytes = e.read()
+        detail = err_bytes.decode(errors="replace")[:200] if err_bytes else str(e)
+        log.warning("GE v2 service error %s: HTTP %d — %s", aid, e.code, detail)
+        return jsonify({"ok": False, "error": f"HTTP {e.code}", "detail": detail}), e.code
+    except Exception as e:
+        log.warning("GE v2 service error %s: %s", aid, e)
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
 @app.route("/api/devices")
 def api_devices():
     return jsonify({
@@ -2602,6 +2681,28 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .badge-running { background: rgba(16,185,129,.2); color: var(--online); animation: pulse-run 1.5s infinite; }
   @keyframes pulse-run { 0%,100% { opacity:1; } 50% { opacity:.5; } }
   .badge-scheduled { background: rgba(99,102,241,.15); color: var(--grid); }
+  /* GE SmartHQ appliance cards */
+  @keyframes ge-border-pulse { 0%,100%{border-color:rgba(16,185,129,0.35)} 50%{border-color:rgba(16,185,129,0.85)} }
+  @keyframes ge-dot-pulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.6);opacity:.7} }
+  @keyframes ge-prog-indeterminate { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+  .ge-card-running { animation: ge-border-pulse 2s ease-in-out infinite; }
+  .ge-progress-bar { height:5px; background:rgba(255,255,255,0.07); border-radius:3px; overflow:hidden; margin:6px 0 2px; }
+  .ge-progress-fill { height:100%; border-radius:3px; background:linear-gradient(90deg,#059669,#10b981,#34d399); transition:width 1s linear; }
+  .ge-progress-indet { height:100%; border-radius:3px; background:linear-gradient(90deg,transparent 0%,#10b981 50%,transparent 100%); background-size:200% 100%; animation:ge-prog-indeterminate 1.5s linear infinite; }
+  .ge-attr-pill { display:inline-flex; align-items:center; gap:3px; padding:2px 8px; background:var(--surface2); border:1px solid var(--border); border-radius:10px; font-size:10px; color:var(--text-dim); margin:2px 2px 0 0; white-space:nowrap; }
+  .ge-attr-val { color:var(--text); font-weight:600; }
+  .ge-ctrl-btn { flex:1; padding:7px 0; border-radius:6px; font-size:11px; cursor:pointer; font-family:inherit; font-weight:600; transition:all .15s; border:1px solid; letter-spacing:.02em; }
+  .ge-ctrl-btn:disabled { opacity:.4; cursor:default; }
+  .ge-ctrl-btn.pause  { background:rgba(245,158,11,.1);  border-color:rgba(245,158,11,.4);  color:#f59e0b; }
+  .ge-ctrl-btn.pause:hover:not(:disabled)  { background:rgba(245,158,11,.22); }
+  .ge-ctrl-btn.resume { background:rgba(16,185,129,.1);  border-color:rgba(16,185,129,.4);  color:#10b981; }
+  .ge-ctrl-btn.resume:hover:not(:disabled) { background:rgba(16,185,129,.22); }
+  .ge-ctrl-btn.stop   { background:rgba(239,68,68,.1);   border-color:rgba(239,68,68,.3);   color:#ef4444; }
+  .ge-ctrl-btn.stop:hover:not(:disabled)   { background:rgba(239,68,68,.22); }
+  .ge-ctrl-btn.start  { background:rgba(99,102,241,.1);  border-color:rgba(99,102,241,.4);  color:#6366f1; }
+  .ge-ctrl-btn.start:hover:not(:disabled)  { background:rgba(99,102,241,.22); }
+  .ge-ctrl-btn.fridge { background:rgba(56,189,248,.1);  border-color:rgba(56,189,248,.35); color:#38bdf8; font-size:10px; padding:5px 10px; flex:none; }
+  .ge-ctrl-btn.fridge:hover:not(:disabled) { background:rgba(56,189,248,.2); }
   /* Modal overlay */
   #bhyve-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.7); z-index:1000; align-items:center; justify-content:center; }
   #bhyve-modal.show { display:flex; }
@@ -4126,14 +4227,14 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   </div>
 
   <!-- Summary strip — visible when configured & online -->
-  <div id="ge-summary-strip" style="display:none;gap:0;align-items:stretch;margin-bottom:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
+  <div id="ge-summary-strip" style="display:none;margin-bottom:14px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;overflow:hidden">
     <div style="display:flex;flex-wrap:wrap">
       <div style="display:flex;align-items:center;gap:10px;padding:12px 20px;border-right:1px solid var(--border)">
         <span style="font-size:26px;font-weight:800;color:var(--text);line-height:1" id="ge-sum-total">0</span>
         <span style="font-size:11px;color:var(--text-dim);line-height:1.3">appliances<br>on account</span>
       </div>
       <div style="display:flex;align-items:center;gap:10px;padding:12px 20px;border-right:1px solid var(--border)">
-        <span class="dev-sdot online" style="flex-shrink:0"></span>
+        <span class="dev-sdot online" style="flex-shrink:0;animation:ge-dot-pulse 1.5s ease-in-out infinite"></span>
         <span style="font-size:26px;font-weight:800;color:var(--online);line-height:1" id="ge-sum-running">0</span>
         <span style="font-size:11px;color:var(--text-dim);line-height:1.3">currently<br>running</span>
       </div>
@@ -4141,6 +4242,11 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         <span style="font-size:14px;color:#f59e0b">&#9889;</span>
         <span style="font-size:22px;font-weight:800;color:#f59e0b;line-height:1" id="ge-sum-watts">0 W</span>
         <span style="font-size:11px;color:var(--text-dim);line-height:1.3">estimated<br>draw</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:12px 20px;border-right:1px solid var(--border)">
+        <span style="font-size:14px">&#128260;</span>
+        <span style="font-size:22px;font-weight:800;color:#a78bfa;line-height:1" id="ge-sum-cycles">0</span>
+        <span style="font-size:11px;color:var(--text-dim);line-height:1.3">cycles<br>today</span>
       </div>
       <div style="display:flex;align-items:center;padding:12px 20px;margin-left:auto">
         <span style="font-size:11px;color:var(--text-dim)" id="ge-sum-lastseen"></span>
@@ -5908,6 +6014,13 @@ function _geLastSeen(ts) {
   return Math.floor(secs / 3600) + 'h ago';
 }
 
+function _geSecs2Str(secs) {
+  if (!secs || secs <= 0) return '';
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  return h > 0 ? h + 'h ' + m + 'm' : m + 'm';
+}
+
 function geForceRefresh() {
   const btn = document.getElementById('ge-refresh-btn');
   if (btn) { btn.disabled = true; btn.textContent = '...'; }
@@ -5923,27 +6036,72 @@ function geForceRefresh() {
 }
 
 function geApplCommand(aid, appType, action) {
-  // Map action → ERD code + value
+  // Map action → ERD attribute + value (v1 attribute endpoint)
+  // ERD 0x0317 = operation state: 00=stop, 02=pause, 03=resume, 07=remote-start
   const cmds = {
-    'stop_washer':  {attribute: '0x0317', value: '00'},
-    'stop_dryer':   {attribute: '0x0317', value: '00'},
-    'stop_dish':    {attribute: '0x0317', value: '00'},
-    'remote_start': {attribute: '0x0317', value: '07'},
+    'stop_washer':    {attribute: '0x0317', value: '00'},
+    'stop_dryer':     {attribute: '0x0317', value: '00'},
+    'stop_dish':      {attribute: '0x0317', value: '00'},
+    'pause_washer':   {attribute: '0x0317', value: '02'},
+    'pause_dryer':    {attribute: '0x0317', value: '02'},
+    'pause_dish':     {attribute: '0x0317', value: '02'},
+    'resume_washer':  {attribute: '0x0317', value: '03'},
+    'resume_dryer':   {attribute: '0x0317', value: '03'},
+    'resume_dish':    {attribute: '0x0317', value: '03'},
+    'remote_start':   {attribute: '0x0317', value: '07'},
   };
   const cmd = cmds[action];
   if (!cmd) { toast('Unknown command: ' + action); return; }
+  const btn = event && event.target;
+  if (btn) btn.disabled = true;
   fetch('/api/ge/appliance/' + encodeURIComponent(aid) + '/command', {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(cmd)
   }).then(r => r.json()).then(d => {
     if (d.ok) {
-      toast('Command sent to ' + appType);
+      toast(appType + ': ' + action.replace(/_/g,' ') + ' sent');
     } else {
       const detail = d.detail || d.error || 'Unknown error';
       toast('Command failed: ' + detail.slice(0, 80));
+      if (btn) btn.disabled = false;
     }
-  }).catch(e => toast('Command error: ' + e));
+  }).catch(e => { toast('Command error: ' + e); if (btn) btn.disabled = false; });
+}
+
+function geFridgeToggle(did, controlType, enable) {
+  // Send v2 Digital Twin service toggle for fridge controls
+  const svcMap = {
+    'turbo_cool': {
+      serviceType:       'cloud.smarthq.service.toggle',
+      domainType:        'cloud.smarthq.domain.turbo',
+      serviceDeviceType: 'cloud.smarthq.device.freshfood',
+    },
+    'turbo_freeze': {
+      serviceType:       'cloud.smarthq.service.toggle',
+      domainType:        'cloud.smarthq.domain.turbo',
+      serviceDeviceType: 'cloud.smarthq.device.freezer',
+    },
+    'icemaker': {
+      serviceType:       'cloud.smarthq.service.toggle',
+      domainType:        'cloud.smarthq.domain.power',
+      serviceDeviceType: 'cloud.smarthq.device.icemaker.freezer',
+    },
+  };
+  const svc = svcMap[controlType];
+  if (!svc) { toast('Unknown fridge control: ' + controlType); return; }
+  fetch('/api/ge/appliance/' + encodeURIComponent(did) + '/v2service', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(Object.assign({}, svc, {state: {on: enable}}))
+  }).then(r => r.json()).then(d => {
+    if (d.ok) {
+      toast(controlType.replace(/_/g,' ') + ' ' + (enable ? 'on' : 'off'));
+      setTimeout(() => fetch('/api/ge/refresh', {method:'POST'}), 2500);
+    } else {
+      toast('Fridge control failed: ' + (d.detail || d.error || 'err').slice(0, 80));
+    }
+  }).catch(e => toast('Fridge control error: ' + e));
 }
 
 function renderAppliances(ge) {
@@ -5951,7 +6109,7 @@ function renderAppliances(ge) {
   const status = ge.status || 'unconfigured';
   const appliances = ge.appliances || [];
 
-  // Update header card visibility
+  // Header card badge
   const badge = document.getElementById('ge-badge');
   if (badge) { badge.textContent = status; badge.className = 'badge ' + statusColor(status); }
   const uncfgMsg   = document.getElementById('ge-unconfigured-msg');
@@ -5967,24 +6125,23 @@ function renderAppliances(ge) {
   if (status === 'online') {
     const running = appliances.filter(a => a.state === 'running');
     const totalW  = running.reduce((s, a) => s + (a.est_watts || 0), 0);
-    const el = id => document.getElementById(id);
-    if (el('ge-sum-total'))   el('ge-sum-total').textContent   = appliances.length;
-    if (el('ge-sum-running')) el('ge-sum-running').textContent = running.length;
-    if (el('ge-sum-watts'))   el('ge-sum-watts').textContent   = totalW >= 1000 ? (totalW/1000).toFixed(1)+' kW' : totalW+' W';
-    if (el('ge-sum-lastseen')) el('ge-sum-lastseen').textContent = ge.last_seen ? 'Updated ' + _geLastSeen(ge.last_seen) : '';
+    const totalCycles = appliances.reduce((s, a) => s + (a.cycles_today || 0), 0);
+    const $e = id => document.getElementById(id);
+    if ($e('ge-sum-total'))   $e('ge-sum-total').textContent   = appliances.length;
+    if ($e('ge-sum-running')) $e('ge-sum-running').textContent = running.length;
+    if ($e('ge-sum-watts'))   $e('ge-sum-watts').textContent   = totalW >= 1000 ? (totalW/1000).toFixed(1)+' kW' : totalW+' W';
+    if ($e('ge-sum-cycles'))  $e('ge-sum-cycles').textContent  = totalCycles;
+    if ($e('ge-sum-lastseen')) $e('ge-sum-lastseen').textContent = ge.last_seen ? 'Updated ' + _geLastSeen(ge.last_seen) : '';
   }
 
-  // Count chip beside section title
+  // Count chip
   const countEl = document.getElementById('ge-online-count');
   if (countEl && status === 'online') {
     const nRun = appliances.filter(a => a.state === 'running').length;
     countEl.textContent = appliances.length + ' appliance' + (appliances.length !== 1 ? 's' : '') +
       (nRun ? ' \xb7 ' + nRun + ' running' : '');
-  } else if (countEl) {
-    countEl.textContent = '';
-  }
+  } else if (countEl) countEl.textContent = '';
 
-  // Card grid
   const grid = document.getElementById('ge-appliance-grid');
   if (!grid) return;
   if (!appliances.length) {
@@ -5994,98 +6151,218 @@ function renderAppliances(ge) {
     return;
   }
 
-  grid.innerHTML = appliances.map(a => {
-    const stLabel   = GE_STATE_LABELS[a.state] || a.state || 'Unknown';
-    const stColor   = GE_STATE_COLORS[a.state]  || 'var(--text-dim)';
-    const isRunning = a.state === 'running';
-    const isEOC     = a.state === 'end of cycle';
-    const isDoorOpen = a.state === 'Door Open';
-    const isOffline = a.state === 'disconnected';
-    const dotCls    = isRunning ? 'online' : (isDoorOpen ? 'warning' : (isOffline ? 'offline' : 'dim'));
-    const borderCol = isRunning ? '#10b981' : ((isEOC||isDoorOpen) ? '#f59e0b' : 'var(--border)');
-    const cardBg    = isRunning ? 'rgba(16,185,129,0.04)' : ((isEOC||isDoorOpen) ? 'rgba(245,158,11,0.04)' : '');
+  // Sort: running > paused/eoc > active-states > idle > disconnected
+  const stOrd = {'running':0,'paused':1,'end of cycle':1,'delay start':2,'remote start':2,
+                  'downloading':2,'Door Open':3,'Online':4,'idle':4,'standby':4,'disconnected':5};
+  const sorted = [...appliances].sort((a,b) => (stOrd[a.state]??4) - (stOrd[b.state]??4));
+  const nowSec = Date.now() / 1000;
+  grid.innerHTML = sorted.map(a => _geRenderCard(a, nowSec)).join('');
+}
 
-    // Energy estimate row (only when running + non-zero estimate)
-    let energyRow = '';
-    if (isRunning && a.est_watts > 0) {
-      const wStr = a.est_watts >= 1000 ? (a.est_watts/1000).toFixed(1)+' kW' : a.est_watts+' W';
-      energyRow = `<div style="display:flex;align-items:center;gap:8px;margin:8px 0;padding:6px 10px;background:rgba(16,185,129,0.08);border-radius:6px;border:1px solid rgba(16,185,129,0.18)">
-  <span style="color:#10b981;font-size:12px">&#9889;</span>
-  <span style="font-size:13px;font-weight:700;color:#10b981">~${wStr}</span>
-  <span style="font-size:10px;color:var(--text-dim)">estimated draw</span>
+function _geRenderCard(a, nowSec) {
+  const stLabel    = GE_STATE_LABELS[a.state] || a.state || 'Unknown';
+  const stColor    = GE_STATE_COLORS[a.state] || 'var(--text-dim)';
+  const isRunning  = a.state === 'running';
+  const isPaused   = a.state === 'paused';
+  const isEOC      = a.state === 'end of cycle';
+  const isDoorOpen = a.state === 'Door Open';
+  const isOffline  = a.state === 'disconnected';
+  const isActive   = isRunning || isPaused || isEOC;
+  const isLaundry  = GE_CONTROLLABLE_TYPES.has(a.type);
+  const isFridge   = a.type === 'Refrigerator' || a.type === 'Freezer';
+  const typeKey    = a.type.includes('Dish') ? 'dish' : (a.type.includes('Dry') ? 'dryer' : 'washer');
+
+  // Visual treatment
+  let borderCol = 'var(--border)', cardBg = '';
+  if      (isRunning)              { borderCol = 'rgba(16,185,129,0.45)'; cardBg = 'rgba(16,185,129,0.025)'; }
+  else if (isPaused || isEOC)      { borderCol = 'rgba(245,158,11,0.45)'; cardBg = 'rgba(245,158,11,0.025)'; }
+  else if (isDoorOpen)             { borderCol = 'rgba(245,158,11,0.3)'; }
+  const dotCls    = isRunning ? 'online' : (isPaused||isEOC||isDoorOpen ? 'warning' : (isOffline ? 'offline' : 'dim'));
+  const runClass  = isRunning ? ' ge-card-running' : '';
+  const iconGlow  = isRunning ? 'filter:drop-shadow(0 0 10px rgba(16,185,129,0.55))' : '';
+
+  // Status badge (pulse dot when running)
+  const dotAnim = isRunning ? 'animation:ge-dot-pulse 1.5s ease-in-out infinite' : '';
+  const stBadge = `<span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${stColor}1a;color:${stColor};border:1px solid ${stColor}33">
+    <span class="dev-sdot ${dotCls}" style="width:5px;height:5px;margin:0;${dotAnim}"></span>${stLabel}
+  </span>`;
+
+  // State age
+  const ageStr = isActive ? _geStateAge(a.state_changed_at) : '';
+
+  // ── Progress bar ──────────────────────────────────────────────────────────
+  let progressHtml = '';
+  const secsLeft = a.seconds_remaining || 0;
+  if (isRunning) {
+    if (secsLeft > 0 && a.cycle_started > 0) {
+      const elapsed = nowSec - a.cycle_started;
+      const total   = elapsed + secsLeft;
+      const pct     = total > 0 ? Math.min(99, Math.round(elapsed / total * 100)) : 0;
+      const remLbl  = _geSecs2Str(secsLeft);
+      progressHtml = `<div style="margin:8px 0 2px">
+  <div class="ge-progress-bar"><div class="ge-progress-fill" style="width:${pct}%"></div></div>
+  <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-dim);margin-top:2px">
+    <span>${pct}% complete</span><span>${remLbl} remaining</span>
+  </div>
+</div>`;
+    } else if (secsLeft > 0) {
+      const remLbl = _geSecs2Str(secsLeft);
+      progressHtml = `<div style="margin:8px 0 2px">
+  <div class="ge-progress-bar"><div class="ge-progress-indet"></div></div>
+  <div style="font-size:10px;color:var(--text-dim);margin-top:2px;text-align:right">${remLbl} remaining</div>
+</div>`;
+    } else {
+      progressHtml = `<div style="margin:8px 0 4px"><div class="ge-progress-bar"><div class="ge-progress-indet"></div></div></div>`;
+    }
+  }
+
+  // ── Cycle label ───────────────────────────────────────────────────────────
+  let cycleHtml = '';
+  if (a.cycle && isActive) {
+    cycleHtml = `<div style="font-size:12px;font-weight:600;color:var(--text);margin-top:4px">${a.cycle}</div>`;
+  }
+
+  // ── Temp (fridge) ─────────────────────────────────────────────────────────
+  let tempHtml = '';
+  if (a.temp) {
+    // Split multi-part fridge temp into visual chips
+    const parts = a.temp.split(' | ');
+    if (parts.length > 1) {
+      const chips = parts.map(p => {
+        const isFreezer = p.toLowerCase().includes('freezer');
+        const c = isFreezer ? '#38bdf8' : '#10b981';
+        return `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:${c}12;border:1px solid ${c}33;border-radius:10px;font-size:11px;font-weight:600;color:${c}">${p}</span>`;
+      }).join('');
+      tempHtml = `<div style="display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 4px">${chips}</div>`;
+    } else {
+      tempHtml = `<div style="font-size:12px;color:#38bdf8;margin:6px 0 2px">&#10052; ${a.temp}</div>`;
+    }
+  }
+
+  // ── Energy estimate ───────────────────────────────────────────────────────
+  let energyHtml = '';
+  if (isRunning && a.est_watts > 0) {
+    const wStr = a.est_watts >= 1000 ? (a.est_watts/1000).toFixed(1)+' kW' : a.est_watts+' W';
+    energyHtml = `<div style="display:inline-flex;align-items:center;gap:6px;padding:4px 12px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.22);border-radius:12px;font-size:11px;color:#10b981;margin:4px 0">
+  &#9889; ~${wStr} <span style="color:var(--text-dim);font-weight:400">est. draw</span>
+</div>`;
+  }
+
+  // ── Cycle stats (idle only) ───────────────────────────────────────────────
+  let statsHtml = '';
+  if (!isRunning && !isOffline && (a.cycles_today > 0 || a.last_cycle_end > 0)) {
+    const parts = [];
+    if (a.cycles_today > 0) parts.push(`${a.cycles_today} cycle${a.cycles_today !== 1 ? 's' : ''} today`);
+    if (a.daily_runtime_mins > 0) parts.push(`${a.daily_runtime_mins}m runtime`);
+    if (a.last_cycle_end > 0) {
+      const ago = nowSec - a.last_cycle_end;
+      const agoStr = ago < 60 ? 'just now' : (ago < 3600 ? Math.floor(ago/60)+'m ago' : Math.floor(ago/3600)+'h ago');
+      parts.push('Last: ' + agoStr);
+    }
+    if (parts.length) {
+      statsHtml = `<div style="font-size:11px;color:var(--text-dim);margin:6px 0 2px;padding:5px 10px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.15);border-radius:6px">
+  &#128260; ${parts.join(' \xb7 ')}
 </div>`;
     }
+  }
 
-    // Detail rows: cycle, door, temp
-    let detailRows = '';
-    if (a.cycle) detailRows += `<div style="font-size:11px;color:var(--text-dim);margin-top:3px">Cycle: <span style="color:var(--text)">${a.cycle}</span></div>`;
-    if (a.temp)  detailRows += `<div style="font-size:11px;color:var(--text-dim);margin-top:3px">Temp: <span style="color:var(--text)">${a.temp}</span></div>`;
-    if (a.door)  detailRows += `<div style="font-size:11px;color:var(--text-dim);margin-top:3px">Door: <span style="color:var(--text)">${a.door}</span></div>`;
+  // ── Alert attrs ───────────────────────────────────────────────────────────
+  const attrs = a.attrs || [];
+  const _isAlert    = x => !!(x.label && x.label.includes('Alert'));
+  const alertAttrs  = attrs.filter(_isAlert);
+  const normalAttrs = attrs.filter(x => !_isAlert(x));
 
-    // Extra attribute rows
-    let attrRows = '';
-    if (a.attrs && a.attrs.length) {
-      attrRows = '<div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">' +
-        a.attrs.map(attr => {
-          const valStr = attr.unit ? attr.value + ' ' + attr.unit : attr.value;
-          return `<div style="display:flex;justify-content:space-between;font-size:11px;margin-top:2px">
-  <span style="color:var(--text-dim)">${attr.label}</span>
-  <span style="color:var(--text)">${valStr}</span>
-</div>`;
+  let alertHtml = '';
+  if (alertAttrs.length) {
+    alertHtml = '<div style="margin:6px 0">' + alertAttrs.map(at =>
+      `<div style="display:flex;align-items:center;gap:6px;padding:5px 10px;background:rgba(239,68,68,0.09);border:1px solid rgba(239,68,68,0.22);border-radius:6px;font-size:11px;color:#ef4444;margin:3px 0">${at.value}</div>`
+    ).join('') + '</div>';
+  }
+
+  // ── Attribute display ─────────────────────────────────────────────────────
+  let attrHtml = '';
+  if (normalAttrs.length) {
+    if (isActive) {
+      // Pill style for running/paused
+      attrHtml = '<div style="display:flex;flex-wrap:wrap;margin:6px 0 2px">' +
+        normalAttrs.map(at => {
+          const val = at.unit ? `${at.value}\u202F${at.unit}` : at.value;
+          return `<span class="ge-attr-pill"><span>${at.label}</span>\u00a0<span class="ge-attr-val">${val}</span></span>`;
+        }).join('') + '</div>';
+    } else {
+      // 2-col grid for idle
+      attrHtml = '<div style="border-top:1px solid var(--border);margin-top:8px;padding-top:7px;display:grid;grid-template-columns:1fr 1fr;gap:1px 12px">' +
+        normalAttrs.slice(0, 10).map(at => {
+          const val = at.unit ? `${at.value}\u202F${at.unit}` : at.value;
+          return `<div style="font-size:11px;padding:2px 0;color:var(--text-dim)">${at.label}: <span style="color:var(--text)">${val}</span></div>`;
         }).join('') + '</div>';
     }
+  }
 
-    // State age
-    const ageStr = (isRunning || isEOC || a.state === 'paused') ? _geStateAge(a.state_changed_at) : '';
-
-    // Controls (type-specific; only if not disconnected)
-    let ctrlRow = '';
-    if (!isOffline && GE_CONTROLLABLE_TYPES.has(a.type)) {
-      const typeKey = a.type.includes('Dish') ? 'dish' : (a.type.includes('Dry') ? 'dryer' : 'washer');
-      if (isRunning || a.state === 'paused') {
-        ctrlRow = `<div style="display:flex;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">
-  <button onclick="geApplCommand('${a.id}','${a.type}','stop_${typeKey}')"
-    style="flex:1;padding:5px 0;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:5px;color:#ef4444;font-size:11px;cursor:pointer;font-family:inherit">
-    &#9632; Cancel Cycle
-  </button>
+  // ── Controls ──────────────────────────────────────────────────────────────
+  let ctrlHtml = '';
+  const ctrlWrap = 'display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)';
+  if (!isOffline && isLaundry) {
+    if (isRunning) {
+      ctrlHtml = `<div style="${ctrlWrap}">
+  <button class="ge-ctrl-btn pause" onclick="geApplCommand('${a.id}','${a.type}','pause_${typeKey}')">&#9646;&#9646; Pause</button>
+  <button class="ge-ctrl-btn stop"  onclick="geApplCommand('${a.id}','${a.type}','stop_${typeKey}')">&#9632; Cancel</button>
 </div>`;
-      } else if (a.remote_enabled && a.state === 'idle') {
-        ctrlRow = `<div style="display:flex;gap:6px;margin-top:10px;padding-top:8px;border-top:1px solid var(--border)">
-  <button onclick="geApplCommand('${a.id}','${a.type}','remote_start')"
-    style="flex:1;padding:5px 0;background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.3);border-radius:5px;color:#6366f1;font-size:11px;cursor:pointer;font-family:inherit">
-    &#9654; Remote Start
-  </button>
+    } else if (isPaused) {
+      ctrlHtml = `<div style="${ctrlWrap}">
+  <button class="ge-ctrl-btn resume" onclick="geApplCommand('${a.id}','${a.type}','resume_${typeKey}')">&#9654; Resume</button>
+  <button class="ge-ctrl-btn stop"   onclick="geApplCommand('${a.id}','${a.type}','stop_${typeKey}')">&#9632; Cancel</button>
 </div>`;
-      }
+    } else if (isEOC) {
+      ctrlHtml = `<div style="${ctrlWrap}">
+  <button class="ge-ctrl-btn stop" style="flex:1" onclick="geApplCommand('${a.id}','${a.type}','stop_${typeKey}')">&#9989; Dismiss / Clear</button>
+</div>`;
+    } else if (a.remote_enabled && (a.state === 'idle' || a.state === 'remote start')) {
+      ctrlHtml = `<div style="${ctrlWrap}">
+  <button class="ge-ctrl-btn start" style="flex:1" onclick="geApplCommand('${a.id}','${a.type}','remote_start')">&#9654; Remote Start</button>
+</div>`;
     }
+  } else if (isFridge && !isOffline) {
+    // Fridge quick controls — Turbo Cool / Turbo Freeze / Ice Maker
+    const hasTurboCool   = normalAttrs.some(x => x.label === 'Turbo Cool'  && x.value === 'On');
+    const hasTurboFreeze = normalAttrs.some(x => x.label === 'Turbo Freeze' && x.value === 'On');
+    const iceMakerAttr   = normalAttrs.find(x => x.label === 'Ice Maker');
+    const iceMakerOn     = iceMakerAttr ? iceMakerAttr.value === 'On' : null;
+    const btns = [];
+    btns.push(`<button class="ge-ctrl-btn fridge ${hasTurboCool?'resume':''}" onclick="geFridgeToggle('${a.id}','turbo_cool',${!hasTurboCool})">&#10052; Turbo Cool ${hasTurboCool?'Off':'On'}</button>`);
+    btns.push(`<button class="ge-ctrl-btn fridge ${hasTurboFreeze?'resume':''}" onclick="geFridgeToggle('${a.id}','turbo_freeze',${!hasTurboFreeze})">&#10052;&#65038; Turbo Freeze ${hasTurboFreeze?'Off':'On'}</button>`);
+    if (iceMakerOn !== null) {
+      btns.push(`<button class="ge-ctrl-btn fridge ${iceMakerOn?'resume':''}" onclick="geFridgeToggle('${a.id}','icemaker',${!iceMakerOn})">&#129398; Ice Maker ${iceMakerOn?'Off':'On'}</button>`);
+    }
+    ctrlHtml = `<div style="${ctrlWrap}">${btns.join('')}</div>`;
+  }
 
-    // Model footer
-    const modelStr = [a.brand, a.model].filter(Boolean).join(' ');
-    const modelFooter = modelStr
-      ? `<div style="font-size:10px;color:var(--text-dim);margin-top:8px;opacity:.55">${modelStr}</div>`
-      : '';
+  // ── Model footer ──────────────────────────────────────────────────────────
+  const modelStr    = [a.brand, a.model].filter(Boolean).join(' ');
+  const modelFooter = modelStr ? `<div style="font-size:10px;color:var(--text-dim);margin-top:8px;opacity:.45">${modelStr}</div>` : '';
 
-    return `<div class="card" style="padding:14px;position:relative;border-color:${borderCol};background:var(--surface)${cardBg ? ';background:'+cardBg : ''}">
-  <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:10px">
-    <span style="font-size:28px;line-height:1;margin-top:3px">${a.icon || '&#127968;'}</span>
+  return `<div class="card${runClass}" style="padding:14px;position:relative;border-color:${borderCol};${cardBg?'background:'+cardBg:''}transition:border-color 0.3s">
+  <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:6px">
+    <span style="font-size:32px;line-height:1;margin-top:2px;${iconGlow}">${a.icon || '&#127968;'}</span>
     <div style="flex:1;min-width:0">
       <div style="font-size:14px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name}</div>
       <div style="font-size:11px;color:var(--text-dim);margin-top:1px">${a.type || 'Appliance'}</div>
     </div>
     <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
-      <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600;background:${stColor}18;color:${stColor}">
-        <span class="dev-sdot ${dotCls}" style="width:5px;height:5px;margin:0"></span>${stLabel}
-      </span>
+      ${stBadge}
       ${ageStr ? `<span style="font-size:10px;color:var(--text-dim)">${ageStr}</span>` : ''}
     </div>
   </div>
-  ${energyRow}
-  ${detailRows}
-  ${attrRows}
-  ${ctrlRow}
+  ${cycleHtml}
+  ${progressHtml}
+  ${tempHtml}
+  ${energyHtml}
+  ${statsHtml}
+  ${alertHtml}
+  ${attrHtml}
+  ${ctrlHtml}
   ${modelFooter}
 </div>`;
-  }).join('');
 }
 
 // ══ Settings save functions ════════════════════════════════════════════════════

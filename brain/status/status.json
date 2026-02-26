@@ -1,15 +1,15 @@
 {
-  "lastPulse": "2026-02-26T09:15:00-07:00",
+  "lastPulse": "2026-02-26T09:43:00-07:00",
   "activeTasks": [
     {
       "id": "c_76d1b40efb41c_19c9974fa0f",
       "title": "Roku TV integration (jarvis-home-energy)",
       "status": "in-progress",
-      "sessionKey": "agent:main:subagent:5d0d0e57-9af8-47c4-8520-40eb2ca18588"
+      "restarted": "2026-02-26T09:43:00-07:00 (stale recovery)"
     }
   ],
   "health": {
-    "cpu_temp": "60°C",
+    "cpu_temp": "58°C",
     "disk_usage": "39%",
     "services": "all active",
     "critical_alerts": "clean"

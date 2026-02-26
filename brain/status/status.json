@@ -1,17 +1,33 @@
 {
-  "updatedAt": "2026-02-25T22:13:00-07:00",
+  "updatedAt": "2026-02-25T22:43:00-07:00",
   "activeTasks": [
     {
-      "id": "c_8943547595525_19c98335808",
-      "title": "Numerai era-boost — full run, all 3 models",
+      "id": "c_e0f7c708adbf7_19c98359cd7",
+      "title": "Blofin per coin performance — promote backtest models to forward test",
       "status": "In Progress",
-      "startedAt": "2026-02-25T22:08:00-07:00",
+      "startedAt": "2026-02-25T22:32:00-07:00",
       "assignee": "claude",
-      "notes": "2nd attempt. Direct training, no TaskOutput spawn. v2_equivalent (304) features only. ETA 30-60 min."
+      "notes": "Fixing pipeline to run per-coin models forward from backtest. 11 min elapsed."
+    },
+    {
+      "id": "c_7517229eafe77_19c984cd65b",
+      "title": "Expand psych levels beyond x20/x80 — add confluence weighting",
+      "status": "In Progress",
+      "startedAt": "2026-02-25T22:32:00-07:00",
+      "assignee": "claude",
+      "notes": "NinjaTrader strategies. Adding VWAP/EMA/prev-day-H-L weighting. 11 min elapsed."
+    },
+    {
+      "id": "c_8943547595525_19c98335808",
+      "title": "Numerai era-boost restart — full run (2.7M rows, all 3 models)",
+      "status": "In Progress",
+      "startedAt": "2026-02-25T22:43:00-07:00",
+      "assignee": "claude",
+      "notes": "3rd attempt. Was stale at 31 min — reset and restarted. Direct training, no TaskOutput spawn. v2_equivalent (304) features. PID 89930."
     }
   ],
   "health": {
-    "cpu_temp": "73.0°C",
+    "cpu_temp": "85.0°C",
     "disk": "38% used (166G/468G)",
     "services": {
       "openclaw-gateway": "active",
@@ -20,5 +36,5 @@
     },
     "critical_alerts": "none"
   },
-  "notes": "Numerai era-boost training in progress. No stale cards. No planned cards queued."
+  "notes": "3 cards In Progress. Planned queue empty. Numerai restarted after 31-min stale. No new dispatches needed."
 }

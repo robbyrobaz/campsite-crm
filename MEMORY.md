@@ -128,6 +128,14 @@ ORB improvement: target_horizon 5→10 bars = +14.6% PF, +14.6% Sharpe, +2.9pp W
 
 ## NQ Live Trading Architecture (Feb 24, 2026)
 
+### ⛔ LIVE TRADING REQUIRES EXPLICIT ROB APPROVAL — NEVER ACTIVATE AUTONOMOUSLY
+Never enable live trading, fire TradersPost webhooks, or place real orders without Rob explicitly saying "go live."
+
+### NQ Live Strategy: GOD MODEL
+- NOT individual strategies (momentum, orb, etc.) — those are components
+- The live model is a single unified "God Model" — best of all strategies combined into one
+- Do not reference individual strategy PFs when discussing live trading readiness
+
 ### Final Architecture (locked)
 ```
 DATA:       Tradovate API WS → wss://md.tradovateapi.com/v1/websocket

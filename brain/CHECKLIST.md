@@ -78,6 +78,8 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 
 ## NEVER:
 - ❌ Block main session with sleep/wait/long exec (all work >30s must be background or subagent)
+- ❌ **Enable NQ live trading without Rob's explicit approval** — no TradersPost webhooks, no live orders, EVER
+- ❌ **Confuse individual strategies with the God Model** — NQ live uses ONE unified God Model, not individual momentum/orb/etc.
 - ❌ Skip QA on builder output
 - ❌ Move cards to Done without qa-sentinel review
 - ❌ Wait idle between Rob's messages — be a COO, pick up work

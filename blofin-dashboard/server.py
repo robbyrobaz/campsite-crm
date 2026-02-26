@@ -1325,7 +1325,7 @@ def health():
 
 
 if __name__ == '__main__':
-    print(f"Starting Blofin Dashboard Server on http://localhost:8888")
+    print(f"Starting Blofin Dashboard Server on http://localhost:8892")
     print(f"Database: {DB_PATH}")
-    print(f"Dashboard: http://localhost:8888/blofin-dashboard.html")
-    app.run(host='0.0.0.0', port=8888, debug=False)
+    print(f"Dashboard: http://localhost:8892/blofin-dashboard.html")
+    app.run(host='0.0.0.0', port=8892, debug=False)

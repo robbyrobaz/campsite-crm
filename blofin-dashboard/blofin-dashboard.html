@@ -376,6 +376,13 @@ td { padding: 7px 10px; white-space: nowrap; }
 .show-more-btn:hover { background: var(--card2); color: var(--muted); }
 .no-file-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%;
   background: var(--amber); margin-right: 4px; vertical-align: middle; }
+.expand-row { margin: 4px 0 14px; }
+.expand-row button {
+  width: 100%; padding: 7px; background: transparent; border: 1px dashed var(--border2);
+  border-radius: 4px; color: var(--muted); font-size: 11px;
+  transition: all 0.15s;
+}
+.expand-row button:hover { background: var(--card2); color: var(--blue); border-color: var(--blue); }
 
 /* ─── Responsive ─────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -502,6 +509,7 @@ td { padding: 7px 10px; white-space: nowrap; }
     </tbody>
   </table>
 </div>
+<div id="table-expand-btn" class="expand-row"></div>
 
 <!-- ── Per-Coin Performance ─────────────────────────────────────────────── -->
 <div class="section-header">
@@ -537,6 +545,7 @@ td { padding: 7px 10px; white-space: nowrap; }
     </tbody>
   </table>
 </div>
+<div id="coin-expand-btn" class="expand-row"></div>
 
 <!-- ── ML Model Status ──────────────────────────────────────────────────── -->
 <div class="section-header">
@@ -547,6 +556,7 @@ td { padding: 7px 10px; white-space: nowrap; }
 <div class="ml-grid" id="ml-grid">
   <div class="loading">Loading ML models…</div>
 </div>
+<div id="ml-expand-btn" class="expand-row"></div>
 
 <!-- ── Live Data Feed ───────────────────────────────────────────────────── -->
 <div class="section-header">
@@ -557,10 +567,12 @@ td { padding: 7px 10px; white-space: nowrap; }
   <div class="feed-card">
     <div class="feed-card-title">Recent Signals</div>
     <div id="signals-feed"><div class="loading">Loading…</div></div>
+    <div id="sig-expand-btn" class="expand-row"></div>
   </div>
   <div class="feed-card">
     <div class="feed-card-title">Paper Trade Activity</div>
     <div id="trades-feed"><div class="loading">Loading…</div></div>
+    <div id="trade-expand-btn" class="expand-row"></div>
   </div>
 </div>
 
@@ -582,6 +594,11 @@ const state = {
   coinSortAsc: false,
   coinStatusFilter: 'all',
   coinSearch: '',
+  tableLimit: 10,
+  coinLimit: 10,
+  mlLimit: 10,
+  sigLimit: 10,
+  tradeLimit: 10,
   countdownSec: 30,
   countdownTimer: null,
 };
@@ -644,6 +661,11 @@ async function safeFetch(url) {
 
 async function refreshAll() {
   resetCountdown();
+  state.tableLimit = 10;
+  state.coinLimit = 10;
+  state.mlLimit = 10;
+  state.sigLimit = 10;
+  state.tradeLimit = 10;
   const [registry, mlModels, metrics, summary, coinPerf] = await Promise.all([
     safeFetch('/api/registry'),
     safeFetch('/api/ml_models'),
@@ -899,12 +921,14 @@ function renderStatsRow() {
 // ─── Strategy Table ──────────────────────────────────────────────────────────
 function setTierFilter(tier, btn) {
   state.tierFilter = tier;
+  state.tableLimit = 10;
   document.querySelectorAll('.tier-filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderTable();
 }
 function setSearch(val) {
   state.search = val.toLowerCase();
+  state.tableLimit = 10;
   renderTable();
 }
 function sortTable(col) {
@@ -982,14 +1006,18 @@ function renderTable() {
     return state.sortAsc ? av - bv : bv - av;
   });
 
-  document.getElementById('table-badge').textContent = strategies.length + ' shown';
-  document.getElementById('table-count').textContent = strategies.length + ' / ' + (reg.strategies?.length ?? 0) + ' strategies';
+  const filteredTotal = strategies.length;
+  document.getElementById('table-badge').textContent = filteredTotal + ' shown';
+  document.getElementById('table-count').textContent = filteredTotal + ' / ' + (reg.strategies?.length ?? 0) + ' strategies';
 
-  if (!strategies.length) {
+  if (!filteredTotal) {
     document.getElementById('strategy-tbody').innerHTML =
       '<tr><td colspan="10" class="empty-state">No strategies match filter</td></tr>';
+    document.getElementById('table-expand-btn').innerHTML = '';
     return;
   }
+
+  strategies = strategies.slice(0, state.tableLimit);
 
   const rows = strategies.map(s => {
     const tier = s.tier ?? 0;
@@ -1025,17 +1053,26 @@ function renderTable() {
   }).join('');
 
   document.getElementById('strategy-tbody').innerHTML = rows;
+
+  const expandEl = document.getElementById('table-expand-btn');
+  if (filteredTotal > state.tableLimit) {
+    expandEl.innerHTML = `<button onclick="state.tableLimit=${filteredTotal};renderTable()">Show all ${filteredTotal} strategies</button>`;
+  } else {
+    expandEl.innerHTML = '';
+  }
 }
 
 // ─── Per-Coin Performance ─────────────────────────────────────────────────────
 function setCoinStatusFilter(status, btn) {
   state.coinStatusFilter = status;
+  state.coinLimit = 10;
   document.querySelectorAll('[data-cstatus]').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderCoinPerf();
 }
 function setCoinSearch(val) {
   state.coinSearch = val.toLowerCase();
+  state.coinLimit = 10;
   renderCoinPerf();
 }
 function sortCoinTable(col) {
@@ -1106,12 +1143,16 @@ function renderCoinPerf() {
   const active = (data.rows ?? []).filter(r => r.status === 'active').length;
   const blacklisted = total - active;
   badge.textContent = `${total} pairs · ${active} active · ${blacklisted} blacklisted`;
-  countEl.textContent = rows.length + ' / ' + total;
+  const filteredTotal = rows.length;
+  countEl.textContent = filteredTotal + ' / ' + total;
 
-  if (!rows.length) {
+  if (!filteredTotal) {
     tbody.innerHTML = '<tr><td colspan="8" class="empty-state">No per-coin data yet</td></tr>';
+    document.getElementById('coin-expand-btn').innerHTML = '';
     return;
   }
+
+  rows = rows.slice(0, state.coinLimit);
 
   tbody.innerHTML = rows.map(r => {
     const statusCls = r.status === 'active' ? 'active' : r.status === 'blacklisted' ? 'blisted' : 'library';
@@ -1133,6 +1174,13 @@ function renderCoinPerf() {
       <td${reasonTitle}><span class="status-chip ${statusCls}">${statusLabel}</span></td>
     </tr>`;
   }).join('');
+
+  const coinExpandEl = document.getElementById('coin-expand-btn');
+  if (filteredTotal > state.coinLimit) {
+    coinExpandEl.innerHTML = `<button onclick="state.coinLimit=${filteredTotal};renderCoinPerf()">Show all ${filteredTotal} pairs</button>`;
+  } else {
+    coinExpandEl.innerHTML = '';
+  }
 }
 
 // ─── ML Models ───────────────────────────────────────────────────────────────
@@ -1147,10 +1195,14 @@ function renderMLModels() {
 
   if (!models.length) {
     document.getElementById('ml-grid').innerHTML = '<div class="empty-state">No ML models found</div>';
+    document.getElementById('ml-expand-btn').innerHTML = '';
     return;
   }
 
-  const html = models.map(m => {
+  const totalModels = models.length;
+  const visibleModels = models.slice(0, state.mlLimit);
+
+  const html = visibleModels.map(m => {
     const leak = m.leakage_suspected;
     return `
     <div class="ml-card ${leak ? 'leakage' : ''}">
@@ -1181,6 +1233,13 @@ function renderMLModels() {
   }).join('');
 
   document.getElementById('ml-grid').innerHTML = html;
+
+  const mlExpandEl = document.getElementById('ml-expand-btn');
+  if (totalModels > state.mlLimit) {
+    mlExpandEl.innerHTML = `<button onclick="state.mlLimit=${totalModels};renderMLModels()">Show all ${totalModels} models</button>`;
+  } else {
+    mlExpandEl.innerHTML = '';
+  }
 }
 
 // ─── Live Feed ───────────────────────────────────────────────────────────────
@@ -1190,7 +1249,7 @@ function renderLiveFeed() {
 
   // Signals feed
   const sigs = sum.recent_signals ?? [];
-  let sigHtml = sigs.slice(0, 12).map(s => {
+  let sigHtml = sigs.slice(0, state.sigLimit).map(s => {
     const sigCls = s.signal === 'BUY' ? 'buy' : 'sell';
     return `<div class="feed-item">
       <span class="feed-time">${timeShort(s.ts_iso)}</span>
@@ -1201,10 +1260,16 @@ function renderLiveFeed() {
   }).join('');
   if (!sigHtml) sigHtml = '<div class="empty-state">No recent signals</div>';
   document.getElementById('signals-feed').innerHTML = sigHtml;
+  const sigExpandEl = document.getElementById('sig-expand-btn');
+  if (sigs.length > state.sigLimit) {
+    sigExpandEl.innerHTML = `<button onclick="state.sigLimit=${sigs.length};renderLiveFeed()">Show all ${sigs.length} signals</button>`;
+  } else {
+    sigExpandEl.innerHTML = '';
+  }
 
   // Trades feed
   const trades = sum.recent_trades ?? [];
-  let tradeHtml = trades.slice(0, 12).map(t => {
+  let tradeHtml = trades.slice(0, state.tradeLimit).map(t => {
     const pnl = t.pnl_pct;
     const cls = pnl > 0 ? 'pos' : pnl < 0 ? 'neg' : '';
     return `<div class="feed-item">
@@ -1217,6 +1282,12 @@ function renderLiveFeed() {
   }).join('');
   if (!tradeHtml) tradeHtml = '<div class="empty-state">No recent trades</div>';
   document.getElementById('trades-feed').innerHTML = tradeHtml;
+  const tradeExpandEl = document.getElementById('trade-expand-btn');
+  if (trades.length > state.tradeLimit) {
+    tradeExpandEl.innerHTML = `<button onclick="state.tradeLimit=${trades.length};renderLiveFeed()">Show all ${trades.length} trades</button>`;
+  } else {
+    tradeExpandEl.innerHTML = '';
+  }
 }
 
 // ─── Countdown Timer ────────────────────────────────────────────────────────

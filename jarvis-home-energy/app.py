@@ -1802,10 +1802,11 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .td-col { display: flex; flex-direction: column; gap: 8px; overflow: hidden; min-height: 0; }
   .sparkline { width: 100%; height: 34px; display: block; }
   .circuit-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-  .circuit-bar-label { font-size: 10px; color: rgba(255,255,255,.6); width: 96px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
+  .circuit-bar-label { font-size: 0.88rem; color: rgba(255,255,255,.6); width: 96px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex-shrink: 0; }
   .circuit-bar-track { flex: 1; height: 6px; background: rgba(255,255,255,.08); border-radius: 3px; overflow: hidden; }
   .circuit-bar-fill  { height: 100%; border-radius: 3px; background: linear-gradient(90deg,#7c3aed,#9B59B6); transition: width .5s; }
-  .circuit-bar-val   { font-size: 10px; color: rgba(255,255,255,.4); width: 38px; text-align: right; flex-shrink: 0; }
+  .circuit-bar-val   { font-size: 0.92rem; font-weight: 700; color: rgba(255,255,255,.4); width: 38px; text-align: right; flex-shrink: 0; }
+  #view-trading .label-sm { font-size: 0.82rem; }
   .shed-btn { font-size: 9px; padding: 1px 5px; border-radius: 4px; cursor: pointer; border: 1px solid rgba(239,68,68,.5); background: rgba(239,68,68,.1); color: #ef4444; font-family: inherit; flex-shrink: 0; transition: background .15s; }
   .shed-btn:hover { background: rgba(239,68,68,.25); }
   /* Mode 3 — Backup */
@@ -1833,10 +1834,105 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     .td-top    { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
     .bi-layout { grid-template-columns: 1fr; grid-template-rows: auto auto auto; }
   }
+  @media (max-width: 767px) {
+    #view-microgrid .mc-layout { grid-template-columns: 1fr !important; }
+    #view-microgrid .mc-left, #view-microgrid .mc-right { display: none !important; }
+    #view-microgrid .mc-center { grid-column: 1 !important; width: 100% !important; }
+    .mc-hero { min-width: 180px !important; width: 88vw !important; }
+    #view-microgrid .tab-status-bar { font-size: 0.7rem !important; flex-wrap: wrap !important; gap: 4px 8px !important; min-height: auto !important; padding: 6px 8px !important; }
+  }
+
+  /* ── Mode Switcher ─────────────────────────────────────────────────── */
+  .mode-switcher {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .mode-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 20px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.04);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    min-width: 110px;
+    user-select: none;
+  }
+  .mode-btn:hover {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.15);
+  }
+  .mode-btn.active {
+    background: rgba(255,255,255,0.07);
+  }
+  .mode-btn .mode-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    opacity: 0.45;
+    transition: opacity 0.25s;
+  }
+  .mode-btn.active .mode-label {
+    opacity: 1;
+  }
+  .mode-btn .mode-icon {
+    font-size: 1.1rem;
+    line-height: 1;
+  }
+  .mode-btn .mode-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    border: 1.5px solid currentColor;
+    background: transparent;
+    transition: all 0.25s ease;
+  }
+  .mode-btn.active .mode-dot {
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+  }
+  .mode-btn[data-mode='microgrid'] { color: #FFD700; }
+  .mode-btn[data-mode='trading']   { color: #3B82F6; }
+  .mode-btn[data-mode='backup']    { color: #00FFFF; }
+  .mode-btn:not(.active) { color: rgba(255,255,255,0.35); }
+  .mode-btn.active[data-mode='microgrid'] { border-color: rgba(255,215,0,0.3); box-shadow: 0 0 12px rgba(255,215,0,0.08); }
+  .mode-btn.active[data-mode='trading']   { border-color: rgba(59,130,246,0.3); box-shadow: 0 0 12px rgba(59,130,246,0.08); }
+  .mode-btn.active[data-mode='backup']    { border-color: rgba(0,255,255,0.3);  box-shadow: 0 0 12px rgba(0,255,255,0.08); }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 </head>
 <body>
+
+<div class="mode-switcher" id="mode-switcher">
+  <button class="mode-btn active" data-mode="microgrid" onclick="switchMode('microgrid')">
+    <span class="mode-icon">⚡</span>
+    <span class="mode-label">Microgrid</span>
+    <span class="mode-dot"></span>
+  </button>
+  <button class="mode-btn" data-mode="trading" onclick="switchMode('trading')">
+    <span class="mode-icon">📊</span>
+    <span class="mode-label">Trading</span>
+    <span class="mode-dot"></span>
+  </button>
+  <button class="mode-btn" data-mode="backup" onclick="switchMode('backup')">
+    <span class="mode-icon">🔋</span>
+    <span class="mode-label">Backup</span>
+    <span class="mode-dot"></span>
+  </button>
+</div>
 
 <header>
   <div class="logo">⚡ JARVIS <span>Home Energy OS</span></div>
@@ -1853,9 +1949,9 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <button onclick="showView('sprinklers')">Sprinklers</button>
     <button onclick="showView('settings')">Settings</button>
     <span style="width:1px;height:24px;background:rgba(255,255,255,0.12);margin:0 4px;flex-shrink:0"></span>
-    <button onclick="showView('microgrid')" style="color:#FFD700">⚡ Microgrid</button>
-    <button onclick="showView('trading')" style="color:#00d4ff">📊 Trading</button>
-    <button onclick="showView('backup')" style="color:#00FFFF">🔋 Backup</button>
+    <button onclick="showView('microgrid')" style="color:#FFD700;display:none">⚡ Microgrid</button>
+    <button onclick="showView('trading')" style="color:#00d4ff;display:none">📊 Trading</button>
+    <button onclick="showView('backup')" style="color:#00FFFF;display:none">🔋 Backup</button>
   </nav>
   <div class="status-bar">
     <div id="span-dot" class="dot offline" title="SPAN Panel"></div>
@@ -3001,72 +3097,81 @@ DASHBOARD_HTML = """<!DOCTYPE html>
      TABLET MODE 1 — MICROGRID COMMAND CORE
      ═══════════════════════════════════════════════════════════════════════ -->
 <div id="view-microgrid" class="view tablet-view">
-  <div class="tab-status-bar">
-    <span class="sb-time" id="mc-time">--:--</span>
-    <span class="sb-rate off-peak" id="mc-rate">Off-Peak</span>
-    <span id="mc-weather" style="opacity:0.7">☀️ —</span>
+  <div class="tab-status-bar" style="min-height:48px;gap:16px">
+    <span class="sb-time" id="mc-time" style="font-size:1.4rem;font-weight:800">--:--</span>
+    <span class="sb-rate off-peak" id="mc-rate" style="font-size:1.4rem">Off-Peak</span>
+    <span id="mc-weather" style="opacity:0.7;font-size:1.4rem">Queen Creek, AZ</span>
     <span style="flex:1"></span>
-    <span class="sb-grid up" id="mc-grid-status">Grid ✓</span>
-    <span id="mc-island-badge" class="island-badge" style="display:none">⚡ ISLANDED</span>
+    <span id="mc-banner-solar" style="color:#FFD700;font-weight:700;font-size:1.4rem">☀ — kW</span>
+    <span id="mc-banner-load" style="color:#9B59B6;font-weight:700;font-size:1.4rem">🏠 — kW</span>
+    <span id="mc-banner-grid" style="color:#3B82F6;font-weight:700;font-size:1.4rem">⚡ — kW</span>
+    <span id="mc-banner-cost" style="color:#10b981;font-weight:700;font-size:1.4rem">$—/hr</span>
+    <span id="mc-banner-coverage" style="color:#FFD700;font-weight:700;font-size:1.4rem">—% ☀</span>
+    <span class="sb-grid up" id="mc-grid-status" style="font-size:1.4rem">Grid ✓</span>
+    <span id="mc-island-badge" class="island-badge" style="display:none;font-size:1.4rem">⚡ ISLANDED</span>
   </div>
   <div class="mc-layout">
     <!-- LEFT — Sources -->
     <div class="mc-left">
-      <div class="glass-card" id="mc-enphase-card">
-        <span class="label-sm">Enphase Solar</span>
-        <div class="hero-num" id="mc-enphase-kw" style="color:#FFD700">—</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
-        <span class="label-sm" style="margin-top:10px">SolarEdge</span>
-        <div class="value-md" id="mc-solaredge-kw" style="color:#FFC200">— <span style="font-size:0.8rem;opacity:0.5">kW</span></div>
+      <div class="glass-card" id="mc-solar-card" style="border-color:rgba(255,215,0,0.3)">
+        <span class="label-sm">Solar Production</span>
+        <div class="hero-num" id="mc-solar-total-kw" style="color:#FFD700">--</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW total</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin-top:10px;font-size:0.78rem">
+          <div style="opacity:0.55">Enphase</div><div style="opacity:0.55">SolarEdge</div>
+          <div id="mc-enphase-sub" style="color:#FFD700;font-weight:600">--</div>
+          <div id="mc-solaredge-sub" style="color:#FFC200;font-weight:600">--</div>
+        </div>
+        <canvas id="mc-solar-spark" class="sparkline" style="margin-top:8px"></canvas>
       </div>
-      <div class="glass-card" id="mc-grid-card">
+      <div class="glass-card" id="mc-grid-card" style="border-color:rgba(59,130,246,0.3)">
         <span class="label-sm">SRP Grid</span>
-        <div class="hero-num" id="mc-grid-kw" style="color:#FF8C00">—</div>
+        <div class="hero-num" id="mc-grid-kw" style="color:#3B82F6">—</div>
         <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
         <div id="mc-grid-direction" style="font-size:10px;opacity:0.5;margin-top:4px">—</div>
-      </div>
-      <div class="glass-card" id="mc-truck-source-card">
-        <span class="label-sm">Cybertruck</span>
-        <div class="hero-num" id="mc-truck-kw" style="color:#00FFFF">—</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
-        <div id="mc-truck-mode" style="font-size:10px;opacity:0.5;margin-top:4px">Idle</div>
+        <canvas id="mc-grid-spark" class="sparkline" style="margin-top:8px"></canvas>
       </div>
     </div>
     <!-- CENTER — Topology canvas + hero overlay -->
     <div class="mc-center">
       <canvas id="mc-canvas"></canvas>
       <div class="mc-overlay">
-        <div class="glass-card mc-hero">
+        <div class="glass-card mc-hero" style="min-width:240px;padding:20px">
           <span class="label-sm" style="text-align:center;display:block;margin-bottom:6px">NET FLOW</span>
-          <div style="font-size:2.6rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums" id="mc-net-kw">—</div>
+          <div style="font-size:3rem;font-weight:800;line-height:1;font-variant-numeric:tabular-nums" id="mc-net-kw">—</div>
           <div style="font-size:0.85rem;opacity:0.45;margin-top:2px" id="mc-net-direction">kW</div>
           <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;text-align:left">
             <div><span class="label-sm">Home Load</span><div class="value-md" id="mc-home-kw">—</div></div>
             <div><span class="label-sm">Cost/hr</span><div class="value-md" id="mc-cost-hr" style="color:#10b981">—</div></div>
             <div><span class="label-sm">Solar Cover</span><div class="value-md" id="mc-solar-pct">—</div></div>
-            <div><span class="label-sm">Site SoE</span><div class="value-md" id="mc-soc" style="color:#00FFFF">—</div></div>
+            <div><span class="label-sm">15-min Demand</span><div class="value-md" id="mc-demand-15m">—</div></div>
+            <div style="grid-column:1/-1"><span class="label-sm">Session Peak</span><div class="value-md" id="mc-session-peak">—</div></div>
           </div>
         </div>
       </div>
     </div>
     <!-- RIGHT — Loads -->
     <div class="mc-right">
-      <div class="glass-card" id="mc-home-card">
+      <div class="glass-card" id="mc-home-card" style="flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column">
         <span class="label-sm">Home Panel</span>
         <div class="hero-num" id="mc-home-load-kw" style="color:#9B59B6">—</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
+        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW total</div>
+        <canvas id="mc-home-spark" class="sparkline" style="margin-top:8px;flex-shrink:0"></canvas>
+        <div id="mc-home-circuits" style="margin-top:8px;font-size:0.75rem;overflow:hidden;flex:1"></div>
       </div>
       <div class="glass-card" id="mc-pool-card">
         <span class="label-sm">Pool Sub-Panel</span>
         <div class="hero-num" id="mc-pool-kw" style="color:#06b6d4">—</div>
         <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
         <div id="mc-pool-status" style="font-size:10px;opacity:0.5;margin-top:4px">—</div>
+        <canvas id="mc-pool-spark" class="sparkline" style="margin-top:8px"></canvas>
       </div>
-      <div class="glass-card" id="mc-ev-card">
-        <span class="label-sm">EV Charging</span>
-        <div class="hero-num" id="mc-ev-kw" style="color:#22d3ee">—</div>
+      <div class="glass-card" id="mc-truck-card" style="border-color:rgba(0,255,255,0.3)">
+        <span class="label-sm">Cybertruck</span>
+        <div class="hero-num" id="mc-truck-kw" style="color:#00FFFF">—</div>
         <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
-        <div id="mc-ev-status" style="font-size:10px;opacity:0.5;margin-top:4px">—</div>
+        <div id="mc-truck-mode" style="font-size:10px;opacity:0.5;margin-top:4px">Idle</div>
+        <canvas id="mc-truck-spark" class="sparkline" style="margin-top:8px"></canvas>
       </div>
     </div>
   </div>
@@ -3076,10 +3181,20 @@ DASHBOARD_HTML = """<!DOCTYPE html>
      TABLET MODE 2 — ENERGY TRADING DESK
      ═══════════════════════════════════════════════════════════════════════ -->
 <div id="view-trading" class="view tablet-view">
-  <div class="tab-status-bar">
-    <span style="font-size:12px;font-weight:700">📊 Energy Trading Desk</span>
+  <div class="tab-status-bar" style="font-size:1.4rem;padding:6px 14px;gap:16px;min-height:48px;flex-wrap:wrap">
+    <span id="td-time" style="font-weight:800">--:--</span>
+    <span class="sb-rate off-peak" id="td-rate" style="font-size:1.1rem;padding:3px 8px">Off-Peak</span>
+    <span id="td-weather" style="opacity:0.85">☀ --</span>
     <span style="flex:1"></span>
-    <span style="font-size:10px;opacity:0.45" id="td-last-update">—</span>
+    <span style="font-size:0.85rem;opacity:0.45" id="td-last-update">--</span>
+  </div>
+  <div id="td-totals-bar" style="display:flex;gap:24px;padding:8px 16px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0;flex-wrap:wrap;align-items:center">
+    <div style="text-align:center"><div class="label-sm">Total Solar</div><div id="td-total-solar" style="color:#FFD700;font-size:1.2rem;font-weight:800">--</div></div>
+    <div style="text-align:center"><div class="label-sm">Home Load</div><div id="td-total-load" style="color:#9B59B6;font-size:1.2rem;font-weight:800">--</div></div>
+    <div style="text-align:center"><div class="label-sm">SRP Grid</div><div id="td-total-grid" style="color:#3B82F6;font-size:1.2rem;font-weight:800">--</div></div>
+    <div style="text-align:center"><div class="label-sm">Solar Coverage</div><div id="td-total-coverage" style="color:#10b981;font-size:1.2rem;font-weight:800">--</div></div>
+    <div style="text-align:center"><div class="label-sm">Cost/hr</div><div id="td-total-cost" style="color:#10b981;font-size:1.2rem;font-weight:800">--</div></div>
+    <div style="text-align:center"><div class="label-sm">$/kWh</div><div style="color:#10b981;font-size:1.2rem;font-weight:800">$0.18</div></div>
   </div>
   <div class="td-layout">
     <div class="td-top">
@@ -3087,17 +3202,17 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <div class="td-col">
         <div class="glass-card" style="flex-shrink:0">
           <span class="label-sm">Enphase Production</span>
-          <div class="value-md" id="td-enphase-kw" style="color:#FFD700;font-size:1.8rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          <div class="value-md" id="td-enphase-kw" style="color:#FFD700;font-size:2.4rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
           <canvas class="sparkline" id="td-enphase-spark"></canvas>
         </div>
         <div class="glass-card" style="flex-shrink:0">
           <span class="label-sm">SolarEdge Production</span>
-          <div class="value-md" id="td-solaredge-kw" style="color:#FFC200;font-size:1.8rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          <div class="value-md" id="td-solaredge-kw" style="color:#FFC200;font-size:2.4rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
           <canvas class="sparkline" id="td-solaredge-spark"></canvas>
         </div>
         <div class="glass-card" style="flex-shrink:0">
           <span class="label-sm">Combined Solar</span>
-          <div class="value-md" id="td-total-solar-kw" style="font-size:2rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          <div class="value-md" id="td-total-solar-kw" style="font-size:2.4rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
           <div style="font-size:10px;opacity:0.45;margin-top:4px" id="td-solar-capacity-pct">— % of 11.8 kW</div>
         </div>
       </div>
@@ -3122,11 +3237,19 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
           <div>
             <span class="label-sm">15-min Demand</span>
-            <div class="value-md" id="td-demand-15m" style="font-size:1.6rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+            <div class="value-md" id="td-demand-15m" style="font-size:2.2rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
           </div>
           <div>
             <span class="label-sm">Session Peak</span>
-            <div class="value-md" id="td-peak-proj" style="font-size:1.6rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+            <div class="value-md" id="td-peak-proj" style="font-size:2.2rem">— <span style="font-size:0.8rem;opacity:0.4">kW</span></div>
+          </div>
+          <div style="text-align:center">
+            <span class="label-sm">Cost/hr</span>
+            <div id="td-cost-hr" style="color:#10b981;font-size:2.2rem;font-weight:700">--</div>
+          </div>
+          <div style="text-align:center">
+            <span class="label-sm">Solar Coverage</span>
+            <div id="td-solar-coverage" style="color:#FFD700;font-size:2.2rem;font-weight:700">--</div>
           </div>
           <div style="flex:1;min-width:120px">
             <span class="label-sm" style="margin-bottom:3px">Demand Exposure</span>
@@ -4663,11 +4786,10 @@ function mcNodePositions(W, H) {
     enphase:   {x: 28,   y: cy - 120},
     solaredge: {x: 28,   y: cy},
     srpGrid:   {x: 28,   y: cy + 120},
-    truck:     {x: cx,   y: H - 30},
     core:      {x: cx,   y: cy},
     home:      {x: W-28, y: cy - 90},
     pool:      {x: W-28, y: cy + 40},
-    ev:        {x: W-28, y: cy + 140},
+    truck:     {x: W-28, y: cy + 160},
   };
 }
 
@@ -4696,12 +4818,12 @@ function mcUpdateFlowPaths(s) {
   mcFlowPaths = [
     {from:'enphase',   to:'core',    kw:enphW,              color:'#FFD700', active:enphW>0.05},
     {from:'solaredge', to:'core',    kw:seW,                color:'#FFC200', active:seW>0.05},
-    {from:'srpGrid',   to:'core',    kw:gridW>0?gridW:0,    color:'#FF8C00', active:gridW>0.05},
-    {from:'core',      to:'srpGrid', kw:gridW<0?-gridW:0,   color:'#FF6600', active:gridW<-0.05},
+    {from:'srpGrid',   to:'core',    kw:gridW>0?gridW:0,    color:'#3B82F6', active:gridW>0.05},
+    {from:'core',      to:'srpGrid', kw:gridW<0?-gridW:0,   color:'#1D4ED8', active:gridW<-0.05},
     {from:'truck',     to:'core',    kw:truckW,             color:'#00FFFF', active:truckW>0.05},
+    {from:'core',      to:'truck',   kw:evW,                color:'#22d3ee', active:evW>0.05},
     {from:'core',      to:'home',    kw:homeW,              color:'#9B59B6', active:homeW>0.05},
     {from:'core',      to:'pool',    kw:poolW,              color:'#06b6d4', active:poolW>0.05},
-    {from:'core',      to:'ev',      kw:evW,                color:'#22d3ee', active:evW>0.05},
   ];
 }
 
@@ -4719,24 +4841,14 @@ function mcDrawFrame() {
   ctx.clearRect(0, 0, W, H);
   const nodes = mcNodePositions(W, H);
 
-  // Draw node halos
-  Object.entries(nodes).forEach(([k, pos]) => {
-    const colors = {enphase:'#FFD700',solaredge:'#FFC200',srpGrid:'#FF8C00',truck:'#00FFFF',
-                    core:'rgba(0,200,255,0.4)',home:'#9B59B6',pool:'#06b6d4',ev:'#22d3ee'};
-    const r = k==='core' ? 50 : 20;
-    ctx.beginPath(); ctx.arc(pos.x, pos.y, r, 0, Math.PI*2);
-    ctx.strokeStyle = colors[k] || '#fff'; ctx.lineWidth = k==='core' ? 2 : 1.5;
-    ctx.globalAlpha = k==='core' ? 0.35 : 0.25; ctx.stroke(); ctx.globalAlpha = 1;
-  });
-
   // Draw flow paths + spawn particles
   mcFlowPaths.forEach(path => {
     const f = nodes[path.from], t2 = nodes[path.to];
     if (!f || !t2) return;
     const cp = mcCtrl(f, t2);
     ctx.beginPath(); ctx.moveTo(f.x, f.y); ctx.quadraticCurveTo(cp.x, cp.y, t2.x, t2.y);
-    ctx.strokeStyle = path.color; ctx.lineWidth = Math.max(1, path.kw * 2.5);
-    ctx.globalAlpha = path.active ? 0.2 : 0.06; ctx.setLineDash([]); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = path.color; ctx.lineWidth = Math.max(3, path.kw * 6);
+    ctx.globalAlpha = path.active ? 0.35 : 0.08; ctx.setLineDash([]); ctx.stroke(); ctx.globalAlpha = 1;
     // Spawn
     if (path.active && mcParticles.length < 180 && Math.random() < Math.min(0.6, path.kw * 0.18)) {
       mcParticles.push({path, t:Math.random()*0.3, speed: 0.005 + path.kw * 0.002});
@@ -4754,15 +4866,19 @@ function mcDrawFrame() {
     const pos = mcBezierPt(f, cp, t2, p.t);
     const grad = ctx.createRadialGradient(pos.x, pos.y, 0, pos.x, pos.y, 6);
     grad.addColorStop(0, p.path.color); grad.addColorStop(1, 'transparent');
-    ctx.beginPath(); ctx.arc(pos.x, pos.y, 5, 0, Math.PI*2);
-    ctx.fillStyle = grad; ctx.globalAlpha = 0.55; ctx.fill(); ctx.globalAlpha = 1;
-    ctx.beginPath(); ctx.arc(pos.x, pos.y, 2, 0, Math.PI*2);
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, 7, 0, Math.PI*2);
+    ctx.fillStyle = grad; ctx.globalAlpha = 0.75; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.beginPath(); ctx.arc(pos.x, pos.y, 3, 0, Math.PI*2);
     ctx.fillStyle = p.path.color; ctx.fill();
     live.push(p);
   });
   mcParticles = live;
   mcAnimFrame = requestAnimationFrame(mcDrawFrame);
 }
+
+// Module-level demand tracking for microgrid mode
+let mcDemandSamples = [];
+let mcSessionPeak   = 0;
 
 function updateMicrogrid(s) {
   const sum = s.summary || {}, wc = s.wall_connector || {}, tesla = s.tesla || {}, span = s.span || {};
@@ -4776,59 +4892,125 @@ function updateMicrogrid(s) {
   const totalSW = (sum.solar_w   || 0);
   const poolCirc = circuits.find(c => (c.name||'').toLowerCase().includes('pool'));
   const poolKW  = poolCirc ? Math.abs(poolCirc.power_w||0)/1000 : 0;
-  const evKW    = Math.abs(ctRaw)/1000;
+  const evKW    = ctV2H ? 0 : Math.abs(ctRaw)/1000;
+  const truckDischargeKW = ctV2H ? Math.abs(ctRaw)/1000 : 0;
   const loadW   = homeW + Math.abs(ctRaw);
   const netW    = totalSW - loadW;
   const rp      = getSRPRatePeriod();
-  const importW = Math.max(0, gridW);
-  const costHr  = (importW/1000 * rp.rate).toFixed(2);
+  const BLENDED_RATE = 0.18;
+  const totalLoadKW = loadW / 1000;
+  const costHr  = (totalLoadKW * BLENDED_RATE).toFixed(2);
   const solarPct= loadW > 0 ? Math.min(100, Math.round(totalSW/loadW*100)) : 0;
-  let truckMode = 'Idle';
-  if (ctV2H)             truckMode = 'Discharging (V2H)';
-  else if (evKW > 0.1)   truckMode = 'Charging';
-  else if (!wc.vehicle_connected) truckMode = 'Away';
-  const soe = tesla.status === 'online' ? tesla.soe : null;
   const islanded = tesla.islanded || false;
+
+  // 15-min demand tracking
+  const nowMs = Date.now();
+  mcDemandSamples.push({t: nowMs, w: loadW});
+  mcDemandSamples = mcDemandSamples.filter(sp => nowMs - sp.t <= 15*60*1000);
+  const demand15W = mcDemandSamples.length > 0
+    ? mcDemandSamples.reduce((a,b) => a+b.w, 0) / mcDemandSamples.length
+    : loadW;
+  if (loadW > mcSessionPeak) mcSessionPeak = loadW;
+
+  // Truck card label
+  let truckMode = 'Idle';
+  let truckDispKW = evKW;
+  if (ctV2H)                      { truckMode = 'Powershare (V2H)'; truckDispKW = truckDischargeKW; }
+  else if (evKW > 0.1)             { truckMode = 'Charging'; }
+  else if (!wc.vehicle_connected)  { truckMode = 'Away'; }
 
   const setText = (id, v) => { const el = document.getElementById(id); if(el) el.textContent = v; };
   const setHTML = (id, v) => { const el = document.getElementById(id); if(el) el.innerHTML  = v; };
 
-  setText('mc-enphase-kw',       enphKW.toFixed(2));
-  setHTML('mc-solaredge-kw',     seKW.toFixed(2) + ' <span style="font-size:0.8rem;opacity:0.5">kW</span>');
-  setText('mc-grid-kw',          (Math.abs(gridW)/1000).toFixed(2));
-  setText('mc-grid-direction',   gridW > 50 ? '▼ importing' : gridW < -50 ? '▲ exporting' : 'balanced');
-  setText('mc-truck-kw',         evKW.toFixed(2));
-  setText('mc-truck-mode',       truckMode);
+  // LEFT column — combined solar card
+  setText('mc-solar-total-kw', (enphKW + seKW).toFixed(2));
+  setText('mc-enphase-sub',    enphKW.toFixed(2) + ' kW');
+  setText('mc-solaredge-sub',  seKW.toFixed(2) + ' kW');
+
+  // Grid card
+  setText('mc-grid-kw',        (Math.abs(gridW)/1000).toFixed(2));
+  setText('mc-grid-direction',  gridW > 50 ? '▼ Importing' : gridW < -50 ? '▲ Exporting' : 'Balanced');
+
+  // Hero card
   const netEl = document.getElementById('mc-net-kw');
   if(netEl){ netEl.textContent = (Math.abs(netW)/1000).toFixed(2); netEl.style.color = netW>=0?'#10b981':'#ef4444'; }
-  setText('mc-net-direction',    (netW>=0?'▲ exporting':'▼ importing') + ' kW');
-  setText('mc-home-kw',          (homeW/1000).toFixed(2) + ' kW');
-  setText('mc-cost-hr',          '$' + costHr);
-  setText('mc-solar-pct',        solarPct + '%');
-  setText('mc-soc',              soe !== null ? Math.round(soe) + '%' : '—');
-  setText('mc-home-load-kw',     (homeW/1000).toFixed(2));
-  setText('mc-pool-kw',          poolKW.toFixed(2));
-  setText('mc-pool-status',      poolCirc ? poolCirc.relay : '—');
-  setText('mc-ev-kw',            evKW.toFixed(2));
-  setText('mc-ev-status',        truckMode);
-  setText('mc-weather',          '☀️ Solar: ' + (totalSW/1000).toFixed(1) + ' kW');
+  setText('mc-net-direction',   (netW>=0?'▲ Exporting':'▼ Importing') + ' kW');
+  setText('mc-home-kw',         (homeW/1000).toFixed(2) + ' kW');
+  setText('mc-cost-hr',         '$' + costHr);
+  setText('mc-solar-pct',       solarPct + '%');
+  setText('mc-demand-15m',      (demand15W/1000).toFixed(2) + ' kW');
+  setText('mc-session-peak',    (mcSessionPeak/1000).toFixed(2) + ' kW');
 
-  const rateEl = document.getElementById('mc-rate');
-  if(rateEl){ rateEl.textContent = rp.label; rateEl.className = 'sb-rate ' + rp.cls; }
+  // RIGHT column
+  setText('mc-home-load-kw',    (homeW/1000).toFixed(2));
+  setText('mc-pool-kw',         poolKW.toFixed(2));
+  setText('mc-pool-status',     poolCirc ? poolCirc.relay : '—');
+  setText('mc-truck-kw',        truckDispKW.toFixed(2));
+  setText('mc-truck-mode',      truckMode);
+
+  // Top 3 circuits mini chart in Home Panel card
+  const top5 = circuits.filter(c => Math.abs(c.power_w||0) > 10)
+    .sort((a,b) => Math.abs(b.power_w||0) - Math.abs(a.power_w||0)).slice(0,3);
+  const maxCircW = Math.max(...top5.map(c => Math.abs(c.power_w||0)), 1);
+  const circHtml = top5.map(c => {
+    const w = Math.abs(c.power_w||0);
+    const pct = (w/maxCircW*100).toFixed(0);
+    const nm = (c.name||c.id||'').replace(/</g,'&lt;');
+    const kw = (w/1000).toFixed(2);
+    return `<div style='margin-bottom:5px'>
+      <div style='display:flex;justify-content:space-between;margin-bottom:2px'>
+        <span style='opacity:0.7;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:110px'>${nm}</span>
+        <span style='color:#9B59B6;font-weight:700'>${kw} kW</span>
+      </div>
+      <div style='height:4px;background:rgba(255,255,255,0.08);border-radius:2px;overflow:hidden'>
+        <div style='height:100%;width:${pct}%;background:#9B59B6;border-radius:2px;transition:width 0.5s'></div>
+      </div></div>`;
+  }).join('');
+  setHTML("mc-home-circuits", circHtml);
+
+  // Banner live totals
+  const gridDir = gridW > 50 ? "▼" : gridW < -50 ? "▲" : "—";
+  setText("mc-banner-solar",    "☀ " + (totalSW/1000).toFixed(2) + " kW");
+  setText("mc-banner-load",     "🏠 " + (loadW/1000).toFixed(2) + " kW");
+  setText("mc-banner-grid",     "⚡ " + gridDir + " " + (Math.abs(gridW)/1000).toFixed(2) + " kW");
+  setText("mc-banner-cost",     "$" + costHr + "/hr");
+  setText("mc-banner-coverage", solarPct + "% ☀");
+
+  const rateEl = document.getElementById("mc-rate");
+  if(rateEl){ rateEl.textContent = rp.label; rateEl.className = "sb-rate " + rp.cls; }
   const now = new Date();
-  setText('mc-time', now.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}));
-  const gsEl = document.getElementById('mc-grid-status'), ibEl = document.getElementById('mc-island-badge');
-  if(gsEl){ gsEl.textContent = islanded?'Islanded':'Grid ✓'; gsEl.className = 'sb-grid ' + (islanded?'islanded':'up'); }
-  if(ibEl) ibEl.style.display = islanded ? 'inline-flex' : 'none';
+  setText("mc-time", now.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));
+  const gsEl = document.getElementById("mc-grid-status"), ibEl = document.getElementById("mc-island-badge");
+  if(gsEl){ gsEl.textContent = islanded?"Islanded":"Grid ✓"; gsEl.className = "sb-grid " + (islanded?"islanded":"up"); }
+  if(ibEl) ibEl.style.display = islanded ? "inline-flex" : "none";
 
   // Card glow
-  const setGlow = (id, cls) => { const el=document.getElementById(id); if(el) el.className='glass-card'+(cls?' '+cls:''); };
-  setGlow('mc-enphase-card',     enphKW > 0.1 ? 'glow-solar' : '');
-  setGlow('mc-grid-card',        importW > 100 ? 'glow-grid' : '');
-  setGlow('mc-truck-source-card',ctV2H ? 'glow-truck' : '');
-  setGlow('mc-home-card',        homeW > 500 ? 'glow-load' : '');
+  const setGlow = (id, cls, extra) => {
+    const el = document.getElementById(id);
+    if(el) el.className = "glass-card" + (cls ? " " + cls : "") + (extra ? ";" + extra : "");
+  };
+  const solarCardEl = document.getElementById("mc-solar-card");
+  if(solarCardEl) solarCardEl.className = (enphKW+seKW) > 0.1 ? "glass-card glow-solar" : "glass-card";
+  const gridCardEl = document.getElementById("mc-grid-card");
+  if(gridCardEl) { gridCardEl.className = "glass-card"; gridCardEl.style.borderColor = "rgba(59,130,246," + (Math.max(0, gridW) > 100 ? "0.6" : "0.3") + ")"; }
+  const homeCardEl = document.getElementById("mc-home-card");
+  if(homeCardEl) homeCardEl.className = "glass-card" + (homeW > 500 ? " glow-load" : "") + " " + ""; // keep flex style via inline
+  const truckCardEl = document.getElementById("mc-truck-card");
+  if(truckCardEl) truckCardEl.className = ctV2H ? "glass-card glow-truck" : "glass-card";
 
   mcUpdateFlowPaths(s);
+
+  // Sparklines for Mode 1 cards
+  pushHist(mcSolarHist,  totalSW/1000);
+  pushHist(mcGridHist,   Math.abs(gridW)/1000);
+  pushHist(mcHomeHist,   homeW/1000);
+  pushHist(mcPoolHist,   poolKW);
+  pushHist(mcTruckHist,  truckDispKW);
+  drawSparkline('mc-solar-spark', mcSolarHist, '#FFD700');
+  drawSparkline('mc-grid-spark',  mcGridHist,  '#3B82F6');
+  drawSparkline('mc-home-spark',  mcHomeHist,  '#9B59B6');
+  drawSparkline('mc-pool-spark',  mcPoolHist,  '#06b6d4');
+  drawSparkline('mc-truck-spark', mcTruckHist, '#00FFFF');
 }
 
 // ── MODE 2: Trading Desk ─────────────────────────────────────────────────────
@@ -4837,6 +5019,11 @@ const tdEnphHist   = new Array(SPARK_LEN).fill(0);
 const tdSEHist     = new Array(SPARK_LEN).fill(0);
 const tdDemandHist = new Array(SPARK_LEN).fill(0);
 let   tdPeak24h    = 0;
+const mcSolarHist  = new Array(SPARK_LEN).fill(0);
+const mcGridHist   = new Array(SPARK_LEN).fill(0);
+const mcHomeHist   = new Array(SPARK_LEN).fill(0);
+const mcPoolHist   = new Array(SPARK_LEN).fill(0);
+const mcTruckHist  = new Array(SPARK_LEN).fill(0);
 
 function pushHist(arr, v) { arr.push(v); if(arr.length > SPARK_LEN) arr.shift(); }
 
@@ -4877,57 +5064,81 @@ function drawSankey(s) {
   const homeW = sum.load_w || 0;
   const ctW  = Math.abs(wc.charging_w || 0);
   const poolW = sum.pool_w || 0;
-  const sources = [{label:'Enphase', w:enW, c:'#FFD700'},{label:'SolarEdge', w:seW, c:'#FFC200'},{label:'Grid Import', w:giW, c:'#FF8C00'}].filter(x=>x.w>10);
-  const sinks   = [{label:'Home',      w:homeW, c:'#9B59B6'},{label:'Pool',       w:poolW, c:'#06b6d4'},
-                   {label:'EV Charge', w:ctW,   c:'#22d3ee'},{label:'Grid Export',w:geW,   c:'#FF6600'}].filter(x=>x.w>10);
+  // Always show SRP Grid (import/export) — grayed out when idle
+  const allSources = [
+    {label:'Enphase', w:enW, c:'#FFD700'},
+    {label:'SolarEdge', w:seW, c:'#FFC200'},
+    {label:'SRP Grid', w:giW, c:'#3B82F6', alwaysShow:true},
+  ];
+  const allSinks = [
+    {label:'Home',       w:homeW, c:'#9B59B6'},
+    {label:'Pool',       w:poolW, c:'#06b6d4'},
+    {label:'EV Charge',  w:ctW,   c:'#22d3ee'},
+    {label:'Grid Export',w:geW,   c:'#1D4ED8', alwaysShow:true},
+  ];
+  const sources = allSources.filter(x=>x.w>10||x.alwaysShow);
+  const sinks   = allSinks.filter(x=>x.w>10||x.alwaysShow);
   if(!sources.length && !sinks.length) {
-    ctx.fillStyle='rgba(255,255,255,0.15)'; ctx.font='11px system-ui'; ctx.textAlign='center';
+    ctx.fillStyle='rgba(255,255,255,0.15)'; ctx.font='16px system-ui'; ctx.textAlign='center';
     ctx.fillText('No significant flows', W/2, H/2); return;
   }
-  const pad=20, nw=14, total=Math.max(sources.reduce((a,x)=>a+x.w,0), 1);
-  const maxH = H - pad*2;
-  let sy=pad;
+  const hpad=40, vpad=20, nw=14, total=Math.max(sources.reduce((a,x)=>a+x.w,0), 1);
+  const maxH = H - vpad*2;
+  let sy=vpad;
   sources.forEach(src => {
-    src._h = Math.max(4,(src.w/total)*maxH); src._y = sy;
-    ctx.fillStyle=src.c; ctx.globalAlpha=0.75; ctx.fillRect(pad, sy, nw, src._h);
-    ctx.globalAlpha=1; ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.font='9px system-ui'; ctx.textAlign='left';
-    ctx.fillText(src.label, pad+nw+4, sy+src._h/2+3);
+    src._h = src.w > 0 ? Math.max(4,(src.w/total)*maxH) : 4; src._y = sy;
+    const alpha = src.w > 0 ? 0.75 : 0.22;
+    ctx.fillStyle=src.c; ctx.globalAlpha=alpha; ctx.fillRect(hpad, sy, nw, src._h);
+    ctx.globalAlpha=1;
+    ctx.fillStyle = src.w > 0 ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.25)';
+    ctx.font='bold 16px system-ui'; ctx.textAlign='left';
+    ctx.fillText(src.label, hpad+nw+4, sy+src._h/2+5);
     sy += src._h + 5;
   });
-  let dy=pad;
+  let dy=vpad;
   sinks.forEach(snk => {
-    snk._h = Math.max(4,(snk.w/total)*maxH); snk._y = dy;
-    ctx.fillStyle=snk.c; ctx.globalAlpha=0.75; ctx.fillRect(W-pad-nw, dy, nw, snk._h);
-    ctx.globalAlpha=1; ctx.fillStyle='rgba(255,255,255,0.55)'; ctx.textAlign='right';
-    ctx.fillText(snk.label, W-pad-nw-4, dy+snk._h/2+3);
+    snk._h = snk.w > 0 ? Math.max(4,(snk.w/total)*maxH) : 4; snk._y = dy;
+    const alpha = snk.w > 0 ? 0.75 : 0.22;
+    ctx.fillStyle=snk.c; ctx.globalAlpha=alpha; ctx.fillRect(W-hpad-nw, dy, nw, snk._h);
+    ctx.globalAlpha=1;
+    ctx.fillStyle = snk.w > 0 ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.25)';
+    ctx.font='bold 16px system-ui'; ctx.textAlign='right';
+    ctx.fillText(snk.label, W-hpad-nw-4, dy+snk._h/2+5);
     dy += snk._h + 5;
   });
-  const x0=pad+nw, x1=W-pad-nw, cpx=(x0+x1)/2;
+  const x0=hpad+nw, x1=W-hpad-nw, cpx=(x0+x1)/2;
   sources.forEach(src => {
+    if(src.w <= 0) return;
     sinks.forEach(snk => {
-      const fw = Math.min(src._h, snk._h) * 0.6; if(fw < 2) return;
+      if(snk.w <= 0) return;
+      const fw = Math.min(src._h, snk._h) * 0.6; if(fw < 1) return;
       ctx.beginPath(); ctx.moveTo(x0, src._y+src._h/2);
       ctx.bezierCurveTo(cpx, src._y+src._h/2, cpx, snk._y+snk._h/2, x1, snk._y+snk._h/2);
       const g = ctx.createLinearGradient(x0,0,x1,0);
       g.addColorStop(0, src.c); g.addColorStop(1, snk.c);
-      ctx.strokeStyle=g; ctx.lineWidth=Math.max(1.5, fw*0.35); ctx.globalAlpha=0.3; ctx.stroke(); ctx.globalAlpha=1;
+      ctx.strokeStyle=g; ctx.lineWidth=Math.max(1, fw*0.35); ctx.globalAlpha=0.3; ctx.stroke(); ctx.globalAlpha=1;
     });
   });
 }
 
-function updateCircuitBars(s) {
+function updateCircuitBars(s, extraCircuits) {
   const el = document.getElementById('td-circuit-bars'); if(!el) return;
   const circuits = ((s.span||{}).circuits||[]);
-  const sorted = [...circuits].filter(c=>Math.abs(c.power_w||0)>10)
+  const allCircuits = extraCircuits ? [...circuits, ...extraCircuits] : circuits;
+  const sorted = [...allCircuits].filter(c=>Math.abs(c.power_w||0)>0)
     .sort((a,b)=>Math.abs(b.power_w)-Math.abs(a.power_w)).slice(0,12);
   const maxW = Math.max(...sorted.map(c=>Math.abs(c.power_w||0)), 1);
   el.innerHTML = sorted.map(c => {
     const w=Math.abs(c.power_w||0), pct=(w/maxW*100).toFixed(0);
-    const canShed = c.relay && c.relay !== 'CLOSED_COMMITTED' && w > 100;
+    const isTruck = c._isTruck || false;
+    const canShed = !isTruck && c.relay && c.relay !== 'CLOSED_COMMITTED' && w > 100;
+    const nameStyle = isTruck ? ' style="color:#00FFFF"' : '';
+    const valStyle  = isTruck ? ' style="color:#00FFFF"' : '';
+    const fillStyle = isTruck ? 'background:#00FFFF;' : '';
     return `<div class="circuit-bar-row">
-      <div class="circuit-bar-label" title="${c.name||c.id}">${c.name||c.id}</div>
-      <div class="circuit-bar-track"><div class="circuit-bar-fill" style="width:${pct}%"></div></div>
-      <div class="circuit-bar-val">${(w/1000).toFixed(2)}k</div>
+      <div class="circuit-bar-label"${nameStyle} title="${c.name||c.id}">${c.name||c.id}</div>
+      <div class="circuit-bar-track"><div class="circuit-bar-fill" style="${fillStyle}width:${pct}%"></div></div>
+      <div class="circuit-bar-val"${valStyle}>${(w/1000).toFixed(2)}k</div>
       ${canShed ? `<button class="shed-btn" onclick="shedSpanCircuit('${c.id}')">Shed</button>` : '<div style="width:36px"></div>'}
     </div>`;
   }).join('');
@@ -4938,12 +5149,22 @@ function updateTrading(s) {
   const enW = sum.enphase_solar_w||0, seW = sum.solaredge_solar_w||0;
   const totalSW = enW + seW;
   const loadW   = (sum.load_w||0) + Math.abs(wc.charging_w||0);
+  const gridW   = sum.srp_grid_w || 0;
   if(loadW > tdPeak24h) tdPeak24h = loadW;
   pushHist(tdEnphHist,   enW/1000);
   pushHist(tdSEHist,     seW/1000);
   pushHist(tdDemandHist, loadW/1000);
 
+  const RATE = 0.18;
+  const loadKW   = loadW / 1000;
+  const solarKW  = totalSW / 1000;
+  const costHr   = (loadKW * RATE).toFixed(2);
+  const coverage = loadKW > 0 ? Math.min(100, Math.round(solarKW/loadKW*100)) : 0;
+  const gridDir  = gridW > 50 ? "▼ " : gridW < -50 ? "▲ " : "";
+  const gridLabel= gridDir + (Math.abs(gridW)/1000).toFixed(2) + " kW";
+
   const setText=(id,v)=>{const e=document.getElementById(id);if(e)e.innerHTML=v;};
+  const setTxt =(id,v)=>{const e=document.getElementById(id);if(e)e.textContent=v;};
   setText('td-enphase-kw',       (enW/1000).toFixed(2)+'<span style="font-size:0.8rem;opacity:0.4"> kW</span>');
   setText('td-solaredge-kw',     (seW/1000).toFixed(2)+'<span style="font-size:0.8rem;opacity:0.4"> kW</span>');
   setText('td-total-solar-kw',   (totalSW/1000).toFixed(2)+'<span style="font-size:0.8rem;opacity:0.4"> kW</span>');
@@ -4955,12 +5176,37 @@ function updateTrading(s) {
   if(demBar) demBar.style.width = Math.min(100, loadW/15000*100).toFixed(0) + '%';
   const lu = document.getElementById('td-last-update');
   if(lu) lu.textContent = new Date().toLocaleTimeString();
+  const now2 = new Date();
+  const rp2 = getSRPRatePeriod();
+  setTxt('td-time', now2.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit', hour12:true}));
+  const tdRateEl = document.getElementById('td-rate');
+  if(tdRateEl) { tdRateEl.textContent = rp2.label; tdRateEl.className = 'sb-rate ' + rp2.cls; }
+
+  // Cost/hr and solar coverage in demand strip
+  setTxt('td-cost-hr',       '$' + costHr);
+  setTxt('td-solar-coverage', coverage + '%');
+
+  // Totals bar
+  setTxt('td-total-solar',    (totalSW/1000).toFixed(2) + ' kW');
+  setTxt('td-total-load',     (loadW/1000).toFixed(2) + ' kW');
+  setTxt('td-total-grid',     gridLabel);
+  setTxt('td-total-coverage', coverage + '%');
+  setTxt('td-total-cost',     '$' + costHr);
 
   drawSparkline('td-enphase-spark',  tdEnphHist,   '#FFD700');
   drawSparkline('td-solaredge-spark',tdSEHist,     '#FFC200');
   drawSparkline('td-demand-chart',   tdDemandHist, '#9B59B6');
   drawSankey(s);
-  updateCircuitBars(s);
+
+  // Cybertruck circuit entry
+  const ctRawW  = Math.abs(wc.charging_w || 0);
+  const ctV2H2  = sum.ct_v2h || false;
+  const extraCircuits = [{
+    name: ctV2H2 ? "Cybertruck (Powershare)" : "Cybertruck (Charging)",
+    power_w: ctRawW,
+    _isTruck: true
+  }];
+  updateCircuitBars(s, extraCircuits);
 }
 
 // ── MODE 3: Backup Intelligence ───────────────────────────────────────────────
@@ -5110,8 +5356,56 @@ evtSrc.onerror = () => console.warn('SSE disconnected — retrying...');
 // Initial load
 fetch('/api/state').then(r=>r.json()).then(renderState).catch(console.error);
 
+// Weather fetch — Queen Creek, AZ (refresh every 10 min)
+(function fetchWeather() {
+  fetch("https://wttr.in/Queen+Creek,AZ?format=j1")
+    .then(r => r.json())
+    .then(d => {
+      const cur = d.current_condition && d.current_condition[0];
+      if(cur) {
+        const tempF = cur.temp_F || "--";
+        const desc  = (cur.weatherDesc && cur.weatherDesc[0] && cur.weatherDesc[0].value) || "";
+        const txt   = tempF + "°F " + desc;
+        const el = document.getElementById("mc-weather");
+        if(el) el.textContent = txt;
+        const tdW = document.getElementById("td-weather");
+        if(tdW) tdW.textContent = txt;
+      }
+    })
+    .catch(() => {
+      const el = document.getElementById("mc-weather");
+      if(el) el.textContent = "Queen Creek, AZ";
+      const tdW = document.getElementById("td-weather");
+      if(tdW) tdW.textContent = "Queen Creek, AZ";
+    });
+  setTimeout(fetchWeather, 10*60*1000);
+})();
+
 // Start particle animation loop (runs continuously, draws only when microgrid mode active)
 mcDrawFrame();
+
+// ── Mode Switcher ────────────────────────────────────────────────────
+function switchMode(mode) {
+  // Update switcher button states
+  document.querySelectorAll('.mode-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.mode === mode);
+  });
+  // Show only the selected tablet view
+  ['microgrid', 'trading', 'backup'].forEach(function(m) {
+    var el = document.getElementById('view-' + m);
+    if (el) el.style.display = (m === mode) ? '' : 'none';
+  });
+  // Persist selection
+  localStorage.setItem('jarvis-energy-mode', mode);
+  // Sync the underlying showView so nav button active states work
+  if (typeof showView === 'function') showView(mode);
+}
+
+// Init: restore last mode or default to microgrid
+(function() {
+  var _initMode = localStorage.getItem('jarvis-energy-mode') || 'microgrid';
+  switchMode(_initMode);
+})();
 </script>
 </body>
 </html>

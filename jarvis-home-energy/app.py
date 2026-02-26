@@ -7193,9 +7193,14 @@ function updateMicrogrid(s) {
   const loadW   = homeW + Math.abs(ctRaw);
   const netW    = totalSW - loadW;
   const rp      = getSRPRatePeriod();
-  const BLENDED_RATE = 0.18;
+  const BLENDED_RATE = 0.181;  // weighted avg all-in rate (incl. demand charges) — do not change
   const totalLoadKW = loadW / 1000;
-  const costHr  = (totalLoadKW * BLENDED_RATE).toFixed(2);
+  const exportingKW = gridW < -50 ? Math.abs(gridW) / 1000 : 0;
+  const netGridKW   = gridW > 50  ? gridW / 1000 : 0;
+  // Exporting → negative cost (credit at same blended rate); importing → positive cost
+  const costHr  = exportingKW > 0
+    ? (-(exportingKW * BLENDED_RATE)).toFixed(2)
+    : (netGridKW > 0 ? (netGridKW * BLENDED_RATE) : (totalLoadKW * BLENDED_RATE)).toFixed(2);
   const solarPct= loadW > 0 ? Math.min(100, Math.round(totalSW/loadW*100)) : 0;
   const islanded = tesla.islanded || false;
 
@@ -7232,7 +7237,12 @@ function updateMicrogrid(s) {
   if(netEl){ netEl.textContent = (Math.abs(netW)/1000).toFixed(2); netEl.style.color = netW>=0?'#10b981':'#ef4444'; }
   setText('mc-net-direction',   (netW>=0?'▲ Exporting':'▼ Importing') + ' kW');
   setText('mc-home-kw',         (homeW/1000).toFixed(2) + ' kW');
-  setText('mc-cost-hr',         '$' + costHr);
+  const costEl = document.getElementById('mc-cost-hr');
+  if(costEl) {
+    const isCredit = parseFloat(costHr) < 0;
+    costEl.textContent = isCredit ? '-$' + Math.abs(parseFloat(costHr)).toFixed(2) + '/hr ↺' : '$' + costHr + '/hr';
+    costEl.style.color = isCredit ? '#10b981' : '#f59e0b';
+  }
   setText('mc-solar-pct',       solarPct + '%');
   setText('mc-demand-15m',      (demand15W/1000).toFixed(2) + ' kW');
   setText('mc-session-peak',    (mcSessionPeak/1000).toFixed(2) + ' kW');
@@ -7269,7 +7279,12 @@ function updateMicrogrid(s) {
   setText("mc-banner-solar",    "☀ " + (totalSW/1000).toFixed(2) + " kW");
   setText("mc-banner-load",     "🏠 " + (loadW/1000).toFixed(2) + " kW");
   setText("mc-banner-grid",     "⚡ " + gridDir + " " + (Math.abs(gridW)/1000).toFixed(2) + " kW");
-  setText("mc-banner-cost",     "$" + costHr + "/hr");
+  const bannerCostEl = document.getElementById('mc-banner-cost');
+  if(bannerCostEl) {
+    const isCr = parseFloat(costHr) < 0;
+    bannerCostEl.textContent = isCr ? '-$' + Math.abs(parseFloat(costHr)).toFixed(2) + '/hr ↺' : '$' + costHr + '/hr';
+    bannerCostEl.style.color = isCr ? '#10b981' : '#f59e0b';
+  }
   setText("mc-banner-coverage", solarPct + "% ☀");
 
   const rateEl = document.getElementById("mc-rate");
@@ -7451,10 +7466,14 @@ function updateTrading(s) {
   pushHist(tdSEHist,     seW/1000);
   pushHist(tdDemandHist, loadW/1000);
 
-  const RATE = 0.18;
+  const RATE     = 0.181;  // weighted avg all-in rate (incl. demand charges) — do not change
   const loadKW   = loadW / 1000;
   const solarKW  = totalSW / 1000;
-  const costHr   = (loadKW * RATE).toFixed(2);
+  const exportingKW2 = gridW < -50 ? Math.abs(gridW) / 1000 : 0;
+  const netGridKW2   = gridW > 50  ? gridW / 1000 : 0;
+  const costHr   = exportingKW2 > 0
+    ? (-(exportingKW2 * RATE)).toFixed(2)
+    : (netGridKW2 > 0 ? (netGridKW2 * RATE) : (loadKW * RATE)).toFixed(2);
   const coverage = loadKW > 0 ? Math.min(100, Math.round(solarKW/loadKW*100)) : 0;
   const gridDir  = gridW > 50 ? "▼ " : gridW < -50 ? "▲ " : "";
   const gridLabel= gridDir + (Math.abs(gridW)/1000).toFixed(2) + " kW";
@@ -7479,7 +7498,13 @@ function updateTrading(s) {
   if(tdRateEl) { tdRateEl.textContent = rp2.label; tdRateEl.className = 'sb-rate ' + rp2.cls; }
 
   // Cost/hr and solar coverage in demand strip
-  setTxt('td-cost-hr',       '$' + costHr);
+  const isTdCredit = parseFloat(costHr) < 0;
+  const costLabel  = isTdCredit ? '-$' + Math.abs(parseFloat(costHr)).toFixed(2) + '/hr ↺' : '$' + costHr + '/hr';
+  const costColor  = isTdCredit ? '#10b981' : '#f59e0b';
+  const tdCostEl   = document.getElementById('td-cost-hr');
+  if(tdCostEl) { tdCostEl.textContent = costLabel; tdCostEl.style.color = costColor; }
+  const tdTotCostEl = document.getElementById('td-total-cost');
+  if(tdTotCostEl) { tdTotCostEl.textContent = costLabel; tdTotCostEl.style.color = costColor; }
   setTxt('td-solar-coverage', coverage + '%');
 
   // Totals bar
@@ -7487,7 +7512,6 @@ function updateTrading(s) {
   setTxt('td-total-load',     (loadW/1000).toFixed(2) + ' kW');
   setTxt('td-total-grid',     gridLabel);
   setTxt('td-total-coverage', coverage + '%');
-  setTxt('td-total-cost',     '$' + costHr);
 
   drawSparkline('td-enphase-spark',  tdEnphHist,   '#FFD700');
   drawSparkline('td-solaredge-spark',tdSEHist,     '#FFC200');

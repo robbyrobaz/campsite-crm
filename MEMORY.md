@@ -185,9 +185,9 @@ INTERIM:    IBKR paper account (DUH860616) used for delayed (~15 min) data via
 - Store in: `ninja_trader_strategies/config_live.py` (gitignored)
 
 ### Services
-- `nq-bar-feed.service`       — IB delayed feed (active, interim)
-- `nq-tradovate-feed.service` — Tradovate live feed (pre-built, disabled until creds)
-- Switch: `systemctl --user stop nq-bar-feed && systemctl --user enable --now nq-tradovate-feed`
+- `nq-smb-watcher.service`    — **ACTIVE LIVE FEED** (Feb 26 2026). Watches NinjaTrader SMB bridge at `/mnt/nt_bridge/bars.csv` (192.168.68.88), appends to `NQ_continuous_1min.csv`, runs signal engine in dry-run mode.
+- `nq-bar-feed.service`       — IB delayed feed (RETIRED — stopped Feb 26, replaced by SMB watcher)
+- `nq-tradovate-feed.service` — Tradovate direct API feed (disabled — optional future upgrade)
 
 ### Data File
 - `processed_data/NQ_continuous_1min.csv` — 400K+ rows, Jan 2025→present, updated every 60s (IB) or real-time (Tradovate)

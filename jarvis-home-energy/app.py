@@ -100,9 +100,13 @@ try:
 except ImportError:
     BHYVE_EMAIL = ""; BHYVE_PASSWORD = ""
 try:
-    from config import GE_CLIENT_ID, GE_CLIENT_SECRET, GE_USERNAME, GE_PASSWORD
+    from config import GE_CLIENT_ID, GE_CLIENT_SECRET, GE_REFRESH_TOKEN
 except ImportError:
-    GE_CLIENT_ID = ""; GE_CLIENT_SECRET = ""; GE_USERNAME = ""; GE_PASSWORD = ""
+    GE_CLIENT_ID = ""; GE_CLIENT_SECRET = ""; GE_REFRESH_TOKEN = ""
+try:
+    from config import MYQ_EMAIL, MYQ_PASSWORD
+except ImportError:
+    MYQ_EMAIL = ""; MYQ_PASSWORD = ""
 
 app = Flask(__name__)
 
@@ -120,6 +124,7 @@ _state = {
     "nest": {"status": "unconfigured", "temp_f": 0, "setpoint_f": 0, "mode": "off", "hvac_state": "idle", "humidity": 0, "last_seen": 0},
     "bhyve": {"status": "unconfigured", "devices": [], "zones": [], "last_seen": 0},
     "ge_appliances": {"status": "unconfigured", "appliances": [], "last_seen": 0},
+    "myq": {"status": "unconfigured", "doors": [], "last_seen": 0},
 }
 _sse_subscribers = []
 _sse_lock = threading.Lock()
@@ -1197,6 +1202,7 @@ _GE_STATE_MAP = {
 # Map common GE appliance type tokens → emoji
 _GE_TYPE_ICON = {
     "Washer": "🫧", "Dryer": "♨️", "Dishwasher": "🍽️",
+    "Clothes Washer": "🫧", "Clothes Dryer": "♨️",
     "Refrigerator": "🧊", "Oven": "🔥", "Range": "🔥",
     "Microwave": "📡", "Freezer": "🧊", "AirConditioner": "❄️",
     "WashDryer": "🫧", "Hood": "💨",
@@ -1204,16 +1210,17 @@ _GE_TYPE_ICON = {
 
 
 def _ge_get_token():
-    """Return a valid GE SmartHQ access token, refreshing if needed."""
-    global _ge_access_token, _ge_token_expiry
+    """Return a valid GE SmartHQ access token, refreshing via refresh_token grant."""
+    global _ge_access_token, _ge_token_expiry, GE_REFRESH_TOKEN
     with _ge_token_lock:
         if _ge_access_token and time.time() < _ge_token_expiry - 60:
             return _ge_access_token
+        if not (GE_CLIENT_ID and GE_REFRESH_TOKEN):
+            return None
         try:
             data = urllib.parse.urlencode({
-                "grant_type": "password",
-                "username": GE_USERNAME,
-                "password": GE_PASSWORD,
+                "grant_type": "refresh_token",
+                "refresh_token": GE_REFRESH_TOKEN,
                 "client_id": GE_CLIENT_ID,
                 "client_secret": GE_CLIENT_SECRET,
             }).encode()
@@ -1225,7 +1232,22 @@ def _ge_get_token():
                 resp = json.loads(r.read())
             _ge_access_token = resp["access_token"]
             _ge_token_expiry = time.time() + resp.get("expires_in", 3600)
-            log.info("GE SmartHQ token acquired OK")
+            # Persist rotated refresh token if server issued a new one
+            new_rt = resp.get("refresh_token")
+            if new_rt and new_rt != GE_REFRESH_TOKEN:
+                GE_REFRESH_TOKEN = new_rt
+                try:
+                    import re as _re
+                    config_path = Path(__file__).parent / "config.py"
+                    text = config_path.read_text()
+                    text = _re.sub(r'^GE_REFRESH_TOKEN\s*=\s*.*$',
+                                   f'GE_REFRESH_TOKEN = "{new_rt}"',
+                                   text, flags=_re.MULTILINE)
+                    config_path.write_text(text)
+                    log.info("GE SmartHQ refresh token rotated — config.py updated")
+                except Exception as _e:
+                    log.warning("GE refresh token rotate write error: %s", _e)
+            log.info("GE SmartHQ token refreshed OK")
             return _ge_access_token
         except Exception as e:
             log.warning("GE SmartHQ auth error: %s", e)
@@ -1235,7 +1257,7 @@ def _ge_get_token():
 
 def poll_ge_appliances():
     global _ge_next_retry
-    if not (GE_CLIENT_ID and GE_USERNAME and GE_PASSWORD):
+    if not (GE_CLIENT_ID and GE_REFRESH_TOKEN):
         with _state_lock:
             _state["ge_appliances"]["status"] = "unconfigured"
         return False
@@ -1246,7 +1268,7 @@ def poll_ge_appliances():
         if not token:
             raise RuntimeError("no token")
 
-        # List all appliances registered to the account
+        # List all appliances on the account
         req = urllib.request.Request(
             f"{GE_API_BASE}/v1/appliance",
             headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
@@ -1262,35 +1284,16 @@ def poll_ge_appliances():
             if not aid:
                 continue
 
-            # Fetch per-appliance attributes for live state
-            attrs = {}
-            try:
-                req2 = urllib.request.Request(
-                    f"{GE_API_BASE}/v1/appliance/{aid}/attribute",
-                    headers={"Authorization": f"Bearer {token}", "Accept": "application/json"},
-                )
-                with urllib.request.urlopen(req2, timeout=8) as r2:
-                    raw = json.loads(r2.read())
-                # Normalise: list of {"erd": "0x...", "value": "..."} or plain dict
-                if isinstance(raw, list):
-                    attrs = {a.get("erd", a.get("name", "")): a.get("value", "") for a in raw}
-                elif isinstance(raw, dict):
-                    attrs = raw
-            except Exception:
-                pass
+            # Derive state from "online" field ("ONLINE"/"OFFLINE" string or bool)
+            online_raw = item.get("online", "")
+            if isinstance(online_raw, str):
+                state_str = "idle" if online_raw.upper() == "ONLINE" else "disconnected"
+            elif isinstance(online_raw, bool):
+                state_str = "idle" if online_raw else "disconnected"
+            else:
+                state_str = "idle"
 
-            # Decode appliance state (ERD 0x2000 = ApplianceState)
-            state_raw = attrs.get("0x2000") or attrs.get("applianceState") or ""
-            state_str = _GE_STATE_MAP.get(str(state_raw), str(state_raw) if state_raw else "idle")
-
-            # Cycle name (ERD 0x0405 = CycleList / 0x0418 CycleState)
-            cycle = (attrs.get("0x0405") or attrs.get("0x0418")
-                     or attrs.get("cycleStatus") or attrs.get("cycleName") or "")
-            door = attrs.get("0x0003") or attrs.get("doorStatus") or ""
-            if door in ("0", "00"): door = "closed"
-            elif door in ("1", "01"): door = "open"
-
-            app_type = item.get("type", "")
+            app_type = item.get("applianceType") or item.get("type", "")
             icon = _GE_TYPE_ICON.get(app_type, "🏠")
 
             appliances.append({
@@ -1301,8 +1304,8 @@ def poll_ge_appliances():
                 "model": item.get("modelNumber", ""),
                 "brand": item.get("brand", "GE"),
                 "state": state_str,
-                "cycle": cycle,
-                "door": door,
+                "cycle": "",
+                "door": "",
             })
 
         with _state_lock:
@@ -1322,24 +1325,77 @@ def poll_ge_appliances():
         return False
 
 
+# ─── MyQ Garage Door ──────────────────────────────────────────────────────────
+_myq_next_retry = 0.0
+
+
+async def _myq_fetch_doors():
+    """Async: log in to MyQ and return list of cover (garage door) dicts."""
+    import aiohttp
+    import pymyq
+    async with aiohttp.ClientSession() as session:
+        api = await pymyq.login(MYQ_EMAIL, MYQ_PASSWORD, session)
+        doors = []
+        for serial, dev in api.covers.items():
+            doors.append({
+                "serial": serial,
+                "name": dev.name or "Garage Door",
+                "state": dev.state or "unknown",
+                "online": dev.online,
+            })
+        return doors
+
+
+def poll_myq():
+    global _myq_next_retry
+    if not MYQ_EMAIL or not MYQ_PASSWORD:
+        with _state_lock:
+            _state["myq"]["status"] = "unconfigured"
+        return False
+    if time.time() < _myq_next_retry:
+        return False
+    try:
+        doors = _run_async(_myq_fetch_doors())
+        with _state_lock:
+            _state["myq"] = {
+                "status": "online",
+                "doors": doors,
+                "last_seen": time.time(),
+            }
+        log.info("MyQ: %d door(s) polled", len(doors))
+        return True
+    except Exception as e:
+        log.warning("MyQ poll error: %s", e)
+        _myq_next_retry = time.time() + 120  # 2-min backoff
+        with _state_lock:
+            _state["myq"]["status"] = "error"
+        return False
+
+
 # ╔══════════════════════════════════════════════════════════════════════════════╗
 # ║  POLLING LOOP                                                                ║
 # ╚══════════════════════════════════════════════════════════════════════════════╝
 
 def _poll_loop():
     import concurrent.futures
-    global _camera_poll_counter
+    global _camera_poll_counter, _ge_poll_counter
     log.info("Polling loop started (interval=%ds, parallel)", POLL_INTERVAL_SECONDS)
     _camera_poll_counter = 11  # trigger camera poll on first tick
+    _ge_poll_counter = 11      # trigger GE appliance poll on first tick
     while True:
         # Cameras: poll every 60s (every 12 ticks at 5s) — Wyze login is rate-limited
         _camera_poll_counter += 1
-        poll_fns = [poll_pentair, poll_span, poll_enphase, poll_tesla, poll_wall_connector, poll_nest, poll_bhyve]
+        # GE SmartHQ: poll every 60s (appliances change slowly; avoid hammering cloud API)
+        _ge_poll_counter += 1
+        poll_fns = [poll_pentair, poll_span, poll_enphase, poll_tesla, poll_wall_connector, poll_nest, poll_bhyve, poll_myq]
         if _camera_poll_counter >= 12:
             poll_fns.append(poll_cameras)
             _camera_poll_counter = 0
+        if _ge_poll_counter >= 12:
+            poll_fns.append(poll_ge_appliances)
+            _ge_poll_counter = 0
         # Run all device polls concurrently — Pentair can take 45s, don't let it block solar/SPAN
-        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
+        with concurrent.futures.ThreadPoolExecutor(max_workers=9) as ex:
             futs = [ex.submit(f) for f in poll_fns]
             concurrent.futures.wait(futs, timeout=60)
         try:
@@ -1444,6 +1500,46 @@ def api_span_circuit(circuit_id):
     try:
         with urllib.request.urlopen(req, timeout=5) as r:
             return jsonify({"ok": True, "response": json.loads(r.read())})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/myq/door/<serial>/open", methods=["POST"])
+def api_myq_open(serial):
+    if not MYQ_EMAIL or not MYQ_PASSWORD:
+        return jsonify({"error": "MyQ not configured"}), 403
+    async def _do():
+        import aiohttp
+        import pymyq
+        async with aiohttp.ClientSession() as session:
+            api = await pymyq.login(MYQ_EMAIL, MYQ_PASSWORD, session)
+            dev = api.covers.get(serial)
+            if not dev:
+                raise ValueError(f"Door serial {serial!r} not found")
+            await dev.open(wait_for_state=False)
+    try:
+        _run_async(_do())
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/api/myq/door/<serial>/close", methods=["POST"])
+def api_myq_close(serial):
+    if not MYQ_EMAIL or not MYQ_PASSWORD:
+        return jsonify({"error": "MyQ not configured"}), 403
+    async def _do():
+        import aiohttp
+        import pymyq
+        async with aiohttp.ClientSession() as session:
+            api = await pymyq.login(MYQ_EMAIL, MYQ_PASSWORD, session)
+            dev = api.covers.get(serial)
+            if not dev:
+                raise ValueError(f"Door serial {serial!r} not found")
+            await dev.close(wait_for_state=False)
+    try:
+        _run_async(_do())
+        return jsonify({"ok": True})
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
@@ -1781,6 +1877,36 @@ def api_settings_bhyve():
         with _bhyve_token_lock:
             _bhyve_token = None
         _bhyve_next_retry = 0
+        return jsonify({"ok": True})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route("/api/settings/ge", methods=["POST"])
+def api_settings_ge():
+    global GE_CLIENT_ID, GE_CLIENT_SECRET, GE_REFRESH_TOKEN, _ge_access_token, _ge_next_retry
+    body = request.get_json() or {}
+    client_id     = (body.get("client_id")     or "").strip()
+    client_secret = (body.get("client_secret") or "").strip()
+    refresh_token = (body.get("refresh_token") or "").strip()
+    config_path = Path(__file__).parent / "config.py"
+    try:
+        import re as _re
+        text = config_path.read_text()
+        if client_id:
+            text = _re.sub(r'^GE_CLIENT_ID\s*=\s*.*$', f'GE_CLIENT_ID = "{client_id}"', text, flags=_re.MULTILINE)
+            GE_CLIENT_ID = client_id
+        if client_secret:
+            text = _re.sub(r'^GE_CLIENT_SECRET\s*=\s*.*$', f'GE_CLIENT_SECRET = "{client_secret}"', text, flags=_re.MULTILINE)
+            GE_CLIENT_SECRET = client_secret
+        if refresh_token:
+            text = _re.sub(r'^GE_REFRESH_TOKEN\s*=\s*.*$', f'GE_REFRESH_TOKEN = "{refresh_token}"', text, flags=_re.MULTILINE)
+            GE_REFRESH_TOKEN = refresh_token
+        config_path.write_text(text)
+        # Clear cached token so next poll re-authenticates
+        with _ge_token_lock:
+            _ge_access_token = ""
+        _ge_next_retry = 0
         return jsonify({"ok": True})
     except Exception as e:
         return jsonify({"ok": False, "error": str(e)}), 500
@@ -2190,6 +2316,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <button onclick="showView('cameras')">Cameras</button>
     <button onclick="showView('home-control')">Controls</button>
     <button onclick="showView('sprinklers')">Sprinklers</button>
+    <button onclick="showView('appliances')">Appliances</button>
     <button onclick="showView('settings')">Settings</button>
   </nav>
   <div class="status-bar">
@@ -3162,6 +3289,21 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       </div>
     </div>
 
+    <!-- MyQ Garage Door -->
+    <div class="dev-card status-offline" id="dc-myq">
+      <div class="dev-sdot offline" id="dc-myq-dot"></div>
+      <div class="dev-body">
+        <div class="dev-header">
+          <span class="dev-dicon">🚗</span>
+          <span class="dev-dname">MyQ Garage</span>
+          <span class="badge offline" id="dev-myq-badge">—</span>
+        </div>
+        <div class="dev-ip">cloud API · Chamberlain/LiftMaster</div>
+        <div id="dc-myq-doors" style="margin-top:6px"></div>
+        <div class="dev-lastseen" id="dc-myq-lastseen">last seen: —</div>
+      </div>
+    </div>
+
     <!-- Wyze Cam — Front Side -->
     <div class="dev-card status-offline" id="dc-cam-front">
       <div class="dev-sdot offline" id="dc-cam-front-dot"></div>
@@ -3204,6 +3346,21 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         <div class="dev-ip">192.168.68.82 · Wyze Cloud</div>
         <div class="dev-metric" id="dc-cam-down-metric">—</div>
         <div class="dev-lastseen" id="dc-cam-down-lastseen">last seen: —</div>
+      </div>
+    </div>
+
+    <!-- GE SmartHQ Appliances -->
+    <div class="dev-card status-offline" id="dc-ge">
+      <div class="dev-sdot offline" id="dc-ge-dot"></div>
+      <div class="dev-body">
+        <div class="dev-header">
+          <span class="dev-dicon">&#127968;</span>
+          <span class="dev-dname">GE SmartHQ</span>
+          <span class="badge offline" id="dev-ge-badge">&#x2014;</span>
+        </div>
+        <div class="dev-ip">cloud API &middot; SmartHQ OAuth2</div>
+        <div class="dev-metric" id="dc-ge-metric">&#x2014;<span> appliances</span></div>
+        <div class="dev-lastseen" id="dc-ge-lastseen">last seen: &#x2014;</div>
       </div>
     </div>
 
@@ -3542,6 +3699,38 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   </div>
 </div>
 
+<!-- ═══ APPLIANCES ═══════════════════════════════════════════════════════════ -->
+<div id="view-appliances" class="view">
+  <div class="section-title">GE SmartHQ Appliances
+    <span id="ge-online-count" style="font-size:10px;color:var(--online);font-weight:600;text-transform:none;letter-spacing:0;margin-left:6px"></span>
+  </div>
+
+  <!-- Status / setup card -->
+  <div class="card" style="margin-bottom:12px" id="ge-header-card">
+    <div class="card-header">
+      <span class="card-title">&#127968; GE SmartHQ &mdash; Cloud Integration</span>
+      <span class="badge unconfigured" id="ge-badge">unconfigured</span>
+    </div>
+    <div id="ge-unconfigured-msg" style="color:var(--text-dim);font-size:12px;padding:8px 0">
+      GE SmartHQ is not configured. Add <code>GE_CLIENT_ID</code>, <code>GE_CLIENT_SECRET</code>,
+      and <code>GE_REFRESH_TOKEN</code> to <code>config.py</code> to enable live appliance status.
+      Complete the OAuth2 Authorization Code flow at <strong>developers.smarthq.com</strong>
+      to obtain a refresh token.
+    </div>
+    <div id="ge-error-msg" style="display:none;color:var(--error);font-size:12px;padding:8px 0">
+      Unable to reach the GE SmartHQ API. Check credentials and network connectivity.
+    </div>
+    <div id="ge-status-line" style="display:none;font-size:12px;color:var(--text-dim)">
+      Polling every 60 s &nbsp;&middot;&nbsp; OAuth2 refresh token (Authorization Code flow) &nbsp;&middot;&nbsp; api.brillion.geappliances.com
+    </div>
+  </div>
+
+  <!-- Appliance card grid — populated by renderAppliances() -->
+  <div id="ge-appliance-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px"></div>
+
+</div><!-- /appliances -->
+
+
 <!-- ═══ SETTINGS ════════════════════════════════════════════════════════════ -->
 <div id="view-settings" class="view">
   <div class="section-title">Integration Settings</div>
@@ -3675,6 +3864,40 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     </div>
   </div>
 
+  <!-- GE SmartHQ -->
+  <div class="card" style="margin-top:12px">
+    <div class="card-header">
+      <span class="card-title">&#127968; GE SmartHQ Appliances</span>
+      <span class="badge" id="ge-cfg-badge">unconfigured</span>
+    </div>
+    <div style="color:var(--text-dim);font-size:11px;margin-bottom:12px">
+      Uses OAuth2 Authorization Code flow. Complete auth at <strong>developers.smarthq.com</strong>
+      to obtain a refresh token, then save it here or directly in <code>config.py</code>.<br>
+      Keys: <code>GE_CLIENT_ID</code>, <code>GE_CLIENT_SECRET</code>, <code>GE_REFRESH_TOKEN</code>.
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Client ID</div>
+        <input type="text" id="ge-client-id" placeholder="GE SmartHQ client_id"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+      </div>
+      <div>
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Client Secret</div>
+        <input type="password" id="ge-client-secret" placeholder="GE SmartHQ client_secret"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+      </div>
+      <div style="grid-column:1/-1">
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">Refresh Token</div>
+        <input type="password" id="ge-refresh-token" placeholder="refresh_token from OAuth2 Authorization Code flow"
+          style="width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--text);font-family:inherit;font-size:12px;outline:none">
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn primary" onclick="saveGE()">Save GE SmartHQ Credentials</button>
+      <span id="ge-save-status" style="font-size:11px;color:var(--text-dim)"></span>
+    </div>
+  </div>
+
 </div><!-- /settings -->
 
 
@@ -3682,7 +3905,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <div id="toast"></div>
 
 <script>
-const views = ['cockpit','solar','span','pool','devices','tesla-energy','cybertruck','cameras','home-control','sprinklers','settings'];
+const views = ['cockpit','solar','span','pool','devices','tesla-energy','cybertruck','cameras','home-control','sprinklers','appliances','settings'];
 function showView(v) {
   views.forEach(id => {
     document.getElementById('view-'+id).classList.toggle('active', id===v);
@@ -4237,6 +4460,13 @@ function renderState(s) {
     bhZones ? `${bhZones}<span> zones${bhRunning?' · '+bhRunning+' running':''}</span>` : '<span>—</span>',
     bh.last_seen);
 
+  // GE SmartHQ
+  const geApps = (ge.appliances||[]).length;
+  const geRunning = (ge.appliances||[]).filter(a=>a.state==='running').length;
+  dcUpdate('ge', ge.status,
+    geApps ? `${geApps}<span> appliance${geApps!==1?'s':''}${geRunning?' \xb7 '+geRunning+' running':''}</span>` : '<span>\u2014</span>',
+    ge.last_seen);
+
   // Wyze cameras — match by name fragment
   const cams = s.cameras||[];
   function camCard(cardSuffix, nameHint) {
@@ -4258,8 +4488,38 @@ function renderState(s) {
   camCard('up',    'upstairs');
   camCard('down',  'downstairs');
 
+  // MyQ Garage
+  const myq = s.myq||{};
+  const myqDoors = myq.doors||[];
+  dcUpdate('myq', myq.status,
+    myqDoors.length ? `${myqDoors.length}<span> door${myqDoors.length!==1?'s':''}</span>` : '<span>—</span>',
+    myq.last_seen);
+  const myqDoorsEl = document.getElementById('dc-myq-doors');
+  if (myqDoorsEl) {
+    if (myq.status === 'unconfigured') {
+      myqDoorsEl.innerHTML = '<div style="font-size:10px;color:var(--text-dim);margin-top:2px">Set MYQ_EMAIL + MYQ_PASSWORD env vars</div>';
+    } else {
+      myqDoorsEl.innerHTML = myqDoors.map(function(d, i) {
+        const st = (d.state||'unknown').toLowerCase();
+        const stCls = (st==='open'||st==='opening') ? 'error' : (st==='closed' ? 'online' : 'warning');
+        return '<div style="display:flex;align-items:center;gap:5px;margin-top:4px;flex-wrap:wrap">'
+          + '<span style="font-size:11px;font-weight:600;color:var(--text);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (d.name||'Door') + '</span>'
+          + '<span class="badge ' + stCls + '" style="font-size:9px;padding:2px 5px">' + st.toUpperCase() + '</span>'
+          + '<button class="btn" style="padding:3px 8px;font-size:11px" data-myq-idx="' + i + '" data-myq-action="open" title="Open door">\u25b2</button>'
+          + '<button class="btn" style="padding:3px 8px;font-size:11px" data-myq-idx="' + i + '" data-myq-action="close" title="Close door">\u25bc</button>'
+          + '</div>';
+      }).join('');
+      myqDoorsEl.querySelectorAll('[data-myq-action]').forEach(function(btn) {
+        var idx = parseInt(btn.getAttribute('data-myq-idx'), 10);
+        var action = btn.getAttribute('data-myq-action');
+        btn.onclick = function() { myqCmd(myqDoors[idx].serial, action); };
+      });
+    }
+  }
+
   // Online device count
-  const devStatuses = [sd.status, ed.status, td.status, wc.status, pd.status, nd.status, bh.status];
+  const ge = s.ge_appliances||{};
+  const devStatuses = [sd.status, ed.status, td.status, wc.status, pd.status, nd.status, bh.status, myq.status, ge.status];
   const onlineCount = devStatuses.filter(x=>x==='online'||x==='partial'||x==='no_token').length
     + cams.filter(c=>c.status==='online').length;
   const totalCount  = devStatuses.length + 3; // +3 wyze cams
@@ -4395,6 +4655,9 @@ function renderState(s) {
   // ── B-Hyve Sprinklers ──
   renderBhyve(s.bhyve || {});
 
+  // ── GE SmartHQ Appliances ──
+  renderAppliances(s.ge_appliances || {});
+
   // ── Settings badges ──
   const settingsTeslaBadge = document.getElementById('settings-tesla-badge');
   if (settingsTeslaBadge) { settingsTeslaBadge.textContent = td.status||'—'; settingsTeslaBadge.className = 'badge ' + statusColor(td.status); }
@@ -4403,6 +4666,8 @@ function renderState(s) {
   const ringBadge = document.getElementById('ring-cfg-badge');
   if (ringBadge) { const ringCfg = (s.cameras||[]).some(c=>c.type==='ring'); ringBadge.textContent = ringCfg ? 'connected' : 'unconfigured'; ringBadge.className = 'badge ' + (ringCfg ? 'online' : 'offline'); }
   // bhyve badge in settings is handled by renderBhyve() above
+  const geCfgBadge = document.getElementById('ge-cfg-badge');
+  if (geCfgBadge) { geCfgBadge.textContent = ge.status||'unconfigured'; geCfgBadge.className = 'badge ' + statusColor(ge.status||'unconfigured'); }
 
   // ── Tablet dashboard modes ──
   try { updateMicrogrid(s); } catch(e) { console.warn('Microgrid update error:', e); }
@@ -5163,6 +5428,84 @@ function renderBhyve(bhyve) {
   });
 }
 
+// ══ GE SmartHQ Appliances ══════════════════════════════════════════════════════
+const GE_STATE_LABELS = {
+  'idle': 'Idle', 'running': 'Running', 'paused': 'Paused',
+  'end of cycle': 'End of Cycle', 'delay start': 'Delay Start',
+  'disconnected': 'Disconnected', 'standby': 'Standby',
+  'downloading': 'Downloading', 'remote start': 'Remote Start',
+};
+const GE_STATE_COLORS = {
+  'running': 'var(--online)', 'end of cycle': 'var(--warning)',
+  'paused': 'var(--warning)', 'delay start': 'var(--warning)',
+  'idle': 'var(--text-dim)', 'standby': 'var(--text-dim)',
+  'disconnected': 'var(--offline)', 'downloading': 'var(--solar)',
+};
+
+function renderAppliances(ge) {
+  if (!ge) return;
+  const status = ge.status || 'unconfigured';
+  const appliances = ge.appliances || [];
+
+  // Update header card
+  const badge = document.getElementById('ge-badge');
+  if (badge) { badge.textContent = status; badge.className = 'badge ' + statusColor(status); }
+
+  const uncfgMsg  = document.getElementById('ge-unconfigured-msg');
+  const errMsg    = document.getElementById('ge-error-msg');
+  const statusLine = document.getElementById('ge-status-line');
+  if (uncfgMsg)  uncfgMsg.style.display  = status === 'unconfigured' ? '' : 'none';
+  if (errMsg)    errMsg.style.display    = status === 'error' ? '' : 'none';
+  if (statusLine) statusLine.style.display = (status === 'online') ? '' : 'none';
+
+  // Count badge
+  const countEl = document.getElementById('ge-online-count');
+  if (countEl && status === 'online') {
+    const running = appliances.filter(a => a.state === 'running').length;
+    countEl.textContent = `${appliances.length} appliance${appliances.length !== 1 ? 's' : ''}${running ? ' \xb7 ' + running + ' running' : ''}`;
+  } else if (countEl) {
+    countEl.textContent = '';
+  }
+
+  // Appliance grid
+  const grid = document.getElementById('ge-appliance-grid');
+  if (!grid) return;
+
+  if (!appliances.length) {
+    if (status === 'online') {
+      grid.innerHTML = '<div style="color:var(--text-dim);font-size:13px;grid-column:1/-1">No appliances found on this account.</div>';
+    } else {
+      grid.innerHTML = '';
+    }
+    return;
+  }
+
+  grid.innerHTML = appliances.map(a => {
+    const stLabel = GE_STATE_LABELS[a.state] || a.state || 'Unknown';
+    const stColor = GE_STATE_COLORS[a.state] || 'var(--text-dim)';
+    const isRunning = a.state === 'running';
+    const dotCls = isRunning ? 'online' : (a.state === 'disconnected' ? 'offline' : 'dim');
+
+    let extras = '';
+    if (a.cycle) extras += `<div style="font-size:11px;color:var(--text-dim);margin-top:4px">Cycle: ${a.cycle}</div>`;
+    if (a.door)  extras += `<div style="font-size:11px;color:var(--text-dim);margin-top:2px">Door: ${a.door}</div>`;
+    if (a.model) extras += `<div style="font-size:10px;color:var(--text-dim);margin-top:4px;opacity:.6">${a.brand} ${a.model}</div>`;
+
+    return `<div class="card" style="padding:14px;position:relative;border-color:${isRunning ? 'var(--online)' : 'var(--border)'}">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+    <span style="font-size:24px;line-height:1">${a.icon || '&#127968;'}</span>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${a.name}</div>
+      <div style="font-size:11px;color:var(--text-dim)">${a.type || 'Appliance'}</div>
+    </div>
+    <div class="dev-sdot ${dotCls}" style="flex-shrink:0"></div>
+  </div>
+  <div style="font-size:14px;font-weight:700;color:${stColor}">${stLabel}</div>
+  ${extras}
+</div>`;
+  }).join('');
+}
+
 // ══ Settings save functions ════════════════════════════════════════════════════
 function saveWyze() {
   const body = {
@@ -5219,6 +5562,21 @@ function saveBhyve() {
       statusEl.style.color = d.ok ? 'var(--online)' : 'var(--error)';
       if (d.ok) toast('✓ B-Hyve credentials saved');
     }).catch(e => { statusEl.textContent = '✗ ' + e; statusEl.style.color = 'var(--error)'; });
+}
+
+function saveGE() {
+  const clientId     = document.getElementById('ge-client-id').value.trim();
+  const clientSecret = document.getElementById('ge-client-secret').value.trim();
+  const refreshToken = document.getElementById('ge-refresh-token').value.trim();
+  const statusEl = document.getElementById('ge-save-status');
+  statusEl.textContent = 'Saving\u2026';
+  fetch('/api/settings/ge', {method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({client_id:clientId,client_secret:clientSecret,refresh_token:refreshToken})})
+    .then(r=>r.json()).then(d => {
+      statusEl.textContent = d.ok ? '\u2713 Saved' : ('\u2717 ' + (d.error||'Error'));
+      statusEl.style.color = d.ok ? 'var(--online)' : 'var(--error)';
+      if (d.ok) toast('\u2713 GE SmartHQ credentials saved');
+    }).catch(e => { statusEl.textContent = '\u2717 ' + e; statusEl.style.color = 'var(--error)'; });
 }
 
 function saveTeslaPasswordFromSettings() {
@@ -5802,6 +6160,12 @@ function shedCircuit(type) {
   if(type==='ac2')  target=circuits.find(c=>{const n=(c.name||'').toLowerCase();return n.includes('ac')&&(n.includes('2')||n.includes('cond'));});
   if(target) shedSpanCircuit(target.id);
   else toast('Circuit not found in SPAN data');
+}
+function myqCmd(serial, action) {
+  fetch('/api/myq/door/'+encodeURIComponent(serial)+'/'+action, {method:'POST'})
+    .then(r=>r.json())
+    .then(d=>toast(d.ok ? ('🚗 Garage ' + action + ' sent') : ('✗ MyQ: ' + (d.error||'Error'))))
+    .catch(e=>toast('✗ MyQ: ' + e));
 }
 
 // Swipe gesture support for cockpit sub-view switching

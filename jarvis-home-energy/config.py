@@ -79,7 +79,7 @@ TESLA_ENERGY_SITE_ID = 2252397277512276  # "My Home" energy site (Gateway 3, no 
 # ─── GE SmartHQ Appliances ────────────────────────────────────────────────────
 # Register at https://developers.smarthq.com to obtain client credentials.
 # Use OAuth2 Resource Owner Password Credentials grant (client_id + username/password).
-GE_CLIENT_ID = ""         # SmartHQ developer app client ID
-GE_CLIENT_SECRET = ""     # SmartHQ developer app client secret
-GE_USERNAME = ""          # GE/SmartHQ account email
-GE_PASSWORD = ""          # GE/SmartHQ account password
+GE_CLIENT_ID = "1uBdIDY5Km1pbHIbQIl27mdIZJdxGG3M7W2K77D7FwMOyA0n"
+GE_CLIENT_SECRET = "n2roZALTuHPPeyXXWGxBDGsDeNplweaYq6hc320C7PQ6AJRm4bWgIbxkozktuzTg"
+GE_REFRESH_TOKEN = "uw2e5ireefyo9vjwh8tkrejct5as71ua"  # obtained 2026-02-26
+GE_REDIRECT_URI = "http://127.0.0.1:8484/callback"

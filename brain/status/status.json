@@ -1,31 +1,22 @@
 {
-  "lastUpdated": "2026-02-26T00:30:00-07:00",
+  "updated": "2026-02-26T00:48:00-07:00",
   "activeTasks": [
     {
-      "id": "c_99e25b714a3e1_19c987cb819",
-      "title": "Numerai: Get all 3 models into payout zone (TC > 0)",
-      "status": "In Progress",
-      "project": "/home/rob/.openclaw/workspace/numerai-tournament",
-      "assignee": "claude",
-      "minutesSinceUpdate": 0
-    },
-    {
       "id": "c_5a52658c795f8_19c98bebc64",
-      "title": "NQ: Rehabilitate equal_tops_bottoms — ML feature research",
+      "title": "NQ: Rehabilitate equal_tops_bottoms — ML feature research, best entry conditions, add to God Model",
       "status": "In Progress",
-      "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
       "assignee": "claude",
-      "minutesSinceUpdate": 0
+      "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
+      "pid": 291807,
+      "restarted": "2026-02-26T00:48:00-07:00",
+      "reason": "Stale recovery (was stuck 49 min)"
     }
   ],
   "health": {
-    "cpuTemp": "82°C",
-    "disk": "38% (167G/468G)",
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active"
-    },
-    "criticalAlerts": "none"
+    "cpu_temp": "83°C",
+    "disk_used": "38%",
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active"
   }
 }

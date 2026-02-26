@@ -1,22 +1,16 @@
 {
-  "updated": "2026-02-26T00:48:00-07:00",
-  "activeTasks": [
-    {
-      "id": "c_5a52658c795f8_19c98bebc64",
-      "title": "NQ: Rehabilitate equal_tops_bottoms — ML feature research, best entry conditions, add to God Model",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project": "/home/rob/.openclaw/workspace/ninja_trader_strategies",
-      "pid": 291807,
-      "restarted": "2026-02-26T00:48:00-07:00",
-      "reason": "Stale recovery (was stuck 49 min)"
-    }
-  ],
+  "timestamp": "2026-02-26T01:18:00-07:00",
+  "activeTasks": [],
   "health": {
-    "cpu_temp": "83°C",
-    "disk_used": "38%",
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active"
-  }
+    "cpu_temp": "79.0°C",
+    "disk_usage": "38%",
+    "services_active": 3,
+    "alert_monitor": "clean"
+  },
+  "board": {
+    "in_progress": 0,
+    "planned": 0,
+    "total": 0
+  },
+  "status": "idle"
 }

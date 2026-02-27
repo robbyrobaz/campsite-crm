@@ -103,8 +103,8 @@ curl -s -X PATCH "http://127.0.0.1:8787/api/cards/<id>" \
 
 ## PHASE 6 — DISPATCH (max 1 In Progress at a time)
 
-- If 0 cards currently In Progress: pick the top Planned card (lowest id = oldest), run it
-- If 1+ already In Progress: **skip** — do not stack builders
+- If < 3 cards currently In Progress: pick the top Planned card (lowest id = oldest), run it
+- If 3+ already In Progress: **skip** — max 3 concurrent builders
 - Before running, confirm the card has assignee + project_path + non-vague description (Phase 5 must complete first)
 
 ```bash
@@ -166,7 +166,7 @@ Rewrite `brain/status/status.json` with current reality:
 
 ## HARD RULES
 - **NEVER block on long work** — dispatch and move on
-- **NEVER stack builders** — max 1 In Progress at a time
+- **Max 3 concurrent builders** — if 3+ In Progress, skip dispatch this cycle
 - **NEVER run a card without verifying assignee + project_path + real description**
 - **NEVER assume a card is deployed** — verify services are restarted and alive
 - **NEVER enable NQ live trading** — DRY_RUN only, no TradersPost webhooks, no prop firm eval activation

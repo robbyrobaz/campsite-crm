@@ -1,28 +1,13 @@
 {
   "activeTasks": [
     {
-      "id": "c_fbec230004bf6_19c9f3346fa",
-      "title": "[NQ] Register equal_tops_bottoms in God Model live dispatcher",
+      "id": "c_e5cdb0c3cc294_19c9f338375",
+      "title": "[NQ] Investigate gap_fill bleeding live — 14% WR, -$2565 in 7d",
       "status": "In Progress",
-      "pid": 3141291,
+      "pid": 3190576,
       "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
     }
   ],
-  "queuedTasks": [
-    {
-      "id": "c_e5cdb0c3cc294_19c9f338375",
-      "title": "[NQ] Investigate gap_fill bleeding live — 14% WR, -$2565 in 7d"
-    },
-    {
-      "id": "c_a3a59b7b080f2_19c9f33cd7e",
-      "title": "[Blofin] Diagnose T2 strategies with no forward test data"
-    }
-  ],
-  "lastDispatch": "2026-02-27T13:13:00.000Z",
-  "lastHealthCheck": "2026-02-27T13:13:00.000Z",
-  "health": {
-    "cpu_temp": "61°C",
-    "disk_used": "40%",
-    "services": "all active"
-  }
+  "lastDispatch": "2026-02-27T06:43:00-07:00",
+  "lastHealthCheck": "2026-02-27T06:43:00-07:00"
 }

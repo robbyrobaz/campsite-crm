@@ -1,13 +1,13 @@
 {
   "activeTasks": [
     {
-      "id": "c_5d5bd55860259_19ca0e82c6c",
-      "title": "[NQ] Register equal_tops_bottoms in live God Model dispatcher",
-      "status": "In Progress",
-      "pid": 3926088,
-      "project": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
+      "id": "c_5c9679dc29083_19ca10ca473",
+      "title": "NQ: Research God Model multi-signal conflict + add Forward Test section to champion card",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "assignee": "claude",
+      "status": "In Progress"
     }
   ],
-  "lastDispatch": "2026-02-27T21:14:00Z",
-  "lastHealthCheck": "2026-02-27T21:13:00Z"
+  "lastDispatch": "2026-02-27T21:45:00Z",
+  "lastHealthCheck": "2026-02-27T21:45:00Z"
 }

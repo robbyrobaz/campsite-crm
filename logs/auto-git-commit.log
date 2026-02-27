@@ -3193,3 +3193,22 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 2 committed, 7 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+[main 3d25636] auto: snapshot 2026-02-27T10:00:01Z
+ 3 files changed, 39 insertions(+), 1 deletion(-)
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main 226f9bc7] auto: snapshot 2026-02-27T10:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 2 committed, 7 skipped
+CLEAN master-dashboard (nothing to commit)
+[main 20e0607] auto: snapshot 2026-02-27T11:00:01Z
+ 4 files changed, 189 insertions(+), 1 deletion(-)
+ create mode 100644 models/entry_classifier_SOL-USDT/entry_classifier.pkl
+ create mode 100644 models/entry_classifier_SOL-USDT/entry_classifier_meta.json
+ create mode 100644 models/entry_classifier_SOL-USDT/entry_classifier_scaler.pkl
+COMMITTED blofin-stack

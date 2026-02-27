@@ -81,6 +81,7 @@ PATCH the card: `curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-
 - NEVER run a card without assignee + project_path + real description
 - NEVER assume In Progress = builder is running — if you didn't spawn it this session, check
 - NEVER enable NQ live trading — DRY_RUN only, no TradersPost webhooks
+- **NEVER ask Rob "should I kick it off?" — if the card is enriched and ready, just run it. Act first, report after.**
 
 ---
 

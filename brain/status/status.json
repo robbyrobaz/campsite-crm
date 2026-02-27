@@ -1,22 +1,27 @@
 {
-  "timestamp": "2026-02-26T22:43:00-07:00",
-  "pulse_cycle": "36f47279-520f-4ce7-8f9c-a7c44be0771a",
-  "health": {
-    "cpu_temp_c": 54.0,
-    "disk_usage_pct": 40,
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active"
+  "activeTasks": [
+    {
+      "id": "c_bc50ac8e3d637_19c9c2a10d4",
+      "title": "NQ: Forward test validation — confirm signals firing correctly on all sessions",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
     },
-    "critical_alerts": false
-  },
-  "kanban": {
-    "inProgress": 0,
-    "planned": 0,
-    "totalActive": 0
-  },
-  "activeTasks": [],
-  "nextAction": "waiting for dispatch",
-  "status": "idle"
+    {
+      "id": "c_f392b29f89e66_19c9dae3cb8",
+      "title": "make sure bars.csv is working well with new candles, and regular checks for correct data, no gaps, etc",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
+    },
+    {
+      "id": "c_8ce17afeea053_19c9dba12d2",
+      "title": "reorganize \"⚡ Live Agent Work\" on the master status dashboard",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/master-dashboard"
+    }
+  ],
+  "lastDispatch": "2026-02-27T06:13:00Z",
+  "lastHealthCheck": "2026-02-27T06:13:00Z"
 }

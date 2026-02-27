@@ -76,7 +76,9 @@ Autonomous crypto strategy research and paper trading engine targeting consisten
 - **Global ML models** — trained on all coins combined. NEVER per-coin models.
 - **Per-coin eligibility** — `strategy_coin_eligibility` table tracks which coin+strategy pairs respond well to global models. Only winning pairs trade. This is the correct approach.
 - **3-tier lifecycle:** T0 (library/backtest) → T1 (backtested, monitoring) → T2 (forward test / paper trading) → T3 (live, future)
-- **EEP scoring** (not just win rate): Entry 60% (PF 30%, Sharpe 25%, Max DD 20%, Sortino 15%) + Exit 40%
+- **Ranking:** Strategies ranked by `bt_pnl_pct` (compounded PnL %). Top N by PnL that pass all gates get promoted. No EEP scoring — that was removed.
+- **Promotion gates (T0→T1):** min 100 trades, PF ≥ 1.35, max drawdown < 50%, PnL > 0
+- **Demotion gates (T2 FT):** after 20 FT trades — PF < 1.1 or MDD > 50% triggers demotion. Early crash-stop: PF < 0.5 with ≥5 FT trades = immediate demotion.
 - **Pipeline runs every 4h** via `orchestration/run_pipeline.py`
 
 **Current state:**
@@ -119,7 +121,7 @@ Autonomous crypto strategy research and paper trading engine targeting consisten
 - Retrain ML models for the top FT performer using latest tick data
 - Expand the top FT pair (vwap_volatility_rebound) to additional coin pairings
 - Analyze slippage patterns in paper trades — are SL/TP targets realistic?
-- Improve EEP scoring for strategies stuck between T1/T2
+- Improve bt_pnl_pct or sharpe for strategies stuck between T1/T2 via config tuning or feature work
 - Add new features to the feature library for a specific market regime
 
 **What bad Blofin cards look like (do not create):**

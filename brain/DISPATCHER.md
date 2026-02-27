@@ -61,7 +61,7 @@ Read the card title and description. Match to the correct project:
 | Keywords | project_path |
 |----------|-------------|
 | NQ, futures, momentum, orb, gap_fill, vwap_fade, God Model, smb_watcher, forward test, strategy_registry (NQ), ETB, psych_levels | `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE` |
-| Blofin, crypto, coin, paper trade, strategy_registry (Blofin), T1/T2/T0, ML pipeline, backtester, EEP | `/home/rob/.openclaw/workspace/blofin-stack` |
+| Blofin, crypto, coin, paper trade, strategy_registry (Blofin), T1/T2/T0, ML pipeline, backtester, pnl_rank, bt_pnl_pct | `/home/rob/.openclaw/workspace/blofin-stack` |
 | Jarvis home, energy, Nest, SPAN, Tesla, Wyze, Ring, camera, GE appliance, washer | `/home/rob/.openclaw/workspace/jarvis-home-energy` |
 | Master dashboard, usage dashboard | `/home/rob/.openclaw/workspace/master-dashboard` |
 | Numerai, tournament, era-boost | `/home/rob/.openclaw/workspace/numerai-tournament` |

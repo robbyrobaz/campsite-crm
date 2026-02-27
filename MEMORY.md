@@ -20,7 +20,7 @@
 - Feature library: 95+ technical indicators
 - Backtester: 7-day historical replay, multi-timeframe
 - ML pipeline: 5 models (direction, risk, price, momentum, volatility)
-- EEP scoring: Entry (60%) + Exit (40%) composite. Hard gates: PF≥1.3, Sharpe≥0.8, MDD≤35%, Trades≥30
+- Ranking: strategies ranked by `bt_pnl_pct` (compounded PnL %). Promotion gates: min 100 trades, PF≥1.35, MDD<50%, PnL>0. FT demotion: PF<1.1 or MDD>50% after 20 FT trades. EEP scoring was removed.
 - Paper trading reality gap: slippage 0.052%/side (2.6x worse than assumed), fill rate 67%, stops too tight (47% hit then reversed)
 
 ### Numerai

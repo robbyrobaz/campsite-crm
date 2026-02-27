@@ -1,23 +1,19 @@
 {
-  "timestamp": "2026-02-26T17:38:00-07:00",
-  "cycle": "Heartbeat 5:38 PM",
-  "health": {
-    "cpu_temp_c": 66,
-    "disk_used_pct": 40,
-    "services": "all active"
-  },
-  "activeTasks": [],
-  "recentlyCompleted": [
-    "NQ: repo migrated to NQ-Trading-PIPELINE (all services updated)",
-    "NQ: timezone contamination fixed (35K rows corrected)",
-    "NQ: forward test locked to smb_live_forward_test only",
-    "NQ: Telegram/ntfy alerts wired into smb_watcher",
-    "NQ: session coverage audit — all 8 models confirmed 24/7",
-    "NQ: ETB added to tournament (PF 3.02, beats champion)",
-    "NQ: forward test trades table added to dashboard",
-    "Jarvis Home: active appliance banner (washer running, 50 min)"
+  "lastRun": "2026-02-26T17:43:00Z",
+  "activeTasks": [
+    {
+      "id": "c_38a72201135a1_19c9c2a10aa",
+      "title": "NQ: Add Telegram alerts for key pipeline events",
+      "status": "In Progress",
+      "startedAt": "2026-02-26T17:43:00Z",
+      "assignee": "sonnet"
+    }
   ],
-  "warnings": [
-    "7-day Sonnet at 97% — resets Mar 1 4PM MST. Not at 99% yet, no action needed."
-  ]
+  "plannedCount": 0,
+  "health": {
+    "cpu": "57°C",
+    "disk": "40%",
+    "services": "all active",
+    "alerts": "none"
+  }
 }

@@ -133,14 +133,37 @@ Autonomous crypto strategy research and paper trading engine targeting consisten
 
 ---
 
-## STEP 1 — GATE CHECK
+## STEP 1 — GATE CHECK + DEDUP
 ```bash
 IN_PROGRESS=$(curl -s "http://127.0.0.1:8787/api/cards?status=In%20Progress" | python3 -c "import sys,json; print(len(json.load(sys.stdin)['cards']))")
 echo "In Progress: $IN_PROGRESS"
 ```
 **If IN_PROGRESS >= 6: print "GATE: $IN_PROGRESS builders already running, skipping" and STOP.**
 
-Note: We only gate on In Progress — cards launch immediately on creation, so Planned should always be near zero.
+Also fetch recent Done cards and In Progress titles to avoid duplicates:
+```bash
+python3 << 'EOF'
+import json, subprocess, time
+
+def get_titles(status):
+    r = subprocess.check_output(f'curl -s "http://127.0.0.1:8787/api/cards?status={status}"', shell=True)
+    cards = json.loads(r).get('cards', [])
+    return [c['title'].lower() for c in cards]
+
+in_progress = get_titles('In%20Progress')
+# Done cards from last 4 hours only
+done_raw = json.loads(subprocess.check_output('curl -s "http://127.0.0.1:8787/api/cards?status=Done"', shell=True))
+cutoff = (time.time() - 4*3600) * 1000
+recent_done = [c['title'].lower() for c in done_raw.get('cards',[]) if c.get('updated_at',0) > cutoff]
+
+skip_titles = in_progress + recent_done
+print(json.dumps(skip_titles))
+EOF
+```
+
+**Before creating any card: check if a card with a similar title (key strategy/topic words) is already In Progress or Done in the last 4 hours. If yes, skip it and pick a different task.**
+
+Note: We only gate on In Progress count — cards launch immediately on creation, so Planned should always be near zero.
 
 ---
 

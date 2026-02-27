@@ -1,5 +1,13 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-02-27T07:43:00-07:00",
-  "lastHealthCheck": "2026-02-27T07:43:00-07:00"
+  "activeTasks": [
+    {
+      "id": "c_a5f89596d277a_19c9f9f2619",
+      "title": "[NQ] Investigate gap_fill 14% live WR vs 62% backtest — find root cause and fix",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "pid": 3386381,
+      "dispatched_at": "2026-02-27T08:43:00-07:00"
+    }
+  ],
+  "lastDispatch": "2026-02-27T08:43:00-07:00",
+  "lastHealthCheck": "2026-02-27T08:43:00-07:00"
 }

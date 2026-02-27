@@ -1,6 +1,7 @@
 # Auto Card Generator — Cron Prompt Instructions
 
-> Runs hourly at :00. Model: Sonnet. Creates 2 NQ + 1 Blofin card in Planned.
+> Runs hourly at :00. Model: Sonnet. Creates 2 NQ + 1 Blofin card and **launches them immediately**.
+> Cards do NOT sit in Planned waiting for the dispatcher. Create → enrich → run, all in one step.
 > This file is the complete operating context. Read it fully before generating cards.
 
 ---
@@ -134,12 +135,12 @@ Autonomous crypto strategy research and paper trading engine targeting consisten
 
 ## STEP 1 — GATE CHECK
 ```bash
-PLANNED=$(curl -s "http://127.0.0.1:8787/api/cards?status=Planned" | python3 -c "import sys,json; print(len(json.load(sys.stdin)['cards']))")
 IN_PROGRESS=$(curl -s "http://127.0.0.1:8787/api/cards?status=In%20Progress" | python3 -c "import sys,json; print(len(json.load(sys.stdin)['cards']))")
-TOTAL=$((PLANNED + IN_PROGRESS))
-echo "Queue: $PLANNED planned + $IN_PROGRESS in-progress = $TOTAL total"
+echo "In Progress: $IN_PROGRESS"
 ```
-**If TOTAL >= 6: print "GATE: queue has $TOTAL cards, skipping" and STOP.**
+**If IN_PROGRESS >= 6: print "GATE: $IN_PROGRESS builders already running, skipping" and STOP.**
+
+Note: We only gate on In Progress — cards launch immediately on creation, so Planned should always be near zero.
 
 ---
 
@@ -221,9 +222,9 @@ Use the pipeline plans above as your compass. Pick work that moves the pipelines
 
 ---
 
-## STEP 5 — CREATE CARDS
+## STEP 5 — CREATE AND LAUNCH CARDS
 
-Create **2 NQ cards + 1 Blofin card** in **Planned** (not Inbox):
+Create **2 NQ cards + 1 Blofin card** and launch them immediately — no waiting in Planned.
 
 ```bash
 # Step A: Create in inbox to get ID
@@ -232,14 +233,16 @@ CARD=$(curl -s -X POST http://127.0.0.1:8787/api/inbox \
   -d '{"text":"TITLE","source":"auto-generator","project_path":"PROJECT_PATH"}')
 CARD_ID=$(echo "$CARD" | python3 -c "import sys,json; print(json.load(sys.stdin)['card']['id'])")
 
-# Step B: Enrich and move to Planned
+# Step B: Enrich with full description and assignee
 curl -s -X PATCH "http://127.0.0.1:8787/api/cards/$CARD_ID" \
   -H "content-type: application/json" \
   -d '{
-    "status": "Planned",
     "assignee": "claude",
     "description": "FULL DESCRIPTION with file paths, DB queries for context, what to build, success criteria, deploy steps, constraints"
   }'
+
+# Step C: Launch immediately — no sitting in Planned
+curl -s -X POST "http://127.0.0.1:8787/api/cards/$CARD_ID/run"
 ```
 
 **Description must include:**
@@ -260,17 +263,17 @@ curl -s -X PATCH "http://127.0.0.1:8787/api/cards/$CARD_ID" \
 ## STEP 6 — SUMMARY
 Print:
 ```
-AUTO-GENERATOR: Created 3 cards
-- [NQ] <title>
-- [NQ] <title>
-- [Blofin] <title>
+AUTO-GENERATOR: Launched 3 builders
+- [NQ] <title> (pid: <pid>)
+- [NQ] <title> (pid: <pid>)
+- [Blofin] <title> (pid: <pid>)
 ```
 
 ---
 
 ## ABSOLUTE RULES
-- Gate: Planned + In Progress >= 2 → skip, do nothing
-- Cards go to Planned (not Inbox) — dispatcher picks up within 30min
+- Gate: In Progress >= 6 → skip, do nothing (don't flood the board)
+- Cards launch immediately via `/run` — do NOT leave them sitting in Planned waiting for dispatcher
 - assignee = always "claude"
 - NEVER enable live trading, fire TradersPost webhooks, or activate prop firm evals
 - NEVER suggest per-coin ML models for Blofin

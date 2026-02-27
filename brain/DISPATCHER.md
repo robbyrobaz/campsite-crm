@@ -101,10 +101,11 @@ curl -s -X PATCH "http://127.0.0.1:8787/api/cards/<id>" \
 
 ---
 
-## PHASE 6 — DISPATCH (max 1 In Progress at a time)
+## PHASE 6 — DISPATCH
 
-- If < 3 cards currently In Progress: pick the top Planned card (lowest id = oldest), run it
+- If < 3 cards currently In Progress: run ALL remaining Planned cards (up to the 3-builder cap)
 - If 3+ already In Progress: **skip** — max 3 concurrent builders
+- Do NOT leave cards sitting in Planned if slots are available — dispatch immediately
 - Before running, confirm the card has assignee + project_path + non-vague description (Phase 5 must complete first)
 
 ```bash

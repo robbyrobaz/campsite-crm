@@ -1,13 +1,26 @@
 {
   "activeTasks": [
     {
-      "id": "c_a5f89596d277a_19c9f9f2619",
-      "title": "[NQ] Investigate gap_fill 14% live WR vs 62% backtest — find root cause and fix",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "pid": 3386381,
-      "dispatched_at": "2026-02-27T08:43:00-07:00"
+      "id": "c_1e33f330fc0c1_19c9f9f6f3d",
+      "title": "[Blofin] Diagnose why T2 strategies have ft_profit_factor=None despite paper trades",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
+      "pid": 3435812,
+      "dispatched_at": "2026-02-27T09:13:00-07:00"
     }
   ],
-  "lastDispatch": "2026-02-27T08:43:00-07:00",
-  "lastHealthCheck": "2026-02-27T08:43:00-07:00"
+  "plannedQueue": [
+    {
+      "id": "c_13311bac2892b_19c9fd5cc39",
+      "title": "[NQ] Register equal_tops_bottoms in god_model_dispatcher for live signals"
+    },
+    {
+      "id": "c_9f5d6c14f4c93_19c9fd6601c",
+      "title": "[NQ] Investigate gap_fill and vwap_fade bleeding — diagnose low WR vs backtest"
+    }
+  ],
+  "deploymentIssues": [
+    "equal_tops_bottoms NOT found in god_model_dispatcher.py — Done card was premature. Re-queued as Planned."
+  ],
+  "lastDispatch": "2026-02-27T09:13:00-07:00",
+  "lastHealthCheck": "2026-02-27T09:13:00-07:00"
 }

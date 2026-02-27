@@ -117,7 +117,7 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 
 ## Auto Card Generator (runs hourly at :00):
 - Reads pipeline state (NQ + Blofin) from live DBs and logs
-- Gates on Planned + In Progress >= 2 (skips if queue already has work)
-- Creates 2 NQ cards + 1 Blofin card in **Planned** status
+- Gates on In Progress >= 6 (skips if board is already saturated)
+- Creates 2 NQ cards + 1 Blofin card and **launches them immediately** — no waiting in Planned
 - Instructions in: brain/AUTO_CARD_GENERATOR.md
-- Dispatcher picks up cards within 30min automatically
+- Planned should always be near zero — if you see cards stuck there, something went wrong

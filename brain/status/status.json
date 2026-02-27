@@ -1,19 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_e6c5ddbb6e648_19ca044ef11",
-      "title": "[Blofin] Expand cross_asset_correlation to more coin pairs",
-      "project": "blofin-stack",
-      "startedAt": "2026-02-27T11:03:00-07:00"
-    },
-    {
-      "id": "c_78e6468b72f23_19ca044ee31",
-      "title": "[NQ] Investigate ORB — only 1 live signal in 7 days despite PF 2.92 backtest",
-      "project": "NQ-Trading-PIPELINE",
-      "startedAt": "2026-02-27T11:03:00-07:00"
-    }
-  ],
-  "lastDispatch": "2026-02-27T11:13:00-07:00",
-  "lastHealthCheck": "2026-02-27T11:13:00-07:00",
-  "notes": "Fixed NQ dashboard 500 error (None pnl_usd from open psych_levels trade — Jinja2 selectattr None comparison). Services all active. CPU 94C (within limits)."
+  "activeTasks": [],
+  "lastDispatch": "2026-02-27T11:43:00-07:00",
+  "lastHealthCheck": "2026-02-27T11:43:00-07:00",
+  "notes": "Board clear. All services active. 3 recent Done cards verified deployed (Blofin cross_asset_correlation, NQ ORB investigation, NQ vol_contraction fix). CPU 54°C, disk 41%."
 }

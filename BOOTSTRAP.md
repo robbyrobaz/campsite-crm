@@ -6,8 +6,9 @@
 1. `brain/CHECKLIST.md` — operating rules (read every session, non-negotiable)
 2. `brain/PROJECTS.md` — current project board (what's active, what's next)
 3. `brain/status/status.json` — what's happening right now
-4. **`memory/YYYY-MM-DD.md` (today + yesterday)** — NON-OPTIONAL. This is where session decisions, cron changes, doc audits, and architecture corrections live before they get distilled into MEMORY.md. Skipping this = repeating mistakes Rob already corrected.
-5. **`brain/DISPATCHER.md`** — NON-OPTIONAL. Rob will ask you to dispatch work. You must know the 8-phase protocol: health check → enrich vague cards (add file paths, context, success criteria, deploy steps) → dispatch → verify deployment. Skipping enrichment sends a useless prompt to the builder.
+
+> **Daily memory** is captured in the "Recent Changes" section below — no separate file read needed.
+> **Dispatcher protocol** is inlined below — no separate DISPATCHER.md read needed.
 
 If you skip these and get corrected, that's the most expensive thing that happens.
 
@@ -30,6 +31,56 @@ If you skip these and get corrected, that's the most expensive thing that happen
 - **Jarvis Home** — port 8793, Nest/SPAN/Tesla/Wyze/GE live. Washer GE state stale (investigate). Ring blocked on 2FA.
 - **Numerai** — 3 models submitting daily. Not primary focus.
 - **Master Dashboard** — port 8890, usage panels live.
+
+---
+
+## Dispatcher Protocol (INLINE — no separate file read needed)
+
+Rob will ask you to dispatch work in any session. Know this cold.
+
+**8 phases (run in order):**
+
+**Phase 1 — Health check:** services alive? (gateway, blofin-ingestor, blofin-paper, nq-smb-watcher, nq-dashboard)
+
+**Phase 2 — Critical alert check:** `cd blofin-stack && .venv/bin/python critical_alert_monitor.py` — if exit 1, ntfy Rob immediately
+
+**Phase 3 — Fetch board state:**
+```bash
+curl -s "http://127.0.0.1:8787/api/cards?status=In%20Progress"
+curl -s "http://127.0.0.1:8787/api/cards?status=Planned"
+```
+
+**Phase 4 — Stale recovery:** any In Progress card untouched >30 min → PATCH back to Planned for redispatch
+
+**Phase 5 — ENRICH PLANNED CARDS (do not skip):**
+A card is ready when it has: `assignee=claude`, `project_path` set, and a description specific enough to execute.
+If any are missing or vague — **enrich before running.**
+
+Enrichment must include: what to do, exact file paths, context from DB/logs, success criteria, deploy steps, hard constraints.
+
+Project path matching:
+| Keywords | project_path |
+|----------|-------------|
+| NQ, futures, momentum, orb, gap_fill, vwap_fade, God Model, ETB, psych_levels | `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE` |
+| Blofin, crypto, coin, paper trade, T1/T2/T0, ML pipeline, backtester, bt_pnl_pct | `/home/rob/.openclaw/workspace/blofin-stack` |
+| Jarvis home, energy, Nest, SPAN, Tesla, Wyze, Ring, GE appliance | `/home/rob/.openclaw/workspace/jarvis-home-energy` |
+| Master dashboard, usage dashboard | `/home/rob/.openclaw/workspace/master-dashboard` |
+| Numerai, tournament, era-boost | `/home/rob/.openclaw/workspace/numerai-tournament` |
+| Kanban, claw-kanban | `/home/rob/.openclaw/workspace/kanban-dashboard` |
+
+PATCH the card: `curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-type: application/json' -d '{"assignee":"claude","project_path":"...","description":"..."}'`
+
+**Phase 6 — Dispatch:** if < 3 In Progress → run oldest Planned card: `curl -X POST http://127.0.0.1:8787/api/cards/<id>/run` — verify `"ok":true` + pid
+
+**Phase 7 — Deployment verification:** for Done cards completed in last 60 min — verify service is actually restarted and alive. If not, restart it.
+
+**Phase 8 — Update status.json** with current reality (active tasks, timestamps)
+
+**Dispatcher hard rules:**
+- Max 3 concurrent builders — if 3+ In Progress, skip dispatch
+- NEVER run a card without assignee + project_path + real description
+- NEVER assume In Progress = builder is running — if you didn't spawn it this session, check
+- NEVER enable NQ live trading — DRY_RUN only, no TradersPost webhooks
 
 ---
 

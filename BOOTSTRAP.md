@@ -7,6 +7,7 @@
 2. `brain/PROJECTS.md` — current project board (what's active, what's next)
 3. `brain/status/status.json` — what's happening right now
 4. **`memory/YYYY-MM-DD.md` (today + yesterday)** — NON-OPTIONAL. This is where session decisions, cron changes, doc audits, and architecture corrections live before they get distilled into MEMORY.md. Skipping this = repeating mistakes Rob already corrected.
+5. **`brain/DISPATCHER.md`** — NON-OPTIONAL. Rob will ask you to dispatch work. You must know the 8-phase protocol: health check → enrich vague cards (add file paths, context, success criteria, deploy steps) → dispatch → verify deployment. Skipping enrichment sends a useless prompt to the builder.
 
 If you skip these and get corrected, that's the most expensive thing that happens.
 

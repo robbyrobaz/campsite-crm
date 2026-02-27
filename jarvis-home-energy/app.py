@@ -2195,6 +2195,7 @@ _rtsp_capture_threads: dict = {}
 def _rtsp_capture_loop(cam_id: str, rtsp_url: str):
     """Background thread: keep ffmpeg alive, update frame cache on every keyframe."""
     import subprocess as _sp
+    import os as _os
     log.info("RTSP capture thread starting for %s", cam_id)
     while True:
         try:
@@ -2209,10 +2210,12 @@ def _rtsp_capture_loop(cam_id: str, rtsp_url: str):
                 '-r', '0.2',   # 1 frame/5s — reduces CPU ~90% vs 2fps; plenty for dashboard tiles
                 'pipe:1',
             ]
-            proc = _sp.Popen(cmd, stdout=_sp.PIPE, stderr=_sp.DEVNULL)
+            # bufsize=0: unbuffered so os.read returns as soon as any bytes arrive
+            proc = _sp.Popen(cmd, stdout=_sp.PIPE, stderr=_sp.DEVNULL, bufsize=0)
             buf = b''
             while True:
-                chunk = proc.stdout.read(65536)
+                # os.read returns as soon as ANY data is available (no blocking until full)
+                chunk = _os.read(proc.stdout.fileno(), 65536)
                 if not chunk:
                     break
                 buf += chunk
@@ -2233,6 +2236,19 @@ def _rtsp_capture_loop(cam_id: str, rtsp_url: str):
             log.warning("RTSP capture error for %s: %s", cam_id, exc)
         time.sleep(3)   # brief pause before reconnect
 
+def _rtsp_watchdog():
+    """Watchdog thread: every 30s respawn any dead RTSP capture threads."""
+    while True:
+        time.sleep(30)
+        for cam_id, rtsp_url in _RTSP_CAM_URLS.items():
+            t = _rtsp_capture_threads.get(cam_id)
+            if t is None or not t.is_alive():
+                log.warning("RTSP watchdog: thread dead for %s, respawning", cam_id)
+                nt = threading.Thread(target=_rtsp_capture_loop, args=(cam_id, rtsp_url),
+                                      daemon=True, name=f"rtsp-{cam_id}")
+                nt.start()
+                _rtsp_capture_threads[cam_id] = nt
+
 def _start_rtsp_threads():
     """Start background RTSP capture threads (called once on app startup)."""
     for cam_id, rtsp_url in _RTSP_CAM_URLS.items():
@@ -2242,6 +2258,10 @@ def _start_rtsp_threads():
             t.start()
             _rtsp_capture_threads[cam_id] = t
             log.info("Started RTSP capture thread: %s", cam_id)
+    # Watchdog: respawn dead threads every 30s
+    wd = threading.Thread(target=_rtsp_watchdog, daemon=True, name="rtsp-watchdog")
+    wd.start()
+    log.info("Started RTSP watchdog thread")
 
 @app.route("/api/camera/<cam_id>/frame")
 def camera_frame(cam_id):

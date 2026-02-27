@@ -1,11 +1,22 @@
 {
-  "lastRun": "2026-02-26T20:13:00Z",
-  "activeTasks": [],
-  "plannedCount": 0,
+  "timestamp": "2026-02-26T20:43:00-07:00",
+  "pulse_cycle": "36f47279-520f-4ce7-8f9c-a7c44be0771a",
   "health": {
-    "cpu": "62°C",
-    "disk": "40% (174G/468G)",
-    "services": "all active",
-    "alerts": "none"
-  }
+    "cpu_temp_c": 55.0,
+    "disk_usage_pct": 40,
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active"
+    },
+    "critical_alerts": false
+  },
+  "kanban": {
+    "inProgress": 0,
+    "planned": 0,
+    "totalActive": 0
+  },
+  "activeTasks": [],
+  "nextAction": "waiting for dispatch",
+  "status": "idle"
 }

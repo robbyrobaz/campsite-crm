@@ -1,13 +1,13 @@
 {
   "activeTasks": [
     {
-      "id": "c_5c9679dc29083_19ca10ca473",
-      "title": "NQ: Research God Model multi-signal conflict + add Forward Test section to champion card",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "id": "c_0f36da774958c_19ca128a9e4",
+      "title": "Jarvis Home Energy -- Bottom Nav + Swipeable Cockpit Pages",
+      "project": "jarvis-home-energy",
       "assignee": "claude",
       "status": "In Progress"
     }
   ],
-  "lastDispatch": "2026-02-27T21:45:00Z",
-  "lastHealthCheck": "2026-02-27T21:45:00Z"
+  "lastDispatch": "2026-02-27T22:13:00Z",
+  "lastHealthCheck": "2026-02-27T22:13:00Z"
 }

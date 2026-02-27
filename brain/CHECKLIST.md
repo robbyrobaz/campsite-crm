@@ -52,6 +52,7 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 
 ## When builder completes:
 - [ ] **NO Review/Test step — skip it entirely.** Cards go directly from In Progress → Done.
+- [ ] **Commit and push the work.** Builder must `git add -A && git commit && git push` before marking Done. Code that isn't committed isn't real.
 - [ ] If card auto-moves to "Review/Test" (kanban runner behavior), immediately PATCH it to "Done"
 - [ ] **DEPLOY — restart the relevant service(s).** Code done ≠ deployed. Nothing happens until the service reloads.
   - NQ changes: `systemctl --user restart nq-smb-watcher.service nq-dashboard.service`

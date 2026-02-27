@@ -139,7 +139,7 @@ IN_PROGRESS=$(curl -s "http://127.0.0.1:8787/api/cards?status=In%20Progress" | p
 TOTAL=$((PLANNED + IN_PROGRESS))
 echo "Queue: $PLANNED planned + $IN_PROGRESS in-progress = $TOTAL total"
 ```
-**If TOTAL >= 2: print "GATE: queue has $TOTAL cards, skipping" and STOP.**
+**If TOTAL >= 6: print "GATE: queue has $TOTAL cards, skipping" and STOP.**
 
 ---
 
@@ -276,3 +276,11 @@ AUTO-GENERATOR: Created 3 cards
 - NEVER suggest per-coin ML models for Blofin
 - NEVER use `build_features()` for NQ model training (RTH-only) — use `build_session_aware_features()`
 - Be specific — name the strategy, file, metric. No vague "improve the pipeline" cards.
+
+## ⚠️ Cron Creation Gotcha (Feb 27 2026)
+After creating this cron, ALWAYS verify `nextRunAtMs` is not null:
+```bash
+openclaw cron list
+```
+If `nextRunAtMs` is null or status is `idle` with no next run, the cron is broken — delete and recreate using `openclaw cron add --cron "0 * * * *"`.
+Never create crons by manually editing jobs.json — IDs must be system-generated.

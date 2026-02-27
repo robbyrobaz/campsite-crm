@@ -1,8 +1,8 @@
 {
-  "timestamp": "2026-02-26T21:43:00-07:00",
+  "timestamp": "2026-02-26T22:13:00-07:00",
   "pulse_cycle": "36f47279-520f-4ce7-8f9c-a7c44be0771a",
   "health": {
-    "cpu_temp_c": 63.0,
+    "cpu_temp_c": 67.0,
     "disk_usage_pct": 40,
     "services": {
       "openclaw-gateway": "active",

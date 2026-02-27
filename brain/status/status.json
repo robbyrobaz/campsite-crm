@@ -1,13 +1,13 @@
 {
   "activeTasks": [
     {
-      "id": "c_8fd217e143c03_19c9dbc09c8",
-      "title": "reorganize master status dashboard, services, timers, projects",
+      "id": "c_d0eda5a7bd92_19c9dbdf826",
+      "title": "remove redundant links to dashboards",
       "status": "In Progress",
       "project": "master-dashboard",
-      "pid": 2513045
+      "pid": 2525134
     }
   ],
-  "lastDispatch": "2026-02-27T06:43:00Z",
+  "lastDispatch": "2026-02-27T06:51:00Z",
   "lastHealthCheck": "2026-02-27T06:43:00Z"
 }

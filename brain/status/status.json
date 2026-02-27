@@ -1,13 +1,5 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_0f36da774958c_19ca128a9e4",
-      "title": "Jarvis Home Energy -- Bottom Nav + Swipeable Cockpit Pages",
-      "project": "jarvis-home-energy",
-      "assignee": "claude",
-      "status": "In Progress"
-    }
-  ],
-  "lastDispatch": "2026-02-27T22:13:00Z",
-  "lastHealthCheck": "2026-02-27T22:13:00Z"
+  "activeTasks": [],
+  "lastDispatch": "2026-02-27T22:43:00Z",
+  "lastHealthCheck": "2026-02-27T22:43:00Z"
 }

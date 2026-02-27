@@ -63,9 +63,23 @@
 - **Claw-Kanban:** port 8787, systemd `claw-kanban.service`, SQLite DB at `kanban-dashboard/kanban.sqlite`
 - **Kanban status semantics:** Inbox=idea bucket (dispatcher ignores), Planned=do it now (dispatcher picks up within 30min), In Progress=running, Review/Test=SKIP (go straight to Done), Done=complete
 - **Auto Card Generator:** Hourly cron (Sonnet), creates 2 NQ + 1 Blofin cards in Planned. Gates if Planned+InProgress≥2. Instructions: `brain/AUTO_CARD_GENERATOR.md`
+- **Dispatcher (Jarvis Pulse):** Every 30min, **Sonnet** (upgraded from Haiku Feb 26 — dispatching requires reasoning). Full 8-phase protocol: `brain/DISPATCHER.md`. Max 3 concurrent In Progress (raised from 1, Feb 26).
 - **NQ Research Scientist cron:** REMOVED Feb 26 2026 — was pointing to wrong dir, timing out. Replaced by Auto Card Generator.
 - **Agent files:** `.claude/agents/` — ml-engineer, dashboard-builder, devops-engineer, qa-sentinel, crypto-researcher
 - **Numerai "medium" feature set = 740 features** (misleading). v2_equivalent = 304. Full dataset OOMs with 740 on 32GB RAM.
+
+## Session Context Gap Fix (Feb 26 2026)
+**Root cause of Rob repeating himself every day:** New sessions weren't reading `memory/YYYY-MM-DD.md`. An entire session's work (cron overhaul, doc audit, Blofin gate corrections, new brain files) was invisible to the next session. Fixed by:
+1. AGENTS.md startup sequence now explicitly requires reading daily memory (NON-OPTIONAL note added)
+2. BOOTSTRAP.md updated with NON-OPTIONAL callout for daily memory + all critical facts from Feb 26 session
+3. This MEMORY.md entry distilling the Feb 26 changes
+
+**Feb 26 2026 session summary (critical changes):**
+- EEP scoring: DEAD. Blofin ranks by `bt_pnl_pct`. Gates: min 100 trades, PF≥1.35, MDD<50%, PnL>0. Demotion after 20 FT trades if PF<1.1 or MDD>50%. Early crash-stop: PF<0.5 with ≥5 FT trades.
+- Jarvis Pulse upgraded to Sonnet (dispatching requires reasoning, Haiku was making bad card choices)
+- NQ Research Scientist cron removed (broken path, replaced by Auto Card Generator)
+- blofin README, HEARTBEAT.md, AGENTS.md, PROJECTS.md all audited: Opus removed, port 8888→8892, IBKR retired, EEP references purged
+- `brain/AUTO_CARD_GENERATOR.md` and `brain/DISPATCHER.md` created — full pipeline context for cron agents
 
 ## OpenClaw Ops Memory (Feb 21, 2026)
 

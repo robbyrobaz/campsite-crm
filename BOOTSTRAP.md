@@ -6,7 +6,7 @@
 1. `brain/CHECKLIST.md` — operating rules (read every session, non-negotiable)
 2. `brain/PROJECTS.md` — current project board (what's active, what's next)
 3. `brain/status/status.json` — what's happening right now
-4. `memory/YYYY-MM-DD.md` (today + yesterday) — recent context and decisions
+4. **`memory/YYYY-MM-DD.md` (today + yesterday)** — NON-OPTIONAL. This is where session decisions, cron changes, doc audits, and architecture corrections live before they get distilled into MEMORY.md. Skipping this = repeating mistakes Rob already corrected.
 
 If you skip these and get corrected, that's the most expensive thing that happens.
 
@@ -51,17 +51,20 @@ If you skip these and get corrected, that's the most expensive thing that happen
 - **NQ live model = GOD MODEL** — a single unified model combining all strategies; NOT individual strategies (momentum/orb/etc.)
 
 ## Key Facts (often forgotten, very expensive to re-derive)
-- **NQ data feed**: NinjaTrader (Windows, 192.168.68.88) → SMB share `/mnt/nt_bridge/bars.csv` → `nq-smb-watcher.service` → `NQ_continuous_1min.csv`. Live and running as of Feb 26.
-- **NQ data feed**: NinjaTrader SMB → `/mnt/nt_bridge/bars.csv` (read-only) → `nq-smb-watcher.service` → `NQ_continuous_1min.csv` (UTC). Live and running.
+- **NQ data feed**: NinjaTrader SMB → `/mnt/nt_bridge/bars.csv` (read-only) → `nq-smb-watcher.service` → `NQ_continuous_1min.csv` (UTC). Live. IBKR/nq-bar-feed is RETIRED.
 - **NQ execution chain (future, Rob approves)**: God Model signal → TradersPost webhook → Tradovate → Lucid prop accounts. Currently DRY_RUN=True always.
-- **Windows setup**: Python ML → NinjaTrader directly. TradersPost has NEVER been tested.
-- **Start with MNQ** (not NQ) for initial live validation — 1/10th size, $2/pt
-- **ETB (equal_tops_bottoms) is UNBLACKLISTED (Feb 26 2026)** — blacklist was wrong. 10/10 WF folds pass prop sim, PF 2.78–3.27, Sharpe 7.3–8.6, ~2000+ OOS trades per fold. This is one of the strongest strategies. ML feature research card in progress to find best entry conditions.
-- **Jinja/JS**: Always use `&quot;` not `\'` in JS strings inside Jinja templates
-- **Model routing**: Sonnet for all reasoning/code/orchestration. Haiku for crons and lightweight tasks. **Opus is banned.** Gateway config: primary=`anthropic/claude-sonnet-4-6`, fallback=haiku. If you ever see Opus in session_status, fix it immediately.
-- **Webhook**: `https://webhooks.traderspost.io/trading/webhook/51e37934-7a18-4e37-9dc5-33416a36d579/2ddfa7c41bcf347dc1a599108945b07a`
-- **Kanban API**: POST to `/api/inbox` with field `text` (not `body`)
+- **ETB (equal_tops_bottoms) is UNBLACKLISTED** — PF 3.02, Sharpe 7.97. Best strategy. NOT yet in live inference — top priority.
+- **NQ ML feature function**: ALWAYS use `build_session_aware_features()`. NEVER `build_features()` (RTH-only, wrong).
+- **Blofin ranking**: `bt_pnl_pct` (compounded PnL%). NOT EEP scoring — EEP is dead, removed Feb 26.
+- **Blofin promotion gates**: min 100 trades, PF≥1.35, MDD<50%, PnL>0. FT demotion: PF<1.1 or MDD>50% after 20 FT trades. Early crash-stop: PF<0.5 with ≥5 FT trades.
+- **Blofin dashboard**: port 8892. NEVER show aggregate/system-wide PF or WR — always top-N pairs by FT PF.
+- **Model routing**: Sonnet for all reasoning/code/orchestration. Haiku for crons. **Opus is banned.** If you ever see Opus in session_status, fix it immediately.
+- **Jarvis Pulse cron**: upgraded to Sonnet (Feb 26). Dispatcher is too important for Haiku.
+- **Max concurrent builders**: 3 (raised from 1, Feb 26).
+- **Jinja/JS**: Always use `&quot;` not `\'` in JS strings inside Jinja templates.
+- **Kanban API**: POST to `/api/inbox` with field `text` (not `body`). Kanban runner model string: `claude-sonnet-4-6` (no `anthropic/` prefix — CLI format).
 - **Always restart service after code changes**: `systemctl --user restart <service>`
+- **Webhook**: `https://webhooks.traderspost.io/trading/webhook/51e37934-7a18-4e37-9dc5-33416a36d579/2ddfa7c41bcf347dc1a599108945b07a`
 
 ---
 
@@ -84,4 +87,4 @@ If you skip these and get corrected, that's the most expensive thing that happen
 | Tesla Wall Connector | 192.168.68.87 — no auth, local API works |
 
 ---
-*Updated: 2026-02-24 17:07 MST*
+*Updated: 2026-02-26 23:45 MST*

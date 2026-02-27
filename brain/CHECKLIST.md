@@ -53,9 +53,20 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 ## When builder completes:
 - [ ] **NO Review/Test step — skip it entirely.** Cards go directly from In Progress → Done.
 - [ ] If card auto-moves to "Review/Test" (kanban runner behavior), immediately PATCH it to "Done"
-- [ ] Restart/reload relevant service(s), verify health
+- [ ] **DEPLOY — restart the relevant service(s).** Code done ≠ deployed. Nothing happens until the service reloads.
+  - NQ changes: `systemctl --user restart nq-smb-watcher.service nq-dashboard.service`
+  - Blofin changes: `systemctl --user restart blofin-stack-ingestor.service blofin-stack-paper.service blofin-dashboard.service`
+  - Jarvis home: `systemctl --user restart jarvis-home.service`
+  - ML model retrained: restart the inference service to load new weights
+- [ ] **VERIFY deployment is live** — `systemctl --user is-active <service>` + curl the dashboard endpoint
 - [ ] Move card to "Done", notify Rob with brief summary
 - [ ] Update PROJECTS.md if project status changed
+
+## Before dispatching any Planned card:
+- [ ] **Enrich vague cards** — Rob often adds short descriptions. Before running, flesh out the description so the builder has: exact file paths, context from DB/logs, success criteria, deploy steps, constraints (no live trading etc.)
+- [ ] Verify `project_path` is set correctly — wrong path = builder works in wrong repo silently
+- [ ] Verify `assignee` = `claude`
+- [ ] See `brain/DISPATCHER.md` for project path matching table and enrichment examples
 
 ## QA Functional Smoke Test (NON-OPTIONAL for UI/dashboard/API work):
 > Code review catches syntax errors, not integration failures. Run it and verify.

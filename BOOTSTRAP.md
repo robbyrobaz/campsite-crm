@@ -43,7 +43,7 @@ If you skip these and get corrected, that's the most expensive thing that happen
 |------|----------|-------------|
 | Auto Card Generator | Hourly :00 (Sonnet) | Reads live NQ+Blofin state → creates 2 NQ + 1 Blofin cards in Planned. Gates if queue ≥ 2. Instructions: `brain/AUTO_CARD_GENERATOR.md` |
 | Blofin Pipeline | Every 4h (Haiku) | Runs `run_pipeline.py` — backtest, promote/demote |
-| Jarvis Pulse | Every 30min (Haiku) | Health + dispatch Planned cards |
+| Jarvis Pulse | Every 30min (**Sonnet**) | Health + **enrich vague cards** + dispatch + **verify deployment** of completed work |
 | Oversight | Every 2h (Haiku) | HEARTBEAT.md server checks |
 
 ## ⛔ HARD RULES — NEVER VIOLATE

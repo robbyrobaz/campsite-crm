@@ -102,19 +102,19 @@
 ### Cron Schedule
 | Cron | Schedule | Model | Purpose |
 |------|----------|-------|---------|
-| Auto Card Generator | Every hour :00 | Sonnet | Reads NQ + Blofin state, creates 2 NQ + 1 Blofin cards in Planned (gates if queue ≥ 2) |
+| Auto Card Generator | Every hour :00 | Sonnet | Reads NQ + Blofin state, creates 2 NQ + 1 Blofin cards and **launches immediately** (gates if In Progress ≥ 6) |
 | Blofin Strategy Pipeline | Every 4h :15 | Haiku | Runs `run_pipeline.py` — backtests, promotes/demotes strategies |
-| Jarvis Pulse (Dispatch) | Every 30min | Haiku | Health checks, dispatches Planned cards, recovers stale In Progress |
+| Jarvis Pulse (Dispatch) | Every 30min | Sonnet | Health checks, dispatches any lingering Planned cards, recovers stale In Progress |
 | Hourly Oversight | Every 2h :30 | Haiku | HEARTBEAT.md — server health, services, git hygiene |
 | AI Token Usage Audit | Weekly Sun 8am | Haiku | Token efficiency report |
 
 ### Kanban Workflow
 - **Inbox** = idea bucket (dispatcher ignores — Rob's scratchpad)
-- **Planned** = approved, dispatcher picks up within 30min
+- **Planned** = should be near-zero. Auto-generator launches cards immediately. If cards are stuck here, dispatcher picks them up within 30min.
 - **In Progress** = builder working
 - **Done** = complete (skip Review/Test entirely)
 
 ### Auto-generation logic
 - Instructions: `brain/AUTO_CARD_GENERATOR.md`
-- Gate: if Planned + In Progress >= 2, skip cycle
-- Creates work based on live pipeline data — not generic tasks
+- Gate: if In Progress >= 6, skip cycle
+- Creates and **launches** work immediately based on live pipeline data — no sitting in Planned

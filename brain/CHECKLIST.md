@@ -110,7 +110,7 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 
 ## Kanban Status Semantics (CANONICAL):
 - **Inbox** = idea bucket / backlog. Rob or Jarvis tosses ideas here. Dispatcher IGNORES it.
-- **Planned** = approved work queue. Dispatcher picks these up within 30min. Putting something here means "do this now."
+- **Planned** = cards waiting to be launched. **Should be near-zero** — auto-generator launches immediately. If you see cards here, dispatch them NOW (don't leave them waiting).
 - **In Progress** = builder actively working
 - **Review/Test** = skip entirely — cards go directly Done after successful run
 - **Done** = complete

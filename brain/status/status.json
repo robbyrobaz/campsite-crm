@@ -1,26 +1,23 @@
 {
-  "timestamp": "2026-02-26T17:13:00-07:00",
-  "cycle": "Jarvis Pulse 5:13 PM",
+  "timestamp": "2026-02-26T17:38:00-07:00",
+  "cycle": "Heartbeat 5:38 PM",
   "health": {
-    "cpu_temp_c": 63,
-    "disk_used_pct": 39,
-    "services_up": 3
+    "cpu_temp_c": 66,
+    "disk_used_pct": 40,
+    "services": "all active"
   },
-  "activeTasks": [
-    {
-      "id": "c_c3e94299c5691_19c9c2a107d",
-      "title": "NQ: Audit strategy models for session coverage",
-      "status": "In Progress",
-      "pid": 1901733,
-      "action": "Restarted (was stale 38 min)"
-    }
+  "activeTasks": [],
+  "recentlyCompleted": [
+    "NQ: repo migrated to NQ-Trading-PIPELINE (all services updated)",
+    "NQ: timezone contamination fixed (35K rows corrected)",
+    "NQ: forward test locked to smb_live_forward_test only",
+    "NQ: Telegram/ntfy alerts wired into smb_watcher",
+    "NQ: session coverage audit — all 8 models confirmed 24/7",
+    "NQ: ETB added to tournament (PF 3.02, beats champion)",
+    "NQ: forward test trades table added to dashboard",
+    "Jarvis Home: active appliance banner (washer running, 50 min)"
   ],
-  "queued": [
-    {
-      "id": "c_38a72201135a1_19c9c2a10aa",
-      "title": "NQ: Add Telegram alerts for key pipeline events",
-      "status": "Planned",
-      "notes": "Next cycle"
-    }
+  "warnings": [
+    "7-day Sonnet at 97% — resets Mar 1 4PM MST. Not at 99% yet, no action needed."
   ]
 }

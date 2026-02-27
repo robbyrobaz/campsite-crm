@@ -1,5 +1,13 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-02-27T13:43:00-07:00",
-  "lastHealthCheck": "2026-02-27T13:43:00-07:00"
+  "activeTasks": [
+    {
+      "id": "c_5d5bd55860259_19ca0e82c6c",
+      "title": "[NQ] Register equal_tops_bottoms in live God Model dispatcher",
+      "status": "In Progress",
+      "pid": 3926088,
+      "project": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
+    }
+  ],
+  "lastDispatch": "2026-02-27T21:14:00Z",
+  "lastHealthCheck": "2026-02-27T21:13:00Z"
 }

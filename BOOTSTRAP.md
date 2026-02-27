@@ -68,6 +68,22 @@ If you skip these and get corrected, that's the most expensive thing that happen
 
 ---
 
+## Recent Changes (rolling 48h — update this at session end whenever significant changes happen)
+> This replaces needing to read the daily memory log on startup. Key decisions only.
+
+**Feb 26-27 2026:**
+- Cron overhaul: NQ Research Scientist removed, Auto Card Generator added (hourly, Sonnet), Dispatcher upgraded Haiku→Sonnet, max In Progress raised 1→3
+- EEP scoring dead. Blofin ranking = `bt_pnl_pct`. Gates: 100 trades, PF≥1.35, MDD<50%, PnL>0
+- equal_tops_bottoms (PF 3.02) is the #1 priority — NOT yet in live inference, needs to be added to God Model
+- gapfill + vwapfade bleeding live (14%/11% WR) — under investigation
+- IBKR/nq-bar-feed retired. SMB watcher is the only live feed.
+- Dispatcher reads brain/DISPATCHER.md | Auto Card Generator reads brain/AUTO_CARD_GENERATOR.md (cron-only, no need to read these every session — key facts are here)
+
+## Session-End Protocol (run this whenever significant changes happen)
+1. Update "Recent Changes" above with key decisions/facts (3-5 bullets max, replace stale entries)
+2. Distill to MEMORY.md if it's a permanent lesson
+3. Commit: `git add -A && git commit -m "session handoff: <one-line summary>"`
+
 ## Dashboard URLs
 | Dashboard | URL |
 |-----------|-----|

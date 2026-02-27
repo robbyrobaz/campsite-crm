@@ -156,6 +156,41 @@ ORB improvement: target_horizon 5→10 bars = +14.6% PF, +14.6% Sharpe, +2.9pp W
 - Key endpoint: `/live_status` → solar_power, battery_power, grid_power, load_power, grid_status
 - **Status as of Feb 25 night**: grid=7065W (house load), solar=0W (dark), soe=0% (Gateway 3, no Powerwall)
 
+## Feb 26-27 Session — Critical Changes (Permanent Reference)
+
+### Cron System Overhaul
+- **Removed:** NQ Research Scientist (broken — wrong path, timeouts)
+- **Added:** Auto Card Generator (hourly :00, Sonnet) — reads live NQ+Blofin state, creates 2 NQ + 1 Blofin Planned cards. Gates if Planned+InProgress ≥ 2
+- **Upgraded:** Jarvis Pulse dispatcher Haiku → Sonnet (dispatch logic too important for Haiku)
+- **Max concurrent In Progress:** 3 (was 1)
+- Dispatcher reads `brain/DISPATCHER.md` — enriches vague cards, verifies deploy after builder done
+
+### Blofin Promotion Gates (EEP IS DEAD — use these)
+- Ranking field: `bt_pnl_pct` (compounded PnL%), NOT EEP score
+- Promotion: min 100 BT trades, PF≥1.35, MDD<50%, PnL>0
+- FT demotion: PF<1.1 or MDD>50% after 20 FT trades
+- Early crash-stop: PF<0.5 with ≥5 FT trades
+- Per-coin ML models are banned — global models only, per-coin eligibility table handles coin selection
+
+### NQ Forward Test State (Feb 26)
+- run_id=`smb_live_forward_test`, 129 trades
+- momentum: +$5,900 ✅ | vol_contraction: +$160 ✅
+- gapfill: 14% WR, -$2,565 ❌ | vwapfade: 11% WR, -$2,750 ❌
+- equal_tops_bottoms (PF 3.02, best strategy) NOT YET in live inference — high priority
+- Feb 26: 100 trades in one day — possible overtrading under investigation
+
+### Session Context Fix — Root Cause + Solution
+- Root cause: daily memory file wasn't being read on session boot, causing Rob to repeat context daily
+- Fix: BOOTSTRAP.md carries "Recent Changes" (rolling 48h summary). Key facts distilled to MEMORY.md.
+- Protocol: at end of any session with significant changes, update BOOTSTRAP.md Recent Changes + distill to MEMORY.md
+
+### Docs Purged of Stale Content
+- EEP scoring: removed everywhere
+- Opus: banned, removed everywhere. Sonnet=primary, Haiku=crons only
+- IBKR/nq-bar-feed: retired, SMB is the live feed
+- Port 8888 → 8892 for Blofin dashboard (everywhere)
+- NQ Research Scientist: removed from AGENTS.md
+
 ## Ops Lessons (Feb 24, 2026)
 - **Kanban discipline**: spawn → PATCH In Progress → update status.json — must happen atomically. Rob called this out.
 - **Dispatch immediately**: don't wait for "ideal conditions" — when data supports a test, run it. Rob called out delay on ML exit re-run.

@@ -881,8 +881,10 @@ def poll_cameras():
             _wyze_client = None  # force re-auth next cycle
 
     # Ring — fully async in ring_doorbell 0.9.x; use cached token + backoff
+    # DISABLED: Ring requires interactive 2FA to get initial token. Re-enable once
+    # authenticated interactively and token cached. Until then this spams Rob with texts.
     global _ring_next_retry
-    if RING_EMAIL and RING_PASSWORD and time.time() >= _ring_next_retry:
+    if False and RING_EMAIL and RING_PASSWORD and time.time() >= _ring_next_retry:
         try:
             ring_cameras = _run_async(_ring_poll_cameras_async())
             cameras.extend(ring_cameras)

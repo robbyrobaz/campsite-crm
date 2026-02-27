@@ -68,14 +68,13 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - [ ] Verify `assignee` = `claude`
 - [ ] See `brain/DISPATCHER.md` for project path matching table and enrichment examples
 
-## QA Functional Smoke Test (NON-OPTIONAL for UI/dashboard/API work):
-> Code review catches syntax errors, not integration failures. Run it and verify.
-- [ ] **Dashboards/UI:** Load the page with playwright, check for JS console errors (`page.on("pageerror")`), verify key elements render with real data (not "Loading…" forever)
+## Builder Verification (NON-OPTIONAL — builder does this, no separate QA agent):
+> The builder verifies their own work before marking Done. No QA sentinel, no Review/Test status.
+- [ ] **Dashboards/UI:** `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:<port>/` must return 200. Check for JS errors (run `node --check` on extracted script blocks if Flask/Jinja).
 - [ ] **API endpoints:** `curl` every new/changed endpoint, verify response has real data and correct shape
-- [ ] **Services:** After restart, verify `systemctl is-active` AND hit the health/status endpoint
-- [ ] **If you can't run the functional test, the QA is incomplete — say so explicitly**
-- [ ] QA sentinel instructions MUST include: "Use playwright to load the page headless, check for JS errors, screenshot the result, verify panels show real data"
-- [ ] **For any Flask/Jinja dashboard**: extract `<script>` content and run `node --check` to catch syntax errors from Jinja template escaping (known recurring bug: `\'` in JS strings gets eaten by Jinja → use `&quot;` instead)
+- [ ] **Services:** `systemctl --user is-active <service>` must be active after restart
+- [ ] **For any Flask/Jinja dashboard**: use `&quot;` not `\'` in JS strings inside Jinja templates (known recurring bug)
+- [ ] **Deployment verification is also done by the Dispatcher (Phase 7) and Oversight cron** — they double-check Done cards are actually live
 
 ## Git backup discipline (every cycle/hourly oversight):
 - [ ] Check repo remote + branch + `git status --short` for active repos
@@ -91,7 +90,7 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - ❌ Block main session with sleep/wait/long exec (all work >30s must be background or subagent)
 - ❌ **Enable NQ live trading or start any prop firm eval without Rob's explicit approval** — no TradersPost webhooks, no live orders, no Lucid/FTMO/any eval activation, EVER
 - ❌ **Confuse individual strategies with the God Model** — NQ live uses ONE unified God Model, not individual momentum/orb/etc.
-- ❌ Skip QA on builder output
+- ❌ Skip builder verification (curl endpoint, systemctl is-active) before marking Done
 - ❌ Move cards to Review/Test — skip it, go straight to Done after successful run
 - ❌ Wait idle between Rob's messages — be a COO, pick up work
 - ❌ Forget about spawned builders — check sessions_list
@@ -108,7 +107,6 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - Kanban In Progress cards — are builders still alive?
 - Kanban Planned cards — should any be started?
 - If a builder died silently, flag it and respawn
-- Review/Test cards waiting — QA needed?
 
 ## Kanban Status Semantics (CANONICAL):
 - **Inbox** = idea bucket / backlog. Rob or Jarvis tosses ideas here. Dispatcher IGNORES it.

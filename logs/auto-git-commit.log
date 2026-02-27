@@ -3027,3 +3027,32 @@ COMMITTED master-dashboard
  create mode 100644 models/entry_classifier_BTC-USDT/entry_classifier_meta.json
  create mode 100644 models/entry_classifier_BTC-USDT/entry_classifier_scaler.pkl
 COMMITTED blofin-stack
+warning: adding embedded git repository: NQ-Trading-PIPELINE
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint: 
+hint: 	git submodule add <url> NQ-Trading-PIPELINE
+hint: 
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint: 
+hint: 	git rm --cached NQ-Trading-PIPELINE
+hint: 
+hint: See "git help submodule" for more information.
+[main 684fdd5] auto: snapshot 2026-02-27T00:00:01Z
+ 9 files changed, 55 insertions(+), 6 deletions(-)
+ create mode 160000 NQ-Trading-PIPELINE
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main 31e7fe53] auto: snapshot 2026-02-27T00:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 4 committed, 5 skipped
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

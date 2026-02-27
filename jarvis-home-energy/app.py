@@ -5616,6 +5616,26 @@ function renderState(s) {
 
   // ── GE SmartHQ Appliances ──
   renderAppliances(s.ge_appliances || {});
+  // ── Active appliance banner ──
+  (function() {
+    const banner = document.getElementById('appliance-banner');
+    if (!banner) return;
+    const apps = (s.ge_appliances || {}).appliances || [];
+    const active = apps.filter(a => a.state === 'running' || a.state === 'paused' || a.state === 'end of cycle');
+    if (!active.length) { banner.style.display = 'none'; return; }
+    banner.style.display = 'flex';
+    banner.innerHTML = active.map(a => {
+      const icon = a.type && a.type.includes('Dry') ? '🌀' : a.type && a.type.includes('Dish') ? '🍽️' : '🧺';
+      const secsLeft = a.seconds_remaining || 0;
+      const timeStr = secsLeft > 0 ? ` · ${Math.ceil(secsLeft/60)}m left` : '';
+      const cycleStr = a.cycle ? ` · ${a.cycle}` : '';
+      const stColor = a.state === 'running' ? '#10b981' : '#f59e0b';
+      return `<span onclick="showView('appliances')" style="cursor:pointer;display:inline-flex;align-items:center;gap:6px;padding:3px 10px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.25);border-radius:12px;color:${stColor};font-weight:600">
+        <span style="width:6px;height:6px;border-radius:50%;background:${stColor};animation:ge-dot-pulse 1.5s ease-in-out infinite"></span>
+        ${icon} ${a.name}${cycleStr}${timeStr}
+      </span>`;
+    }).join('') + `<span style="color:var(--text-muted);font-size:11px;margin-left:auto">tap to view →</span>`;
+  })();
 
   // ── Settings badges ──
   const settingsTeslaBadge = document.getElementById('settings-tesla-badge');

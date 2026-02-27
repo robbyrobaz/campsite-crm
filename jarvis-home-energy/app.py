@@ -3037,6 +3037,9 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   </nav>
 </header>
 
+<!-- ── Active Appliance Banner (always visible when something is running) ── -->
+<div id="appliance-banner" style="display:none;background:rgba(16,185,129,0.08);border-bottom:1px solid rgba(16,185,129,0.2);padding:6px 16px;font-size:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap"></div>
+
 <main>
 
 <!-- ═══ HOME DASHBOARD ═══════════════════════════════════════════════════════ -->

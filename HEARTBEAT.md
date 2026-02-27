@@ -81,7 +81,7 @@
 ## NQ Pipeline Agent Team Check (EVERY HEARTBEAT while running)
 - Check if the Agent Team process is still alive: `ps aux | grep claude | grep -v grep | wc -l`
 - If process count drops to 0 or 1 (lead only, no teammates): check if work completed or died
-- Check for new files in `/home/rob/.openclaw/workspace/ninja_trader_strategies/pipeline/` and `strategies/`
+- Check for new files in `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/pipeline/` and `strategies/`
 - If team finished: report what was built, run a quick validation (e.g., `python3 -c "from pipeline import db; print('ok')"`)
 - If team died: FLAG immediately
 

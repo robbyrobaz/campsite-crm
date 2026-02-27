@@ -8,7 +8,7 @@ set -euo pipefail
 #   - ai-workshop source (minus projects that graduated to own repos)
 #
 # Repos with their own remotes are EXCLUDED (already backed up):
-#   blofin-stack, campsite-crm, ninja_trader_strategies, numerai-tournament,
+#   blofin-stack, campsite-crm, NQ-Trading-PIPELINE, numerai-tournament,
 #   kanban-dashboard, master-dashboard, arb-dashboard, gilbert-pd-radio-trainer,
 #   jarvis-home-energy
 #
@@ -78,7 +78,7 @@ tar -czf "$archive" \
   --exclude='workspace/blofin-stack' \
   --exclude='workspace/blofin-dashboard' \
   --exclude='workspace/campsite-crm' \
-  --exclude='workspace/ninja_trader_strategies' \
+  --exclude='workspace/NQ-Trading-PIPELINE' \
   --exclude='workspace/numerai-tournament' \
   --exclude='workspace/kanban-dashboard' \
   --exclude='workspace/master-dashboard' \

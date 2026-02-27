@@ -3006,3 +3006,24 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 2 committed, 7 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+[main 34c367b] auto: snapshot 2026-02-26T23:00:01Z
+ 4 files changed, 40 insertions(+), 2 deletions(-)
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main 6529e22b] auto: snapshot 2026-02-26T23:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 2 committed, 7 skipped
+[master 69263e4] auto: snapshot 2026-02-27T00:00:01Z
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+COMMITTED master-dashboard
+[main a56959f] auto: snapshot 2026-02-27T00:00:01Z
+ 4 files changed, 189 insertions(+), 1 deletion(-)
+ create mode 100644 models/entry_classifier_BTC-USDT/entry_classifier.pkl
+ create mode 100644 models/entry_classifier_BTC-USDT/entry_classifier_meta.json
+ create mode 100644 models/entry_classifier_BTC-USDT/entry_classifier_scaler.pkl
+COMMITTED blofin-stack

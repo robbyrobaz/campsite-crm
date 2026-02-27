@@ -1,18 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_13311bac2892b_19c9fd5cc39",
-      "title": "[NQ] Register equal_tops_bottoms in god_model_dispatcher",
-      "status": "In Progress",
-      "pid": 3446133
-    },
-    {
-      "id": "c_9f5d6c14f4c93_19c9fd6601c",
-      "title": "[NQ] Investigate gap_fill and vwap_fade bleeding",
-      "status": "In Progress",
-      "pid": 3446126
-    }
-  ],
-  "lastDispatch": "2026-02-27T09:20:00-07:00",
-  "lastHealthCheck": "2026-02-27T09:23:00-07:00"
+  "activeTasks": [],
+  "lastDispatch": "2026-02-27T09:43:00-07:00",
+  "lastHealthCheck": "2026-02-27T09:43:00-07:00",
+  "notes": "All services active. No In Progress or Planned cards. 3 recently completed cards verified deployed. CPU 76°C, disk 40%. NQ watcher DRY_RUN, 9 bars today, 0 signals."
 }

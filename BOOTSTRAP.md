@@ -24,13 +24,27 @@ If you skip these and get corrected, that's the most expensive thing that happen
 ---
 
 ## Active Projects (high-level — see brain/PROJECTS.md for full detail)
-- **NQ Futures Pipeline** — Phase 2 complete, Phase 3 (live trading) in progress. Repo: `NQ-Trading-PIPELINE` (path: `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/`). PRD: `docs/PRD.md`
-- **Blofin Stack** — paper trading active (84K+ trades), FT winner accumulating
-- **Numerai** — 3 models submitting daily (robbyrobml, robbyrob2, robbyrob3)
-- **Home Energy Dashboard** — port 8793, Nest/SPAN/Enphase/Wyze live
-- **Master Dashboard** — port 8890, Anthropic + OpenAI usage panels live
+- **NQ Futures Pipeline** ⭐ PRIMARY — Live forward test running (DRY_RUN). 8 models. `smb_live_forward_test`. Repo: `NQ-Trading-PIPELINE`. ETB not yet in live inference (high priority). gapfill/vwapfade bleeding live.
+- **Blofin Stack** ⭐ PRIMARY — Paper trading active (86K+ trades). T2: 12 strategies. Pipeline runs every 4h.
+- **Jarvis Home** — port 8793, Nest/SPAN/Tesla/Wyze/GE live. Washer GE state stale (investigate). Ring blocked on 2FA.
+- **Numerai** — 3 models submitting daily. Not primary focus.
+- **Master Dashboard** — port 8890, usage panels live.
 
 ---
+
+## Kanban Status Semantics (CANONICAL)
+- **Inbox** = idea bucket / backlog — dispatcher IGNORES it. Rob's scratchpad.
+- **Planned** = approved, ready to execute — dispatcher picks up within 30min
+- **In Progress** = builder running
+- **Done** = complete (skip Review/Test entirely — go straight to Done)
+
+## Autonomous Cron Overview
+| Cron | Schedule | What it does |
+|------|----------|-------------|
+| Auto Card Generator | Hourly :00 (Sonnet) | Reads live NQ+Blofin state → creates 2 NQ + 1 Blofin cards in Planned. Gates if queue ≥ 2. Instructions: `brain/AUTO_CARD_GENERATOR.md` |
+| Blofin Pipeline | Every 4h (Haiku) | Runs `run_pipeline.py` — backtest, promote/demote |
+| Jarvis Pulse | Every 30min (Haiku) | Health + dispatch Planned cards |
+| Oversight | Every 2h (Haiku) | HEARTBEAT.md server checks |
 
 ## ⛔ HARD RULES — NEVER VIOLATE
 - **NEVER enable NQ live trading or start any prop firm eval (Lucid, FTMO, etc.) without Rob's explicit approval** — no webhooks, no live orders, no eval activation, nothing

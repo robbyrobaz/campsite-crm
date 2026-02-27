@@ -61,6 +61,9 @@
 
 ## Infrastructure Reference
 - **Claw-Kanban:** port 8787, systemd `claw-kanban.service`, SQLite DB at `kanban-dashboard/kanban.sqlite`
+- **Kanban status semantics:** Inbox=idea bucket (dispatcher ignores), Planned=do it now (dispatcher picks up within 30min), In Progress=running, Review/Test=SKIP (go straight to Done), Done=complete
+- **Auto Card Generator:** Hourly cron (Sonnet), creates 2 NQ + 1 Blofin cards in Planned. Gates if Planned+InProgress≥2. Instructions: `brain/AUTO_CARD_GENERATOR.md`
+- **NQ Research Scientist cron:** REMOVED Feb 26 2026 — was pointing to wrong dir, timing out. Replaced by Auto Card Generator.
 - **Agent files:** `.claude/agents/` — ml-engineer, dashboard-builder, devops-engineer, qa-sentinel, crypto-researcher
 - **Numerai "medium" feature set = 740 features** (misleading). v2_equivalent = 304. Full dataset OOMs with 740 on 32GB RAM.
 

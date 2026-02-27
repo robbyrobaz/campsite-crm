@@ -2,98 +2,119 @@
 
 > **Strategic project overview.** Kanban board (:8787) is the live work queue.
 > This file is the high-level view — project status, architecture, what matters.
-> Update both when creating/completing projects. Keep it scannable.
+> Last updated: 2026-02-26
 
 ---
 
-## 🟢 ACTIVE
+## 🟢 ACTIVE (Primary Focus)
 
-### 1. Blofin Trading Pipeline
-**Repo:** `blofin-stack/` | **Dashboard:** http://127.0.0.1:8888
-**Status:** Running hourly. Post-bug-fix rebuild phase.
-**Last update:** Feb 19 — BUY/SELL bug fixed, all strategies demoted to T0, 12 promoted to T1
-**Current state:** 2 T2s (ml_gbt_5m, mtf_trend_align), 10 T1, 19 T0
+### 1. NQ Futures Trading Pipeline
+**Repo:** `NQ-Trading-PIPELINE/` | **Path:** `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/`
+**Dashboard:** http://127.0.0.1:8891 (also :8891 on LAN)
+**GitHub:** https://github.com/robbyrobaz/NQ-Trading-PIPELINE (private, main branch)
+**Status:** Live forward test running. DRY_RUN mode. 8 models active.
+
+**Live data feed:** NinjaTrader (Windows 192.168.68.88) → SMB `/mnt/nt_bridge/bars.csv` → `nq-smb-watcher.service` → `NQ_continuous_1min.csv`
+**Forward test run_id:** `smb_live_forward_test` (only valid run — 129 trades Feb 23-26)
+**Alert topic:** ntfy.sh/nq-pipeline
+
+**Forward Test Results (Feb 23-26):**
+- momentum: 99 trades, 62% WR, +$5,900 ✅
+- vol_contraction: 13 trades, 62% WR, +$160 ✅
+- gapfill: 7 trades, 14% WR, -$2,565 ❌ (investigate)
+- vwapfade: 9 trades, 11% WR, -$2,750 ❌ (investigate)
+- Feb 26 had 100 trades in one day — possible overtrading during volatile session
+
+**Strategy Registry (all tier=1, gate_status=pass):**
+- equal_tops_bottoms: PF 3.02, Sharpe 7.97 (NOT YET in live inference — add to God Model)
+- orb: PF 2.92, Sharpe 7.59
+- momentum: PF 2.82, Sharpe 7.38 (carrying live forward test)
+- vwap_fade: PF 2.17, psych_levels: PF 1.92, gap_fill: PF 2.07, vol_contraction: PF 1.96
+
+**God Model:** Ensemble dispatcher — runs all experts per bar, dispatches highest-confidence signal. Tournament table tracks challenger vs champion.
+
 **Next actions:**
+- [ ] Register equal_tops_bottoms in live God Model inference (high priority — best PF, not generating signals)
+- [ ] Investigate gapfill and vwapfade live signal quality (14% WR is broken)
+- [ ] Investigate Feb 26 trade flood (100 trades in one day — momentum firing too aggressively?)
+- [ ] Run God Model tournament update to include ETB as challenger
+- [ ] Verify psych_levels is generating live signals
+
+**Constraints:**
+- ⛔ DRY_RUN only — NO live orders, NO TradersPost webhooks, NO prop firm eval activation ever without Rob's explicit approval
+- ⛔ God Model = single unified ensemble, NOT individual strategies
+- SMB mount is read-only — never write to `/mnt/nt_bridge/`
+
+---
+
+### 2. Blofin Trading Pipeline
+**Repo:** `blofin-stack/` | **Path:** `/home/rob/.openclaw/workspace/blofin-stack/`
+**Dashboard:** http://127.0.0.1:8892
+**Status:** Paper trading active (86K+ trades). Post-bug-fix rebuild phase.
+
+**Current Tier State:**
+- T2 (live-eligible): 12 strategies
+- T1 (promoted, monitoring): 9 strategies
+- T0 (backtesting): 7 strategies
+- T-1 (demoted/failing): 3 strategies
+
+**Top performers by FT PF (min 20 FT trades):**
+- vwap_volatility_rebound: FT PF 2.21, T2
+- volume_volatility_mean_reversion: FT PF 1.51, T2
+- cross_asset_correlation: FT PF 1.40, T2
+
+**Pipeline runs every 4h** via cron (Haiku): `orchestration/run_pipeline.py`
+
+**Next actions:**
+- [ ] Diagnose T1/T2 strategies with gate_status=fail (momentum T2, volatility_regime_switch T2, atr_contraction_breakout T2 — all fail with no FT data)
+- [ ] Investigate strategies with large BT/FT PF divergence (overfitting or regime change?)
+- [ ] Phase 2 ML retrain scheduled ~March 1 — verify gate conditions
 - [ ] Fix 3 breakout strategies with syntax error (line 41)
-- [ ] Bump smoke test from 5K to 50K ticks
-- [ ] Monitor T1→T2 promotions
-- [ ] Phase 2 ML retrain triggers ~March 1
-- [ ] Analyze paper trading slippage patterns and propose mitigation (queued)
-- [ ] Add unit tests for feature library core functions (queued)
-- [ ] Optimize backtester memory usage with chunked processing (queued)
-**Blockers:** None
-
-### 2. Numerai Tournament
-**Repo:** `numerai-tournament/` | **Models:** robbyrobml, robbyrob2, robbyrob3
-**Status:** Submissions working (round 1207). Performance is poor. Era-boosting promising.
-**Last update:** Feb 19 — Medium era-boost: Sharpe +284%. Full run died, needs restart.
-**Next actions:**
-- [ ] Restart full era-boost run (2.7M rows)
-- [ ] Set up persistent systemd service for daily submissions
-- [ ] Investigate pickle deploy to Numerai compute
-- [ ] If era-boost beats baselines → retrain all 3 models
-**Blockers:** Full run keeps dying (memory/timeout?)
-
-### 3. HedgeEngine (Sports Betting Dashboard)
-**Repo:** `arb-dashboard/` | **Live:** GitHub Pages
-**Status:** ✅ Deployed. Presets feature shipped.
-**Last update:** Feb 19 — Save/load presets with localStorage
-**Next actions:**
-- [ ] Waiting on Rob for more features
-**Blockers:** None
-
-### 4. Sports Betting Arb Scanner
-**Repo:** github.com/robbyrobaz/sports-betting-arb
-**Status:** Hourly GitHub Actions running. Scanning 15+ sportsbooks.
-**Last update:** Feb 18 — Full rebuild and deploy
-**Next actions:**
-- [ ] Phase 2: Bonus bet input form → auto-calculate best hedge
-**Blockers:** None
-
-### 5. Agent Stack / Jarvis Infrastructure
-**Status:** Claw-Kanban installed and running at :8787. Agent files created. Enforcement hook active.
-**Git backup governance:** Hourly oversight + heartbeat now include repo remote/branch/dirty checks and maturity routing (ai-workshop vs dedicated repos).
-**Last update:** Feb 19 — Full stack deployment
-**Components deployed:**
-- ✅ Claw-Kanban dashboard (systemd: claw-kanban.service, port 8787)
-- ✅ 5 agent files in `.claude/agents/` (ml-engineer, dashboard-builder, devops-engineer, qa-sentinel, crypto-researcher)
-- ✅ Enforcement hook (enforce-tracking.sh)
-- ✅ PROJECTS.md as data backbone
-**Next actions:**
-- [ ] Configure Claw-Kanban role routing and Telegram integration
-- [ ] Integration test: create card → dispatch → verify flow
-- [ ] Bake GSD principles into delegation workflow
-**Blockers:** None
+- [ ] Analyze paper trading slippage patterns
 
 ---
 
-## 🟡 WAITING / STAGED
+## 🟡 SECONDARY (active but not primary focus)
 
-### 6. Phase 2 ML Retrain (Blofin)
-**Status:** Code written, staged for ~March 1
-**Gate:** 2 weeks from Feb 15 + regime diversity check
-**Next:** Auto-triggers or manual acceleration
+### 3. Jarvis Home Energy Dashboard
+**Repo:** `jarvis-home-energy/` | **Port:** 8793
+**Status:** Live. Nest/SPAN/Tesla/Wyze/GE appliances integrated.
+**Known issue:** Washer showing "disconnected" despite GE API showing ONLINE — investigation mid-stream (GE services all stale: lastSyncTime 17 days old)
+**Blocked:** Ring integration (2FA lockout — complete interactively when lockout clears)
 
----
-
-## ✅ COMPLETED (last 7 days)
-- Claw-Kanban + agent stack deployment (Feb 19)
-- Blofin BUY/SELL bug fix + strategy cleanup (Feb 19)
-- HedgeEngine presets feature (Feb 19)
-- Blofin audit bug fixes — 5 critical (Feb 17)
-- Blofin dashboard rebuild at :8888 (Feb 18)
-- Strategy ranking overhaul to EEP scoring (Feb 17)
-- Sports betting arb scanner full rebuild (Feb 18)
-- Gilbert PD radio trainer app scaffold (Feb 21)
+### 4. Numerai Tournament
+**Models:** robbyrobml, robbyrob2, robbyrob3 (submitting daily)
+**Status:** Stable. Era-boosting promising but full retrain pending.
+**Not a primary focus right now.**
 
 ---
 
-## 🔴 KNOWN ISSUES
-- **Git LFS backup failing** — >2GB objects rejected by GitHub
-- **Disk at 53%** — Numerai parquet files (~6GB)
+## 🔴 PAUSED / BACKLOG
+
+- HedgeEngine / Sports Betting Arb Scanner — deployed, waiting on Rob for next features
+- Gilbert PD Radio Trainer — scaffolded, parked
+- Campsite CRM — not started
 
 ---
 
-## 📋 BACKLOG (mentioned but not started)
-- Campsite CRM
-- Rob's "5 more projects" once tracking is clean
+## ⚙️ AUTONOMOUS OPERATIONS
+
+### Cron Schedule
+| Cron | Schedule | Model | Purpose |
+|------|----------|-------|---------|
+| Auto Card Generator | Every hour :00 | Sonnet | Reads NQ + Blofin state, creates 2 NQ + 1 Blofin cards in Planned (gates if queue ≥ 2) |
+| Blofin Strategy Pipeline | Every 4h :15 | Haiku | Runs `run_pipeline.py` — backtests, promotes/demotes strategies |
+| Jarvis Pulse (Dispatch) | Every 30min | Haiku | Health checks, dispatches Planned cards, recovers stale In Progress |
+| Hourly Oversight | Every 2h :30 | Haiku | HEARTBEAT.md — server health, services, git hygiene |
+| AI Token Usage Audit | Weekly Sun 8am | Haiku | Token efficiency report |
+
+### Kanban Workflow
+- **Inbox** = idea bucket (dispatcher ignores — Rob's scratchpad)
+- **Planned** = approved, dispatcher picks up within 30min
+- **In Progress** = builder working
+- **Done** = complete (skip Review/Test entirely)
+
+### Auto-generation logic
+- Instructions: `brain/AUTO_CARD_GENERATOR.md`
+- Gate: if Planned + In Progress >= 2, skip cycle
+- Creates work based on live pipeline data — not generic tasks

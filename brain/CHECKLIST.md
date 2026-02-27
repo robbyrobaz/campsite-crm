@@ -81,7 +81,7 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - ❌ **Enable NQ live trading or start any prop firm eval without Rob's explicit approval** — no TradersPost webhooks, no live orders, no Lucid/FTMO/any eval activation, EVER
 - ❌ **Confuse individual strategies with the God Model** — NQ live uses ONE unified God Model, not individual momentum/orb/etc.
 - ❌ Skip QA on builder output
-- ❌ Move cards to Done without qa-sentinel review
+- ❌ Move cards to Review/Test — skip it, go straight to Done after successful run
 - ❌ Wait idle between Rob's messages — be a COO, pick up work
 - ❌ Forget about spawned builders — check sessions_list
 - ❌ Write code directly in main session (delegate it)
@@ -92,9 +92,23 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - ❌ Kill or reassign work that's already in progress — check agent status FIRST
 - ❌ Launch duplicate agents for work that's already running
 
-## Heartbeat checks (every hour, automated):
+## Heartbeat checks (every 2h, automated):
 - Server health (CPU, disk, services)
 - Kanban In Progress cards — are builders still alive?
 - Kanban Planned cards — should any be started?
 - If a builder died silently, flag it and respawn
 - Review/Test cards waiting — QA needed?
+
+## Kanban Status Semantics (CANONICAL):
+- **Inbox** = idea bucket / backlog. Rob or Jarvis tosses ideas here. Dispatcher IGNORES it.
+- **Planned** = approved work queue. Dispatcher picks these up within 30min. Putting something here means "do this now."
+- **In Progress** = builder actively working
+- **Review/Test** = skip entirely — cards go directly Done after successful run
+- **Done** = complete
+
+## Auto Card Generator (runs hourly at :00):
+- Reads pipeline state (NQ + Blofin) from live DBs and logs
+- Gates on Planned + In Progress >= 2 (skips if queue already has work)
+- Creates 2 NQ cards + 1 Blofin card in **Planned** status
+- Instructions in: brain/AUTO_CARD_GENERATOR.md
+- Dispatcher picks up cards within 30min automatically

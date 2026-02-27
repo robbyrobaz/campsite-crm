@@ -2643,28 +2643,33 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: var(--bg); color: var(--text); font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; min-height: 100vh; }
 
-  /* Nav */
+  /* Header (status bar only — no nav buttons) */
   header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0; position: sticky; top: 0; z-index: 100; }
-  .header-top { display: flex; align-items: center; gap: 20px; padding: 0 20px; height: 52px; }
+  .header-top { display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 42px; }
   .logo { font-size: 16px; font-weight: 700; letter-spacing: .05em; color: var(--solar); }
   .logo span { color: var(--text-dim); }
-  .nav-hamburger { display: none; background: none; border: 1px solid #444; color: var(--text); font-size: 1.4rem; padding: 4px 10px; border-radius: 6px; cursor: pointer; margin-left: auto; }
-  nav { display: flex; flex-wrap: wrap; gap: 4px; padding: 4px 20px 8px; }
-  nav button { background: transparent; border: none; color: var(--text-dim); cursor: pointer; padding: 6px 14px; border-radius: 6px; font-size: 12px; font-family: inherit; transition: all .15s; min-height: 36px; }
-  nav button.active, nav button:hover { background: var(--surface2); color: var(--text); }
-  .status-bar { display: flex; gap: 14px; align-items: center; }
-  @media (max-width: 768px) {
-    .nav-hamburger { display: block; }
-    nav { display: none; flex-direction: column; align-items: stretch; padding: 0.5rem 1rem 1rem; }
-    nav.open { display: flex; }
-    nav button { width: 100%; text-align: left; min-height: 44px; font-size: 1rem; padding: 10px 14px; }
-    .status-bar { display: none; }
-    body { padding: 0; }
-    #main-content, [id$="-view"], .view { padding: 0.75rem; }
-    .card, .panel, .metric-card, .roku-card { min-width: unset !important; width: 100% !important; max-width: 100% !important; }
-    table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
-    main { padding: 0.5rem; }
+  .status-bar { display: flex; gap: 12px; align-items: center; margin-left: auto; }
+
+  /* Bottom Navigation Bar */
+  #bottom-nav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    display: flex; justify-content: space-around; align-items: stretch;
+    background: var(--surface); border-top: 1px solid var(--border);
+    z-index: 200; height: 56px;
+    -webkit-tap-highlight-color: transparent;
   }
+  .bnav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: none; border: none; border-top: 2px solid transparent;
+    color: var(--text-dim); cursor: pointer; padding: 4px 2px; gap: 2px;
+    font-family: inherit; transition: color .15s, border-color .15s;
+    min-width: 0;
+  }
+  .bnav-btn.active { color: var(--solar); border-top-color: var(--solar); }
+  .bnav-btn:hover { color: var(--text); }
+  .bnav-icon { font-size: 1.2rem; line-height: 1; }
+  .bnav-label { font-size: 0.52rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; white-space: nowrap; }
+
   .dot { width: 8px; height: 8px; border-radius: 50%; }
   .dot.online { background: var(--online); box-shadow: 0 0 6px var(--online); }
   .dot.error { background: var(--error); }
@@ -2673,17 +2678,21 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .ts { color: var(--text-dim); font-size: 11px; }
 
   /* Views */
-  main { padding: 16px 20px; }
+  main { padding: 6px 20px 64px; }
   .view { display: none; }
   .view.active { display: block; }
   /* Sub-nav buttons */
-  .sub-nav-btn { padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #aaa; cursor: pointer; font-size: 0.9rem; min-height: 36px; transition: all 0.15s; }
+  .sub-nav-btn { padding: 6px 14px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #aaa; cursor: pointer; font-size: 0.9rem; min-height: 36px; transition: all 0.15s; white-space: nowrap; flex-shrink: 0; }
   .sub-nav-btn.active { background: rgba(99,102,241,0.2); border-color: rgba(99,102,241,0.4); color: #fff; }
   .sub-nav-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
-  /* Cockpit is a flex column so sub-panels fill remaining height */
+  /* Horizontally scrollable sub-nav (no wrap, hide scrollbar) */
+  .sub-nav { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .sub-nav::-webkit-scrollbar { display: none; }
+  /* Cockpit is a flex column; cockpit-panels fills remaining height */
   #view-cockpit { display: none; flex-direction: column; }
   #view-cockpit.active { display: flex; flex-direction: column; }
-  #view-cockpit .tablet-view { flex: 1; min-height: 0; height: auto; }
+  /* Only direct .tablet-view children of view-cockpit get flex:1 (not ones inside cockpit-panels) */
+  #view-cockpit > .tablet-view { flex: 1; min-height: 0; height: auto; }
 
   /* Grid */
   .grid { display: grid; gap: 12px; }
@@ -2694,7 +2703,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   @media (max-width: 600px) { .grid-4, .grid-3, .grid-2 { grid-template-columns: 1fr; } }
 
   /* Card */
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
   .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
   .card-title { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--text-dim); }
   .badge { font-size: 10px; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
@@ -2927,7 +2936,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   /* ══════════════════════════════════════════════════════════════════════
      TABLET DASHBOARD MODES — Glassmorphism Design System
      ══════════════════════════════════════════════════════════════════════ */
-  .tablet-view { height: calc(100vh - 52px); overflow: hidden; background: #0a0e1a; padding: 0; display: flex; flex-direction: column; }
+  .tablet-view { height: calc(100vh - 52px - 56px); overflow: hidden; background: #0a0e1a; padding: 0; display: flex; flex-direction: column; }
   .glass-card { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.10); box-shadow: 0 0 20px rgba(0,200,255,0.05); border-radius: 16px; padding: 16px; }
   .glass-card.glow-solar { border-color: rgba(255,215,0,0.35); box-shadow: 0 0 24px rgba(255,215,0,0.12); }
   .glass-card.glow-grid  { border-color: rgba(255,140,0,0.35); box-shadow: 0 0 24px rgba(255,140,0,0.12); }
@@ -3002,33 +3011,34 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     #view-microgrid .tab-status-bar { font-size: 0.7rem !important; flex-wrap: wrap !important; gap: 4px 8px !important; min-height: auto !important; padding: 6px 8px !important; }
   }
 
-  /* ── Cockpit Sub-Nav ────────────────────────────────────────────────── */
-  .csub-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 3px;
-    padding: 7px 18px;
-    border-radius: 10px;
-    border: 1px solid rgba(255,255,255,0.07);
-    background: rgba(255,255,255,0.03);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-width: 100px;
-    user-select: none;
-    color: rgba(255,255,255,0.35);
+  /* ── Cockpit Swipe Panels + Dot Indicators ──────────────────────────── */
+  #cockpit-panels {
+    display: flex; overflow-x: scroll; scroll-snap-type: x mandatory;
+    scrollbar-width: none; -webkit-overflow-scrolling: touch;
+    flex: 1; min-height: 0;
   }
-  .csub-btn:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.7); }
-  .csub-btn.active { background: rgba(255,255,255,0.06); color: #fff; }
-  .csub-btn .csub-icon { font-size: 1rem; line-height: 1; }
-  .csub-btn .csub-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 700; opacity: 0.7; transition: opacity 0.2s; }
-  .csub-btn.active .csub-label { opacity: 1; }
-  .csub-btn .csub-dot { width: 6px; height: 6px; border-radius: 50%; border: 1.5px solid currentColor; background: transparent; transition: all 0.2s ease; }
-  .csub-btn.active .csub-dot { background: currentColor; box-shadow: 0 0 6px currentColor; }
-  .csub-btn.active[data-csub='live']      { color: #10b981; border-color: rgba(16,185,129,0.25); box-shadow: 0 0 10px rgba(16,185,129,0.07); }
-  .csub-btn.active[data-csub='microgrid'] { color: #FFD700; border-color: rgba(255,215,0,0.25);  box-shadow: 0 0 10px rgba(255,215,0,0.07);  }
-  .csub-btn.active[data-csub='trading']   { color: #3B82F6; border-color: rgba(59,130,246,0.25); box-shadow: 0 0 10px rgba(59,130,246,0.07); }
-  .csub-btn.active[data-csub='backup']    { color: #00FFFF; border-color: rgba(0,255,255,0.25);  box-shadow: 0 0 10px rgba(0,255,255,0.07);  }
+  #cockpit-panels::-webkit-scrollbar { display: none; }
+  #cockpit-panels > div {
+    scroll-snap-align: start; flex: 0 0 100%; width: 100%;
+    overflow-y: auto; box-sizing: border-box;
+  }
+  #cockpit-panels .tablet-view { height: 100%; }
+  #cockpit-dots {
+    display: flex; justify-content: center; align-items: center;
+    gap: 14px; padding: 8px 0; flex-shrink: 0;
+    background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .ck-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: rgba(255,255,255,0.2); cursor: pointer;
+    border: none; padding: 0; transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .ck-dot.active { background: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.6); transform: scale(1.25); }
+  .ck-dot[data-sub='live'].active      { background: #10b981; box-shadow: 0 0 8px rgba(16,185,129,0.7); }
+  .ck-dot[data-sub='microgrid'].active { background: #FFD700; box-shadow: 0 0 8px rgba(255,215,0,0.7); }
+  .ck-dot[data-sub='trading'].active   { background: #3B82F6; box-shadow: 0 0 8px rgba(59,130,246,0.7); }
+  .ck-dot[data-sub='backup'].active    { background: #00FFFF; box-shadow: 0 0 8px rgba(0,255,255,0.7); }
 
   /* ── 1280×800 Tablet Optimization ── */
   @media screen and (max-width: 1280px) {
@@ -3040,21 +3050,23 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     .row { gap: 8px; margin-bottom: 8px; }
     table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
   }
-  @media screen and (max-width: 1280px) and (max-height: 800px) {
+  @media screen and (max-width: 1280px) and (max-height: 900px) {
     /* Landscape 1280×800 — keep energy cockpit fully visible without scrolling */
-    main { padding: 8px 12px; }
-    .card { padding: 8px 10px; }
-    .card-header { margin-bottom: 6px; }
-    .grid { gap: 8px; }
-    .row { gap: 8px; margin-bottom: 6px; }
-    .big-val { font-size: 22px !important; }
-    .sub-val { font-size: 10px; margin-top: 2px; }
-    #power-flow-svg { max-height: 34vh !important; }
-    #csub-live > .card:first-child { margin-bottom: 8px !important; }
-    #cockpit-subnav { padding: 6px 12px; gap: 8px; }
-    .csub-btn { padding: 5px 14px; min-width: 80px; }
-    .csub-btn .csub-icon { font-size: 0.85rem; }
-    .csub-btn .csub-label { font-size: 0.6rem; }
+    main { padding: 4px 10px 64px; }
+    .card { padding: 6px 8px; }
+    .card-header { margin-bottom: 4px; }
+    .grid { gap: 6px; }
+    .row { gap: 6px; margin-bottom: 4px; }
+    .big-val { font-size: 16px !important; }
+    .big-unit { font-size: 10px !important; }
+    .sub-val { font-size: 10px; margin-top: 1px; }
+    #power-flow-svg { max-height: 170px !important; }
+    #csub-live > .card:first-child { margin-bottom: 4px !important; }
+    #cockpit-dots { padding: 3px 0; }
+    .ck-dot { width: 6px; height: 6px; }
+    .header-top { height: 36px !important; }
+    .sub-nav-btn { padding: 3px 8px; font-size: 10px; min-height: 28px; }
+    .sub-nav { padding: 4px 10px !important; }
   }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
@@ -3063,7 +3075,18 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 <header>
   <div class="header-top">
-    <div class="logo">🏠 <span>Jarvis Home</span></div>
+    <a href="http://192.168.68.72:8793" class="logo" style="text-decoration:none;color:inherit">🏠 <span>Jarvis Home</span></a>
+    <!-- Sub-nav pills live here — shown/hidden per active view -->
+    <div id="header-subnav" style="flex:1;display:flex;justify-content:center;align-items:center;gap:5px;overflow-x:auto;padding:0 12px;scrollbar-width:none">
+      <!-- Energy pills (default visible) -->
+      <div id="hsnav-energy" style="display:flex;gap:5px;align-items:center;flex-shrink:0">
+        <button class="sub-nav-btn active" onclick="showEnergySub('cockpit')">⚡ Cockpit</button>
+        <button class="sub-nav-btn" onclick="showEnergySub('solar')">☀️ Solar</button>
+        <button class="sub-nav-btn" onclick="showEnergySub('span')">🔌 SPAN</button>
+        <button class="sub-nav-btn" onclick="showEnergySub('tesla-energy')"><img src="https://p7.hiclipart.com/preview/22/647/661/5bbf5330c0fe8.jpg" height="14" style="vertical-align:middle;margin-right:4px;border-radius:2px">Tesla</button>
+        <button class="sub-nav-btn" onclick="showEnergySub('cybertruck')"><img src="https://png.pngtree.com/png-vector/20240628/ourmid/pngtree-tesla-cybertruck-with-a-stealth-bomber-fighter-jet-style-body-kit-png-image_12727295.png" height="18" style="vertical-align:middle;margin-right:3px;filter:brightness(1.2)">Cybertruck</button>
+      </div>
+    </div>
     <div class="status-bar">
       <div id="span-dot" class="dot offline" title="SPAN Panel"></div>
       <div id="enphase-dot" class="dot offline" title="Enphase"></div>
@@ -3072,19 +3095,44 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <div id="wc-dot" class="dot offline" title="Wall Connector"></div>
       <span class="ts" id="ts">—</span>
     </div>
-    <button class="nav-hamburger" onclick="toggleNav()" aria-label="Menu">☰</button>
   </div>
-  <nav id="nav-links">
-    <button class="active" onclick="showView('energy')">⚡ Energy</button>
-    <button onclick="showView('pool')">🏊 Pool</button>
-    <button onclick="showView('thermostat')">🌡️ Thermostat</button>
-    <button onclick="showView('sprinklers')">💧 Sprinklers</button>
-    <button onclick="showView('entertainment')">📺 Entertainment</button>
-    <button onclick="showView('cameras')">📷 Cameras</button>
-    <button onclick="showView('appliances')">🏠 Appliances</button>
-    <button onclick="showView('settings')">⚙️ Settings</button>
-  </nav>
 </header>
+
+<!-- ── Bottom Navigation Bar ─────────────────────────────────────────── -->
+<nav id="bottom-nav">
+  <button class="bnav-btn active" data-view="energy" onclick="showView('energy')">
+    <span class="bnav-icon">⚡</span>
+    <span class="bnav-label">Energy</span>
+  </button>
+  <button class="bnav-btn" data-view="pool" onclick="showView('pool')">
+    <span class="bnav-icon">🏊</span>
+    <span class="bnav-label">Pool</span>
+  </button>
+  <button class="bnav-btn" data-view="thermostat" onclick="showView('thermostat')">
+    <span class="bnav-icon">🌡️</span>
+    <span class="bnav-label">Thermo</span>
+  </button>
+  <button class="bnav-btn" data-view="sprinklers" onclick="showView('sprinklers')">
+    <span class="bnav-icon">💧</span>
+    <span class="bnav-label">Sprinklers</span>
+  </button>
+  <button class="bnav-btn" data-view="entertainment" onclick="showView('entertainment')">
+    <span class="bnav-icon">📺</span>
+    <span class="bnav-label">Media</span>
+  </button>
+  <button class="bnav-btn" data-view="cameras" onclick="showView('cameras')">
+    <span class="bnav-icon">📷</span>
+    <span class="bnav-label">Cameras</span>
+  </button>
+  <button class="bnav-btn" data-view="appliances" onclick="showView('appliances')">
+    <span class="bnav-icon">🏠</span>
+    <span class="bnav-label">Appliances</span>
+  </button>
+  <button class="bnav-btn" data-view="settings" onclick="showView('settings')">
+    <span class="bnav-icon">⚙️</span>
+    <span class="bnav-label">Settings</span>
+  </button>
+</nav>
 
 <!-- ── Active Appliance Banner (always visible when something is running) ── -->
 <div id="appliance-banner" style="display:none;background:rgba(16,185,129,0.08);border-bottom:1px solid rgba(16,185,129,0.2);padding:6px 16px;font-size:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap"></div>
@@ -3094,16 +3142,8 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <!-- ═══ HOME DASHBOARD ═══════════════════════════════════════════════════════ -->
 
 
-<!-- ═══ ENERGY WRAPPER ════════════════════════════════════════════════════════ -->
-<div id="view-energy" class="view active">
-  <div class="sub-nav" style="display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;">
-    <button class="sub-nav-btn active" onclick="showEnergySub('cockpit')">⚡ Cockpit</button>
-    <button class="sub-nav-btn" onclick="showEnergySub('solar')">☀️ Solar</button>
-    <button class="sub-nav-btn" onclick="showEnergySub('span')">🔌 SPAN</button>
-    <button class="sub-nav-btn" onclick="showEnergySub('tesla-energy')"><svg width="14" height="14" viewBox="0 0 342 512" fill="currentColor" style="vertical-align:middle;margin-right:3px"><path d="M0 58.8L171 512 342 58.8c-45.8 17-100.3 26.4-171 26.4S45.8 75.8 0 58.8zM171 0c59.9 0 114.4 8.2 152.4 21.2L342 0H0l18.6 21.2C56.6 8.2 111.1 0 171 0z"/></svg>Tesla</button>
-    <button class="sub-nav-btn" onclick="showEnergySub('cybertruck')"><svg width="26" height="14" viewBox="0 0 130 60" fill="none" style="vertical-align:middle;margin-right:3px"><g stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"><polygon points="8,48 14,22 32,10 72,8 96,18 118,20 122,48" fill="rgba(180,180,200,0.15)"/><line x1="32" y1="10" x2="35" y2="30"/><line x1="72" y1="8" x2="72" y2="20"/><line x1="96" y1="18" x2="96" y2="30"/><line x1="8" y1="48" x2="122" y2="48"/></g><circle cx="32" cy="48" r="9" fill="rgba(40,40,50,0.9)" stroke="currentColor" stroke-width="2.5"/><circle cx="32" cy="48" r="4" fill="rgba(200,200,210,0.6)"/><circle cx="95" cy="48" r="9" fill="rgba(40,40,50,0.9)" stroke="currentColor" stroke-width="2.5"/><circle cx="95" cy="48" r="4" fill="rgba(200,200,210,0.6)"/></svg>Cybertruck</button>
-  </div>
-</div>
+<!-- ═══ ENERGY WRAPPER (sub-nav moved to header) ══════════════════════════════ -->
+<div id="view-energy" class="view active"></div>
 
 <!-- ═══ CLIMATE WRAPPER (legacy, hidden) ════════════════════════════════════ -->
 <div id="view-climate" class="view" style="display:none">
@@ -3123,30 +3163,9 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <!-- ═══ ENERGY COCKPIT ═══════════════════════════════════════════════════════ -->
 <div id="view-cockpit" class="view" style="display:none">
 
-<div id="cockpit-subnav" style="display:flex;justify-content:center;gap:12px;padding:10px 16px;background:rgba(0,0,0,0.3);border-bottom:1px solid rgba(255,255,255,0.06);flex-shrink:0">
-  <button class="csub-btn" data-csub="live" onclick="setCockpitSub('live')">
-    <span class="csub-icon">⚡</span>
-    <span class="csub-label">Live Power Flow</span>
-    <span class="csub-dot"></span>
-  </button>
-  <button class="csub-btn" data-csub="microgrid" onclick="setCockpitSub('microgrid')">
-    <span class="csub-icon">🔆</span>
-    <span class="csub-label">Microgrid</span>
-    <span class="csub-dot"></span>
-  </button>
-  <button class="csub-btn" data-csub="trading" onclick="setCockpitSub('trading')">
-    <span class="csub-icon">📊</span>
-    <span class="csub-label">Trading</span>
-    <span class="csub-dot"></span>
-  </button>
-  <button class="csub-btn" data-csub="backup" onclick="setCockpitSub('backup')">
-    <span class="csub-icon">🔋</span>
-    <span class="csub-label">Backup</span>
-    <span class="csub-dot"></span>
-  </button>
-</div>
+<div id="cockpit-panels">
 
-<div id="csub-live" style="display:none">
+<div id="csub-live">
 
   <!-- Animated Power Flow -->
   <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px">
@@ -3154,8 +3173,8 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <span style="font-size:13px;font-weight:600;color:var(--text)">&#x26A1; Live Power Flow</span>
       <span style="font-size:11px;color:var(--text-dim)" id="flow-total-label">Total load: &#x2014; W</span>
     </div>
-    <svg id="power-flow-svg" viewBox="0 0 700 440" preserveAspectRatio="xMidYMid meet"
-         style="width:100%;max-height:440px;display:block">
+    <svg id="power-flow-svg" viewBox="0 30 700 370" preserveAspectRatio="xMidYMid meet"
+         style="width:100%;max-height:180px;display:block">
 
       <defs>
         <!-- Glow for active particles -->
@@ -3501,27 +3520,29 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 </div><!-- /csub-live -->
 
-<div id="csub-microgrid" class="tablet-view" style="display:none">
-  <div class="tab-status-bar" style="min-height:48px;gap:16px">
-    <span class="sb-time" id="mc-time" style="font-size:1.4rem;font-weight:800">--:--</span>
-    <span class="sb-rate off-peak" id="mc-rate" style="font-size:1.4rem">Off-Peak</span>
-    <span id="mc-weather" style="opacity:0.7;font-size:1.4rem">Queen Creek, AZ</span>
+<div id="csub-microgrid" class="tablet-view">
+  <div class="tab-status-bar" style="min-height:auto;gap:8px;padding:4px 10px;">
+    <span class="sb-time" id="mc-time" style="font-size:0.82rem;font-weight:800">--:--</span>
+    <span class="sb-rate off-peak" id="mc-rate" style="font-size:0.82rem">Off-Peak</span>
+    <span id="mc-weather" style="opacity:0.7;font-size:0.82rem">Queen Creek, AZ</span>
     <span style="flex:1"></span>
-    <span id="mc-banner-solar" style="color:#FFD700;font-weight:700;font-size:1.4rem">☀ — kW</span>
-    <span id="mc-banner-load" style="color:#9B59B6;font-weight:700;font-size:1.4rem">🏠 — kW</span>
-    <span id="mc-banner-grid" style="color:#3B82F6;font-weight:700;font-size:1.4rem">⚡ — kW</span>
-    <span id="mc-banner-cost" style="color:#10b981;font-weight:700;font-size:1.4rem">$—/hr</span>
-    <span id="mc-banner-coverage" style="color:#FFD700;font-weight:700;font-size:1.4rem">—% ☀</span>
-    <span class="sb-grid up" id="mc-grid-status" style="font-size:1.4rem">Grid ✓</span>
-    <span id="mc-island-badge" class="island-badge" style="display:none;font-size:1.4rem">⚡ ISLANDED</span>
+    <span id="mc-banner-solar" style="color:#FFD700;font-weight:700;font-size:0.82rem">☀ — kW</span>
+    <span id="mc-banner-load" style="color:#9B59B6;font-weight:700;font-size:0.82rem">🏠 — kW</span>
+    <span id="mc-banner-grid" style="color:#3B82F6;font-weight:700;font-size:0.82rem">⚡ — kW</span>
+    <span id="mc-banner-cost" style="color:#10b981;font-weight:700;font-size:0.82rem">$—/hr</span>
+    <span id="mc-banner-coverage" style="color:#FFD700;font-weight:700;font-size:0.82rem">—% ☀</span>
+    <span class="sb-grid up" id="mc-grid-status" style="font-size:0.82rem">Grid ✓</span>
+    <span id="mc-island-badge" class="island-badge" style="display:none;font-size:0.82rem">⚡ ISLANDED</span>
   </div>
   <div class="mc-layout">
     <!-- LEFT — Sources -->
     <div class="mc-left">
       <div class="glass-card" id="mc-solar-card" style="border-color:rgba(255,215,0,0.3)">
         <span class="label-sm">Solar Production</span>
-        <div class="hero-num" id="mc-solar-total-kw" style="color:#FFD700">--</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW total</div>
+        <div style="display:flex;align-items:baseline;gap:5px">
+          <div class="hero-num" id="mc-solar-total-kw" style="color:#FFD700">--</div>
+          <span style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</span>
+        </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;margin-top:10px;font-size:0.78rem">
           <div style="opacity:0.55">Enphase</div><div style="opacity:0.55">SolarEdge</div>
           <div id="mc-enphase-sub" style="color:#FFD700;font-weight:600">--</div>
@@ -3531,9 +3552,11 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       </div>
       <div class="glass-card" id="mc-grid-card" style="border-color:rgba(59,130,246,0.3)">
         <span class="label-sm">SRP Grid</span>
-        <div class="hero-num" id="mc-grid-kw" style="color:#3B82F6">—</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
-        <div id="mc-grid-direction" style="font-size:10px;opacity:0.5;margin-top:4px">—</div>
+        <div style="display:flex;align-items:baseline;gap:5px">
+          <div class="hero-num" id="mc-grid-kw" style="color:#3B82F6">—</div>
+          <span style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</span>
+        </div>
+        <div id="mc-grid-direction" style="font-size:10px;opacity:0.5;margin-top:2px">—</div>
         <canvas id="mc-grid-spark" class="sparkline" style="margin-top:8px"></canvas>
       </div>
     </div>
@@ -3559,31 +3582,37 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <div class="mc-right">
       <div class="glass-card" id="mc-home-card" style="flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column">
         <span class="label-sm">Home Panel</span>
-        <div class="hero-num" id="mc-home-load-kw" style="color:#9B59B6">—</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW total</div>
-        <canvas id="mc-home-spark" class="sparkline" style="margin-top:8px;flex-shrink:0"></canvas>
-        <div id="mc-home-circuits" style="margin-top:8px;font-size:0.75rem;overflow:hidden;flex:1"></div>
+        <div style="display:flex;align-items:baseline;gap:5px">
+          <div class="hero-num" id="mc-home-load-kw" style="color:#9B59B6">—</div>
+          <span style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</span>
+        </div>
+        <canvas id="mc-home-spark" class="sparkline" style="margin-top:6px;flex-shrink:0"></canvas>
+        <div id="mc-home-circuits" style="margin-top:6px;font-size:0.75rem;overflow:hidden;flex:1"></div>
       </div>
-      <div class="glass-card" id="mc-pool-card">
+      <div class="glass-card" id="mc-pool-card" style="padding:8px 12px">
         <span class="label-sm">Pool Sub-Panel</span>
-        <div class="hero-num" id="mc-pool-kw" style="color:#06b6d4">—</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
-        <div id="mc-pool-status" style="font-size:10px;opacity:0.5;margin-top:4px">—</div>
-        <canvas id="mc-pool-spark" class="sparkline" style="margin-top:8px"></canvas>
+        <div style="display:flex;align-items:baseline;gap:4px">
+          <div style="font-size:1.4rem;font-weight:800;font-variant-numeric:tabular-nums;color:#06b6d4" id="mc-pool-kw">—</div>
+          <span style="font-size:0.75rem;color:rgba(255,255,255,0.4)">kW</span>
+        </div>
+        <div id="mc-pool-status" style="font-size:10px;opacity:0.5;margin-top:2px">—</div>
+        <canvas id="mc-pool-spark" class="sparkline" style="margin-top:4px;height:22px"></canvas>
       </div>
-      <div class="glass-card" id="mc-truck-card" style="border-color:rgba(0,255,255,0.3)">
+      <div class="glass-card" id="mc-truck-card" style="border-color:rgba(0,255,255,0.3);padding:8px 12px">
         <span class="label-sm">Cybertruck</span>
-        <div class="hero-num" id="mc-truck-kw" style="color:#00FFFF">—</div>
-        <div style="font-size:0.85rem;color:rgba(255,255,255,0.4)">kW</div>
-        <div id="mc-truck-mode" style="font-size:10px;opacity:0.5;margin-top:4px">Idle</div>
-        <canvas id="mc-truck-spark" class="sparkline" style="margin-top:8px"></canvas>
+        <div style="display:flex;align-items:baseline;gap:4px">
+          <div style="font-size:1.4rem;font-weight:800;font-variant-numeric:tabular-nums;color:#00FFFF" id="mc-truck-kw">—</div>
+          <span style="font-size:0.75rem;color:rgba(255,255,255,0.4)">kW</span>
+        </div>
+        <div id="mc-truck-mode" style="font-size:10px;opacity:0.5;margin-top:2px">Idle</div>
+        <canvas id="mc-truck-spark" class="sparkline" style="margin-top:4px;height:22px"></canvas>
       </div>
     </div>
   </div>
 </div><!-- /csub-microgrid -->
 
-<div id="csub-trading" class="tablet-view" style="display:none">
-  <div class="tab-status-bar" style="font-size:1.4rem;padding:6px 14px;gap:16px;min-height:48px;flex-wrap:wrap">
+<div id="csub-trading" class="tablet-view">
+  <div class="tab-status-bar" style="font-size:0.82rem;padding:6px 14px;gap:16px;min-height:48px;flex-wrap:wrap">
     <span id="td-time" style="font-weight:800">--:--</span>
     <span class="sb-rate off-peak" id="td-rate" style="font-size:1.1rem;padding:3px 8px">Off-Peak</span>
     <span id="td-weather" style="opacity:0.85">☀ --</span>
@@ -3666,7 +3695,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   </div>
 </div><!-- /csub-trading -->
 
-<div id="csub-backup" class="tablet-view" style="display:none">
+<div id="csub-backup" class="tablet-view">
   <div class="tab-status-bar" id="bi-statusbar">
     <span style="font-size:12px;font-weight:700">🔋 Backup Intelligence</span>
     <span id="bi-island-badge" class="island-badge" style="display:none">⚡ ISLANDED</span>
@@ -3753,6 +3782,15 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     </div><!-- /bi-log -->
   </div>
 </div><!-- /csub-backup -->
+
+</div><!-- /cockpit-panels -->
+
+<div id="cockpit-dots">
+  <button class="ck-dot" data-sub="live" onclick="setCockpitSub('live')" title="Live Power Flow"></button>
+  <button class="ck-dot" data-sub="microgrid" onclick="setCockpitSub('microgrid')" title="Microgrid"></button>
+  <button class="ck-dot" data-sub="trading" onclick="setCockpitSub('trading')" title="Trading"></button>
+  <button class="ck-dot" data-sub="backup" onclick="setCockpitSub('backup')" title="Backup/Battery"></button>
+</div>
 
 </div><!-- /cockpit -->
 
@@ -4851,12 +4889,13 @@ function showEnergySub(name) {
   // cockpit uses flex layout
   const ckEl = document.getElementById('view-cockpit');
   if (name === 'cockpit' && ckEl) ckEl.style.display = 'flex';
-  document.querySelectorAll('#view-energy .sub-nav-btn').forEach(btn => {
+  document.querySelectorAll('#hsnav-energy .sub-nav-btn').forEach(btn => {
     btn.classList.toggle('active', btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'"+name+"'"));
   });
   if (name === 'cockpit') {
     var savedSub = localStorage.getItem('jarvis-cockpit-sub') || 'microgrid';
-    setTimeout(function() { setCockpitSub(savedSub); }, 0);
+    // Give layout time to resolve before scrolling
+    setTimeout(function() { setCockpitSub(savedSub); }, 50);
   }
 }
 
@@ -4878,19 +4917,13 @@ function showEntertainmentSub(name) {
     btn.classList.toggle('active', btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'"+name+"'"));
   });
 }
-function toggleNav() {
-  const nav = document.getElementById('nav-links');
-  nav.classList.toggle('open');
-}
-// Close nav when a view is selected (mobile UX)
-document.addEventListener('click', function(e) {
-  if (e.target.closest('#nav-links') && e.target.tagName === 'BUTTON') {
-    const nav = document.getElementById('nav-links');
-    if (window.innerWidth <= 768) nav.classList.remove('open');
-  }
-});
 
 function showView(v) {
+  // Update header sub-nav: show energy pills only when on energy section
+  const _energyViews2 = ['energy','cockpit','solar','span','tesla-energy','cybertruck'];
+  const hsnav = document.getElementById('hsnav-energy');
+  if (hsnav) hsnav.style.display = _energyViews2.includes(v) ? 'flex' : 'none';
+
   // Hide all top-level views
   views.forEach(id => {
     const el = document.getElementById('view-'+id);
@@ -4918,9 +4951,15 @@ function showView(v) {
     if (_rk.length) try { renderRoku(_rk); } catch(e) {}
   }
 
-  // Update nav active state
-  document.querySelectorAll('#nav-links button').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'"+v+"'"));
+  // Update bottom-nav active state
+  const _energyViews = ['energy','cockpit','solar','span','tesla-energy','cybertruck'];
+  document.querySelectorAll('#bottom-nav .bnav-btn').forEach(btn => {
+    const dv = btn.dataset.view;
+    const isActive = dv === v
+      || (dv === 'energy' && _energyViews.includes(v))
+      || (dv === 'thermostat' && v === 'home-control')
+      || (dv === 'sprinklers' && v === 'sprinklers');
+    btn.classList.toggle('active', isActive);
   });
 }
 
@@ -7787,34 +7826,17 @@ function myqCmd(serial, action) {
     .catch(e=>toast('✗ MyQ: ' + e));
 }
 
-// Swipe gesture support for cockpit sub-view switching
-(function() {
-  let ts=0, tx=0;
-  const cockpitSubs = ['live','microgrid','trading','backup'];
-  function curSub() {
-    return cockpitSubs.find(s => { var el=document.getElementById('csub-'+s); return el && el.style.display !== 'none'; });
-  }
-  document.addEventListener('touchstart', e=>{ts=e.touches[0].clientX; tx=e.touches[0].clientY;}, {passive:true});
-  document.addEventListener('touchend', e=>{
-    const dx=e.changedTouches[0].clientX-ts, dy=e.changedTouches[0].clientY-tx;
-    if(Math.abs(dx)<60||Math.abs(dy)>Math.abs(dx)*0.7) return;
-    const cockpitEl = document.getElementById('view-cockpit');
-    if(!cockpitEl || cockpitEl.style.display==='none') return;
-    const cur = curSub(); if(!cur) return;
-    const idx = cockpitSubs.indexOf(cur);
-    if(dx<0 && idx<cockpitSubs.length-1) setCockpitSub(cockpitSubs[idx+1]);
-    if(dx>0 && idx>0) setCockpitSub(cockpitSubs[idx-1]);
-  }, {passive:true});
-  // Keyboard arrow keys for cockpit sub-view switching
-  document.addEventListener('keydown', e=>{
-    const cockpitEl = document.getElementById('view-cockpit');
-    if(!cockpitEl || cockpitEl.style.display==='none') return;
-    const cur = curSub(); if(!cur) return;
-    const idx = cockpitSubs.indexOf(cur);
-    if(e.key==='ArrowRight' && idx<cockpitSubs.length-1) setCockpitSub(cockpitSubs[idx+1]);
-    if(e.key==='ArrowLeft' && idx>0) setCockpitSub(cockpitSubs[idx-1]);
-  });
-})();
+// Keyboard arrow keys for cockpit panel scrolling
+document.addEventListener('keydown', function(e) {
+  var cockpitEl = document.getElementById('view-cockpit');
+  if (!cockpitEl || cockpitEl.style.display === 'none') return;
+  var panelsEl = document.getElementById('cockpit-panels');
+  if (!panelsEl) return;
+  var idx = Math.round(panelsEl.scrollLeft / (panelsEl.offsetWidth || 1));
+  idx = Math.max(0, Math.min(idx, _cockpitSubs.length - 1));
+  if (e.key === 'ArrowRight' && idx < _cockpitSubs.length - 1) setCockpitSub(_cockpitSubs[idx + 1]);
+  if (e.key === 'ArrowLeft' && idx > 0) setCockpitSub(_cockpitSubs[idx - 1]);
+});
 
 // Flag for SPAN token (set by Python template)
 const SPAN_TOKEN_CONFIGURED = {{ 'true' if config_span_token else 'false' }};
@@ -7856,25 +7878,63 @@ fetch('/api/state').then(r=>r.json()).then(renderState).catch(console.error);
 // Start particle animation loop (runs continuously, draws only when microgrid mode active)
 mcDrawFrame();
 
-// ── Cockpit Sub-Nav ──────────────────────────────────────────────────
+// ── Cockpit Swipe Panels ─────────────────────────────────────────────
+var _cockpitSubs = ['live', 'microgrid', 'trading', 'backup'];
+
+function _setCockpitDot(sub) {
+  document.querySelectorAll('.ck-dot').forEach(function(d) {
+    d.classList.toggle('active', d.dataset.sub === sub);
+  });
+}
+
 function setCockpitSub(sub) {
-  // Update sub-nav buttons
-  document.querySelectorAll('.csub-btn').forEach(function(btn) {
-    btn.classList.toggle('active', btn.dataset.csub === sub);
-  });
-  // Show/hide sub-content panels
-  ['live', 'microgrid', 'trading', 'backup'].forEach(function(s) {
-    var el = document.getElementById('csub-' + s);
-    if (el) el.style.display = s === sub ? '' : 'none';
-  });
-  // Persist
+  var idx = _cockpitSubs.indexOf(sub);
+  if (idx < 0) idx = 0;
+  var panelsEl = document.getElementById('cockpit-panels');
+  if (panelsEl) {
+    if (panelsEl.offsetWidth > 0) {
+      panelsEl.scrollTo({ left: idx * panelsEl.offsetWidth, behavior: 'smooth' });
+    } else {
+      // Not laid out yet — set directly after layout
+      setTimeout(function() {
+        if (panelsEl.offsetWidth > 0) panelsEl.scrollLeft = idx * panelsEl.offsetWidth;
+      }, 80);
+    }
+  }
+  _setCockpitDot(sub);
   localStorage.setItem('jarvis-cockpit-sub', sub);
 }
+
+// Update dots on scroll (IntersectionObserver-free: just use scroll event)
+(function() {
+  var panelsEl = document.getElementById('cockpit-panels');
+  if (!panelsEl) return;
+  var _scrollTimer;
+  panelsEl.addEventListener('scroll', function() {
+    clearTimeout(_scrollTimer);
+    _scrollTimer = setTimeout(function() {
+      var idx = Math.round(panelsEl.scrollLeft / (panelsEl.offsetWidth || 1));
+      idx = Math.max(0, Math.min(idx, _cockpitSubs.length - 1));
+      var sub = _cockpitSubs[idx];
+      _setCockpitDot(sub);
+      localStorage.setItem('jarvis-cockpit-sub', sub);
+    }, 80);
+  }, { passive: true });
+})();
 
 // Init: restore last sub or default to microgrid
 (function() {
   var _initSub = localStorage.getItem('jarvis-cockpit-sub') || 'microgrid';
-  setCockpitSub(_initSub);
+  _setCockpitDot(_initSub);
+  // Scroll to saved position after a short delay (panels may not be laid out yet)
+  setTimeout(function() {
+    var panelsEl = document.getElementById('cockpit-panels');
+    var idx = _cockpitSubs.indexOf(_initSub);
+    if (idx < 0) idx = 0;
+    if (panelsEl && panelsEl.offsetWidth > 0) {
+      panelsEl.scrollLeft = idx * panelsEl.offsetWidth;
+    }
+  }, 100);
 })();
 </script>
 </body>

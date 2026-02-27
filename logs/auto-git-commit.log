@@ -3380,3 +3380,20 @@ CLEAN master-dashboard (nothing to commit)
 [main 8c4b9d7] auto: snapshot 2026-02-27T22:00:01Z
  1 file changed, 17 insertions(+), 6 deletions(-)
 COMMITTED blofin-stack
+[main affdd242] auto: snapshot 2026-02-27T22:00:01Z
+ 5 files changed, 143 insertions(+), 42 deletions(-)
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main 627bae14] auto: snapshot 2026-02-27T22:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 3 committed, 6 skipped
+CLEAN master-dashboard (nothing to commit)
+[main 2bda297] auto: snapshot 2026-02-27T23:00:01Z
+ 1 file changed, 110 insertions(+)
+ create mode 100644 analysis/ml_direction_predictor_promotion.md
+COMMITTED blofin-stack

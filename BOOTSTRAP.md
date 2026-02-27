@@ -78,7 +78,9 @@ If you skip these and get corrected, that's the most expensive thing that happen
 - equal_tops_bottoms (PF 3.02) is the #1 priority — NOT yet in live inference, needs to be added to God Model
 - gapfill + vwapfade bleeding live (14%/11% WR) — under investigation
 - IBKR/nq-bar-feed retired. SMB watcher is the only live feed.
-- Dispatcher reads brain/DISPATCHER.md | Auto Card Generator reads brain/AUTO_CARD_GENERATOR.md (cron-only, no need to read these every session — key facts are here)
+- DISPATCHER.md added to mandatory startup reads (step 5 in BOOTSTRAP) — Rob will ask for dispatch work in any session
+- QA sentinel removed. Builder self-verifies. Dispatcher Phase 7 + Oversight cron double-check Done cards are live.
+- No Review/Test status ever. Cards go In Progress → Done directly.
 
 ## Session-End Protocol (run this whenever significant changes happen)
 1. Update "Recent Changes" above with key decisions/facts (3-5 bullets max, replace stale entries)

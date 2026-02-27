@@ -2187,9 +2187,9 @@ def camera_snapshot(cam_id):
 
 # ── RTSP camera frame cache (background ffmpeg threads) ───────────────────────
 _RTSP_CAM_URLS = {
-    "upstairs":   "rtsp://Camera:Feed@192.168.68.51/live",
-    "downstairs": "rtsp://Camera:Feed@192.168.68.82/live",
     "front-side-cam": "rtsp://127.0.0.1:8554/front-side-cam",  # via docker-wyze-bridge
+    "upstairs-cam":   "rtsp://127.0.0.1:8554/upstairs-cam",    # via docker-wyze-bridge
+    "downstairs-cam": "rtsp://127.0.0.1:8554/downstairs-cam",  # via docker-wyze-bridge
 }
 _rtsp_frame_cache: dict = {}   # cam_id → latest JPEG bytes
 _rtsp_capture_threads: dict = {}
@@ -2620,7 +2620,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Jarvis Home</title>
 <style>
   :root {
@@ -3029,6 +3029,33 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .csub-btn.active[data-csub='microgrid'] { color: #FFD700; border-color: rgba(255,215,0,0.25);  box-shadow: 0 0 10px rgba(255,215,0,0.07);  }
   .csub-btn.active[data-csub='trading']   { color: #3B82F6; border-color: rgba(59,130,246,0.25); box-shadow: 0 0 10px rgba(59,130,246,0.07); }
   .csub-btn.active[data-csub='backup']    { color: #00FFFF; border-color: rgba(0,255,255,0.25);  box-shadow: 0 0 10px rgba(0,255,255,0.07);  }
+
+  /* ── 1280×800 Tablet Optimization ── */
+  @media screen and (max-width: 1280px) {
+    .card { padding: 10px 12px; }
+    .big-val { font-size: 26px !important; }
+    .big-unit { font-size: 12px !important; }
+    .sub-val { font-size: 11px; margin-top: 4px; }
+    .sub-nav-btn { padding: 4px 10px; font-size: 11px; }
+    .row { gap: 8px; margin-bottom: 8px; }
+    table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  }
+  @media screen and (max-width: 1280px) and (max-height: 800px) {
+    /* Landscape 1280×800 — keep energy cockpit fully visible without scrolling */
+    main { padding: 8px 12px; }
+    .card { padding: 8px 10px; }
+    .card-header { margin-bottom: 6px; }
+    .grid { gap: 8px; }
+    .row { gap: 8px; margin-bottom: 6px; }
+    .big-val { font-size: 22px !important; }
+    .sub-val { font-size: 10px; margin-top: 2px; }
+    #power-flow-svg { max-height: 34vh !important; }
+    #csub-live > .card:first-child { margin-bottom: 8px !important; }
+    #cockpit-subnav { padding: 6px 12px; gap: 8px; }
+    .csub-btn { padding: 5px 14px; min-width: 80px; }
+    .csub-btn .csub-icon { font-size: 0.85rem; }
+    .csub-btn .csub-label { font-size: 0.6rem; }
+  }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 </head>
@@ -6041,8 +6068,8 @@ const _FRONT_SIDE_MAC = 'D03F275A9799';
 
 function _getRtspId(cam) {
   const n = (cam.name || '').toLowerCase();
-  if (n.includes('upstairs'))   return 'upstairs';
-  if (n.includes('downstairs')) return 'downstairs';
+  if (n.includes('upstairs'))   return 'upstairs-cam';    // via docker-wyze-bridge
+  if (n.includes('downstairs')) return 'downstairs-cam';  // via docker-wyze-bridge
   if (n.includes('front'))      return 'front-side-cam';  // via docker-wyze-bridge
   return null;
 }
@@ -6310,23 +6337,39 @@ function renderCameras(cameras) {
 }
 
 // ══ Nest helpers ══════════════════════════════════════════════════════════════
-let _nestSetpoints = {};  // device_name → current cool setpoint
+let _nestSetpoints = {};  // device_name → {heat_f, cool_f, mode}
 
-function nestAdjust(delta, deviceName) {
-  if (!_nestSetpoints[deviceName]) _nestSetpoints[deviceName] = 70;
-  _nestSetpoints[deviceName] += delta;
-  const sp = _nestSetpoints[deviceName];
+function nestAdjust(delta, deviceName, which) {
+  // which = 'heat' or 'cool'
+  const sp = _nestSetpoints[deviceName] || {heat_f: 68, cool_f: 74, mode: 'HEATCOOL'};
+  if (which === 'cool') sp.cool_f = Math.round((sp.cool_f || 74) + delta);
+  else sp.heat_f = Math.round((sp.heat_f || 68) + delta);
+  // Enforce min gap of 2°F between heat and cool
+  if (sp.cool_f - sp.heat_f < 2) {
+    if (which === 'cool') sp.heat_f = sp.cool_f - 2;
+    else sp.cool_f = sp.heat_f + 2;
+  }
+  _nestSetpoints[deviceName] = sp;
   const safeId = deviceName.replace(/[^a-z0-9]/gi, '_');
-  const el = document.getElementById('nest-sp-' + safeId);
-  if (el) el.textContent = sp;
+  const heatEl = document.getElementById('nest-sp-heat-' + safeId);
+  const coolEl = document.getElementById('nest-sp-cool-' + safeId);
+  if (heatEl) heatEl.textContent = sp.heat_f;
+  if (coolEl) coolEl.textContent = sp.cool_f;
+
+  const body = sp.mode === 'HEATCOOL'
+    ? {device_name: deviceName, cool_f: sp.cool_f, heat_f: sp.heat_f}
+    : which === 'cool'
+      ? {device_name: deviceName, cool_f: sp.cool_f}
+      : {device_name: deviceName, heat_f: sp.heat_f};
+
   fetch('/api/nest/setpoint', {
     method: 'POST',
     headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({device_name: deviceName, cool_f: sp})
+    body: JSON.stringify(body)
   }).then(r=>r.json()).then(d => {
-    if (d.ok) toast('✓ ' + sp + '°F → ' + deviceName.split('/').pop().slice(0,8));
-    else toast('✗ ' + (d.error||'Error'), 5000);
-  }).catch(e => toast('✗ ' + e, 5000));
+    if (d.ok) toast('&#10003; Range ' + sp.heat_f + '&#8211;' + sp.cool_f + '&#xB0;F');
+    else toast('&#10007; ' + (d.error||'Error'), 5000);
+  }).catch(e => toast('&#10007; ' + e, 5000));
 }
 
 function renderNest(nest) {
@@ -6370,27 +6413,45 @@ function renderNest(nest) {
   if (container) {
     container.innerHTML = thermostats.map(t => {
       const safeId   = t.device_name.replace(/[^a-z0-9]/gi, '_');
-      const spVal    = t.cool_setpoint_f || t.heat_setpoint_f || 70;
-      if (!_nestSetpoints[t.device_name]) _nestSetpoints[t.device_name] = Math.round(spVal);
-      const devEnc   = encodeURIComponent(t.device_name).replace(/'/g, '%27');
+      if (!_nestSetpoints[t.device_name]) _nestSetpoints[t.device_name] = {
+        heat_f: Math.round(t.heat_setpoint_f || 68),
+        cool_f: Math.round(t.cool_setpoint_f || 74),
+        mode: t.mode
+      };
+      const sp     = _nestSetpoints[t.device_name];
+      // Keep mode fresh from server
+      sp.mode = t.mode;
+      const devEnc = encodeURIComponent(t.device_name).replace(/'/g, '%27');
+      const isRange = t.mode === 'HEATCOOL';
       return `
       <div class="card" style="min-width:280px;flex:1">
         <div class="card-header">
-          <span class="card-title">🌡️ ${t.name}</span>
+          <span class="card-title">&#x1F321;&#xFE0F; ${t.name}</span>
           <span class="badge ${statusColor(t.status)}">${t.status}</span>
         </div>
         <div style="display:flex;gap:20px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px">
           <div>
             <div class="sub-val">Current Temp</div>
-            <div class="big-val c-pool" style="font-size:36px">${Math.round(t.temp_f)}<span class="big-unit">°F</span></div>
+            <div class="big-val c-pool" style="font-size:36px">${Math.round(t.temp_f)}<span class="big-unit">&#xB0;F</span></div>
           </div>
           <div>
-            <div class="sub-val">Cool Setpoint</div>
-            <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
-              <button class="btn" onclick="nestAdjust(-1, decodeURIComponent('${devEnc}'))" style="font-size:16px;padding:4px 12px">−</button>
-              <span class="big-val" id="nest-sp-${safeId}" style="font-size:26px">${Math.round(spVal)}</span>
-              <span class="big-unit">°F</span>
-              <button class="btn" onclick="nestAdjust(1, decodeURIComponent('${devEnc}'))" style="font-size:16px;padding:4px 12px">+</button>
+            <div class="sub-val">Setpoint Range</div>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+              ${isRange ? `
+              <div style="display:flex;align-items:center;gap:6px">
+                <span style="font-size:10px;color:var(--text-dim);width:32px">HEAT</span>
+                <button class="btn" onclick="nestAdjust(-1, decodeURIComponent('${devEnc}'), 'heat')" style="font-size:14px;padding:2px 10px">&#8722;</button>
+                <span id="nest-sp-heat-${safeId}" style="font-size:20px;font-weight:600;min-width:28px;text-align:center">${sp.heat_f}</span>
+                <button class="btn" onclick="nestAdjust(1, decodeURIComponent('${devEnc}'), 'heat')" style="font-size:14px;padding:2px 10px">+</button>
+                <span style="font-size:11px;color:var(--text-dim)">&#xB0;F</span>
+              </div>` : ''}
+              <div style="display:flex;align-items:center;gap:6px">
+                <span style="font-size:10px;color:var(--text-dim);width:32px">COOL</span>
+                <button class="btn" onclick="nestAdjust(-1, decodeURIComponent('${devEnc}'), 'cool')" style="font-size:14px;padding:2px 10px">&#8722;</button>
+                <span id="nest-sp-cool-${safeId}" style="font-size:20px;font-weight:600;min-width:28px;text-align:center">${sp.cool_f}</span>
+                <button class="btn" onclick="nestAdjust(1, decodeURIComponent('${devEnc}'), 'cool')" style="font-size:14px;padding:2px 10px">+</button>
+                <span style="font-size:11px;color:var(--text-dim)">&#xB0;F</span>
+              </div>
             </div>
           </div>
         </div>

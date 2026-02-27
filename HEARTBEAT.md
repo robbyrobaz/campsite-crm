@@ -1,6 +1,6 @@
 # HEARTBEAT.md - Proactive Health Checks
 
-> **Runtime:** This runs as an **isolated Haiku cron job** (hourly). It does NOT wake the main Jarvis (Opus) session. Update status.json silently when all OK. Only alert via ntfy if something needs attention.
+> **Runtime:** This runs as an **isolated Haiku cron job** (every 2h). It does NOT wake the main Jarvis (Sonnet) session. Update status.json silently when all OK. Only alert via ntfy if something needs attention.
 
 ## Server Health (every heartbeat)
 

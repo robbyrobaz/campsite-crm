@@ -52,12 +52,13 @@ If you skip these and get corrected, that's the most expensive thing that happen
 
 ## Key Facts (often forgotten, very expensive to re-derive)
 - **NQ data feed**: NinjaTrader (Windows, 192.168.68.88) → SMB share `/mnt/nt_bridge/bars.csv` → `nq-smb-watcher.service` → `NQ_continuous_1min.csv`. Live and running as of Feb 26.
-- **NQ execution chain**: Signal engine → TradersPost webhook → Tradovate/Lucid prop accounts (execution). NOT IBKR for live trading. NOT TradersPost for data.
+- **NQ data feed**: NinjaTrader SMB → `/mnt/nt_bridge/bars.csv` (read-only) → `nq-smb-watcher.service` → `NQ_continuous_1min.csv` (UTC). Live and running.
+- **NQ execution chain (future, Rob approves)**: God Model signal → TradersPost webhook → Tradovate → Lucid prop accounts. Currently DRY_RUN=True always.
 - **Windows setup**: Python ML → NinjaTrader directly. TradersPost has NEVER been tested.
 - **Start with MNQ** (not NQ) for initial live validation — 1/10th size, $2/pt
 - **ETB (equal_tops_bottoms) is UNBLACKLISTED (Feb 26 2026)** — blacklist was wrong. 10/10 WF folds pass prop sim, PF 2.78–3.27, Sharpe 7.3–8.6, ~2000+ OOS trades per fold. This is one of the strongest strategies. ML feature research card in progress to find best entry conditions.
 - **Jinja/JS**: Always use `&quot;` not `\'` in JS strings inside Jinja templates
-- **Token reset**: March 1, 4:00 PM MST. **Sonnet is the highest model for EVERYTHING. Opus is banned.** Gateway config: primary=sonnet, fallback=haiku. If you ever see Opus in session_status, fix it immediately.
+- **Model routing**: Sonnet for all reasoning/code/orchestration. Haiku for crons and lightweight tasks. **Opus is banned.** Gateway config: primary=`anthropic/claude-sonnet-4-6`, fallback=haiku. If you ever see Opus in session_status, fix it immediately.
 - **Webhook**: `https://webhooks.traderspost.io/trading/webhook/51e37934-7a18-4e37-9dc5-33416a36d579/2ddfa7c41bcf347dc1a599108945b07a`
 - **Kanban API**: POST to `/api/inbox` with field `text` (not `body`)
 - **Always restart service after code changes**: `systemctl --user restart <service>`

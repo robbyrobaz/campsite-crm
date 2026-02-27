@@ -20,7 +20,7 @@
 - Feature library: 95+ technical indicators
 - Backtester: 7-day historical replay, multi-timeframe
 - ML pipeline: 5 models (direction, risk, price, momentum, volatility)
-- Ranking: strategies ranked by `bt_pnl_pct` (compounded PnL %). Promotion gates: min 100 trades, PF≥1.35, MDD<50%, PnL>0. FT demotion: PF<1.1 or MDD>50% after 20 FT trades. EEP scoring was removed.
+- Ranking: strategies ranked by `bt_pnl_pct` (compounded PnL %). Promotion gates: min 100 trades, PF≥1.35, MDD<50%, PnL>0. FT demotion: PF<1.1 or MDD>50% after 20 FT trades.
 - Paper trading reality gap: slippage 0.052%/side (2.6x worse than assumed), fill rate 67%, stops too tight (47% hit then reversed)
 
 ### Numerai
@@ -31,7 +31,7 @@
 
 ### Model Strategy
 - Subscription: Claude Max 5x ($100/mo flat). Resets every 5 hours.
-- Model routing table is in AGENTS.md (opus/sonnet/haiku/mini/codex)
+- Model routing: Sonnet for all reasoning/code/main session. Haiku for cron jobs, health checks, lightweight tasks. Opus is banned.
 
 ## Lessons Learned
 
@@ -159,43 +159,38 @@ Never enable live trading, fire TradersPost webhooks, place real orders, or star
 
 ### Final Architecture (locked)
 ```
-DATA:       Tradovate API WS → wss://md.tradovateapi.com/v1/websocket
-            → pipeline/data_feed/tradovate_feed.py
-            → processed_data/NQ_continuous_1min.csv (single source of truth)
+DATA:       NinjaTrader (Windows 192.168.68.88) → SMB /mnt/nt_bridge/bars.csv (ET timestamps)
+            → nq-smb-watcher.service converts ET→UTC, appends to NQ_continuous_1min.csv
+            → God Model inference on every bar (DRY_RUN=True)
 
-EXECUTION:  Signal engine → TradersPost webhook → Tradovate → Lucid prop accounts
-            Webhook: https://webhooks.traderspost.io/trading/webhook/51e37934-7a18-4e37-9dc5-33416a36d579/...
-            NOTE: Rotate webhook URL — was shared in chat Feb 24
-
-INTERIM:    IBKR paper account (DUH860616) used for delayed (~15 min) data via
-            pipeline/data_feed/ib_gap_fill.py → nq-bar-feed.service (active)
-            Switch to Tradovate when live creds arrive
+EXECUTION:  (Future, Rob approves) Signal engine → TradersPost webhook → Tradovate → Lucid prop accounts
+            Webhook token in config_live.py (gitignored) — do NOT fire without Rob's approval
 ```
 
 ### Key Architecture Decisions
-- **Data and execution are decoupled**: Tradovate for data (personal acct), TradersPost→Tradovate for execution (Lucid prop accts)
-- **TradersPost is execution-only**: does NOT provide market data outward. Tradovate integration only routes orders, no data feed
-- **IBKR direct API**: requires partner approval (gated). Don't pursue for personal accounts
-- **TradeStation API**: also gated. Rob doesn't qualify as individual developer
-- **Tradovate data feed**: open to account holders. Needs CID (int) + SEC (str) from developer portal + username/password
-- **signalPrice is MANDATORY** in TradersPost webhooks when using Tradovate broker — Tradovate doesn't provide quotes to TradersPost
+- **SMB feed is the live data source** — NinjaTrader writes bars.csv, we read it. Never write to it.
+- **TradersPost is execution-only** — routes orders only, no data feed
+- **Tradovate feed** — optional future upgrade, credentials not yet set up
+- **signalPrice is MANDATORY** in TradersPost webhooks when using Tradovate broker
 
-### Tradovate Credentials Needed (Rob getting tomorrow Feb 25)
+### Tradovate Credentials (needed for live feed — not yet provided)
 - `TRADOVATE_CID`  — integer, from tradovate.com → Settings → Developer → API Keys
 - `TRADOVATE_SEC`  — string, same location
 - `TRADOVATE_USER` — Tradovate email
 - `TRADOVATE_PASS` — Tradovate password
 - Store in: `NQ-Trading-PIPELINE/config_live.py` (gitignored)
+- Current live data feed is SMB (NinjaTrader) — Tradovate feed is optional future upgrade
 
 ### Services
-- `nq-smb-watcher.service`    — **ACTIVE LIVE FEED** (Feb 26 2026). Watches NinjaTrader SMB bridge at `/mnt/nt_bridge/bars.csv` (192.168.68.88), appends to `NQ_continuous_1min.csv`, runs signal engine in dry-run mode.
-- `nq-bar-feed.service`       — IB delayed feed (RETIRED — stopped Feb 26, replaced by SMB watcher)
-- `nq-tradovate-feed.service` — Tradovate direct API feed (disabled — optional future upgrade)
+- `nq-smb-watcher.service` — **ACTIVE LIVE FEED**. Reads `/mnt/nt_bridge/bars.csv`, converts ET→UTC, appends to `NQ_continuous_1min.csv`, runs God Model in DRY_RUN mode.
+- `nq-dashboard.service` — Dashboard at port 8891
+- `nq-bar-feed.service` — RETIRED (IB delayed feed, replaced by SMB watcher Feb 26)
+- `nq-tradovate-feed.service` — DISABLED (optional future upgrade)
 
 ### Data File
-- `processed_data/NQ_continuous_1min.csv` — 400K+ rows, Jan 2025→present, updated every 60s (IB) or real-time (Tradovate)
+- `processed_data/NQ_continuous_1min.csv` — 403K+ rows, Jan 2025→present, all UTC
 - Schema: datetime(UTC ISO), open, high, low, close, volume, contract
-- Contracts: NQ_2025H/M/U/Z, NQ_2026H (rolls quarterly, next: NQM6 on March 13 2026)
+- Contracts roll quarterly — next roll NQM6 March 13 2026
 
 ### Execution Details
 - Lucid 100K Flex eval: max DD $3K, daily DD $2K, min 10 trades

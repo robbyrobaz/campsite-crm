@@ -1,22 +1,15 @@
 {
   "activeTasks": [
     {
-      "id": "c_83665e42f0983_19ca1fd2db7",
-      "title": "[Blofin] Expand cross_asset_correlation to additional coin pairs",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "started_at": "2026-02-27T19:04:00-07:00"
-    },
-    {
       "id": "c_8eb4ba9f778a_19ca1c4d1f8",
       "title": "[Blofin] Expand volume_volatility_mean_reversion to additional coin pairs",
-      "status": "In Progress",
-      "assignee": "claude",
       "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "started_at": "2026-02-27T18:02:00-07:00"
+      "status": "In Progress",
+      "pid": 543249,
+      "dispatched_at": "2026-02-28T02:44:00Z",
+      "note": "Recovered from stale (was stuck 100min), re-dispatched this cycle"
     }
   ],
-  "lastDispatch": "2026-02-27T19:13:00-07:00",
-  "lastHealthCheck": "2026-02-27T19:13:00-07:00"
+  "lastDispatch": "2026-02-28T02:44:00Z",
+  "lastHealthCheck": "2026-02-28T02:44:00Z"
 }

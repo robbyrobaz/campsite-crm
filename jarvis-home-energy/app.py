@@ -1758,13 +1758,16 @@ def poll_ge_appliances():
             _now = _time.time()
             for al in dev_alerts:
                 atype = al.get("alertType","").replace("cloud.smarthq.alert.","")
-                # Only show alerts triggered in the last 24 hours
+                # Stale alert filter: door-open alerts expire after 2h; others after 24h
                 last_time_str = al.get("lastAlertTime","")
+                atype_raw = al.get("alertType","").replace("cloud.smarthq.alert.","")
+                _is_door_alert = "door.open" in atype_raw
+                _stale_secs = 7200 if _is_door_alert else 86400
                 if last_time_str:
                     try:
                         import datetime as _dt
                         lt = _dt.datetime.fromisoformat(last_time_str.replace("Z","+00:00")).timestamp()
-                        if (_now - lt) > 86400:
+                        if (_now - lt) > _stale_secs:
                             continue  # skip stale alerts
                     except Exception:
                         pass
@@ -2628,6 +2631,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   html, body { height: 100dvh; overflow: hidden; }
+  main { overflow-y: auto !important; -webkit-overflow-scrolling: touch; }
 
   body { background: var(--bg); color: var(--text); font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; display: flex; flex-direction: column; }
 
@@ -2646,14 +2650,24 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     position: fixed; left: 0; top: 0; bottom: 0; width: 72px;
     background: var(--surface); border-right: 1px solid var(--border);
     z-index: 200; display: flex; flex-direction: column; align-items: center;
-    padding: 4px 0; overflow: hidden;
+    overflow: hidden;
     -webkit-tap-highlight-color: transparent;
+  }
+  /* Header-height placeholder at top of left rail — aligns with header bar */
+  #left-rail::before {
+    content: ''; display: block; width: 100%; height: 43px; flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
   }
   #sub-rail {
     position: fixed; left: 72px; top: 0; bottom: 0; width: 160px;
     background: var(--surface); border-right: 1px solid var(--border);
     z-index: 190; display: none; flex-direction: column;
-    padding-top: 42px; overflow-y: auto;
+    overflow-y: auto;
+  }
+  /* Header-height placeholder at top of sub-rail */
+  #sub-rail::before {
+    content: ''; display: block; width: 100%; height: 43px; flex-shrink: 0;
+    border-bottom: 1px solid var(--border);
   }
   #sub-rail.visible { display: flex; }
   .rail-btn {
@@ -2699,7 +2713,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .sub-nav { scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .sub-nav::-webkit-scrollbar { display: none; }
   /* Cockpit is a flex column; cockpit-panels fills remaining height */
-  .view { display: none; flex-direction: column; overflow: hidden; }
+  .view { display: none; flex-direction: column; overflow: visible; }
   .view.active { display: flex; flex: 1; min-height: 0; }
   /* view-energy is a shell (sub-nav moved to header) — zero height */
   #view-energy { flex: 0 !important; min-height: 0 !important; overflow: hidden; }
@@ -3135,19 +3149,23 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   </button>
   <button class="rail-btn" data-rail="climate" onclick="showView('climate')">
     <span class="rail-icon">&#127777;</span>
-    <span class="rail-label">Climate</span>
+    <span class="rail-label">Thermo</span>
+  </button>
+  <button class="rail-btn" data-rail="sprinklers" onclick="showView('sprinklers')">
+    <span class="rail-icon">&#128167;</span>
+    <span class="rail-label">Irrigation</span>
   </button>
   <button class="rail-btn" data-rail="cameras" onclick="showView('cameras')">
     <span class="rail-icon">&#128247;</span>
     <span class="rail-label">Cameras</span>
   </button>
   <button class="rail-btn" data-rail="appliances" onclick="showView('appliances')">
-    <span class="rail-icon">&#127968;</span>
+    <span class="rail-icon">&#129530;</span>
     <span class="rail-label">Appliances</span>
   </button>
-  <button class="rail-btn" data-rail="entertainment" onclick="showView('entertainment')">
+  <button class="rail-btn" data-rail="roku" onclick="showView('roku')">
     <span class="rail-icon">&#128250;</span>
-    <span class="rail-label">Media</span>
+    <span class="rail-label">TV</span>
   </button>
   <button class="rail-btn" data-rail="settings" onclick="showView('settings')">
     <span class="rail-icon">&#9881;</span>
@@ -3159,20 +3177,18 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <nav id="sub-rail">
   <!-- Energy sub-pages -->
   <div id="sr-energy" style="display:none;flex-direction:column;width:100%">
-    <button class="sub-rail-btn active" data-sub="cockpit" onclick="showEnergySub('cockpit')">&#9889; Cockpit</button>
+    <button class="sub-rail-btn active" data-sub="ck-microgrid" onclick="navCockpit('microgrid')">&#9889; Microgrid</button>
+    <button class="sub-rail-btn" data-sub="ck-live" onclick="navCockpit('live')">&#127760; Live Flow</button>
+    <button class="sub-rail-btn" data-sub="ck-trading" onclick="navCockpit('trading')">&#128200; Trading</button>
+    <button class="sub-rail-btn" data-sub="ck-backup" onclick="navCockpit('backup')">&#128267; Backup</button>
     <button class="sub-rail-btn" data-sub="solar" onclick="showEnergySub('solar')">&#9728; Solar</button>
     <button class="sub-rail-btn" data-sub="span" onclick="showEnergySub('span')">&#128268; SPAN</button>
     <button class="sub-rail-btn" data-sub="tesla-energy" onclick="showEnergySub('tesla-energy')"><img src="/static/img/tesla-logo.svg" height="12" style="vertical-align:middle;margin-right:5px;filter:brightness(10) opacity(0.7)">Tesla</button>
     <button class="sub-rail-btn" data-sub="cybertruck" onclick="showEnergySub('cybertruck')"><img src="/static/img/cybertruck.png" height="14" style="vertical-align:middle;margin-right:5px;filter:brightness(1.2)">Cybertruck</button>
   </div>
-  <!-- Climate sub-pages -->
+  <!-- Climate sub-pages — Thermostat only, no sub-pages needed -->
   <div id="sr-climate" style="display:none;flex-direction:column;width:100%">
     <button class="sub-rail-btn active" data-sub="home-control" onclick="showClimateSub('home-control')">&#127777; Thermostat</button>
-    <button class="sub-rail-btn" data-sub="sprinklers" onclick="showClimateSub('sprinklers')">&#128167; Sprinklers</button>
-  </div>
-  <!-- Media sub-pages -->
-  <div id="sr-entertainment" style="display:none;flex-direction:column;width:100%">
-    <button class="sub-rail-btn active" data-sub="roku" onclick="showEntertainmentSub('roku')">&#128250; Roku TVs</button>
   </div>
 </nav>
 
@@ -3819,12 +3835,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 </div><!-- /cockpit-panels -->
 
-<div id="cockpit-dots">
-  <button class="ck-dot" data-sub="microgrid" onclick="setCockpitSub('microgrid')" title="Microgrid"></button>
-  <button class="ck-dot" data-sub="live" onclick="setCockpitSub('live')" title="Live Power Flow"></button>
-  <button class="ck-dot" data-sub="trading" onclick="setCockpitSub('trading')" title="Trading"></button>
-  <button class="ck-dot" data-sub="backup" onclick="setCockpitSub('backup')" title="Backup/Battery"></button>
-</div>
+<!-- cockpit-dots removed: navigation moved to Energy sub-rail -->
 
 </div><!-- /cockpit -->
 
@@ -4908,9 +4919,9 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <div id="toast"></div>
 
 <script>
-const views = ['energy','climate','pool','entertainment','cameras','appliances','settings','devices','cockpit','solar','span','tesla-energy','cybertruck','home-control','sprinklers','roku'];
+const views = ['energy','climate','pool','cameras','appliances','settings','devices','cockpit','solar','span','tesla-energy','cybertruck','home-control','sprinklers','roku'];
 const _energySubs = ['cockpit','solar','span','tesla-energy','cybertruck'];
-const _climateSubs = ['home-control','sprinklers'];
+const _climateSubs = ['home-control'];
 let _curEnergySub = 'cockpit';
 let _curClimateSub = 'home-control';
 
@@ -4923,15 +4934,24 @@ function showEnergySub(name) {
   // cockpit uses flex layout
   const ckEl = document.getElementById('view-cockpit');
   if (name === 'cockpit' && ckEl) ckEl.style.display = 'flex';
-  // Update sub-rail active state
+  // Update sub-rail active state (only non-ck-* buttons; ck-* are managed by navCockpit)
   document.querySelectorAll('#sr-energy .sub-rail-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.sub === name);
+    if (!btn.dataset.sub.startsWith('ck-')) {
+      btn.classList.toggle('active', btn.dataset.sub === name);
+    } else {
+      btn.classList.remove('active');
+    }
   });
-  if (name === 'cockpit') {
-    var savedSub = localStorage.getItem('jarvis-cockpit-sub-v3') || 'microgrid';
-    // Give layout time to resolve before scrolling
-    setTimeout(function() { setCockpitSub(savedSub); }, 50);
-  }
+}
+
+// Navigate directly to a cockpit sub-page from the Energy sub-rail
+function navCockpit(sub) {
+  showEnergySub('cockpit');
+  setCockpitSub(sub);
+  // Mark the matching ck-* button active (showEnergySub cleared them all)
+  document.querySelectorAll('#sr-energy .sub-rail-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.sub === 'ck-' + sub);
+  });
 }
 
 function showClimateSub(name) {
@@ -4958,19 +4978,19 @@ function showEntertainmentSub(name) {
 function showView(v) {
   // Determine which left-rail section this view belongs to
   const _energyViews = ['energy','cockpit','solar','span','tesla-energy','cybertruck'];
-  const _climateViews = ['climate','thermostat','home-control','sprinklers'];
-  const _entertainViews = ['entertainment','roku'];
+  const _climateViews = ['climate','thermostat','home-control'];
   let railSection = v;
   if (_energyViews.includes(v)) railSection = 'energy';
   else if (_climateViews.includes(v)) railSection = 'climate';
-  else if (_entertainViews.includes(v)) railSection = 'entertainment';
+  else if (v === 'sprinklers') railSection = 'sprinklers'; // own rail item
+  // roku is its own rail item — railSection stays 'roku'
 
   // Show/hide sub-rail and toggle body class
-  const hasSubnav = ['energy','climate','entertainment'].includes(railSection);
+  const hasSubnav = ['energy'].includes(railSection);
   document.body.classList.toggle('has-subnav', hasSubnav);
   const srEl = document.getElementById('sub-rail');
   if (srEl) srEl.classList.toggle('visible', hasSubnav);
-  ['energy','climate','entertainment'].forEach(s => {
+  ['energy','climate'].forEach(s => {
     const el = document.getElementById('sr-'+s);
     if (el) el.style.display = (s === railSection && hasSubnav) ? 'flex' : 'none';
   });
@@ -4991,13 +5011,14 @@ function showView(v) {
   const target = document.getElementById('view-'+v);
   if (target) target.style.display = 'block';
 
-  // Handle grouped views
-  if (v === 'energy') showEnergySub(_curEnergySub);
-  if (v === 'climate') showClimateSub(_curClimateSub || 'home-control');
-  if (v === 'thermostat') { showClimateSub('home-control'); }
-  if (v === 'sprinklers') { showClimateSub('sprinklers'); }
-  if (v === 'entertainment') {
-    showEntertainmentSub('roku');
+  // Handle grouped views — delegate to sub-show functions which also update sub-rail highlights
+  if (_energyViews.includes(v)) {
+    if (v === 'energy') showEnergySub(_curEnergySub);
+    else showEnergySub(v);  // direct energy sub-view (solar, span, cybertruck, etc.)
+  } else if (_climateViews.includes(v)) {
+    showClimateSub('home-control');  // climate, thermostat, home-control all → thermostat
+  } else if (v === 'roku') {
+    if (rokuEl) rokuEl.style.display = 'block';
     // Use already-loaded SSE state — no separate fetch
     const _rk = (window._lastState||{}).roku || window._lastRoku || [];
     if (_rk.length) try { renderRoku(_rk); } catch(e) {}
@@ -7900,10 +7921,9 @@ evtSrc.onerror = () => console.warn('SSE disconnected — retrying...');
 // ── fitCockpit: constrain cockpit panels to available viewport height ──
 function fitCockpit() {
   var header = document.querySelector('header');
-  var nav    = document.getElementById('bottom-nav');
   var vc     = document.getElementById('view-cockpit');
-  if (!header || !nav || !vc) return;
-  var avail = window.innerHeight - header.offsetHeight - nav.offsetHeight;
+  if (!header || !vc) return;
+  var avail = window.innerHeight - header.offsetHeight;
   vc.style.height    = avail + 'px';
   vc.style.maxHeight = avail + 'px';
 }
@@ -7969,6 +7989,10 @@ function setCockpitSub(sub) {
     }
   }
   _setCockpitDot(sub);
+  // Sync sub-rail active state
+  document.querySelectorAll('#sr-energy .sub-rail-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.sub === 'ck-' + sub);
+  });
   localStorage.setItem('jarvis-cockpit-sub-v3', sub);
 }
 
@@ -7992,6 +8016,10 @@ function setCockpitSub(sub) {
 // Init: restore last sub or default to microgrid
 (function() {
   var _initSub = localStorage.getItem('jarvis-cockpit-sub-v3') || 'microgrid';
+  // Mark the matching sub-rail button active
+  document.querySelectorAll('#sr-energy .sub-rail-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.dataset.sub === 'ck-' + _initSub);
+  });
   _setCockpitDot(_initSub);
   // Scroll to saved position after a short delay (panels may not be laid out yet)
   setTimeout(function() {

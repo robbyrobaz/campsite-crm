@@ -1758,19 +1758,22 @@ def poll_ge_appliances():
             _now = _time.time()
             for al in dev_alerts:
                 atype = al.get("alertType","").replace("cloud.smarthq.alert.","")
-                # Stale alert filter: door-open alerts expire after 2h; others after 24h
+                # Stale alert filter: skip anything older than 24h
                 last_time_str = al.get("lastAlertTime","")
                 atype_raw = al.get("alertType","").replace("cloud.smarthq.alert.","")
-                _is_door_alert = "door.open" in atype_raw
-                _stale_secs = 7200 if _is_door_alert else 86400
                 if last_time_str:
                     try:
                         import datetime as _dt
                         lt = _dt.datetime.fromisoformat(last_time_str.replace("Z","+00:00")).timestamp()
-                        if (_now - lt) > _stale_secs:
+                        if (_now - lt) > 86400:
                             continue  # skip stale alerts
                     except Exception:
                         pass
+                # Suppress door.open alerts if telemetry already shows door as Closed.
+                # The GE API never clears door.open alerts on its own — they stick
+                # indefinitely even after the door is shut. Trust the live telemetry instead.
+                if "door.open" in atype_raw and telemetry.get("door") == "Closed":
+                    continue
                 label = _GE_ALERT_LABELS.get(atype, None)
                 if label is None:
                     # Skip generic notification subscriptions (endofcycle, ota, pausedcycle etc)
@@ -3160,7 +3163,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <span class="rail-label">Cameras</span>
   </button>
   <button class="rail-btn" data-rail="appliances" onclick="showView('appliances')">
-    <span class="rail-icon">&#129530;</span>
+    <span class="rail-icon">&#129767;</span>
     <span class="rail-label">Appliances</span>
   </button>
   <button class="rail-btn" data-rail="roku" onclick="showView('roku')">

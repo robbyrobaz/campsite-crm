@@ -3371,9 +3371,9 @@ def ring_page():
 
 # ── RTSP camera frame cache (background ffmpeg threads) ───────────────────────
 _RTSP_CAM_URLS = {
-    "front-side-cam": "rtsp://127.0.0.1:8559/front-side-cam",  # via docker-wyze-bridge
-    "upstairs-cam":   "rtsp://127.0.0.1:8559/upstairs-cam",    # via docker-wyze-bridge
-    "downstairs-cam": "rtsp://127.0.0.1:8559/downstairs-cam",  # via docker-wyze-bridge
+    "front-side-cam": "rtsp://127.0.0.1:8554/front-side-cam",  # via docker-wyze-bridge
+    "upstairs-cam":   "rtsp://127.0.0.1:8554/upstairs-cam",    # via docker-wyze-bridge
+    "downstairs-cam": "rtsp://127.0.0.1:8554/downstairs-cam",  # via docker-wyze-bridge
 }
 _rtsp_frame_cache: dict = {}   # cam_id → latest JPEG bytes
 _rtsp_capture_threads: dict = {}
@@ -5381,7 +5381,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
           <span class="dev-dname">Wyze — Front Side</span>
           <span class="badge offline" id="dc-cam-front-badge">—</span>
         </div>
-        <div class="dev-ip">192.168.68.76 · RTSP :8559</div>
+        <div class="dev-ip">192.168.68.76 · RTSP :8554</div>
         <div class="dev-metric" id="dc-cam-front-metric">—</div>
         <div class="dev-lastseen" id="dc-cam-front-lastseen">last seen: —</div>
       </div>

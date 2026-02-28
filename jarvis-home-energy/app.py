@@ -380,6 +380,64 @@ def _ring_event_poller():
         except Exception as e:
             log.debug("Ring device status update error: %s", e)
 
+    def _history_loop():
+        nonlocal last_evt_id
+        import asyncio as _aio
+        hloop = _aio.new_event_loop()
+        h_ring_ref = [None]
+
+        async def _hloop_poll(dev_id):
+            if h_ring_ref[0] is None:
+                h_ring_ref[0] = await _ring_build(update=True)
+            try:
+                resp = await h_ring_ref[0]._async_query(f'/clients_api/doorbots/{dev_id}/history')
+                return resp.json()
+            except Exception:
+                h_ring_ref[0] = None
+                return []
+
+        while True:
+            try:
+                if device_id[0]:
+                    hist = hloop.run_until_complete(_hloop_poll(device_id[0]))
+
+                    # Cache history
+                    with _ring_history_lock:
+                        _ring_history_cache[:] = hist[:30]  # Keep last 30 events
+
+                    # Emit new events
+                    for evt in hist:
+                        evt_id = str(evt.get('id', ''))
+                        if evt_id == last_evt_id[0]:
+                            break
+                        kind = evt.get('kind', '')
+                        if kind in HISTORY_KINDS and kind != 'ding':  # Dings handled by active poller
+                            created = evt.get('created_at', '')
+                            try:
+                                dt = datetime.fromisoformat(created.replace('Z', '+00:00'))
+                                ts = dt.timestamp()
+                            except Exception:
+                                ts = time.time()
+                            evt_type = 'motion' if kind == 'motion' else 'on_demand'
+                            dev_name = (evt.get('doorbot') or {}).get('description') or 'Front Door'
+                            with _ring_evts_lock:
+                                _ring_evts.append({"ts": ts, "type": evt_type, "device": dev_name})
+                                if len(_ring_evts) > 50:
+                                    _ring_evts.pop(0)
+                            log.info("Ring %s detected: %s at %s", evt_type, dev_name, created)
+                    if hist:
+                        last_evt_id[0] = str(hist[0].get('id', ''))
+
+                    # Update device status periodically
+                    if device_ref[0]:
+                        _update_device_status(device_ref[0])
+            except Exception as exc:
+                log.debug("Ring history poll error: %s", exc)
+            time.sleep(15)
+
+    history_thread = threading.Thread(target=_history_loop, daemon=True, name="ring-history")
+    history_thread.start()
+
     while True:
         try:
             if ring_ref[0] is None:
@@ -426,51 +484,6 @@ def _ring_event_poller():
     # History poll (every 15s — run in a separate slower loop to avoid blocking)
     # This is integrated into the main 5s loop but only executes every 3 iterations
     history_counter = [0]
-
-    def _history_loop():
-        nonlocal last_evt_id
-        while True:
-            try:
-                if ring_ref[0] and device_id[0]:
-                    hist = loop.run_until_complete(_poll_history(ring_ref[0], device_id[0]))
-
-                    # Cache history
-                    with _ring_history_lock:
-                        _ring_history_cache[:] = hist[:30]  # Keep last 30 events
-
-                    # Emit new events
-                    for evt in hist:
-                        evt_id = str(evt.get('id', ''))
-                        if evt_id == last_evt_id[0]:
-                            break
-                        kind = evt.get('kind', '')
-                        if kind in HISTORY_KINDS and kind != 'ding':  # Dings handled by active poller
-                            created = evt.get('created_at', '')
-                            try:
-                                dt = datetime.fromisoformat(created.replace('Z', '+00:00'))
-                                ts = dt.timestamp()
-                            except Exception:
-                                ts = time.time()
-                            evt_type = 'motion' if kind == 'motion' else 'on_demand'
-                            dev_name = (evt.get('doorbot') or {}).get('description') or 'Front Door'
-                            with _ring_evts_lock:
-                                _ring_evts.append({"ts": ts, "type": evt_type, "device": dev_name})
-                                if len(_ring_evts) > 50:
-                                    _ring_evts.pop(0)
-                            log.info("Ring %s detected: %s at %s", evt_type, dev_name, created)
-                    if hist:
-                        last_evt_id[0] = str(hist[0].get('id', ''))
-
-                    # Update device status periodically
-                    if device_ref[0]:
-                        _update_device_status(device_ref[0])
-            except Exception as exc:
-                log.debug("Ring history poll error: %s", exc)
-            time.sleep(15)
-
-    history_thread = threading.Thread(target=_history_loop, daemon=True, name="ring-history")
-    history_thread.start()
-
 
 def _get_wyze_client(force_refresh=False):
     """Return a cached Wyze Client, creating/refreshing only when needed.
@@ -2539,13 +2552,13 @@ def ring_page():
             color: #e0e0e0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             height: 100vh;
-            overflow: hidden;
+            overflow-y: auto;
         }
 
         .container {
             display: flex;
             flex-direction: column;
-            height: 100vh;
+            min-height: 100vh;
             gap: 16px;
             padding: 16px;
         }
@@ -2602,7 +2615,7 @@ def ring_page():
             display: flex;
             gap: 16px;
             flex: 1;
-            overflow: hidden;
+            min-height: 320px;
         }
 
         /* Status Panels */
@@ -2841,8 +2854,9 @@ def ring_page():
             border-radius: 8px;
             overflow: hidden;
             background: #000;
-            aspect-ratio: 16 / 9;
+            height: 260px;
             border: 1px solid rgba(0, 255, 136, 0.2);
+            flex-shrink: 0;
         }
 
         #streamArea.show {
@@ -3733,6 +3747,10 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   #view-energy { flex: 0 !important; min-height: 0 !important; overflow: hidden; }
   #view-cockpit { display: none; flex-direction: column; overflow: hidden; }
   #view-cockpit.active { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
+  /* Ring view: iframe must fill the full available height */
+  #view-ring { overflow: hidden; padding: 0 !important; }
+  #view-ring.active { display: block; }
+  #view-ring iframe { display: block; width: 100%; height: calc(100vh - 42px); border: none; }
 
   /* Grid */
   .grid { display: grid; gap: 12px; }
@@ -5651,7 +5669,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 <!-- ═══ RING DOORBELL ════════════════════════════════════════════════════════ -->
 <div id="view-ring" class="view" style="display:none;padding:0">
-  <iframe src="/ring" style="width:100%;height:100%;border:none;display:block"></iframe>
+  <iframe src="/ring" style="width:100%;border:none;display:block"></iframe>
 </div>
 
 
@@ -5946,8 +5964,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <div id="ring-popup" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px">
   <div style="color:#FFD700;font-size:2rem;font-weight:900;letter-spacing:1px;text-align:center">&#128276; Someone at the Door</div>
   <div style="color:rgba(255,255,255,0.65);font-size:1rem" id="ring-popup-time">&#8212;</div>
-  <img id="ring-popup-img" src="" alt="Ring doorbell"
-       style="width:min(640px,90vw);max-height:48vh;object-fit:contain;border-radius:10px;background:#111;border:2px solid rgba(255,215,0,0.35)">
+  <div style="font-size:4rem">&#128276;</div>
   <div style="color:rgba(255,255,255,0.45);font-size:0.9rem" id="ring-popup-device">Front Door</div>
   <button id="ring-dismiss-btn" onclick="dismissDoorbellPopup()"
     style="margin-top:8px;padding:20px 52px;font-size:1.4rem;font-weight:800;background:#FFD700;color:#000;border:none;border-radius:12px;cursor:pointer;min-height:64px;min-width:220px;letter-spacing:1px;touch-action:manipulation">
@@ -8995,8 +9012,6 @@ function showDoorbellPopup(evt) {
   if (timeEl) timeEl.textContent = new Date(evt.ts * 1000).toLocaleString();
   const devEl = document.getElementById('ring-popup-device');
   if (devEl) devEl.textContent = evt.device || 'Front Door';
-  const imgEl = document.getElementById('ring-popup-img');
-  if (imgEl) imgEl.src = '/api/ring/snapshot?' + Date.now();
   const cdEl = document.getElementById('ring-popup-countdown');
   // Doorbell chime via Web Audio API
   try {
@@ -9017,10 +9032,7 @@ function showDoorbellPopup(evt) {
   // Show popup
   popup.style.display = 'flex';
   // Refresh camera image every 30s while open (Ring cloud rate)
-  _ringPopupImgTimer = setInterval(() => {
-    const img = document.getElementById('ring-popup-img');
-    if (img) img.src = '/api/ring/snapshot?' + Date.now();
-  }, 30000);
+  _ringPopupImgTimer = setInterval(() => { /* snapshot removed */ }, 30000);
   // Countdown auto-dismiss
   let remaining = 60;
   function _tick() {
@@ -9063,13 +9075,10 @@ function _renderRingEventsList() {
 // Ring view: try to load snapshot; refresh every 30s (Ring cloud API rate)
 function _startRingViewRefresh() {
   if (_ringViewRefreshTimer) return;
-  // Load initial snapshot immediately
-  const img = document.getElementById('ring-live-img');
-  if (img) img.src = '/api/ring/snapshot?' + Date.now();
   _ringViewRefreshTimer = setInterval(() => {
     const i = document.getElementById('ring-live-img');
     if (!i) return;
-    i.src = '/api/ring/snapshot?' + Date.now();
+    
     const ageEl = document.getElementById('ring-snap-age');
     if (ageEl) ageEl.textContent = 'Snapshot \u00b7 ' + new Date().toLocaleTimeString();
   }, 30000);
@@ -9235,8 +9244,8 @@ if __name__ == "__main__":
 
     # Ring doorbell background threads (snapshot + event polling)
     if _ring_token_data:
-        threading.Thread(target=_ring_snapshot_poller, daemon=True, name="ring-snapshot").start()
-        threading.Thread(target=_ring_event_poller,    daemon=True, name="ring-events").start()
+        # snapshot poller removed — Ring's snapshot API is blocked, always 204
+        threading.Thread(target=_ring_event_poller, daemon=True, name="ring-events").start()
         log.info("Ring background threads started")
 
     log.info("Discovering Roku devices via SSDP ...")

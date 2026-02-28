@@ -1,6 +1,14 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-02-27T23:43:00.000Z",
-  "lastHealthCheck": "2026-02-27T23:43:00.000Z",
-  "notes": "Board empty. All services active. CPU 81°C, disk 41%. 3 recent Done cards (NQ vwap_fade, NQ psych_levels, Blofin vwap_volatility_rebound) — all services verified live post-completion."
+  "activeTasks": [
+    {
+      "id": "c_e3141b3a58ad8_19ca18d2eae",
+      "title": "[NQ] Investigate 0 signals today — 1428 bars ingested but no signals generated",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "dispatched_at": "2026-02-27T17:02:00-07:00"
+    }
+  ],
+  "lastDispatch": "2026-02-27T17:02:00-07:00",
+  "lastHealthCheck": "2026-02-27T17:13:00-07:00"
 }

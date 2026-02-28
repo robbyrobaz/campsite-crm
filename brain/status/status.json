@@ -1,6 +1,15 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-02-28T00:43:00-07:00",
-  "lastHealthCheck": "2026-02-28T00:43:00-07:00",
-  "notes": "Board clear — no Planned or In Progress cards. All services active. NQ+Blofin dashboards 200. CPU 78°C, disk 42%."
+  "activeTasks": [
+    {
+      "id": "c_aa5a773a3fd9a_19ca344e318",
+      "title": "[NQ] Investigate prev_day 0 forward test trades — PF 2.03 strategy generating no signals",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "started_at": "2026-02-28T08:02:04Z"
+    }
+  ],
+  "lastDispatch": "2026-02-28T08:13:00Z",
+  "lastHealthCheck": "2026-02-28T08:13:00Z",
+  "notes": "All services healthy. CPU 79°C. 1 builder active (prev_day debug). 3 recent Done cards verified deployed."
 }

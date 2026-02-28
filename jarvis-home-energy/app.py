@@ -254,6 +254,9 @@ _ring_status_lock = threading.Lock()
 _ring_history_cache = []  # [{id, kind, created_at, answered, duration, ...}]
 _ring_history_lock = threading.Lock()
 _ring_history_last_update = 0
+# Global device ref exposed for live stream endpoint (set by _ring_event_poller)
+_ring_live_device = [None]
+_ring_live_loop   = [None]
 
 
 def _ring_snapshot_poller():
@@ -443,6 +446,8 @@ def _ring_event_poller():
             if ring_ref[0] is None:
                 r, dev_id, dev = loop.run_until_complete(_init_ring())
                 ring_ref[0], device_id[0], device_ref[0] = r, dev_id, dev
+                _ring_live_device[0] = dev
+                _ring_live_loop[0]   = loop
                 log.info("Ring event poller: device_id=%s, device=%s", dev_id, dev.name if dev else None)
                 if dev:
                     _update_device_status(dev)
@@ -2536,6 +2541,137 @@ def ring_history_route():
     return jsonify(events)
 
 
+@app.route("/api/ring/webrtc_offer", methods=["POST"])
+def ring_webrtc_offer():
+    """WebRTC signaling proxy: relay SDP offer to Ring, return SDP answer.
+    POST body: {"offer": "<SDP offer string>"}
+    Returns:   {"answer": "<SDP answer string>", "session_id": "..."}
+
+    Uses direct aiohttp + Ring WebSocket signaling to avoid event-loop binding issues
+    with the poller's Ring device object.
+    """
+    import asyncio, uuid as _uuid, ssl, json as _json
+    data = request.get_json(silent=True) or {}
+    offer_sdp = data.get("offer", "")
+    if not offer_sdp:
+        return jsonify({"error": "Missing 'offer' field"}), 400
+
+    # Get current access token
+    tok = _ring_token_data or {}
+    access_token = tok.get("access_token", "")
+    if not access_token:
+        return jsonify({"error": "No Ring access token available"}), 503
+
+    session_id = str(_uuid.uuid4())
+    dialog_id  = str(_uuid.uuid4())
+    device_id  = 4662242
+
+    TICKET_URL = "https://prd-api-us.prd.rings.solutions/api/v1/clap/ticket/request/signalsocket"
+    WS_URL_TPL = "wss://api.prod.signalling.ring.devices.a2z.com:443/ws?api_version=4.0&auth_type=ring_solutions&client_id=ring_site-{0}&token={1}"
+    SDP_TIMEOUT = 20
+
+    async def _do_webrtc_direct():
+        import aiohttp
+        from websockets.asyncio.client import connect as ws_connect
+
+        ssl_ctx = ssl.create_default_context()
+        hdrs = {
+            "Authorization": f"Bearer {access_token}",
+            "Content-Type":  "application/json",
+            "User-Agent":    "android:com.ringapp",
+        }
+
+        async with aiohttp.ClientSession(headers=hdrs) as sess:
+            # 1. Get signaling ticket
+            async with sess.post(TICKET_URL) as resp:
+                body = await resp.json()
+                ticket = body.get("ticket")
+                if not ticket:
+                    raise RuntimeError(f"No ticket in response: {body}")
+
+        # 2. Connect to Ring WebSocket signaling server
+        ws_uri = WS_URL_TPL.format(_uuid.uuid4(), ticket)
+        sdp_answer = None
+        ice_candidates = []
+
+        async with ws_connect(ws_uri, user_agent_header="android:com.ringapp", ssl=ssl_ctx) as ws:
+            # 3. Send SDP offer
+            offer_msg = _json.dumps({
+                "method": "live_view",
+                "dialog_id": dialog_id,
+                "body": {
+                    "doorbot_id": device_id,
+                    "stream_options": {"audio_enabled": True, "video_enabled": True},
+                    "sdp": offer_sdp,
+                    "type": "offer",
+                },
+            })
+            await ws.send(offer_msg)
+
+            # 4. Wait for SDP answer + ICE candidates
+            import asyncio as _aio
+            deadline = _aio.get_event_loop().time() + SDP_TIMEOUT
+            while _aio.get_event_loop().time() < deadline:
+                try:
+                    raw = await _aio.wait_for(ws.recv(), timeout=3)
+                    msg = _json.loads(raw)
+                    method = msg.get("method", "")
+                    body   = msg.get("body", {})
+                    if method in ("sdp", "live_view") and body.get("type") == "answer":
+                        sdp_answer = body.get("sdp")
+                    elif method == "ice":
+                        cand = body.get("ice", "")
+                        sdp_mid = body.get("sdpMid", "0")
+                        sdp_mline = body.get("sdpMLineIndex", 0)
+                        if cand:
+                            ice_candidates.append((cand, sdp_mid, sdp_mline))
+                    elif method == "close":
+                        break
+                    if sdp_answer and len(ice_candidates) >= 2:
+                        break
+                except _aio.TimeoutError:
+                    if sdp_answer:
+                        break
+
+            # Close gracefully
+            await ws.send(_json.dumps({
+                "method": "close",
+                "dialog_id": dialog_id,
+                "body": {"reason": {"code": 0}},
+            }))
+
+        if not sdp_answer:
+            raise RuntimeError("Ring did not return an SDP answer within timeout")
+
+        # Inject ICE candidates into the SDP answer
+        if ice_candidates:
+            lines = sdp_answer.splitlines()
+            out = []
+            for line in lines:
+                out.append(line)
+                if line.startswith("a=mid:"):
+                    mid = line[6:]
+                    for cand, smid, _ in ice_candidates:
+                        if smid == mid:
+                            out.append(f"a={cand}")
+            sdp_answer = "\r\n".join(out) + "\r\n"
+
+        return sdp_answer
+
+    try:
+        answer_sdp = asyncio.run(_do_webrtc_direct())
+        return jsonify({"answer": answer_sdp, "session_id": session_id})
+    except Exception as e:
+        log.warning("Ring WebRTC proxy error: %s", e)
+        return jsonify({"error": str(e)}), 502
+
+
+@app.route("/api/ring/webrtc_close", methods=["POST"])
+def ring_webrtc_close():
+    """No-op — WebRTC sessions are closed client-side."""
+    return jsonify({"ok": True})
+
+
 @app.route("/ring")
 def ring_page():
     """Ring doorbell page with live status, device info, recent events, and real-time ding popup."""
@@ -2890,18 +3026,10 @@ def ring_page():
         <div class="video-section">
             <div class="video-controls">
                 <span style="color: #888; font-size: 12px;">Live Video Stream</span>
-                <button class="video-btn" id="toggleStreamBtn" onclick="toggleStream()">▶ View Live</button>
-            </div>
-            <div id="streamSetupNotice" style="display: none; padding: 16px; background: rgba(255,165,0,0.1); border: 1px solid rgba(255,165,0,0.3); border-radius: 8px; margin-top: 8px;">
-                <div style="color: #ffa500; font-weight: 600; margin-bottom: 8px;">⚠️ Live Streaming Setup Required</div>
-                <div style="color: #aaa; font-size: 13px; line-height: 1.5;">
-                    Ring requires browser authentication to enable live streaming.
-                    <a href="http://192.168.68.72:55123/" target="_blank" style="color: #00ff88;">Open Ring Auth →</a>
-                    <br><span style="font-size: 11px; color: #666;">After authenticating, refresh this page.</span>
-                </div>
+                <button class="video-btn" id="toggleStreamBtn" onclick="toggleStream()">&#9654; View Live</button>
             </div>
             <div id="streamArea">
-                <iframe id="streamFrame" src="about:blank"></iframe>
+                <iframe id="streamFrame" src="about:blank" allow="autoplay" style="width:100%;height:340px;border:none;border-radius:6px;background:#000;display:none;"></iframe>
             </div>
         </div>
 
@@ -2969,7 +3097,6 @@ def ring_page():
 
     <script>
         const PAGE_LOAD_TIME = Date.now() / 1000;
-        const GO2RTC_STREAM_URL = 'http://192.168.68.72:1984/stream.html?src=ring_door';
         let events = [];
         let status = {};
         let lastHistoryFetch = 0;
@@ -3109,40 +3236,27 @@ def ring_page():
             }
         }
 
+        const GO2RTC_STREAM_URL = 'http://192.168.68.72:1984/stream.html?src=ring_door';
+
         function toggleStream() {
             const area = document.getElementById('streamArea');
             const btn = document.getElementById('toggleStreamBtn');
-            const notice = document.getElementById('streamSetupNotice');
+            const frame = document.getElementById('streamFrame');
             if (streamOpen) {
-                area.classList.remove('show');
-                btn.textContent = '▶ View Live';
-                const frame = document.getElementById('streamFrame');
+                frame.style.display = 'none';
                 frame.src = 'about:blank';
+                btn.textContent = '&#9654; View Live';
                 streamOpen = false;
-                if (streamCheckTimer) { clearTimeout(streamCheckTimer); streamCheckTimer = null; }
             } else {
-                area.classList.add('show');
-                btn.textContent = '✕ Close Stream';
-                notice.style.display = 'none';  // Hide notice initially
-                const frame = document.getElementById('streamFrame');
-                frame.src = GO2RTC_STREAM_URL + '?ts=' + Date.now();
+                frame.style.display = 'block';
+                frame.src = GO2RTC_STREAM_URL + '&ts=' + Date.now();
+                btn.textContent = '&#10005; Close Stream';
                 streamOpen = true;
-                // Check stream health after 5 seconds
-                streamCheckTimer = setTimeout(checkStreamHealth, 5000);
             }
         }
 
-        function showStream() {
-            if (!streamOpen) {
-                toggleStream();
-            }
-        }
-
-        function hideStream() {
-            if (streamOpen) {
-                toggleStream();
-            }
-        }
+        function showStream() { if (!streamOpen) toggleStream(); }
+        function hideStream() { if (streamOpen) toggleStream(); }
 
         // ── Ding Popup ────────────────────────────────────────────────
         let dingPopupTimer = null;
@@ -3233,9 +3347,9 @@ def ring_page():
 
 # ── RTSP camera frame cache (background ffmpeg threads) ───────────────────────
 _RTSP_CAM_URLS = {
-    "front-side-cam": "rtsp://127.0.0.1:8554/front-side-cam",  # via docker-wyze-bridge
-    "upstairs-cam":   "rtsp://127.0.0.1:8554/upstairs-cam",    # via docker-wyze-bridge
-    "downstairs-cam": "rtsp://127.0.0.1:8554/downstairs-cam",  # via docker-wyze-bridge
+    "front-side-cam": "rtsp://127.0.0.1:8559/front-side-cam",  # via docker-wyze-bridge
+    "upstairs-cam":   "rtsp://127.0.0.1:8559/upstairs-cam",    # via docker-wyze-bridge
+    "downstairs-cam": "rtsp://127.0.0.1:8559/downstairs-cam",  # via docker-wyze-bridge
 }
 _rtsp_frame_cache: dict = {}   # cam_id → latest JPEG bytes
 _rtsp_capture_threads: dict = {}
@@ -5243,7 +5357,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
           <span class="dev-dname">Wyze — Front Side</span>
           <span class="badge offline" id="dc-cam-front-badge">—</span>
         </div>
-        <div class="dev-ip">192.168.68.76 · RTSP :8554</div>
+        <div class="dev-ip">192.168.68.76 · RTSP :8559</div>
         <div class="dev-metric" id="dc-cam-front-metric">—</div>
         <div class="dev-lastseen" id="dc-cam-front-lastseen">last seen: —</div>
       </div>

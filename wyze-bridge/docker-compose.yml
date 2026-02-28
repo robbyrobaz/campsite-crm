@@ -12,6 +12,8 @@ services:
       - WB_HLS=0
       - WB_AUTH=False
       - TZ=America/Phoenix
+      - RTSP_PORT=8559
+      - MEDIAMTX_RTSPADDRESS=:8559
     volumes:
       - ./tokens:/tokens
       - ./config:/config

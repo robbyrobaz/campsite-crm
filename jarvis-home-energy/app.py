@@ -1786,14 +1786,24 @@ def poll_ge_appliances():
                 if "icemaker" in atype and "full" in atype:
                     continue
 
+                # ── Suppress cycle-noise and idle-machine alerts ───────────────
+                # These alert types are informational/completion events, not faults.
+                # Also suppress ALL of them when the appliance is currently idle —
+                # if the machine is empty, any cycle-related alert is from a past run.
+                _cycle_noise = ["endofcycle", "otaupdate", "pausedcycle", "cyclefeedback",
+                                "selfclean", "minutesleft", "minutesafter", "tankdetergent",
+                                "damp"]  # "damp" = clothes still damp at end of cycle
+                atype_key = atype.lower().replace(".", "").replace(" ", "")
+                is_cycle_alert = any(s in atype_key for s in _cycle_noise)
+                if is_cycle_alert:
+                    continue
+                # If appliance is idle, suppress any remaining cycle-related hints
+                if state_str == "idle" and any(s in atype_key for s in [
+                        "endof", "cycle", "damp", "remaining", "complete"]):
+                    continue
+
                 label = _GE_ALERT_LABELS.get(atype, None)
                 if label is None:
-                    # Skip generic noise: end-of-cycle, OTA, paused-cycle, etc.
-                    atype_key = atype.lower().replace(".", "").replace(" ", "")
-                    if any(s in atype_key for s in ["endofcycle", "otaupdate", "pausedcycle",
-                                                     "cyclefeedback", "selfclean", "minutesleft",
-                                                     "minutesafter", "tankdetergent"]):
-                        continue
                     label = "⚠️ " + atype.replace(".", " ").title()
                 alert_attrs.append({"label": "🔔 Alert", "value": label, "unit": ""})
 

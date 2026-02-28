@@ -1756,23 +1756,45 @@ def poll_ge_appliances():
                 'leakdetected': '💧 Leak Detected',
                 'leakdetected.pitcher': '💧 Pitcher Leak Detected',
             }
+            import time as _time
+            _now = _time.time()
             alert_attrs = []
             for al in dev_alerts:
-                # All alerts here are live — we query ?status=triggered, so GE only
-                # returns alerts that are currently active. Door closed = no door alert.
                 atype = al.get("alertType","").replace("cloud.smarthq.alert.","")
-                atype_raw = atype
+
+                # ── Suppress by age (24h) ──────────────────────────────────────
+                # GE never auto-clears alerts — ?status=triggered just means "ever
+                # fired and never explicitly DELETE'd". So we still need age gating.
+                last_time_str = al.get("lastAlertTime", "")
+                if last_time_str:
+                    try:
+                        import datetime as _dt
+                        lt = _dt.datetime.fromisoformat(last_time_str.replace("Z", "+00:00")).timestamp()
+                        if (_now - lt) > 86400:
+                            continue  # alert is older than 24h — skip
+                    except Exception:
+                        pass
+
+                # ── Suppress door.open if live telemetry says door is Closed ──
+                # The fridge reports door state every poll; if it's Closed the
+                # door.open alert is stale regardless of lastAlertTime.
+                if "door.open" in atype and telemetry.get("door") == "Closed":
+                    continue
+
+                # ── Suppress always-normal conditions ─────────────────────────
+                # Ice Bin Full is expected/normal — not actionable.
+                if atype in {"toggle.full.icemaker", "full.icemaker"}:
+                    continue
+
                 label = _GE_ALERT_LABELS.get(atype, None)
                 if label is None:
-                    # Skip generic notification subscriptions (endofcycle, ota, pausedcycle etc)
-                    _skip = {"endofcycle","ota","pausedcycle","cyclefeedback","selfclean",
-                             "endofcycle.minutesleft","endofcycle.minutesafter","damp",
-                             "tank.detergent.low","tank.detergent.empty"}
-                    atype_key = atype.lower().replace(".","").replace(" ","")
-                    if any(s in atype_key for s in ["endofcycle","otaupdate","pausedcycle","cyclefeedback",
-                                                     "selfclean","minutesleft","minutesafter","tankdetergent"]):
+                    # Skip generic noise: end-of-cycle, OTA, paused-cycle, etc.
+                    atype_key = atype.lower().replace(".", "").replace(" ", "")
+                    if any(s in atype_key for s in ["endofcycle", "otaupdate", "pausedcycle",
+                                                     "cyclefeedback", "selfclean", "minutesleft",
+                                                     "minutesafter", "tankdetergent"]):
                         continue
-                    label = "⚠️ " + atype.replace("."," ").title()
+                    label = "⚠️ " + atype.replace(".", " ").title()
                 alert_attrs.append({"label": "🔔 Alert", "value": label, "unit": ""})
 
             all_attrs = alert_attrs + telemetry.get("attrs", [])

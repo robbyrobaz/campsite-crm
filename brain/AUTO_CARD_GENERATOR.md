@@ -254,7 +254,7 @@ Create **2 NQ cards + 1 Blofin card** and launch them immediately — no waiting
 CARD=$(curl -s -X POST http://127.0.0.1:8787/api/inbox \
   -H "content-type: application/json" \
   -d '{"text":"TITLE","source":"auto-generator","project_path":"PROJECT_PATH"}')
-CARD_ID=$(echo "$CARD" | python3 -c "import sys,json; print(json.load(sys.stdin)['card']['id'])")
+CARD_ID=$(echo "$CARD" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
 
 # Step B: Enrich with full description and assignee
 curl -s -X PATCH "http://127.0.0.1:8787/api/cards/$CARD_ID" \

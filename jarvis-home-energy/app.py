@@ -1657,7 +1657,10 @@ def poll_ge_appliances():
             except Exception:
                 pass
             try:
-                r3 = urllib.request.Request(f"{GE_API_BASE}/v2/device/{did}/alert", headers=hdr)
+                # ?status=triggered → only currently-active alerts; cleared alerts are excluded.
+                # This is the correct way per the Digital Twin API spec — no need for
+                # lastAlertTime age filtering, the server only sends what's live right now.
+                r3 = urllib.request.Request(f"{GE_API_BASE}/v2/device/{did}/alert?status=triggered", headers=hdr)
                 with urllib.request.urlopen(r3, timeout=8) as resp:
                     alert_data = json.loads(resp.read())
                     alerts = alert_data.get("alerts", [])
@@ -1753,27 +1756,12 @@ def poll_ge_appliances():
                 'leakdetected': '💧 Leak Detected',
                 'leakdetected.pitcher': '💧 Pitcher Leak Detected',
             }
-            import time as _time
             alert_attrs = []
-            _now = _time.time()
             for al in dev_alerts:
+                # All alerts here are live — we query ?status=triggered, so GE only
+                # returns alerts that are currently active. Door closed = no door alert.
                 atype = al.get("alertType","").replace("cloud.smarthq.alert.","")
-                # Stale alert filter: skip anything older than 24h
-                last_time_str = al.get("lastAlertTime","")
-                atype_raw = al.get("alertType","").replace("cloud.smarthq.alert.","")
-                if last_time_str:
-                    try:
-                        import datetime as _dt
-                        lt = _dt.datetime.fromisoformat(last_time_str.replace("Z","+00:00")).timestamp()
-                        if (_now - lt) > 86400:
-                            continue  # skip stale alerts
-                    except Exception:
-                        pass
-                # Suppress door.open alerts if telemetry already shows door as Closed.
-                # The GE API never clears door.open alerts on its own — they stick
-                # indefinitely even after the door is shut. Trust the live telemetry instead.
-                if "door.open" in atype_raw and telemetry.get("door") == "Closed":
-                    continue
+                atype_raw = atype
                 label = _GE_ALERT_LABELS.get(atype, None)
                 if label is None:
                     # Skip generic notification subscriptions (endofcycle, ota, pausedcycle etc)

@@ -1,16 +1,14 @@
 {
   "activeTasks": [
     {
-      "id": "c_b81b39088e49e_19ca4f72c3e",
-      "title": "[Jarvis Home] Ring doorbell page — live camera + ding popup on wall tablet",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/jarvis-home-energy",
+      "id": "c_72b0d77dc9368_19ca5335a20",
+      "title": "[NQ] Design and backtest opening_drive strategy — RTH open momentum expert",
       "status": "In Progress",
-      "started_approx": "2026-02-28T16:29:00Z",
-      "pid": 2859730
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "updated_at": 1772298220597
     }
   ],
-  "lastDispatch": "2026-02-28T16:43:00Z",
-  "lastHealthCheck": "2026-02-28T16:43:00Z",
-  "notes": "All services active. CPU 68°C, disk 43%. No critical alerts. Ring doorbell builder running (PID 2859730, ~13 min). No Planned cards to dispatch. Recently Done: NQ walk-forward revalidation, Master Dashboard IBKR panel, NQ RTH/ETH session breakdown — all verified deployed (nq-dashboard :8891 200, master-dashboard :8890 200)."
+  "lastDispatch": "2026-02-28T17:13:00Z",
+  "lastHealthCheck": "2026-02-28T17:13:00Z"
 }

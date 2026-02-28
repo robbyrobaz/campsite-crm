@@ -237,28 +237,51 @@ def _ring_snapshot_poller():
     asyncio.set_event_loop(loop)
     ring_ref   = [None]
     device_ref = [None]
+    snap_errs  = [0]      # consecutive snapshot failures
+    init_backoff = [0.0]  # epoch: don't retry init before this
 
-    async def _init():
+    async def _init_ring():
         r = await _ring_build(update=True)
         devs = list(r.video_devices())
         return r, (devs[0] if devs else None)
 
     while True:
-        try:
-            if ring_ref[0] is None:
-                r, d = loop.run_until_complete(_init())
+        # (Re-)initialise ring session when needed, with backoff
+        if ring_ref[0] is None:
+            if time.time() < init_backoff[0]:
+                time.sleep(5)
+                continue
+            try:
+                r, d = loop.run_until_complete(_init_ring())
                 ring_ref[0], device_ref[0] = r, d
+                snap_errs[0] = 0
                 if d:
                     log.info("Ring snapshot poller: device=%s", getattr(d, 'name', d))
-            if device_ref[0] is not None:
+            except Exception as exc:
+                log.warning("Ring init error: %s — backing off 60s", exc)
+                init_backoff[0] = time.time() + 60
+            time.sleep(1.5)
+            continue
+
+        # Fetch snapshot
+        if device_ref[0] is not None:
+            try:
                 img = loop.run_until_complete(device_ref[0].async_get_snapshot())
                 if img:
                     with _ring_snap_lock:
                         _ring_snap_bytes = img
                         _ring_snap_age   = time.time()
-        except Exception as exc:
-            log.debug("Ring snapshot poller error: %s", exc)
-            ring_ref[0] = device_ref[0] = None  # re-init on next iteration
+                    snap_errs[0] = 0
+            except Exception as exc:
+                snap_errs[0] += 1
+                log.debug("Ring snapshot error #%d: %s", snap_errs[0], exc)
+                # Only reset session after repeated failures or on auth error
+                err_str = str(exc).lower()
+                auth_err = any(x in err_str for x in ('401', '403', '406', 'unauthorized'))
+                if auth_err or snap_errs[0] >= 5:
+                    log.warning("Ring session reset (auth=%s, errs=%d)", auth_err, snap_errs[0])
+                    ring_ref[0] = device_ref[0] = None
+                    init_backoff[0] = time.time() + 30  # backoff before re-init
         time.sleep(1.5)
 
 
@@ -268,9 +291,11 @@ def _ring_event_poller():
     import asyncio
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    ring_ref = [None]
+    ring_ref     = [None]
+    poll_errs    = [0]
+    init_backoff = [0.0]
 
-    async def _init():
+    async def _init_ring():
         return await _ring_build(update=True)
 
     async def _poll(ring):
@@ -278,10 +303,23 @@ def _ring_event_poller():
         return list(ring.video_devices())
 
     while True:
+        if ring_ref[0] is None:
+            if time.time() < init_backoff[0]:
+                time.sleep(5)
+                continue
+            try:
+                ring_ref[0] = loop.run_until_complete(_init_ring())
+                poll_errs[0] = 0
+                log.info("Ring event poller: session initialised")
+            except Exception as exc:
+                log.warning("Ring event init error: %s — backing off 60s", exc)
+                init_backoff[0] = time.time() + 60
+            time.sleep(5)
+            continue
+
         try:
-            if ring_ref[0] is None:
-                ring_ref[0] = loop.run_until_complete(_init())
             devs = loop.run_until_complete(_poll(ring_ref[0]))
+            poll_errs[0] = 0
             for dev in devs:
                 ding_at = getattr(dev, 'last_ding', None)
                 if ding_at and ding_at != _ring_last_ding_at:
@@ -302,8 +340,13 @@ def _ring_event_poller():
                     _ring_last_motion_at = motion_at
                     log.info("Ring motion detected at %s", motion_at)
         except Exception as exc:
-            log.debug("Ring event poller error: %s", exc)
-            ring_ref[0] = None  # re-auth on next iteration
+            poll_errs[0] += 1
+            log.debug("Ring event poll error #%d: %s", poll_errs[0], exc)
+            err_str = str(exc).lower()
+            if any(x in err_str for x in ('401', '403', '406', 'unauthorized')) or poll_errs[0] >= 3:
+                log.warning("Ring event session reset (errs=%d)", poll_errs[0])
+                ring_ref[0] = None
+                init_backoff[0] = time.time() + 30
         time.sleep(5)
 
 

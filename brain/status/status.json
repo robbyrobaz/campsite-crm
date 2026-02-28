@@ -1,14 +1,15 @@
 {
   "activeTasks": [
     {
-      "id": "c_2f59960799b87_19ca4eac98d",
-      "title": "[Master Dashboard] Add IBKR options pipeline panel",
+      "id": "c_efc36c7fa077d_19ca4fcc9ab",
+      "title": "[NQ] Revalidate walk-forward for bleeding strategies — vwap_fade, gap_fill, orb",
       "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/master-dashboard",
-      "status": "In Progress"
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "status": "In Progress",
+      "started_approx": "2026-02-28T16:08:00Z"
     }
   ],
-  "lastDispatch": "2026-02-28T15:43:00Z",
-  "lastHealthCheck": "2026-02-28T15:43:00Z",
-  "notes": "IBKR infra built — Docker stack ready at /home/rob/infrastructure/ibkr/ but containers not started (requires human 2FA to launch IB Gateway). NQ services active, dashboard 200."
+  "lastDispatch": "2026-02-28T16:13:00Z",
+  "lastHealthCheck": "2026-02-28T16:13:00Z",
+  "notes": "nq-dashboard was running as orphan process (PID 2755259) outside systemd — killed and restarted under service control. All dashboards verified: master-dashboard :8890 200, jarvis-home-energy :8793 200, nq-dashboard :8891 200. No Planned cards. 1 builder active on NQ walk-forward revalidation (~5 min old)."
 }

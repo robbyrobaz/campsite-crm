@@ -231,3 +231,6 @@ Manual intervention needed to either:
 - Has Google Cloud Console access via browser
 - Projects: ml-trading-431520, campsite-crm-app
 - NOTE: Rob gave this account to Jarvis. Stop asking Rob for help with it.
+
+## 2026-02-28 09:13 MST — nq-dashboard orphan process
+nq-dashboard.service was inactive because dashboard/app.py was running as an orphan process (PID 2755259) outside systemd control, holding port 8891. Dashboard was serving 200 OK but not managed by systemd. Killed orphan, restarted service — now active under systemd.

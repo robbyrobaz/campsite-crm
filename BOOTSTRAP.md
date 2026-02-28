@@ -118,7 +118,7 @@ PATCH the card: `curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-
 - **Jarvis Pulse cron**: upgraded to Sonnet (Feb 26). Dispatcher is too important for Haiku.
 - **Max concurrent builders**: 3 (raised from 1, Feb 26).
 - **Jinja/JS**: Always use `&quot;` not `\'` in JS strings inside Jinja templates.
-- **Kanban API**: POST to `/api/inbox` with field `text` (not `body`). Kanban runner model string: `claude-sonnet-4-6` (no `anthropic/` prefix — CLI format).
+- **Kanban API**: POST to `/api/inbox` with field `text` (not `body`). Kanban runner model string: `claude-haiku-4-5` (no `anthropic/` prefix — CLI format). **ALL coding agents use Haiku** — Sonnet reserved for main Jarvis session only.
 - **Always restart service after code changes**: `systemctl --user restart <service>`
 - **Webhook**: `https://webhooks.traderspost.io/trading/webhook/51e37934-7a18-4e37-9dc5-33416a36d579/2ddfa7c41bcf347dc1a599108945b07a`
 

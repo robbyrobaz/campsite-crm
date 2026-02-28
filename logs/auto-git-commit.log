@@ -3712,3 +3712,17 @@ Done: 3 committed, 6 skipped
  1 file changed, 165 insertions(+)
 COMMITTED master-dashboard
 CLEAN blofin-stack (nothing to commit)
+[main 60e9ae66] auto: snapshot 2026-02-28T16:00:01Z
+ 9 files changed, 87 insertions(+), 19 deletions(-)
+ delete mode 160000 ibkr-options
+ create mode 100644 jarvis-home-energy/ring_token.json
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main fd8eed03] auto: snapshot 2026-02-28T16:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 3 committed, 6 skipped

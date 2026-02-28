@@ -71,25 +71,27 @@ When delegating to Builder subagents:
 
 | Alias | Model | Use For |
 |-------|-------|---------|
-| `sonnet` | claude-sonnet-4-6 | **Primary (Jarvis main agent).** Conversations, planning, orchestration, reasoning, code generation, refactors, bug fixes. **Kanban runner model string: `claude-sonnet-4-6`** (NOT `anthropic/claude-sonnet-4-6` — CLI format, no prefix) |
-| `haiku` | claude-haiku-4-5 | Cron jobs (blofin, token audit), lightweight QA, health checks, heartbeats, 15-min dispatch pulse |
+| `sonnet` | claude-sonnet-4-6 | **Primary (Jarvis main agent ONLY).** Conversations, planning, orchestration, reasoning with Rob. Jarvis Pulse dispatcher. NOT for coding subagents. |
+| `haiku` | claude-haiku-4-5 | **ALL coding/builder subagents.** Code generation, refactors, bug fixes, cron jobs, token audit, health checks, heartbeats, dispatch pulse. **Kanban runner model string: `claude-haiku-4-5`** (NOT `anthropic/claude-haiku-4-5` — CLI format, no prefix) |
 
 ### Subagent Model Assignment
 
 Jarvis (Sonnet) delegates to subagents with explicit model overrides:
 
-**Use `model=sonnet` for Builder subagents when:**
-- Writing or modifying code (any change beyond a trivial one-liner)
+**Use `model=haiku` for ALL Builder subagents (coding tasks):**
+- Writing or modifying code (any change, including complex refactors)
 - Generating functions, refactoring modules, writing tests
-- Bug fixing that requires reasoning about code behavior
-
-**Use `model=haiku` for:**
+- Bug fixing
 - Build execution and retry loops
 - Log parsing and error extraction
 - CI/CD automation, repetitive tool calls
 - Cron job execution (default for all cron)
 - QA checks spawned by the dispatch pulse
 - 15-min dispatch pulse
+
+**Use `model=sonnet` ONLY for:**
+- Main Jarvis session (orchestration, planning, conversations with Rob)
+- Jarvis Pulse dispatcher cron (requires reasoning to enrich cards correctly)
 
 ### Fallback Chain
 

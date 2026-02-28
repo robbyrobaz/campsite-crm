@@ -58,7 +58,7 @@ If you find a better way to do something, update your own instructions (CHECKLIS
 - Max 3 atomic tasks per builder — keep delegations focused
 
 **Delegation decision tree:**
-- Code changes → `sessions_spawn` with `model=sonnet`
+- Code changes → `sessions_spawn` with `model=haiku` (ALL coding/building tasks use Haiku)
 - 3+ parallel tasks in same repo → Claude Code Agent Teams
 - Research/analysis → spawn crypto-researcher (read-only)
 - QA review → spawn qa-sentinel (read-only)

@@ -217,6 +217,96 @@ async def _ring_get_snapshot_async(device_id):
             return await device.async_get_snapshot()
     return None
 
+
+# ── Ring snapshot & event background state ────────────────────────────────────
+_ring_snap_bytes: bytes = b''
+_ring_snap_lock  = threading.Lock()
+_ring_snap_age: float = 0.0
+
+_ring_evts: list = []          # [{ts, type, device}] — most recent events
+_ring_evts_lock  = threading.Lock()
+_ring_last_ding_at   = None    # datetime of last seen ding
+_ring_last_motion_at = None    # datetime of last seen motion
+
+
+def _ring_snapshot_poller():
+    """Background thread: fetch Ring doorbell snapshot every 1.5s → _ring_snap_bytes."""
+    global _ring_snap_bytes, _ring_snap_age
+    import asyncio
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    ring_ref   = [None]
+    device_ref = [None]
+
+    async def _init():
+        r = await _ring_build(update=True)
+        devs = list(r.video_devices())
+        return r, (devs[0] if devs else None)
+
+    while True:
+        try:
+            if ring_ref[0] is None:
+                r, d = loop.run_until_complete(_init())
+                ring_ref[0], device_ref[0] = r, d
+                if d:
+                    log.info("Ring snapshot poller: device=%s", getattr(d, 'name', d))
+            if device_ref[0] is not None:
+                img = loop.run_until_complete(device_ref[0].async_get_snapshot())
+                if img:
+                    with _ring_snap_lock:
+                        _ring_snap_bytes = img
+                        _ring_snap_age   = time.time()
+        except Exception as exc:
+            log.debug("Ring snapshot poller error: %s", exc)
+            ring_ref[0] = device_ref[0] = None  # re-init on next iteration
+        time.sleep(1.5)
+
+
+def _ring_event_poller():
+    """Background thread: poll Ring for new ding/motion events every 5s."""
+    global _ring_last_ding_at, _ring_last_motion_at
+    import asyncio
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    ring_ref = [None]
+
+    async def _init():
+        return await _ring_build(update=True)
+
+    async def _poll(ring):
+        await ring.async_update_data()
+        return list(ring.video_devices())
+
+    while True:
+        try:
+            if ring_ref[0] is None:
+                ring_ref[0] = loop.run_until_complete(_init())
+            devs = loop.run_until_complete(_poll(ring_ref[0]))
+            for dev in devs:
+                ding_at = getattr(dev, 'last_ding', None)
+                if ding_at and ding_at != _ring_last_ding_at:
+                    ts = ding_at.timestamp() if hasattr(ding_at, 'timestamp') else float(ding_at)
+                    with _ring_evts_lock:
+                        _ring_evts.append({"ts": ts, "type": "ding", "device": dev.name or "Front Door"})
+                        if len(_ring_evts) > 50:
+                            _ring_evts.pop(0)
+                    _ring_last_ding_at = ding_at
+                    log.info("Ring ding detected at %s", ding_at)
+                motion_at = getattr(dev, 'last_motion', None)
+                if motion_at and motion_at != _ring_last_motion_at:
+                    ts = motion_at.timestamp() if hasattr(motion_at, 'timestamp') else float(motion_at)
+                    with _ring_evts_lock:
+                        _ring_evts.append({"ts": ts, "type": "motion", "device": dev.name or "Front Door"})
+                        if len(_ring_evts) > 50:
+                            _ring_evts.pop(0)
+                    _ring_last_motion_at = motion_at
+                    log.info("Ring motion detected at %s", motion_at)
+        except Exception as exc:
+            log.debug("Ring event poller error: %s", exc)
+            ring_ref[0] = None  # re-auth on next iteration
+        time.sleep(5)
+
+
 def _get_wyze_client(force_refresh=False):
     """Return a cached Wyze Client, creating/refreshing only when needed.
     Implements backoff: after a failed auth, wait 5 min before retrying."""
@@ -2187,9 +2277,7 @@ def api_tesla_set_password():
 def camera_snapshot(cam_id):
     try:
         if cam_id.startswith('ring_'):
-            return '', 204  # Ring disabled — no auth attempts
-            if img_bytes:
-                return Response(img_bytes, mimetype='image/jpeg')
+            return '', 204  # legacy ring_ cam_id — use /api/ring/snapshot instead
         else:
             # Wyze — proxy thumbnail URL cached during last poll
             with _state_lock:
@@ -2208,6 +2296,45 @@ def camera_snapshot(cam_id):
     except Exception as e:
         log.warning("Snapshot error for %s: %s", cam_id, e)
     return '', 204
+
+
+@app.route("/api/ring/snapshot")
+def ring_snapshot_route():
+    """Return the latest cached Ring doorbell snapshot as JPEG."""
+    with _ring_snap_lock:
+        img = bytes(_ring_snap_bytes)
+    if not img:
+        return '', 204
+    resp = Response(img, mimetype='image/jpeg')
+    resp.headers['Cache-Control'] = 'no-cache, no-store'
+    return resp
+
+
+@app.route("/api/ring/events")
+def ring_events_sse():
+    """SSE stream: push Ring ding/motion events to the browser."""
+    def generate():
+        last_seen = time.time()
+        ticker = 0
+        while True:
+            with _ring_evts_lock:
+                new_evts = [e for e in _ring_evts if e["ts"] > last_seen]
+            for evt in sorted(new_evts, key=lambda x: x["ts"]):
+                yield f"data: {json.dumps(evt)}\n\n"
+                last_seen = max(last_seen, evt["ts"])
+            time.sleep(1)
+            ticker += 1
+            if ticker % 30 == 0:
+                yield ": keepalive\n\n"
+    return Response(stream_with_context(generate()), mimetype="text/event-stream",
+                    headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
+
+
+@app.route("/ring")
+def ring_page_redirect():
+    """Redirect /ring to the main dashboard (Ring view is a SPA panel)."""
+    from flask import redirect as _redirect
+    return _redirect("/")
 
 
 # ── RTSP camera frame cache (background ffmpeg threads) ───────────────────────
@@ -3194,6 +3321,10 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   <button class="rail-btn" data-rail="cameras" onclick="showView('cameras')">
     <span class="rail-icon">&#128247;</span>
     <span class="rail-label">Cameras</span>
+  </button>
+  <button class="rail-btn" data-rail="ring" onclick="showView('ring')">
+    <span class="rail-icon">&#128276;</span>
+    <span class="rail-label">Doorbell</span>
   </button>
   <button class="rail-btn" data-rail="appliances" onclick="showView('appliances')">
     <span class="rail-icon">&#129767;</span>
@@ -4667,6 +4798,35 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 </div><!-- /appliances -->
 
 
+<!-- ═══ RING DOORBELL ════════════════════════════════════════════════════════ -->
+<div id="view-ring" class="view" style="display:none">
+  <div class="section-title">&#128276; Front Door Doorbell</div>
+  <div style="display:flex;flex-direction:column;gap:12px;max-width:720px">
+    <!-- Live snapshot -->
+    <div class="card" style="padding:0;overflow:hidden;background:#000;border-radius:10px">
+      <img id="ring-live-img" src="/api/ring/snapshot" alt="Ring Live"
+           style="width:100%;display:block;min-height:200px;max-height:450px;object-fit:contain;background:#111"
+           onerror="this.style.opacity='0.3'">
+    </div>
+    <!-- Status bar -->
+    <div class="card" style="padding:10px 14px;display:flex;gap:20px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:13px;color:var(--text-dim)">Last ding:</span>
+      <span id="ring-last-ding" style="font-weight:600;color:#FFD700">&#8212;</span>
+      <span style="font-size:13px;color:var(--text-dim)">Last motion:</span>
+      <span id="ring-last-motion" style="font-weight:600">&#8212;</span>
+      <span style="margin-left:auto;font-size:11px;color:var(--text-dim)" id="ring-snap-age">&#8212;</span>
+    </div>
+    <!-- Recent events list -->
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:8px">Recent Events</div>
+      <div id="ring-events-list" style="display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto">
+        <div style="color:rgba(255,255,255,0.3);font-size:12px;padding:8px">Loading events&hellip;</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- ═══ SETTINGS ════════════════════════════════════════════════════════════ -->
 <div id="view-settings" class="view">
   <div class="section-title">🔧 Devices &amp; Settings</div>
@@ -4954,8 +5114,22 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 </main>
 <div id="toast"></div>
 
+<!-- ─── Ring Doorbell Popup Overlay ────────────────────────────────────────── -->
+<div id="ring-popup" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px">
+  <div style="color:#FFD700;font-size:2rem;font-weight:900;letter-spacing:1px;text-align:center">&#128276; Someone at the Door</div>
+  <div style="color:rgba(255,255,255,0.65);font-size:1rem" id="ring-popup-time">&#8212;</div>
+  <img id="ring-popup-img" src="" alt="Ring doorbell"
+       style="width:min(640px,90vw);max-height:48vh;object-fit:contain;border-radius:10px;background:#111;border:2px solid rgba(255,215,0,0.35)">
+  <div style="color:rgba(255,255,255,0.45);font-size:0.9rem" id="ring-popup-device">Front Door</div>
+  <button id="ring-dismiss-btn" onclick="dismissDoorbellPopup()"
+    style="margin-top:8px;padding:20px 52px;font-size:1.4rem;font-weight:800;background:#FFD700;color:#000;border:none;border-radius:12px;cursor:pointer;min-height:64px;min-width:220px;letter-spacing:1px;touch-action:manipulation">
+    DISMISS
+  </button>
+  <div style="color:rgba(255,255,255,0.3);font-size:0.8rem;margin-top:4px" id="ring-popup-countdown">Auto-dismiss in 60s</div>
+</div>
+
 <script>
-const views = ['energy','climate','pool','cameras','appliances','settings','devices','cockpit','solar','span','tesla-energy','cybertruck','home-control','sprinklers','roku'];
+const views = ['energy','climate','pool','cameras','appliances','settings','devices','cockpit','solar','span','tesla-energy','cybertruck','home-control','sprinklers','roku','ring'];
 const _energySubs = ['cockpit','solar','span','tesla-energy','cybertruck'];
 const _climateSubs = ['home-control'];
 let _curEnergySub = 'cockpit';
@@ -7954,6 +8128,140 @@ const evtSrc = new EventSource('/api/stream');
 evtSrc.onmessage = e => { try { renderState(JSON.parse(e.data)); } catch(err) { console.error(err); } };
 evtSrc.onerror = () => console.warn('SSE disconnected — retrying...');
 
+// ── Ring Doorbell SSE, Popup & Page Refresh ──────────────────────────────────
+let _ringSSE = null;
+let _ringPopupCountdownTimer = null;
+let _ringPopupImgTimer = null;
+let _ringViewRefreshTimer = null;
+let _ringRecentEvts = [];
+
+function _connectRingSSE() {
+  if (_ringSSE) { try { _ringSSE.close(); } catch(e){} }
+  _ringSSE = new EventSource('/api/ring/events');
+  _ringSSE.onmessage = function(e) {
+    try {
+      const evt = JSON.parse(e.data);
+      _ringRecentEvts.unshift(evt);
+      if (_ringRecentEvts.length > 30) _ringRecentEvts.pop();
+      _renderRingEventsList();
+      if (evt.type === 'ding') {
+        showDoorbellPopup(evt);
+        const el = document.getElementById('ring-last-ding');
+        if (el) el.textContent = new Date(evt.ts * 1000).toLocaleTimeString();
+      } else if (evt.type === 'motion') {
+        const el = document.getElementById('ring-last-motion');
+        if (el) el.textContent = new Date(evt.ts * 1000).toLocaleTimeString();
+      }
+    } catch(err) { console.error('Ring SSE parse error', err); }
+  };
+  _ringSSE.onerror = function() { setTimeout(_connectRingSSE, 10000); };
+}
+
+function showDoorbellPopup(evt) {
+  const popup = document.getElementById('ring-popup');
+  if (!popup) return;
+  clearTimeout(_ringPopupCountdownTimer);
+  clearInterval(_ringPopupImgTimer);
+  // Fill popup content
+  const timeEl = document.getElementById('ring-popup-time');
+  if (timeEl) timeEl.textContent = new Date(evt.ts * 1000).toLocaleString();
+  const devEl = document.getElementById('ring-popup-device');
+  if (devEl) devEl.textContent = evt.device || 'Front Door';
+  const imgEl = document.getElementById('ring-popup-img');
+  if (imgEl) imgEl.src = '/api/ring/snapshot?' + Date.now();
+  const cdEl = document.getElementById('ring-popup-countdown');
+  // Doorbell chime via Web Audio API
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    [[523,0],[659,0.28],[784,0.56],[659,0.84]].forEach(([freq, t]) => {
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.35, ctx.currentTime + t);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.45);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(ctx.currentTime + t);
+      osc.stop(ctx.currentTime + t + 0.5);
+    });
+  } catch(e) {}
+  // Show popup
+  popup.style.display = 'flex';
+  // Refresh camera image every 1s while open
+  _ringPopupImgTimer = setInterval(() => {
+    const img = document.getElementById('ring-popup-img');
+    if (img) img.src = '/api/ring/snapshot?' + Date.now();
+  }, 1000);
+  // Countdown auto-dismiss
+  let remaining = 60;
+  function _tick() {
+    if (cdEl) cdEl.textContent = 'Auto-dismiss in ' + remaining + 's';
+    if (remaining <= 0) { dismissDoorbellPopup(); return; }
+    remaining--;
+    _ringPopupCountdownTimer = setTimeout(_tick, 1000);
+  }
+  _tick();
+}
+
+function dismissDoorbellPopup() {
+  const popup = document.getElementById('ring-popup');
+  if (popup) popup.style.display = 'none';
+  clearTimeout(_ringPopupCountdownTimer);
+  clearInterval(_ringPopupImgTimer);
+}
+
+function _renderRingEventsList() {
+  const el = document.getElementById('ring-events-list');
+  if (!el) return;
+  if (!_ringRecentEvts.length) {
+    el.innerHTML = '<div style="color:rgba(255,255,255,0.3);font-size:12px;padding:8px">No recent events</div>';
+    return;
+  }
+  el.innerHTML = _ringRecentEvts.slice(0, 20).map(e => {
+    const icon  = e.type === 'ding' ? '&#128276;' : '&#128065;';
+    const label = e.type === 'ding' ? 'Doorbell' : 'Motion';
+    const t     = new Date(e.ts * 1000).toLocaleString();
+    const dev   = e.device || 'Front Door';
+    return '<div style="display:flex;gap:10px;align-items:center;padding:6px 8px;background:rgba(255,255,255,0.03);border-radius:6px">'
+      + '<span style="font-size:1.1rem">' + icon + '</span>'
+      + '<span style="font-weight:600;min-width:64px">' + label + '</span>'
+      + '<span style="color:rgba(255,255,255,0.5);font-size:12px">' + dev + '</span>'
+      + '<span style="margin-left:auto;font-size:12px;color:rgba(255,255,255,0.4)">' + t + '</span>'
+      + '</div>';
+  }).join('');
+}
+
+// Ring view: auto-refresh camera image every 1.5s while active
+function _startRingViewRefresh() {
+  if (_ringViewRefreshTimer) return;
+  // Load initial snapshot immediately
+  const img = document.getElementById('ring-live-img');
+  if (img) img.src = '/api/ring/snapshot?' + Date.now();
+  _ringViewRefreshTimer = setInterval(() => {
+    const i = document.getElementById('ring-live-img');
+    if (!i) return;
+    i.src = '/api/ring/snapshot?' + Date.now();
+    const ageEl = document.getElementById('ring-snap-age');
+    if (ageEl) ageEl.textContent = 'Live \u00b7 ' + new Date().toLocaleTimeString();
+  }, 1500);
+}
+function _stopRingViewRefresh() {
+  clearInterval(_ringViewRefreshTimer);
+  _ringViewRefreshTimer = null;
+}
+
+// Patch showView to start/stop ring camera refresh and update events list
+const _origShowView = showView;
+showView = function(v) {
+  _origShowView(v);
+  if (v === 'ring') { _startRingViewRefresh(); _renderRingEventsList(); }
+  else _stopRingViewRefresh();
+};
+
+// Start Ring SSE on page load
+_connectRingSSE();
+
 // ── fitCockpit: constrain cockpit panels to available viewport height ──
 function fitCockpit() {
   var header = document.querySelector('header');
@@ -8096,6 +8404,12 @@ if __name__ == "__main__":
     t.start()
 
     _start_rtsp_threads()   # start background RTSP frame capture
+
+    # Ring doorbell background threads (snapshot + event polling)
+    if _ring_token_data:
+        threading.Thread(target=_ring_snapshot_poller, daemon=True, name="ring-snapshot").start()
+        threading.Thread(target=_ring_event_poller,    daemon=True, name="ring-events").start()
+        log.info("Ring background threads started")
 
     log.info("Discovering Roku devices via SSDP ...")
     import threading as _threading

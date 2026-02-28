@@ -1,13 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_bd83c118f7537_19ca37c1022",
-      "title": "[NQ] Investigate orb live underperformance — 33% WR, -$176 in 7d vs PF 2.92 backtest",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
-    }
-  ],
-  "lastDispatch": "2026-02-28T09:13:00Z",
-  "lastHealthCheck": "2026-02-28T09:13:00Z"
+  "activeTasks": [],
+  "lastDispatch": "2026-02-28T02:43:00-07:00",
+  "lastHealthCheck": "2026-02-28T02:43:00-07:00",
+  "notes": "No In Progress or Planned cards. 3 cards Done recently (ORB, TIA-USDT, vwap_fade). All services active. Restarted blofin-stack-ingestor to pick up TIA fix (was running since 22:13 before fix). CPU 79°C, disk 42%."
 }

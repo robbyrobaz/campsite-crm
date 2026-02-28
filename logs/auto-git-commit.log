@@ -3538,3 +3538,19 @@ CLEAN master-dashboard (nothing to commit)
  create mode 100644 models/entry_classifier_BTC-USDT_archive_20260228T063622/entry_classifier_meta.json
  create mode 100644 models/entry_classifier_BTC-USDT_archive_20260228T063622/entry_classifier_scaler.pkl
 COMMITTED blofin-stack
+[main d2313ec2] auto: snapshot 2026-02-28T07:00:01Z
+ 4 files changed, 50 insertions(+), 7 deletions(-)
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main ae56c960] auto: snapshot 2026-02-28T07:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 3 committed, 6 skipped
+CLEAN master-dashboard (nothing to commit)
+[main 9d4e768] auto: snapshot 2026-02-28T08:00:01Z
+ 15 files changed, 68 insertions(+), 68 deletions(-)
+COMMITTED blofin-stack

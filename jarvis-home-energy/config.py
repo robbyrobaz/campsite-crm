@@ -49,7 +49,7 @@ WYZE_KEY_ID = "ec0dd323-1db4-4e81-8cd4-a4feab256bae"
 
 # ─── Ring Doorbell ────────────────────────────────────────────────────────────
 RING_EMAIL = "rob.hartwig@gmail.com"
-RING_PASSWORD = "1978philly"
+RING_PASSWORD = "L#MzBsX27h&j.r9"
 
 # ─── Nest Thermostat (Google SDM API) ────────────────────────────────────────
 # OAuth app: Google Cloud project 574885630755

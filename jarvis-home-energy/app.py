@@ -5,6 +5,7 @@ Covers: SPAN Panel · Enphase Solar · Pentair Pool · Tesla Energy Gateway 3V �
 """
 
 import json
+import os
 import logging
 import socket
 import ssl
@@ -139,7 +140,14 @@ _ge_poll_counter = 0      # throttle: poll GE appliances every 30s
 
 # Ring — cached token data (persisted across calls to avoid repeated re-auth)
 # ring_doorbell 0.9.x is fully async; we wrap with a fresh event loop
-_ring_token_data = {}
+_RING_TOKEN_FILE = os.path.join(os.path.dirname(__file__), "ring_token.json")
+def _ring_load_token():
+    try:
+        with open(_RING_TOKEN_FILE) as f:
+            return json.load(f)
+    except Exception:
+        return {}
+_ring_token_data = _ring_load_token()
 _ring_next_retry = 0
 _ring_lock = threading.Lock()
 
@@ -147,6 +155,11 @@ _ring_lock = threading.Lock()
 def _ring_token_updater(token_data):
     global _ring_token_data
     _ring_token_data = token_data
+    try:
+        with open(_RING_TOKEN_FILE, "w") as f:
+            json.dump(token_data, f)
+    except Exception:
+        pass
 
 
 def _run_async(coro):

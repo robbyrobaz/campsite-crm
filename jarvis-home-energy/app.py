@@ -880,19 +880,8 @@ def poll_cameras():
             global _wyze_client
             _wyze_client = None  # force re-auth next cycle
 
-    # Ring — fully async in ring_doorbell 0.9.x; use cached token + backoff
-    # DISABLED: Ring requires interactive 2FA to get initial token. Re-enable once
-    # authenticated interactively and token cached. Until then this spams Rob with texts.
-    global _ring_next_retry
-    if False and RING_EMAIL and RING_PASSWORD and time.time() >= _ring_next_retry:
-        try:
-            ring_cameras = _run_async(_ring_poll_cameras_async())
-            cameras.extend(ring_cameras)
-            _ring_next_retry = 0
-            log.info("Ring poll OK — %d devices", len(ring_cameras))
-        except Exception as e:
-            log.warning("Ring poll error: %s — backing off 5 min", e)
-            _ring_next_retry = time.time() + 300
+    # RING DISABLED — do not poll. triggers 2FA SMS on every auth attempt. No token cached.
+    pass  # Ring removed from poll loop
 
     with _state_lock:
         _state["cameras"] = cameras
@@ -2159,10 +2148,7 @@ def api_tesla_set_password():
 def camera_snapshot(cam_id):
     try:
         if cam_id.startswith('ring_'):
-            if not RING_EMAIL:
-                return '', 204
-            device_id = cam_id[5:]
-            img_bytes = _run_async(_ring_get_snapshot_async(device_id))
+            return '', 204  # Ring disabled — no auth attempts
             if img_bytes:
                 return Response(img_bytes, mimetype='image/jpeg')
         else:
@@ -2646,31 +2632,52 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   body { background: var(--bg); color: var(--text); font-family: 'SF Mono', 'Fira Code', monospace; font-size: 13px; display: flex; flex-direction: column; }
 
   /* Header (status bar only — no nav buttons) */
-  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0; position: sticky; top: 0; z-index: 100; }
+  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0; position: sticky; top: 0; z-index: 100; margin-left: 72px; }
+  body.has-subnav header { margin-left: 232px; }
+  #appliance-banner { margin-left: 72px; }
+  body.has-subnav #appliance-banner { margin-left: 232px; }
   .header-top { display: flex; align-items: center; gap: 12px; padding: 0 16px; height: 42px; }
   .logo { font-size: 16px; font-weight: 700; letter-spacing: .05em; color: var(--solar); }
   .logo span { color: var(--text-dim); }
   .status-bar { display: flex; gap: 12px; align-items: center; margin-left: auto; }
 
-  /* Bottom Navigation Bar */
-  #bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    display: flex; justify-content: space-around; align-items: stretch;
-    background: var(--surface); border-top: 1px solid var(--border);
-    z-index: 200; height: 56px;
+  /* Left Rail Navigation */
+  #left-rail {
+    position: fixed; left: 0; top: 0; bottom: 0; width: 72px;
+    background: var(--surface); border-right: 1px solid var(--border);
+    z-index: 200; display: flex; flex-direction: column; align-items: center;
+    padding: 4px 0; overflow: hidden;
     -webkit-tap-highlight-color: transparent;
   }
-  .bnav-btn {
-    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    background: none; border: none; border-top: 2px solid transparent;
-    color: var(--text-dim); cursor: pointer; padding: 4px 2px; gap: 2px;
-    font-family: inherit; transition: color .15s, border-color .15s;
-    min-width: 0;
+  #sub-rail {
+    position: fixed; left: 72px; top: 0; bottom: 0; width: 160px;
+    background: var(--surface); border-right: 1px solid var(--border);
+    z-index: 190; display: none; flex-direction: column;
+    padding-top: 42px; overflow-y: auto;
   }
-  .bnav-btn.active { color: var(--solar); border-top-color: var(--solar); }
-  .bnav-btn:hover { color: var(--text); }
-  .bnav-icon { font-size: 1.2rem; line-height: 1; }
-  .bnav-label { font-size: 0.52rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; white-space: nowrap; }
+  #sub-rail.visible { display: flex; }
+  .rail-btn {
+    width: 100%; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; background: none; border: none;
+    border-left: 3px solid transparent;
+    color: var(--text-dim); cursor: pointer; padding: 8px 4px; gap: 3px;
+    font-family: inherit; transition: color .15s, border-color .15s, background .15s;
+    min-height: 72px; flex-shrink: 0;
+  }
+  .rail-btn.active { color: var(--solar); border-left-color: var(--solar); background: rgba(245,158,11,0.08); }
+  .rail-btn:hover { color: var(--text); background: rgba(255,255,255,0.05); }
+  .rail-icon { font-size: 1.35rem; line-height: 1; }
+  .rail-label { font-size: 0.52rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; white-space: nowrap; text-align: center; }
+  .sub-rail-btn {
+    width: 100%; display: flex; align-items: center;
+    background: none; border: none; border-left: 3px solid transparent;
+    color: var(--text-dim); cursor: pointer; padding: 10px 14px;
+    font-family: inherit; font-size: 0.82rem; text-align: left;
+    transition: color .15s, border-color .15s, background .15s;
+    min-height: 44px; gap: 6px; white-space: nowrap;
+  }
+  .sub-rail-btn.active { color: var(--text); border-left-color: var(--solar); background: rgba(245,158,11,0.08); }
+  .sub-rail-btn:hover { color: var(--text); background: rgba(255,255,255,0.05); }
 
   .dot { width: 8px; height: 8px; border-radius: 50%; }
   .dot.online { background: var(--online); box-shadow: 0 0 6px var(--online); }
@@ -2680,7 +2687,8 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .ts { color: var(--text-dim); font-size: 11px; }
 
   /* Views */
-  main { padding: 0; flex: 1; min-height: 0; overflow: hidden; display: flex; flex-direction: column; }
+  main { padding: 0; margin-left: 72px; flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; }
+  body.has-subnav main { margin-left: 232px; }
   .view { display: none; }
   .view.active { display: block; }
   /* Sub-nav buttons */
@@ -3104,17 +3112,6 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <header>
   <div class="header-top">
     <a href="http://192.168.68.72:8793" class="logo" style="text-decoration:none;color:inherit">🏠 <span>Jarvis Home</span></a>
-    <!-- Sub-nav pills live here — shown/hidden per active view -->
-    <div id="header-subnav" style="flex:1;display:flex;justify-content:center;align-items:center;gap:5px;overflow-x:auto;padding:0 12px;scrollbar-width:none">
-      <!-- Energy pills (default visible) -->
-      <div id="hsnav-energy" style="display:flex;gap:5px;align-items:center;flex-shrink:0">
-        <button class="sub-nav-btn active" onclick="showEnergySub('cockpit')">⚡ Cockpit</button>
-        <button class="sub-nav-btn" onclick="showEnergySub('solar')">☀️ Solar</button>
-        <button class="sub-nav-btn" onclick="showEnergySub('span')">🔌 SPAN</button>
-        <button class="sub-nav-btn" onclick="showEnergySub('tesla-energy')"><img src="/static/img/tesla-logo.svg" height="14" style="vertical-align:middle;margin-right:4px;filter:brightness(10)">Tesla</button>
-        <button class="sub-nav-btn" onclick="showEnergySub('cybertruck')"><img src="/static/img/cybertruck.png" height="18" style="vertical-align:middle;margin-right:3px;filter:brightness(1.3) contrast(1.2)">Cybertruck</button>
-      </div>
-    </div>
     <div class="status-bar">
       <div id="span-dot" class="dot offline" title="SPAN Panel"></div>
       <div id="enphase-dot" class="dot offline" title="Enphase"></div>
@@ -3126,40 +3123,57 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   </div>
 </header>
 
-<!-- ── Bottom Navigation Bar ─────────────────────────────────────────── -->
-<nav id="bottom-nav">
-  <button class="bnav-btn active" data-view="energy" onclick="showView('energy')">
-    <span class="bnav-icon">⚡</span>
-    <span class="bnav-label">Energy</span>
+<!-- ── Left Rail Navigation ──────────────────────────────────────────── -->
+<nav id="left-rail">
+  <button class="rail-btn active" data-rail="energy" onclick="showView('energy')">
+    <span class="rail-icon">&#9889;</span>
+    <span class="rail-label">Energy</span>
   </button>
-  <button class="bnav-btn" data-view="pool" onclick="showView('pool')">
-    <span class="bnav-icon">🏊</span>
-    <span class="bnav-label">Pool</span>
+  <button class="rail-btn" data-rail="pool" onclick="showView('pool')">
+    <span class="rail-icon">&#127946;</span>
+    <span class="rail-label">Pool</span>
   </button>
-  <button class="bnav-btn" data-view="thermostat" onclick="showView('thermostat')">
-    <span class="bnav-icon">🌡️</span>
-    <span class="bnav-label">Thermo</span>
+  <button class="rail-btn" data-rail="climate" onclick="showView('climate')">
+    <span class="rail-icon">&#127777;</span>
+    <span class="rail-label">Climate</span>
   </button>
-  <button class="bnav-btn" data-view="sprinklers" onclick="showView('sprinklers')">
-    <span class="bnav-icon">💧</span>
-    <span class="bnav-label">Sprinklers</span>
+  <button class="rail-btn" data-rail="cameras" onclick="showView('cameras')">
+    <span class="rail-icon">&#128247;</span>
+    <span class="rail-label">Cameras</span>
   </button>
-  <button class="bnav-btn" data-view="entertainment" onclick="showView('entertainment')">
-    <span class="bnav-icon">📺</span>
-    <span class="bnav-label">Media</span>
+  <button class="rail-btn" data-rail="appliances" onclick="showView('appliances')">
+    <span class="rail-icon">&#127968;</span>
+    <span class="rail-label">Appliances</span>
   </button>
-  <button class="bnav-btn" data-view="cameras" onclick="showView('cameras')">
-    <span class="bnav-icon">📷</span>
-    <span class="bnav-label">Cameras</span>
+  <button class="rail-btn" data-rail="entertainment" onclick="showView('entertainment')">
+    <span class="rail-icon">&#128250;</span>
+    <span class="rail-label">Media</span>
   </button>
-  <button class="bnav-btn" data-view="appliances" onclick="showView('appliances')">
-    <span class="bnav-icon">🏠</span>
-    <span class="bnav-label">Appliances</span>
+  <button class="rail-btn" data-rail="settings" onclick="showView('settings')">
+    <span class="rail-icon">&#9881;</span>
+    <span class="rail-label">Settings</span>
   </button>
-  <button class="bnav-btn" data-view="settings" onclick="showView('settings')">
-    <span class="bnav-icon">⚙️</span>
-    <span class="bnav-label">Settings</span>
-  </button>
+</nav>
+
+<!-- ── Sub-Rail Navigation ────────────────────────────────────────────── -->
+<nav id="sub-rail">
+  <!-- Energy sub-pages -->
+  <div id="sr-energy" style="display:none;flex-direction:column;width:100%">
+    <button class="sub-rail-btn active" data-sub="cockpit" onclick="showEnergySub('cockpit')">&#9889; Cockpit</button>
+    <button class="sub-rail-btn" data-sub="solar" onclick="showEnergySub('solar')">&#9728; Solar</button>
+    <button class="sub-rail-btn" data-sub="span" onclick="showEnergySub('span')">&#128268; SPAN</button>
+    <button class="sub-rail-btn" data-sub="tesla-energy" onclick="showEnergySub('tesla-energy')"><img src="/static/img/tesla-logo.svg" height="12" style="vertical-align:middle;margin-right:5px;filter:brightness(10) opacity(0.7)">Tesla</button>
+    <button class="sub-rail-btn" data-sub="cybertruck" onclick="showEnergySub('cybertruck')"><img src="/static/img/cybertruck.png" height="14" style="vertical-align:middle;margin-right:5px;filter:brightness(1.2)">Cybertruck</button>
+  </div>
+  <!-- Climate sub-pages -->
+  <div id="sr-climate" style="display:none;flex-direction:column;width:100%">
+    <button class="sub-rail-btn active" data-sub="home-control" onclick="showClimateSub('home-control')">&#127777; Thermostat</button>
+    <button class="sub-rail-btn" data-sub="sprinklers" onclick="showClimateSub('sprinklers')">&#128167; Sprinklers</button>
+  </div>
+  <!-- Media sub-pages -->
+  <div id="sr-entertainment" style="display:none;flex-direction:column;width:100%">
+    <button class="sub-rail-btn active" data-sub="roku" onclick="showEntertainmentSub('roku')">&#128250; Roku TVs</button>
+  </div>
 </nav>
 
 <!-- ── Active Appliance Banner (always visible when something is running) ── -->
@@ -3173,20 +3187,11 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <!-- ═══ ENERGY WRAPPER (sub-nav moved to header) ══════════════════════════════ -->
 <div id="view-energy" class="view active"></div>
 
-<!-- ═══ CLIMATE WRAPPER (legacy, hidden) ════════════════════════════════════ -->
-<div id="view-climate" class="view" style="display:none">
-  <div class="sub-nav" style="display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;">
-    <button class="sub-nav-btn active" onclick="showClimateSub('home-control')">🌡️ Thermostat</button>
-    <button class="sub-nav-btn" onclick="showClimateSub('sprinklers')">💧 Sprinklers</button>
-  </div>
-</div>
+<!-- ═══ CLIMATE WRAPPER ════════════════════════════════════════════════════ -->
+<div id="view-climate" class="view" style="display:none"></div>
 
 <!-- ═══ ENTERTAINMENT WRAPPER ════════════════════════════════════════════════ -->
-<div id="view-entertainment" class="view">
-  <div class="sub-nav" style="display:flex;gap:6px;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;">
-    <button class="sub-nav-btn active" onclick="showEntertainmentSub('roku')">📺 Roku TVs</button>
-  </div>
-</div>
+<div id="view-entertainment" class="view"></div>
 
 <!-- ═══ ENERGY COCKPIT ═══════════════════════════════════════════════════════ -->
 <div id="view-cockpit" class="view" style="display:none">
@@ -3293,7 +3298,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <span style="font-size:13px;font-weight:600;color:var(--text)">&#x26A1; Live Power Flow</span>
       <span style="font-size:11px;color:var(--text-dim)" id="flow-total-label">Total load: &#x2014; W</span>
     </div>
-    <svg id="power-flow-svg" viewBox="0 30 700 370" preserveAspectRatio="xMidYMid meet"
+    <svg id="power-flow-svg" viewBox="0 15 700 430" preserveAspectRatio="xMidYMid meet"
          style="width:100%;flex:1;min-height:0;display:block;max-height:none">
 
       <defs>
@@ -3554,7 +3559,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   <span id="f-grid-dir" style="display:none"></span>
 
   <!-- Metric Cards — flex-shrink:0 so SVG above gets remaining space -->
-  <div class="grid grid-4" style="margin-bottom:6px;flex-shrink:0">
+  <div class="grid grid-4" style="margin-bottom:4px;flex-shrink:0;padding:0 8px">
     <div class="card energy-solar">
       <div class="card-header">
         <span class="card-title">Solar Production</span>
@@ -3565,14 +3570,14 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       <div class="sub-val" id="solar-sub">Enphase IQ · 192.168.68.63</div>
     </div>
 
-    <div class="card energy-battery">
+    <div class="card" style="border-color:rgba(0,255,255,0.2)">
       <div class="card-header">
-        <span class="card-title">Battery</span>
-        <span class="badge offline" id="tesla-badge">unconfigured</span>
+        <span class="card-title">Cybertruck</span>
+        <span class="badge" id="ct-lm-badge" style="background:rgba(0,255,255,0.15);color:#22d3ee">—</span>
       </div>
-      <div class="big-val c-battery" id="battery-soe">—</div>
+      <div class="big-val" id="ct-lm-soc" style="color:#22d3ee">—</div>
       <span class="big-unit">%</span>
-      <div class="sub-val" id="battery-sub">Tesla Gateway · not found</div>
+      <div class="sub-val" id="ct-lm-sub">Wall Connector · —</div>
     </div>
 
     <div class="card energy-grid">
@@ -3597,7 +3602,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   </div>
 
   <!-- Self-Powered + Pool + Nest -->
-  <div class="row" style="flex-shrink:0;margin-bottom:0">
+  <div class="row" style="flex-shrink:0;margin-bottom:0;padding:0 8px">
     <div class="card">
       <div class="card-header"><span class="card-title">Solar Self-Powered</span></div>
       <div class="big-val" id="self-pct" style="color:var(--solar)">—</div><span class="big-unit">%</span>
@@ -4918,8 +4923,9 @@ function showEnergySub(name) {
   // cockpit uses flex layout
   const ckEl = document.getElementById('view-cockpit');
   if (name === 'cockpit' && ckEl) ckEl.style.display = 'flex';
-  document.querySelectorAll('#hsnav-energy .sub-nav-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'"+name+"'"));
+  // Update sub-rail active state
+  document.querySelectorAll('#sr-energy .sub-rail-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.sub === name);
   });
   if (name === 'cockpit') {
     var savedSub = localStorage.getItem('jarvis-cockpit-sub-v3') || 'microgrid';
@@ -4934,31 +4940,48 @@ function showClimateSub(name) {
     const el = document.getElementById('view-'+s);
     if (el) el.style.display = (s === name) ? 'block' : 'none';
   });
-  document.querySelectorAll('#view-climate .sub-nav-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'"+name+"'"));
+  // Update sub-rail active state
+  document.querySelectorAll('#sr-climate .sub-rail-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.sub === name);
   });
 }
 
 function showEntertainmentSub(name) {
   const el = document.getElementById('view-roku');
   if (el) el.style.display = 'block';
-  document.querySelectorAll('#view-entertainment .sub-nav-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.getAttribute('onclick') && btn.getAttribute('onclick').includes("'"+name+"'"));
+  // Update sub-rail active state
+  document.querySelectorAll('#sr-entertainment .sub-rail-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.sub === name);
   });
 }
 
 function showView(v) {
-  // Update header sub-nav: show energy pills only when on energy section
-  const _energyViews2 = ['energy','cockpit','solar','span','tesla-energy','cybertruck'];
-  const hsnav = document.getElementById('hsnav-energy');
-  if (hsnav) hsnav.style.display = _energyViews2.includes(v) ? 'flex' : 'none';
+  // Determine which left-rail section this view belongs to
+  const _energyViews = ['energy','cockpit','solar','span','tesla-energy','cybertruck'];
+  const _climateViews = ['climate','thermostat','home-control','sprinklers'];
+  const _entertainViews = ['entertainment','roku'];
+  let railSection = v;
+  if (_energyViews.includes(v)) railSection = 'energy';
+  else if (_climateViews.includes(v)) railSection = 'climate';
+  else if (_entertainViews.includes(v)) railSection = 'entertainment';
 
-  // Hide all top-level views
-  views.forEach(id => {
-    const el = document.getElementById('view-'+id);
-    if (el) el.style.display = 'none';
+  // Show/hide sub-rail and toggle body class
+  const hasSubnav = ['energy','climate','entertainment'].includes(railSection);
+  document.body.classList.toggle('has-subnav', hasSubnav);
+  const srEl = document.getElementById('sub-rail');
+  if (srEl) srEl.classList.toggle('visible', hasSubnav);
+  ['energy','climate','entertainment'].forEach(s => {
+    const el = document.getElementById('sr-'+s);
+    if (el) el.style.display = (s === railSection && hasSubnav) ? 'flex' : 'none';
   });
-  // Also hide energy/climate subs
+
+  // Update left rail active state
+  document.querySelectorAll('#left-rail .rail-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.rail === railSection);
+  });
+
+  // Hide all top-level views and sub-views
+  views.forEach(id => { const el = document.getElementById('view-'+id); if(el) el.style.display='none'; });
   _energySubs.forEach(s => { const el = document.getElementById('view-'+s); if(el) el.style.display='none'; });
   _climateSubs.forEach(s => { const el = document.getElementById('view-'+s); if(el) el.style.display='none'; });
   const rokuEl = document.getElementById('view-roku');
@@ -4971,8 +4994,8 @@ function showView(v) {
   // Handle grouped views
   if (v === 'energy') showEnergySub(_curEnergySub);
   if (v === 'climate') showClimateSub(_curClimateSub || 'home-control');
-  if (v === 'thermostat') { const el = document.getElementById('view-home-control'); if(el) el.style.display='block'; }
-  if (v === 'sprinklers') { const el = document.getElementById('view-sprinklers'); if(el) el.style.display='block'; }
+  if (v === 'thermostat') { showClimateSub('home-control'); }
+  if (v === 'sprinklers') { showClimateSub('sprinklers'); }
   if (v === 'entertainment') {
     showEntertainmentSub('roku');
     // Use already-loaded SSE state — no separate fetch
@@ -4982,17 +5005,6 @@ function showView(v) {
 
   // Refit heights whenever view changes
   setTimeout(fitCockpit, 50);
-
-  // Update bottom-nav active state
-  const _energyViews = ['energy','cockpit','solar','span','tesla-energy','cybertruck'];
-  document.querySelectorAll('#bottom-nav .bnav-btn').forEach(btn => {
-    const dv = btn.dataset.view;
-    const isActive = dv === v
-      || (dv === 'energy' && _energyViews.includes(v))
-      || (dv === 'thermostat' && v === 'home-control')
-      || (dv === 'sprinklers' && v === 'sprinklers');
-    btn.classList.toggle('active', isActive);
-  });
 }
 
 function fmt(w, unit='W') {
@@ -5349,7 +5361,7 @@ function renderState(s) {
   document.getElementById('f-grid-dir').textContent = gridW > 0 ? 'importing' : (gridW < 0 ? 'exporting' : 'balanced');
 
   document.getElementById('solar-w').textContent  = solarW >= 1000 ? (solarW/1000).toFixed(2)+'k' : Math.round(solarW);
-  document.getElementById('battery-soe').textContent = td.soe != null ? Math.round(td.soe) : '—';
+  const _bSoe = document.getElementById('battery-soe'); if(_bSoe) _bSoe.textContent = td.soe != null ? Math.round(td.soe) : '—';
   document.getElementById('grid-w').textContent   = Math.abs(gridW) >= 1000 ? (Math.abs(gridW)/1000).toFixed(2)+'k' : Math.round(Math.abs(gridW));
   document.getElementById('load-w').textContent   = loadW >= 1000 ? (loadW/1000).toFixed(2)+'k' : Math.round(loadW);
   document.getElementById('grid-dir').textContent = gridW > 50 ? 'Importing from grid' : (gridW < -50 ? 'Exporting to grid' : 'Grid balanced');
@@ -5367,8 +5379,7 @@ function renderState(s) {
   // Badges
   document.getElementById('enphase-badge').textContent = ed.status||'—';
   document.getElementById('enphase-badge').className = 'badge ' + statusColor(ed.status);
-  document.getElementById('tesla-badge').textContent = td.status||'—';
-  document.getElementById('tesla-badge').className = 'badge ' + statusColor(td.status);
+  const _tbadge = document.getElementById('tesla-badge'); if(_tbadge){_tbadge.textContent=td.status||'—';_tbadge.className='badge '+statusColor(td.status);}
   document.getElementById('pentair-badge').textContent = pd.status||'—';
   document.getElementById('pentair-badge').className = 'badge ' + statusColor(pd.status);
 
@@ -5384,7 +5395,7 @@ function renderState(s) {
   // Solar sub
   document.getElementById('solar-sub').textContent =
     ed.status==='online'||ed.status==='partial' ? `Enphase D8.3.5167 · ${ed.serial||'202324023651'}` : 'Enphase · needs token';
-  document.getElementById('battery-sub').textContent = td.status==='online' ? 'Tesla Gateway 3V · online' : 'Tesla Gateway 3V · offline';
+  const _bsub = document.getElementById('battery-sub'); if(_bsub) _bsub.textContent = td.status==='online' ? 'Tesla Gateway 3V · online' : 'Tesla Gateway 3V · offline';
 
   // Grid badge
   const gb = document.getElementById('grid-badge');
@@ -7431,6 +7442,14 @@ function updateMicrogrid(s) {
   setText('mc-truck-kw',        truckDispKW.toFixed(2));
   setText('mc-truck-mode',      truckMode);
 
+  // Live Power Flow page — Cybertruck metric card
+  const ctLmBadge = document.getElementById('ct-lm-badge');
+  const ctLmSoc   = document.getElementById('ct-lm-soc');
+  const ctLmSub   = document.getElementById('ct-lm-sub');
+  if (ctLmBadge) { ctLmBadge.textContent = wc.vehicle_connected ? (evKW > 0.1 ? 'charging' : 'connected') : 'away'; }
+  if (ctLmSoc)   { ctLmSoc.textContent = evKW > 0.05 ? (evKW*1000).toFixed(0)+'' : '—'; document.getElementById('ct-lm-soc').nextElementSibling.textContent = evKW > 0.05 ? 'W' : ''; }
+  if (ctLmSub)   { ctLmSub.textContent = evKW > 0.05 ? 'Charging · '+evKW.toFixed(2)+' kW' : truckMode; }
+
   // Top 3 circuits mini chart in Home Panel card
   const top5 = circuits.filter(c => Math.abs(c.power_w||0) > 10)
     .sort((a,b) => Math.abs(b.power_w||0) - Math.abs(a.power_w||0)).slice(0,3);
@@ -7878,22 +7897,22 @@ const evtSrc = new EventSource('/api/stream');
 evtSrc.onmessage = e => { try { renderState(JSON.parse(e.data)); } catch(err) { console.error(err); } };
 evtSrc.onerror = () => console.warn('SSE disconnected — retrying...');
 
-// ── fitCockpit: set main height from actual DOM measurements ──
+// ── fitCockpit: constrain cockpit panels to available viewport height ──
 function fitCockpit() {
   var header = document.querySelector('header');
-  var nav = document.getElementById('bottom-nav');
-  var main = document.querySelector('main');
-  if (!header || !nav || !main) return;
+  var nav    = document.getElementById('bottom-nav');
+  var vc     = document.getElementById('view-cockpit');
+  if (!header || !nav || !vc) return;
   var avail = window.innerHeight - header.offsetHeight - nav.offsetHeight;
-  main.style.height = avail + 'px';
-  main.style.maxHeight = avail + 'px';
+  vc.style.height    = avail + 'px';
+  vc.style.maxHeight = avail + 'px';
 }
 window.addEventListener('resize', fitCockpit);
 
 // Initial load — start on Energy Cockpit
 showView('energy');
 fetch('/api/state').then(r=>r.json()).then(renderState).catch(console.error);
-// Run after layout settles — multiple passes to catch any reflow
+// Run after layout settles
 fitCockpit();
 setTimeout(fitCockpit, 50);
 setTimeout(fitCockpit, 200);

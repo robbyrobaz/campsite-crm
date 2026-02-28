@@ -1,3 +1,6 @@
+## ⛔ AUTH FLOWS — NEVER AUTO-RETRY (learned the hard way, Feb 28)
+**Ring, IBKR, any 2FA service:** ONE attempt only. Stop. Wait for Rob to complete 2FA/SMS. Check result. Never loop, never auto-restart, never retry without Rob explicitly saying go. Repeated attempts = account lockouts that last hours. This has happened with Ring (locked for days) and IBKR (locked 1hr today).
+
 # BOOTSTRAP.md — Session Startup Context
 > Auto-loaded every session. Updated by cron. Last updated: see timestamp below.
 > **This file is the minimum context needed before responding to Rob.**

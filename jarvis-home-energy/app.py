@@ -5192,9 +5192,10 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         <div class="pc-stat-temp" id="pc-pool-temp">—°F</div>
         <div class="pc-stat-sub" id="pc-pool-setpoint">Setpoint: —</div>
         <div class="pc-stat-sub" id="pc-pool-heat">Heat: —</div>
-        <div style="margin-top:10px;display:flex;gap:6px">
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
           <button class="btn primary" onclick="pentairSet('C0006',{STATUS:'ON'})">Pool ON</button>
-          <button class="btn danger"  onclick="pentairSet('C0006',{STATUS:'OFF'})">Pool OFF</button>
+          <button class="btn danger"  onclick="pentairSet('C0006',{STATUS:'OFF'});setTimeout(()=>pentairSet('FTR01',{STATUS:'OFF'}),500)">Pool OFF</button>
+          <button class="btn danger" style="background:#7f1d1d;font-size:10px;margin-top:4px;width:100%" onclick="pentairSet('C0006',{STATUS:'OFF'});setTimeout(()=>{pentairSet('FTR01',{STATUS:'OFF'})},500)">⏹ ALL OFF (Pool + Cleaner)</button>
         </div>
       </div>
 

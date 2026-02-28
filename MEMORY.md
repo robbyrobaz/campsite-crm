@@ -30,7 +30,7 @@
 - Baselines: robbyrobml val_corr=0.02916 Sharpe=1.40
 
 ### Model Strategy
-- Subscription: Claude Max 5x ($100/mo flat). Resets every 5 hours.
+- Subscription: Claude Max 20x (upgraded Sun Feb 22). 7-day Sonnet limit is the binding constraint — NOT the 5h window. Haiku/Opus from separate buckets.
 - Model routing: Sonnet for all reasoning/code/main session. Haiku for cron jobs, health checks, lightweight tasks. Opus is banned.
 
 ## Lessons Learned

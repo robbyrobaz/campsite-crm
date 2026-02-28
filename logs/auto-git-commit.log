@@ -3628,3 +3628,37 @@ CLEAN master-dashboard (nothing to commit)
 [main 64bb2ce] auto: snapshot 2026-02-28T13:00:01Z
  1 file changed, 13 insertions(+), 1 deletion(-)
 COMMITTED blofin-stack
+Auto packing the repository in background for optimum performance.
+See "git help gc" for manual housekeeping.
+[main bc976a38] auto: snapshot 2026-02-28T13:00:01Z
+ 6 files changed, 55 insertions(+), 13 deletions(-)
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main 8bfe48cc] auto: snapshot 2026-02-28T13:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 3 committed, 6 skipped
+CLEAN master-dashboard (nothing to commit)
+[main 03207be] auto: snapshot 2026-02-28T14:00:01Z
+ 25 files changed, 1174 insertions(+), 179 deletions(-)
+ create mode 100644 analysis/blofin_edge_report_2026-02-28.md
+ create mode 100644 analysis/feature_importance_report.md
+ create mode 100644 analysis/feature_selection_experiment_2026-02-28.md
+ create mode 100644 analysis/run_feature_selection_experiment.py
+ create mode 100644 models/entry_classifier_archive_20260228T135534/entry_classifier.pkl
+ create mode 100644 models/entry_classifier_archive_20260228T135534/entry_classifier_meta.json
+ create mode 100644 models/entry_classifier_archive_20260228T135534/entry_classifier_scaler.pkl
+ create mode 100644 models/entry_classifier_full/entry_classifier.pkl
+ create mode 100644 models/entry_classifier_full/entry_classifier_meta.json
+ create mode 100644 models/entry_classifier_full/entry_classifier_scaler.pkl
+ create mode 100644 models/entry_classifier_top10/entry_classifier.pkl
+ create mode 100644 models/entry_classifier_top10/entry_classifier_meta.json
+ create mode 100644 models/entry_classifier_top10/entry_classifier_scaler.pkl
+ create mode 100644 models/entry_classifier_top5/entry_classifier.pkl
+ create mode 100644 models/entry_classifier_top5/entry_classifier_meta.json
+ create mode 100644 models/entry_classifier_top5/entry_classifier_scaler.pkl
+COMMITTED blofin-stack

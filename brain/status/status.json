@@ -1,14 +1,14 @@
 {
   "activeTasks": [
     {
-      "id": "c_5aa037f39b17a_19ca4b76b0a",
-      "title": "[IBKR] Build options data pipeline — IB Gateway Docker + ib_async + Redis + DuckDB",
-      "status": "In Progress",
+      "id": "c_2f59960799b87_19ca4eac98d",
+      "title": "[Master Dashboard] Add IBKR options pipeline panel",
       "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/ibkr-options",
-      "pid": 2614145
+      "project_path": "/home/rob/.openclaw/workspace/master-dashboard",
+      "status": "In Progress"
     }
   ],
-  "lastDispatch": "2026-02-28T08:13:00-07:00",
-  "lastHealthCheck": "2026-02-28T08:13:00-07:00"
+  "lastDispatch": "2026-02-28T15:43:00Z",
+  "lastHealthCheck": "2026-02-28T15:43:00Z",
+  "notes": "IBKR infra built — Docker stack ready at /home/rob/infrastructure/ibkr/ but containers not started (requires human 2FA to launch IB Gateway). NQ services active, dashboard 200."
 }

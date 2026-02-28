@@ -820,7 +820,7 @@ def poll_pentair():
                     "C0008": "Tree Lights",
                     "C0009": "Air Blower",
                     "FTR01": "Cleaner",
-                    "H0001": "Gas Heater",
+                    # H0001 (Gas Heater) excluded — controlled via dedicated heater card, not circuit tiles
                 }
                 circuits = []
                 for objnam, label in circuit_map.items():
@@ -850,6 +850,7 @@ def poll_pentair():
                     "temp": safe_int(spa.get("TEMP")),
                     "setpoint_lo": safe_int(spa.get("LOTMP")),
                     "setpoint_hi": safe_int(spa.get("HITMP")),
+                    "heat_source": spa.get("HTSRC", "?"),
                 },
                 "pump": {
                     "status": pump.get("STATUS", "?"),
@@ -4897,7 +4898,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
           <div class="big-val" id="pump-w" style="color:var(--pool)">—</div><span class="big-unit">W</span>
         </div>
       </div>
-      <div class="sub-val" id="pool-status-line" style="margin-top:8px">—</div>
+      <div class="sub-val" id="pool-status-line" style="margin-top:8px;display:none">—</div>
     </div>
 
     <div class="card" style="cursor:pointer" onclick="showView('home-control')" title="Click for thermostat control">
@@ -5228,7 +5229,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         </div>
         <div class="pc-stat-temp" id="pc-pool-temp">—°F</div>
         <div class="pc-stat-sub" id="pc-pool-setpoint">Setpoint: —</div>
-        <div class="pc-stat-sub" id="pc-pool-heat">Heat: —</div>
+        <div class="pc-stat-sub" id="pc-pool-heat" style="display:none">Heat: —</div>
         <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
           <button class="btn primary" onclick="pentairSet('C0006',{STATUS:'ON'})">Pool ON</button>
           <button class="btn danger"  onclick="pentairSet('C0006',{STATUS:'OFF'});setTimeout(()=>pentairSet('FTR01',{STATUS:'OFF'}),500)">Pool OFF</button>
@@ -5255,10 +5256,11 @@ DASHBOARD_HTML = """<!DOCTYPE html>
           <span class="pc-section-lbl">GAS HEATER</span>
           <span class="badge" id="pc-heater-badge">—</span>
         </div>
-        <div class="pc-stat-sub" id="pc-heater-status">Status: —</div>
-        <div style="margin-top:10px;display:flex;gap:6px">
-          <button class="btn primary" onclick="pentairSet('H0001',{STATUS:'ON'})">Enable</button>
-          <button class="btn danger"  onclick="pentairSet('H0001',{STATUS:'OFF'})">Disable</button>
+        <div class="pc-stat-sub" id="pc-heater-status">Spa heat: — · Pool heat: —</div>
+        <div style="margin-top:6px;font-size:10px;opacity:0.6">Spa heat source:</div>
+        <div style="margin-top:4px;display:flex;gap:6px">
+          <button class="btn primary" style="flex:1;font-size:11px" onclick="pentairSet('B1202',{HTSRC:'H0001'})">Gas ON</button>
+          <button class="btn danger"  style="flex:1;font-size:11px" onclick="pentairSet('B1202',{HTSRC:'00000'})">Gas OFF</button>
         </div>
       </div>
 
@@ -6657,7 +6659,7 @@ function renderState(s) {
   document.getElementById('pump-rpm').textContent  = pump.rpm != null ? pump.rpm : '—';
   document.getElementById('pump-w').textContent    = pump.power_w != null ? pump.power_w : '—';
   document.getElementById('pool-status-line').textContent =
-    `Pool: ${pool.status||'?'} · Spa: ${(pd.spa||{}).status||'?'} · Heater: ${(pd.heater||{}).status||'?'}`;
+    `Pool: ${pool.status||'?'} · Spa: ${(pd.spa||{}).status||'?'} · Heater: ${((pool.status==='ON'&&(pool.heat_source||'')==='H0001')||((pd.spa||{}).status==='ON'&&((pd.spa||{}).heat_source||'')==='H0001'))?'HEATING':'IDLE'}`;
 
   // Solar sub
   document.getElementById('solar-sub').textContent =
@@ -6738,15 +6740,20 @@ function renderState(s) {
   const pcPumpW = document.getElementById('pc-pump-w-val');
   if (pcPumpW) pcPumpW.textContent = pump.power_w != null ? pump.power_w : '—';
 
-  // Heater card
-  const heaterSt = (pd.heater||{}).status||'—';
-  const heaterOn = heaterSt === 'ON';
+  // Heater card — "active" only when a body is ON and using H0001 as heat source
+  const poolHtsrc = (pd.pool||{}).heat_source||'';
+  const spaHtsrc  = (pd.spa||{}).heat_source||'';
+  const poolOn    = ((pd.pool||{}).status||'') === 'ON';
+  const spaOnH    = ((pd.spa||{}).status||'') === 'ON';
+  const heaterActive = (poolOn && poolHtsrc === 'H0001') || (spaOnH && spaHtsrc === 'H0001');
+  const heaterLabel  = heaterActive ? 'HEATING' : 'IDLE';
+  const spaHeatLabel = spaHtsrc === 'H0001' ? 'Gas' : (spaHtsrc === '00000' ? 'None' : spaHtsrc);
   const pcHeaterCard = document.getElementById('pc-heater-card');
-  if (pcHeaterCard) { pcHeaterCard.className = 'pc-stat-card ' + (heaterOn ? 'card-running' : 'card-off'); }
+  if (pcHeaterCard) { pcHeaterCard.className = 'pc-stat-card ' + (heaterActive ? 'card-running' : 'card-off'); }
   const pcHeaterBadge = document.getElementById('pc-heater-badge');
-  if (pcHeaterBadge) { pcHeaterBadge.textContent = heaterSt; pcHeaterBadge.className = 'badge ' + (heaterOn?'online':'offline'); }
+  if (pcHeaterBadge) { pcHeaterBadge.textContent = heaterLabel; pcHeaterBadge.className = 'badge ' + (heaterActive?'online':'offline'); }
   const pcHeaterSt = document.getElementById('pc-heater-status');
-  if (pcHeaterSt) pcHeaterSt.textContent = `Status: ${heaterSt}`;
+  if (pcHeaterSt) pcHeaterSt.textContent = `Spa heat: ${spaHeatLabel} · Pool heat: ${poolHtsrc==='H0001'?'Gas':'None'}`;
 
   // Circuit tiles
   const poolCirc = document.getElementById('pool-circuits');

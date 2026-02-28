@@ -1,6 +1,21 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-02-27T20:43:00-07:00",
-  "lastHealthCheck": "2026-02-27T20:43:00-07:00",
-  "notes": "No In Progress or Planned cards. 3 recently completed cards verified: equal_tops_bottoms registered in smb_watcher dispatcher, NQ + Blofin services all active, dashboards 200. CPU 82°C (within limits), disk 41%."
+  "activeTasks": [
+    {
+      "id": "c_912d0a33d1009",
+      "title": "[Blofin] Investigate T1 strategy BT gate failures — PF clustering 1.0-1.31",
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_bc5fa76567d87",
+      "title": "[Blofin] Diagnose T1 promotion gap — vwap_volatility_anchor & momentum_v1",
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_9e6112e8baa29",
+      "title": "[NQ] Investigate orb live underperformance — 33% WR, -$176 in 7d",
+      "project": "NQ-Trading-PIPELINE"
+    }
+  ],
+  "lastDispatch": "2026-02-28T04:13:00Z",
+  "lastHealthCheck": "2026-02-28T04:13:00Z"
 }

@@ -2672,6 +2672,26 @@ def ring_webrtc_close():
     return jsonify({"ok": True})
 
 
+@app.route("/api/ring/webrtc_proxy", methods=["POST"])
+def ring_webrtc_proxy():
+    """Proxy WebRTC SDP offer to go2rtc (avoids browser CORS restriction)."""
+    import urllib.request as _ur
+    try:
+        sdp = request.get_data()
+        req = _ur.Request(
+            "http://127.0.0.1:1984/api/webrtc?src=ring_door",
+            data=sdp,
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            method="POST"
+        )
+        with _ur.urlopen(req, timeout=15) as resp:
+            answer_sdp = resp.read().decode()
+        return answer_sdp, 200, {"Content-Type": "application/sdp"}
+    except Exception as e:
+        log.warning("WebRTC proxy error: %s", e)
+        return str(e), 502
+
+
 @app.route("/ring")
 def ring_page():
     """Ring doorbell page with live status, device info, recent events, and real-time ding popup."""
@@ -3028,8 +3048,12 @@ def ring_page():
                 <span style="color: #888; font-size: 12px;">Live Video Stream</span>
                 <button class="video-btn" id="toggleStreamBtn" onclick="toggleStream()">&#9654; View Live</button>
             </div>
-            <div id="streamArea">
-                <iframe id="streamFrame" src="about:blank" allow="autoplay" style="width:100%;height:340px;border:none;border-radius:6px;background:#000;display:none;"></iframe>
+            <div id="streamArea" style="width:100%;">
+                <iframe id="streamFrame" src="about:blank"
+                  allow="autoplay; camera; microphone; display-capture"
+                  allowfullscreen
+                  style="width:100%;height:260px;border:none;border-radius:6px;background:#000;display:block;">
+                </iframe>
             </div>
         </div>
 
@@ -3239,18 +3263,18 @@ def ring_page():
         const GO2RTC_STREAM_URL = 'http://192.168.68.72:1984/stream.html?src=ring_door';
 
         function toggleStream() {
-            const area = document.getElementById('streamArea');
-            const btn = document.getElementById('toggleStreamBtn');
+            const btn   = document.getElementById('toggleStreamBtn');
+            const area  = document.getElementById('streamArea');
             const frame = document.getElementById('streamFrame');
             if (streamOpen) {
-                frame.style.display = 'none';
                 frame.src = 'about:blank';
-                btn.textContent = '&#9654; View Live';
+                area.classList.remove('show');
+                btn.innerHTML = '&#9654; View Live';
                 streamOpen = false;
             } else {
-                frame.style.display = 'block';
                 frame.src = GO2RTC_STREAM_URL + '&ts=' + Date.now();
-                btn.textContent = '&#10005; Close Stream';
+                area.classList.add('show');
+                btn.innerHTML = '&#10005; Close Stream';
                 streamOpen = true;
             }
         }

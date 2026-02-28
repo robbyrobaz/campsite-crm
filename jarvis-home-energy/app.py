@@ -1378,7 +1378,7 @@ def _bhyve_login():
     )
     resp.raise_for_status()
     data = resp.json()
-    token = data.get("orbit_session_token") or data.get("session_token")
+    token = data.get("orbit_session_token") or data.get("orbit_api_key") or data.get("session_token")
     if not token:
         raise RuntimeError(f"No token in login response: {data}")
     _bhyve_token = token
@@ -1408,7 +1408,7 @@ def _bhyve_ws_command(device_id, payload, token=None):
         # websockets >=11: additional_headers replaces extra_headers
         connect_kwargs = {
             "ping_interval": None,
-            "open_timeout": 10,
+            "open_timeout": 25,
         }
         try:
             # websockets >= 11 uses additional_headers

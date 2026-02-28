@@ -1,6 +1,9 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-02-28T10:43:00-07:00",
-  "lastHealthCheck": "2026-02-28T10:43:00-07:00",
-  "notes": "Board idle — 0 In Progress, 0 Planned. All services active. CPU 85°C (within limits). NQ + Blofin dashboards 200. 3 recent Done cards verified deployed."
+  "activeTasks": [
+    {"id": "c_2c0656c88ea6b_19ca3e97aa4", "title": "[NQ] Retrain momentum live model with latest bar data", "pid": 3108288},
+    {"id": "c_16e79fd365424_19ca48407a2", "title": "[Blofin] Feature importance report — rank all features across strategies", "pid": 3108298},
+    {"id": "c_74deaeb967352_19ca37ba451", "title": "[NQ] Investigate vwap_fade live underperformance — 33% WR, -$1115 in 7d", "pid": 3108310}
+  ],
+  "lastDispatch": "2026-02-28T18:13:00Z",
+  "lastHealthCheck": "2026-02-28T18:13:00Z"
 }

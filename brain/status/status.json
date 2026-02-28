@@ -1,15 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_b6a6be01d48ab_19ca2a0a68f",
-      "title": "[NQ] Investigate psych_levels signal frequency — only 2 lifetime forward test trades",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "started_at": 1772254977164
-    }
-  ],
-  "lastDispatch": "2026-02-27T22:13:00-07:00",
-  "lastHealthCheck": "2026-02-27T22:13:00-07:00",
-  "notes": "Blofin ingestor + paper services restarted to load duplicate signal fix (was running pre-fix code). NQ services confirmed active post vol_contraction + orb fixes."
+  "activeTasks": [],
+  "lastDispatch": "2026-02-28T05:43:00Z",
+  "lastHealthCheck": "2026-02-28T05:43:00Z",
+  "notes": "No Planned or In Progress cards. All services active. 3 recently Done cards verified deployed (NQ + Blofin). CPU 74°C, disk 41%."
 }

@@ -1580,7 +1580,7 @@ def _ge_parse_services(services, device_type):
             elif st == "toggle" and dom == "power" and "icemaker" in sdev:
                 attrs.append({"label": "Ice Maker", "value": "On" if state.get("on") else "Off", "unit": ""})
             elif st == "toggle" and dom == "full" and "icemaker" in sdev:
-                if state.get("on"): attrs.append({"label": "Ice Bin", "value": "Full", "unit": ""})
+                attrs.append({"label": "Ice Bin", "value": "✅ Full" if state.get("on") else "Making ice…", "unit": ""})
             elif st == "integer" and "percent.usage.remaining" in dom:
                 pct = state.get("value", 0)
                 attrs.append({"label": "Water Filter", "value": f"{pct}% remaining" if pct > 0 else "⚠️ Replace filter", "unit": ""})
@@ -1782,8 +1782,8 @@ def poll_ge_appliances():
                     continue
 
                 # ── Suppress always-normal conditions ─────────────────────────
-                # Ice Bin Full is expected/normal — not actionable.
-                if atype in {"toggle.full.icemaker", "full.icemaker"}:
+                # Ice Bin Full is expected/good — not an alert.
+                if "icemaker" in atype and "full" in atype:
                     continue
 
                 label = _GE_ALERT_LABELS.get(atype, None)

@@ -5560,7 +5560,6 @@ DASHBOARD_HTML = """<!DOCTYPE html>
         <span class="badge" id="ct-connection-badge">—</span>
       </div>
       <div class="device-detail">Wall Connector Gen 3 · 192.168.68.87 · No auth required</div>
-      <div class="device-detail">Vehicle telemetry via Fleet API — Phase 2</div>
     </div>
   </div>
 
@@ -5616,38 +5615,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     </div>
   </div>
 
-  <div class="section-title" style="margin-top:16px">Vehicle Telemetry</div>
-  <div class="card" style="border-color:var(--border)">
-    <div class="card-header">
-      <span class="card-title">Cybertruck Fleet Data</span>
-      <span class="badge warning">Phase 2</span>
-    </div>
-    <div style="color:var(--text-dim);font-size:11px;margin-bottom:16px">
-      Fleet API integration — requires Tesla Fleet API credentials (Phase 2)
-    </div>
-    <div class="grid grid-4">
-      <div class="card" style="opacity:.4;pointer-events:none;background:var(--surface2)">
-        <div class="card-title" style="margin-bottom:8px">Battery SOC</div>
-        <div class="big-val" style="color:var(--battery)">—</div><span class="big-unit">%</span>
-        <div class="sub-val">Fleet API · Phase 2</div>
-      </div>
-      <div class="card" style="opacity:.4;pointer-events:none;background:var(--surface2)">
-        <div class="card-title" style="margin-bottom:8px">Range</div>
-        <div class="big-val" style="color:var(--text-dim)">—</div><span class="big-unit">mi</span>
-        <div class="sub-val">Fleet API · Phase 2</div>
-      </div>
-      <div class="card" style="opacity:.4;pointer-events:none;background:var(--surface2)">
-        <div class="card-title" style="margin-bottom:8px">Charge Limit</div>
-        <div class="big-val" style="color:var(--text-dim)">—</div><span class="big-unit">%</span>
-        <div class="sub-val">Fleet API · Phase 2</div>
-      </div>
-      <div class="card" style="opacity:.4;pointer-events:none;background:var(--surface2)">
-        <div class="card-title" style="margin-bottom:8px">Plug Status</div>
-        <div class="big-val" style="color:var(--text-dim);font-size:18px">—</div>
-        <div class="sub-val">Fleet API · Phase 2</div>
-      </div>
-    </div>
-  </div>
+
 
 </div><!-- /cybertruck -->
 
@@ -6957,14 +6925,27 @@ function renderState(s) {
     ctConnBadge.className   = 'badge ' + statusColor(wc.status);
   }
   if (ctWcBadge) {
-    ctWcBadge.textContent = wc.charge_status || wc.status || '—';
-    const csMap = {charging:'online', complete:'partial', standby:'offline', fault:'error'};
+    const csMap  = {charging:'online', complete:'partial', standby:'offline', fault:'error', auth_required:'offline'};
+    const csNames = {auth_required:'Ready',charging:'Charging',complete:'Complete',standby:'Standby',disconnected:'No Vehicle',fault:'Fault',wait_car:'Waiting',booting:'Booting',powersharing:'Powershare'};
+    ctWcBadge.textContent = csNames[wc.charge_status] || wc.charge_status || wc.status || '—';
     ctWcBadge.className = 'badge ' + (csMap[wc.charge_status] || statusColor(wc.status));
   }
 
   const setEl = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
-  setEl('ct-charge-status', wc.charge_status || '—');
-  setEl('ct-vehicle',       wc.vehicle_connected ? '🔌 connected' : '— disconnected');
+  const csLabel = {
+    'auth_required':       'Ready — No Vehicle',
+    'charging':            'Charging',
+    'complete':            'Charge Complete',
+    'disconnected':        'No Vehicle',
+    'standby':             'Standby',
+    'fault':               'Fault',
+    'wait_car':            'Waiting for Vehicle',
+    'booting':             'Booting',
+    'powersharing':        'V2H Powershare',
+    'vehicle_powersharing':'V2H Powershare',
+  };
+  setEl('ct-charge-status', csLabel[wc.charge_status] || wc.charge_status || '—');
+  setEl('ct-vehicle',       wc.vehicle_connected ? '🔌 Connected' : 'Not Connected');
   setEl('ct-rate-w',        wc.charging_w != null ? Math.round(wc.charging_w) : '—');
   setEl('ct-rate-a',        wc.current_a  != null ? wc.current_a + ' A' : '— A');
   setEl('ct-session',       wc.session_energy_wh != null ? wc.session_energy_wh : '—');

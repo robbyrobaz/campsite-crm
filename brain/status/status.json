@@ -1,14 +1,5 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_72b0d77dc9368_19ca5335a20",
-      "title": "[NQ] Design and backtest opening_drive strategy — RTH open momentum expert",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "updated_at": 1772298220597
-    }
-  ],
+  "activeTasks": [],
   "lastDispatch": "2026-02-28T17:13:00Z",
-  "lastHealthCheck": "2026-02-28T17:13:00Z"
+  "lastHealthCheck": "2026-02-28T17:30:00Z"
 }

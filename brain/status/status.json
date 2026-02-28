@@ -1,14 +1,15 @@
 {
   "activeTasks": [
     {
-      "id": "c_9e6112e8baa29_19ca26a185b",
-      "title": "[NQ] Investigate orb live underperformance — 33% WR, -$176 in 7d vs PF 2.92",
+      "id": "c_b6a6be01d48ab_19ca2a0a68f",
+      "title": "[NQ] Investigate psych_levels signal frequency — only 2 lifetime forward test trades",
       "status": "In Progress",
       "assignee": "claude",
       "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "pid": 912442
+      "started_at": 1772254977164
     }
   ],
-  "lastDispatch": "2026-02-28T04:43:47Z",
-  "lastHealthCheck": "2026-02-28T04:43:47Z"
+  "lastDispatch": "2026-02-27T22:13:00-07:00",
+  "lastHealthCheck": "2026-02-27T22:13:00-07:00",
+  "notes": "Blofin ingestor + paper services restarted to load duplicate signal fix (was running pre-fix code). NQ services confirmed active post vol_contraction + orb fixes."
 }

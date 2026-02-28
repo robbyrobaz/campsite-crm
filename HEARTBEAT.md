@@ -102,6 +102,17 @@
 - Query `curl -s http://127.0.0.1:8787/api/cards?status=Review%2FTest` — any cards waiting for QA?
 - If Review/Test cards exist, **FLAG as "QA needed"**
 
+## IBKR Options Pipeline Check (EVERY HEARTBEAT)
+- Check service: `systemctl --user is-active ibkr-options.service`
+  - Expected: `active` (may show `inactive` before creds added — check if .env has real password)
+  - If inactive and .env has real password: restart and alert Rob
+- Check IB Gateway container: `sudo docker inspect --format='{{.State.Status}}' ibkr-options-ib-gateway-1 2>/dev/null || echo "not running"`
+  - Expected: `running` during market hours setup
+  - If not running: `cd ~/workspace/ibkr-options/docker && sudo docker compose up -d`
+- Check skew signals (when live): `tail -5 /home/rob/.openclaw/workspace/ibkr-options/data/skew_signals.csv 2>/dev/null || echo "no signals yet"`
+- Paper account: mkhhjz078 / DUH860616 — API port 4002
+- Weekend/closed market: service will log "market closed" — this is NORMAL, do not alert
+
 ## Rules
 
 - If a service is down, restart it and log to incidents.md

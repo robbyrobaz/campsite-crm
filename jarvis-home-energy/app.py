@@ -2892,6 +2892,14 @@ def ring_page():
                 <span style="color: #888; font-size: 12px;">Live Video Stream</span>
                 <button class="video-btn" id="toggleStreamBtn" onclick="toggleStream()">▶ View Live</button>
             </div>
+            <div id="streamSetupNotice" style="display: none; padding: 16px; background: rgba(255,165,0,0.1); border: 1px solid rgba(255,165,0,0.3); border-radius: 8px; margin-top: 8px;">
+                <div style="color: #ffa500; font-weight: 600; margin-bottom: 8px;">⚠️ Live Streaming Setup Required</div>
+                <div style="color: #aaa; font-size: 13px; line-height: 1.5;">
+                    Ring requires browser authentication to enable live streaming.
+                    <a href="http://192.168.68.72:55123/" target="_blank" style="color: #00ff88;">Open Ring Auth →</a>
+                    <br><span style="font-size: 11px; color: #666;">After authenticating, refresh this page.</span>
+                </div>
+            </div>
             <div id="streamArea">
                 <iframe id="streamFrame" src="about:blank"></iframe>
             </div>
@@ -3085,21 +3093,42 @@ def ring_page():
         }
 
         // ── Live Stream Controls ──────────────────────────────────────
+        let streamCheckTimer = null;
+
+        async function checkStreamHealth() {
+            try {
+                const resp = await fetch('http://192.168.68.72:1984/api/streams');
+                const data = await resp.json();
+                const stream = data.ring_door;
+                // If stream has no consumers after 5s, show setup notice
+                if (!stream || !stream.consumers || stream.consumers.length === 0) {
+                    document.getElementById('streamSetupNotice').style.display = 'block';
+                }
+            } catch (e) {
+                document.getElementById('streamSetupNotice').style.display = 'block';
+            }
+        }
+
         function toggleStream() {
             const area = document.getElementById('streamArea');
             const btn = document.getElementById('toggleStreamBtn');
+            const notice = document.getElementById('streamSetupNotice');
             if (streamOpen) {
                 area.classList.remove('show');
                 btn.textContent = '▶ View Live';
                 const frame = document.getElementById('streamFrame');
                 frame.src = 'about:blank';
                 streamOpen = false;
+                if (streamCheckTimer) { clearTimeout(streamCheckTimer); streamCheckTimer = null; }
             } else {
                 area.classList.add('show');
                 btn.textContent = '✕ Close Stream';
+                notice.style.display = 'none';  // Hide notice initially
                 const frame = document.getElementById('streamFrame');
                 frame.src = GO2RTC_STREAM_URL + '?ts=' + Date.now();
                 streamOpen = true;
+                // Check stream health after 5 seconds
+                streamCheckTimer = setTimeout(checkStreamHealth, 5000);
             }
         }
 

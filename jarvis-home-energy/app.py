@@ -4044,7 +4044,10 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .pc-btn-off:hover { background: rgba(255,255,255,0.12); }
   .pc-right { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; align-content: start; }
   @media (max-width: 500px) { .pc-right { grid-template-columns: 1fr; } }
-  .pc-stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 12px; padding: 14px; }
+  .pc-stat-card { background: var(--surface2); border: 2px solid var(--border); border-radius: 12px; padding: 14px; transition: border-color .3s, box-shadow .3s; }
+  .pc-stat-card.card-on  { border-color: #06b6d4; box-shadow: 0 0 18px rgba(6,182,212,0.35), inset 0 0 12px rgba(6,182,212,0.06); }
+  .pc-stat-card.card-running { border-color: #22c55e; box-shadow: 0 0 18px rgba(34,197,94,0.4), inset 0 0 12px rgba(34,197,94,0.07); }
+  .pc-stat-card.card-off  { border-color: rgba(255,255,255,0.08); opacity: 0.7; }
   .pc-stat-hdr  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
   .pc-stat-temp { font-size: 34px; font-weight: 700; color: var(--pool); margin: 4px 0; }
   .pc-stat-sub  { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
@@ -4052,11 +4055,11 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .pc-pump-unit { font-size: 12px; color: var(--text-dim); }
   .pc-pump-row  { font-size: 12px; color: var(--text-dim); margin-top: 4px; }
   .pc-circ-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(118px,1fr)); gap: 8px; }
-  .pc-circ-tile { background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; padding: 11px 9px; text-align: center; transition: border-color .2s, background .2s; }
-  .pc-circ-tile.circ-on { border-color: rgba(6,182,212,0.45); background: rgba(6,182,212,0.06); }
+  .pc-circ-tile { background: var(--surface2); border: 2px solid rgba(255,255,255,0.06); border-radius: 10px; padding: 11px 9px; text-align: center; transition: border-color .2s, background .2s, box-shadow .2s; opacity: 0.55; }
+  .pc-circ-tile.circ-on { border-color: #06b6d4; background: rgba(6,182,212,0.1); box-shadow: 0 0 12px rgba(6,182,212,0.3); opacity: 1; }
   .pc-circ-nm   { font-size: 11px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
   .pc-circ-st   { font-size: 10px; font-weight: 700; letter-spacing: 1px; }
-  .pc-circ-tile.circ-on .pc-circ-st { color: var(--online); }
+  .pc-circ-tile.circ-on .pc-circ-st { color: #06b6d4; }
   .pc-circ-tile.circ-off .pc-circ-st { color: var(--text-dim); }
   .btn { background: var(--surface2); border: 1px solid var(--border); color: var(--text); cursor: pointer; padding: 7px 14px; border-radius: 6px; font-size: 11px; font-family: inherit; transition: all .15s; }
   .btn:hover { background: var(--border); }
@@ -5218,7 +5221,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <div class="pc-right">
 
       <!-- Pool body -->
-      <div class="pc-stat-card">
+      <div class="pc-stat-card" id="pc-pool-card">
         <div class="pc-stat-hdr">
           <span class="pc-section-lbl">POOL</span>
           <span class="badge" id="pool-body-badge">—</span>
@@ -5234,7 +5237,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       </div>
 
       <!-- VSF Pump -->
-      <div class="pc-stat-card">
+      <div class="pc-stat-card" id="pc-pump-card">
         <div class="pc-stat-hdr">
           <span class="pc-section-lbl">VSF PUMP</span>
           <span class="badge" id="pc-pump-badge">—</span>
@@ -5247,7 +5250,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
       </div>
 
       <!-- Gas Heater -->
-      <div class="pc-stat-card">
+      <div class="pc-stat-card" id="pc-heater-card">
         <div class="pc-stat-hdr">
           <span class="pc-section-lbl">GAS HEATER</span>
           <span class="badge" id="pc-heater-badge">—</span>
@@ -6701,6 +6704,8 @@ function renderState(s) {
   // Pool body card
   const bpb = document.getElementById('pool-body-badge');
   if (bpb) { bpb.textContent = pool.status||'?'; bpb.className = 'badge ' + (pool.status==='ON'?'online':'offline'); }
+  const poolCard = document.getElementById('pc-pool-card');
+  if (poolCard) { poolCard.className = 'pc-stat-card ' + (pool.status==='ON' ? 'card-on' : 'card-off'); }
   const pcPoolTemp = document.getElementById('pc-pool-temp');
   if (pcPoolTemp) pcPoolTemp.textContent = pool.temp ? pool.temp+'°F' : '—°F';
   const pcPoolSp = document.getElementById('pc-pool-setpoint');
@@ -6721,7 +6726,9 @@ function renderState(s) {
   if (pcSpaSp) pcSpaSp.textContent = `Target: ${spa.setpoint_lo||'?'} °F`;
 
   // Pump card
-  const pumpOn = pump.status && pump.status !== 'OFF' && pump.status !== '?';
+  const pumpOn = (pump.power_w != null && pump.power_w > 10) || (pump.rpm != null && pump.rpm > 0);
+  const pcPumpCard = document.getElementById('pc-pump-card');
+  if (pcPumpCard) { pcPumpCard.className = 'pc-stat-card ' + (pumpOn ? 'card-running' : 'card-off'); }
   const pcPumpBadge = document.getElementById('pc-pump-badge');
   if (pcPumpBadge) { pcPumpBadge.textContent = pump.status||'?'; pcPumpBadge.className = 'badge ' + (pumpOn?'online':'offline'); }
   const pcPumpRpm = document.getElementById('pc-pump-rpm');
@@ -6734,6 +6741,8 @@ function renderState(s) {
   // Heater card
   const heaterSt = (pd.heater||{}).status||'—';
   const heaterOn = heaterSt === 'ON';
+  const pcHeaterCard = document.getElementById('pc-heater-card');
+  if (pcHeaterCard) { pcHeaterCard.className = 'pc-stat-card ' + (heaterOn ? 'card-running' : 'card-off'); }
   const pcHeaterBadge = document.getElementById('pc-heater-badge');
   if (pcHeaterBadge) { pcHeaterBadge.textContent = heaterSt; pcHeaterBadge.className = 'badge ' + (heaterOn?'online':'offline'); }
   const pcHeaterSt = document.getElementById('pc-heater-status');

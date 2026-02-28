@@ -464,16 +464,18 @@ def _ring_event_poller():
                 new_active_ids = set()
                 for ding in active_dings:
                     ding_id = str(ding.get('id', ''))
+                    ding_kind = ding.get('kind', '')
                     new_active_ids.add(ding_id)
-                    # Emit event if this is a newly active ding
-                    if ding_id not in active_ding_ids:
+                    # Only emit for real doorbell presses (kind=='ding')
+                    # Ignore on_demand (live view opened), motion, etc.
+                    if ding_id not in active_ding_ids and ding_kind == 'ding':
                         ts = time.time()
                         dev_name = device_ref[0].name if device_ref[0] else 'Front Door'
                         with _ring_evts_lock:
                             _ring_evts.append({"ts": ts, "type": "ding", "device": dev_name})
                             if len(_ring_evts) > 50:
                                 _ring_evts.pop(0)
-                        log.info("Ring ACTIVE DING detected: %s", ding_id)
+                        log.info("Ring ACTIVE DING detected (kind=%s): %s", ding_kind, ding_id)
                 active_ding_ids = new_active_ids
 
         except Exception as exc:
@@ -3115,8 +3117,18 @@ def ring_page():
                 <div class="ding-subtitle" id="dingDevice">Front Door</div>
                 <div class="ding-timestamp" id="dingTime"></div>
             </div>
-            <div class="ding-countdown" id="dingCountdown">Dismiss in 15s</div>
         </div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:8px">
+            <button onclick="showStream();document.getElementById('dingPopup').classList.remove('show');clearTimeout(dingPopupTimer)"
+              style="padding:10px 24px;background:#22c55e;color:#000;border:none;border-radius:8px;font-size:0.95rem;font-weight:700;cursor:pointer;touch-action:manipulation">
+              ▶ View Live
+            </button>
+            <button onclick="document.getElementById('dingPopup').classList.remove('show');clearTimeout(dingPopupTimer)"
+              style="padding:10px 24px;background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:8px;font-size:0.95rem;cursor:pointer;touch-action:manipulation">
+              Dismiss
+            </button>
+        </div>
+        <div class="ding-countdown" id="dingCountdown" style="margin-top:6px">Dismiss in 15s</div>
     </div>
 
     <script>
@@ -6096,15 +6108,21 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 <div id="toast"></div>
 
 <!-- ─── Ring Doorbell Popup Overlay ────────────────────────────────────────── -->
-<div id="ring-popup" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px">
-  <div style="color:#FFD700;font-size:2rem;font-weight:900;letter-spacing:1px;text-align:center">&#128276; Someone at the Door</div>
-  <div style="color:rgba(255,255,255,0.65);font-size:1rem" id="ring-popup-time">&#8212;</div>
+<div id="ring-popup" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.88);backdrop-filter:blur(8px);flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:24px">
   <div style="font-size:4rem">&#128276;</div>
+  <div style="color:#FFD700;font-size:2rem;font-weight:900;letter-spacing:1px;text-align:center">Someone at the Door</div>
+  <div style="color:rgba(255,255,255,0.65);font-size:1rem" id="ring-popup-time">&#8212;</div>
   <div style="color:rgba(255,255,255,0.45);font-size:0.9rem" id="ring-popup-device">Front Door</div>
-  <button id="ring-dismiss-btn" onclick="dismissDoorbellPopup()"
-    style="margin-top:8px;padding:20px 52px;font-size:1.4rem;font-weight:800;background:#FFD700;color:#000;border:none;border-radius:12px;cursor:pointer;min-height:64px;min-width:220px;letter-spacing:1px;touch-action:manipulation">
-    DISMISS
-  </button>
+  <div style="display:flex;gap:16px;margin-top:4px;flex-wrap:wrap;justify-content:center">
+    <button onclick="dismissDoorbellPopup();showView('ring');setTimeout(()=>{const f=document.getElementById('streamFrame');const a=document.getElementById('streamArea');if(f&&a&&!a.classList.contains('show')){f.src='http://192.168.68.72:1984/stream.html?src=ring_door&ts='+Date.now();a.classList.add('show');}},400)"
+      style="padding:18px 40px;font-size:1.3rem;font-weight:800;background:#22c55e;color:#000;border:none;border-radius:12px;cursor:pointer;min-height:64px;touch-action:manipulation;letter-spacing:0.5px">
+      ▶ View Live
+    </button>
+    <button id="ring-dismiss-btn" onclick="dismissDoorbellPopup()"
+      style="padding:18px 40px;font-size:1.3rem;font-weight:800;background:#FFD700;color:#000;border:none;border-radius:12px;cursor:pointer;min-height:64px;touch-action:manipulation;letter-spacing:1px">
+      DISMISS
+    </button>
+  </div>
   <div style="color:rgba(255,255,255,0.3);font-size:0.8rem;margin-top:4px" id="ring-popup-countdown">Auto-dismiss in 60s</div>
 </div>
 

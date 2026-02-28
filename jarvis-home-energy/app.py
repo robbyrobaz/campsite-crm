@@ -2304,6 +2304,20 @@ def api_pentair_set():
         return jsonify({"error": "missing objnam or params"}), 400
     try:
         resp = pentair_set(objnam, params)
+        # Optimistically update local state so UI reflects change immediately
+        status = params.get("STATUS")
+        if status:
+            with _state_lock:
+                for c in _state.get("pentair", {}).get("circuits", []):
+                    if c.get("id") == objnam:
+                        c["status"] = status
+                        break
+                # If turning off pool or cleaner, also update pump display
+                if status == "OFF" and objnam in ("C0006", "FTR01"):
+                    pump = _state.get("pentair", {}).get("pump", {})
+                    # Will be corrected by next real poll; mark as stopping
+                    pump["power_w"] = 0
+                    pump["rpm"] = 0
         return jsonify({"ok": True, "response": resp})
     except Exception as e:
         return jsonify({"error": str(e)}), 500

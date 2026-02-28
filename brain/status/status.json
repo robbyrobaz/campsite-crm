@@ -1,5 +1,14 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-02-28T21:43:00Z",
-  "lastHealthCheck": "2026-02-28T21:43:00Z"
+  "activeTasks": [
+    {
+      "id": "c_baec3890c373c_19ca64640a1",
+      "title": "[NQ] Build live signal audit tool — per-strategy bar-by-bar scoring log",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "started_at": "2026-02-28T15:02:45Z"
+    }
+  ],
+  "lastDispatch": "2026-02-28T22:13:00Z",
+  "lastHealthCheck": "2026-02-28T22:13:00Z"
 }

@@ -108,8 +108,8 @@
   - If inactive and .env has real password: restart and alert Rob
 - Check IB Gateway container: `sudo docker inspect --format='{{.State.Status}}' ibkr-options-ib-gateway-1 2>/dev/null || echo "not running"`
   - Expected: `running` during market hours setup
-  - If not running: `cd ~/workspace/ibkr-options/docker && sudo docker compose up -d`
-- Check skew signals (when live): `tail -5 /home/rob/.openclaw/workspace/ibkr-options/data/skew_signals.csv 2>/dev/null || echo "no signals yet"`
+  - If not running: `cd ~/infrastructure/ibkr/docker && sudo docker compose up -d`
+- Check skew signals (when live): `tail -5 /home/rob/.openclaw/infrastructure/ibkr/data/skew_signals.csv 2>/dev/null || echo "no signals yet"`
 - Paper account: mkhhjz078 / DUH860616 — API port 4002
 - Weekend/closed market: service will log "market closed" — this is NORMAL, do not alert
 

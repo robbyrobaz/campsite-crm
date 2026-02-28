@@ -2195,37 +2195,53 @@ def _poll_loop():
     _ge_poll_counter = 11      # trigger GE appliance poll on first tick
     _nest_poll_counter = 11    # trigger Nest poll on first tick (every 60s — SDM API rate limit)
     _roku_poll_counter = 5     # trigger Roku poll every 30s (6 ticks × 5s)
+
+    # Pentair runs in its own background thread (takes ~45s) — never blocks fast polls
+    _pentair_executor = concurrent.futures.ThreadPoolExecutor(max_workers=1, thread_name_prefix="pentair-slow")
+    _pentair_future = [None]
+
+    def _submit_pentair():
+        if _pentair_future[0] is None or _pentair_future[0].done():
+            _pentair_future[0] = _pentair_executor.submit(poll_pentair)
+
+    _submit_pentair()  # kick off first pentair poll immediately
+
     while True:
-        # Cameras: poll every 60s (every 12 ticks at 5s) — Wyze login is rate-limited
         _camera_poll_counter += 1
-        # GE SmartHQ: poll every 30s
         _ge_poll_counter += 1
-        # Nest SDM: poll every 60s — Google rate-limits at >1 req/min per device
         _nest_poll_counter += 1
-        # Roku: poll every 30s — local network, lightweight
         _roku_poll_counter += 1
-        poll_fns = [poll_pentair, poll_span, poll_enphase, poll_tesla, poll_wall_connector, poll_bhyve, poll_myq]
+
+        # Fast polls — these must all complete quickly (< 3s each)
+        fast_fns = [poll_span, poll_enphase, poll_tesla, poll_wall_connector, poll_bhyve, poll_myq]
         if _nest_poll_counter >= 12:
-            poll_fns.append(poll_nest)
+            fast_fns.append(poll_nest)
             _nest_poll_counter = 0
         if _camera_poll_counter >= 12:
-            poll_fns.append(poll_cameras)
+            fast_fns.append(poll_cameras)
             _camera_poll_counter = 0
         if _ge_poll_counter >= 6:
-            poll_fns.append(poll_ge_appliances)
+            fast_fns.append(poll_ge_appliances)
             _ge_poll_counter = 0
         if _roku_poll_counter >= 6:
-            poll_fns.append(poll_roku)
+            fast_fns.append(poll_roku)
             _roku_poll_counter = 0
-        # Run all device polls concurrently — Pentair can take 45s, don't let it block solar/SPAN
-        with concurrent.futures.ThreadPoolExecutor(max_workers=9) as ex:
-            futs = [ex.submit(f) for f in poll_fns]
-            concurrent.futures.wait(futs, timeout=60)
+
+        # Run fast polls concurrently with a tight timeout
+        with concurrent.futures.ThreadPoolExecutor(max_workers=8) as ex:
+            futs = [ex.submit(f) for f in fast_fns]
+            concurrent.futures.wait(futs, timeout=8)
+
+        # Broadcast SSE immediately after fast polls — don't wait for Pentair
         try:
             _update_summary()
         except Exception as _sum_err:
             log.error("_update_summary() crashed: %s", _sum_err, exc_info=True)
         _broadcast_sse()
+
+        # Re-submit Pentair poll if previous one finished
+        _submit_pentair()
+
         time.sleep(POLL_INTERVAL_SECONDS)
 
 
@@ -2318,6 +2334,12 @@ def api_pentair_set():
                     # Will be corrected by next real poll; mark as stopping
                     pump["power_w"] = 0
                     pump["rpm"] = 0
+        # Broadcast SSE immediately so UI updates without waiting for next Pentair poll
+        try:
+            _update_summary()
+            _broadcast_sse()
+        except Exception:
+            pass
         return jsonify({"ok": True, "response": resp})
     except Exception as e:
         return jsonify({"error": str(e)}), 500

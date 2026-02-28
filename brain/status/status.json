@@ -1,6 +1,14 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-02-28T07:43:00-07:00",
-  "lastHealthCheck": "2026-02-28T07:43:00-07:00",
-  "notes": "All services active. No Planned or In Progress cards. 3 recent Done cards verified deployed. CPU 83°C, disk 42%."
+  "activeTasks": [
+    {
+      "id": "c_5aa037f39b17a_19ca4b76b0a",
+      "title": "[IBKR] Build options data pipeline — IB Gateway Docker + ib_async + Redis + DuckDB",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/ibkr-options",
+      "pid": 2614145
+    }
+  ],
+  "lastDispatch": "2026-02-28T08:13:00-07:00",
+  "lastHealthCheck": "2026-02-28T08:13:00-07:00"
 }

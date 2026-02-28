@@ -88,6 +88,11 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - [ ] Pick up next card autonomously — don't wait for Rob
 - [ ] Monitor running processes (quick poll, NOT blocking)
 
+## Communication Rules:
+- ❌ NEVER say "I'll leave it running and report when done" — you have no mechanism to check back proactively. Either check now or tell Rob to ping you when ready.
+- ❌ NEVER say "I'll monitor this" or "I'll check back in X minutes" — you won't. Be honest.
+- ✅ After dispatching a builder: say "dispatched, ping me when you want a status check" OR check immediately if it's fast enough to verify now.
+
 ## NEVER:
 - ❌ **Restart openclaw-gateway while you are in an active conversation** — this kills the WebSocket mid-stream, fragments the reply, and replays all exec commands on reconnect. If a gateway restart is needed, finish your reply first, warn Rob, then restart.
 - ❌ Block main session with sleep/wait/long exec (all work >30s must be background or subagent)

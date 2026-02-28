@@ -1,6 +1,6 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-02-28T04:13:00-07:00",
-  "lastHealthCheck": "2026-02-28T04:30:00-07:00",
-  "notes": "4:30 AM check: CPU 87°C (elevated, expected: Firefox+ingestor+Chrome load). Disk 42%, Gateway active, all services running (ingestor/dashboard/paper/nq-watcher). No failed services. Numerai models present, daily bot completed Feb 27 (inactive=normal). Kanban: 0 In Progress, 0 Planned, 0 Review/Test, 378 Done. No active tasks. Token usage: 5% 5-hour limit, 19% 7-day limit. Wyze-bridge running, RTSP 200. Git repos: all remotes configured, minor uncommitted backups (blofin-stack, campsite-crm). Old Claude process running since Feb 27 (~9% CPU, idle). No critical alerts."
+  "lastDispatch": "2026-02-28T04:43:00-07:00",
+  "lastHealthCheck": "2026-02-28T04:43:00-07:00",
+  "notes": "No Planned or In Progress cards. All services healthy. NQ weekend mode DRY_RUN. Recent Done cards verified: NQ services active (200), Blofin services active (200)."
 }

@@ -1,12 +1,13 @@
 {
   "activeTasks": [
-    {"id": "c_0e35ae0b4178b_19ca4735fd1", "title": "[Blofin] Research: Find best strategy+coin combos — isolate top pairs from 87K trades", "pid": 2402274},
-    {"id": "c_e14dde0c36fe2_19ca2d6dfc0", "title": "[NQ] Analyze momentum winning trade patterns — identify features that drive 71% WR", "pid": 2402353},
-    {"id": "c_736906887f7f3_19ca30f4848", "title": "[NQ] Investigate gap_fill live signal conditions — 25% WR, -$615 in 7d vs PF 2.07 BT", "pid": 2402488}
+    {
+      "id": "c_e5bf60d423fa2_19ca48ea374",
+      "title": "[NQ] Investigate ORB live signal drought — 1 trade in 7 days, PF 2.92 backtest",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "status": "In Progress"
+    }
   ],
-  "pendingPlanned": [
-    {"id": "c_0141c246fecdf_19ca2a06a4e", "title": "[NQ] Fix vol_contraction risk/reward imbalance — 67% WR but -$230 net loss"}
-  ],
-  "lastDispatch": "2026-02-28T06:43:00-07:00",
-  "lastHealthCheck": "2026-02-28T06:43:00-07:00"
+  "lastDispatch": "2026-02-28T14:13:00Z",
+  "lastHealthCheck": "2026-02-28T14:13:00Z"
 }

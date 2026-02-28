@@ -173,15 +173,22 @@ def _run_async(coro):
 
 
 async def _ring_build(update=True):
-    """Authenticate with Ring and optionally fetch device data."""
+    """Authenticate with Ring and optionally fetch device data.
+    NOTE: Ring's /clients_api/session endpoint returns 406 ext_authz_denied for
+    programmatic clients; we bypass it by injecting a dummy session so that
+    async_update_devices() and the history/health endpoints still work.
+    Snapshots (which need a valid session) are attempted but may not work.
+    """
     from ring_doorbell import Ring, Auth
     auth = Auth("JarvisHomeEnergy/1.0", _ring_token_data or None, _ring_token_updater)
     if not _ring_token_data:
         await auth.async_fetch_token(RING_EMAIL, RING_PASSWORD)
     ring = Ring(auth)
-    await ring.async_create_session()
+    # Bypass async_create_session() — Ring blocks this endpoint for third-party clients.
+    # Other endpoints (devices, history, health) still work with just the OAuth token.
+    ring.session = {"profile": {"id": 0}}
     if update:
-        await ring.async_update_data()
+        await ring.async_update_devices()
     return ring
 
 
@@ -228,17 +235,38 @@ _ring_evts_lock  = threading.Lock()
 _ring_last_ding_at   = None    # datetime of last seen ding
 _ring_last_motion_at = None    # datetime of last seen motion
 
+# Ring device status cache (updated by event poller)
+_ring_status = {
+    "connected": False,
+    "device_name": "Front Door",
+    "battery": 100,
+    "rssi": 0,
+    "rssi_label": "Unknown",
+    "ac_power": False,
+    "firmware": "",
+    "uptime_hours": 0,
+    "wifi_name": "",
+    "packet_loss": 0.0,
+    "subscribed": False,
+    "last_updated": None,
+}
+_ring_status_lock = threading.Lock()
+_ring_history_cache = []  # [{id, kind, created_at, answered, duration, ...}]
+_ring_history_lock = threading.Lock()
+_ring_history_last_update = 0
+
 
 def _ring_snapshot_poller():
-    """Background thread: fetch Ring doorbell snapshot every 1.5s → _ring_snap_bytes."""
+    """Background thread: fetch Ring doorbell snapshot every 30s → _ring_snap_bytes.
+    Ring's session API is blocked for programmatic clients; snapshots may not work,
+    but we try periodically and serve the last successful image.
+    """
     global _ring_snap_bytes, _ring_snap_age
     import asyncio
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
     ring_ref   = [None]
     device_ref = [None]
-    snap_errs  = [0]      # consecutive snapshot failures
-    init_backoff = [0.0]  # epoch: don't retry init before this
 
     async def _init_ring():
         r = await _ring_build(update=True)
@@ -246,108 +274,202 @@ def _ring_snapshot_poller():
         return r, (devs[0] if devs else None)
 
     while True:
-        # (Re-)initialise ring session when needed, with backoff
-        if ring_ref[0] is None:
-            if time.time() < init_backoff[0]:
-                time.sleep(5)
-                continue
-            try:
+        try:
+            if ring_ref[0] is None:
                 r, d = loop.run_until_complete(_init_ring())
                 ring_ref[0], device_ref[0] = r, d
-                snap_errs[0] = 0
                 if d:
-                    log.info("Ring snapshot poller: device=%s", getattr(d, 'name', d))
-            except Exception as exc:
-                log.warning("Ring init error: %s — backing off 60s", exc)
-                init_backoff[0] = time.time() + 60
-            time.sleep(1.5)
-            continue
-
-        # Fetch snapshot
-        if device_ref[0] is not None:
-            try:
+                    log.info("Ring snapshot poller: device=%s (id=%s)",
+                             getattr(d, 'name', d), getattr(d, 'id', '?'))
+            if device_ref[0] is not None:
                 img = loop.run_until_complete(device_ref[0].async_get_snapshot())
                 if img:
                     with _ring_snap_lock:
                         _ring_snap_bytes = img
                         _ring_snap_age   = time.time()
-                    snap_errs[0] = 0
-            except Exception as exc:
-                snap_errs[0] += 1
-                log.debug("Ring snapshot error #%d: %s", snap_errs[0], exc)
-                # Only reset session after repeated failures or on auth error
-                err_str = str(exc).lower()
-                auth_err = any(x in err_str for x in ('401', '403', '406', 'unauthorized'))
-                if auth_err or snap_errs[0] >= 5:
-                    log.warning("Ring session reset (auth=%s, errs=%d)", auth_err, snap_errs[0])
-                    ring_ref[0] = device_ref[0] = None
-                    init_backoff[0] = time.time() + 30  # backoff before re-init
-        time.sleep(1.5)
+                    log.info("Ring snapshot: %d bytes", len(img))
+        except Exception as exc:
+            log.debug("Ring snapshot error: %s", exc)
+            # Close the aiohttp session before discarding the ring object
+            try:
+                if ring_ref[0] is not None:
+                    loop.run_until_complete(ring_ref[0].auth.async_close())
+            except Exception:
+                pass
+            ring_ref[0] = device_ref[0] = None
+        time.sleep(30)  # 30s between snapshot attempts (Ring cloud API throttle)
 
 
 def _ring_event_poller():
-    """Background thread: poll Ring for new ding/motion events every 5s."""
-    global _ring_last_ding_at, _ring_last_motion_at
+    """Background thread: detect Ring ding/motion via history (every 15s) and active dings (every 5s).
+    - Polls /clients_api/doorbots/{id}/history for ding/motion/on_demand events
+    - Polls /clients_api/dings/active for real-time ringing detection
+    - Caches device health, history, and emits SSE events for new activity
+    """
     import asyncio
+    from datetime import datetime, timezone
     loop = asyncio.new_event_loop()
     asyncio.set_event_loop(loop)
-    ring_ref     = [None]
-    poll_errs    = [0]
-    init_backoff = [0.0]
+    ring_ref    = [None]
+    device_id   = [None]
+    device_ref  = [None]
+    last_evt_id = [None]  # most recently seen event ID (str)
+    active_ding_ids = set()  # track current active ding IDs to avoid duplicate events
+
+    HISTORY_KINDS = {'ding', 'motion', 'on_demand'}
 
     async def _init_ring():
-        return await _ring_build(update=True)
+        r = await _ring_build(update=True)
+        devs = list(r.video_devices())
+        dev_id = str(devs[0].id) if devs else None
+        dev = devs[0] if devs else None
+        return r, dev_id, dev
 
-    async def _poll(ring):
-        await ring.async_update_data()
-        return list(ring.video_devices())
+    async def _poll_history(ring, dev_id):
+        resp = await ring._async_query(f'/clients_api/doorbots/{dev_id}/history')
+        return resp.json()
+
+    async def _poll_active_dings(ring):
+        """Poll for currently active dings."""
+        try:
+            resp = await ring._async_query('/clients_api/dings/active')
+            return resp.json() if resp else []
+        except Exception:
+            return []
+
+    def _update_device_status(dev):
+        """Cache device health info to _ring_status."""
+        global _ring_status
+        try:
+            attrs = getattr(dev, '_attrs', {})
+            health = attrs.get('health', {})
+            battery = health.get('battery_percentage', 100)
+            rssi = health.get('rssi', 0)
+            ac = health.get('ac_power', 0)
+            fw = health.get('firmware_version', '')
+            uptime_sec = health.get('uptime_sec', 0)
+            wifi = health.get('wifi_name', '')
+            pkt_loss = health.get('packet_loss', 0.0)
+            connected = health.get('connected', True)
+
+            # Map rssi to label
+            if rssi >= -30:
+                label = "Excellent"
+            elif rssi >= -67:
+                label = "Good"
+            elif rssi >= -70:
+                label = "Fair"
+            else:
+                label = "Poor"
+
+            with _ring_status_lock:
+                _ring_status.update({
+                    "connected": connected,
+                    "device_name": getattr(dev, 'name', 'Front Door'),
+                    "battery": battery,
+                    "rssi": rssi,
+                    "rssi_label": label,
+                    "ac_power": bool(ac),
+                    "firmware": fw,
+                    "uptime_hours": uptime_sec / 3600,
+                    "wifi_name": wifi,
+                    "packet_loss": pkt_loss,
+                    "subscribed": True,
+                    "last_updated": datetime.now(timezone.utc).isoformat(),
+                })
+        except Exception as e:
+            log.debug("Ring device status update error: %s", e)
 
     while True:
-        if ring_ref[0] is None:
-            if time.time() < init_backoff[0]:
-                time.sleep(5)
-                continue
-            try:
-                ring_ref[0] = loop.run_until_complete(_init_ring())
-                poll_errs[0] = 0
-                log.info("Ring event poller: session initialised")
-            except Exception as exc:
-                log.warning("Ring event init error: %s — backing off 60s", exc)
-                init_backoff[0] = time.time() + 60
-            time.sleep(5)
-            continue
-
         try:
-            devs = loop.run_until_complete(_poll(ring_ref[0]))
-            poll_errs[0] = 0
-            for dev in devs:
-                ding_at = getattr(dev, 'last_ding', None)
-                if ding_at and ding_at != _ring_last_ding_at:
-                    ts = ding_at.timestamp() if hasattr(ding_at, 'timestamp') else float(ding_at)
-                    with _ring_evts_lock:
-                        _ring_evts.append({"ts": ts, "type": "ding", "device": dev.name or "Front Door"})
-                        if len(_ring_evts) > 50:
-                            _ring_evts.pop(0)
-                    _ring_last_ding_at = ding_at
-                    log.info("Ring ding detected at %s", ding_at)
-                motion_at = getattr(dev, 'last_motion', None)
-                if motion_at and motion_at != _ring_last_motion_at:
-                    ts = motion_at.timestamp() if hasattr(motion_at, 'timestamp') else float(motion_at)
-                    with _ring_evts_lock:
-                        _ring_evts.append({"ts": ts, "type": "motion", "device": dev.name or "Front Door"})
-                        if len(_ring_evts) > 50:
-                            _ring_evts.pop(0)
-                    _ring_last_motion_at = motion_at
-                    log.info("Ring motion detected at %s", motion_at)
+            if ring_ref[0] is None:
+                r, dev_id, dev = loop.run_until_complete(_init_ring())
+                ring_ref[0], device_id[0], device_ref[0] = r, dev_id, dev
+                log.info("Ring event poller: device_id=%s, device=%s", dev_id, dev.name if dev else None)
+                if dev:
+                    _update_device_status(dev)
+                # Seed last_evt_id with the current latest event
+                if dev_id:
+                    hist = loop.run_until_complete(_poll_history(r, dev_id))
+                    if hist:
+                        last_evt_id[0] = str(hist[0].get('id', ''))
+                        log.info("Ring event poller: seeded last_evt_id=%s", last_evt_id[0])
+
+            # Poll active dings every 5s (real-time detection)
+            if ring_ref[0] and device_id[0]:
+                active_dings = loop.run_until_complete(_poll_active_dings(ring_ref[0]))
+                new_active_ids = set()
+                for ding in active_dings:
+                    ding_id = str(ding.get('id', ''))
+                    new_active_ids.add(ding_id)
+                    # Emit event if this is a newly active ding
+                    if ding_id not in active_ding_ids:
+                        ts = time.time()
+                        dev_name = device_ref[0].name if device_ref[0] else 'Front Door'
+                        with _ring_evts_lock:
+                            _ring_evts.append({"ts": ts, "type": "ding", "device": dev_name})
+                            if len(_ring_evts) > 50:
+                                _ring_evts.pop(0)
+                        log.info("Ring ACTIVE DING detected: %s", ding_id)
+                active_ding_ids = new_active_ids
+
         except Exception as exc:
-            poll_errs[0] += 1
-            log.debug("Ring event poll error #%d: %s", poll_errs[0], exc)
-            err_str = str(exc).lower()
-            if any(x in err_str for x in ('401', '403', '406', 'unauthorized')) or poll_errs[0] >= 3:
-                log.warning("Ring event session reset (errs=%d)", poll_errs[0])
-                ring_ref[0] = None
-                init_backoff[0] = time.time() + 30
-        time.sleep(5)
+            log.debug("Ring event poller error: %s", exc)
+            try:
+                if ring_ref[0] is not None:
+                    loop.run_until_complete(ring_ref[0].auth.async_close())
+            except Exception:
+                pass
+            ring_ref[0] = None
+        time.sleep(5)  # poll active dings every 5s
+
+    # History poll (every 15s — run in a separate slower loop to avoid blocking)
+    # This is integrated into the main 5s loop but only executes every 3 iterations
+    history_counter = [0]
+
+    def _history_loop():
+        nonlocal last_evt_id
+        while True:
+            try:
+                if ring_ref[0] and device_id[0]:
+                    hist = loop.run_until_complete(_poll_history(ring_ref[0], device_id[0]))
+
+                    # Cache history
+                    with _ring_history_lock:
+                        _ring_history_cache[:] = hist[:30]  # Keep last 30 events
+
+                    # Emit new events
+                    for evt in hist:
+                        evt_id = str(evt.get('id', ''))
+                        if evt_id == last_evt_id[0]:
+                            break
+                        kind = evt.get('kind', '')
+                        if kind in HISTORY_KINDS and kind != 'ding':  # Dings handled by active poller
+                            created = evt.get('created_at', '')
+                            try:
+                                dt = datetime.fromisoformat(created.replace('Z', '+00:00'))
+                                ts = dt.timestamp()
+                            except Exception:
+                                ts = time.time()
+                            evt_type = 'motion' if kind == 'motion' else 'on_demand'
+                            dev_name = (evt.get('doorbot') or {}).get('description') or 'Front Door'
+                            with _ring_evts_lock:
+                                _ring_evts.append({"ts": ts, "type": evt_type, "device": dev_name})
+                                if len(_ring_evts) > 50:
+                                    _ring_evts.pop(0)
+                            log.info("Ring %s detected: %s at %s", evt_type, dev_name, created)
+                    if hist:
+                        last_evt_id[0] = str(hist[0].get('id', ''))
+
+                    # Update device status periodically
+                    if device_ref[0]:
+                        _update_device_status(device_ref[0])
+            except Exception as exc:
+                log.debug("Ring history poll error: %s", exc)
+            time.sleep(15)
+
+    history_thread = threading.Thread(target=_history_loop, daemon=True, name="ring-history")
+    history_thread.start()
 
 
 def _get_wyze_client(force_refresh=False):
@@ -2373,11 +2495,697 @@ def ring_events_sse():
                     headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"})
 
 
+@app.route("/api/ring/status")
+def ring_status_route():
+    """Return Ring doorbell status (device health, connectivity, etc.)."""
+    with _ring_status_lock:
+        status = dict(_ring_status)
+    return jsonify(status)
+
+
+@app.route("/api/ring/history")
+def ring_history_route():
+    """Return recent Ring events (dings, motion, on_demand) up to 30 events."""
+    with _ring_history_lock:
+        history = list(_ring_history_cache)
+
+    # Transform history to include duration and recording_ready flags
+    events = []
+    for evt in history:
+        events.append({
+            "id": evt.get("id"),
+            "kind": evt.get("kind"),
+            "created_at": evt.get("created_at"),
+            "answered": evt.get("answered", False),
+            "duration": evt.get("duration", 0),
+            "recording_ready": (evt.get("recording", {}) or {}).get("status") == "ready",
+        })
+    return jsonify(events)
+
+
 @app.route("/ring")
-def ring_page_redirect():
-    """Redirect /ring to the main dashboard (Ring view is a SPA panel)."""
-    from flask import redirect as _redirect
-    return _redirect("/")
+def ring_page():
+    """Ring doorbell page with live status, device info, recent events, and real-time ding popup."""
+    html = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ring Doorbell — Jarvis Home</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0a;
+            color: #e0e0e0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            gap: 16px;
+            padding: 16px;
+        }
+
+        /* ── Header ────────────────────────────────────────────────────── */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            flex-shrink: 0;
+        }
+
+        .header-icon { font-size: 24px; }
+        .header-main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .device-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #fff;
+        }
+        .header-subtitle {
+            font-size: 11px;
+            color: #999;
+            letter-spacing: 0.3px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff88;
+            box-shadow: 0 0 8px rgba(0, 255, 136, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        .status-dot.offline {
+            background: #ff4444;
+            box-shadow: 0 0 8px rgba(255, 68, 68, 0.5);
+            animation: none;
+        }
+
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+        /* ── Content (2-column + activity) ────────────────────────────── */
+        .content {
+            display: flex;
+            gap: 16px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        /* Status Panels */
+        .panel {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 255, 136, 0.15);
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+
+        .panel-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #00ff88;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-size: 12px;
+            gap: 8px;
+        }
+
+        .stat-label { color: #888; }
+        .stat-value { color: #fff; font-weight: 500; }
+
+        /* Activity List */
+        .activity-section {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .activity-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: #00ff88;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            flex-shrink: 0;
+        }
+
+        .activity-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            padding-right: 6px;
+        }
+
+        .activity-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        .activity-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 2px;
+        }
+        .activity-list::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 136, 0.25);
+            border-radius: 2px;
+        }
+
+        .activity-item {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 8px 10px;
+            border-radius: 5px;
+            border-left: 2px solid #00ff88;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.15s;
+        }
+
+        .activity-item.motion {
+            border-left-color: #ffaa00;
+        }
+
+        .activity-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .activity-icon {
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .activity-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .activity-type {
+            color: #aaa;
+            font-size: 10px;
+        }
+
+        .activity-time {
+            color: #00ff88;
+            font-weight: 500;
+            font-size: 11px;
+        }
+
+        .activity-reltime {
+            color: #666;
+            font-size: 10px;
+        }
+
+        /* ── Ding Popup ────────────────────────────────────────────────── */
+        .ding-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+        }
+
+        .ding-popup.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .ding-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            text-align: center;
+            animation: dingScale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        @keyframes dingScale {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .ding-icon {
+            font-size: 100px;
+            animation: dingBounce 0.5s ease-in-out infinite;
+        }
+
+        @keyframes dingBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        .ding-text {
+            font-size: 44px;
+            font-weight: 700;
+            color: #00ff88;
+            letter-spacing: 1px;
+        }
+
+        .ding-subtitle {
+            font-size: 22px;
+            color: #ddd;
+        }
+
+        .ding-timestamp {
+            font-size: 13px;
+            color: #888;
+        }
+
+        .ding-countdown {
+            font-size: 12px;
+            color: #666;
+            margin-top: 16px;
+        }
+
+        /* ── Live Video Stream ──────────────────────────────────────── */
+        .video-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .video-controls {
+            display: flex;
+            gap: 8px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .video-btn {
+            padding: 8px 16px;
+            background: rgba(0, 255, 136, 0.15);
+            border: 1px solid rgba(0, 255, 136, 0.4);
+            color: #00ff88;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .video-btn:hover {
+            background: rgba(0, 255, 136, 0.25);
+            box-shadow: 0 0 12px rgba(0, 255, 136, 0.3);
+        }
+
+        .video-btn.close {
+            padding: 4px 12px;
+            background: rgba(255, 100, 100, 0.15);
+            border-color: rgba(255, 100, 100, 0.4);
+            color: #ff6464;
+        }
+
+        .video-btn.close:hover {
+            background: rgba(255, 100, 100, 0.25);
+            box-shadow: 0 0 12px rgba(255, 100, 100, 0.3);
+        }
+
+        #streamArea {
+            display: none;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #000;
+            aspect-ratio: 16 / 9;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+
+        #streamArea.show {
+            display: block;
+        }
+
+        #streamFrame {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #000;
+        }
+
+        @media (max-width: 1200px) {
+            .content { flex-direction: column; }
+            .panel { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-icon">🔔</div>
+            <div class="header-main">
+                <div class="device-name" id="headerName">Front Door</div>
+                <div class="header-subtitle" id="headerStats">Battery 100% • WiFi -42dBm • AC Wired</div>
+            </div>
+            <div class="status-dot" id="statusDot"></div>
+        </div>
+
+        <div class="video-section">
+            <div class="video-controls">
+                <span style="color: #888; font-size: 12px;">Live Video Stream</span>
+                <button class="video-btn" id="toggleStreamBtn" onclick="toggleStream()">▶ View Live</button>
+            </div>
+            <div id="streamArea">
+                <iframe id="streamFrame" src="about:blank"></iframe>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="panel" style="width: 240px;">
+                <div class="panel-title">Live Status</div>
+                <div class="stat-row">
+                    <span class="stat-label">Last Ding:</span>
+                </div>
+                <div id="lastDingInfo" style="font-size: 11px; color: #888;">—</div>
+                <div class="stat-row" style="margin-top: 6px;">
+                    <span class="stat-label">Answered:</span>
+                    <span class="stat-value" id="lastAnswered">—</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Duration:</span>
+                    <span class="stat-value" id="lastDuration">—</span>
+                </div>
+            </div>
+
+            <div class="panel" style="width: 240px;">
+                <div class="panel-title">Device Status</div>
+                <div class="stat-row">
+                    <span class="stat-label">Firmware:</span>
+                    <span class="stat-value" id="firmware">—</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Uptime:</span>
+                    <span class="stat-value" id="uptime">—</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">WiFi:</span>
+                    <span class="stat-value" id="wifiName">—</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Packet Loss:</span>
+                    <span class="stat-value" id="packetLoss">—</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Signal:</span>
+                    <span class="stat-value" id="signal">—</span>
+                </div>
+            </div>
+
+            <div class="activity-section">
+                <div class="activity-title">Recent Activity</div>
+                <div class="activity-list" id="activityList">
+                    <div style="color: #555; text-align: center; padding: 16px; font-size: 11px;">Loading events...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="ding-popup" id="dingPopup">
+        <div class="ding-content">
+            <div class="ding-icon">🔔</div>
+            <div>
+                <div class="ding-text">DING DONG</div>
+                <div class="ding-subtitle" id="dingDevice">Front Door</div>
+                <div class="ding-timestamp" id="dingTime"></div>
+            </div>
+            <div class="ding-countdown" id="dingCountdown">Dismiss in 15s</div>
+        </div>
+    </div>
+
+    <script>
+        const PAGE_LOAD_TIME = Date.now() / 1000;
+        const GO2RTC_STREAM_URL = 'http://192.168.68.72:1984/stream.html?src=ring_door';
+        let events = [];
+        let status = {};
+        let lastHistoryFetch = 0;
+        let streamOpen = false;
+
+        // ── Format Helpers ────────────────────────────────────────────
+        function formatAbsTime(ts) {
+            const dt = new Date(ts * 1000);
+            return dt.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' +
+                   dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        function formatRelTime(ts) {
+            const diff = (Date.now() / 1000) - ts;
+            if (diff < 60) return 'just now';
+            if (diff < 3600) return Math.floor(diff / 60) + 'min ago';
+            if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+            if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+            return Math.floor(diff / 604800) + 'w ago';
+        }
+
+        function formatUptimeHours(hours) {
+            if (hours < 24) return Math.floor(hours) + 'h';
+            const d = Math.floor(hours / 24);
+            const h = Math.floor(hours % 24);
+            return d + 'd ' + h + 'h';
+        }
+
+        // ── Status Update ─────────────────────────────────────────────
+        async function updateStatus() {
+            try {
+                const resp = await fetch('/api/ring/status');
+                status = await resp.json();
+                updateStatusUI();
+            } catch (e) {
+                console.error('Status fetch error:', e);
+            }
+        }
+
+        function updateStatusUI() {
+            // Header
+            document.getElementById('headerName').textContent = status.device_name || 'Front Door';
+            document.getElementById('headerStats').textContent =
+                `Battery ${status.battery}% • WiFi ${status.rssi}dBm • ${status.ac_power ? 'AC Wired' : 'Battery'}`;
+
+            // Status dot
+            const dot = document.getElementById('statusDot');
+            if (status.connected) {
+                dot.classList.remove('offline');
+            } else {
+                dot.classList.add('offline');
+            }
+
+            // Device Status panel
+            document.getElementById('firmware').textContent = status.firmware || '—';
+            document.getElementById('uptime').textContent = formatUptimeHours(status.uptime_hours) || '—';
+            document.getElementById('wifiName').textContent = status.wifi_name || '—';
+            document.getElementById('packetLoss').textContent = (status.packet_loss || 0).toFixed(1) + '%';
+            document.getElementById('signal').textContent = status.rssi_label + ' (' + status.rssi + 'dBm)';
+        }
+
+        // ── History Fetch ────────────────────────────────────────────
+        async function updateHistory() {
+            try {
+                const resp = await fetch('/api/ring/history');
+                const history = await resp.json();
+                events = history.map(evt => ({
+                    id: evt.id,
+                    kind: evt.kind,
+                    created_at: evt.created_at,
+                    answered: evt.answered,
+                    duration: evt.duration,
+                    ts: new Date(evt.created_at).getTime() / 1000,
+                }));
+                renderEvents();
+                updateLastDing();
+            } catch (e) {
+                console.error('History fetch error:', e);
+            }
+        }
+
+        function updateLastDing() {
+            const ding = events.find(e => e.kind === 'ding');
+            if (!ding) {
+                document.getElementById('lastDingInfo').textContent = '—';
+                document.getElementById('lastAnswered').textContent = '—';
+                document.getElementById('lastDuration').textContent = '—';
+                return;
+            }
+            document.getElementById('lastDingInfo').textContent = formatAbsTime(ding.ts) + ' (' + formatRelTime(ding.ts) + ')';
+            document.getElementById('lastAnswered').textContent = ding.answered ? '✓' : '✗';
+            document.getElementById('lastDuration').textContent = Math.round(ding.duration) + 's';
+        }
+
+        function renderEvents() {
+            const list = document.getElementById('activityList');
+            if (!events.length) {
+                list.innerHTML = '<div style="color: #555; text-align: center; padding: 16px; font-size: 11px;">No events yet</div>';
+                return;
+            }
+
+            const sorted = [...events].sort((a, b) => b.ts - a.ts).slice(0, 30);
+            list.innerHTML = sorted.map(evt => {
+                const isMotion = evt.kind === 'motion';
+                const icon = evt.kind === 'ding' ? '🔔' : (evt.kind === 'motion' ? '🚶' : '📱');
+                const typeStr = evt.kind === 'ding' ? 'Ding' : (evt.kind === 'motion' ? 'Motion' : 'App View');
+                const absTime = formatAbsTime(evt.ts);
+                const relTime = formatRelTime(evt.ts);
+
+                return `
+                    <div class="activity-item ${isMotion ? 'motion' : ''}">
+                        <span class="activity-icon">${icon}</span>
+                        <div class="activity-info">
+                            <div class="activity-type">${typeStr}${evt.answered ? ' ✓' : ''}${evt.duration ? ' · ' + Math.round(evt.duration) + 's' : ''}</div>
+                            <div class="activity-time">${absTime}</div>
+                        </div>
+                        <div class="activity-reltime">${relTime}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ── Live Stream Controls ──────────────────────────────────────
+        function toggleStream() {
+            const area = document.getElementById('streamArea');
+            const btn = document.getElementById('toggleStreamBtn');
+            if (streamOpen) {
+                area.classList.remove('show');
+                btn.textContent = '▶ View Live';
+                const frame = document.getElementById('streamFrame');
+                frame.src = 'about:blank';
+                streamOpen = false;
+            } else {
+                area.classList.add('show');
+                btn.textContent = '✕ Close Stream';
+                const frame = document.getElementById('streamFrame');
+                frame.src = GO2RTC_STREAM_URL + '?ts=' + Date.now();
+                streamOpen = true;
+            }
+        }
+
+        function showStream() {
+            if (!streamOpen) {
+                toggleStream();
+            }
+        }
+
+        function hideStream() {
+            if (streamOpen) {
+                toggleStream();
+            }
+        }
+
+        // ── Ding Popup ────────────────────────────────────────────────
+        let dingPopupTimer = null;
+
+        function playDingSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                // 440Hz glide to 880Hz over 0.8s
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.setValueAtTime(440, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.8);
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+                osc.start(ctx.currentTime);
+                osc.stop(ctx.currentTime + 0.8);
+            } catch (e) {}
+        }
+
+        function showDingPopup() {
+            const popup = document.getElementById('dingPopup');
+            clearTimeout(dingPopupTimer);
+
+            popup.classList.add('show');
+            showStream();  // Show live video when ding occurs
+            playDingSound();
+
+            let remaining = 15;
+            function tick() {
+                document.getElementById('dingCountdown').textContent = `Dismiss in ${remaining}s`;
+                if (remaining <= 0) {
+                    popup.classList.remove('show');
+                    return;
+                }
+                remaining--;
+                dingPopupTimer = setTimeout(tick, 1000);
+            }
+            tick();
+
+            // Click to dismiss
+            popup.onclick = () => {
+                popup.classList.remove('show');
+                clearTimeout(dingPopupTimer);
+            };
+        }
+
+        // ── SSE Stream ────────────────────────────────────────────────
+        let pageLoadTime = PAGE_LOAD_TIME;
+
+        function connectSSE() {
+            const src = new EventSource('/api/ring/events');
+            src.onmessage = (e) => {
+                try {
+                    const evt = JSON.parse(e.data);
+                    // Only show popup for events AFTER page load
+                    if (evt.ts > pageLoadTime && evt.type === 'ding') {
+                        showDingPopup();
+                        updateHistory();  // Refresh history to get latest event
+                    }
+                } catch (err) {}
+            };
+            src.onerror = () => {
+                src.close();
+                setTimeout(connectSSE, 5000);
+            };
+        }
+
+        // ── Init ──────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            updateStatus();
+            updateHistory();
+            connectSSE();
+
+            // Poll status every 30s
+            setInterval(updateStatus, 30000);
+
+            // Poll history every 60s
+            setInterval(updateHistory, 60000);
+        });
+    </script>
+</body>
+</html>
+"""
+    return render_template_string(html)
 
 
 # ── RTSP camera frame cache (background ffmpeg threads) ───────────────────────
@@ -4842,31 +5650,8 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 
 <!-- ═══ RING DOORBELL ════════════════════════════════════════════════════════ -->
-<div id="view-ring" class="view" style="display:none">
-  <div class="section-title">&#128276; Front Door Doorbell</div>
-  <div style="display:flex;flex-direction:column;gap:12px;max-width:720px">
-    <!-- Live snapshot -->
-    <div class="card" style="padding:0;overflow:hidden;background:#000;border-radius:10px">
-      <img id="ring-live-img" src="/api/ring/snapshot" alt="Ring Live"
-           style="width:100%;display:block;min-height:200px;max-height:450px;object-fit:contain;background:#111"
-           onerror="this.style.opacity='0.3'">
-    </div>
-    <!-- Status bar -->
-    <div class="card" style="padding:10px 14px;display:flex;gap:20px;flex-wrap:wrap;align-items:center">
-      <span style="font-size:13px;color:var(--text-dim)">Last ding:</span>
-      <span id="ring-last-ding" style="font-weight:600;color:#FFD700">&#8212;</span>
-      <span style="font-size:13px;color:var(--text-dim)">Last motion:</span>
-      <span id="ring-last-motion" style="font-weight:600">&#8212;</span>
-      <span style="margin-left:auto;font-size:11px;color:var(--text-dim)" id="ring-snap-age">&#8212;</span>
-    </div>
-    <!-- Recent events list -->
-    <div class="card">
-      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-dim);margin-bottom:8px">Recent Events</div>
-      <div id="ring-events-list" style="display:flex;flex-direction:column;gap:6px;max-height:280px;overflow-y:auto">
-        <div style="color:rgba(255,255,255,0.3);font-size:12px;padding:8px">Loading events&hellip;</div>
-      </div>
-    </div>
-  </div>
+<div id="view-ring" class="view" style="display:none;padding:0">
+  <iframe src="/ring" style="width:100%;height:100%;border:none;display:block"></iframe>
 </div>
 
 
@@ -8231,11 +9016,11 @@ function showDoorbellPopup(evt) {
   } catch(e) {}
   // Show popup
   popup.style.display = 'flex';
-  // Refresh camera image every 1s while open
+  // Refresh camera image every 30s while open (Ring cloud rate)
   _ringPopupImgTimer = setInterval(() => {
     const img = document.getElementById('ring-popup-img');
     if (img) img.src = '/api/ring/snapshot?' + Date.now();
-  }, 1000);
+  }, 30000);
   // Countdown auto-dismiss
   let remaining = 60;
   function _tick() {
@@ -8275,7 +9060,7 @@ function _renderRingEventsList() {
   }).join('');
 }
 
-// Ring view: auto-refresh camera image every 1.5s while active
+// Ring view: try to load snapshot; refresh every 30s (Ring cloud API rate)
 function _startRingViewRefresh() {
   if (_ringViewRefreshTimer) return;
   // Load initial snapshot immediately
@@ -8286,8 +9071,8 @@ function _startRingViewRefresh() {
     if (!i) return;
     i.src = '/api/ring/snapshot?' + Date.now();
     const ageEl = document.getElementById('ring-snap-age');
-    if (ageEl) ageEl.textContent = 'Live \u00b7 ' + new Date().toLocaleTimeString();
-  }, 1500);
+    if (ageEl) ageEl.textContent = 'Snapshot \u00b7 ' + new Date().toLocaleTimeString();
+  }, 30000);
 }
 function _stopRingViewRefresh() {
   clearInterval(_ringViewRefreshTimer);

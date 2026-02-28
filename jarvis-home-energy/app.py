@@ -1397,7 +1397,10 @@ def _bhyve_get(path, token=None):
 
 
 def _bhyve_ws_command(device_id, payload, token=None):
-    """Send a command to B-Hyve via WebSocket (websockets 11+)."""
+    """Send a command to B-Hyve via WebSocket.
+    Protocol: connect → optional server hello → send app_connection handshake →
+              send command → wait for ack echo.
+    """
     import asyncio
     import json as _json
     tok = token or _bhyve_token
@@ -1405,41 +1408,38 @@ def _bhyve_ws_command(device_id, payload, token=None):
     async def _send():
         import websockets
         ws_url = "wss://api.orbitbhyve.com/v1/events"
-        # websockets >=11: additional_headers replaces extra_headers
-        connect_kwargs = {
-            "ping_interval": None,
-            "open_timeout": 25,
-        }
-        try:
-            # websockets >= 11 uses additional_headers
-            async with websockets.connect(
-                ws_url,
-                additional_headers={"Orbit-Session-Token": tok or ""},
-                **connect_kwargs,
-            ) as ws:
-                hello = _json.loads(await asyncio.wait_for(ws.recv(), timeout=5))
+        async with websockets.connect(
+            ws_url,
+            additional_headers={"Orbit-Session-Token": tok or ""},
+            ping_interval=None,
+            open_timeout=25,
+        ) as ws:
+            # Server may or may not send a hello — drain it if present
+            try:
+                hello = _json.loads(await asyncio.wait_for(ws.recv(), timeout=4))
                 log.debug("B-Hyve WS hello: %s", hello)
-                await ws.send(_json.dumps(payload))
-                try:
-                    ack = _json.loads(await asyncio.wait_for(ws.recv(), timeout=5))
-                    log.debug("B-Hyve WS ack: %s", ack)
-                except asyncio.TimeoutError:
-                    pass
-        except TypeError:
-            # Fallback for older websockets API using extra_headers
-            async with websockets.connect(
-                ws_url,
-                extra_headers={"Orbit-Session-Token": tok or ""},
-                **connect_kwargs,
-            ) as ws:
-                hello = _json.loads(await asyncio.wait_for(ws.recv(), timeout=5))
-                log.debug("B-Hyve WS hello: %s", hello)
-                await ws.send(_json.dumps(payload))
-                try:
-                    ack = _json.loads(await asyncio.wait_for(ws.recv(), timeout=5))
-                    log.debug("B-Hyve WS ack: %s", ack)
-                except asyncio.TimeoutError:
-                    pass
+            except (asyncio.TimeoutError, Exception):
+                pass
+
+            # Send app_connection handshake (server may silently ignore but needs it)
+            await ws.send(_json.dumps({
+                "event": "app_connection",
+                "orbit_session_token": tok or "",
+                "subscribe_device_id": device_id,
+            }))
+            try:
+                await asyncio.wait_for(ws.recv(), timeout=4)
+            except (asyncio.TimeoutError, Exception):
+                pass
+
+            # Send the actual command
+            await ws.send(_json.dumps(payload))
+            # Wait for ack echo from server
+            try:
+                ack = _json.loads(await asyncio.wait_for(ws.recv(), timeout=8))
+                log.debug("B-Hyve WS ack: %s", ack)
+            except asyncio.TimeoutError:
+                log.debug("B-Hyve WS: no ack within 8s (command may still have been accepted)")
 
     asyncio.run(_send())
 
@@ -3634,10 +3634,8 @@ def api_bhyve_stop():
         from datetime import timezone
         ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.000Z")
         payload = {
-            "event": "change_mode",
+            "event": "stop_watering",
             "device_id": device_id,
-            "mode": "auto",
-            "stations": [],
             "timestamp": ts,
         }
         _bhyve_ws_command(device_id, payload)

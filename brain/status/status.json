@@ -1,6 +1,49 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-01T09:34:00-07:00",
-  "lastHealthCheck": "2026-03-01T09:34:00-07:00",
-  "notes": "Dispatch cycle complete. No Planned cards (inbox idle). All 3 recent Done cards verified deployed. Services: nq-smb-watcher/dashboard active, blofin-ingestor/paper/dashboard active, moonshot-dashboard responsive. SMB mount restored at 09:34 (was unmounted). CPU 66°C, disk 36% (healthy)."
+  "activeTasks": [
+    {
+      "id": "c_a81a13037af72_19caa592a65",
+      "title": "[Moonshot] Verify champion model is set and position entry is working",
+      "project": "blofin-moonshot",
+      "status": "In Progress"
+    },
+    {
+      "id": "c_b590521fd34c9_19caa590876",
+      "title": "[Blofin] volatility_expansion_volume_breakout T2 gate_status=fail",
+      "project": "blofin-stack",
+      "status": "In Progress"
+    },
+    {
+      "id": "c_3a77f6182cacb_19caa473265",
+      "title": "Moonshot: Add Short-Side Predictions",
+      "project": "blofin-moonshot",
+      "status": "In Progress"
+    }
+  ],
+  "plannedQueue": [
+    {
+      "id": "c_3c2b79e226dff_19caa45ba25",
+      "title": "Moonshot Feature Engineering: Cross-Pipeline Learning",
+      "project": "blofin-moonshot"
+    },
+    {
+      "id": "c_fbbdd83826b87_19caa45f560",
+      "title": "Jarvis home: Energy storage and ROI analysis",
+      "project": "jarvis-home-energy",
+      "notes": "Enriched in this cycle (assignee + project_path)"
+    }
+  ],
+  "lastDispatch": "2026-03-01T10:04:00-07:00",
+  "lastHealthCheck": "2026-03-01T10:04:00-07:00",
+  "dispatchSummary": "DISPATCH CYCLE COMPLETE. Health check: NQ services were inactive, restarted (now active). Board state: 3 In Progress (at capacity), 2 Planned. Phase 5 enriched Jarvis home card. Phase 6 skipped (3 builders at max). Phase 7 verified 2 recent Done cards deployed successfully. No critical alerts. CPU 78°C, disk 36% (healthy).",
+  "systemHealth": {
+    "cpu_temp": "78.0°C",
+    "disk_usage": "36%",
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-smb-watcher": "active",
+      "nq-dashboard": "active"
+    }
+  }
 }

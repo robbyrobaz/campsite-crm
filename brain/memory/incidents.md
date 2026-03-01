@@ -256,3 +256,12 @@ nq-dashboard.service was inactive because dashboard/app.py was running as an orp
 - Action: Remounted SMB share via `sudo mount /mnt/nt_bridge` (fstab configured with nofail)
 - Result: Mount restored, service restarted successfully, now active
 - Status: nq-smb-watcher.service = active, nq-dashboard.service = active
+
+## 2026-03-01 10:04 MST — NQ Services Found Inactive, Restarted
+- **Incident Time:** Jarvis Pulse (Dispatch) cycle at 10:04 AM MST
+- **Services:** nq-smb-watcher.service and nq-dashboard.service were INACTIVE
+- **Action:** Restarted both services: `systemctl --user restart nq-smb-watcher.service nq-dashboard.service`
+- **Verification:** Both services now ACTIVE after restart
+- **Dashboard:** HTTP 200 OK (verified)
+- **Note:** Services may have been killed/crashed between 09:34 and 10:04 (30-min cycle), or systemd restart from overnight. Cause unclear. Monitoring next cycles.
+- **Impact:** Trading dashboards briefly unavailable during restart (~2-3 sec), but no data loss (ingestor independent)

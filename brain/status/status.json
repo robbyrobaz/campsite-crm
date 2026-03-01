@@ -1,25 +1,9 @@
 {
   "activeTasks": [
-    {
-      "id": "c_813b15eb7a031_19ca9396efe",
-      "title": "for NQ trades, all trades must end before the EOD reset",
-      "project": "NQ-Trading-PIPELINE",
-      "status": "In Progress"
-    },
-    {
-      "id": "c_5a1e6a71fb7b2_19ca94730c7",
-      "title": "[Blofin] Expand volume_volatility_mean_reversion to additional coin pairs",
-      "project": "blofin-stack",
-      "status": "In Progress"
-    },
-    {
-      "id": "c_91b6776b7119e_19ca93ce5d6",
-      "title": "add a calendar check for NQ futures pipeline",
-      "project": "NQ-Trading-PIPELINE",
-      "status": "In Progress",
-      "note": "Dispatched this cycle"
-    }
+    {"id": "c_a87fae18d35b3_19ca95a7572", "title": "[Blofin] Wire leverage into paper trader execution", "pid": 1940703},
+    {"id": "c_a535fc5537933_19ca9343005", "title": "moonshot data -- find more than just OHLC candle data", "pid": 1940705},
+    {"id": "c_258010dbe46fd_19ca47a5437", "title": "Test local LLM models on real coding+trading tasks", "pid": 1940714}
   ],
-  "lastDispatch": "2026-03-01T12:13:00Z",
-  "lastHealthCheck": "2026-03-01T12:13:00Z"
+  "lastDispatch": "2026-03-01T05:43:00-07:00",
+  "lastHealthCheck": "2026-03-01T05:43:00-07:00"
 }

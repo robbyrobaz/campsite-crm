@@ -70,6 +70,24 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - [ ] Verify `assignee` = `claude`
 - [ ] See `brain/DISPATCHER.md` for project path matching table and enrichment examples
 
+## ⚠️ Builder Behavior Rules (CRITICAL — include in every card description):
+> Haiku builders have a pattern of planning extensively then asking "Ready to proceed?" instead of executing. This wastes tokens and marks cards Done without actual work.
+
+**Rules for ALL builder cards:**
+1. **EXECUTE, don't plan.** Do the work. Don't ask permission. Don't ask "Ready to proceed?"
+2. **No confirmation prompts.** If you have the information needed, just do it.
+3. **Verify before Done.** Run the code. Check the output. Confirm success criteria are met.
+4. **If blocked, say why and stop.** Don't mark Done with "planned for next session."
+
+**Standard footer to add to card descriptions:**
+```
+## Execution Rules (NON-NEGOTIABLE)
+- Do NOT ask "Ready to proceed?" or "Should I continue?" — just execute
+- Do NOT mark Done until you have VERIFIED the success criteria
+- If you cannot complete the task, leave the card In Progress and explain the blocker
+- Commit all changes: `git add -A && git commit -m "..." && git push`
+```
+
 ## Builder Verification (NON-OPTIONAL — builder does this, no separate QA agent):
 > The builder verifies their own work before marking Done. No QA sentinel, no Review/Test status.
 - [ ] **Dashboards/UI:** `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:<port>/` must return 200. Check for JS errors (run `node --check` on extracted script blocks if Flask/Jinja).

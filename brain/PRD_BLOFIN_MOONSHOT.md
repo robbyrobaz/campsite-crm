@@ -67,10 +67,10 @@
 
 Data Sources:
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│  Blofin API                        │  CoinGecko (optional, free tier)      │
-│  ├── /market/instruments (SWAP)    │  ├── /coins/list (metadata)           │
-│  ├── /market/candles (OHLCV)       │  ├── /coins/{id}/market_chart         │
-│  └── Paper execution (existing)    │  └── Market cap, volume, age          │
+│  Blofin API                        │  Blofin API (all market data)      │
+│  ├── /market/instruments (SWAP)    │  ├── /market/tickers (price/vol/OI)    │
+│  ├── /market/candles (OHLCV)       │  ├── /market/candles (OHLCV history)   │
+│  └── Paper execution (existing)    │  └── /market/funding-rate (funding)    │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -103,8 +103,8 @@ CREATE TABLE coins (
     symbol         TEXT PRIMARY KEY,     -- e.g., "BTC-USDT"
     first_seen_ts  INTEGER NOT NULL,     -- Unix ms when first discovered
     delisted_ts    INTEGER DEFAULT NULL, -- Unix ms if no longer on Blofin
-    coingecko_id   TEXT DEFAULT NULL,    -- e.g., "bitcoin" (optional enrichment)
-    market_cap_usd REAL DEFAULT NULL,    -- From CoinGecko, refreshed daily
+    
+    market_cap_usd REAL DEFAULT NULL,    -- From Blofin tickers, refreshed daily
     age_days       INTEGER GENERATED ALWAYS AS ((julianday('now') - julianday(first_seen_ts/1000, 'unixepoch'))),
     is_new_listing INTEGER GENERATED ALWAYS AS (age_days < 30),
     created_at     INTEGER DEFAULT (strftime('%s','now') * 1000),
@@ -366,7 +366,7 @@ This feeds back into scoring as a "track record" feature:
 │   ├── discovery/
 │   │   ├── __init__.py
 │   │   ├── coin_fetcher.py     # Poll Blofin instruments
-│   │   └── coingecko.py        # Optional metadata enrichment
+│   │   └── blofin_enricher.py   # Market cap/vol from Blofin tickers
 │   ├── features/
 │   │   ├── __init__.py
 │   │   ├── technical.py        # BB squeeze, volume, ATR
@@ -476,14 +476,14 @@ Add panel to master dashboard at :8890:
 | `/market/funding-rate` | Funding rate | 20/sec |
 | `/market/open-interest` | OI data | 20/sec |
 
-### Secondary: CoinGecko (Free Tier, Optional)
+### Secondary: Blofin Tickers (Free, Already Integrated)
 
 | Endpoint | Use | Rate Limit |
 |----------|-----|------------|
 | `/coins/list` | Map Blofin symbols to CG IDs | 50/min |
 | `/coins/{id}` | Market cap, ATH, metadata | 50/min |
 
-CoinGecko is optional enrichment. The engine works with Blofin data alone.
+All enrichment data comes from Blofin directly. No external data sources needed.
 
 ---
 
@@ -682,7 +682,7 @@ The moonshot engine is a fundamentally different approach from V1:
 - Learns from closed trades
 - Auto-discovers new listings
 
-The 342 Blofin coins provide sufficient universe. CoinGecko expansion is optional Phase 2.
+The 342 Blofin coins are the complete universe. All data sourced from Blofin API.
 
 Build sequence is clear. First paper trade could fire within 2 weeks of starting build.
 

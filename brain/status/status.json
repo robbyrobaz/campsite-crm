@@ -1,49 +1,43 @@
 {
-  "dispatch_cycle": "Sunday, March 1st, 2026 — 10:34 AM",
-  "health_status": "OK",
-  "cpu_temp_c": 79,
-  "disk_usage": "36%",
-  "critical_alerts": 0,
+  "timestamp": "2026-03-01T18:05:05.003412Z",
+  "phase": "Dispatch complete",
   "activeTasks": [
     {
-      "id": "c_fbbdd83826b87_19caa45f560",
-      "title": "Jarvis home: build energy data storage & ROI analysis",
-      "project": "jarvis-home-energy",
-      "status": "In Progress",
-      "assigned_to": "claude",
-      "started_at": "10:34 AM",
-      "pid": 335162
-    }
-  ],
-  "recent_completions": [
-    {
-      "id": "c_3c2b79e226dff_19caa45ba25",
-      "title": "Moonshot Feature Engineering",
-      "completed": "9.5 min ago",
-      "verified_deployed": true
+      "id": "c_b64228",
+      "title": "[Moonshot] Fix duplicate champions + debug stalled position exits",
+      "project": "blofin-moonshot",
+      "elapsed_minutes": 3
     },
     {
-      "id": "c_4b5b6cada246b_19caa60c087",
-      "title": "ML Training Overhaul: Precision/PnL Optimization",
-      "completed": "12.4 min ago",
-      "verified_deployed": true
-    },
-    {
-      "id": "c_907fac2896aa6_19caa44e679",
-      "title": "Jarvis home: cache energy data locally",
-      "completed": "13.2 min ago",
-      "verified_deployed": true,
-      "note": "jarvis-home-energy.service was inactive; restarted"
+      "id": "c_248b4c",
+      "title": "[Blofin] Diagnose why paper trading stalled \u2014 no trades in 48h",
+      "project": "blofin-stack",
+      "elapsed_minutes": 3
     }
   ],
-  "lastDispatch": "2026-03-01T10:34:00-07:00",
-  "lastHealthCheck": "2026-03-01T10:34:00-07:00",
-  "services_status": {
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "nq-smb-watcher": "active",
-    "nq-dashboard": "active",
-    "jarvis-home-energy": "active"
-  }
+  "queuedTasks": 0,
+  "lastDispatch": "2026-03-01T18:05:05.003412Z",
+  "lastHealthCheck": "2026-03-01T18:05:05.003412Z",
+  "systemHealth": {
+    "cpu_temp": "73\u00b0C",
+    "disk_usage": "36%",
+    "services": "all active"
+  },
+  "recentlyDeployed": [
+    {
+      "card": "c_d38efc",
+      "project": "NQ-Trading-PIPELINE",
+      "minutes_ago": 3
+    },
+    {
+      "card": "c_fbbdd8",
+      "project": "jarvis-home-energy (code-only)",
+      "minutes_ago": 24
+    },
+    {
+      "card": "c_3c2b79",
+      "project": "blofin-moonshot",
+      "minutes_ago": 40
+    }
+  ]
 }

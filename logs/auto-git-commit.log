@@ -3862,3 +3862,32 @@ CLEAN master-dashboard (nothing to commit)
  1 file changed, 345 insertions(+)
  create mode 100644 brain/PRD_BLOFIN_MOONSHOT.md
 COMMITTED blofin-stack
+warning: adding embedded git repository: blofin-moonshot
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint: 
+hint: 	git submodule add <url> blofin-moonshot
+hint: 
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint: 
+hint: 	git rm --cached blofin-moonshot
+hint: 
+hint: See "git help submodule" for more information.
+[main ff415fc9] auto: snapshot 2026-03-01T02:00:01Z
+ 6 files changed, 55 insertions(+), 13 deletions(-)
+ create mode 160000 blofin-moonshot
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main aebc3fe3] auto: snapshot 2026-03-01T02:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 3 committed, 6 skipped
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

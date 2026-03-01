@@ -1,31 +1,57 @@
 {
-  "lastDispatch": "2026-03-01T22:34:49Z",
-  "lastHealthCheck": "2026-03-01T22:34:49Z",
+  "lastDispatch": "2026-03-01T23:04:40Z",
+  "lastHealthCheck": "2026-03-01T23:04:40Z",
   "systemHealth": {
-    "cpu_temp_c": 52,
+    "cpu_temp_c": 86,
     "disk_used_pct": 36,
     "critical_services": "all active"
   },
-  "activeTasks": [],
+  "activeTasks": [
+    {
+      "id": "c_4844b425a3e24_19caba2624b",
+      "title": "Blofin: Audit T2 strategies for FT data gaps and paper trading health",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "blofin-stack",
+      "started_min_ago": 2
+    },
+    {
+      "id": "c_a42741ee38682_19caba26208",
+      "title": "NQ: Verify equal_tops_bottoms live signals in God Model dispatcher",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "NQ-Trading-PIPELINE",
+      "started_min_ago": 2
+    }
+  ],
   "recentlyCompleted": [
+    {
+      "id": "c_cbdd2a4f7d534_19caba26283",
+      "title": "Moonshot: Diagnose 10% null ml_scores and verify model inference health",
+      "completed_age_min": 4,
+      "deployment_verified": true,
+      "project": "blofin-moonshot"
+    },
+    {
+      "id": "c_feb22989d8583_19cab9d80f9",
+      "title": "Moonshot Dashboard: 4 critical fixes",
+      "completed_age_min": 2,
+      "deployment_verified": true,
+      "project": "blofin-moonshot"
+    },
     {
       "id": "c_97d76d46b98bb_19cab6b9ed1",
       "title": "Blofin: Diagnose and fix momentum_v1 T2 gate failure",
-      "completed_age_min": 31,
-      "deployment_verified": true
-    },
-    {
-      "id": "c_ad8975d548453_19cab6b9f30",
-      "title": "Moonshot: Verify 4h cycle timer and score generation health",
-      "completed_age_min": 31,
-      "deployment_verified": true
-    },
-    {
-      "id": "c_d0fa19bef9b05_19cab6b9e53",
-      "title": "NQ: Register equal_tops_bottoms in live God Model dispatcher",
-      "completed_age_min": 32,
-      "deployment_verified": true
+      "completed_age_min": 60,
+      "deployment_verified": true,
+      "project": "blofin-stack"
     }
   ],
-  "notes": "No active work in queue. All critical services healthy. Recent deployments verified live."
+  "queueStatus": {
+    "plannedCards": 0,
+    "inProgressCards": 2,
+    "maxConcurrentBuilders": 3,
+    "nextDispatchSlot": 1
+  },
+  "notes": "2 builders active (Blofin T2 audit, NQ EBT). Blofin dashboard healthy (156 trades/1h). Moonshot services verified live. All deployments verified. No Planned cards in queue — ready to accept new work."
 }

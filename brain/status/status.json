@@ -1,27 +1,18 @@
 {
   "activeTasks": [
     {
-      "id": "c_0d9bc9d8f68fa_19ca834e913",
-      "title": "[Moonshot] Fix exit logic \u2014 5 open positions, exits not processing",
-      "project": "blofin-moonshot"
-    },
-    {
       "id": "c_208a7c33aa7cf_19ca8349061",
       "title": "[Blofin] Expand cross_asset_correlation to additional coin pairs",
-      "project": "blofin-stack"
-    },
-    {
-      "id": "c_26b0bf2bb884b_19ca82c36c8",
-      "title": "[Moonshot] Walk-forward multi-fold trainer",
-      "project": "blofin-moonshot"
+      "status": "In Progress",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-stack"
     },
     {
       "id": "c_61dfeabfc6245_19ca82c368c",
-      "title": "[Moonshot] Path-dependent label generator",
-      "project": "blofin-moonshot"
+      "title": "[Moonshot] Path-dependent label generator — fix naive labels, model path TP-before-SL",
+      "status": "In Progress",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot"
     }
   ],
-  "lastDispatch": "2026-03-01T00:13:00-07:00",
-  "lastHealthCheck": "2026-03-01T00:13:00-07:00",
-  "notes": "At builder cap (4 In Progress). 4 Planned cards waiting. Dispatch resumes when slot opens."
+  "lastDispatch": "2026-03-01T00:43:00-07:00",
+  "lastHealthCheck": "2026-03-01T00:43:00-07:00"
 }

@@ -18,8 +18,16 @@
 - **NQ SMB watcher**: `systemctl --user is-active nq-smb-watcher.service`
   - Expected: `active` — this is the live NQ data feed (NinjaTrader SMB bridge → NQ_continuous_1min.csv)
   - If inactive: `systemctl --user start nq-smb-watcher.service` and alert Rob
-  - Data staleness during overnight Globex hours (11 PM – 6 AM MST) is NORMAL — NinjaTrader may pause writing
-  - Only flag stale data during RTH (6:30 AM – 1 PM MST) or active Globex (6 PM – 11 PM MST)
+  - **NQ Futures trading hours (CME Globex):**
+    - **RTH (Regular Trading Hours):** Mon–Fri 8:30 AM – 3:15 PM CT (7:30 AM – 2:15 PM MST)
+    - **Globex overnight:** Sun 5 PM CT – Mon 8:30 AM CT, then Mon–Thu 3:30 PM – 8:30 AM CT next day
+    - **Weekend close:** Fri 3:15 PM CT – Sun 5 PM CT — **NO DATA, completely expected**
+    - **Daily maintenance break:** 4:00 PM – 5:00 PM CT (3 PM – 4 PM MST) — brief gap is NORMAL
+  - **Staleness rules:**
+    - Weekend (Fri 3:15 PM CT → Sun 5 PM CT): stale data is **100% expected — NEVER alert**
+    - Daily maintenance break (3–4 PM MST): brief gap is **NORMAL — do not alert**
+    - Overnight Globex hours (Sun–Thu 3 PM – 7:30 AM MST): NinjaTrader may pause — **NORMAL, do not alert**
+    - **Only flag stale data during RTH (7:30 AM – 2:15 PM MST, Mon–Fri)**
 - **docker-wyze-bridge**: `sudo docker inspect --format='{{.State.Status}}' wyze-bridge 2>/dev/null`
   - Expected: `running`
   - If not running: `cd ~/workspace/wyze-bridge && sudo docker compose up -d` then alert Rob

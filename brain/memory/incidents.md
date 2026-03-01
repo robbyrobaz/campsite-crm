@@ -265,3 +265,21 @@ nq-dashboard.service was inactive because dashboard/app.py was running as an orp
 - **Dashboard:** HTTP 200 OK (verified)
 - **Note:** Services may have been killed/crashed between 09:34 and 10:04 (30-min cycle), or systemd restart from overnight. Cause unclear. Monitoring next cycles.
 - **Impact:** Trading dashboards briefly unavailable during restart (~2-3 sec), but no data loss (ingestor independent)
+
+---
+
+## Dispatch Cycle — Sunday, March 1st 10:34 AM
+
+**Status:** HEALTHY
+
+- **Health Check:** CPU 79°C, disk 36%, all 5 services ACTIVE
+- **Critical Alerts:** 0
+- **Dispatch:** Jarvis home energy analysis card → dispatched (PID 335162)
+- **Stale Recovery:** none (0 In Progress at start)
+- **Deployment Verification:**
+  - Moonshot Feature Engineering (9.5 min old): DEPLOYED ✓
+  - ML Training Overhaul (12.4 min old): DEPLOYED ✓
+  - Jarvis home cache (13.2 min old): **jarvis-home-energy.service WAS INACTIVE** → restarted, dashboard 200 ✓
+- **Action:** Restarted `jarvis-home-energy.service` (was inactive despite code change 13 min prior)
+- **Impact:** Energy service briefly restarted; data collection continuous
+

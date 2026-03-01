@@ -67,12 +67,15 @@ When delegating to Builder subagents:
 - Prefer 1-2 active subagents unless the task genuinely requires parallelism
 - Never spawn subagents in a loop without a termination condition
 
-## Model Routing & Escalation (Claude-only, updated 2026-02-25)
+## Model Routing & Escalation (Claude-only, updated 2026-03-01)
 
 | Alias | Model | Use For |
 |-------|-------|---------|
-| `sonnet` | claude-sonnet-4-6 | **Primary (Jarvis main agent ONLY).** Conversations, planning, orchestration, reasoning with Rob. Jarvis Pulse dispatcher. NOT for coding subagents. |
-| `haiku` | claude-haiku-4-5 | **ALL coding/builder subagents.** Code generation, refactors, bug fixes, cron jobs, token audit, health checks, heartbeats, dispatch pulse. **Kanban runner model string: `claude-haiku-4-5`** (NOT `anthropic/claude-haiku-4-5` — CLI format, no prefix) |
+| `opus` | claude-opus-4-5 | **Primary (Jarvis main session).** Conversations, planning, orchestration, reasoning with Rob. Use when Sonnet quota is constrained. |
+| `sonnet` | claude-sonnet-4-6 | **Alternate main session.** Use when Opus quota is constrained or for cost efficiency. Jarvis Pulse dispatcher. |
+| `haiku` | claude-haiku-4-5 | **ALL coding/builder subagents.** Code generation, refactors, bug fixes, cron jobs, token audit, health checks, heartbeats. **Kanban runner model string: `claude-haiku-4-5`** (NOT `anthropic/claude-haiku-4-5` — CLI format, no prefix) |
+
+**Current routing (Mar 1 2026):** Opus for main Jarvis session. Haiku for all builders. Skip Sonnet until 7-day limit recovers.
 
 ### Subagent Model Assignment
 

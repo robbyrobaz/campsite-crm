@@ -29,9 +29,19 @@
 - Era-boosting: 300 trees × 4 rounds, fixed tree count (no early stopping on boost rounds)
 - Baselines: robbyrobml val_corr=0.02916 Sharpe=1.40
 
-### Model Strategy
+### Model Strategy (Updated Mar 1 2026)
 - Subscription: Claude Max 20x (upgraded Sun Feb 22). 7-day Sonnet limit is the binding constraint — NOT the 5h window. Haiku/Opus from separate buckets.
-- Model routing: Sonnet for all reasoning/code/main session. Haiku for cron jobs, health checks, lightweight tasks. Opus is banned.
+- **Current routing (Mar 1 2026):** Opus for main Jarvis session. Haiku for all coding/builder subagents. Skip Sonnet until limit recovers.
+- Gateway config: `~/.openclaw/openclaw.json` → `.agents.defaults.model.primary`
+
+### Three Pipelines Philosophy (Core Architecture, Mar 1 2026)
+**NQ Pipeline, Blofin v1, and Blofin Moonshot are THREE INDEPENDENT ARENAS.** We do NOT combine, average, or merge their outputs. We cherry-pick the TOP PERFORMERS from each independently.
+
+- **NQ Pipeline:** Top 2-3 strategies with FT PF ≥ 2.5 → God Model
+- **Blofin v1:** Strategy+coin pairs with FT PF ≥ 1.35 → dynamic leverage tiers (5x/3x/2x/1x based on PF)
+- **Blofin Moonshot:** Coins with ml_score confidence ≥ 0.7 + FT validation
+
+**The key insight:** Overall/aggregate performance is meaningless noise. The average of 100 strategies is garbage. The top 5 are gold. Every analysis must filter to top performers FIRST, then assess. Never look at system-wide WR, PF, or PnL — only per-strategy or per-pair metrics matter.
 
 ## Lessons Learned
 

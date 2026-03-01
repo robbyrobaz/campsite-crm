@@ -37,6 +37,25 @@ If you skip these and get corrected, that's the most expensive thing that happen
 
 ---
 
+## ⚠️ THREE PIPELINES = THREE ARENAS (Core Philosophy)
+
+**NQ Pipeline, Blofin v1, and Blofin Moonshot are INDEPENDENT systems.** We do NOT combine them, average them, or merge their outputs.
+
+**The goal:** Cherry-pick the TOP PERFORMERS from each arena independently.
+- **NQ Pipeline:** Take the 2-3 strategies with PF ≥ 2.5 in forward test → God Model
+- **Blofin v1:** Take strategy+coin pairs with FT PF ≥ 1.35 → leverage tiers (5x/3x/2x/1x)
+- **Blofin Moonshot:** Take coins with ml_score confidence ≥ 0.7 AND FT validation
+
+**What this means operationally:**
+- NEVER look at overall/aggregate performance across all strategies — it's meaningless noise
+- ALWAYS filter to top performers first, THEN analyze
+- Each arena has different success criteria (NQ = Lucid prop gates, Blofin v1 = FT PF, Moonshot = ml_score + FT)
+- Leverage, position sizing, and risk management are per-arena decisions
+
+**Why this matters:** The average of 100 strategies is garbage. The top 5 strategies are gold. We're building systems to automatically identify, promote, and amplify the gold while dropping the garbage. That's the whole game.
+
+---
+
 ## Dispatcher Protocol (INLINE — no separate file read needed)
 
 Rob will ask you to dispatch work in any session. Know this cold.

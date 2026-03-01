@@ -1335,7 +1335,8 @@ def api_top_pairs(conn):
             ROUND(ft_profit_factor, 3)                       AS ft_pf,
             ROUND(COALESCE(ft_win_rate, 0) * 100, 1)         AS ft_wr_pct,
             ft_trades,
-            ROUND(COALESCE(ft_pnl_pct, 0), 2)               AS ft_pnl_pct
+            ROUND(COALESCE(ft_pnl_pct, 0), 2)               AS ft_pnl_pct,
+            COALESCE(leverage, 1)                            AS leverage
         FROM strategy_coin_performance
         WHERE ft_profit_factor IS NOT NULL
           AND ft_trades >= 20
@@ -1351,10 +1352,127 @@ def api_top_pairs(conn):
             "ft_wr_pct":   float(row['ft_wr_pct'] or 0),
             "ft_trades":   int(row['ft_trades'] or 0),
             "ft_pnl_pct":  float(row['ft_pnl_pct'] or 0),
+            "leverage":    int(row['leverage'] or 1),
         })
     return jsonify({
         "pairs":     pairs,
         "count":     len(pairs),
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+    })
+
+
+@app.route('/api/leverage_tiers')
+@cache_response(ttl_seconds=30)
+@safe_query
+def api_leverage_tiers(conn):
+    """
+    Leverage tier distribution: count of pairs at each leverage level (5x, 3x, 2x, 1x).
+    """
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT
+            leverage,
+            COUNT(*) as count
+        FROM strategy_coin_eligibility
+        WHERE leverage IS NOT NULL
+        GROUP BY leverage
+        ORDER BY leverage DESC
+    """)
+
+    tier_dist = {}
+    for row in cursor.fetchall():
+        tier_dist[int(row['leverage'])] = int(row['count'])
+
+    return jsonify({
+        "tier_distribution": tier_dist,
+        "total_pairs": sum(tier_dist.values()),
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+    })
+
+
+@app.route('/api/leverage_pairs')
+@cache_response(ttl_seconds=30)
+@safe_query
+def api_leverage_pairs(conn):
+    """
+    All pairs with leverage > 1x, ranked by leverage and FT profit factor.
+    Includes strategy, coin, leverage, FT metrics.
+    """
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT
+            strategy_name,
+            symbol,
+            leverage,
+            ROUND(ft_profit_factor, 3)        AS ft_pf,
+            ROUND(COALESCE(ft_win_rate, 0) * 100, 1) AS ft_wr_pct,
+            ft_trades,
+            ROUND(COALESCE(ft_pnl_pct, 0), 2) AS ft_pnl_pct
+        FROM strategy_coin_performance
+        WHERE leverage > 1
+        ORDER BY leverage DESC, ft_profit_factor DESC
+    """)
+
+    pairs = []
+    for row in cursor.fetchall():
+        pairs.append({
+            "strategy":    row['strategy_name'],
+            "symbol":      row['symbol'],
+            "leverage":    int(row['leverage']),
+            "ft_pf":       float(row['ft_pf'] or 0),
+            "ft_wr_pct":   float(row['ft_wr_pct'] or 0),
+            "ft_trades":   int(row['ft_trades'] or 0),
+            "ft_pnl_pct":  float(row['ft_pnl_pct'] or 0),
+        })
+
+    return jsonify({
+        "pairs":     pairs,
+        "count":     len(pairs),
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+    })
+
+
+@app.route('/api/leverage_trades')
+@cache_response(ttl_seconds=15)
+@safe_query
+def api_leverage_trades(conn):
+    """
+    Recent paper trades with leverage > 1x (last 100 trades).
+    """
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT
+            symbol,
+            opened_ts_iso,
+            leverage_used,
+            entry_price,
+            qty,
+            status,
+            pnl_pct,
+            ROUND(exit_price, 4) as exit_price
+        FROM paper_trades
+        WHERE leverage_used > 1
+        ORDER BY opened_ts_ms DESC
+        LIMIT 100
+    """)
+
+    trades = []
+    for row in cursor.fetchall():
+        pnl_pct = float(row['pnl_pct']) if row['pnl_pct'] is not None else None
+        trades.append({
+            "symbol":       row['symbol'],
+            "opened_ts":    row['opened_ts_iso'],
+            "leverage":     int(row['leverage_used']),
+            "entry_price":  float(row['entry_price']),
+            "exit_price":   float(row['exit_price']) if row['exit_price'] else None,
+            "qty":          float(row['qty']),
+            "status":       row['status'],
+            "pnl_pct":      pnl_pct,
+        })
+
+    return jsonify({
+        "trades":    trades,
+        "count":     len(trades),
         "timestamp": datetime.utcnow().isoformat() + "Z",
     })
 

@@ -284,6 +284,48 @@ td { padding: 7px 10px; white-space: nowrap; }
 .status-chip.library { background: rgba(255,255,255,0.04); color: var(--dim); }
 .status-chip.blisted { background: var(--red-dim); color: var(--red); }
 
+/* ─── Leverage Tiers ────────────────────────────────────────────────────── */
+.leverage-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px; margin: 12px 0;
+}
+.leverage-stat {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px; text-align: center;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  transition: border-color 0.2s, background 0.2s;
+}
+.leverage-stat:hover { background: var(--card2); border-color: var(--border2); }
+.leverage-tier {
+  font-size: 20px; font-weight: 800; width: 50px; height: 50px;
+  border-radius: 6px; display: flex; align-items: center; justify-content: center;
+  color: #fff;
+}
+.leverage-5x { background: rgba(245,158,11,0.12); border: 2px solid #F59E0B; }
+.leverage-3x { background: rgba(192,192,192,0.12); border: 2px solid #A8A8A8; }
+.leverage-2x { background: rgba(205,127,50,0.12); border: 2px solid #CD7F32; }
+.leverage-1x { background: var(--border2); }
+.leverage-count {
+  font-size: 24px; font-weight: 800; color: var(--text);
+  line-height: 1;
+}
+.leverage-label {
+  font-size: 11px; color: var(--muted); text-transform: uppercase;
+  letter-spacing: 0.5px; font-weight: 600;
+}
+
+.subsection-header {
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--muted); margin: 16px 0 10px;
+  padding-bottom: 8px; border-bottom: 1px solid var(--border);
+}
+
+/* Leverage column coloring in tables */
+td.leverage-5x { color: #FDB022; font-weight: 600; }
+td.leverage-3x { color: #C0C0C0; font-weight: 600; }
+td.leverage-2x { color: #CD7F32; font-weight: 600; }
+td.leverage-1x { color: var(--text); }
+
 /* ─── ML Models ──────────────────────────────────────────────────────── */
 .ml-grid {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -474,10 +516,84 @@ td { padding: 7px 10px; white-space: nowrap; }
         <th>FT Win Rate</th>
         <th>FT Trades</th>
         <th>FT PnL%</th>
+        <th>Leverage</th>
       </tr>
     </thead>
     <tbody id="top-pairs-tbody">
+      <tr><td colspan="7" class="loading">Loading…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── Leverage Tiers ────────────────────────────────────────────────────── -->
+<div class="section-header">
+  <div class="section-title">Leverage Tiers</div>
+  <div class="section-line"></div>
+  <div class="section-badge" id="leverage-badge">Active >1x pairs</div>
+</div>
+
+<div class="leverage-grid">
+  <div class="leverage-stat">
+    <div class="leverage-tier leverage-5x">5x</div>
+    <div class="leverage-count" id="leverage-5x-count">-</div>
+    <div class="leverage-label">Gold Tier</div>
+  </div>
+  <div class="leverage-stat">
+    <div class="leverage-tier leverage-3x">3x</div>
+    <div class="leverage-count" id="leverage-3x-count">-</div>
+    <div class="leverage-label">Silver Tier</div>
+  </div>
+  <div class="leverage-stat">
+    <div class="leverage-tier leverage-2x">2x</div>
+    <div class="leverage-count" id="leverage-2x-count">-</div>
+    <div class="leverage-label">Bronze Tier</div>
+  </div>
+  <div class="leverage-stat">
+    <div class="leverage-tier leverage-1x">1x</div>
+    <div class="leverage-count" id="leverage-1x-count">-</div>
+    <div class="leverage-label">Standard</div>
+  </div>
+</div>
+
+<div class="subsection-header">All High-Leverage Pairs (>1x)</div>
+<div class="table-wrap">
+  <table id="leverage-pairs-table">
+    <thead>
+      <tr>
+        <th>Leverage</th>
+        <th>Strategy</th>
+        <th>Coin</th>
+        <th>FT Profit Factor</th>
+        <th>FT Trades</th>
+        <th>FT PnL%</th>
+      </tr>
+    </thead>
+    <tbody id="leverage-pairs-tbody">
       <tr><td colspan="6" class="loading">Loading…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="subsection-header">Recent Trades with Leverage >1x</div>
+<div id="leverage-trades-notice" style="display:none; color:var(--dim); font-size:11px; padding:8px 0;">
+  No trades with leverage >1x yet.
+</div>
+<div class="table-wrap" id="leverage-trades-wrap">
+  <table id="leverage-trades-table">
+    <thead>
+      <tr>
+        <th>Coin</th>
+        <th>Leverage</th>
+        <th>Entry Price</th>
+        <th>Qty</th>
+        <th>Exit Price</th>
+        <th>Status</th>
+        <th>PnL%</th>
+        <th>Opened</th>
+      </tr>
+    </thead>
+    <tbody id="leverage-trades-tbody">
+      <tr><td colspan="8" class="loading">Loading…</td></tr>
     </tbody>
   </table>
 </div>
@@ -677,13 +793,16 @@ async function refreshAll() {
   state.mlLimit = 10;
   state.sigLimit = 10;
   state.tradeLimit = 10;
-  const [registry, mlModels, metrics, summary, coinPerf, topPairs] = await Promise.all([
+  const [registry, mlModels, metrics, summary, coinPerf, topPairs, leverageTiers, leveragePairs, leverageTrades] = await Promise.all([
     safeFetch('/api/registry'),
     safeFetch('/api/ml_models'),
     safeFetch('/api/advanced_metrics'),
     safeFetch('/api/summary'),
     safeFetch('/api/coin_performance'),
     safeFetch('/api/top_pairs'),
+    safeFetch('/api/leverage_tiers'),
+    safeFetch('/api/leverage_pairs'),
+    safeFetch('/api/leverage_trades'),
   ]);
   state.registry = registry;
   state.mlModels = mlModels;
@@ -691,12 +810,18 @@ async function refreshAll() {
   state.summary = summary;
   state.coinPerf = coinPerf;
   state.topPairs = topPairs;
+  state.leverageTiers = leverageTiers;
+  state.leveragePairs = leveragePairs;
+  state.leverageTrades = leverageTrades;
 
   renderHeader();
   renderHealthBar();
   renderPipeline();
   renderPipelineCards();
   renderTopPairsTable();
+  renderLeverageTiers();
+  renderLeveragePairsTable();
+  renderLeverageTradesTable();
   renderTable();
   renderCoinPerf();
   renderMLModels();
@@ -907,12 +1032,13 @@ function renderTopPairsTable() {
   const tbody = document.getElementById('top-pairs-tbody');
   if (!tbody) return;
   if (!pairs || pairs.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" class="loading">No pairs with ≥20 FT trades yet.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" class="loading">No pairs with ≥20 FT trades yet.</td></tr>';
     return;
   }
   tbody.innerHTML = pairs.map((p, i) => {
     const pfCls = p.ft_pf >= 1.5 ? 'pos' : p.ft_pf >= 1.0 ? '' : 'neg';
     const pnlCls = p.ft_pnl_pct > 0 ? 'pos' : p.ft_pnl_pct < 0 ? 'neg' : '';
+    const leverageCls = p.leverage === 5 ? 'leverage-5x' : p.leverage === 3 ? 'leverage-3x' : p.leverage === 2 ? 'leverage-2x' : 'leverage-1x';
     return `<tr>
       <td><span style="color:var(--text-muted);font-size:11px;margin-right:4px;">#${i+1}</span>${p.strategy}</td>
       <td>${p.symbol}</td>
@@ -920,6 +1046,79 @@ function renderTopPairsTable() {
       <td>${p.ft_wr_pct.toFixed(1)}%</td>
       <td>${p.ft_trades}</td>
       <td class="${pnlCls}">${p.ft_pnl_pct >= 0 ? '+' : ''}${p.ft_pnl_pct.toFixed(2)}%</td>
+      <td class="${leverageCls}">${p.leverage}x</td>
+    </tr>`;
+  }).join('');
+}
+
+// ─── Leverage Tiers ──────────────────────────────────────────────────────────
+function renderLeverageTiers() {
+  const tiers = state.leverageTiers?.tier_distribution;
+  if (!tiers) return;
+
+  const tierLevels = [5, 3, 2, 1];
+  tierLevels.forEach(lev => {
+    const count = tiers[lev] || 0;
+    const el = document.getElementById(`leverage-${lev}x-count`);
+    if (el) el.textContent = count;
+  });
+}
+
+function renderLeveragePairsTable() {
+  const pairs = state.leveragePairs?.pairs;
+  const tbody = document.getElementById('leverage-pairs-tbody');
+  if (!tbody) return;
+  if (!pairs || pairs.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="loading">No pairs with leverage >1x yet.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = pairs.map((p, i) => {
+    const pfCls = p.ft_pf >= 1.5 ? 'pos' : p.ft_pf >= 1.0 ? '' : 'neg';
+    const pnlCls = p.ft_pnl_pct > 0 ? 'pos' : p.ft_pnl_pct < 0 ? 'neg' : '';
+    const leverageCls = p.leverage === 5 ? 'leverage-5x' : p.leverage === 3 ? 'leverage-3x' : p.leverage === 2 ? 'leverage-2x' : 'leverage-1x';
+    return `<tr>
+      <td class="${leverageCls}"><strong>${p.leverage}x</strong></td>
+      <td>${p.strategy}</td>
+      <td><strong>${p.symbol}</strong></td>
+      <td class="${pfCls}">${p.ft_pf.toFixed(3)}</td>
+      <td>${p.ft_trades}</td>
+      <td class="${pnlCls}">${p.ft_pnl_pct >= 0 ? '+' : ''}${p.ft_pnl_pct.toFixed(2)}%</td>
+    </tr>`;
+  }).join('');
+}
+
+function renderLeverageTradesTable() {
+  const trades = state.leverageTrades?.trades;
+  const tbody = document.getElementById('leverage-trades-tbody');
+  const notice = document.getElementById('leverage-trades-notice');
+  const wrap = document.getElementById('leverage-trades-wrap');
+
+  if (!tbody || !wrap || !notice) return;
+
+  if (!trades || trades.length === 0) {
+    notice.style.display = 'block';
+    wrap.style.display = 'none';
+    return;
+  }
+
+  notice.style.display = 'none';
+  wrap.style.display = 'block';
+
+  tbody.innerHTML = trades.map((t, i) => {
+    const leverageCls = t.leverage === 5 ? 'leverage-5x' : t.leverage === 3 ? 'leverage-3x' : t.leverage === 2 ? 'leverage-2x' : 'leverage-1x';
+    const pnlCls = t.pnl_pct > 0 ? 'pos' : t.pnl_pct < 0 ? 'neg' : '';
+    const pnlStr = t.pnl_pct != null ? (t.pnl_pct >= 0 ? '+' : '') + t.pnl_pct.toFixed(2) + '%' : '—';
+    const exitStr = t.exit_price ? t.exit_price.toFixed(4) : '—';
+    const openedStr = t.opened_ts.split('T')[1].substring(0, 5);
+    return `<tr>
+      <td><strong>${t.symbol}</strong></td>
+      <td class="${leverageCls}"><strong>${t.leverage}x</strong></td>
+      <td>${t.entry_price.toFixed(4)}</td>
+      <td>${t.qty.toFixed(6)}</td>
+      <td>${exitStr}</td>
+      <td><span style="font-size:10px;background:${t.status === 'OPEN' ? 'var(--blue-dim);color:var(--blue);' : 'var(--green-dim);color:var(--green);'}padding:2px 6px;border-radius:3px;">${t.status}</span></td>
+      <td class="${pnlCls}">${pnlStr}</td>
+      <td style="font-size:11px;color:var(--muted);">${openedStr}</td>
     </tr>`;
   }).join('');
 }

@@ -1,13 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_ab6bbc43ba2bf_19ca7242084",
-      "title": "Blofin-Moonshot: Design a persistent moonshot detection ENGINE",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "status": "In Progress"
-    }
-  ],
-  "lastDispatch": "2026-02-28T19:13:00-07:00",
-  "lastHealthCheck": "2026-02-28T19:13:00-07:00"
+  "activeTasks": [],
+  "lastDispatch": "2026-02-28T19:43:00-07:00",
+  "lastHealthCheck": "2026-02-28T19:43:00-07:00",
+  "notes": "Board clear. 3 cards Done: Blofin v1 improvements (ML gate killed, TOD filter, winning pairs, SL/TP fix) — deployed + verified. Blofin Moonshot PRD/scaffold — design task complete. NQ ETB verification — strategy confirmed in smb_watcher.py, model loaded (313 signals in audit). All services healthy."
 }

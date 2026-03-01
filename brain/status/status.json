@@ -1,52 +1,12 @@
 {
-  "timestamp": "2026-03-01T14:04:43-07:00",
-  "dispatchCycleId": "36f47279-520f-4ce7-8f9c-a7c44be0771a",
-  "activeTasks": [
-    {
-      "id": "c_e471ab574af1a_19cab354021",
-      "title": "[Moonshot] Verify position exit signal logic — 16 open positions, zero closed trades",
-      "status": "In Progress",
-      "startedSecondsAgo": 53
-    },
-    {
-      "id": "c_ebf76d3c3fe3a_19cab351003",
-      "title": "[Blofin] Diagnose momentum_v1 T2 gate failure — fix or demote",
-      "status": "In Progress",
-      "startedSecondsAgo": 62
-    }
-  ],
-  "inProgressCards": 2,
-  "plannedCards": 0,
-  "completedThisCycle": 0,
-  "lastDispatch": "2026-03-01T14:04:43-07:00",
-  "lastHealthCheck": "2026-03-01T14:04:43-07:00",
-  "health": {
-    "cpu_temp": "66.0°C",
-    "disk": "36% used (285G free)",
-    "services": "all active (5/5)",
-    "critical_alerts": "none"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-01T21:34:52.960975+00:00",
+  "lastHealthCheck": "2026-03-01T21:34:52.960985+00:00",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "inbox": 5,
+    "done": 530
   },
-  "recentlyCompletedCards": [
-    {
-      "id": "c_a423996b4c8ab_19cab34c7d0",
-      "title": "[NQ] Verify equal_tops_bottoms model loading & dispatch integration",
-      "completedSecondsAgo": 80,
-      "status": "deployed",
-      "verified": "service active, dashboard 200"
-    },
-    {
-      "id": "c_c04eeb9913a6e_19caafde4ce",
-      "title": "[Blofin] Expand vwap_reversion (FT_PF=1.54) to additional coin pairs",
-      "completedMinutesAgo": 28,
-      "status": "deployed",
-      "verified": "services active, dashboard 200"
-    },
-    {
-      "id": "c_d1cb3f5ded7ab_19caafe0beb",
-      "title": "[Moonshot] Verify 4h cycle timer is firing and position exits are processing",
-      "completedMinutesAgo": 28,
-      "status": "deployed",
-      "verified": "timer active"
-    }
-  ]
+  "note": "All critical services active. No work in flight. 5 critical Blofin issues in Inbox await triage."
 }

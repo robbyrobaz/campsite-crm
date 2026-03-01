@@ -1,44 +1,36 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_d1cb3f5ded7ab_19caafe0beb",
-      "title": "[Moonshot] Verify 4h cycle timer is firing and position exits are processing",
-      "project": "blofin-moonshot",
-      "status": "In Progress"
-    },
+  "timestamp": "2026-03-01T13:34:00-07:00",
+  "dispatchCycleId": "36f47279-520f-4ce7-8f9c-a7c44be0771a",
+  "activeTasks": [],
+  "inProgressCards": 0,
+  "plannedCards": 0,
+  "completedThisCycle": 0,
+  "lastDispatch": "2026-03-01T13:34:00-07:00",
+  "lastHealthCheck": "2026-03-01T13:34:00-07:00",
+  "health": {
+    "cpu_temp": "52.0°C",
+    "disk": "36% used (285G free)",
+    "services": "all active (5/5)",
+    "critical_alerts": "none"
+  },
+  "recentlyCompletedCards": [
     {
       "id": "c_c04eeb9913a6e_19caafde4ce",
       "title": "[Blofin] Expand vwap_reversion (FT_PF=1.54) to additional coin pairs",
-      "project": "blofin-stack",
-      "status": "In Progress"
-    }
-  ],
-  "recentlyCompleted": [
+      "completedMinutesAgo": 28,
+      "status": "deployed"
+    },
+    {
+      "id": "c_d1cb3f5ded7ab_19caafe0beb",
+      "title": "[Moonshot] Verify 4h cycle timer is firing and position exits are processing",
+      "completedMinutesAgo": 28,
+      "status": "deployed"
+    },
     {
       "id": "c_bf7356306b656_19caafdbad3",
       "title": "[NQ] Investigate ORB signal collapse: 1 trade in 7d vs PF 3.01 backtest",
-      "deployed": true,
-      "verified": "NQ services active, dashboard 200 OK"
-    },
-    {
-      "id": "c_14f2df9937dc_19caac731f0",
-      "title": "[Blofin] CRITICAL: Paper trades -1865% PnL in 7d — diagnose systemic loss",
-      "deployed": true,
-      "verified": "Blofin services active, dashboard 200 OK"
-    },
-    {
-      "id": "c_b3b468956ee2a_19caac73272",
-      "title": "[Moonshot] Fix null ml_scores (12% missing) — debug model loading",
-      "deployed": true,
-      "verified": "Moonshot Engine running, model loaded, API rate limit recovering"
+      "completedMinutesAgo": 31,
+      "status": "deployed"
     }
-  ],
-  "boardState": {
-    "inProgress": 2,
-    "planned": 0,
-    "buildersAvailable": 1
-  },
-  "lastDispatch": "2026-03-01T20:04:00Z",
-  "lastHealthCheck": "2026-03-01T20:04:00Z",
-  "notes": "All critical services active. 2 builders running. 0 cards queued. 3 recent completions verified live. Next dispatch in 30min if new cards queued."
+  ]
 }

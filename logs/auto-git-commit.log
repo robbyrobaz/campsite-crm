@@ -5528,3 +5528,23 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 3 committed, 6 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+[main 9f13f760] auto: snapshot 2026-03-01T18:00:01Z
+ 15 files changed, 2445 insertions(+), 17 deletions(-)
+ create mode 100644 jarvis-home-energy/ANALYTICS_QUERIES.sql
+ create mode 100644 jarvis-home-energy/DEPLOYMENT_NOTES.md
+ create mode 100644 jarvis-home-energy/ENERGY_ANALYTICS.md
+ create mode 100644 jarvis-home-energy/ENERGY_ANALYTICS_SUMMARY.md
+ create mode 100644 jarvis-home-energy/QUICK_START.md
+ create mode 100644 jarvis-home-energy/energy_analytics.py
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main 05cda39f] auto: snapshot 2026-03-01T18:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 2 committed, 7 skipped
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

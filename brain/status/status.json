@@ -1,24 +1,23 @@
 {
   "activeTasks": [
     {
+      "id": "c_d2b34e60f362d_19ca81fa6ab",
+      "title": "[Moonshot] Opus PRD review — apply NQ + Blofin learning patterns, rebuild training framework",
+      "status": "In Progress",
+      "project": "blofin-moonshot",
+      "assignee": "claude"
+    },
+    {
       "id": "c_ec8fa9dedbdf6_19ca801e258",
-      "title": "[Moonshot] 1-year historical backfill + retrain",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_b84e9bf4542c1_19ca7fc4973",
-      "title": "[Moonshot] Historical candle backfill — 90d of 4h bars for all 342 coins",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_abb2632ef74ed_19ca7fc4910",
-      "title": "[Moonshot] Train initial LightGBM model",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot",
-      "assignee": "claude"
+      "title": "[Moonshot] 1-year historical backfill + retrain — fetch max history for all 342 coins",
+      "status": "In Progress",
+      "project": "blofin-moonshot",
+      "assignee": "claude",
+      "pid": 1189492,
+      "note": "Recovered from stale (35min), re-dispatched this cycle"
     }
   ],
-  "lastDispatch": "2026-02-28T23:13:00-07:00",
-  "lastHealthCheck": "2026-02-28T23:13:00-07:00"
+  "lastDispatch": "2026-02-28T23:43:00-07:00",
+  "lastHealthCheck": "2026-02-28T23:43:00-07:00",
+  "notes": "All services active. CPU 69°C. Disk 44%. No critical alerts. Moonshot timer healthy (next: 00:04 MST). Model v3 val_auc=0.661 not marked champion (v2 is, 0.651) — 1yr backfill retrain will resolve."
 }

@@ -1,18 +1,18 @@
 {
   "activeTasks": [
     {
-      "id": "c_208a7c33aa7cf_19ca8349061",
-      "title": "[Blofin] Expand cross_asset_correlation to additional coin pairs",
-      "status": "In Progress",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack"
-    },
-    {
       "id": "c_61dfeabfc6245_19ca82c368c",
       "title": "[Moonshot] Path-dependent label generator — fix naive labels, model path TP-before-SL",
       "status": "In Progress",
       "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot"
+    },
+    {
+      "id": "c_208a7c33aa7cf_19ca8349061",
+      "title": "[Blofin] Expand cross_asset_correlation to additional coin pairs",
+      "status": "In Progress",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-stack"
     }
   ],
-  "lastDispatch": "2026-03-01T00:43:00-07:00",
-  "lastHealthCheck": "2026-03-01T00:43:00-07:00"
+  "lastDispatch": "2026-03-01T01:13:00-07:00",
+  "lastHealthCheck": "2026-03-01T01:13:00-07:00"
 }

@@ -1,44 +1,44 @@
 {
-  "timestamp": "2026-03-01T18:34:00Z",
-  "phase": "Dispatch cycle complete",
-  "currentTime": "Sunday, March 1st, 2026 — 11:34 AM MST",
-  "activeTasks": [],
-  "inProgress": 0,
-  "queued": 0,
-  "lastDispatch": "2026-03-01T18:34:00Z",
-  "lastHealthCheck": "2026-03-01T18:34:00Z",
-  "systemHealth": {
-    "cpu_temp": "86°C (high, monitor)",
-    "disk_usage": "36%",
-    "critical_services": "all active"
-  },
-  "deployment_verification": {
-    "blofin_stack": {
-      "card": "c_248b4c6e8a1ed (21m ago)",
-      "status": "✅ LIVE",
-      "detail": "Services active (ingestor/paper/dashboard), dashboard HTTP 200, 156 paper trades in last 30m"
-    },
-    "blofin_moonshot": {
-      "card": "c_b64228a513402 (29m ago)",
-      "status": "❌ FAILED",
-      "detail": "Scorer service in restart loop. sqlite3.IntegrityError: NOT NULL constraint failed: positions.position_size (11:34:46 MST). Fix not deployed successfully."
-    },
-    "nq_trading_pipeline": {
-      "card": "c_d38efc619fe4f (33m ago)",
-      "status": "✅ LIVE",
-      "detail": "Dashboard HTTP 200, equal_tops_bottoms loaded with 244 features, registered in god_model_dispatcher (8 strategies, PF=1.268)"
-    }
-  },
-  "alerts": [
+  "activeTasks": [
     {
-      "severity": "CRITICAL",
+      "id": "c_b3b468956ee2a_19caac73272",
+      "title": "[Moonshot] Fix null ml_scores (12% missing) — debug model loading",
+      "status": "In Progress",
       "project": "blofin-moonshot",
-      "message": "Moonshot scorer crashing on every cycle. Position size constraint failure in database. Requires immediate fix."
+      "age_min": 2
     },
     {
-      "severity": "WARNING",
-      "system": "CPU",
-      "message": "Temperature at 86°C (high). Monitor and report if trending upward."
+      "id": "c_14f2df9937dc_19caac731f0",
+      "title": "[Blofin] CRITICAL: Paper trades -1865% PnL in 7d — diagnose systemic loss",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "age_min": 2
     }
-  ]
+  ],
+  "lastDispatch": "2026-03-01T12:04:32Z",
+  "lastHealthCheck": "2026-03-01T12:04:32Z",
+  "boardStatus": {
+    "inProgress": 2,
+    "planned": 0,
+    "done": 3
+  },
+  "recentDeployments": [
+    {
+      "title": "[NQ] Diagnose gap_fill & vwap_fade bleeding",
+      "verified": "live (nq-smb-watcher active, dashboard 200)"
+    },
+    {
+      "title": "[Blofin] Diagnose why paper trading stalled",
+      "verified": "live (all services active, dashboard 200)"
+    },
+    {
+      "title": "[Moonshot] Fix duplicate champions",
+      "verified": "live (ingestor active, dashboard 200)"
+    }
+  ],
+  "health": {
+    "cpu_temp_c": 87,
+    "disk_pct": 36,
+    "critical_alerts": 0
+  }
 }

@@ -1,38 +1,10 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_14f2df9937dc_19caac731f0",
-      "title": "[Blofin] CRITICAL: Paper trades -1865% PnL in 7d — diagnose systemic loss",
-      "status": "In Progress",
-      "pid": 651242,
-      "dispatchedAt": "2026-03-01T16:34:00-07:00"
-    }
+  "lastHeartbeat": "2026-03-01T16:46:00-07:00",
+  "activeTasks": [],
+  "recentCompletions": [
+    {"title": "ETB added to God Model (8 experts)", "completedAt": "2026-03-01T16:27:00"},
+    {"title": "Moonshot short positions fixed", "completedAt": "2026-03-01T16:21:00"},
+    {"title": "Jarvis home cache persistence fixed", "completedAt": "2026-03-01T16:35:00"}
   ],
-  "lastDispatch": "2026-03-01T16:34:00-07:00",
-  "lastHealthCheck": "2026-03-01T16:34:00-07:00",
-  "systemStatus": {
-    "cpuTemp": "58°C",
-    "diskUsage": "36%",
-    "services": "all active"
-  },
-  "recentlyVerified": [
-    {
-      "card": "Jarvis Home Energy cache",
-      "status": "deployed",
-      "service": "jarvis-home-energy.service",
-      "http": 200
-    },
-    {
-      "card": "NQ equal_tops_bottoms verify",
-      "status": "deployed",
-      "service": "nq-smb-watcher.service",
-      "http": 200
-    },
-    {
-      "card": "Blofin T2 audit",
-      "status": "deployed",
-      "services": "blofin-stack-ingestor + paper",
-      "http": 200
-    }
-  ]
+  "notes": "All systems healthy. Sunday - NQ markets closed (expected)."
 }

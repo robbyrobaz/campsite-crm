@@ -20,6 +20,10 @@ from pathlib import Path
 import requests as _requests
 import teslapy
 from flask import Flask, Response, jsonify, render_template_string, request, stream_with_context
+from energy_analytics import (
+    init_db, log_telemetry, compute_hourly_aggregates, compute_daily_aggregates,
+    get_usage_patterns, calculate_powerwall_roi, get_recent_daily_trends
+)
 
 logging.basicConfig(
     level=logging.INFO,
@@ -137,6 +141,8 @@ _wyze_client_lock = threading.Lock()
 _wyze_next_retry = 0   # epoch seconds — don't retry auth before this time
 _camera_poll_counter = 0  # throttle: refresh camera list every 60s (every 12 ticks at 5s)
 _ge_poll_counter = 0      # throttle: poll GE appliances every 30s
+_telemetry_log_counter = 0  # throttle: log telemetry every 60s (every 12 ticks at 5s)
+_daily_agg_counter = 0    # throttle: compute daily aggregates every 24h (every 17280 ticks at 5s)
 
 # Ring — cached token data (persisted across calls to avoid repeated re-auth)
 # ring_doorbell 0.9.x is fully async; we wrap with a fresh event loop
@@ -2190,12 +2196,14 @@ def poll_myq():
 
 def _poll_loop():
     import concurrent.futures
-    global _camera_poll_counter, _ge_poll_counter
+    global _camera_poll_counter, _ge_poll_counter, _telemetry_log_counter, _daily_agg_counter
     log.info("Polling loop started (interval=%ds, parallel)", POLL_INTERVAL_SECONDS)
     _camera_poll_counter = 11  # trigger camera poll on first tick
     _ge_poll_counter = 11      # trigger GE appliance poll on first tick
     _nest_poll_counter = 11    # trigger Nest poll on first tick (every 60s — SDM API rate limit)
     _roku_poll_counter = 5     # trigger Roku poll every 30s (6 ticks × 5s)
+    _telemetry_log_counter = 11   # trigger telemetry log every 60s (12 ticks × 5s)
+    _daily_agg_counter = 0        # trigger daily aggregation every 24h
 
     # Pentair runs in its own background thread (takes ~45s) — never blocks fast polls
     _pentair_executor = concurrent.futures.ThreadPoolExecutor(max_workers=1, thread_name_prefix="pentair-slow")
@@ -2239,6 +2247,25 @@ def _poll_loop():
         except Exception as _sum_err:
             log.error("_update_summary() crashed: %s", _sum_err, exc_info=True)
         _broadcast_sse()
+
+        # Log telemetry for analytics (every 60s)
+        _telemetry_log_counter += 1
+        if _telemetry_log_counter >= 12:
+            try:
+                log_telemetry(_state)
+                compute_hourly_aggregates()
+            except Exception as _tel_err:
+                log.debug("Telemetry logging error: %s", _tel_err)
+            _telemetry_log_counter = 0
+
+        # Compute daily aggregates (every 24h)
+        _daily_agg_counter += 1
+        if _daily_agg_counter >= 17280:  # 86400s / 5s = 17280 ticks
+            try:
+                compute_daily_aggregates()
+            except Exception as _agg_err:
+                log.debug("Daily aggregation error: %s", _agg_err)
+            _daily_agg_counter = 0
 
         # Re-submit Pentair poll if previous one finished
         _submit_pentair()
@@ -3841,6 +3868,37 @@ def api_devices():
         "pentair": {"host": PENTAIR_HOST, "port": PENTAIR_PORT, "configured": True},
         "tesla": {"host": TESLA_HOST or "not_found", "configured": bool(TESLA_HOST and TESLA_EMAIL)},
     })
+
+
+# ── Energy Analytics API ───────────────────────────────────────────────────────
+
+@app.route("/api/analytics/usage-patterns")
+def api_usage_patterns():
+    """Get usage pattern analysis: hourly peaks, daily averages, seasonal trends."""
+    days = request.args.get("days", 30, type=int)
+    patterns = get_usage_patterns(days)
+    return jsonify(patterns or {})
+
+
+@app.route("/api/analytics/daily-trends")
+def api_daily_trends():
+    """Fetch daily energy trends for charts (solar, load, grid, etc)."""
+    days = request.args.get("days", 30, type=int)
+    trends = get_recent_daily_trends(days)
+    return jsonify({"trends": trends})
+
+
+@app.route("/api/analytics/powerwall-roi")
+def api_powerwall_roi():
+    """Calculate ROI for Powerwall installation based on recent data patterns."""
+    battery_kwh = request.args.get("battery_kwh", 13.5, type=float)
+    install_cost = request.args.get("install_cost", 11000, type=int)
+    lifetime_years = request.args.get("lifetime_years", 10, type=int)
+
+    roi = calculate_powerwall_roi(battery_kwh, install_cost, lifetime_years)
+    if not roi:
+        return jsonify({"error": "insufficient data"}), 202  # Accepted but not ready
+    return jsonify(roi)
 
 
 # ╔══════════════════════════════════════════════════════════════════════════════╗
@@ -7116,6 +7174,8 @@ function renderState(s) {
   // Roku: update from SSE state — no separate fetch
   if (s.roku && s.roku.length) { try { renderRoku(s.roku); } catch(e) { console.warn('Roku render error:', e); } }
 
+  // Auto-save energy data to localStorage for persistence across page refreshes
+  saveHistToCache();
 }
 
 // ╔══════════════════════════════════════════════════════════════════════╗
@@ -8825,7 +8885,62 @@ const mcHomeHist   = new Array(SPARK_LEN).fill(0);
 const mcPoolHist   = new Array(SPARK_LEN).fill(0);
 const mcTruckHist  = new Array(SPARK_LEN).fill(0);
 
+// Load cached energy data from localStorage on page load
+if (typeof window !== 'undefined') {
+  setTimeout(() => loadHistFromCache(), 100);  // defer to ensure DOM is ready
+}
+
 function pushHist(arr, v) { arr.push(v); if(arr.length > SPARK_LEN) arr.shift(); }
+
+// ── Energy History Cache (localStorage) ────────────────────────────────────
+function saveHistToCache() {
+  try {
+    const cache = {
+      tdEnphHist, tdSEHist, tdDemandHist, tdPeak24h,
+      mcSolarHist, mcGridHist, mcHomeHist, mcPoolHist, mcTruckHist,
+      mcDemandSamples, mcSessionPeak,
+      biEventLog, biLastIsland, biPeak24h
+    };
+    localStorage.setItem('jarvis_energy_cache', JSON.stringify(cache));
+  } catch(e) {
+    console.warn('Cache save failed:', e);
+  }
+}
+
+function loadHistFromCache() {
+  try {
+    const cached = localStorage.getItem('jarvis_energy_cache');
+    if (!cached) return false;
+    const data = JSON.parse(cached);
+    // Restore trading mode
+    if (data.tdEnphHist)   { tdEnphHist.length = 0; tdEnphHist.push(...data.tdEnphHist); }
+    if (data.tdSEHist)     { tdSEHist.length = 0; tdSEHist.push(...data.tdSEHist); }
+    if (data.tdDemandHist) { tdDemandHist.length = 0; tdDemandHist.push(...data.tdDemandHist); }
+    if (data.tdPeak24h !== undefined) tdPeak24h = data.tdPeak24h;
+    // Restore microgrid mode
+    if (data.mcSolarHist)  { mcSolarHist.length = 0; mcSolarHist.push(...data.mcSolarHist); }
+    if (data.mcGridHist)   { mcGridHist.length = 0; mcGridHist.push(...data.mcGridHist); }
+    if (data.mcHomeHist)   { mcHomeHist.length = 0; mcHomeHist.push(...data.mcHomeHist); }
+    if (data.mcPoolHist)   { mcPoolHist.length = 0; mcPoolHist.push(...data.mcPoolHist); }
+    if (data.mcTruckHist)  { mcTruckHist.length = 0; mcTruckHist.push(...data.mcTruckHist); }
+    if (data.mcDemandSamples !== undefined) {
+      mcDemandSamples.length = 0;
+      mcDemandSamples.push(...data.mcDemandSamples);
+    }
+    if (data.mcSessionPeak !== undefined) mcSessionPeak = data.mcSessionPeak;
+    // Restore backup mode
+    if (data.biEventLog !== undefined) {
+      biEventLog.length = 0;
+      biEventLog.push(...data.biEventLog);
+    }
+    if (data.biLastIsland !== undefined) biLastIsland = data.biLastIsland;
+    if (data.biPeak24h !== undefined) biPeak24h = data.biPeak24h;
+    return true;
+  } catch(e) {
+    console.warn('Cache load failed:', e);
+    return false;
+  }
+}
 
 function drawSparkline(id, data, color) {
   const canvas = document.getElementById(id); if(!canvas) return;
@@ -9453,6 +9568,9 @@ if __name__ == "__main__":
     log.info("  Enphase : %s (token=%s)", ENPHASE_HOST, "yes" if ENPHASE_TOKEN else "NO")
     log.info("  Pentair : %s:%d", PENTAIR_HOST, PENTAIR_PORT)
     log.info("  Tesla   : %s", TESLA_HOST or "not configured")
+
+    # Initialize energy analytics database
+    init_db()
 
     t = threading.Thread(target=_poll_loop, daemon=True)
     t.start()

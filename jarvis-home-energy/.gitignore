@@ -2,3 +2,4 @@ __pycache__/
 *.pyc
 config.py
 tesla_cache.json
+energy_data.db

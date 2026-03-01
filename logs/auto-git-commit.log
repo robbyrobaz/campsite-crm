@@ -3845,3 +3845,20 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 2 committed, 7 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+[main ea343fa1] auto: snapshot 2026-03-01T01:00:01Z
+ 5 files changed, 46 insertions(+), 8 deletions(-)
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main dbafa77c] auto: snapshot 2026-03-01T01:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 2 committed, 7 skipped
+CLEAN master-dashboard (nothing to commit)
+[main fd3ab09] auto: snapshot 2026-03-01T02:00:01Z
+ 1 file changed, 345 insertions(+)
+ create mode 100644 brain/PRD_BLOFIN_MOONSHOT.md
+COMMITTED blofin-stack

@@ -249,3 +249,10 @@ nq-dashboard.service was inactive because dashboard/app.py was running as an orp
 - Action: Restart attempted, failed with exit code 1
 - Status: Expected on weekends when NT not running
 - No action needed unless Rob wants live forward testing
+
+## 2026-03-01 09:34 MST — nq-smb-watcher Recovery (SMB Mount Restored)
+- Service: nq-smb-watcher.service — was in auto-restart loop (475 attempts), exit code 1
+- Root cause: /mnt/nt_bridge mount point was stale/unmounted
+- Action: Remounted SMB share via `sudo mount /mnt/nt_bridge` (fstab configured with nofail)
+- Result: Mount restored, service restarted successfully, now active
+- Status: nq-smb-watcher.service = active, nq-dashboard.service = active

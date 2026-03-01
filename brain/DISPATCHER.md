@@ -66,6 +66,7 @@ Read the card title and description. Match to the correct project:
 | Master dashboard, usage dashboard | `/home/rob/.openclaw/workspace/master-dashboard` |
 | Numerai, tournament, era-boost | `/home/rob/.openclaw/workspace/numerai-tournament` |
 | Kanban, claw-kanban | `/home/rob/.openclaw/workspace/kanban-dashboard` |
+| Moonshot, blofin-moonshot, moonshot engine, moonshot dashboard, path-dependent, walk-forward, coin confidence, regime detection, feature importance, leverage research | `/home/rob/.openclaw/workspace/blofin-moonshot` |
 
 ### How to enrich vague descriptions:
 Read the card title. Write a description that includes:

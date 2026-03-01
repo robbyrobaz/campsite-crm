@@ -1,6 +1,25 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-01T04:43:00-07:00",
-  "lastHealthCheck": "2026-03-01T04:43:00-07:00",
-  "notes": "No cards In Progress or Planned. Board clear. All services active. NQ dashboard 200, Blofin dashboard 200. 3 recent Done cards verified deployed."
+  "activeTasks": [
+    {
+      "id": "c_813b15eb7a031_19ca9396efe",
+      "title": "for NQ trades, all trades must end before the EOD reset",
+      "project": "NQ-Trading-PIPELINE",
+      "status": "In Progress"
+    },
+    {
+      "id": "c_5a1e6a71fb7b2_19ca94730c7",
+      "title": "[Blofin] Expand volume_volatility_mean_reversion to additional coin pairs",
+      "project": "blofin-stack",
+      "status": "In Progress"
+    },
+    {
+      "id": "c_91b6776b7119e_19ca93ce5d6",
+      "title": "add a calendar check for NQ futures pipeline",
+      "project": "NQ-Trading-PIPELINE",
+      "status": "In Progress",
+      "note": "Dispatched this cycle"
+    }
+  ],
+  "lastDispatch": "2026-03-01T12:13:00Z",
+  "lastHealthCheck": "2026-03-01T12:13:00Z"
 }

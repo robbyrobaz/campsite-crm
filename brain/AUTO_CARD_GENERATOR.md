@@ -1,6 +1,6 @@
 # Auto Card Generator — Cron Prompt Instructions
 
-> Runs hourly at :00. Model: Sonnet. Creates 2 NQ + 1 Blofin card and **launches them immediately**.
+> Runs hourly at :00. Model: Sonnet. Creates 1 NQ + 1 Blofin v1 + 1 Moonshot card and **launches them immediately**.
 > Cards do NOT sit in Planned waiting for the dispatcher. Create → enrich → run, all in one step.
 > This file is the complete operating context. Read it fully before generating cards.
 
@@ -245,9 +245,55 @@ Use the pipeline plans above as your compass. Pick work that moves the pipelines
 
 ---
 
+## STEP 4.5 — READ MOONSHOT LIVE STATE
+```bash
+python3 << 'EOF'
+import sqlite3
+db = '/home/rob/.openclaw/workspace/blofin-moonshot/data/moonshot.db'
+c = sqlite3.connect(db)
+print("=== Open Positions ===")
+for r in c.execute("SELECT symbol, entry_price, high_water, ml_score_entry, entry_ts FROM positions WHERE status='open'"):
+    print(r)
+print("\n=== Score quality (null vs scored) ===")
+total = c.execute("SELECT COUNT(*) FROM scores").fetchone()[0]
+null_ml = c.execute("SELECT COUNT(*) FROM scores WHERE ml_score IS NULL").fetchone()[0]
+print(f"Total scores: {total}, Null ml_score: {null_ml} ({100*null_ml//max(total,1)}%)")
+print("\n=== Model versions ===")
+for r in c.execute("SELECT version_id, trained_at, val_auc, is_champion FROM model_versions ORDER BY trained_at DESC LIMIT 3"):
+    print(r)
+print("\n=== Closed trades ===")
+cnt = c.execute("SELECT COUNT(*) FROM trades WHERE status='closed'").fetchone()[0]
+print(f"Closed trades: {cnt}")
+EOF
+```
+
+**Moonshot priority order:**
+1. Are 80%+ of ml_scores NULL? → The ML model hasn't been trained yet — run initial training (historical label generation + LightGBM fit)
+2. Are positions just sitting with no exits processed? → Check exit logic is running each cycle
+3. Is the 4h cycle timer actually firing? → Check `systemctl --user status blofin-moonshot.timer`
+4. Are new coin listings being auto-discovered? → Check coins table first_seen_ts recency
+5. Default: tune scoring thresholds or expand feature set based on position outcomes
+
+**What good Moonshot cards look like:**
+- Train the initial LightGBM model using historical Blofin data — generate labels (30%+ move in 7d), extract features, train and save champion model
+- Fix null ml_scores: model not loading, features missing, or prefilter dropping all coins
+- Add historical backfill: fetch 90 days of 4h candles for all 342 coins and compute features
+- Validate the 4h cycle timer is running and producing real scores each cycle
+- Add CoinGecko market cap enrichment so new_listing_age and market_cap_tier features work
+- Tune TP/SL/time-stop parameters based on first week of paper trade results
+
+**What bad Moonshot cards look like:**
+- ❌ Enable live trading
+- ❌ Merge moonshot code into blofin-stack
+- ❌ Change the 342-coin dynamic discovery to a static list
+
+**Project path:** `/home/rob/.openclaw/workspace/blofin-moonshot`
+
+---
+
 ## STEP 5 — CREATE AND LAUNCH CARDS
 
-Create **2 NQ cards + 1 Blofin card** and launch them immediately — no waiting in Planned.
+Create **1 NQ card + 1 Blofin v1 card + 1 Moonshot card** and launch them immediately — no waiting in Planned.
 
 ```bash
 # Step A: Create in inbox to get ID
@@ -279,7 +325,8 @@ curl -s -X POST "http://127.0.0.1:8787/api/cards/$CARD_ID/run"
 
 **Project paths:**
 - NQ: `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE`
-- Blofin: `/home/rob/.openclaw/workspace/blofin-stack`
+- Blofin v1: `/home/rob/.openclaw/workspace/blofin-stack`
+- Moonshot: `/home/rob/.openclaw/workspace/blofin-moonshot`
 
 ---
 
@@ -288,8 +335,8 @@ Print:
 ```
 AUTO-GENERATOR: Launched 3 builders
 - [NQ] <title> (pid: <pid>)
-- [NQ] <title> (pid: <pid>)
 - [Blofin] <title> (pid: <pid>)
+- [Moonshot] <title> (pid: <pid>)
 ```
 
 ---

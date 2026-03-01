@@ -54,12 +54,12 @@
 - Check GitHub issues on ai-workshop: any `ai-task` labels queued?
 - Check backup timer ran: `systemctl --user status openclaw-full-restore-backup.timer`
 - Review recent incident log for unresolved items
-- **Git backup hygiene (NON-OPTIONAL):**
-  - For active repos (`ai-workshop`, `blofin-stack`, `campsite-crm`, `master-dashboard`, `numerai-tournament`, `gilbert-pd-radio-trainer`), run:
-    - `git -C <repo> status --short`
-    - `git -C <repo> branch --show-current`
-    - `git -C <repo> remote -v`
-  - Flag repos with no remote, wrong remote, or large uncommitted drift.
+- **Git backup hygiene (NON-OPTIONAL) — AUTO-COMMIT ALL DIRTY REPOS:**
+  - For ALL active repos, run `git -C <repo> status --short`. If any files are uncommitted:
+    - `git -C <repo> add -A && git -C <repo> commit -m "chore: auto-commit $(date +%Y-%m-%d-%H%M)" && git -C <repo> push`
+  - Repos to sweep: `blofin-stack`, `blofin-moonshot`, `NQ-Trading-PIPELINE`, `master-dashboard`, `kanban-dashboard`, `numerai-tournament`, `ai-workshop`, `/home/rob/infrastructure/ibkr`
+  - Do NOT just flag — actually commit and push. Rob lost a full session of work because auto-commit wasn't wired to project repos.
+  - Flag repos with no remote or wrong remote.
   - Ensure lifecycle routing is followed:
     - early/experimental iterations can live in `ai-workshop`
     - mature projects must have their own dedicated repo remote and be pushed there

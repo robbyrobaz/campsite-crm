@@ -1,9 +1,14 @@
 {
   "activeTasks": [
-    {"id": "c_753865b8e7957_19ca94799ee", "title": "[Moonshot] Fix 51% null ml_scores — champion model v6", "status": "In Progress", "pid": 83416},
-    {"id": "c_d1b3d25af4ddf_19ca933612d", "title": "Moonshot: massive feature importance test on ML", "status": "In Progress", "pid": 83551},
-    {"id": "c_51131d68b876_19ca9bc151f", "title": "[Moonshot] debug remaining 44% null ml_scores", "status": "In Progress", "pid": 84084}
+    {
+      "id": "c_5d47dc8fb911_19caa2374eb",
+      "title": "[Moonshot] No champion model set — all model_versions have is_champion=0",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot",
+      "status": "In Progress"
+    }
   ],
-  "lastDispatch": "2026-03-01T08:34:00-07:00",
-  "lastHealthCheck": "2026-03-01T08:34:00-07:00"
+  "lastDispatch": "2026-03-01T09:04:00-07:00",
+  "lastHealthCheck": "2026-03-01T09:04:00-07:00",
+  "notes": "nq-smb-watcher cycling (restart #319): /mnt/nt_bridge not mounted — expected, NT not running (Sunday). All dashboards 200. Blofin/NQ services healthy."
 }

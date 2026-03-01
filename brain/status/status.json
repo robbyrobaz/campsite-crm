@@ -1,22 +1,26 @@
 {
   "activeTasks": [
     {
-      "id": "c_258010dbe46fd_19ca47a5437",
-      "title": "Test local LLM models on real coding+trading tasks — benchmark vs Anthropic",
-      "status": "In Progress",
+      "id": "c_d612737afb6db_19ca9ecd098",
+      "title": "[Moonshot] 0 open positions and 0 closed trades — investigate why position opening logic isn't firing",
       "assignee": "claude",
-      "pid": 8576,
-      "project_path": "/home/rob/.openclaw/workspace",
-      "dispatched_at": "2026-03-01T07:35:00-07:00"
+      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot"
+    },
+    {
+      "id": "c_61b0d05a9d1f7_19ca9ec1b36",
+      "title": "[Blofin] volatility_expansion_volume_breakout T2 with null ft_profit_factor — diagnose",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-stack"
+    },
+    {
+      "id": "c_462159cc1ab3f_19ca9d92740",
+      "title": "[Blofin] Wire leverage into paper trader — use leverage column from strategy_coin_eligibility",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
+      "pid": 41640
     }
   ],
-  "lastDispatch": "2026-03-01T07:35:00-07:00",
-  "lastHealthCheck": "2026-03-01T07:34:00-07:00",
-  "notes": [
-    "nq-smb-watcher stopped — /mnt/nt_bridge not mounted (expected on weekend, no NinjaTrader)",
-    "blofin-stack-ingestor, paper, dashboard: all active",
-    "blofin-moonshot: timer active, service runs on 4h schedule",
-    "Recovered stale card c_258010dbe46fd_19ca47a5437 (0 runs, ~30min in In Progress) → dispatched",
-    "No critical blofin alerts (exit 0)"
-  ]
+  "lastDispatch": "2026-03-01T15:04:00Z",
+  "lastHealthCheck": "2026-03-01T15:04:00Z",
+  "notes": "nq-smb-watcher down — /mnt/nt_bridge not mounted (NinjaTrader offline, expected on weekends). All other services healthy. 3 builders active."
 }

@@ -242,3 +242,10 @@ nq-dashboard.service was inactive because dashboard/app.py was running as an orp
   - c_a535fc5537933: "moonshot data..." — recovered to Planned, redispatched (pid 5939)
 - Blofin services all active, dashboard 200 OK
 - Critical alert check: EXIT 0 (no alerts)
+
+## 2026-03-01 08:04 MST — nq-smb-watcher Down (Expected)
+- Service: nq-smb-watcher.service
+- Reason: /mnt/nt_bridge not mounted (NinjaTrader bridge disconnected)
+- Action: Restart attempted, failed with exit code 1
+- Status: Expected on weekends when NT not running
+- No action needed unless Rob wants live forward testing

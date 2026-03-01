@@ -127,6 +127,17 @@ PATCH the card: `curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-
 ## Recent Changes (rolling 48h — update this at session end whenever significant changes happen)
 > This replaces needing to read the daily memory log on startup. Key decisions only.
 
+**Feb 28 2026 (afternoon):**
+- IBKR pipeline LIVE: IB Gateway Docker running, paper account DUH860616, port 4002, no 2FA needed
+- Historical data confirmed working: SPX chain, NQ futures, option bars all pulling clean
+- Options pipeline PRD written: `brain/PRD_OPTIONS_PIPELINE.md` — APPROVED
+- Strategy 1: IV Skew Exploitation (SPX 0DTE, z-score >2σ → sell put spread)
+- Strategy 2: NQ God Model → QQQ options bridge
+- Blocking on OPRA subscription ($1.50/mo) — Rob enables Thursday when $500 clears
+- Build Card 1 (skew monitor) queued for Thursday; Cards 2+3 follow
+- DuckDB schema init'd: `opt_right` (not `right` — reserved word), `skew_signals` table
+- IBKR infra: restart=no, TWOFA_TIMEOUT_ACTION=exit (won't lockout on failure)
+
 **Feb 26-27 2026:**
 - Cron overhaul: NQ Research Scientist removed, Auto Card Generator added (hourly, Sonnet), Dispatcher upgraded Haiku→Sonnet, max In Progress raised 1→3
 - EEP scoring dead. Blofin ranking = `bt_pnl_pct`. Gates: 100 trades, PF≥1.35, MDD<50%, PnL>0

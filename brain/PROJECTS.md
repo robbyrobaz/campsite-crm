@@ -8,6 +8,25 @@
 
 ## 🟢 ACTIVE (Primary Focus)
 
+### 0. IBKR Options Pipeline ⭐ NEW
+**Repo:** `robbyrobaz/ibkr-pipeline` (private) | **Path:** `~/infrastructure/ibkr/`
+**Status:** Infrastructure DONE. Waiting on OPRA subscription (~Thursday Mar 5 when $500 clears).
+**PRD:** `brain/PRD_OPTIONS_PIPELINE.md` — APPROVED, ready to build
+
+**Infrastructure (all live):**
+- IB Gateway Docker running, port 4002, paper account DUH860616
+- Redis port 6379 ✅ | DuckDB `data/options.duckdb` ✅
+- ib_async venv installed, all pipeline modules clean
+- Historical data confirmed: SPX chain, NQ futures, option bars all working
+- No 2FA on paper — auto-reconnects nightly at 11:59 PM
+
+**Build sequence (post-OPRA Thursday):**
+1. Card 1: Live skew monitor — stream ATM±3% SPX strikes, compute z-score signals
+2. Card 2: Paper trade executor — credit spreads, TP/SL/time stops, PDT guard
+3. Card 3: NQ signal bridge — God Model → QQQ options
+
+---
+
 ### 1. NQ Futures Trading Pipeline
 **Repo:** `NQ-Trading-PIPELINE/` | **Path:** `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/`
 **Dashboard:** http://127.0.0.1:8891 (also :8891 on LAN)

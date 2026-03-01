@@ -1,43 +1,44 @@
 {
-  "timestamp": "2026-03-01T18:05:05.003412Z",
-  "phase": "Dispatch complete",
-  "activeTasks": [
-    {
-      "id": "c_b64228",
-      "title": "[Moonshot] Fix duplicate champions + debug stalled position exits",
-      "project": "blofin-moonshot",
-      "elapsed_minutes": 3
-    },
-    {
-      "id": "c_248b4c",
-      "title": "[Blofin] Diagnose why paper trading stalled \u2014 no trades in 48h",
-      "project": "blofin-stack",
-      "elapsed_minutes": 3
-    }
-  ],
-  "queuedTasks": 0,
-  "lastDispatch": "2026-03-01T18:05:05.003412Z",
-  "lastHealthCheck": "2026-03-01T18:05:05.003412Z",
+  "timestamp": "2026-03-01T18:34:00Z",
+  "phase": "Dispatch cycle complete",
+  "currentTime": "Sunday, March 1st, 2026 — 11:34 AM MST",
+  "activeTasks": [],
+  "inProgress": 0,
+  "queued": 0,
+  "lastDispatch": "2026-03-01T18:34:00Z",
+  "lastHealthCheck": "2026-03-01T18:34:00Z",
   "systemHealth": {
-    "cpu_temp": "73\u00b0C",
+    "cpu_temp": "86°C (high, monitor)",
     "disk_usage": "36%",
-    "services": "all active"
+    "critical_services": "all active"
   },
-  "recentlyDeployed": [
-    {
-      "card": "c_d38efc",
-      "project": "NQ-Trading-PIPELINE",
-      "minutes_ago": 3
+  "deployment_verification": {
+    "blofin_stack": {
+      "card": "c_248b4c6e8a1ed (21m ago)",
+      "status": "✅ LIVE",
+      "detail": "Services active (ingestor/paper/dashboard), dashboard HTTP 200, 156 paper trades in last 30m"
     },
-    {
-      "card": "c_fbbdd8",
-      "project": "jarvis-home-energy (code-only)",
-      "minutes_ago": 24
+    "blofin_moonshot": {
+      "card": "c_b64228a513402 (29m ago)",
+      "status": "❌ FAILED",
+      "detail": "Scorer service in restart loop. sqlite3.IntegrityError: NOT NULL constraint failed: positions.position_size (11:34:46 MST). Fix not deployed successfully."
     },
+    "nq_trading_pipeline": {
+      "card": "c_d38efc619fe4f (33m ago)",
+      "status": "✅ LIVE",
+      "detail": "Dashboard HTTP 200, equal_tops_bottoms loaded with 244 features, registered in god_model_dispatcher (8 strategies, PF=1.268)"
+    }
+  },
+  "alerts": [
     {
-      "card": "c_3c2b79",
+      "severity": "CRITICAL",
       "project": "blofin-moonshot",
-      "minutes_ago": 40
+      "message": "Moonshot scorer crashing on every cycle. Position size constraint failure in database. Requires immediate fix."
+    },
+    {
+      "severity": "WARNING",
+      "system": "CPU",
+      "message": "Temperature at 86°C (high). Monitor and report if trending upward."
     }
   ]
 }

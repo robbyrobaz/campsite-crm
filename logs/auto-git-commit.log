@@ -5512,3 +5512,17 @@ CLEAN master-dashboard (nothing to commit)
 [main 29d2409] auto: snapshot 2026-03-01T17:00:01Z
  4 files changed, 107 insertions(+), 8 deletions(-)
 COMMITTED blofin-stack
+[main 0b21cc52] auto: snapshot 2026-03-01T17:00:01Z
+ 8 files changed, 797 insertions(+), 5 deletions(-)
+ create mode 100644 GPU_ACCELERATION_SETUP.md
+ create mode 100644 test_gpu_acceleration.py
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main 273f295a] auto: snapshot 2026-03-01T17:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 3 committed, 6 skipped

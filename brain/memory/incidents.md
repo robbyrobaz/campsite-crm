@@ -234,3 +234,11 @@ Manual intervention needed to either:
 
 ## 2026-02-28 09:13 MST — nq-dashboard orphan process
 nq-dashboard.service was inactive because dashboard/app.py was running as an orphan process (PID 2755259) outside systemd control, holding port 8891. Dashboard was serving 200 OK but not managed by systemd. Killed orphan, restarted service — now active under systemd.
+
+## 2026-03-01 07:05 MST — Stale Card Recovery + nq-smb-watcher restart
+- **nq-smb-watcher.service** was inactive — restarted, now active
+- **2 stale In Progress cards** (both ~82 min since update, no builder processes running):
+  - c_258010dbe46fd: "Test local LLM models..." — recovered to Planned, redispatched (pid 6092)
+  - c_a535fc5537933: "moonshot data..." — recovered to Planned, redispatched (pid 5939)
+- Blofin services all active, dashboard 200 OK
+- Critical alert check: EXIT 0 (no alerts)

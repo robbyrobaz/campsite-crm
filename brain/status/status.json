@@ -1,6 +1,6 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-02T04:06:00Z",
-  "lastHealthCheck": "2026-03-02T04:06:00Z",
-  "cycleNotes": "Queue idle. All services healthy: CPU 88C (normal), disk 40% (267GB free). 0 In Progress, 0 Planned. 3 recent cards verified deployed: [Moonshot] promote champion, [NQ] psych_levels fix, [Blofin] rsi_divergence investigation. All endpoints live (HTTP 200). Ready for work."
+  "lastDispatch": "2026-03-02T04:23:00Z",
+  "lastHealthCheck": "2026-03-02T04:23:00Z",
+  "cycleNotes": "NQ Pipeline fixed: ETB threshold 0.60→0.50, disabled VWAP+PsychLevels (bleeding), fixed dispatcher enabled flag. All services healthy."
 }

@@ -1,37 +1,37 @@
 {
-  "timestamp": "2026-03-01T22:35:00-07:00",
-  "dispatchCycle": "Jarvis Pulse 22:35 MST Sunday March 1",
   "activeTasks": [
     {
-      "id": "c_24571e6275ae5_19cacec5103",
-      "title": "[NQ] Debug orb signal generation gap — add logging & validate model loading",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project": "NQ-Trading-PIPELINE"
-    },
-    {
-      "id": "c_68bfd6de680e7_19cacd3d792",
-      "title": "[Moonshot] Fix severe model overfitting — OOS PF dropped from 16x to 1.0x",
-      "status": "In Progress",
+      "id": "c_aa84aa33d740e_19cad238693",
+      "title": "[Moonshot] Optimize exit logic \u2014 analyze hold times and tune SL/TP",
       "assignee": "claude",
       "project": "blofin-moonshot"
+    },
+    {
+      "id": "c_5a9224b49b842_19cad23867c",
+      "title": "[Blofin] Expand cross_asset_correlation to additional coin pairs",
+      "assignee": "claude",
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_e9fd7754886d7_19cad238660",
+      "title": "[NQ] Debug prev_day strategy \u2014 null PnL trades and model loading",
+      "assignee": "claude",
+      "project": "nq-pipeline"
     }
   ],
-  "plannedQueue": [],
-  "dispatchCapacity": "1 slot available (3 max concurrent)",
-  "health": {
-    "temperature": "75.0°C",
-    "diskUsage": "37%",
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "nq-smb-watcher": "active",
-      "nq-dashboard": "active"
-    },
-    "criticalAlerts": "none"
+  "lastDispatch": "2026-03-02T06:06:00Z",
+  "lastHealthCheck": "2026-03-02T06:06:00Z",
+  "boardState": {
+    "inProgress": 3,
+    "planned": 0,
+    "maxConcurrent": 3
   },
-  "lastDispatch": "2026-03-01T22:35:00-07:00",
-  "lastHealthCheck": "2026-03-01T22:35:00-07:00",
-  "dispatchCycleNotes": "PHASE 8 SUMMARY — Cycle 10:35 PM MST: Health ✓ (CPU 75°C, 37% disk). Board state: 0 In Progress (baseline), 0 Planned, 0 Inbox. No work to dispatch. All 5 critical services active. No stale cards or alerts. Deployed services verified live: jarvis-home-energy (8793), master-dashboard (8890), kanban-dashboard (8787). Ready for next cycle."
+  "services": {
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
+    "nq-smb-watcher": "active",
+    "nq-dashboard": "active"
+  },
+  "deploymentVerified": "2026-03-02T06:06:00Z"
 }

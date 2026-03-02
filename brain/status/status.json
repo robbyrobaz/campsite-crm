@@ -1,6 +1,21 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-02T14:38:02Z",
-  "lastHealthCheck": "2026-03-02T14:38:02Z",
-  "summary": "Board clear. All critical services healthy. 3 recent cards verified deployed."
+  "lastDispatch": "2026-03-02T08:07:00-07:00",
+  "lastHealthCheck": "2026-03-02T08:07:00-07:00",
+  "boardStatus": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 3
+  },
+  "systemHealth": {
+    "cpu_temp": "78.0°C",
+    "disk_usage": "48%",
+    "services": "all active"
+  },
+  "recentCompletions": [
+    "Blofin momentum_v1 forward test gate fix",
+    "Moonshot position exit logic optimization",
+    "NQ ORB signal generation analysis"
+  ],
+  "allDeployed": true
 }

@@ -1,6 +1,23 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-02T04:23:00Z",
-  "lastHealthCheck": "2026-03-02T04:23:00Z",
-  "cycleNotes": "NQ Pipeline fixed: ETB threshold 0.60→0.50, disabled VWAP+PsychLevels (bleeding), fixed dispatcher enabled flag. All services healthy."
+  "activeTasks": [
+    {
+      "id": "c_e0690c0e51d6c_19cae369c02",
+      "title": "[NQ] Investigate psych_levels bleeding — 11% WR live vs backtest",
+      "pid": 942217,
+      "startedAt": "2026-03-02T04:36:30Z"
+    },
+    {
+      "id": "c_c07abb2ce8638_19cae3710d9",
+      "title": "[Moonshot] Promote best model to champion — all models have is_champion=0",
+      "pid": 942229,
+      "startedAt": "2026-03-02T04:36:31Z"
+    }
+  ],
+  "lastDispatch": "2026-03-02T04:36:30Z",
+  "lastHealthCheck": "2026-03-02T04:36:02Z",
+  "systemHealth": {
+    "cpuTemp": "83.0°C",
+    "diskUsage": "40%",
+    "servicesActive": 5
+  }
 }

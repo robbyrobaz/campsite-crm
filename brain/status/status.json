@@ -1,38 +1,14 @@
 {
-  "timestamp": "2026-03-02T02:36:00-07:00",
-  "activeTasks": [],
-  "dispatchStatus": "idle",
-  "inProgressCount": 0,
-  "plannedCount": 0,
-  "dispatchCapacity": "0/3 builders active",
-  "lastDispatch": "2026-03-02T02:36:00-07:00",
-  "lastHealthCheck": "2026-03-02T02:36:00-07:00",
-  "serviceHealth": {
-    "openclaw_gateway": "active",
-    "blofin_ingestor": "active",
-    "blofin_paper": "active",
-    "nq_smb_watcher": "active",
-    "nq_dashboard": "active"
-  },
-  "systemHealth": {
-    "cpu_temp": "71°C",
-    "disk_usage": "38%"
-  },
-  "recentCompletions": [
+  "activeTasks": [
     {
-      "title": "[Moonshot] Fix exit logic — 16 open positions, 0 closed trades ever",
-      "project": "blofin-moonshot",
-      "verified": "✓ services active, dashboard 200"
-    },
-    {
-      "title": "[NQ] Debug equal_tops_bottoms NULL pnl — signal registration issue",
-      "project": "NQ-Trading-PIPELINE",
-      "verified": "✓ services active, dashboard 200"
-    },
-    {
-      "title": "[Blofin] Retrain ML entry model for orderflow_imbalance (T2 top performer)",
-      "project": "blofin-stack",
-      "verified": "✓ services active"
+      "id": "c_574708158b823_19cadff4f83",
+      "title": "[Blofin] Expand volume_volatility_mean_reversion to additional coin pairs",
+      "status": "In Progress",
+      "pid": 801304,
+      "dispatchedAt": "2026-03-02T10:06:00Z"
     }
-  ]
+  ],
+  "lastDispatch": "2026-03-02T10:06:00Z",
+  "lastHealthCheck": "2026-03-02T10:06:00Z",
+  "cycleNotes": "Recovered 1 stale card (12h old). Dispatched Blofin expansion task. All services healthy (CPU 73C, disk 39%). 2 recent deploys verified: Moonshot + NQ both live."
 }

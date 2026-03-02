@@ -1,14 +1,37 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-02T11:37:00Z",
-  "lastHealthCheck": "2026-03-02T11:37:00Z",
+  "activeTasks": [
+    {
+      "id": "c_bf121b62357e3_19cafee717d",
+      "title": "Moonshot: Fix position exit logic (17+ open, 1 closed ever)",
+      "project": "blofin-moonshot",
+      "pid": 1704424,
+      "dispatchedAt": "2026-03-02T19:12:00Z"
+    },
+    {
+      "id": "c_47f8106f6cd0c_19cafee7165",
+      "title": "Blofin: Expand cross_asset_correlation to underperforming pairs",
+      "project": "blofin-stack",
+      "pid": 1704436,
+      "dispatchedAt": "2026-03-02T19:12:00Z"
+    },
+    {
+      "id": "c_49f0b3030896_19cafee7144",
+      "title": "NQ: Diagnose & fix vwap_fade signal quality collapse",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 1704447,
+      "dispatchedAt": "2026-03-02T19:12:00Z"
+    }
+  ],
+  "lastDispatch": "2026-03-02T19:12:00Z",
+  "lastHealthCheck": "2026-03-02T19:12:00Z",
   "summary": {
-    "boardState": "Queue Empty",
-    "inProgress": 0,
+    "boardState": "3 builders active",
+    "inProgress": 3,
     "planned": 0,
     "inbox": 8,
-    "done": 594,
+    "done": 597,
     "cpuTemp": "77.0°C",
-    "diskUsage": "49%"
+    "diskUsage": "49%",
+    "notes": "Deployed 3 cards (Moonshot fix, Blofin expansion, NQ vwap_fade). All services verified active. Moonshot service restarted (was failed after previous cycle)."
   }
 }

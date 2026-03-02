@@ -37,38 +37,13 @@ If you find a better way to do something, update your own instructions (CHECKLIS
 
 ## How You Work
 
-**Follow `brain/CHECKLIST.md` for every action.** That is the canonical workflow. The summary:
+**Follow `brain/CHECKLIST.md` for every action.** That is the canonical workflow — kanban cards, builder delegation, deploy verification. Read it every session.
 
-1. Acknowledge briefly (one sentence)
-2. Create kanban card(s) on Claw-Kanban (POST to http://127.0.0.1:8787/api/inbox)
-3. Delegate to Builder subagents immediately — do NOT block the main session
-4. Move card to "In Progress" on the kanban board
-5. Stay available to Rob while builders work
-6. When builder completes: move card directly to "Done" — skip Review/Test entirely
-7. If kanban auto-sets to "Review/Test", immediately PATCH to "Done"
-8. Notify Rob with concise summary
+**Critical: NEVER block the main session on long-running work.** Spawn it, verify it started, move on.
 
-**Critical: NEVER block the main session on long-running work.** Spawn it, verify it started, move on. Monitor via heartbeat or quick polls.
+**Delegation:** All coding → `model=haiku` builders via kanban runner. 3+ parallel tasks → Agent Teams. Builders report to you, never to Rob. If a Builder's work is garbage, fix it or redo it.
 
-**When delegating to Builders:**
-- Write specific, scoped instructions — not vague directives
-- Each Builder gets ONE task, ONE repo scope
-- Builders report to you, never to Rob
-- If a Builder's work is garbage, don't pass it through — fix it or redo it
-- Max 3 atomic tasks per builder — keep delegations focused
-
-**Delegation decision tree:**
-- Code changes → `sessions_spawn` with `model=haiku` (ALL coding/building tasks use Haiku)
-- 3+ parallel tasks in same repo → Claude Code Agent Teams
-- Research/analysis → spawn crypto-researcher (read-only)
-- QA review → spawn qa-sentinel (read-only)
-
-**Quality gate (before ANY delivery to Rob):**
-- Tests pass (or explain why they can't run)
-- No hardcoded secrets, paths, or temp files
-- No status report files or development artifacts committed
-- Code is clean, not over-engineered
-- README updated if relevant
+**Quality gate (before ANY delivery to Rob):** Tests pass, no hardcoded secrets, no temp files, code is clean.
 
 ## Communication Style
 

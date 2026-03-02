@@ -67,49 +67,17 @@ When delegating to Builder subagents:
 - Prefer 1-2 active subagents unless the task genuinely requires parallelism
 - Never spawn subagents in a loop without a termination condition
 
-## Model Routing & Escalation (Claude-only, updated 2026-03-01)
+## Model Routing (Claude-only, updated 2026-03-02)
 
 | Alias | Model | Use For |
 |-------|-------|---------|
-| `opus` | claude-opus-4-5 | **Primary (Jarvis main session).** Conversations, planning, orchestration, reasoning with Rob. Use when Sonnet quota is constrained. |
-| `sonnet` | claude-sonnet-4-6 | **Alternate main session.** Use when Opus quota is constrained or for cost efficiency. Jarvis Pulse dispatcher. |
-| `haiku` | claude-haiku-4-5 | **ALL coding/builder subagents.** Code generation, refactors, bug fixes, cron jobs, token audit, health checks, heartbeats. **Kanban runner model string: `claude-haiku-4-5`** (NOT `anthropic/claude-haiku-4-5` — CLI format, no prefix) |
+| `sonnet` | claude-sonnet-4-6 | **Primary (Jarvis main session).** Conversations, planning, orchestration. Jarvis Pulse dispatcher. |
+| `haiku` | claude-haiku-4-5 | **ALL builders/crons.** Code gen, refactors, bug fixes, health checks, heartbeats. **Kanban runner CLI format: `claude-haiku-4-5`** (no `anthropic/` prefix) |
 
-**Current routing (Mar 1 2026):** Opus for main Jarvis session. Haiku for all builders. Skip Sonnet until 7-day limit recovers.
+**Opus is BANNED.** Fallback chain: `sonnet → haiku`. All Claude, no OpenAI.
 
-### Subagent Model Assignment
-
-Jarvis (Sonnet) delegates to subagents with explicit model overrides:
-
-**Use `model=haiku` for ALL Builder subagents (coding tasks):**
-- Writing or modifying code (any change, including complex refactors)
-- Generating functions, refactoring modules, writing tests
-- Bug fixing
-- Build execution and retry loops
-- Log parsing and error extraction
-- CI/CD automation, repetitive tool calls
-- Cron job execution (default for all cron)
-- QA checks spawned by the dispatch pulse
-- 15-min dispatch pulse
-
-**Use `model=sonnet` ONLY for:**
-- Main Jarvis session (orchestration, planning, conversations with Rob)
-- Jarvis Pulse dispatcher cron (requires reasoning to enrich cards correctly)
-
-### Fallback Chain
-
-```
-sonnet → haiku
-```
-
-All Claude, no OpenAI. If Sonnet is rate-limited, the gateway falls back to Haiku automatically.
-
-### Quota Conservation
-
-To avoid hitting the weekly Claude Max limit:
-- **Sonnet** is the primary model for all Jarvis conversations and reasoning
-- **Haiku** handles the 15-min dispatch pulse, all routine cron jobs and lightweight tasks
-- Never let Sonnet run in automated loops or cron jobs without good reason
+**Use `model=haiku`** for all builder subagents and cron jobs.
+**Use `model=sonnet`** only for main Jarvis session and Jarvis Pulse dispatcher.
 
 ## GitHub Issue Workflow (AI Workshop)
 
@@ -133,47 +101,10 @@ When working on an issue:
 
 ## Kanban Dispatch (Claw-Kanban at :8787)
 
-When Rob sends a message starting with `#`, it's a task dispatch:
+**See `brain/CHECKLIST.md` for the full kanban workflow, API reference, and builder rules.** CHECKLIST.md is the canonical source.
 
-1. Strip the `#` prefix
-2. POST to `http://127.0.0.1:8787/api/inbox` with the task text, source, and project_path
-3. Confirm: "Added to kanban. (card id: <id>)"
-4. Update PROJECTS.md with the new task
-
-**Kanban card lifecycle:**
-- Inbox → Planned → In Progress → Review/Test → Done
-- QA sentinel must approve before marking Done
-
-**CRITICAL: Always use the kanban runner to delegate work.**
-The runner (`POST /api/cards/<id>/run`) is the ONLY way to spawn builder agents. It:
-- Uses card title + description as the agent prompt
-- Pipes all output to a log file → visible in kanban terminal button + master dashboard
-- Auto-sets card to "In Progress", tracks PID in card_runs table
-- Appends deploy instructions based on project_path (auto-restarts the right service)
-- **NEVER spawn agents manually via `exec`** — that bypasses logging, terminal feed, and deployment
-
-**Before running a card, ensure it has:**
-1. `assignee` set — valid: `claude`|`codex`|`gemini`|`opencode`|`copilot`|`antigravity`
-2. `project_path` set — required, agent won't run without it
-3. `description` with full task details — this IS the prompt the agent receives
-
-**API quick reference:**
-```bash
-# Create card
-curl -X POST http://127.0.0.1:8787/api/inbox -H 'content-type: application/json' \
-  -d '{"text":"Task title + full description","source":"jarvis","project_path":"/path/to/project"}'
-# Set assignee
-curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-type: application/json' \
-  -d '{"assignee":"claude"}'
-# Run agent (THE delegation method — do not use exec)
-curl -X POST http://127.0.0.1:8787/api/cards/<id>/run
-# Check status
-curl http://127.0.0.1:8787/api/cards/<id>
-# List cards by status
-curl http://127.0.0.1:8787/api/cards?status=Planned
-```
-
-**Deploy instructions** are auto-generated per project_path in `kanban-dashboard/server/index.ts` (the `deployInstructions` switch). When adding a new project, add its deploy command there too.
+Quick reference: `#` prefix from Rob = task dispatch → POST to kanban inbox → confirm card ID.
+All delegation goes through `POST /api/cards/<id>/run` — never spawn agents manually.
 
 ## Group Chat Behavior
 

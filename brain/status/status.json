@@ -1,24 +1,24 @@
 {
+  "timestamp": "2026-03-01T21:35:00-07:00",
   "activeTasks": [
     {
-      "id": "c_7a59c70747091_19cacb58425",
-      "title": "[Blofin] Debug momentum_v1 T2 status",
-      "status": "In Progress",
-      "assignee": "claude"
+      "id": "c_68bfd6de680e7_19cacd3d792",
+      "title": "Fix Moonshot overfitting",
+      "status": "in-progress",
+      "pid": 209895,
+      "startedAt": "2026-03-01T21:35:00-07:00"
     }
   ],
-  "lastDispatch": "2026-03-02T04:06:08.387Z",
-  "lastHealthCheck": "2026-03-02T04:06:08.387Z",
-  "serviceStatus": {
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "nq-smb-watcher": "active",
-    "nq-dashboard": "active"
-  },
-  "systemHealth": {
-    "cpuTemp": "68C",
-    "diskUsage": "37%",
-    "freeSpace": "283GB"
-  }
+  "recentCompletions": [
+    {
+      "id": "c_1f1e3705f188f_19cac23b418",
+      "title": "Walk-forward validation",
+      "completedAt": "2026-03-01T20:01:00-07:00",
+      "result": "Revealed severe overfitting: OOS PF 0.99-1.10 vs BT PF 16x"
+    }
+  ],
+  "nextActions": [
+    "Monitor overfitting fix builder",
+    "Verify new models pass OOS PF > 1.3 threshold"
+  ]
 }

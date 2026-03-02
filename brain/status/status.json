@@ -1,28 +1,32 @@
 {
-  "timestamp": "2026-03-02T12:42:00-07:00",
-  "lastDispatch": "2026-03-02T12:42:00-07:00",
-  "lastHealthCheck": "2026-03-02T12:42:00-07:00",
   "activeTasks": [
     {
-      "id": "c_47f8106f6cd0c_19cafee7165",
-      "title": "[Blofin] Expand cross_asset_correlation to underperforming coin pairs",
-      "status": "In Progress",
-      "updatedMinutesAgo": 29.7,
-      "project": "blofin-stack"
+      "id": "c_940971298dcb9_19cb024d7ad",
+      "title": "[Moonshot] Optimize ML scoring threshold",
+      "project": "blofin-moonshot",
+      "pid": 1825698,
+      "dispatched": "2026-03-02T13:14:00-07:00"
+    },
+    {
+      "id": "c_6eec477156dcd_19cb024d773",
+      "title": "[Blofin] Expand vwap_volatility_anchor to more coins",
+      "project": "blofin-stack",
+      "pid": 1825700,
+      "dispatched": "2026-03-02T13:14:00-07:00"
+    },
+    {
+      "id": "c_6e23d3eb27759_19cb024d733",
+      "title": "[NQ] Debug equal_tops_bottoms signal collapse",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 1825704,
+      "dispatched": "2026-03-02T13:14:00-07:00"
     }
   ],
-  "boardState": {
-    "inProgress": 1,
-    "planned": 0,
-    "done": 0
-  },
-  "systemHealth": {
-    "cpuTemp": "84.0°C",
-    "diskUsage": "49%",
-    "criticalServices": 5,
-    "allActive": true
-  },
-  "dispatcherState": "READY",
-  "nextDispatchSlot": "1/3 builders active",
-  "notes": "Single In Progress card (cross_asset_correlation) is active and under 30-min threshold. No Planned cards. Ready to accept new work. All services healthy."
+  "lastDispatch": "2026-03-02T13:14:15-07:00",
+  "lastHealthCheck": "2026-03-02T13:14:15-07:00",
+  "healthStatus": {
+    "cpu": "77C",
+    "disk": "49%",
+    "services": "all active"
+  }
 }

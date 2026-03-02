@@ -1,21 +1,39 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-02T08:07:00-07:00",
-  "lastHealthCheck": "2026-03-02T08:07:00-07:00",
-  "boardStatus": {
-    "inProgress": 0,
-    "planned": 0,
-    "done": 3
-  },
-  "systemHealth": {
-    "cpu_temp": "78.0°C",
-    "disk_usage": "48%",
-    "services": "all active"
-  },
-  "recentCompletions": [
-    "Blofin momentum_v1 forward test gate fix",
-    "Moonshot position exit logic optimization",
-    "NQ ORB signal generation analysis"
+  "activeTasks": [
+    {
+      "id": "c_d88efc80d7618_19caea3ec6f",
+      "title": "[Blofin] diagnose volatility_regime_switch demotion — t2→t-1",
+      "project": "blofin-stack",
+      "pid": 1335551,
+      "status": "In Progress"
+    },
+    {
+      "id": "c_d4924ba727517_19caeda7d6f",
+      "title": "[Blofin] Promote top T1 strategy to T2",
+      "project": "blofin-stack",
+      "pid": 1335561,
+      "status": "In Progress"
+    },
+    {
+      "id": "c_c7d1b1bf1e206_19caeda7cff",
+      "title": "[NQ] Debug equal_tops_bottoms signal quality",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 1335573,
+      "status": "In Progress"
+    },
+    {
+      "id": "c_5cab567e6d1ae_19caf1198e2",
+      "title": "[NQ] analyze orb signal generation collapse",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 1335580,
+      "status": "In Progress"
+    }
   ],
-  "allDeployed": true
+  "lastDispatch": "2026-03-02T15:38:08Z",
+  "lastHealthCheck": "2026-03-02T15:38:08Z",
+  "dispatchStats": {
+    "plannedDispatchedCount": 4,
+    "inProgressBefore": 0,
+    "completedLastHour": 3
+  }
 }

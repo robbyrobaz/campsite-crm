@@ -1,54 +1,26 @@
 {
   "activeTasks": [
     {
-      "id": "c_48fdfe03fe315_19cad5a2e00",
-      "title": "[Blofin] Retrain ML entry model for orderflow_imbalance (top FT performer, 15% PnL)",
+      "id": "c_30c07f498e21a_19cac7e6f52",
+      "title": "[NQ] Investigate vwap_fade bleeding (20% WR live vs 62% backtest)",
       "status": "In Progress",
-      "age_minutes": 4.2,
-      "project": "blofin-stack"
+      "pid": 491452,
+      "startedAt": "2026-03-02T00:35:00Z"
     }
   ],
-  "lastDispatch": "2026-03-02T07:05:00Z",
-  "lastHealthCheck": "2026-03-02T07:05:00Z",
-  "boardState": {
-    "inProgress": 1,
-    "planned": 0,
-    "maxConcurrent": 3,
-    "nextDispatchEligible": true
-  },
-  "services": {
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "blofin-stack-dashboard": "active",
+  "lastDispatch": "2026-03-02T00:35:00Z",
+  "lastHealthCheck": "2026-03-02T00:35:00Z",
+  "deploymentStatus": {
     "nq-smb-watcher": "active",
     "nq-dashboard": "active",
-    "blofin-moonshot-dashboard": "active (port 8893)"
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
+    "blofin-dashboard": "active",
+    "openclaw-gateway": "active"
   },
   "systemHealth": {
-    "cpu_temp_c": 76,
-    "disk_usage_percent": 38,
-    "memory_ok": true
-  },
-  "recentlyDeployed": [
-    {
-      "id": "c_f96498a43eb65_19cad5a2e54",
-      "title": "[Moonshot] Stuck exit positions diagnosis",
-      "minutes_ago": 0.8,
-      "status": "Verified ✅"
-    },
-    {
-      "id": "c_e3866827213d_19cad5a2db2",
-      "title": "[NQ] Verify equal_tops_bottoms signals in God Model",
-      "minutes_ago": 1.8,
-      "status": "Verified ✅"
-    },
-    {
-      "id": "c_5a9224b49b842_19cad23867c",
-      "title": "[Blofin] Expand cross_asset_correlation",
-      "minutes_ago": 44.7,
-      "status": "Verified ✅"
-    }
-  ],
-  "lastStatusUpdate": "2026-03-02T07:05:22Z"
+    "cpuTemp": "76.0°C",
+    "diskUsage": "38%",
+    "criticalAlerts": 0
+  }
 }

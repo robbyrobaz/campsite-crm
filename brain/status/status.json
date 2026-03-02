@@ -1,19 +1,53 @@
 {
   "activeTasks": [
     {
-      "id": "c_1f1e3705f188f_19cac23b418",
-      "title": "Moonshot: Implement proper K-fold walk-forward validation",
+      "id": "c_c93d019e3f3de_19cac4765e6",
+      "title": "[Moonshot] Fix 9% null ml_scores — diagnose missing coverage and improve scoring",
       "project": "blofin-moonshot",
       "status": "In Progress",
-      "pid": 25940,
-      "dispatchedAt": "2026-03-01T18:35:00Z"
+      "dispatchedAt": "2026-03-01T19:01:56Z"
+    },
+    {
+      "id": "c_5b18b85ae9915_19cac4765ac",
+      "title": "[NQ] Diagnose 0 signals generated today — dispatcher health check",
+      "project": "NQ-Trading-PIPELINE",
+      "status": "In Progress",
+      "dispatchedAt": "2026-03-01T19:01:56Z"
     }
   ],
-  "lastDispatch": "2026-03-01T18:35:00Z",
-  "lastHealthCheck": "2026-03-01T18:35:00Z",
+  "plannedCards": 0,
+  "inProgressCount": 2,
+  "lastDispatch": "2026-03-01T19:05:00Z",
+  "lastHealthCheck": "2026-03-01T19:05:00Z",
+  "systemStatus": {
+    "cpu_temp": "57°C",
+    "disk_usage": "37%",
+    "services": "all active (gateway, blofin-ingestor, blofin-paper, nq-smb-watcher, nq-dashboard, moonshot)",
+    "critical_alerts": "none"
+  },
   "deploymentStatus": {
-    "blofin": "active (services + dashboard 200)",
-    "nq": "active (services + dashboard 200)",
-    "moonshot": "active (dashboard 200)"
-  }
+    "blofin": "active (all 3 services + dashboard 200)",
+    "nq": "active (all services + dashboard 200)",
+    "moonshot": "active (service restarted + running, dashboard 200)"
+  },
+  "recentDoneCards": [
+    {
+      "id": "c_5d3a24327912f",
+      "title": "[Blofin] Expand orderflow_imbalance",
+      "verified": "✓ deployed",
+      "completedAgo": "110s"
+    },
+    {
+      "id": "c_1f1e3705f188f",
+      "title": "Moonshot: K-fold validation",
+      "verified": "✓ deployed (service restarted)",
+      "completedAgo": "946s"
+    },
+    {
+      "id": "c_f494c153bb44e",
+      "title": "[Blofin] Expand cross_asset_correlation",
+      "verified": "✓ deployed",
+      "completedAgo": "2279s"
+    }
+  ]
 }

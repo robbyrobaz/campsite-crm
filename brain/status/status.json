@@ -1,49 +1,44 @@
 {
   "activeTasks": [
     {
-      "id": "c_80f873e74d184_19cb08538e2",
-      "title": "Build the CarrierMatch web app",
-      "project": "carrier-match",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-02T14:20:00-07:00"
-    },
-    {
       "id": "c_7bd551140dd73_19cb05b9ade",
-      "title": "[Blofin] Analyze if top 3 FT performers dominate recent PnL",
+      "title": "[Blofin] Analyze if top 3 FT performers dominate recent PnL — propose expansion",
       "project": "blofin-stack",
       "status": "In Progress",
-      "dispatchedAt": "2026-03-02T14:20:00-07:00"
-    }
-  ],
-  "recentlyDeployed": [
-    {
-      "id": "c_961d321117b05_19cb08094dd",
-      "title": "Convert insurance PDFs to structured markdown",
-      "project": "carrier-match",
-      "deployedAt": "2026-03-02T14:50:00-07:00",
-      "verified": true
+      "dispatchedAt": "2026-03-02T15:20:00-07:00",
+      "pid": 2224714
     },
     {
-      "id": "c_e543f45df8879_19cb05b9b16",
-      "title": "[Moonshot] Investigate model champion selection",
+      "id": "c_3eaf1ed10d2b4_19cb091f5a5",
+      "title": "[Moonshot] Set v27 as champion + validate position opening",
       "project": "blofin-moonshot",
-      "deployedAt": "2026-03-02T14:28:00-07:00",
-      "verified": true
+      "status": "In Progress",
+      "dispatchedAt": "2026-03-02T15:20:00-07:00",
+      "pid": 2224717
     },
     {
-      "id": "c_b06a834482cc3_19cb05b9a8e",
-      "title": "[NQ] Investigate ORB strategy signal frequency collapse",
-      "project": "NQ-Trading-PIPELINE",
-      "deployedAt": "2026-03-02T14:27:00-07:00",
-      "verified": true
+      "id": "c_b12ad9ada3c0d_19cb091f58d",
+      "title": "[Blofin] Diagnose momentum_v1 gate failure + restore to passing",
+      "project": "blofin-stack",
+      "status": "In Progress",
+      "dispatchedAt": "2026-03-02T15:20:00-07:00",
+      "pid": 2224728
     }
   ],
-  "lastDispatch": "2026-03-02T14:50:00-07:00",
-  "lastHealthCheck": "2026-03-02T14:50:00-07:00",
+  "recentlyDeployed": [],
+  "lastDispatch": "2026-03-02T15:20:00-07:00",
+  "lastHealthCheck": "2026-03-02T15:20:00-07:00",
   "healthStatus": {
-    "cpuTemp": "77.0°C",
+    "cpuTemp": "75.0°C",
     "diskUsage": "49%",
     "criticalServices": "all 5 active",
     "criticalAlerts": "none"
+  },
+  "dispatchSummary": {
+    "cardsRecovered": 1,
+    "cardsDispatched": 3,
+    "cardsEnriched": 0,
+    "phase5EnrichmentPass": true,
+    "phase7DeploymentVerification": "no_recently_completed"
   }
 }

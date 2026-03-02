@@ -1,30 +1,30 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-02T12:07:14Z",
-  "lastHealthCheck": "2026-03-02T12:07:14Z",
-  "systemHealth": {
-    "cpu_temp": "77°C",
-    "disk_usage": "40%",
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "nq-smb-watcher": "active",
-      "nq-dashboard": "active"
-    },
-    "dashboards": {
-      "nq_dashboard": "200 OK",
-      "blofin_dashboard": "200 OK"
-    }
-  },
-  "recentCompletions": [
-    "c_09df00e6fbc24_19cae6ce7b4: [Moonshot] Expand scoring features",
-    "c_980c29dc2208_19cae6ce6dc: [NQ] gap_fill signal quality",
-    "c_e0690c0e51d6c_19cae369c02: [NQ] psych_levels bleeding"
-  ],
+  "lastDispatch": "2026-03-02T05:36:00Z",
+  "lastHealthCheck": "2026-03-02T05:36:00Z",
   "boardState": {
     "inProgress": 0,
     "planned": 0,
-    "done": 3
-  }
+    "inbox": 8
+  },
+  "recentlyDeployed": [
+    {
+      "id": "c_09df00e6fbc24_19cae6ce7b4",
+      "title": "[Moonshot] Expand scoring features: exchange volume rank + market cap tier",
+      "status": "deployed",
+      "endpoint": "http://127.0.0.1:8893/"
+    },
+    {
+      "id": "c_980c29dc2208_19cae6ce6dc",
+      "title": "[NQ] Diagnose gap_fill signal quality collapse (PF 2.07 backtest, 25% live)",
+      "status": "deployed",
+      "endpoint": "http://127.0.0.1:8891/"
+    },
+    {
+      "id": "c_e0690c0e51d6c_19cae369c02",
+      "title": "[NQ] Investigate psych_levels bleeding — 11% WR live vs backtest",
+      "status": "deployed",
+      "endpoint": "http://127.0.0.1:8891/"
+    }
+  ]
 }

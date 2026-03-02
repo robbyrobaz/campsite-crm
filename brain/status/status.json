@@ -1,48 +1,38 @@
 {
+  "timestamp": "2026-03-02T02:36:00-07:00",
   "activeTasks": [],
+  "dispatchStatus": "idle",
   "inProgressCount": 0,
   "plannedCount": 0,
-  "inboxCount": 7,
-  "doneCount": 567,
-  "stoppedCount": 6,
-  "lastDispatch": "2026-03-02T09:06:00Z",
-  "lastHealthCheck": "2026-03-02T09:06:00Z",
-  "timestamp": "2026-03-02T09:06:00Z",
-  "systemHealth": {
-    "cpu_temp": "84.0°C",
-    "disk_free": "277GB",
-    "disk_percent": "38%",
-    "services": {
-      "openclaw_gateway": "active",
-      "blofin_ingestor": "active",
-      "blofin_paper": "active",
-      "nq_smb_watcher": "active",
-      "nq_dashboard": "active"
-    },
-    "critical_alerts": "none"
+  "dispatchCapacity": "0/3 builders active",
+  "lastDispatch": "2026-03-02T02:36:00-07:00",
+  "lastHealthCheck": "2026-03-02T02:36:00-07:00",
+  "serviceHealth": {
+    "openclaw_gateway": "active",
+    "blofin_ingestor": "active",
+    "blofin_paper": "active",
+    "nq_smb_watcher": "active",
+    "nq_dashboard": "active"
   },
-  "recentDeployments": [
+  "systemHealth": {
+    "cpu_temp": "71°C",
+    "disk_usage": "38%"
+  },
+  "recentCompletions": [
     {
-      "card_id": "c_c3dcf4a76766_19cadc84912",
-      "title": "[Moonshot] Fix exit logic",
-      "completed": "2026-03-02T09:05:54Z",
-      "verified": true,
-      "status": "live"
+      "title": "[Moonshot] Fix exit logic — 16 open positions, 0 closed trades ever",
+      "project": "blofin-moonshot",
+      "verified": "✓ services active, dashboard 200"
     },
     {
-      "card_id": "c_6a37474e3b418_19cadc847ff",
-      "title": "[NQ] Debug equal_tops_bottoms NULL pnl",
-      "completed": "2026-03-02T09:05:01Z",
-      "verified": true,
-      "status": "live"
+      "title": "[NQ] Debug equal_tops_bottoms NULL pnl — signal registration issue",
+      "project": "NQ-Trading-PIPELINE",
+      "verified": "✓ services active, dashboard 200"
     },
     {
-      "card_id": "c_fa5848e630652_19cadc8487e",
-      "title": "[Blofin] Retrain ML entry model",
-      "completed": "2026-03-02T09:04:01Z",
-      "verified": true,
-      "status": "live"
+      "title": "[Blofin] Retrain ML entry model for orderflow_imbalance (T2 top performer)",
+      "project": "blofin-stack",
+      "verified": "✓ services active"
     }
-  ],
-  "notes": "Kanban queue empty (no Planned). All critical services healthy. Recent deployments verified live."
+  ]
 }

@@ -1,30 +1,35 @@
 {
-  "activeTasks": [
+  "activeTasks": [],
+  "recentlyDeployed": [
+    {
+      "id": "c_85318031133e9_19cb0c94b2a",
+      "title": "[NQ] diagnose psych_levels live 18% WR vs 1.92 PF backtest",
+      "completedAt": "2026-03-02T22:41:11Z"
+    },
     {
       "id": "c_e790fad02af4c_19cb0badd51",
-      "title": "Fix kanban runner: deterministic post-build deploy instead of AI-managed deploym…",
-      "project": "kanban-dashboard",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-02T22:46:29Z",
-      "lastUpdated": "2026-03-02T22:46:29Z"
+      "title": "Fix kanban runner: deterministic post-build deploy instead of AI-managed deploy",
+      "completedAt": "2026-03-02T22:38:37Z"
     }
   ],
-  "recentlyDeployed": [],
-  "lastDispatch": "2026-03-02T22:50:00Z",
-  "lastHealthCheck": "2026-03-02T22:50:00Z",
+  "lastDispatch": "2026-03-02T22:43:00Z",
+  "lastHealthCheck": "2026-03-02T22:43:00Z",
   "healthStatus": {
-    "cpuTemp": "85.0°C",
+    "cpuTemp": "83.0°C",
     "diskUsage": "41%",
     "criticalServices": "all 5 active",
-    "criticalAlerts": "none"
+    "criticalAlerts": "none",
+    "gitReposClean": true,
+    "numeraiModelsPresent": true,
+    "kanbanBoardStatus": "idle"
   },
   "dispatchSummary": {
-    "cardsInProgress": 1,
+    "cardsInProgress": 0,
     "cardsPlanned": 0,
     "cardsRecovered": 0,
     "cardsDispatched": 0,
     "cardsEnriched": 0,
     "phase5EnrichmentPass": "not_needed_no_planned",
-    "phase7DeploymentVerification": "no_recently_completed"
+    "phase7DeploymentVerification": "verified_nq_services_and_kanban_api_live"
   }
 }

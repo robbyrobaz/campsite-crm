@@ -1,7 +1,7 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-02T05:36:00Z",
-  "lastHealthCheck": "2026-03-02T05:36:00Z",
+  "lastDispatch": "2026-03-02T06:07:00Z",
+  "lastHealthCheck": "2026-03-02T06:07:00Z",
   "boardState": {
     "inProgress": 0,
     "planned": 0,
@@ -9,22 +9,22 @@
   },
   "recentlyDeployed": [
     {
-      "id": "c_09df00e6fbc24_19cae6ce7b4",
-      "title": "[Moonshot] Expand scoring features: exchange volume rank + market cap tier",
+      "id": "c_c0d05112c9131_19caea3ed60",
+      "title": "[Moonshot] set best model as champion (v27 val_auc=0.866)",
       "status": "deployed",
-      "endpoint": "http://127.0.0.1:8893/"
+      "lastVerified": "2026-03-02T06:07:00Z"
     },
     {
-      "id": "c_980c29dc2208_19cae6ce6dc",
-      "title": "[NQ] Diagnose gap_fill signal quality collapse (PF 2.07 backtest, 25% live)",
+      "id": "c_913a00f49701b_19caea3eb92",
+      "title": "[NQ] analyze vwap_fade filter conditions — 17% live wr vs backtest",
       "status": "deployed",
       "endpoint": "http://127.0.0.1:8891/"
     },
     {
-      "id": "c_e0690c0e51d6c_19cae369c02",
-      "title": "[NQ] Investigate psych_levels bleeding — 11% WR live vs backtest",
+      "id": "c_d88efc80d7618_19caea3ec6f",
+      "title": "[Blofin] diagnose volatility_regime_switch demotion — t2→t-1",
       "status": "deployed",
-      "endpoint": "http://127.0.0.1:8891/"
+      "endpoint": "http://127.0.0.1:8892/"
     }
   ]
 }

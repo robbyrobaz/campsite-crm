@@ -8885,10 +8885,7 @@ const mcHomeHist   = new Array(SPARK_LEN).fill(0);
 const mcPoolHist   = new Array(SPARK_LEN).fill(0);
 const mcTruckHist  = new Array(SPARK_LEN).fill(0);
 
-// Load cached energy data from localStorage on page load
-if (typeof window !== 'undefined') {
-  setTimeout(() => loadHistFromCache(), 100);  // defer to ensure DOM is ready
-}
+// Cache loading moved to BEFORE SSE connection (see below)
 
 function pushHist(arr, v) { arr.push(v); if(arr.length > SPARK_LEN) arr.shift(); }
 
@@ -9300,7 +9297,13 @@ document.addEventListener('keydown', function(e) {
 // Flag for SPAN token (set by Python template)
 const SPAN_TOKEN_CONFIGURED = {{ 'true' if config_span_token else 'false' }};
 
-// SSE connection
+// Load cached energy data BEFORE SSE starts (critical for persistence)
+if (typeof window !== 'undefined') {
+  const cacheLoaded = loadHistFromCache();
+  if (cacheLoaded) console.log('[Cache] Restored energy history from localStorage');
+}
+
+// SSE connection (AFTER cache load)
 const evtSrc = new EventSource('/api/stream');
 evtSrc.onmessage = e => { try { renderState(JSON.parse(e.data)); } catch(err) { console.error(err); } };
 evtSrc.onerror = () => console.warn('SSE disconnected — retrying...');

@@ -292,3 +292,18 @@ nq-dashboard.service was inactive because dashboard/app.py was running as an orp
 - **Critical Alerts:** EXIT 0 (none)
 - **Proceeding to Phase 3 (board state fetch)**
 
+
+## Mar 1, 2026 21:35 MST - Moonshot Dashboard Service Inactive After Deployment
+
+**Incident:** Card `c_7dd2153801f0c_19cacb5843e` completed (4h cycle timer fix). Dispatcher Phase 7 verification found `blofin-moonshot-dashboard.service` inactive, dashboard unreachable (HTTP 0).
+
+**Root cause:** Service killed or crashed after code deployment. Cause unknown — no logs checked yet.
+
+**Action taken:**
+- Restarted `blofin-moonshot-dashboard.service` (now active)
+- Verified HTTP 200 on http://127.0.0.1:8893/
+- Card now deployed successfully
+
+**Impact:** 30-minute gap where dashboard was offline. Live models may not have been updated until restart.
+
+**Follow-up:** Check journalctl for why it exited: `journalctl --user -u blofin-moonshot-dashboard.service -n 50 --since "30 min ago"`

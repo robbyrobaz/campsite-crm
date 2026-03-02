@@ -1,24 +1,36 @@
 {
   "timestamp": "2026-03-01T21:35:00-07:00",
+  "healthCheck": {
+    "cpu": "70°C",
+    "disk": "36% full",
+    "services": "all active",
+    "criticalAlerts": "none"
+  },
   "activeTasks": [
     {
       "id": "c_68bfd6de680e7_19cacd3d792",
-      "title": "Fix Moonshot overfitting",
-      "status": "in-progress",
-      "pid": 209895,
-      "startedAt": "2026-03-01T21:35:00-07:00"
+      "title": "[Moonshot] Fix severe model overfitting — OOS PF dropped from 16x to 1.0x",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "blofin-moonshot",
+      "startedAt": "2026-03-01T21:35:00-07:00",
+      "pid": 209895
     }
   ],
-  "recentCompletions": [
+  "queueStatus": {
+    "planned": 0,
+    "inProgress": 1,
+    "maxConcurrent": 3
+  },
+  "lastDispatch": "2026-03-01T21:35:00-07:00",
+  "lastHealthCheck": "2026-03-01T21:35:00-07:00",
+  "recentIncidents": [
     {
-      "id": "c_1f1e3705f188f_19cac23b418",
-      "title": "Walk-forward validation",
-      "completedAt": "2026-03-01T20:01:00-07:00",
-      "result": "Revealed severe overfitting: OOS PF 0.99-1.10 vs BT PF 16x"
+      "time": "2026-03-01T21:35:00-07:00",
+      "service": "blofin-moonshot-dashboard.service",
+      "status": "FIXED",
+      "description": "Service inactive after deployment, restarted successfully"
     }
   ],
-  "nextActions": [
-    "Monitor overfitting fix builder",
-    "Verify new models pass OOS PF > 1.3 threshold"
-  ]
+  "nextDispatch": "2026-03-01T22:05:00-07:00"
 }

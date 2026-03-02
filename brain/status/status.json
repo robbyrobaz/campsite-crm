@@ -1,38 +1,44 @@
 {
-  "activeTasks": [],
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "done": 544,
-    "inbox": 5,
-    "stopped": 6
-  },
-  "lastDispatch": "2026-03-01T20:05:00-07:00",
-  "lastHealthCheck": "2026-03-01T20:05:00-07:00",
+  "activeTasks": [
+    {
+      "id": "c_30c07f498e21a_19cac7e6f52",
+      "title": "[NQ] Investigate vwap_fade bleeding (20% WR live vs 62% backtest) — root cause analysis",
+      "status": "In Progress",
+      "pid": 140159,
+      "logPath": "/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_30c07f498e21a_19cac7e6f52.log"
+    }
+  ],
+  "lastDispatch": "2026-03-02T03:35:55Z",
+  "lastHealthCheck": "2026-03-02T03:35:55Z",
   "systemStatus": {
-    "cpuTemp": "75°C",
+    "cpuTemp": "73.0°C",
     "diskUsage": "37%",
-    "criticalServices": "all-active"
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-smb-watcher": "active",
+      "nq-dashboard": "active"
+    }
   },
-  "recentCompletions": [
+  "recentlyCompleted": [
     {
       "id": "c_ada8caa8ab911_19cac7e6f74",
-      "title": "[Blofin] Debug vwap_reversion T2 gate failure (PF 0.73 FT vs 1.01 BT)",
-      "age_minutes": 0.7,
-      "deployment": "verified"
+      "title": "[Blofin] Debug vwap_reversion T2 gate failure",
+      "completedAt": "2026-03-01T20:04:57Z",
+      "deploymentVerified": true
     },
     {
       "id": "c_627165fe333d_19cac7e6f8c",
-      "title": "[Moonshot] Verify exit processing logic — no closed trades yet",
-      "age_minutes": 1.3,
-      "deployment": "verified"
+      "title": "[Moonshot] Verify exit processing logic",
+      "completedAt": "2026-03-01T20:04:20Z",
+      "deploymentVerified": true
     },
     {
-      "id": "c_30c07f498e21a_19cac7e6f52",
-      "title": "[NQ] Investigate vwap_fade bleeding (20% WR live vs 62% backtest)",
-      "age_minutes": 3.4,
-      "deployment": "verified"
+      "id": "c_1f1e3705f188f_19cac23b418",
+      "title": "Moonshot: Implement proper K-fold walk-forward validation",
+      "completedAt": "2026-03-01T20:02:01Z",
+      "deploymentVerified": true
     }
-  ],
-  "notes": "DISPATCH CYCLE 20:05 UTC-7: Board clear (0 Planned, 0 In Progress). All critical services active. 3 recent completions verified deployed and live. 5 inbox cards awaiting triage. Ready for new work input."
+  ]
 }

@@ -1,36 +1,37 @@
 {
-  "timestamp": "2026-03-01T21:35:00-07:00",
-  "healthCheck": {
-    "cpu": "70°C",
-    "disk": "36% full",
-    "services": "all active",
-    "criticalAlerts": "none"
-  },
+  "timestamp": "2026-03-01T22:05:00-07:00",
+  "dispatchCycle": "Jarvis Pulse 22:05 MST Sunday March 1",
   "activeTasks": [
+    {
+      "id": "c_24571e6275ae5_19cacec5103",
+      "title": "[NQ] Debug orb signal generation gap — add logging & validate model loading",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "NQ-Trading-PIPELINE"
+    },
     {
       "id": "c_68bfd6de680e7_19cacd3d792",
       "title": "[Moonshot] Fix severe model overfitting — OOS PF dropped from 16x to 1.0x",
       "status": "In Progress",
       "assignee": "claude",
-      "project": "blofin-moonshot",
-      "startedAt": "2026-03-01T21:35:00-07:00",
-      "pid": 209895
+      "project": "blofin-moonshot"
     }
   ],
-  "queueStatus": {
-    "planned": 0,
-    "inProgress": 1,
-    "maxConcurrent": 3
+  "plannedQueue": [],
+  "dispatchCapacity": "1 slot available (3 max concurrent)",
+  "health": {
+    "temperature": "75.0°C",
+    "diskUsage": "36%",
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-smb-watcher": "active",
+      "nq-dashboard": "active"
+    },
+    "criticalAlerts": "none"
   },
-  "lastDispatch": "2026-03-01T21:35:00-07:00",
-  "lastHealthCheck": "2026-03-01T21:35:00-07:00",
-  "recentIncidents": [
-    {
-      "time": "2026-03-01T21:35:00-07:00",
-      "service": "blofin-moonshot-dashboard.service",
-      "status": "FIXED",
-      "description": "Service inactive after deployment, restarted successfully"
-    }
-  ],
-  "nextDispatch": "2026-03-01T22:05:00-07:00"
+  "lastDispatch": "2026-03-01T22:05:00-07:00",
+  "lastHealthCheck": "2026-03-01T22:05:00-07:00",
+  "notes": "NQ orb card missing assignee — fixed. Moonshot model retraining in progress. No Planned cards to dispatch. All services healthy. No stale or critical alerts."
 }

@@ -76,6 +76,7 @@ tar -czf "$archive" \
   --exclude='workspace/.trash' \
   --exclude='workspace/android-sdk' \
   --exclude='workspace/blofin-stack' \
+  --exclude='workspace/blofin-moonshot' \
   --exclude='workspace/blofin-dashboard' \
   --exclude='workspace/campsite-crm' \
   --exclude='workspace/NQ-Trading-PIPELINE' \

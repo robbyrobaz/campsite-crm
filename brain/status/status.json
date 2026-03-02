@@ -7,32 +7,32 @@
     "inbox": 5,
     "stopped": 6
   },
-  "lastDispatch": "2026-03-01T19:35:00-07:00",
-  "lastHealthCheck": "2026-03-01T19:35:00-07:00",
+  "lastDispatch": "2026-03-01T20:05:00-07:00",
+  "lastHealthCheck": "2026-03-01T20:05:00-07:00",
   "systemStatus": {
-    "cpuTemp": "63°C",
+    "cpuTemp": "75°C",
     "diskUsage": "37%",
     "criticalServices": "all-active"
   },
   "recentCompletions": [
     {
-      "id": "c_1f1e37",
-      "title": "Moonshot: Implement proper K-fold walk-forward validation",
-      "age_minutes": 23,
+      "id": "c_ada8caa8ab911_19cac7e6f74",
+      "title": "[Blofin] Debug vwap_reversion T2 gate failure (PF 0.73 FT vs 1.01 BT)",
+      "age_minutes": 0.7,
       "deployment": "verified"
     },
     {
-      "id": "c_5b18b8",
-      "title": "[NQ] Diagnose 0 signals generated today — dispatcher health check",
-      "age_minutes": 27,
+      "id": "c_627165fe333d_19cac7e6f8c",
+      "title": "[Moonshot] Verify exit processing logic — no closed trades yet",
+      "age_minutes": 1.3,
       "deployment": "verified"
     },
     {
-      "id": "c_c93d01",
-      "title": "[Moonshot] Fix 9% null ml_scores — diagnose missing coverage and improve scoring",
-      "age_minutes": 29,
+      "id": "c_30c07f498e21a_19cac7e6f52",
+      "title": "[NQ] Investigate vwap_fade bleeding (20% WR live vs 62% backtest)",
+      "age_minutes": 3.4,
       "deployment": "verified"
     }
   ],
-  "notes": "Board is clear — 0 Planned, 0 In Progress. Recent completions verified deployed. 5 Inbox cards pending triage. Ready for new work."
+  "notes": "DISPATCH CYCLE 20:05 UTC-7: Board clear (0 Planned, 0 In Progress). All critical services active. 3 recent completions verified deployed and live. 5 inbox cards awaiting triage. Ready for new work input."
 }

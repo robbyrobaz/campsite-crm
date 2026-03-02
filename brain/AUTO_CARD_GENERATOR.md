@@ -1,7 +1,8 @@
 # Auto Card Generator — Cron Prompt Instructions
 
-> Runs hourly at :00. Model: Sonnet. Creates 1 NQ + 1 Blofin v1 + 1 Moonshot card and **launches them immediately**.
-> Cards do NOT sit in Planned waiting for the dispatcher. Create → enrich → run, all in one step.
+> Runs hourly at :00. Model: Sonnet. Creates 1 NQ + 1 Blofin v1 + 1 Moonshot card in **Planned** status.
+> Cards sit in Planned for the Jarvis Pulse dispatcher (runs every 30min) to pick up.
+> **DO NOT run cards yourself. DO NOT set status to In Progress. Create → enrich → leave in Planned.**
 > This file is the complete operating context. Read it fully before generating cards.
 
 ---
@@ -138,7 +139,7 @@ Autonomous crypto strategy research and paper trading engine targeting consisten
 IN_PROGRESS=$(curl -s "http://127.0.0.1:8787/api/cards?status=In%20Progress" | python3 -c "import sys,json; print(len(json.load(sys.stdin)['cards']))")
 echo "In Progress: $IN_PROGRESS"
 ```
-**If IN_PROGRESS >= 6: print "GATE: $IN_PROGRESS builders already running, skipping" and STOP.**
+**If IN_PROGRESS + PLANNED >= 3: print "GATE: queue full, skipping" and STOP.**
 
 Also fetch recent Done cards and In Progress titles to avoid duplicates:
 ```bash
@@ -163,7 +164,7 @@ EOF
 
 **Before creating any card: check if a card with a similar title (key strategy/topic words) is already In Progress or Done in the last 4 hours. If yes, skip it and pick a different task.**
 
-Note: We only gate on In Progress count — cards launch immediately on creation, so Planned should always be near zero.
+Note: Cards land in Planned. The Jarvis Pulse dispatcher (every 30min) picks them up and runs them.
 
 ---
 
@@ -291,9 +292,9 @@ EOF
 
 ---
 
-## STEP 5 — CREATE AND LAUNCH CARDS
+## STEP 5 — CREATE CARDS (leave in Planned for dispatcher)
 
-Create **1 NQ card + 1 Blofin v1 card + 1 Moonshot card** and launch them immediately — no waiting in Planned.
+Create **1 NQ card + 1 Blofin v1 card + 1 Moonshot card**. Leave them in **Planned** — the Jarvis Pulse dispatcher picks them up every 30 minutes.
 
 ```bash
 # Step A: Create in inbox to get ID
@@ -302,16 +303,17 @@ CARD=$(curl -s -X POST http://127.0.0.1:8787/api/inbox \
   -d '{"text":"TITLE","source":"auto-generator","project_path":"PROJECT_PATH"}')
 CARD_ID=$(echo "$CARD" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
 
-# Step B: Enrich with full description and assignee
+# Step B: Enrich with full description, assignee, and move to Planned
 curl -s -X PATCH "http://127.0.0.1:8787/api/cards/$CARD_ID" \
   -H "content-type: application/json" \
   -d '{
     "assignee": "claude",
+    "status": "Planned",
     "description": "FULL DESCRIPTION with file paths, DB queries for context, what to build, success criteria, deploy steps, constraints"
   }'
 
-# Step C: Launch immediately — no sitting in Planned
-curl -s -X POST "http://127.0.0.1:8787/api/cards/$CARD_ID/run"
+# Step C: STOP HERE. Do NOT call /run. Dispatcher handles it.
+echo "Card $CARD_ID created in Planned. Dispatcher will pick up within 30min."
 ```
 
 **Description must include:**
@@ -342,8 +344,9 @@ AUTO-GENERATOR: Launched 3 builders
 ---
 
 ## ABSOLUTE RULES
-- Gate: In Progress >= 6 → skip, do nothing (don't flood the board)
-- Cards launch immediately via `/run` — do NOT leave them sitting in Planned waiting for dispatcher
+- Gate: In Progress + Planned >= 3 → skip, do nothing (don't flood the board)
+- **NEVER call `/run` on cards** — leave in Planned, dispatcher picks up within 30min
+- **NEVER set status to "In Progress"** — that is the dispatcher's job after running
 - assignee = always "claude"
 - NEVER enable live trading, fire TradersPost webhooks, or activate prop firm evals
 - NEVER suggest per-coin ML models for Blofin

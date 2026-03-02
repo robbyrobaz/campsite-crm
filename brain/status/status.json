@@ -1,29 +1,48 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-02T08:36:21Z",
-  "lastHealthCheck": "2026-03-02T08:36:21Z",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "done_recent": 3
+  "inProgressCount": 0,
+  "plannedCount": 0,
+  "inboxCount": 7,
+  "doneCount": 567,
+  "stoppedCount": 6,
+  "lastDispatch": "2026-03-02T09:06:00Z",
+  "lastHealthCheck": "2026-03-02T09:06:00Z",
+  "timestamp": "2026-03-02T09:06:00Z",
+  "systemHealth": {
+    "cpu_temp": "84.0°C",
+    "disk_free": "277GB",
+    "disk_percent": "38%",
+    "services": {
+      "openclaw_gateway": "active",
+      "blofin_ingestor": "active",
+      "blofin_paper": "active",
+      "nq_smb_watcher": "active",
+      "nq_dashboard": "active"
+    },
+    "critical_alerts": "none"
   },
-  "recentCompletedCards": [
+  "recentDeployments": [
     {
-      "id": "c_2e5df8a40894_19cad91098e",
-      "title": "Validate Moonshot position lifecycle and first batch exits",
-      "completedMinutesAgo": 30
+      "card_id": "c_c3dcf4a76766_19cadc84912",
+      "title": "[Moonshot] Fix exit logic",
+      "completed": "2026-03-02T09:05:54Z",
+      "verified": true,
+      "status": "live"
     },
     {
-      "id": "c_715a3b81860ba_19cad9108b7",
-      "title": "Diagnose equal_tops_bottoms signal generation gap",
-      "completedMinutesAgo": 32
+      "card_id": "c_6a37474e3b418_19cadc847ff",
+      "title": "[NQ] Debug equal_tops_bottoms NULL pnl",
+      "completed": "2026-03-02T09:05:01Z",
+      "verified": true,
+      "status": "live"
     },
     {
-      "id": "c_0d03b70a7aa05_19cad910929",
-      "title": "Investigate momentum_v1 T2 gate failure and recommend demotion",
-      "completedMinutesAgo": 33
+      "card_id": "c_fa5848e630652_19cadc8487e",
+      "title": "[Blofin] Retrain ML entry model",
+      "completed": "2026-03-02T09:04:01Z",
+      "verified": true,
+      "status": "live"
     }
   ],
-  "healthStatus": "healthy",
-  "notes": "No pending work in queue. All services active. Blofin pipeline running normally."
+  "notes": "Kanban queue empty (no Planned). All critical services healthy. Recent deployments verified live."
 }

@@ -1,44 +1,24 @@
 {
   "activeTasks": [
     {
-      "id": "c_30c07f498e21a_19cac7e6f52",
-      "title": "[NQ] Investigate vwap_fade bleeding (20% WR live vs 62% backtest) — root cause analysis",
+      "id": "c_7a59c70747091_19cacb58425",
+      "title": "[Blofin] Debug momentum_v1 T2 status",
       "status": "In Progress",
-      "pid": 140159,
-      "logPath": "/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_30c07f498e21a_19cac7e6f52.log"
+      "assignee": "claude"
     }
   ],
-  "lastDispatch": "2026-03-02T03:35:55Z",
-  "lastHealthCheck": "2026-03-02T03:35:55Z",
-  "systemStatus": {
-    "cpuTemp": "73.0°C",
-    "diskUsage": "37%",
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "nq-smb-watcher": "active",
-      "nq-dashboard": "active"
-    }
+  "lastDispatch": "2026-03-02T04:06:08.387Z",
+  "lastHealthCheck": "2026-03-02T04:06:08.387Z",
+  "serviceStatus": {
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
+    "nq-smb-watcher": "active",
+    "nq-dashboard": "active"
   },
-  "recentlyCompleted": [
-    {
-      "id": "c_ada8caa8ab911_19cac7e6f74",
-      "title": "[Blofin] Debug vwap_reversion T2 gate failure",
-      "completedAt": "2026-03-01T20:04:57Z",
-      "deploymentVerified": true
-    },
-    {
-      "id": "c_627165fe333d_19cac7e6f8c",
-      "title": "[Moonshot] Verify exit processing logic",
-      "completedAt": "2026-03-01T20:04:20Z",
-      "deploymentVerified": true
-    },
-    {
-      "id": "c_1f1e3705f188f_19cac23b418",
-      "title": "Moonshot: Implement proper K-fold walk-forward validation",
-      "completedAt": "2026-03-01T20:02:01Z",
-      "deploymentVerified": true
-    }
-  ]
+  "systemHealth": {
+    "cpuTemp": "68C",
+    "diskUsage": "37%",
+    "freeSpace": "283GB"
+  }
 }

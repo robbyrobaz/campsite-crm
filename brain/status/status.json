@@ -1,44 +1,30 @@
 {
   "activeTasks": [
     {
-      "id": "c_7bd551140dd73_19cb05b9ade",
-      "title": "[Blofin] Analyze if top 3 FT performers dominate recent PnL — propose expansion",
-      "project": "blofin-stack",
+      "id": "c_e790fad02af4c_19cb0badd51",
+      "title": "Fix kanban runner: deterministic post-build deploy instead of AI-managed deploym…",
+      "project": "kanban-dashboard",
       "status": "In Progress",
-      "dispatchedAt": "2026-03-02T15:20:00-07:00",
-      "pid": 2224714
-    },
-    {
-      "id": "c_3eaf1ed10d2b4_19cb091f5a5",
-      "title": "[Moonshot] Set v27 as champion + validate position opening",
-      "project": "blofin-moonshot",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-02T15:20:00-07:00",
-      "pid": 2224717
-    },
-    {
-      "id": "c_b12ad9ada3c0d_19cb091f58d",
-      "title": "[Blofin] Diagnose momentum_v1 gate failure + restore to passing",
-      "project": "blofin-stack",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-02T15:20:00-07:00",
-      "pid": 2224728
+      "dispatchedAt": "2026-03-02T22:46:29Z",
+      "lastUpdated": "2026-03-02T22:46:29Z"
     }
   ],
   "recentlyDeployed": [],
-  "lastDispatch": "2026-03-02T15:20:00-07:00",
-  "lastHealthCheck": "2026-03-02T15:20:00-07:00",
+  "lastDispatch": "2026-03-02T22:50:00Z",
+  "lastHealthCheck": "2026-03-02T22:50:00Z",
   "healthStatus": {
-    "cpuTemp": "75.0°C",
-    "diskUsage": "49%",
+    "cpuTemp": "85.0°C",
+    "diskUsage": "41%",
     "criticalServices": "all 5 active",
     "criticalAlerts": "none"
   },
   "dispatchSummary": {
-    "cardsRecovered": 1,
-    "cardsDispatched": 3,
+    "cardsInProgress": 1,
+    "cardsPlanned": 0,
+    "cardsRecovered": 0,
+    "cardsDispatched": 0,
     "cardsEnriched": 0,
-    "phase5EnrichmentPass": true,
+    "phase5EnrichmentPass": "not_needed_no_planned",
     "phase7DeploymentVerification": "no_recently_completed"
   }
 }

@@ -1,53 +1,38 @@
 {
-  "activeTasks": [
+  "activeTasks": [],
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 544,
+    "inbox": 5,
+    "stopped": 6
+  },
+  "lastDispatch": "2026-03-01T19:35:00-07:00",
+  "lastHealthCheck": "2026-03-01T19:35:00-07:00",
+  "systemStatus": {
+    "cpuTemp": "63°C",
+    "diskUsage": "37%",
+    "criticalServices": "all-active"
+  },
+  "recentCompletions": [
     {
-      "id": "c_c93d019e3f3de_19cac4765e6",
-      "title": "[Moonshot] Fix 9% null ml_scores — diagnose missing coverage and improve scoring",
-      "project": "blofin-moonshot",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-01T19:01:56Z"
+      "id": "c_1f1e37",
+      "title": "Moonshot: Implement proper K-fold walk-forward validation",
+      "age_minutes": 23,
+      "deployment": "verified"
     },
     {
-      "id": "c_5b18b85ae9915_19cac4765ac",
+      "id": "c_5b18b8",
       "title": "[NQ] Diagnose 0 signals generated today — dispatcher health check",
-      "project": "NQ-Trading-PIPELINE",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-01T19:01:56Z"
+      "age_minutes": 27,
+      "deployment": "verified"
+    },
+    {
+      "id": "c_c93d01",
+      "title": "[Moonshot] Fix 9% null ml_scores — diagnose missing coverage and improve scoring",
+      "age_minutes": 29,
+      "deployment": "verified"
     }
   ],
-  "plannedCards": 0,
-  "inProgressCount": 2,
-  "lastDispatch": "2026-03-01T19:05:00Z",
-  "lastHealthCheck": "2026-03-01T19:05:00Z",
-  "systemStatus": {
-    "cpu_temp": "57°C",
-    "disk_usage": "37%",
-    "services": "all active (gateway, blofin-ingestor, blofin-paper, nq-smb-watcher, nq-dashboard, moonshot)",
-    "critical_alerts": "none"
-  },
-  "deploymentStatus": {
-    "blofin": "active (all 3 services + dashboard 200)",
-    "nq": "active (all services + dashboard 200)",
-    "moonshot": "active (service restarted + running, dashboard 200)"
-  },
-  "recentDoneCards": [
-    {
-      "id": "c_5d3a24327912f",
-      "title": "[Blofin] Expand orderflow_imbalance",
-      "verified": "✓ deployed",
-      "completedAgo": "110s"
-    },
-    {
-      "id": "c_1f1e3705f188f",
-      "title": "Moonshot: K-fold validation",
-      "verified": "✓ deployed (service restarted)",
-      "completedAgo": "946s"
-    },
-    {
-      "id": "c_f494c153bb44e",
-      "title": "[Blofin] Expand cross_asset_correlation",
-      "verified": "✓ deployed",
-      "completedAgo": "2279s"
-    }
-  ]
+  "notes": "Board is clear — 0 Planned, 0 In Progress. Recent completions verified deployed. 5 Inbox cards pending triage. Ready for new work."
 }

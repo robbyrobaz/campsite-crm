@@ -1,14 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_574708158b823_19cadff4f83",
-      "title": "[Blofin] Expand volume_volatility_mean_reversion to additional coin pairs",
-      "status": "In Progress",
-      "pid": 801304,
-      "dispatchedAt": "2026-03-02T10:06:00Z"
-    }
-  ],
-  "lastDispatch": "2026-03-02T10:06:00Z",
-  "lastHealthCheck": "2026-03-02T10:06:00Z",
-  "cycleNotes": "Recovered 1 stale card (12h old). Dispatched Blofin expansion task. All services healthy (CPU 73C, disk 39%). 2 recent deploys verified: Moonshot + NQ both live."
+  "activeTasks": [],
+  "lastDispatch": "2026-03-02T03:36:00Z",
+  "lastHealthCheck": "2026-03-02T03:36:00Z",
+  "cycleNotes": "Queue idle. All services healthy: CPU 80C (normal), disk 40% (268GB free). 0 In Progress, 0 Planned, 7 Inbox (untouched). Recent deploys verified: Blofin + NQ live and processing. Ready for work."
 }

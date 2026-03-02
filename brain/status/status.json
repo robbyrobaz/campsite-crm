@@ -1,34 +1,6 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-02T13:37:49Z",
-  "lastHealthCheck": "2026-03-02T13:37:49Z",
-  "cycleNotes": "Queue empty — no cards in Planned or In Progress. All recent completions verified deployed.",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "inbox": 8
-  },
-  "recentlyDeployed": [
-    {
-      "id": "c_e2aef575b0973_19cae6ce74b",
-      "title": "[Blofin] Design volatility breakout strategy for low-cap altcoins",
-      "status": "verified",
-      "lastVerified": "2026-03-02T13:37:49Z",
-      "endpoint": "http://127.0.0.1:8892/"
-    },
-    {
-      "id": "c_c0d05112c9131_19caea3ed60",
-      "title": "[Moonshot] set best model as champion (v27 val_auc=0.866)",
-      "status": "verified",
-      "lastVerified": "2026-03-02T13:37:49Z",
-      "endpoint": "http://127.0.0.1:8893/"
-    },
-    {
-      "id": "c_913a00f49701b_19caea3eb92",
-      "title": "[NQ] analyze vwap_fade filter conditions — 17% live wr vs backtest",
-      "status": "verified",
-      "lastVerified": "2026-03-02T13:37:49Z",
-      "endpoint": "http://127.0.0.1:8891/"
-    }
-  ]
+  "lastDispatch": "2026-03-02T07:07:00-07:00",
+  "lastHealthCheck": "2026-03-02T07:07:00-07:00",
+  "boardState": "clean"
 }

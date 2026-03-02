@@ -1,24 +1,47 @@
 {
-  "timestamp": "2026-03-02T13:43:00-07:00",
-  "activeTasks": [],
-  "queueStatus": {
-    "inbox": 9,
-    "planned": 0,
-    "inProgress": 0,
-    "done": 601,
-    "stopped": 6
-  },
-  "lastDispatch": "2026-03-02T13:43:00-07:00",
-  "lastHealthCheck": "2026-03-02T13:43:00-07:00",
-  "systemHealth": {
-    "cpu_temp": "78.0°C",
-    "disk_usage": "49%",
-    "services": "all_active",
-    "critical_alerts": "none"
-  },
-  "recentCompletions": [
-    "Blofin: vwap_volatility_anchor expansion (3min ago)",
-    "NQ: Consensus filter combos tournament (7min ago)",
-    "NQ: equal_tops_bottoms signal collapse debug (16min ago)"
-  ]
+  "activeTasks": [
+    {
+      "id": "c_e543f45df8879_19cb05b9b16",
+      "title": "[Moonshot] Investigate model champion selection — v27 (0.866 AUC) vs v28 (0.761)",
+      "project": "blofin-moonshot",
+      "pid": 2025626,
+      "dispatchedAt": "2026-03-02T14:20:00-07:00"
+    },
+    {
+      "id": "c_7bd551140dd73_19cb05b9ade",
+      "title": "[Blofin] Analyze if top 3 FT performers dominate recent PnL",
+      "project": "blofin-stack",
+      "pid": 2025784,
+      "dispatchedAt": "2026-03-02T14:20:00-07:00"
+    },
+    {
+      "id": "c_b06a834482cc3_19cb05b9a8e",
+      "title": "[NQ] Investigate ORB strategy signal frequency collapse",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 2026228,
+      "dispatchedAt": "2026-03-02T14:20:00-07:00"
+    }
+  ],
+  "recentlyDeployed": [
+    {
+      "id": "c_6eec477156dcd_19cb024d773",
+      "title": "[Blofin] Expand vwap_volatility_anchor",
+      "deployedAt": "2026-03-02T13:32:00-07:00",
+      "verified": true
+    },
+    {
+      "id": "c_5392ad52efccb_19cb0376e43",
+      "title": "[NQ] Implement consensus filter combos in tournament",
+      "deployedAt": "2026-03-02T13:29:00-07:00",
+      "verified": true
+    }
+  ],
+  "lastDispatch": "2026-03-02T14:20:00-07:00",
+  "lastHealthCheck": "2026-03-02T14:20:00-07:00",
+  "healthStatus": {
+    "cpuTemp": "80.0°C",
+    "diskUsage": "49%",
+    "criticalServices": "all active",
+    "criticalAlerts": "none"
+  }
 }

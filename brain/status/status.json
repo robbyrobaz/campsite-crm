@@ -1,6 +1,37 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-02T17:37:58Z",
-  "lastHealthCheck": "2026-03-02T17:37:58Z",
-  "notes": "Dispatch cycle 10:37 AM (MST). Board idle: 0 Planned, 0 In Progress. All services healthy. Recent work verified and deployed: NQ debugger ✓, Moonshot exit logic ✓, Blofin correlation ✓. No tasks to dispatch."
+  "timestamp": "2026-03-02T11:07:00Z",
+  "timezone": "America/Phoenix",
+  "lastDispatch": "2026-03-02T11:07:00Z",
+  "lastHealthCheck": "2026-03-02T11:07:00Z",
+  "systemHealth": {
+    "cpu_temp": "81.0°C",
+    "disk_usage": "49%",
+    "services": "all active"
+  },
+  "activeTasks": [
+    {
+      "id": "c_546f38474de3c_19cafb67714",
+      "title": "NQ: Diagnose & fix equal_tops_bottoms bleeding live (-$1,864)",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 1598334
+    },
+    {
+      "id": "c_f1ca6f0a3044f_19cafb6774f",
+      "title": "Blofin: Expand orderflow_imbalance to more coin pairs",
+      "project": "blofin-stack",
+      "pid": 1598319
+    },
+    {
+      "id": "c_39bef33837ed3_19cafb67787",
+      "title": "Moonshot: Validate exit logic, optimize ml_score threshold",
+      "project": "blofin-moonshot",
+      "pid": 1598315
+    }
+  ],
+  "recentlyDeployed": [
+    "NQ equal_tops_bottoms fix (NQ Dashboard: 200)",
+    "Moonshot position exit debug (Blofin Dashboard: 200)",
+    "Blofin cross_asset_correlation expansion (Blofin Dashboard: 200)"
+  ],
+  "nextDispatchIn": "30 minutes"
 }

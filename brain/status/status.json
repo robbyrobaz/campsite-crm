@@ -1,10 +1,23 @@
 {
-  "lastHeartbeat": "2026-03-01T16:46:00-07:00",
+  "lastDispatch": "2026-03-01T18:05:00-07:00",
+  "lastHealthCheck": "2026-03-01T18:05:00-07:00",
   "activeTasks": [],
   "recentCompletions": [
-    {"title": "ETB added to God Model (8 experts)", "completedAt": "2026-03-01T16:27:00"},
-    {"title": "Moonshot short positions fixed", "completedAt": "2026-03-01T16:21:00"},
-    {"title": "Jarvis home cache persistence fixed", "completedAt": "2026-03-01T16:35:00"}
+    {"title": "[Blofin] CRITICAL: Paper trades -1865% PnL in 7d — diagnose systemic loss", "completedAt": "2026-03-01T16:39:32", "verified": true},
+    {"title": "fix the jarvis home app to cache energy data locally for histograms and historical items", "completedAt": "2026-03-01T16:36:34", "verified": true},
+    {"title": "NQ: Verify equal_tops_bottoms live signals in God Model dispatcher", "completedAt": "2026-03-01T16:38:08", "verified": true}
   ],
-  "notes": "All systems healthy. Sunday - NQ markets closed (expected)."
+  "systemHealth": {
+    "cpuTemp": "67.0°C",
+    "diskUsage": "36%",
+    "servicesActive": {
+      "openclaw-gateway": true,
+      "blofin-stack-ingestor": true,
+      "blofin-stack-paper": true,
+      "nq-smb-watcher": true,
+      "nq-dashboard": true
+    },
+    "criticalAlerts": 0
+  },
+  "notes": "All systems healthy. Sunday evening - NQ markets closed (expected). nq-smb-watcher was inactive at cycle start, restarted successfully. No Planned/InProgress cards. Board idle."
 }

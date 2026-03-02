@@ -5783,3 +5783,10 @@ CLEAN ai-workshop (nothing to commit)
 COMMITTED campsite-crm
 CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 2 committed, 7 skipped
+CLEAN master-dashboard (nothing to commit)
+[main ac430cd] auto: snapshot 2026-03-02T13:00:01Z
+ 3 files changed, 879 insertions(+)
+ create mode 100644 expand_volatility_breakout_altcap.py
+ create mode 100644 expand_volatility_breakout_altcap_quick.py
+ create mode 100644 strategies/volatility_breakout_altcap.py
+COMMITTED blofin-stack

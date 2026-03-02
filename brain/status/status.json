@@ -1,6 +1,30 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-02T04:49:00Z",
-  "lastHealthCheck": "2026-03-02T04:49:00Z",
-  "cycleNotes": "Heartbeat OK. CPU 82C (sweep running in background). All services active. Session exit sweep PID 940791 running."
+  "lastDispatch": "2026-03-02T12:07:14Z",
+  "lastHealthCheck": "2026-03-02T12:07:14Z",
+  "systemHealth": {
+    "cpu_temp": "77°C",
+    "disk_usage": "40%",
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-smb-watcher": "active",
+      "nq-dashboard": "active"
+    },
+    "dashboards": {
+      "nq_dashboard": "200 OK",
+      "blofin_dashboard": "200 OK"
+    }
+  },
+  "recentCompletions": [
+    "c_09df00e6fbc24_19cae6ce7b4: [Moonshot] Expand scoring features",
+    "c_980c29dc2208_19cae6ce6dc: [NQ] gap_fill signal quality",
+    "c_e0690c0e51d6c_19cae369c02: [NQ] psych_levels bleeding"
+  ],
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 3
+  }
 }

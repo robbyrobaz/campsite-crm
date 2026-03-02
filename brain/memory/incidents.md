@@ -283,3 +283,12 @@ nq-dashboard.service was inactive because dashboard/app.py was running as an orp
 - **Action:** Restarted `jarvis-home-energy.service` (was inactive despite code change 13 min prior)
 - **Impact:** Energy service briefly restarted; data collection continuous
 
+## Dispatch Cycle — Sunday, March 1st 6:05 PM
+
+**Status:** HEALTHY (post-restart)
+
+- **Health Check:** CPU 67°C, disk 36%, services: gateway/blofin-ingestor/blofin-paper/nq-dashboard ACTIVE, **nq-smb-watcher INACTIVE**
+- **Action:** Restarted nq-smb-watcher.service — now ACTIVE
+- **Critical Alerts:** EXIT 0 (none)
+- **Proceeding to Phase 3 (board state fetch)**
+

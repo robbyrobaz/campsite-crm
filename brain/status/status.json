@@ -1,28 +1,9 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_aa84aa33d740e_19cad238693",
-      "title": "[Moonshot] Optimize exit logic \u2014 analyze hold times and tune SL/TP",
-      "assignee": "claude",
-      "project": "blofin-moonshot"
-    },
-    {
-      "id": "c_5a9224b49b842_19cad23867c",
-      "title": "[Blofin] Expand cross_asset_correlation to additional coin pairs",
-      "assignee": "claude",
-      "project": "blofin-stack"
-    },
-    {
-      "id": "c_e9fd7754886d7_19cad238660",
-      "title": "[NQ] Debug prev_day strategy \u2014 null PnL trades and model loading",
-      "assignee": "claude",
-      "project": "nq-pipeline"
-    }
-  ],
-  "lastDispatch": "2026-03-02T06:06:00Z",
-  "lastHealthCheck": "2026-03-02T06:06:00Z",
+  "activeTasks": [],
+  "lastDispatch": "2026-03-02T06:35:00Z",
+  "lastHealthCheck": "2026-03-02T06:35:00Z",
   "boardState": {
-    "inProgress": 3,
+    "inProgress": 0,
     "planned": 0,
     "maxConcurrent": 3
   },
@@ -33,5 +14,25 @@
     "nq-smb-watcher": "active",
     "nq-dashboard": "active"
   },
-  "deploymentVerified": "2026-03-02T06:06:00Z"
+  "lastDeploymentVerified": "2026-03-02T06:35:00Z",
+  "verifiedCards": [
+    {
+      "id": "c_5a9224b49b842_19cad23867c",
+      "title": "[Blofin] Expand cross_asset_correlation to additional coin pairs",
+      "status": "Done",
+      "deployed": true
+    },
+    {
+      "id": "c_e9fd7754886d7_19cad238660",
+      "title": "[NQ] Debug prev_day strategy — null PnL trades and model loading",
+      "status": "Done",
+      "deployed": true
+    },
+    {
+      "id": "c_aa84aa33d740e_19cad238693",
+      "title": "[Moonshot] Optimize exit logic — analyze hold times and tune SL/TP",
+      "status": "Done",
+      "deployed": true
+    }
+  ]
 }

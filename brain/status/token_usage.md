@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-03-01 23:00 MST
+**Updated:** 2026-03-01 23:15 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -9,28 +9,28 @@
 | 7-day (Sonnet) | **62.0%** | Mar 05 09:00 PM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 22.1M (388 requests)
-- **Input:** 3.6K | **Output:** 128.1K
-- **Cache Read:** 19.6M | **Cache Write:** 2.4M
-- **Cost (est):** $21.58
+- **Total Tokens:** 20.6M (362 requests)
+- **Input:** 3.4K | **Output:** 121.3K
+- **Cache Read:** 18.5M | **Cache Write:** 1.9M
+- **Cost (est):** $18.58
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 109 | 15.0M | 39.3K | $20.02 |
-| haiku | 279 | 7.1M | 88.8K | $1.57 |
+| opus | 102 | 14.0M | 37.2K | $17.10 |
+| haiku | 260 | 6.6M | 84.1K | $1.48 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 58.4M (727 requests)
-- **Output Tokens:** 245.2K
-- **Cost (est):** $55.37
+- **Total Tokens:** 54.4M (697 requests)
+- **Output Tokens:** 235.9K
+- **Cost (est):** $51.18
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
 | opus | 288 | 33.7M | 96.9K | $37.82 |
-| sonnet | 151 | 17.5M | 57.4K | $15.90 |
-| haiku | 288 | 7.3M | 90.9K | $1.65 |
+| sonnet | 129 | 13.7M | 47.0K | $11.72 |
+| haiku | 280 | 7.0M | 92.0K | $1.63 |
 
 ---
 *Note: Max 5x plan is $100/mo flat. Cost shown is equivalent API pricing, not actual charges.*

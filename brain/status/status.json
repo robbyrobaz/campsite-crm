@@ -1,32 +1,24 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_940971298dcb9_19cb024d7ad",
-      "title": "[Moonshot] Optimize ML scoring threshold",
-      "project": "blofin-moonshot",
-      "pid": 1825698,
-      "dispatched": "2026-03-02T13:14:00-07:00"
-    },
-    {
-      "id": "c_6eec477156dcd_19cb024d773",
-      "title": "[Blofin] Expand vwap_volatility_anchor to more coins",
-      "project": "blofin-stack",
-      "pid": 1825700,
-      "dispatched": "2026-03-02T13:14:00-07:00"
-    },
-    {
-      "id": "c_6e23d3eb27759_19cb024d733",
-      "title": "[NQ] Debug equal_tops_bottoms signal collapse",
-      "project": "NQ-Trading-PIPELINE",
-      "pid": 1825704,
-      "dispatched": "2026-03-02T13:14:00-07:00"
-    }
-  ],
-  "lastDispatch": "2026-03-02T13:14:15-07:00",
-  "lastHealthCheck": "2026-03-02T13:14:15-07:00",
-  "healthStatus": {
-    "cpu": "77C",
-    "disk": "49%",
-    "services": "all active"
-  }
+  "timestamp": "2026-03-02T13:43:00-07:00",
+  "activeTasks": [],
+  "queueStatus": {
+    "inbox": 9,
+    "planned": 0,
+    "inProgress": 0,
+    "done": 601,
+    "stopped": 6
+  },
+  "lastDispatch": "2026-03-02T13:43:00-07:00",
+  "lastHealthCheck": "2026-03-02T13:43:00-07:00",
+  "systemHealth": {
+    "cpu_temp": "78.0°C",
+    "disk_usage": "49%",
+    "services": "all_active",
+    "critical_alerts": "none"
+  },
+  "recentCompletions": [
+    "Blofin: vwap_volatility_anchor expansion (3min ago)",
+    "NQ: Consensus filter combos tournament (7min ago)",
+    "NQ: equal_tops_bottoms signal collapse debug (16min ago)"
+  ]
 }

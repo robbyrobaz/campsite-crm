@@ -30,7 +30,8 @@ If you skip these and get corrected, that's the most expensive thing that happen
 
 ## Active Projects (high-level — see brain/PROJECTS.md for full detail)
 - **NQ Futures Pipeline** ⭐ PRIMARY — Live forward test running (DRY_RUN). 8 models. `smb_live_forward_test`. Repo: `NQ-Trading-PIPELINE`. ETB not yet in live inference (high priority). gapfill/vwapfade bleeding live.
-- **Blofin Stack** ⭐ PRIMARY — Paper trading active (86K+ trades). T2: 12 strategies. Pipeline runs every 4h.
+- **Blofin Moonshot v2** ⭐ NEW — Clean rewrite live. 343 coins, tournament ML, social signals. Port 8893. Data accumulating, tournament starts after labels build up. Repo: blofin-moonshot-v2.
+- **Blofin Stack** ⭐ PRIMARY — Paper trading active (86K+ trades). T2: 12 strategies. Pipeline timer STOPPED per Rob's order.
 - **Jarvis Home** — port 8793, Nest/SPAN/Tesla/Wyze/GE live. Washer GE state stale (investigate). Ring blocked on 2FA.
 - **Numerai** — 3 models submitting daily. Not primary focus.
 - **Master Dashboard** — port 8890, usage panels live.
@@ -145,6 +146,21 @@ PATCH the card: `curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-
 
 ## Recent Changes (rolling 48h — update this at session end whenever significant changes happen)
 > This replaces needing to read the daily memory log on startup. Key decisions only.
+
+**Mar 2 2026 (evening) — MAJOR:**
+- **Moonshot v1 RETIRED**: blofin-moonshot.timer, service, dashboard, 2 openclaw crons all disabled
+- **Moonshot v2 LIVE**: clean rewrite, built by agent teams in 14 minutes
+  - Repo: https://github.com/robbyrobaz/blofin-moonshot-v2
+  - Local: /home/rob/.openclaw/workspace/blofin-moonshot-v2/
+  - Dashboard: port 8893 (blofin-moonshot-v2-dashboard.service)
+  - Timers: blofin-moonshot-v2.timer (4h), blofin-moonshot-v2-social.timer (1h)
+  - 343 coins, tournament ML (PF≥2.0, prec≥40%, 50+ trades), 50 features, social signals (free tier)
+  - Path-dependent labels, PnL-weighted training, bootstrap CI on PF
+  - Champion = best FT PnL (≥20 trades) — NEVER AUC
+- **blofin-stack-pipeline.timer STOPPED** per Rob's order (do not restart without approval)
+- **MOONSHOT_V2_PRD.md**: full spec at https://github.com/robbyrobaz/blofin-moonshot/blob/moonshot-v2-plan/MOONSHOT_V2_PRD.md
+- **72h audit completed**: MOONSHOT_AUDIT.md on branch moonshot-audit-20260302 in blofin-moonshot repo
+- Root cause of v1 mass exit: exit.py called predict_proba() without symbol/ts_ms → regime features=0.0 → all scores 0.129 → 15 profitable positions killed
 
 **Feb 28 2026 (afternoon):**
 - IBKR pipeline LIVE: IB Gateway Docker running, paper account DUH860616, port 4002, no 2FA needed

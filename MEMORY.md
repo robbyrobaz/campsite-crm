@@ -41,6 +41,26 @@
 
 **Key insight:** Overall/aggregate performance is meaningless. The top 5 performers are gold. Always filter to top performers FIRST.
 
+## Moonshot v2 Architecture (2026-03-02)
+
+### What is it
+Persistent engine finding big moves (±30%) on any of 343 Blofin USDT pairs.
+- **Repo:** https://github.com/robbyrobaz/blofin-moonshot-v2
+- **Dashboard:** port 8893
+- **Timers:** blofin-moonshot-v2.timer (4h cycle), blofin-moonshot-v2-social.timer (1h social)
+
+### Non-negotiables
+- Champion selection = best FT PnL with ≥20 trades. NEVER AUC.
+- One `compute_features()` function used for training, live scoring, AND exit (prevents INVALIDATION crash class)
+- Path-dependent labels: hit +30% BEFORE -10% (long), hit -30% BEFORE +10% (short)
+- All 343 pairs dynamic — no static coin lists, ever
+- 100% Blofin-native data + free social (Fear & Greed, CoinGecko trending, RSS, Reddit, GitHub)
+- Backtest gate: bt_pf ≥ 2.0, precision ≥ 40%, trades ≥ 50, ALL 3 walk-forward folds pass
+- Bootstrap CI on PF: lower bound ≥ 1.0
+
+### Why v1 died
+Entry/exit used different feature sets when a regime-aware model was promoted. Exit called predict_proba() without symbol/ts_ms → regime features defaulted to 0.0 → all scores 0.129 → 15 profitable positions killed. v2 prevents this with feature_version hashing.
+
 ## Lessons Learned
 
 - **Subagents die on heavy data tasks.** Multi-GB parquet loads → run in main session, not builders.

@@ -1,38 +1,31 @@
 {
-  "timestamp": "2026-03-02T20:13:00-07:00",
+  "timestamp": "2026-03-02T20:22:00-07:00",
   "activeTasks": [
     {
-      "id": "c_a3cd04adfd5ff_19cb1a50ab0",
-      "title": "[Moonshot] Set champion model (v27, auc=0.87) and measure signal quality impact",
-      "pid": 2708243,
-      "project": "blofin-moonshot",
-      "dispatchedAt": "2026-03-02T20:13:00-07:00"
-    },
-    {
-      "id": "c_35f5ef57ea9ee_19cb1a4ee41",
-      "title": "[Blofin] Expand cross_asset_correlation to new coin pairs — 70% cumulative PnL",
-      "pid": 2708246,
-      "project": "blofin-stack",
-      "dispatchedAt": "2026-03-02T20:13:00-07:00"
-    },
-    {
-      "id": "c_c0c63e94cd11_19cb1a4d5b6",
-      "title": "[NQ] Debug vwap_fade strategy bleeding — 11% live WR vs 2.04 BT PF",
-      "pid": 2708265,
-      "project": "NQ-Trading-PIPELINE",
-      "dispatchedAt": "2026-03-02T20:13:00-07:00"
+      "id": "moonshot-v2-cycle",
+      "title": "Moonshot v2 — cycle 2 running (data accumulation phase)",
+      "pid": "timer-managed",
+      "project": "blofin-moonshot-v2",
+      "dispatchedAt": "2026-03-02T20:24:00-07:00",
+      "note": "Fetching extended data (OI, mark prices) for 343 coins. Tournament will start after labels accumulate."
     }
   ],
-  "inProgressCount": 3,
+  "inProgressCount": 1,
   "plannedCount": 0,
-  "recentlyCompletedCount": 3,
-  "lastDispatch": "2026-03-02T20:13:00-07:00",
-  "lastHealthCheck": "2026-03-02T20:13:00-07:00",
+  "recentlyCompletedCount": 1,
+  "lastDispatch": "2026-03-02T20:00:00-07:00",
+  "lastHealthCheck": "2026-03-02T20:14:00-07:00",
   "systemHealth": {
-    "cpu": "64°C",
+    "cpu": "61°C",
     "disk": "41% (264G free)",
-    "services": "all active (openclaw-gateway, blofin-ingestor, blofin-paper, nq-smb-watcher, nq-dashboard)"
+    "services": "all active (openclaw-gateway, blofin-ingestor, blofin-paper, nq-smb-watcher, nq-dashboard, moonshot-v2-dashboard)"
   },
-  "boardStatus": "3 builders active (Moonshot, Blofin, NQ)",
-  "nextDispatchCycle": "2026-03-02T20:43:00-07:00"
+  "boardStatus": "Moonshot v2 deploying — cycle 2 in progress",
+  "nextDispatchCycle": "2026-03-02T20:30:00-07:00",
+  "notes": [
+    "Moonshot v1 fully shut down (service, timer, dashboard, 2 crons)",
+    "Moonshot v2 live at port 8893 — 343 coins, tournament ML, social signals",
+    "blofin-moonshot.timer and blofin-stack-pipeline.timer STOPPED per Rob's order",
+    "Weekly token usage: 81% (resets Mar 5 9pm MST)"
+  ]
 }

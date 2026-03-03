@@ -1,26 +1,23 @@
 {
-  "activeTasks": [
+  "lastDispatch": "1772541650",
+  "dispatchedCards": [
     {
-      "id": "c_2a30c29dbd065_19cb3936cc1",
-      "title": "[Moonshot] Set up blofin-moonshot.timer for 4h scoring cycle",
-      "pid": 3424082,
-      "dispatchedAt": "2026-03-03T05:09:00Z"
+      "id": "c_b862025b9f9f9_19cb2ef335c",
+      "title": "[Blofin] Extend vwap_volatility_rebound FT period for T2 promotion",
+      "pid": 3459252
     },
     {
-      "id": "c_13a32e4d17b68_19cb39337e8",
-      "title": "[Blofin] Debug momentum_v1: T2 strategy with NULL ft_profit_factor",
-      "pid": 3424160,
-      "dispatchedAt": "2026-03-03T05:09:00Z"
-    },
-    {
-      "id": "c_774d5d89b6a0f_19cb3931865",
-      "title": "[NQ] Diagnose equal_tops_bottoms: 3.02 BT PF vs -$1,864 live",
-      "pid": 3424323,
-      "dispatchedAt": "2026-03-03T05:09:00Z"
+      "id": "c_b519f748e243_19cb2ef3387",
+      "title": "[Moonshot] Optimize entry scoring thresholds",
+      "pid": 3459299
     }
   ],
-  "queued": 2,
-  "lastDispatch": "2026-03-03T05:09:00Z",
-  "lastHealthCheck": "2026-03-03T05:09:00Z",
-  "summary": "Health OK. 3 builders running (Moonshot timer, Blofin momentum debug, NQ equal_tops diagnosis). 2 cards queued. 3 recently completed cards verified live."
+  "activeTasks": 2,
+  "inProgress": 0,
+  "lastHealthCheck": "1772541650",
+  "health": {
+    "cpu": "51C",
+    "disk": "43%",
+    "services": "all_active"
+  }
 }

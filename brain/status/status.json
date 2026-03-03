@@ -1,9 +1,28 @@
 {
-  "updatedAt": "2026-03-03T17:06:00Z",
-  "activeTasks": [],
-  "recentCompletions": [
-    {"id": "c_f73f6fae7112b_19cb49752f9", "title": "ETB retrain", "status": "Done", "result": "Model trained WR=50.3% PF=3.034, re-enabled in config"},
-    {"id": "c_484d307607dfc_19cb497532d", "title": "Blofin simplify to 3", "status": "Done", "result": "68 strategies archived, 3 winners active, 820 pairs blacklisted"}
+  "activeTasks": [
+    {
+      "id": "c_bf8c4101dc64c_19cb4a61d84",
+      "title": "[Moonshot] Analyze closed trades — optimize scoring thresholds for entry quality",
+      "status": "In Progress",
+      "pid": 3745528,
+      "started_at": "2026-03-03T10:16:00Z"
+    },
+    {
+      "id": "c_8fe2b0ee5e419_19cb4a5fe38",
+      "title": "[Blofin] Retrain orderflow_imbalance with latest 7d tick data — refresh live edge",
+      "status": "In Progress",
+      "pid": 3745540,
+      "started_at": "2026-03-03T10:16:00Z"
+    },
+    {
+      "id": "c_b080dc1fe5b8d_19cb4a5e344",
+      "title": "[NQ] Fix dispatcher logic — fail-gate strategies should never run live",
+      "status": "In Progress",
+      "pid": 3745556,
+      "started_at": "2026-03-03T10:16:00Z"
+    }
   ],
-  "notes": "7-day Sonnet usage at 93% — resets Mar 5 9PM MST"
+  "lastDispatch": "2026-03-03T10:16:30Z",
+  "lastHealthCheck": "2026-03-03T10:16:00Z",
+  "dispatchNotes": "3 builders dispatched. All 3 Planned cards ready and enriched. Verified 3 recently completed cards deployed (NQ ETB model, Blofin strategy simplification, NQ orb signal quality). Services restarted successfully. Dashboards HTTP 200."
 }

@@ -1,59 +1,22 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_cb6ffa3165ee1_19cb401db14",
-      "title": "[Moonshot] diagnose model regression v30 (0.631 AUC) vs champion v28 (0.761 AUC)",
-      "status": "In Progress",
-      "pid": 3566846,
-      "project": "blofin-moonshot",
-      "dispatchedAt": "2026-03-03T14:10:00Z"
-    },
-    {
-      "id": "c_eadd46d509345_19cb401daec",
-      "title": "[Blofin] audit open position losses — 89 open trades with mostly negative unrealized PnL",
-      "status": "In Progress",
-      "pid": 3566861,
-      "project": "blofin-stack",
-      "dispatchedAt": "2026-03-03T14:10:00Z"
-    },
-    {
-      "id": "c_3900223f9314a_19cb401dabc",
-      "title": "[NQ] investigate vwap_fade signal filtering — 2.04 BT PF vs -$3,064 live (worst)",
-      "status": "In Progress",
-      "pid": 3566876,
-      "project": "NQ-Trading-PIPELINE",
-      "dispatchedAt": "2026-03-03T14:10:00Z"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-03T07:39:00-07:00",
+  "lastHealthCheck": "2026-03-03T07:39:00-07:00",
+  "systemStatus": {
+    "cpu_temp_c": 83.0,
+    "disk_usage_pct": 44,
+    "critical_services": {
+      "openclaw_gateway": "active",
+      "blofin_stack_ingestor": "active",
+      "blofin_stack_paper": "active",
+      "nq_smb_watcher": "active",
+      "nq_dashboard": "active"
     }
-  ],
-  "lastDispatch": "2026-03-03T14:09:00Z",
-  "lastHealthCheck": "2026-03-03T14:09:00Z",
+  },
   "boardState": {
-    "inProgress": 3,
+    "in_progress": 0,
     "planned": 0,
-    "done": 641,
-    "failed": 18,
-    "inbox": 2,
-    "stopped": 7
+    "recently_completed": 3
   },
-  "systemHealth": {
-    "cpuTemp": "73°C",
-    "diskUsage": "43%",
-    "servicesUp": 5,
-    "allActive": [
-      "openclaw-gateway",
-      "blofin-stack-ingestor",
-      "blofin-stack-paper",
-      "nq-smb-watcher",
-      "nq-dashboard"
-    ]
-  },
-  "dispatchSummary": {
-    "cycle": "3/3 @ 07:09 AM MST",
-    "phase1HealthCheck": "PASS",
-    "phase2CriticalAlerts": "PASS",
-    "phase4StaleRecovery": "0 cards recovered",
-    "phase5Enrichment": "3 cards ready (all verified)",
-    "phase6Dispatch": "3 cards dispatched successfully",
-    "phase7DeploymentVerification": "0 recently done cards (within 60min)"
-  }
+  "alerts": "none"
 }

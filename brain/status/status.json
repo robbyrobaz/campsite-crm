@@ -1,29 +1,17 @@
 {
   "activeTasks": [
     {
-      "id": "c_0f6940929563a_19cb1dc327b",
-      "title": "[moonshot] analyze 18 closed trades — exit quality and pattern drivers",
-      "pid": 2812294,
-      "dispatchedAt": "2026-03-02T21:13:00Z"
-    },
-    {
-      "id": "c_9abc8ad87af4f_19cb1dc184c",
-      "title": "[blofin] expand cross_asset_correlation to additional coin pairs and analyze profitability drivers",
-      "pid": 2812299,
-      "dispatchedAt": "2026-03-02T21:13:00Z"
-    },
-    {
-      "id": "c_dc9f58aa99973_19cb1dbf7c9",
-      "title": "[nq] implement confidence scoring for tier=1 strategies in god model dispatcher",
-      "pid": 2812324,
-      "dispatchedAt": "2026-03-02T21:13:00Z"
+      "id": "c_2a1ed3784ce76_19cb1dbb1d5",
+      "title": "[nq] analyze backtest-to-live pf divergence across all tier=1 strategies",
+      "pid": 2867959,
+      "dispatchedAt": "2026-03-02T21:43:00Z"
     }
   ],
-  "plannedRemaining": 1,
-  "lastDispatch": "2026-03-02T21:13:00Z",
-  "lastHealthCheck": "2026-03-02T21:13:00Z",
+  "plannedRemaining": 0,
+  "lastDispatch": "2026-03-02T21:43:00Z",
+  "lastHealthCheck": "2026-03-02T21:43:00Z",
   "systemStatus": {
-    "cpuTemp": "81.0°C",
+    "cpuTemp": "54.0°C",
     "diskUsage": "40%",
     "criticalAlerts": 0
   }

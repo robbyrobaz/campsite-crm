@@ -1,28 +1,25 @@
 {
   "activeTasks": [
     {
-      "id": "c_bf8c4101dc64c_19cb4a61d84",
-      "title": "[Moonshot] Analyze closed trades — optimize scoring thresholds for entry quality",
+      "id": "c_9d8a14997ee74_19cb4ced8e8",
+      "title": "[NQ] NY Open Scalper v2 — multi-entry per session, loose filter, both R:R directions",
       "status": "In Progress",
-      "pid": 3745528,
-      "started_at": "2026-03-03T10:16:00Z"
-    },
-    {
-      "id": "c_8fe2b0ee5e419_19cb4a5fe38",
-      "title": "[Blofin] Retrain orderflow_imbalance with latest 7d tick data — refresh live edge",
-      "status": "In Progress",
-      "pid": 3745540,
-      "started_at": "2026-03-03T10:16:00Z"
-    },
-    {
-      "id": "c_b080dc1fe5b8d_19cb4a5e344",
-      "title": "[NQ] Fix dispatcher logic — fail-gate strategies should never run live",
-      "status": "In Progress",
-      "pid": 3745556,
-      "started_at": "2026-03-03T10:16:00Z"
+      "pid": 3788280,
+      "logPath": "/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_9d8a14997ee74_19cb4ced8e8.log",
+      "startedAt": "2026-03-03T17:46:54Z"
     }
   ],
-  "lastDispatch": "2026-03-03T10:16:30Z",
-  "lastHealthCheck": "2026-03-03T10:16:00Z",
-  "dispatchNotes": "3 builders dispatched. All 3 Planned cards ready and enriched. Verified 3 recently completed cards deployed (NQ ETB model, Blofin strategy simplification, NQ orb signal quality). Services restarted successfully. Dashboards HTTP 200."
+  "plannedQueue": [],
+  "lastDispatch": "2026-03-03T17:46:54Z",
+  "lastHealthCheck": "2026-03-03T17:46:54Z",
+  "systemHealth": {
+    "cpuTemp": "82°C",
+    "diskUsage": "45%",
+    "criticalServicesActive": 5
+  },
+  "verifiedDeployments": {
+    "blofin": "active (8892 HTTP 200)",
+    "moonshot": "active (8893 HTTP 200)",
+    "nq": "active (8891 HTTP 200)"
+  }
 }

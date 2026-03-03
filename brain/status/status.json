@@ -1,7 +1,31 @@
 {
-  "timestamp": "2026-03-03T03:32:00-07:00",
-  "activeTasks": [],
-  "lastDispatch": "2026-03-03T03:32:00-07:00",
-  "lastHealthCheck": "2026-03-03T03:32:00-07:00",
-  "summary": "Board empty (0 planned, 0 in progress). All services healthy. 3 recent completions verified deployed."
+  "lastDispatch": "2026-03-03T04:39:00Z",
+  "lastHealthCheck": "2026-03-03T04:39:00Z",
+  "timestamp": 1772535901000,
+  "activeTasks": [
+    {
+      "id": "c_b6f655adae54d_19cb35c5fef",
+      "title": "[NQ] Investigate orb signal quality — 3.006 BT PF vs -$604 live",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 3387954
+    },
+    {
+      "id": "c_f1f3e62616f3a_19cb35c6017",
+      "title": "[Blofin] Promote vwap_volatility_rebound to T2 — 2.21 FT PF ready for expansion",
+      "project": "blofin-stack",
+      "pid": 3387847
+    },
+    {
+      "id": "c_4265b20ac0447_19cb35c603f",
+      "title": "[Moonshot] Tune entry/exit thresholds based on open position outcomes (5 live positions)",
+      "project": "blofin-moonshot",
+      "pid": 3387577
+    }
+  ],
+  "systemHealth": {
+    "cpuTemp": "56.0°C",
+    "diskUsage": "42%",
+    "criticalServices": "all active"
+  },
+  "notes": "Dispatched 3 cards (max concurrent builders). All deployment verifications passed for recent Done cards. Moonshot service not found (may need systemd unit setup on next cycle)."
 }

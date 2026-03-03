@@ -1,22 +1,6 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-03T07:39:00-07:00",
-  "lastHealthCheck": "2026-03-03T07:39:00-07:00",
-  "systemStatus": {
-    "cpu_temp_c": 83.0,
-    "disk_usage_pct": 44,
-    "critical_services": {
-      "openclaw_gateway": "active",
-      "blofin_stack_ingestor": "active",
-      "blofin_stack_paper": "active",
-      "nq_smb_watcher": "active",
-      "nq_dashboard": "active"
-    }
-  },
-  "boardState": {
-    "in_progress": 0,
-    "planned": 0,
-    "recently_completed": 3
-  },
-  "alerts": "none"
+  "lastDispatch": "2026-03-03T15:09:00.000Z",
+  "lastHealthCheck": "2026-03-03T15:09:00.000Z",
+  "notes": "Pulse 8:09 AM MST — 0 In Progress, 0 Planned. All builders completed. Services healthy (NQ, Blofin, dashboards all active/200). CPU 74°C, disk 44%."
 }

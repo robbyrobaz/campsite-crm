@@ -1,25 +1,30 @@
 {
+  "activeTasksCount": 3,
   "activeTasks": [
     {
-      "id": "c_9d8a14997ee74_19cb4ced8e8",
-      "title": "[NQ] NY Open Scalper v2 — multi-entry per session, loose filter, both R:R directions",
+      "id": "c_d0b47ddc4a394_19cb4dcdd92",
+      "title": "[Moonshot] Analyze first 5 closed trades — entry/exit quality, scoring accuracy, PnL",
       "status": "In Progress",
-      "pid": 3788280,
-      "logPath": "/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_9d8a14997ee74_19cb4ced8e8.log",
-      "startedAt": "2026-03-03T17:46:54Z"
+      "pid": 3808006
+    },
+    {
+      "id": "c_7a2dad46360c7_19cb4dcdd6b",
+      "title": "[Blofin] Expand bb_squeeze_v2 to BTC and ETH — currently 60%+ WR on alts, validate on largest pairs",
+      "status": "In Progress",
+      "pid": 3808018
+    },
+    {
+      "id": "c_44bcd36f1fe1e_19cb4dcdd44",
+      "title": "[NQ] Investigate ema_pullback gate_status divergence — tier=1, gate=fail, but +$1,375 live 7d",
+      "status": "In Progress",
+      "pid": 3808032
     }
   ],
-  "plannedQueue": [],
-  "lastDispatch": "2026-03-03T17:46:54Z",
-  "lastHealthCheck": "2026-03-03T17:46:54Z",
+  "lastDispatch": "2026-03-03T18:16:28Z",
+  "lastHealthCheck": "2026-03-03T18:16:22Z",
   "systemHealth": {
-    "cpuTemp": "82°C",
+    "cpuTemp": "81°C",
     "diskUsage": "45%",
     "criticalServicesActive": 5
-  },
-  "verifiedDeployments": {
-    "blofin": "active (8892 HTTP 200)",
-    "moonshot": "active (8893 HTTP 200)",
-    "nq": "active (8891 HTTP 200)"
   }
 }

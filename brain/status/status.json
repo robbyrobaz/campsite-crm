@@ -1,32 +1,16 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_dbfd18ccac011_19caf48e8c6",
-      "title": "[NQ] Fix equal_tops_bottoms signal quality — PF 3.02 backtest, -$1,864 live",
-      "project": "NQ-Trading-PIPELINE",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-02T19:13:00Z"
-    },
-    {
-      "id": "c_1233c99dc6763_19cb1004f8c",
-      "title": "[Blofin] Audit T1->T2 promotion — why vwap_volatility_rebound stuck at T1",
-      "project": "blofin-stack",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-02T19:13:00Z"
-    },
-    {
-      "id": "c_c8a5d1dd17d6d_19cb1004fc4",
-      "title": "[Moonshot] Analyze closed trades PnL and exit quality — 18 trades, slow velocity",
-      "project": "blofin-moonshot",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-02T19:13:00Z"
-    }
-  ],
-  "lastDispatch": "2026-03-02T19:13:00Z",
-  "lastHealthCheck": "2026-03-02T19:13:00Z",
-  "cpuTemp": "70.0°C",
-  "diskUsage": "41%",
-  "servicesStatus": "all active (5/5)",
-  "criticalAlerts": "none",
-  "nextDispatchTime": "2026-03-02T19:43:00Z"
+  "timestamp": "2026-03-02T19:43:00-07:00",
+  "activeTasks": [],
+  "inProgressCount": 0,
+  "plannedCount": 0,
+  "recentlyCompletedCount": 3,
+  "lastDispatch": "2026-03-02T19:43:00-07:00",
+  "lastHealthCheck": "2026-03-02T19:43:00-07:00",
+  "systemHealth": {
+    "cpu": "56°C",
+    "disk": "41% (265G free)",
+    "services": "all active"
+  },
+  "boardStatus": "idle (no work queued)",
+  "nextDispatchCycle": "2026-03-02T20:13:00-07:00"
 }

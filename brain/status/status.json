@@ -1,23 +1,37 @@
 {
-  "lastDispatch": "1772541650",
+  "lastDispatch": "2026-03-03T06:09:00-07:00",
   "dispatchedCards": [
     {
-      "id": "c_b862025b9f9f9_19cb2ef335c",
-      "title": "[Blofin] Extend vwap_volatility_rebound FT period for T2 promotion",
-      "pid": 3459252
+      "id": "c_b959bee463d4d_19cb3ca9af6",
+      "title": "[Moonshot] Retrain ML model to recover from v29 regression (0.617 AUC)",
+      "pid": 3494805,
+      "project": "blofin-moonshot"
     },
     {
-      "id": "c_b519f748e243_19cb2ef3387",
-      "title": "[Moonshot] Optimize entry scoring thresholds",
-      "pid": 3459299
+      "id": "c_9f9005c2b199e_19cb3ca9ad7",
+      "title": "[Blofin] Diagnose low paper trade volume — 0 closed trades in 24h",
+      "pid": 3494815,
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_54f834dad7899_19cb3ca9aa9",
+      "title": "[NQ] Verify psych_levels signal generation — registered but not scoring?",
+      "pid": 3494827,
+      "project": "NQ-Trading-PIPELINE"
     }
   ],
-  "activeTasks": 2,
-  "inProgress": 0,
-  "lastHealthCheck": "1772541650",
+  "activeTasks": 3,
+  "inProgress": 3,
+  "lastHealthCheck": "2026-03-03T06:09:00-07:00",
   "health": {
-    "cpu": "51C",
+    "cpu": "74°C",
     "disk": "43%",
-    "services": "all_active"
+    "services": "all_active",
+    "criticalAlerts": "none"
+  },
+  "deploymentStatus": {
+    "nqServices": "active_http200",
+    "blofinServices": "active_http200",
+    "recentlyDeployed": "verified"
   }
 }

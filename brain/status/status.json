@@ -1,13 +1,30 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-03T14:46:00-07:00",
-  "lastHealthCheck": "2026-03-03T14:46:00-07:00",
-  "status": "idle",
-  "notes": "All health checks passed. No cards in Planned or In Progress. Dispatcher waiting for new work.",
-  "health": {
-    "cpu_temp_c": 78,
-    "disk_usage_pct": 46,
-    "services_active": 5,
-    "services_total": 5
-  }
+  "activeTasks": [
+    {
+      "id": "c_1891fc4059522_19cb5bc7bb1",
+      "title": "[NQ] New Strategy: Inside Bar Breakout \u2014 WR=65%, PF=1.86"
+    },
+    {
+      "id": "c_fd49282ced016_19cb5bda833",
+      "title": "[NQ] New Strategy: volume_spike_reversal \u2014 WR=93.6%, PF=14.67 (quick test)"
+    },
+    {
+      "id": "c_f3ae217a9017e_19cb5bd2739",
+      "title": "[NQ] Fix vwap_reclaim strategy \u2014 VWAP computed per sub-session not daily, causing 45% vs 63% WR"
+    }
+  ],
+  "plannedQueue": [
+    {
+      "id": "c_5677f1baf57d1_19cb5b87b8a",
+      "title": "[Moonshot] tune tp/sl thresholds \u2014 analyze 26 closed trades by score bracket"
+    },
+    {
+      "id": "c_6ecab8a37ffa_19cb5b87b6a",
+      "title": "[Blofin] expand bb_squeeze_v2 to btc + eth \u2014 test on largest pairs"
+    }
+  ],
+  "lastDispatch": "2026-03-03T22:17:00Z",
+  "lastHealthCheck": "2026-03-03T22:17:00Z",
+  "dispatchStatus": "HELD (max 3 builders active, waiting for slot)",
+  "notes": "All services healthy. NQ deployment verified. Ready to dispatch on next cycle when slot opens."
 }

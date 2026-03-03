@@ -1,22 +1,17 @@
 {
   "activeTasks": [
-    {
-      "id": "c_fb37fc03b103c_19cb249eb1d",
-      "title": "[NQ] Root-cause equal_tops_bottoms PF divergence",
-      "status": "In Progress",
-      "assignee": "claude",
-      "updatedMin": 10
-    },
-    {
-      "id": "c_b6f655adae54d_19cb35c5fef",
-      "title": "[NQ] Investigate orb signal quality — 3.006 BT PF vs -$604 live",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 3654141,
-      "dispatchedAt": "2026-03-03T15:39:00Z"
-    }
+    {"id": "c_a4767f756657e_19cb46f6d51", "title": "[Moonshot] Validate ML model training cycle is running regularly", "pid": 3683261},
+    {"id": "c_f130f2bc71345_19cb46f3bc5", "title": "[Blofin] Expand top FT performer to additional coin pairs", "pid": 3683361},
+    {"id": "c_eff5a960d91e3_19cb46f1240", "title": "[NQ] Diagnose vwap_fade bleeding live", "pid": 3683411}
   ],
-  "lastDispatch": "2026-03-03T15:39:00.000Z",
-  "lastHealthCheck": "2026-03-03T15:39:00.000Z",
-  "notes": "Pulse 8:39 AM MST — 2/3 builders active (ETB 10m ago, ORB just dispatched). All critical services healthy. Temp 85°C, disk 44%. No stale cards, no critical alerts. ORB investigation will likely take 15-30m."
+  "lastDispatch": "2026-03-03T09:09:00-07:00",
+  "lastHealthCheck": "2026-03-03T09:09:00-07:00",
+  "incidents": [
+    {
+      "timestamp": "2026-03-03T09:09:00-07:00",
+      "service": "blofin-moonshot.timer",
+      "issue": "Timer was inactive after Moonshot retraining completed",
+      "action": "Restarted and enabled timer"
+    }
+  ]
 }

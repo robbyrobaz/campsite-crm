@@ -307,3 +307,13 @@ nq-dashboard.service was inactive because dashboard/app.py was running as an orp
 **Impact:** 30-minute gap where dashboard was offline. Live models may not have been updated until restart.
 
 **Follow-up:** Check journalctl for why it exited: `journalctl --user -u blofin-moonshot-dashboard.service -n 50 --since "30 min ago"`
+
+## 2026-03-03 09:09 — Moonshot Timer Inactive
+
+**Service:** blofin-moonshot.timer
+**Severity:** Medium (impacts automated model retraining)
+**Root Cause:** Timer stopped running after Moonshot retraining completed (card c_b959bee463d4d_19cb3ca9af6)
+**Action Taken:** Restarted and enabled blofin-moonshot.timer
+**Status:** ✓ Resolved
+
+The timer was not active, which would have prevented the 4h training cycle from running. This was caught during deployment verification and fixed.

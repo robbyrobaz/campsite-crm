@@ -88,6 +88,25 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - Commit all changes: `git add -A && git commit -m "..." && git push`
 ```
 
+## ⚠️ Heavy-Compute Card Rules (added 2026-03-03 after duplicate sweep incident):
+Any card that runs a script expected to take >10 minutes MUST include this in the description:
+
+```
+## Long-Running Script Rules (NON-NEGOTIABLE)
+This script will take >10 minutes. Follow these rules exactly:
+1. Launch as background process: `nohup python3 <script> > /tmp/<name>.log 2>&1 &`
+   Then: `echo "PID: $!"` and record it
+2. Check progress via: `tail -f /tmp/<name>.log`
+3. Do NOT re-run the script if an exec call times out — the script is still running in background
+4. Do NOT launch a second instance — check `ps aux | grep <script>` first
+5. Wait for completion by polling: `tail -5 /tmp/<name>.log` every few minutes
+6. Only mark Done after the log shows the final summary
+```
+
+**Jarvis (when writing the card):** If the task involves a backtest sweep, training run, or any script
+that processes >6 months of data, add the above block. No exceptions. The duplicate-sweep CPU
+incident (2026-03-03) was caused by a builder exec timing out and re-running the same script 4 times.
+
 ## Builder Verification (NON-OPTIONAL — builder does this, no separate QA agent):
 > The builder verifies their own work before marking Done. No QA sentinel, no Review/Test status.
 - [ ] **Dashboards/UI:** `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:<port>/` must return 200. Check for JS errors (run `node --check` on extracted script blocks if Flask/Jinja).

@@ -1,17 +1,13 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-03T21:17:32.213647+00:00",
-  "lastHealthCheck": "2026-03-03T21:17:32.213655+00:00",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "done": 685,
-    "inbox": 2,
-    "stopped": 7
-  },
-  "recentVerifications": [
-    "\u2705 Blofin slippage card \u2014 services active, dashboard live",
-    "\u2705 NQ vwap_fade card \u2014 service active, dashboard live",
-    "\u2705 Moonshot TP/SL card \u2014 changes committed, analysis complete"
-  ]
+  "lastDispatch": "2026-03-03T14:46:00-07:00",
+  "lastHealthCheck": "2026-03-03T14:46:00-07:00",
+  "status": "idle",
+  "notes": "All health checks passed. No cards in Planned or In Progress. Dispatcher waiting for new work.",
+  "health": {
+    "cpu_temp_c": 78,
+    "disk_usage_pct": 46,
+    "services_active": 5,
+    "services_total": 5
+  }
 }

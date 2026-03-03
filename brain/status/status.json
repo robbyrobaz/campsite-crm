@@ -1,29 +1,46 @@
 {
   "activeTasks": [
     {
-      "id": "c_455b101c19061_19cb0c94c96",
-      "title": "[Blofin] expand orderflow_imbalance (T2 top FT performer) to new coin pairs",
-      "status": "In Progress",
-      "project": "blofin-stack",
-      "pid": 2510915
-    },
-    {
-      "id": "c_acbd76a8ae03f_19cb0249ed9",
-      "title": "[NQ] Debug equal_tops_bottoms signal collapse — PF 3.02 backtest, -$1,864 live",
-      "status": "In Progress",
-      "project": "NQ-Trading-PIPELINE",
-      "pid": 2510974
-    },
-    {
-      "id": "c_c2a54c059f781_19cb0c94e04",
-      "title": "[Moonshot] analyze 18 closed trades — win rate and pattern drivers",
+      "id": "c_d46622d3393d1_19cb1587628",
+      "title": "[Moonshot] Fix model calibration — new champion must recalibrate thresholds at training time",
       "status": "In Progress",
       "project": "blofin-moonshot",
-      "pid": 2511506
+      "pid": 2559331,
+      "dispatchedAt": "2026-03-02T18:43:00-07:00"
+    },
+    {
+      "id": "c_d4ec66583cf1f_19cb15034b3",
+      "title": "[Moonshot] Investigate mass ML score crash — all 16 positions scored 0.75-0.90 then dropped to 0.129",
+      "status": "In Progress",
+      "project": "blofin-moonshot",
+      "pid": 2559343,
+      "dispatchedAt": "2026-03-02T18:43:00-07:00"
+    },
+    {
+      "id": "c_41b9410c45fd5_19cb05b5701",
+      "title": "[NQ] Investigate ORB strategy signal frequency collapse — 3 live trades (0 wins)",
+      "status": "In Progress",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 2559357,
+      "dispatchedAt": "2026-03-02T18:43:00-07:00"
     }
   ],
-  "lastDispatch": "2026-03-02T18:13:00-07:00",
-  "lastHealthCheck": "2026-03-02T18:13:00-07:00",
+  "plannedQueue": [
+    {
+      "id": "c_dbfd18ccac011_19caf48e8c6",
+      "title": "[NQ] Fix equal_tops_bottoms signal quality — PF 3.02 backtest, -$1,864 live"
+    },
+    {
+      "id": "c_1233c99dc6763_19cb1004f8c",
+      "title": "[Blofin] Audit T1->T2 promotion — why vwap_volatility_rebound stuck at T1"
+    },
+    {
+      "id": "c_c8a5d1dd17d6d_19cb1004fc4",
+      "title": "[Moonshot] Analyze closed trades PnL and exit quality — 18 trades, slow velocity"
+    }
+  ],
+  "lastDispatch": "2026-03-02T18:43:00-07:00",
+  "lastHealthCheck": "2026-03-02T18:43:00-07:00",
   "serviceStatus": {
     "openclaw-gateway": "active",
     "blofin-stack-ingestor": "active",
@@ -33,14 +50,22 @@
   },
   "recentlyDeployed": [
     {
-      "id": "c_c040b6b12ad44_19caa8fdda6",
-      "title": "[Blofin] Diagnose why paper trading stalled",
-      "completedAt": "2026-03-02T18:11:00-07:00"
+      "id": "c_acbd76a8ae03f_19cb0249ed9",
+      "title": "[NQ] Debug equal_tops_bottoms signal collapse",
+      "completedAt": "2026-03-02T18:21:00-07:00",
+      "verifiedLive": true
     },
     {
-      "id": "c_e92291a518e68_19cad2357a5",
-      "title": "[NQ] Debug prev_day strategy",
-      "completedAt": "2026-03-02T18:10:00-07:00"
+      "id": "c_c2a54c059f781_19cb0c94e04",
+      "title": "[Moonshot] analyze 18 closed trades — win rate and pattern drivers",
+      "completedAt": "2026-03-02T18:16:00-07:00",
+      "verifiedLive": true
+    },
+    {
+      "id": "c_c040b6b12ad44_19caa8fdda6",
+      "title": "[Blofin] Diagnose why paper trading stalled",
+      "completedAt": "2026-03-02T18:12:00-07:00",
+      "verifiedLive": true
     }
   ]
 }

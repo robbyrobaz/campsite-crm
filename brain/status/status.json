@@ -1,36 +1,18 @@
 {
-  "timestamp": "2026-03-03T00:02:00Z",
-  "cycle": "jarvis-pulse-dispatch",
-  "activeTasks": [
-    {
-      "id": "c_9b48912d09aa6_19cb...",
-      "title": "[NQ] Debug equal_tops_bottoms signal quality — 3.02 BT PF vs -93pt live",
-      "project": "NQ-Trading-PIPELINE",
-      "dispatch_pid": 3065354,
-      "status": "In Progress"
-    },
-    {
-      "id": "c_95a73075cc926_19cb...",
-      "title": "[Blofin] Analyze paper trade PnL and tune SL/TP parameters for T2 strategies",
-      "project": "blofin-stack",
-      "dispatch_pid": 3065348,
-      "status": "In Progress"
-    },
-    {
-      "id": "c_41c9de9e4cf12_19cb...",
-      "title": "[Moonshot] Expand to 342-coin universe and validate real-time scoring pipeline",
-      "project": "blofin-moonshot",
-      "dispatch_pid": 3065337,
-      "status": "In Progress"
-    }
-  ],
-  "lastDispatch": "2026-03-03T00:02:00Z",
-  "lastHealthCheck": "2026-03-03T00:02:00Z",
+  "dispatchCycle": "2026-03-03T00:32:00Z",
+  "activeTasks": [],
+  "inProgressCount": 0,
+  "plannedCount": 0,
+  "doneCount": 3,
+  "lastHealthCheck": "2026-03-03T00:32:00Z",
   "systemStatus": {
-    "cpu_temp_c": 81,
-    "disk_used_percent": 41,
-    "critical_services": "all active",
-    "moonshot_scorer_state": "restarted, 11 models loaded, 487 symbols active"
+    "cpuTemp": "85.0°C",
+    "diskUsage": "41%",
+    "criticalServices": "all active"
   },
-  "notes": "Dispatcher cycle complete. 3 concurrent builders running. Moonshot scorer was inactive after model work; restarted successfully."
+  "deploymentStatus": {
+    "blofin": "✓ verified (21 min ago)",
+    "nq": "✓ verified (24 min ago)"
+  },
+  "notes": "Board is empty. All completed work deployed and live. No stale cards. All services healthy."
 }

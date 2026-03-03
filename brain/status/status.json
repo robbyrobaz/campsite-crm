@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-03-02T20:22:00-07:00",
+  "timestamp": "2026-03-02T20:30:00-07:00",
   "activeTasks": [
     {
       "id": "moonshot-v2-cycle",
@@ -14,18 +14,21 @@
   "plannedCount": 0,
   "recentlyCompletedCount": 1,
   "lastDispatch": "2026-03-02T20:00:00-07:00",
-  "lastHealthCheck": "2026-03-02T20:14:00-07:00",
+  "lastHealthCheck": "2026-03-02T20:30:00-07:00",
   "systemHealth": {
-    "cpu": "61°C",
-    "disk": "41% (264G free)",
-    "services": "all active (openclaw-gateway, blofin-ingestor, blofin-paper, nq-smb-watcher, nq-dashboard, moonshot-v2-dashboard)"
+    "cpu": "70°C",
+    "disk": "41% (263G free)",
+    "services": "all active (openclaw-gateway, blofin-ingestor, blofin-paper, nq-smb-watcher)"
   },
-  "boardStatus": "Moonshot v2 deploying — cycle 2 in progress",
+  "boardStatus": "Moonshot v2 deploying — cycle 2 in progress. No In Progress cards in kanban.",
   "nextDispatchCycle": "2026-03-02T20:30:00-07:00",
   "notes": [
-    "Moonshot v1 fully shut down (service, timer, dashboard, 2 crons)",
-    "Moonshot v2 live at port 8893 — 343 coins, tournament ML, social signals",
-    "blofin-moonshot.timer and blofin-stack-pipeline.timer STOPPED per Rob's order",
-    "Weekly token usage: 81% (resets Mar 5 9pm MST)"
+    "Moonshot v1 fully shut down",
+    "Moonshot v2 live at port 8893 — 343 coins, tournament ML",
+    "Git backup: NQ-Trading-PIPELINE .gitignore updated, committed, pushed",
+    "SQLite WAL files added to gitignore (was causing false dirty state)",
+    "Token usage 5h: 24% (output 275.1K tokens)",
+    "Numerai: all 3 model dirs exist, daily submission ready",
+    "Done cards: 622 total"
   ]
 }

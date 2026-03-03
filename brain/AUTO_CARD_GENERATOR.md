@@ -297,22 +297,19 @@ EOF
 Create **1 NQ card + 1 Blofin v1 card + 1 Moonshot card**. Leave them in **Planned** — the Jarvis Pulse dispatcher picks them up every 30 minutes.
 
 ```bash
-# Step A: Create in inbox to get ID
-CARD=$(curl -s -X POST http://127.0.0.1:8787/api/inbox \
-  -H "content-type: application/json" \
-  -d '{"text":"TITLE","source":"auto-generator","project_path":"PROJECT_PATH"}')
-CARD_ID=$(echo "$CARD" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
-
-# Step B: Enrich with full description, assignee, and move to Planned
-curl -s -X PATCH "http://127.0.0.1:8787/api/cards/$CARD_ID" \
+# Create directly in Planned (no intermediate Inbox step)
+CARD=$(curl -s -X POST http://127.0.0.1:8787/api/cards \
   -H "content-type: application/json" \
   -d '{
-    "assignee": "claude",
+    "title": "TITLE",
     "status": "Planned",
+    "assignee": "claude",
+    "project_path": "PROJECT_PATH",
     "description": "FULL DESCRIPTION with file paths, DB queries for context, what to build, success criteria, deploy steps, constraints"
-  }'
+  }')
+CARD_ID=$(echo "$CARD" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
 
-# Step C: STOP HERE. Do NOT call /run. Dispatcher handles it.
+# STOP HERE. Do NOT call /run. Dispatcher handles it.
 echo "Card $CARD_ID created in Planned. Dispatcher will pick up within 30min."
 ```
 

@@ -111,6 +111,29 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - ❌ NEVER say "I'll monitor this" or "I'll check back in X minutes" — you won't. Be honest.
 - ✅ After dispatching a builder: say "dispatched, ping me when you want a status check" OR check immediately if it's fast enough to verify now.
 
+## ⚠️ DISPATCH GUARD — DUPLICATE PREVENTION (added 2026-03-03 after CPU incident):
+**Before dispatching ANY card via `/api/cards/<id>/run`:**
+1. Extract the script/command from the card description
+2. Run: `ps aux | grep <script_name> | grep -v grep` — if the process is ALREADY running, **DO NOT dispatch again**
+3. If a card shows Failed but the log's last line contains `"subtype":"success"` → mark it Done, do NOT re-dispatch
+4. Failed cards that ran in the last 2 hours: **NEVER auto-re-dispatch** — flag for Rob instead
+5. Max 3 concurrent builders (existing rule) — count running `python3 scripts/` processes, not just kanban status
+
+**Kanban runner bug (confirmed 2026-03-03):** Builders that run long jobs exit non-zero → kanban marks Failed even on success. Pulse MUST check the log before re-dispatching. `tail -5 logs/<id>.log | grep subtype:success` → if found, mark Done and skip.
+
+## ⚠️ RETIRED SERVICE DISCIPLINE (added 2026-03-03 after moonshot v1 incident):
+When retiring ANY service, ALL of the following must happen or it is NOT retired:
+1. `systemctl --user stop <service>` — stop it now
+2. `systemctl --user stop <timer>` — stop the timer too
+3. `ln -sf /dev/null ~/.config/systemd/user/<service>.service` — MASK it (symlink → /dev/null)
+4. `ln -sf /dev/null ~/.config/systemd/user/<service>.timer` — MASK the timer too
+5. `systemctl --user daemon-reload`
+6. Verify: `systemctl --user status <service>` must show "masked"
+7. Also check: are there ANY related services (scorer, dashboard, worker) — mask ALL of them
+8. Update BOOTSTRAP.md "Recent Changes" to list EXACTLY which unit files were masked
+
+**Stopping + disabling is NOT enough.** `Restart=always` services respawn. Only masking (→ /dev/null) guarantees they never start again.
+
 ## NEVER:
 - ❌ **Restart openclaw-gateway while you are in an active conversation** — this kills the WebSocket mid-stream, fragments the reply, and replays all exec commands on reconnect. If a gateway restart is needed, finish your reply first, warn Rob, then restart.
 - ❌ Block main session with sleep/wait/long exec (all work >30s must be background or subagent)

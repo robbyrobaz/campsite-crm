@@ -1,34 +1,16 @@
 {
-  "timestamp": "2026-03-03T02:02:00Z",
-  "dispatchCycle": "Jarvis Pulse 2:02 AM",
-  "activeTasks": [
-    {
-      "id": "c_b519f748e243_19cb2ef3387",
-      "title": "[Moonshot] Optimize entry scoring thresholds based on recent position outcomes",
-      "project": "blofin-moonshot",
-      "pid": 3205527,
-      "startedAt": "2026-03-03T02:02:00Z"
-    },
-    {
-      "id": "c_b862025b9f9f9_19cb2ef335c",
-      "title": "[Blofin] Extend vwap_volatility_rebound FT period for T2 promotion (100+ trades gate)",
-      "project": "blofin-stack",
-      "pid": 3205531,
-      "startedAt": "2026-03-03T02:02:00Z"
-    },
-    {
-      "id": "c_a90adc086db8c_19cb2ef3335",
-      "title": "[NQ] Investigate vwap_fade signal quality — -$2,708 live vs 2.04 BT PF",
-      "project": "NQ-Trading-PIPELINE",
-      "pid": 3205542,
-      "startedAt": "2026-03-03T02:02:00Z"
-    }
-  ],
-  "lastDispatch": "2026-03-03T02:02:00Z",
-  "lastHealthCheck": "2026-03-03T02:02:00Z",
-  "systemStatus": {
-    "cpuTemp": "84.0°C",
-    "diskUsage": "41%",
-    "servicesStatus": "all active"
-  }
+  "activeTasks": [],
+  "lastDispatch": "2026-03-03T02:32:00Z",
+  "lastHealthCheck": "2026-03-03T02:32:00Z",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "recentlyCompleted": 3
+  },
+  "systemHealth": {
+    "cpuTemp": "81.0°C",
+    "diskUsage": "42%",
+    "servicesActive": 5
+  },
+  "notes": "All queues empty. 3 recent completions verified deployed (Blofin, NQ, Moonshot). No dispatch actions needed."
 }

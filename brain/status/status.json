@@ -1,31 +1,26 @@
 {
-  "lastDispatch": "2026-03-03T04:39:00Z",
-  "lastHealthCheck": "2026-03-03T04:39:00Z",
-  "timestamp": 1772535901000,
   "activeTasks": [
     {
-      "id": "c_b6f655adae54d_19cb35c5fef",
-      "title": "[NQ] Investigate orb signal quality — 3.006 BT PF vs -$604 live",
-      "project": "NQ-Trading-PIPELINE",
-      "pid": 3387954
+      "id": "c_2a30c29dbd065_19cb3936cc1",
+      "title": "[Moonshot] Set up blofin-moonshot.timer for 4h scoring cycle",
+      "pid": 3424082,
+      "dispatchedAt": "2026-03-03T05:09:00Z"
     },
     {
-      "id": "c_f1f3e62616f3a_19cb35c6017",
-      "title": "[Blofin] Promote vwap_volatility_rebound to T2 — 2.21 FT PF ready for expansion",
-      "project": "blofin-stack",
-      "pid": 3387847
+      "id": "c_13a32e4d17b68_19cb39337e8",
+      "title": "[Blofin] Debug momentum_v1: T2 strategy with NULL ft_profit_factor",
+      "pid": 3424160,
+      "dispatchedAt": "2026-03-03T05:09:00Z"
     },
     {
-      "id": "c_4265b20ac0447_19cb35c603f",
-      "title": "[Moonshot] Tune entry/exit thresholds based on open position outcomes (5 live positions)",
-      "project": "blofin-moonshot",
-      "pid": 3387577
+      "id": "c_774d5d89b6a0f_19cb3931865",
+      "title": "[NQ] Diagnose equal_tops_bottoms: 3.02 BT PF vs -$1,864 live",
+      "pid": 3424323,
+      "dispatchedAt": "2026-03-03T05:09:00Z"
     }
   ],
-  "systemHealth": {
-    "cpuTemp": "56.0°C",
-    "diskUsage": "42%",
-    "criticalServices": "all active"
-  },
-  "notes": "Dispatched 3 cards (max concurrent builders). All deployment verifications passed for recent Done cards. Moonshot service not found (may need systemd unit setup on next cycle)."
+  "queued": 2,
+  "lastDispatch": "2026-03-03T05:09:00Z",
+  "lastHealthCheck": "2026-03-03T05:09:00Z",
+  "summary": "Health OK. 3 builders running (Moonshot timer, Blofin momentum debug, NQ equal_tops diagnosis). 2 cards queued. 3 recently completed cards verified live."
 }

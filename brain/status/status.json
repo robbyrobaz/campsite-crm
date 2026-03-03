@@ -1,17 +1,19 @@
 {
-  "activeTasks": [
-    {"id": "c_a4767f756657e_19cb46f6d51", "title": "[Moonshot] Validate ML model training cycle is running regularly", "pid": 3683261},
-    {"id": "c_f130f2bc71345_19cb46f3bc5", "title": "[Blofin] Expand top FT performer to additional coin pairs", "pid": 3683361},
-    {"id": "c_eff5a960d91e3_19cb46f1240", "title": "[NQ] Diagnose vwap_fade bleeding live", "pid": 3683411}
-  ],
-  "lastDispatch": "2026-03-03T09:09:00-07:00",
-  "lastHealthCheck": "2026-03-03T09:09:00-07:00",
-  "incidents": [
-    {
-      "timestamp": "2026-03-03T09:09:00-07:00",
-      "service": "blofin-moonshot.timer",
-      "issue": "Timer was inactive after Moonshot retraining completed",
-      "action": "Restarted and enabled timer"
-    }
-  ]
+  "activeTasks": [],
+  "lastDispatch": "2026-03-03T16:40:27Z",
+  "lastHealthCheck": "2026-03-03T16:40:27Z",
+  "systemHealth": {
+    "cpu_temp_c": 66,
+    "disk_used_pct": 44,
+    "critical_services": "all_active"
+  },
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "recentlyCompleted": [
+      "[NQ] Investigate orb signal quality — 3.006 BT PF vs -$604 live",
+      "[Moonshot] Validate ML model training cycle is running regularly",
+      "[Blofin] Expand top FT performer to additional coin pairs"
+    ]
+  }
 }

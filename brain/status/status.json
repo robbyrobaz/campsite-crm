@@ -1,40 +1,18 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_3ca75b66af596_19cb2b7c500",
-      "title": "[Moonshot] Fix model version selection logic — v27 outperforms champion v28",
-      "status": "In Progress",
-      "pid": 3135819,
-      "project": "blofin-moonshot",
-      "dispatchedAt": "2026-03-03T08:02:41Z"
-    },
-    {
-      "id": "c_919b0d9c72828_19cb2b7c4d6",
-      "title": "[Blofin] Diagnose paper trade losses in 24h window",
-      "status": "In Progress",
-      "pid": 3135821,
-      "project": "blofin-stack",
-      "dispatchedAt": "2026-03-03T08:02:41Z"
-    },
-    {
-      "id": "c_1e6bbd940a72b_19cb2b7c4a9",
-      "title": "[NQ] Investigate ema_pullback backtest-to-live gap",
-      "status": "In Progress",
-      "pid": 3135833,
-      "project": "NQ-Trading-PIPELINE",
-      "dispatchedAt": "2026-03-03T08:02:41Z"
-    }
-  ],
-  "lastDispatch": "2026-03-03T08:02:41Z",
-  "lastHealthCheck": "2026-03-03T08:02:41Z",
-  "systemHealth": {
-    "temperature": "85°C",
-    "diskUsage": "41%",
-    "services": "all active",
-    "criticalAlerts": 0
+  "activeTasks": [],
+  "lastDispatch": "2026-03-03T08:32:43.580127Z",
+  "lastHealthCheck": "2026-03-03T08:32:43.580140Z",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 632,
+    "failed": 12,
+    "inbox": 2,
+    "stopped": 7
   },
-  "deploymentVerification": {
-    "blofin": "active (HTTP 200)",
-    "nq": "active (HTTP 200)"
+  "healthStatus": {
+    "cpuTemp": "80\u00b0C",
+    "diskUsage": "41%",
+    "criticalServices": "all active"
   }
 }

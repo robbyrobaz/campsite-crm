@@ -1,41 +1,51 @@
 {
   "activeTasks": [
     {
-      "id": "c_dc197a437f6e1_19cb54ad3f4",
-      "title": "[Moonshot] Analyze closed trades (26 total) — validate scoring, optimize thresholds",
+      "id": "c_fce26151805e5_19cb54ad3b5",
+      "title": "[Blofin] Analyze paper trading losses — TAKE -18%, CHZ -10%, others bleeding",
+      "project": "blofin-stack",
       "assignee": "claude",
-      "dispatchedAt": "2026-03-03T13:16:00Z"
-    },
-    {
-      "id": "c_bede53038d66_19cb513d94e",
-      "title": "[Moonshot] Verify 4h cycle timer and exit pipeline — all running cleanly?",
-      "assignee": "claude",
-      "dispatchedAt": "2026-03-03T13:16:00Z"
+      "status": "In Progress",
+      "updatedAt": "2026-03-03T13:36:00Z"
     },
     {
       "id": "c_98d5686499db_19cb4ff2cb4",
       "title": "[NQ] NY Open Scalper v3 — full 5-30 tick TP sweep, every value",
+      "project": "NQ-Trading-PIPELINE",
       "assignee": "claude",
-      "dispatchedAt": "2026-03-03T13:16:00Z"
+      "status": "In Progress",
+      "updatedAt": "2026-03-03T13:26:00Z"
     }
   ],
-  "plannedQueue": [
+  "plannedQueue": [],
+  "recentlyCompleted": [
     {
-      "id": "c_fce26151805e5_19cb54ad3b5",
-      "title": "[Blofin] Analyze paper trading losses — TAKE -18%, CHZ -10%, others bleeding"
+      "id": "c_bede53038d66_19cb513d94e",
+      "title": "[Moonshot] Verify 4h cycle timer and exit pipeline — all running clean",
+      "completedAt": "2026-03-03T13:36:00Z",
+      "deploymentVerified": true
     },
     {
-      "id": "c_186333e7ac2fc_19cb54ad38e",
-      "title": "[NQ] Diagnose equal_tops_bottoms collapse — bt 0.67 fail, live -$1,864 (0% wr 7d)"
+      "id": "c_dc197a437f6e1_19cb54ad3f4",
+      "title": "[Moonshot] Analyze closed trades (26 total) — validate scoring, optimize thresholds",
+      "completedAt": "2026-03-03T13:18:00Z",
+      "deploymentVerified": true
+    },
+    {
+      "id": "c_b959bee463d4d_19cb3ca9af6",
+      "title": "[Moonshot] Retrain ML model to recover from v29 regression (0.617 AUC)",
+      "completedAt": "2026-03-03T12:47:00Z",
+      "deploymentVerified": true
     }
   ],
-  "lastDispatch": "2026-03-03T13:16:35Z",
-  "lastHealthCheck": "2026-03-03T13:16:35Z",
   "systemHealth": {
-    "cpu": "86°C",
-    "disk": "46% used",
-    "services": "all active",
+    "cpu": "91°C (within limits)",
+    "disk": "46% used (243 GB free)",
+    "services": "all 5 active (gateway, blofin-ingestor, blofin-paper, nq-smb, nq-dashboard)",
     "criticalAlerts": "none"
   },
-  "dispatchCycle": "Every 30 min, max 3 builders concurrent"
+  "dispatcherStatus": "running (Sonnet, 30min cycle)",
+  "lastDispatch": "2026-03-03T13:46:35Z",
+  "lastHealthCheck": "2026-03-03T13:46:35Z",
+  "notes": "2/3 builder slots occupied. Dispatch queue empty. Recent Moonshot completions verified deployed."
 }

@@ -47,7 +47,7 @@
 Persistent engine finding big moves (±30%) on any of 343 Blofin USDT pairs.
 - **Repo:** https://github.com/robbyrobaz/blofin-moonshot-v2
 - **Dashboard:** port 8893
-- **Timers:** blofin-moonshot-v2.timer (4h cycle), blofin-moonshot-v2-social.timer (1h social)
+- **Timers:** moonshot-v2.timer (4h cycle), moonshot-v2-social.timer (1h social)
 
 ### Non-negotiables
 - Champion selection = best FT PnL with ≥20 trades. NEVER AUC.

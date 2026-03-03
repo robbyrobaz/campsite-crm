@@ -66,7 +66,7 @@
 
 ---
 
-### 1b. Blofin Moonshot v2 ⭐ NEW (2026-03-02)
+### 1b. Moonshot v2 ⭐ NEW (2026-03-02)
 **Repo:** https://github.com/robbyrobaz/blofin-moonshot-v2 | **Path:** `/home/rob/.openclaw/workspace/blofin-moonshot-v2/`
 **Dashboard:** http://127.0.0.1:8893
 **Status:** LIVE — first cycle complete, data accumulating, tournament not yet active (needs labels + first challengers)
@@ -80,14 +80,14 @@
 - Per-model entry/invalidation thresholds (never fixed global values)
 - Separate long + short champions
 
-**Services:** blofin-moonshot-v2.timer (4h), blofin-moonshot-v2-social.timer (1h), blofin-moonshot-v2-dashboard.service
+**Services:** moonshot-v2.timer (4h), moonshot-v2-social.timer (1h), moonshot-v2-dashboard.service
 **Old moonshot:** fully shut down (service, timer, dashboard, 2 crons — all disabled)
 
 **Next actions:**
-- [ ] Wait for candle/label accumulation (first tournament run needs 50+ labels per coin)
-- [ ] Monitor first challenger generation and backtest gate results
-- [ ] Verify social collection runs at 20:30 MST (first 1h timer)
-- [ ] Review dashboard once data populates
+- [ ] Trigger cycle now with 14-month candle history imported from v1 (865K rows)
+- [ ] Regenerate labels with full history, then run tournament
+- [ ] Add missing PRD features: backfill.py, extended data, social improvements
+- [ ] Confirm no service confusion — all services now named moonshot-v2-*
 
 ---
 

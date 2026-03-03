@@ -30,7 +30,7 @@ If you skip these and get corrected, that's the most expensive thing that happen
 
 ## Active Projects (high-level — see brain/PROJECTS.md for full detail)
 - **NQ Futures Pipeline** ⭐ PRIMARY — Live forward test running (DRY_RUN). 8 models. `smb_live_forward_test`. Repo: `NQ-Trading-PIPELINE`. ETB not yet in live inference (high priority). gapfill/vwapfade bleeding live.
-- **Blofin Moonshot v2** ⭐ NEW — Clean rewrite live. 343 coins, tournament ML, social signals. Port 8893. Data accumulating, tournament starts after labels build up. Repo: blofin-moonshot-v2.
+- **Moonshot v2** ⭐ NEW — Clean rewrite live. 343 coins, tournament ML, social signals. Port 8893. Services: moonshot-v2.timer (4h), moonshot-v2-social.timer (1h), moonshot-v2-dashboard.service. 14-month candle history imported from v1. Repo: blofin-moonshot-v2.
 - **Blofin Stack** ⭐ PRIMARY — Paper trading active (86K+ trades). T2: 12 strategies. Pipeline timer STOPPED per Rob's order.
 - **Jarvis Home** — port 8793, Nest/SPAN/Tesla/Wyze/GE live. Washer GE state stale (investigate). Ring blocked on 2FA.
 - **Numerai** — 3 models submitting daily. Not primary focus.
@@ -152,8 +152,8 @@ PATCH the card: `curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-
 - **Moonshot v2 LIVE**: clean rewrite, built by agent teams in 14 minutes
   - Repo: https://github.com/robbyrobaz/blofin-moonshot-v2
   - Local: /home/rob/.openclaw/workspace/blofin-moonshot-v2/
-  - Dashboard: port 8893 (blofin-moonshot-v2-dashboard.service)
-  - Timers: blofin-moonshot-v2.timer (4h), blofin-moonshot-v2-social.timer (1h)
+  - Dashboard: port 8893 (moonshot-v2-dashboard.service)
+  - Timers: moonshot-v2.timer (4h), moonshot-v2-social.timer (1h)
   - 343 coins, tournament ML (PF≥2.0, prec≥40%, 50+ trades), 50 features, social signals (free tier)
   - Path-dependent labels, PnL-weighted training, bootstrap CI on PF
   - Champion = best FT PnL (≥20 trades) — NEVER AUC

@@ -1,30 +1,20 @@
 {
-  "activeTasksCount": 3,
+  "activeTasksCount": 1,
   "activeTasks": [
     {
-      "id": "c_d0b47ddc4a394_19cb4dcdd92",
-      "title": "[Moonshot] Analyze first 5 closed trades — entry/exit quality, scoring accuracy, PnL",
+      "id": "c_98d5686499db_19cb4ff2cb4",
+      "title": "[NQ] NY Open Scalper v3 — full 5-30 tick TP sweep, every value",
       "status": "In Progress",
-      "pid": 3808006
-    },
-    {
-      "id": "c_7a2dad46360c7_19cb4dcdd6b",
-      "title": "[Blofin] Expand bb_squeeze_v2 to BTC and ETH — currently 60%+ WR on alts, validate on largest pairs",
-      "status": "In Progress",
-      "pid": 3808018
-    },
-    {
-      "id": "c_44bcd36f1fe1e_19cb4dcdd44",
-      "title": "[NQ] Investigate ema_pullback gate_status divergence — tier=1, gate=fail, but +$1,375 live 7d",
-      "status": "In Progress",
-      "pid": 3808032
+      "startedAt": "2026-03-03T18:39:09Z",
+      "projectPath": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
     }
   ],
-  "lastDispatch": "2026-03-03T18:16:28Z",
-  "lastHealthCheck": "2026-03-03T18:16:22Z",
+  "lastDispatch": "2026-03-03T18:46:00Z",
+  "lastHealthCheck": "2026-03-03T18:46:00Z",
   "systemHealth": {
-    "cpuTemp": "81°C",
+    "cpuTemp": "86°C",
     "diskUsage": "45%",
     "criticalServicesActive": 5
-  }
+  },
+  "dispatcherNotes": "Queue empty (0 Planned cards). 1 active NQ sweep task. No deployment changes this cycle. All systems green."
 }

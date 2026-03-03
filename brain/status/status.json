@@ -1,37 +1,18 @@
 {
-  "lastDispatch": "2026-03-03T06:09:00-07:00",
-  "dispatchedCards": [
-    {
-      "id": "c_b959bee463d4d_19cb3ca9af6",
-      "title": "[Moonshot] Retrain ML model to recover from v29 regression (0.617 AUC)",
-      "pid": 3494805,
-      "project": "blofin-moonshot"
-    },
-    {
-      "id": "c_9f9005c2b199e_19cb3ca9ad7",
-      "title": "[Blofin] Diagnose low paper trade volume — 0 closed trades in 24h",
-      "pid": 3494815,
-      "project": "blofin-stack"
-    },
-    {
-      "id": "c_54f834dad7899_19cb3ca9aa9",
-      "title": "[NQ] Verify psych_levels signal generation — registered but not scoring?",
-      "pid": 3494827,
-      "project": "NQ-Trading-PIPELINE"
-    }
-  ],
-  "activeTasks": 3,
-  "inProgress": 3,
-  "lastHealthCheck": "2026-03-03T06:09:00-07:00",
-  "health": {
-    "cpu": "74°C",
-    "disk": "43%",
-    "services": "all_active",
-    "criticalAlerts": "none"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-03T13:40:30.632947+00:00",
+  "lastHealthCheck": "2026-03-03T13:40:30.632972+00:00",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 641,
+    "failed": 18,
+    "inbox": 2,
+    "stopped": 7
   },
-  "deploymentStatus": {
-    "nqServices": "active_http200",
-    "blofinServices": "active_http200",
-    "recentlyDeployed": "verified"
+  "systemHealth": {
+    "cpuTemp": "79.0\u00b0C",
+    "diskUsage": "43%",
+    "servicesUp": 5
   }
 }

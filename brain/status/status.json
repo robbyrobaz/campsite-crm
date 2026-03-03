@@ -1,50 +1,68 @@
 {
-  "timestamp": "2026-03-03T16:16:00-07:00",
-  "dispatchCycle": "Jarvis Pulse (Sonnet)",
+  "timestamp": "2026-03-03T16:47:00-07:00",
+  "dispatchCycle": "Jarvis Pulse (Sonnet) — Dispatch 4/3",
   "board": {
     "inProgress": 3,
     "planned": 0,
-    "done": 1
+    "done": 3
   },
   "activeTasks": [
     {
-      "id": "c_1891fc4059522_19cb5bc7bb1",
-      "title": "[NQ] New Strategy: Inside Bar Breakout",
+      "id": "c_341d6a29ccc2e_19cb581d9ee",
+      "title": "[NQ] Investigate vwap_fade bleeding (10% WR 7d)",
       "project": "NQ-Trading-PIPELINE",
       "status": "In Progress",
-      "age_min": 6
+      "pid": 4104665,
+      "dispatched_min": 0
     },
     {
-      "id": "c_a03e1a71647d2_19cb5efc13d",
-      "title": "[moonshot] analyze runner positions",
+      "id": "c_186333e7ac2fc_19cb54ad38e",
+      "title": "[NQ] Diagnose equal_tops_bottoms collapse — bt 0.67 fail, live -$1,864",
+      "project": "NQ-Trading-PIPELINE",
+      "status": "In Progress",
+      "pid": 4104652,
+      "dispatched_min": 0
+    },
+    {
+      "id": "c_bede53038d66_19cb513d94e",
+      "title": "[Moonshot] Verify 4h cycle timer and exit pipeline",
       "project": "blofin-moonshot",
       "status": "In Progress",
-      "pid": 4061529
+      "pid": 4104626,
+      "dispatched_min": 0
+    }
+  ],
+  "recentlyCompleted": [
+    {
+      "id": "c_a03e1a71647d2",
+      "title": "[moonshot] analyze runner positions and optimize tp/sl",
+      "completed_min": 15,
+      "verified": "dashboard 200, services active"
     },
     {
-      "id": "c_b8b249d9e1c8a_19cb5ef9fbe",
-      "title": "[blofin] expand orderflow_imbalance",
-      "project": "blofin-stack",
-      "status": "In Progress",
-      "pid": 4061546
+      "id": "c_b8b249d9e1c8a",
+      "title": "[blofin] expand orderflow_imbalance to top coin pairs",
+      "completed_min": 16,
+      "verified": "dashboard 200, services active"
+    },
+    {
+      "id": "c_747ca6e7ac2fc",
+      "title": "[NQ] Retrain vwap_reclaim ML model",
+      "completed_min": 30,
+      "verified": "dashboard 200, services active"
     }
   ],
   "events": [
     {
-      "time": "2026-03-03T16:13:30-07:00",
-      "action": "Recovered stale card",
-      "card": "vwap_reclaim training completed, restarted nq-smb-watcher.service"
-    },
-    {
-      "time": "2026-03-03T16:14:00-07:00",
-      "action": "Dispatched 2 Planned cards",
-      "detail": "moonshot analyzer (PID 4061529), blofin orderflow expander (PID 4061546)"
+      "time": "2026-03-03T16:47:00-07:00",
+      "action": "Dispatch cycle complete",
+      "detail": "4 cards dispatched (3 now In Progress, 1 queued). 3 recent Done cards verified."
     }
   ],
   "health": {
-    "cpu_temp_c": 86,
+    "cpu_temp_c": 90,
     "disk_usage_pct": 47,
     "services_alive": 5,
-    "kanban_api": "offline"
+    "kanban_api": "ok"
   }
 }

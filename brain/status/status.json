@@ -1,29 +1,7 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_540ebb086948_19cb3257361",
-      "title": "[Moonshot] Diagnose model version regression v28 (0.761 AUC) vs v27 (0.867 AUC)",
-      "status": "In Progress",
-      "pid": 3274744
-    },
-    {
-      "id": "c_342ff4ca4751d_19cb325733a",
-      "title": "[Blofin] Expand cross_asset_correlation to new symbol pairs (70% top performer)",
-      "status": "In Progress",
-      "pid": 3274746
-    },
-    {
-      "id": "c_e41583d2dce0a_19cb3257312",
-      "title": "[NQ] Analyze vol_contraction live performance gap — 1.96 BT PF vs -$510 live",
-      "status": "In Progress",
-      "pid": 3274755
-    }
-  ],
-  "lastDispatch": "2026-03-03T03:02:00-07:00",
-  "lastHealthCheck": "2026-03-03T03:02:00-07:00",
-  "systemStatus": {
-    "cpu_temp": "80°C",
-    "disk_usage": "42%",
-    "services": "all active"
-  }
+  "timestamp": "2026-03-03T03:32:00-07:00",
+  "activeTasks": [],
+  "lastDispatch": "2026-03-03T03:32:00-07:00",
+  "lastHealthCheck": "2026-03-03T03:32:00-07:00",
+  "summary": "Board empty (0 planned, 0 in progress). All services healthy. 3 recent completions verified deployed."
 }

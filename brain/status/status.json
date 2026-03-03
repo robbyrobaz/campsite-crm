@@ -1,30 +1,36 @@
 {
-  "activeTasks": [],
-  "plannedRemaining": 0,
-  "lastDispatch": "2026-03-03T06:32:00Z",
-  "lastHealthCheck": "2026-03-03T06:32:00Z",
-  "recentlyCompleted": [
+  "timestamp": "2026-03-03T00:02:00Z",
+  "cycle": "jarvis-pulse-dispatch",
+  "activeTasks": [
     {
-      "id": "c_3409bfedf7bf_19cb249eb5f",
-      "title": "[Moonshot] Investigate model version selection (v27 AUC 0.87 vs v28 champion AUC 0.76)",
-      "completedAt": "2026-03-03T06:10:19Z"
+      "id": "c_9b48912d09aa6_19cb...",
+      "title": "[NQ] Debug equal_tops_bottoms signal quality — 3.02 BT PF vs -93pt live",
+      "project": "NQ-Trading-PIPELINE",
+      "dispatch_pid": 3065354,
+      "status": "In Progress"
     },
     {
-      "id": "c_b6e721be24bc5_19cb212c906",
-      "title": "[Blofin] retrain ml entry model for cross_asset_correlation with latest tick data",
-      "completedAt": "2026-03-03T05:39:21Z"
+      "id": "c_95a73075cc926_19cb...",
+      "title": "[Blofin] Analyze paper trade PnL and tune SL/TP parameters for T2 strategies",
+      "project": "blofin-stack",
+      "dispatch_pid": 3065348,
+      "status": "In Progress"
     },
     {
-      "id": "c_669c0be693168_19cb212c8cb",
-      "title": "[NQ] investigate orb strategy signal frequency collapse — 3 live trades vs 3.01 bt pf",
-      "completedAt": "2026-03-03T05:35:04Z"
+      "id": "c_41c9de9e4cf12_19cb...",
+      "title": "[Moonshot] Expand to 342-coin universe and validate real-time scoring pipeline",
+      "project": "blofin-moonshot",
+      "dispatch_pid": 3065337,
+      "status": "In Progress"
     }
   ],
+  "lastDispatch": "2026-03-03T00:02:00Z",
+  "lastHealthCheck": "2026-03-03T00:02:00Z",
   "systemStatus": {
-    "cpuTemp": "52.0°C",
-    "diskUsage": "41%",
-    "criticalAlerts": 0,
-    "servicesStatus": "all active",
-    "notes": "Blofin dashboard recovered from port conflict"
-  }
+    "cpu_temp_c": 81,
+    "disk_used_percent": 41,
+    "critical_services": "all active",
+    "moonshot_scorer_state": "restarted, 11 models loaded, 487 symbols active"
+  },
+  "notes": "Dispatcher cycle complete. 3 concurrent builders running. Moonshot scorer was inactive after model work; restarted successfully."
 }

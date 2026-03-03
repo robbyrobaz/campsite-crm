@@ -1,31 +1,30 @@
 {
-  "activeTasks": [
+  "activeTasks": [],
+  "plannedRemaining": 0,
+  "lastDispatch": "2026-03-03T06:32:00Z",
+  "lastHealthCheck": "2026-03-03T06:32:00Z",
+  "recentlyCompleted": [
     {
       "id": "c_3409bfedf7bf_19cb249eb5f",
       "title": "[Moonshot] Investigate model version selection (v27 AUC 0.87 vs v28 champion AUC 0.76)",
-      "pid": 2993359,
-      "dispatchedAt": "2026-03-03T06:02:00Z"
+      "completedAt": "2026-03-03T06:10:19Z"
     },
     {
-      "id": "c_39c5fd1df4f7_19cb249eb40",
-      "title": "[Blofin] Expand cross_asset_correlation to 10+ coin pairs (70% PnL on JTO, scale test)",
-      "pid": 2993368,
-      "dispatchedAt": "2026-03-03T06:02:00Z"
+      "id": "c_b6e721be24bc5_19cb212c906",
+      "title": "[Blofin] retrain ml entry model for cross_asset_correlation with latest tick data",
+      "completedAt": "2026-03-03T05:39:21Z"
     },
     {
-      "id": "c_fb37fc03b103c_19cb249eb1d",
-      "title": "[NQ] Root-cause equal_tops_bottoms PF divergence (BT 3.02 → live -$1,864)",
-      "pid": 2993378,
-      "dispatchedAt": "2026-03-03T06:02:00Z"
+      "id": "c_669c0be693168_19cb212c8cb",
+      "title": "[NQ] investigate orb strategy signal frequency collapse — 3 live trades vs 3.01 bt pf",
+      "completedAt": "2026-03-03T05:35:04Z"
     }
   ],
-  "plannedRemaining": 0,
-  "lastDispatch": "2026-03-03T06:02:00Z",
-  "lastHealthCheck": "2026-03-03T06:02:00Z",
   "systemStatus": {
-    "cpuTemp": "80.0°C",
+    "cpuTemp": "52.0°C",
     "diskUsage": "41%",
     "criticalAlerts": 0,
-    "servicesStatus": "all active"
+    "servicesStatus": "all active",
+    "notes": "Blofin dashboard recovered from port conflict"
   }
 }

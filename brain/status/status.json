@@ -1,45 +1,31 @@
 {
+  "timestamp": "2026-03-02T17:43:00-07:00",
   "activeTasks": [],
-  "recentlyDeployed": [
+  "inProgressCount": 0,
+  "plannedCount": 0,
+  "recentlyCompleted": [
     {
       "id": "c_341de03ceb8bd_19cb1004f4a",
       "title": "[NQ] Verify dispatcher is calling all tier=1 pass strategies",
-      "completedAt": "2026-03-02T23:02:40Z",
-      "verifiedDeployed": true
+      "completedAt": "2026-03-02T17:36:00-07:00"
     },
     {
       "id": "c_85318031133e9_19cb0c94b2a",
       "title": "[NQ] diagnose psych_levels live 18% WR vs 1.92 PF backtest",
-      "completedAt": "2026-03-02T22:21:11Z",
-      "verifiedDeployed": true
+      "completedAt": "2026-03-02T17:14:00-07:00"
     },
     {
       "id": "c_e790fad02af4c_19cb0badd51",
       "title": "Fix kanban runner: deterministic post-build deploy",
-      "completedAt": "2026-03-02T22:18:37Z",
-      "verifiedDeployed": true
+      "completedAt": "2026-03-02T17:11:00-07:00"
     }
   ],
-  "lastDispatch": "2026-03-02T23:13:00Z",
-  "lastHealthCheck": "2026-03-02T23:13:00Z",
   "healthStatus": {
-    "cpuTemp": "82.0°C",
-    "diskUsage": "41%",
-    "criticalServices": "all 5 active",
-    "criticalAlerts": "none",
-    "nqPipelineDB": "updated 2026-03-02T23:12:00Z",
-    "nqDashboard": "200 OK",
-    "blofin": "all 3 services active, dashboard 200 OK",
-    "kanban": "200 OK"
+    "cpu": "82°C (healthy)",
+    "disk": "41% (/)",
+    "services": "all active",
+    "criticalAlerts": "none"
   },
-  "dispatchCycle": {
-    "timestamp": "2026-03-02T23:13:00Z",
-    "cardsInProgress": 0,
-    "cardsPlanned": 0,
-    "cardsRecovered": 0,
-    "cardsDispatched": 0,
-    "cardsEnriched": 0,
-    "phase5Notes": "no Planned cards to enrich",
-    "phase7Notes": "verified 3 recent Done cards: NQ services live + dashboards 200 OK + DB actively updating"
-  }
+  "lastDispatch": "2026-03-02T17:43:00-07:00",
+  "lastHealthCheck": "2026-03-02T17:43:00-07:00"
 }

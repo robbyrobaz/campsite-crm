@@ -1,18 +1,25 @@
 {
   "activeTasks": [
     {
-      "id": "c_2a1ed3784ce76_19cb1dbb1d5",
-      "title": "[nq] analyze backtest-to-live pf divergence across all tier=1 strategies",
-      "pid": 2867959,
-      "dispatchedAt": "2026-03-02T21:43:00Z"
+      "id": "c_b6e721be24bc5_19cb212c906",
+      "title": "[Blofin] retrain ml entry model for cross_asset_correlation with latest tick data",
+      "pid": 2943415,
+      "dispatchedAt": "2026-03-02T22:30:00Z"
+    },
+    {
+      "id": "c_669c0be693168_19cb212c8cb",
+      "title": "[NQ] investigate orb strategy signal frequency collapse — 3 live trades vs 3.01 bt pf",
+      "pid": 2943465,
+      "dispatchedAt": "2026-03-02T22:30:00Z"
     }
   ],
   "plannedRemaining": 0,
-  "lastDispatch": "2026-03-02T21:43:00Z",
-  "lastHealthCheck": "2026-03-02T21:43:00Z",
+  "lastDispatch": "2026-03-02T22:30:00Z",
+  "lastHealthCheck": "2026-03-02T22:30:00Z",
   "systemStatus": {
-    "cpuTemp": "54.0°C",
+    "cpuTemp": "80.0°C",
     "diskUsage": "40%",
-    "criticalAlerts": 0
+    "criticalAlerts": 0,
+    "servicesStatus": "all active"
   }
 }

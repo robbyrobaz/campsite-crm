@@ -1,23 +1,50 @@
 {
+  "timestamp": "2026-03-03T16:16:00-07:00",
+  "dispatchCycle": "Jarvis Pulse (Sonnet)",
+  "board": {
+    "inProgress": 3,
+    "planned": 0,
+    "done": 1
+  },
   "activeTasks": [
     {
-      "id": "c_6ecab8a37ffa_19cb5b87b6a",
-      "title": "[Blofin] expand bb_squeeze_v2 to btc + eth \u2014 test on largest pairs",
-      "elapsed_min": -0.2
+      "id": "c_1891fc4059522_19cb5bc7bb1",
+      "title": "[NQ] New Strategy: Inside Bar Breakout",
+      "project": "NQ-Trading-PIPELINE",
+      "status": "In Progress",
+      "age_min": 6
     },
     {
-      "id": "c_5677f1baf57d1_19cb5b87b8a",
-      "title": "[Moonshot] tune tp/sl thresholds \u2014 analyze 26 closed trades by score bracket",
-      "elapsed_min": -0.2
+      "id": "c_a03e1a71647d2_19cb5efc13d",
+      "title": "[moonshot] analyze runner positions",
+      "project": "blofin-moonshot",
+      "status": "In Progress",
+      "pid": 4061529
     },
     {
-      "id": "c_747ca6f53751d_19cb5dcc143",
-      "title": "[NQ] Retrain vwap_reclaim ML model \u2014 VWAP fix verified (61.4% WR, PF=1.59)",
-      "elapsed_min": 6.0
+      "id": "c_b8b249d9e1c8a_19cb5ef9fbe",
+      "title": "[blofin] expand orderflow_imbalance",
+      "project": "blofin-stack",
+      "status": "In Progress",
+      "pid": 4061546
     }
   ],
-  "lastDispatch": "2026-03-03T22:47:39.685955+00:00",
-  "lastHealthCheck": "2026-03-03T22:47:39.685963+00:00",
-  "inProgressCount": 3,
-  "dispatchStatus": "OK \u2014 2 Planned cards dispatched"
+  "events": [
+    {
+      "time": "2026-03-03T16:13:30-07:00",
+      "action": "Recovered stale card",
+      "card": "vwap_reclaim training completed, restarted nq-smb-watcher.service"
+    },
+    {
+      "time": "2026-03-03T16:14:00-07:00",
+      "action": "Dispatched 2 Planned cards",
+      "detail": "moonshot analyzer (PID 4061529), blofin orderflow expander (PID 4061546)"
+    }
+  ],
+  "health": {
+    "cpu_temp_c": 86,
+    "disk_usage_pct": 47,
+    "services_alive": 5,
+    "kanban_api": "offline"
+  }
 }

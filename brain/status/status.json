@@ -1,19 +1,9 @@
 {
+  "updatedAt": "2026-03-03T17:06:00Z",
   "activeTasks": [],
-  "lastDispatch": "2026-03-03T16:40:27Z",
-  "lastHealthCheck": "2026-03-03T16:40:27Z",
-  "systemHealth": {
-    "cpu_temp_c": 66,
-    "disk_used_pct": 44,
-    "critical_services": "all_active"
-  },
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "recentlyCompleted": [
-      "[NQ] Investigate orb signal quality — 3.006 BT PF vs -$604 live",
-      "[Moonshot] Validate ML model training cycle is running regularly",
-      "[Blofin] Expand top FT performer to additional coin pairs"
-    ]
-  }
+  "recentCompletions": [
+    {"id": "c_f73f6fae7112b_19cb49752f9", "title": "ETB retrain", "status": "Done", "result": "Model trained WR=50.3% PF=3.034, re-enabled in config"},
+    {"id": "c_484d307607dfc_19cb497532d", "title": "Blofin simplify to 3", "status": "Done", "result": "68 strategies archived, 3 winners active, 820 pairs blacklisted"}
+  ],
+  "notes": "7-day Sonnet usage at 93% — resets Mar 5 9PM MST"
 }

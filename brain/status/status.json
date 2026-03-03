@@ -1,20 +1,41 @@
 {
-  "activeTasksCount": 1,
+  "dispatch_cycle": "2026-03-03T12:16:00-07:00",
   "activeTasks": [
     {
       "id": "c_98d5686499db_19cb4ff2cb4",
       "title": "[NQ] NY Open Scalper v3 — full 5-30 tick TP sweep, every value",
       "status": "In Progress",
-      "startedAt": "2026-03-03T18:39:09Z",
-      "projectPath": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
+      "started": "12:02 PM",
+      "project": "NQ-Trading-PIPELINE"
+    },
+    {
+      "id": "c_bede53038d66_19cb513d94e",
+      "title": "[Moonshot] Verify 4h cycle timer and exit pipeline",
+      "status": "In Progress",
+      "started": "12:16 PM (just dispatched)",
+      "project": "blofin-moonshot"
+    },
+    {
+      "id": "c_556b02f6d75d3_19cb513d926",
+      "title": "[Blofin] Validate simplified 3-strategy state — all T2 enabled",
+      "status": "In Progress",
+      "started": "12:16 PM (just dispatched)",
+      "project": "blofin-stack"
     }
   ],
-  "lastDispatch": "2026-03-03T18:46:00Z",
-  "lastHealthCheck": "2026-03-03T18:46:00Z",
+  "plannedNext": [
+    {
+      "id": "c_6a73fd6dab7aa_19cb513d8fb",
+      "title": "[NQ] Diagnose equal_tops_bottoms collapse — BT 3.02 → Live -$1,864",
+      "project": "NQ-Trading-PIPELINE"
+    }
+  ],
+  "lastDispatch": "2026-03-03T12:16:00-07:00",
+  "lastHealthCheck": "2026-03-03T12:16:00-07:00",
   "systemHealth": {
-    "cpuTemp": "86°C",
-    "diskUsage": "45%",
-    "criticalServicesActive": 5
+    "cpu": "85.0°C (OK)",
+    "disk": "45% (OK)",
+    "services": "All 5 critical services active"
   },
-  "dispatcherNotes": "Queue empty (0 Planned cards). 1 active NQ sweep task. No deployment changes this cycle. All systems green."
+  "deploymentStatus": "All recent Done cards verified deployed (NQ + Blofin services live, dashboards responsive)"
 }

@@ -1,5 +1,30 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-04T01:17:16.316382+00:00Z",
-  "lastHealthCheck": "2026-03-04T01:17:16.316392+00:00Z"
+  "activeTasks": [
+    {
+      "id": "c_d47fbec84aec3_19cb6869945",
+      "title": "[Moonshot] Fix FT scorer: 'could not convert string to float: price_vs_52w_high'",
+      "status": "In Progress",
+      "project": "blofin-moonshot-v2",
+      "updatedAt": "2026-03-04T01:46:40.399Z"
+    },
+    {
+      "id": "c_4b647c7160602_19cb686b645",
+      "title": "[Blofin] New Strategy: mtf_ensemble_gate — WR=56.0%, PF=1.27",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "pid": 445686,
+      "dispatchedAt": "2026-03-04T01:47:17Z"
+    },
+    {
+      "id": "c_a7abcb6fdbcce_19cb686b234",
+      "title": "[NQ] New Strategy: zscore_from_vwap — WR=89.7%, PF~8.74",
+      "status": "In Progress",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 445698,
+      "dispatchedAt": "2026-03-04T01:47:17Z"
+    }
+  ],
+  "lastDispatch": "2026-03-04T01:47:17Z",
+  "lastHealthCheck": "2026-03-04T01:47:17Z",
+  "summary": "3 builders active (Moonshot FT fix continuing; Blofin + NQ strategies just dispatched). All services healthy. 3 Done cards verified deployed."
 }

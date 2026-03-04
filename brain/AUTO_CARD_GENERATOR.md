@@ -168,6 +168,93 @@ Note: Cards land in Planned. The Jarvis Pulse dispatcher (every 30min) picks the
 
 ---
 
+## STEP 1.5 — WIRE GATE-PASSING STRATEGIES (NON-OPTIONAL, run before card generation)
+
+**This step ensures newly backtested strategies that pass gates are immediately wired into the live forward test.**
+Missing this step = strategies exist in the registry but never generate signals. This is the #1 failure mode.
+
+```python
+import sqlite3, subprocess, json
+
+db = '/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/data/nq_pipeline.db'
+watcher = '/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/pipeline/smb_watcher.py'
+run_phase2 = '/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/ml/run_phase2.py'
+models_dir = '/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/ml/models'
+
+conn = sqlite3.connect(db)
+# Find gate=pass strategies registered in the last 24h
+newly_passed = conn.execute("""
+    SELECT strategy_name FROM strategy_registry
+    WHERE gate_status = 'pass'
+    AND created_at >= datetime('now', '-24 hours')
+""").fetchall()
+conn.close()
+
+with open(watcher) as f:
+    watcher_src = f.read()
+
+import re
+# Extract current STRATEGIES list
+match = re.search(r'STRATEGIES\s*=\s*\[(.*?)\]', watcher_src, re.DOTALL)
+current = re.findall(r'"(\w+)"', match.group(1)) if match else []
+
+needs_wiring = [r[0] for r in newly_passed if r[0] not in current]
+if needs_wiring:
+    print(f"NEED WIRING: {needs_wiring}")
+    # Create a card for each strategy that needs wiring
+    for strategy in needs_wiring:
+        card_body = {
+            "title": f"[NQ] Wire {strategy} into live forward test",
+            "status": "Planned",
+            "assignee": "claude",
+            "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+            "description": f"""Wire the newly gate-passing strategy '{strategy}' into the live smb_watcher forward test.
+
+## What to do:
+1. Add import to `ml/run_phase2.py`:
+   - Find the class name in `strategies/{strategy}.py` (grep for `^class`)
+   - Add: `from strategies.{strategy} import <ClassName>`
+   - Add to `_STRATEGY_CLASS_MAP`: `"{strategy}": <ClassName>,`
+
+2. Add to `pipeline/smb_watcher.py` STRATEGIES list:
+   - Add `"{strategy}",` with a comment noting gate=pass, BT PF, and date added
+
+3. Fix pkl filename if needed:
+   - smb_watcher expects: `ml/models/{strategy}/{strategy}_live_v1.pkl`
+   - If only `{strategy}_v1.pkl` exists: copy it to `{strategy}_live_v1.pkl`
+   - If pkl has key `features` but not `feat_cols`: add `cache['feat_cols'] = cache['features']` and re-save
+
+4. Restart service: `systemctl --user restart nq-smb-watcher.service`
+
+5. Verify: `journalctl --user -u nq-smb-watcher.service -n 30 --no-pager | grep -E "{strategy}|Loaded|Training"`
+   - Should see "Loaded cache: {strategy}" or "Training {strategy} ..." followed by "Saved"
+
+6. Commit: `git add -A && git commit -m "wire {strategy} into live forward test" && git push`
+
+## Success criteria:
+- smb_watcher.service is active
+- `{strategy}` appears in service logs as "Loaded cache" or "Training ... Saved"
+- No errors in journal for this strategy
+
+## Constraints:
+- DRY_RUN=True always — no live orders
+- Never write to /mnt/nt_bridge/
+"""
+        }
+        import subprocess, json
+        result = subprocess.run(
+            ['curl', '-s', '-X', 'POST', 'http://127.0.0.1:8787/api/cards',
+             '-H', 'content-type: application/json', '-d', json.dumps(card_body)],
+            capture_output=True, text=True
+        )
+        card = json.loads(result.stdout)
+        print(f"  Created card {card.get('id')} for {strategy}")
+else:
+    print("No newly gate-passing strategies need wiring.")
+```
+
+---
+
 ## STEP 2 — READ NQ LIVE STATE
 ```bash
 cat /home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/pipeline/logs/smb_status.json

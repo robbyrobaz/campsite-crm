@@ -31,7 +31,7 @@
 **Repo:** `NQ-Trading-PIPELINE/` | **Path:** `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/`
 **Dashboard:** http://127.0.0.1:8891 (also :8891 on LAN)
 **GitHub:** https://github.com/robbyrobaz/NQ-Trading-PIPELINE (private, main branch)
-**Status:** Live forward test running. DRY_RUN mode. 8 models active.
+**Status:** Forward Test (FT-PL) running on live data. BLE off (`DRY_RUN`). 8 models active.
 
 **Live data feed:** NinjaTrader (Windows 192.168.68.88) → SMB `/mnt/nt_bridge/bars.csv` → `nq-smb-watcher.service` → `NQ_continuous_1min.csv`
 **Forward test run_id:** `smb_live_forward_test` (only valid run — 129 trades Feb 23-26)
@@ -60,7 +60,7 @@
 - [ ] Verify psych_levels is generating live signals
 
 **Constraints:**
-- ⛔ DRY_RUN only — NO live orders, NO TradersPost webhooks, NO prop firm eval activation ever without Rob's explicit approval
+- ⛔ FT-PL only by default (live data + paper trades). BLE remains OFF (`DRY_RUN`) — no TradersPost webhooks/live orders/prop eval activation without Rob's explicit approval.
 - ⛔ God Model = single unified ensemble, NOT individual strategies
 - SMB mount is read-only — never write to `/mnt/nt_bridge/`
 

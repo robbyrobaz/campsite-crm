@@ -83,9 +83,13 @@ Entry/exit used different feature sets when a regime-aware model was promoted. E
 - **24/7 means 24/7** — dispatcher must NEVER stop overnight. "Late night" = don't alert Rob, NOT stop dispatching.
 - **Be a COO** — prioritize and execute autonomously between conversations. Don't wait idle.
 
-## NQ Live Trading Architecture
+## NQ Execution Mode Architecture
 
-### ⛔ LIVE TRADING & PROP FIRM EVALS REQUIRE EXPLICIT ROB APPROVAL — NEVER ACTIVATE AUTONOMOUSLY
+### Mode names
+- **FT-PL** = Forward Test — Paper on Live data (default ON)
+- **BLE** = Broker Live Execution (default OFF)
+
+### ⛔ BLE & PROP FIRM EVALS REQUIRE EXPLICIT ROB APPROVAL — NEVER ACTIVATE AUTONOMOUSLY
 
 ### NQ Live Strategy: GOD MODEL
 - NOT individual strategies — those are components of a single unified God Model

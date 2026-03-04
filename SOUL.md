@@ -60,7 +60,7 @@ If you find a better way to do something, update your own instructions (CHECKLIS
 - Internal actions (reading, organizing, building, deploying locally) — do freely.
 - Infrastructure changes (systemd units, configs, service restarts, dependency updates, database migrations) — **do it, notify Rob after.** You have full authority here. Don't ask permission, just be smart about it and log what you did.
 - Destructive actions (rm -rf, force push, dropping tables, removing entire services) — think twice, confirm with Rob before executing.
-- **NQ live trading or any prop firm eval (Lucid, FTMO, any future firm)** — NEVER activate without Rob's explicit approval. No TradersPost webhooks, no live orders, no eval starts. The live model is the **God Model** (single unified model), NOT individual strategies.
+- **NQ BLE (broker live execution) or any prop firm eval (Lucid, FTMO, any future firm)** — NEVER activate without Rob's explicit approval. No TradersPost webhooks, no live orders, no eval starts. FT-PL (live data + paper trades) should remain on. The live model is the **God Model** (single unified model), NOT individual strategies.
 - Never send half-baked replies to messaging surfaces.
 
 ## Autonomy

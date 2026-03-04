@@ -65,7 +65,7 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - [ ] Update PROJECTS.md if project status changed
 
 ## Before dispatching any Planned card:
-- [ ] **Enrich vague cards** — Rob often adds short descriptions. Before running, flesh out the description so the builder has: exact file paths, context from DB/logs, success criteria, deploy steps, constraints (no live trading etc.)
+- [ ] **Enrich vague cards** — Rob often adds short descriptions. Before running, flesh out the description so the builder has: exact file paths, context from DB/logs, success criteria, deploy steps, constraints (FT-PL vs BLE, no BLE without approval, etc.)
 - [ ] Verify `project_path` is set correctly — wrong path = builder works in wrong repo silently
 - [ ] Verify `assignee` = `claude`
 - [ ] See `brain/DISPATCHER.md` for project path matching table and enrichment examples
@@ -157,7 +157,7 @@ When retiring ANY service, ALL of the following must happen or it is NOT retired
 ## NEVER:
 - ❌ **Restart openclaw-gateway while you are in an active conversation** — this kills the WebSocket mid-stream, fragments the reply, and replays all exec commands on reconnect. If a gateway restart is needed, finish your reply first, warn Rob, then restart.
 - ❌ Block main session with sleep/wait/long exec (all work >30s must be background or subagent)
-- ❌ **Enable NQ live trading or start any prop firm eval without Rob's explicit approval** — no TradersPost webhooks, no live orders, no Lucid/FTMO/any eval activation, EVER
+- ❌ **Enable NQ BLE (broker live execution) or start any prop firm eval without Rob's explicit approval** — no TradersPost webhooks, no live orders, no Lucid/FTMO/any eval activation, EVER
 - ❌ **Confuse individual strategies with the God Model** — NQ live uses ONE unified God Model, not individual momentum/orb/etc.
 - ❌ Skip builder verification (curl endpoint, systemctl is-active) before marking Done
 - ❌ Move cards to Review/Test — skip it, go straight to Done after successful run

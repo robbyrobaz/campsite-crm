@@ -135,8 +135,15 @@ PATCH the card: `curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-
 | Jarvis Pulse | Every 30min (**Sonnet**) | Health + **enrich vague cards** + dispatch + **verify deployment** of completed work |
 | Oversight | Every 2h (Haiku) | HEARTBEAT.md server checks |
 
+## Mode Naming (Canonical)
+- **Backtest** = historical replay/offline validation.
+- **Forward Test (FT-PL)** = live data + paper trades/logging (no broker execution).
+- **BLE (Broker Live Execution)** = real webhook/broker orders.
+
+Default operating mode: **FT-PL ON, BLE OFF**.
+
 ## ⛔ HARD RULES — NEVER VIOLATE
-- **NEVER enable NQ live trading or start any prop firm eval (Lucid, FTMO, etc.) without Rob's explicit approval** — no webhooks, no live orders, no eval activation, nothing
+- **NEVER enable BLE for NQ or start any prop firm eval (Lucid, FTMO, etc.) without Rob's explicit approval** — no webhooks, no live orders, no eval activation, nothing
 - **NQ live model = GOD MODEL** — a single unified model combining all strategies; NOT individual strategies (momentum/orb/etc.)
 
 ## Key Facts (often forgotten, very expensive to re-derive)

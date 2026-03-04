@@ -1,24 +1,5 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_08319368f6e26_19cb8f10b00",
-      "title": "[Blofin] Expand top eligibility strategy to 5 new symbols via global-model coin screening",
-      "assignee": "claude",
-      "updated_at": 1772647636026
-    },
-    {
-      "id": "c_ab59b51af9d38_19cb8f10ad6",
-      "title": "[NQ] Root-cause vwap_fade + gap_fill live bleed (WR<15%) and implement guardrails",
-      "assignee": "claude",
-      "updated_at": 1772647635988
-    },
-    {
-      "id": "c_1713094f12718_19cb8b9fd3d",
-      "title": "[Moonshot] Train/repair ML scoring pipeline to remove null ml_scores",
-      "assignee": "claude",
-      "updated_at": 1772647635948
-    }
-  ],
-  "lastDispatch": "2026-03-04T18:07:16.066763+00:00",
-  "lastHealthCheck": "2026-03-04T18:07:16.066780+00:00"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-04T18:37:51.706826+00:00",
+  "lastHealthCheck": "2026-03-04T18:37:51.706826+00:00"
 }

@@ -1,27 +1,53 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-04T09:55:41Z",
-  "lastHealthCheck": "2026-03-04T09:55:41Z",
+  "activeTasks": [
+    {
+      "id": "c_4905b508e08b8_19cb84c6c5e",
+      "title": "[Moonshot] Optimize exit strategy with trailing stops",
+      "project": "blofin-moonshot",
+      "pid": 1254076,
+      "dispatchedAt": "2026-03-04T10:25:00Z"
+    },
+    {
+      "id": "c_f4ff57bd79f69_19cb84c6c39",
+      "title": "[Blofin] Diagnose T1 to T2 promotion stall",
+      "project": "blofin-stack",
+      "pid": 1254085,
+      "dispatchedAt": "2026-03-04T10:25:00Z"
+    },
+    {
+      "id": "c_398ac1f2c44cc_19cb84c6c18",
+      "title": "[NQ] Diagnose equal_tops_bottoms live collapse",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 1254099,
+      "dispatchedAt": "2026-03-04T10:25:00Z"
+    }
+  ],
+  "lastDispatch": "2026-03-04T10:25:00Z",
+  "lastHealthCheck": "2026-03-04T10:25:00Z",
   "boardState": {
-    "inProgress": 0,
+    "inProgress": 3,
     "planned": 0,
-    "stopped": 9,
     "done": 741
+  },
+  "systemHealth": {
+    "cpuTemp": "66.0°C",
+    "diskUsage": "48%",
+    "criticalServices": "all active"
   },
   "recentDeployments": [
     {
       "card": "[Blofin] Promote and expand bb_squeeze_v2",
-      "completedAt": "18 min ago",
+      "completedAt": "48 min ago",
       "status": "VERIFIED"
     },
     {
       "card": "[NQ] Diagnose equal_tops_bottoms / orb / vwap_fade live collapse",
-      "completedAt": "27 min ago",
+      "completedAt": "57 min ago",
       "status": "VERIFIED"
     },
     {
       "card": "[Moonshot] Optimize ML entry thresholds",
-      "completedAt": "28 min ago",
+      "completedAt": "58 min ago",
       "status": "VERIFIED"
     }
   ]

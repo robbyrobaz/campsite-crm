@@ -363,3 +363,19 @@ The timer was not active, which would have prevented the 4h training cycle from 
 3. Verify the 2 builder outputs — code may exist but not deployed to registry
 
 **Dispatcher Decision:** All 3 In Progress cards still active (last updated 5 min ago). Awaiting Rob's guidance on service restoration before restarting builders.
+
+## 2026-03-03 20:55 MST — Dispatch Cycle: Moonshot Service Still Missing
+
+**Verification Phase:** Deployment verification attempted for completed card "[Moonshot] Analyze position exit efficiency"
+
+**Finding:** blofin-moonshot.service still missing (unit file not found, service not installed)
+- Attempted restart: Failed with "Unit not found" (exit code 5)
+- Attempted unmask: Service was masked, unmasking succeeded but revealed unit file completely absent
+- Timer status: blofin-moonshot.timer also inactive
+
+**Impact:** 
+- Card marked Done but deployment could not be verified
+- Moonshot training/position management offline
+- Related Planned card ("[Moonshot] Verify 4h cycle timer") dispatched (PID 604380) to investigate root cause
+
+**Status:** Escalating to Rob via ntfy. Dispatcher continuing with 2 additional builders active (at 3-builder cap).

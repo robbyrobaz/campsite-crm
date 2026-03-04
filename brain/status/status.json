@@ -1,35 +1,71 @@
 {
-  "lastDispatch": "2026-03-04T12:55:00-07:00",
-  "lastHealthCheck": "2026-03-04T12:55:00-07:00",
+  "lastDispatch": "2026-03-04T01:25:00-07:00",
+  "lastHealthCheck": "2026-03-04T01:25:00-07:00",
   "cycleStatus": "complete",
+  "dispatchSummary": {
+    "cardsDispatchedThisCycle": 4,
+    "cardsRecoveredFromStale": 1,
+    "pidsDispatched": [1095465, 1095468, 1095478, 1095481]
+  },
   "activeTasks": [
     {
       "id": "c_f95a6762f1026_19cb7bd73f2",
       "title": "[Blofin] Fix ingestor CPU leak — climbs to 80%+ within 10-20min of start",
       "status": "In Progress",
-      "createdAt": "2026-03-04T12:29:32-07:00",
-      "updatedAt": "2026-03-04T12:29:40-07:00",
-      "minutesElapsed": 25
+      "pid": 1095465,
+      "dispatchedThisCycle": true,
+      "description": "Profile and fix memory leak in blofin-stack ingestor.py"
     },
     {
-      "id": "c_577156a888687_19cb7d20ae5",
-      "title": "[NQ] New Strategy: atr_exhaustion — WR=90.6%, PF>1.8 (quick test)",
+      "id": "c_e2eb4d196a4ba_19cb7de548d",
+      "title": "[Moonshot] Analyze position outcomes — optimize entry thresholds",
       "status": "In Progress",
-      "createdAt": "2026-03-04T12:35:21-07:00",
-      "updatedAt": "2026-03-04T12:35:21-07:00",
-      "minutesElapsed": 20,
+      "pid": 1095468,
       "dispatchedThisCycle": true,
-      "pid": 1047898
+      "description": "Analyze 33 closed trades to identify winning patterns and optimize thresholds"
+    },
+    {
+      "id": "c_0a2354725e21a_19cb7de5458",
+      "title": "[Blofin] Debug orderflow_imbalance gate failure — FT PF 0.50 vs 1.35",
+      "status": "In Progress",
+      "pid": 1095478,
+      "dispatchedThisCycle": true,
+      "description": "Root cause analysis: backtest 1.33 PF vs forward test 0.50 PF"
+    },
+    {
+      "id": "c_647d0b94acdab_19cb7de5436",
+      "title": "[NQ] Fix vwap_fade live collapse — BT 2.04 PF vs -$2,854 live loss",
+      "status": "In Progress",
+      "pid": 1095481,
+      "dispatchedThisCycle": true,
+      "description": "Debug model staleness and signal degradation in vwap_fade strategy"
     }
   ],
-  "pipelineStats": {
-    "inProgressCards": 2,
-    "plannedCards": 0,
-    "recentlyCompletedCards": 7,
-    "deploymentVerification": "passed"
+  "recentlyCompletedVerification": {
+    "cardsCompleted": 3,
+    "withinLastHour": [
+      {
+        "title": "[Blofin] Fix orderflow_imbalance T2 gate failure",
+        "completedMinutesAgo": 8,
+        "verified": true,
+        "deployment": "services restarted, dashboard loads HTTP 200"
+      },
+      {
+        "title": "[NQ] New Strategy: atr_exhaustion",
+        "completedMinutesAgo": 8,
+        "verified": true,
+        "deployment": "strategy registered in registry, smb_watcher active"
+      },
+      {
+        "title": "[NQ] Backtest 5 new strategies",
+        "completedMinutesAgo": 36,
+        "verified": true,
+        "deployment": "all 5 strategies registered (micro_pullback, failed_breakout, atr_breakout, vwap_stretch, session_open_drive)"
+      }
+    ]
   },
   "healthStatus": {
-    "cpuTemp": "77°C",
+    "cpuTemp": "93°C (warm, under critical limit)",
     "diskUsage": "54%",
     "criticalServices": {
       "openclaw-gateway": "active",
@@ -39,5 +75,11 @@
       "nq-dashboard": "active"
     }
   },
-  "alerts": []
+  "alerts": [
+    {
+      "level": "warning",
+      "message": "CPU temperature at 93°C (high but under 100°C critical). Monitor.",
+      "timestamp": "2026-03-04T01:25:00-07:00"
+    }
+  ]
 }

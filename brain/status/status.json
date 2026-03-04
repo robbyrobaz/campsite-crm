@@ -1,54 +1,29 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_df06c26792061_19cb694cc7a",
-      "title": "[NQ] Fix dispatcher gate check — stop trading fail strategies",
-      "status": "In Progress",
-      "project": "NQ-Trading-PIPELINE",
-      "updatedAt": "2026-03-04T02:16:13.052Z"
-    },
-    {
-      "id": "c_3f921b57e1de8_19cb694ed61",
-      "title": "[Blofin] Diagnose registry collapse — only 3 strategies vs 28 expected",
-      "status": "In Progress",
-      "project": "blofin-stack",
-      "updatedAt": "2026-03-04T02:16:12.975Z"
-    },
-    {
-      "id": "c_72abdb247ee4a_19cb69511b6",
-      "title": "[Moonshot] Analyze position exit efficiency",
-      "status": "In Progress",
-      "project": "blofin-moonshot",
-      "updatedAt": "2026-03-04T02:16:12.885Z"
-    }
-  ],
-  "lastDispatch": "2026-03-04T02:16:13Z",
-  "lastHealthCheck": "2026-03-04T02:16:13Z",
-  "deploymentIssues": [
-    {
-      "severity": "CRITICAL",
-      "service": "blofin-moonshot.service",
-      "issue": "Service unit file missing; process killed 2h45m ago",
-      "impact": "Moonshot model training offline"
-    },
-    {
-      "severity": "HIGH",
-      "card": "zscore_from_vwap",
-      "issue": "Strategy NOT in registry despite Done status",
-      "impact": "New NQ strategy not deployed"
-    },
-    {
-      "severity": "HIGH",
-      "card": "mtf_ensemble_gate",
-      "issue": "Strategy NOT in registry despite Done status",
-      "impact": "New Blofin strategy not deployed"
-    }
-  ],
-  "systemStatus": {
-    "cpuTemp": "86.0°C",
-    "diskUsage": "48%",
-    "criticalAlerts": 0,
-    "servicesActive": "gateway, blofin-ingestor, blofin-paper, nq-dashboard, nq-smb-watcher"
+  "timestamp": "2026-03-03T19:46:00-07:00",
+  "phase": "DISPATCH_COMPLETE",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 707,
+    "failed": 1,
+    "inbox": 2,
+    "stopped": 7
   },
-  "summary": "3 builders active. System healthy but 3 critical deployment issues detected: moonshot service down + 2 strategy registrations failed silently. Logged to incidents.md. Awaiting intervention."
+  "lastDispatch": "2026-03-03T19:46:00-07:00",
+  "lastHealthCheck": "2026-03-03T19:46:00-07:00",
+  "systemHealth": {
+    "cpu_temp_c": 76,
+    "disk_used_percent": 48,
+    "gateway": "active",
+    "nq_pipeline": "active",
+    "blofin_stack": "active",
+    "all_dashboards": "responding"
+  },
+  "alerts": [
+    {
+      "severity": "low",
+      "message": "Failed card: [Blofin] Diagnose registry collapse — needs review"
+    }
+  ],
+  "nextDispatchCycle": "2026-03-03T20:16:00-07:00"
 }

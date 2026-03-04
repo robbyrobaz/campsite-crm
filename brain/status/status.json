@@ -1,8 +1,43 @@
 {
-  "updated": "2026-03-04T07:25:00Z",
+  "lastDispatch": "2026-03-04T12:55:00-07:00",
+  "lastHealthCheck": "2026-03-04T12:55:00-07:00",
+  "cycleStatus": "complete",
   "activeTasks": [
-    {"id": "c_c67d0a3563bc", "title": "Backtest 5 new NQ strategies", "status": "in-progress", "pid": 970100, "startedAt": "2026-03-04T07:10:00Z"},
-    {"id": "orderflow-bt", "title": "Blofin backtest_orderflow_imbalance.py", "status": "in-progress", "pid": 891256, "startedAt": "2026-03-04T06:27:00Z"}
+    {
+      "id": "c_f95a6762f1026_19cb7bd73f2",
+      "title": "[Blofin] Fix ingestor CPU leak — climbs to 80%+ within 10-20min of start",
+      "status": "In Progress",
+      "createdAt": "2026-03-04T12:29:32-07:00",
+      "updatedAt": "2026-03-04T12:29:40-07:00",
+      "minutesElapsed": 25
+    },
+    {
+      "id": "c_577156a888687_19cb7d20ae5",
+      "title": "[NQ] New Strategy: atr_exhaustion — WR=90.6%, PF>1.8 (quick test)",
+      "status": "In Progress",
+      "createdAt": "2026-03-04T12:35:21-07:00",
+      "updatedAt": "2026-03-04T12:35:21-07:00",
+      "minutesElapsed": 20,
+      "dispatchedThisCycle": true,
+      "pid": 1047898
+    }
   ],
-  "notes": "Two heavy backtest processes running (run_phase2.py + backtest_orderflow_imbalance.py). Driving 85C temps. Ingestor CPU leak card queued — climbs to 80%+ in 10-20min, restarted 5x tonight. Will be dispatched when slot opens."
+  "pipelineStats": {
+    "inProgressCards": 2,
+    "plannedCards": 0,
+    "recentlyCompletedCards": 7,
+    "deploymentVerification": "passed"
+  },
+  "healthStatus": {
+    "cpuTemp": "77°C",
+    "diskUsage": "54%",
+    "criticalServices": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-smb-watcher": "active",
+      "nq-dashboard": "active"
+    }
+  },
+  "alerts": []
 }

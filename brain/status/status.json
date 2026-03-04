@@ -1,27 +1,5 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_a379b53e91bc4_19cba3acfae",
-      "title": "[Moonshot] Validate 4h timer and exit cycle reliability",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot",
-      "updated_at": 1772651265206
-    },
-    {
-      "id": "c_c3b9fadd90e28_19cba3acf8c",
-      "title": "[Blofin] Expand top FT strategy to additional eligible coin pairs",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "updated_at": 1772651265168
-    },
-    {
-      "id": "c_ff888fefec2d6_19cba3acf68",
-      "title": "[NQ] Diagnose psych_levels live bleed (WR 19%/16 trades) and tighten filters",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "updated_at": 1772651265130
-    }
-  ],
-  "lastDispatch": "2026-03-04T19:07:45.247327+00:00",
-  "lastHealthCheck": "2026-03-04T19:07:45.247341+00:00"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-04T19:49:57.527229+00:00",
+  "lastHealthCheck": "2026-03-04T19:49:57.527229+00:00"
 }

@@ -173,6 +173,13 @@ Note: Cards land in Planned. The Jarvis Pulse dispatcher (every 30min) picks the
 **This step ensures newly backtested strategies that pass gates are immediately wired into the live forward test.**
 Missing this step = strategies exist in the registry but never generate signals. This is the #1 failure mode.
 
+**Refer to Section 5 of `NQ-Trading-PIPELINE/docs/PRD.md` ("How to Add a Strategy to the Pipeline") for the complete 5-phase workflow:**
+1. Create strategy file (if new)
+2. Backtest (Phase 2: `run_phase2.py` trains model and saves pkl on gate pass)
+3. Wire to forward test (Phase 3: add to STRATEGIES list, restart watcher)
+4. Forward test (Phase 4: paper trade on live bars, collect 20+ trades)
+5. Graduate to God Model (Phase 5: add to dispatcher config, enable, run live)
+
 ```python
 import sqlite3, subprocess, json
 

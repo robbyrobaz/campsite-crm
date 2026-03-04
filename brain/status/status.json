@@ -1,42 +1,28 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_13c97829bff04_19cb815015a",
-      "title": "[Moonshot] Optimize ML entry thresholds — analyze position PnL vs ml_score correlation",
-      "status": "In Progress",
-      "pid": 1174972,
-      "project": "blofin-moonshot",
-      "dispatchedAt": "2026-03-04T09:25:44Z"
-    },
-    {
-      "id": "c_d321ffcbfbabe_19cb815013a",
-      "title": "[Blofin] Promote and expand bb_squeeze_v2 — top performer, 12-14% on 3 coins, expand to 5 more",
-      "status": "In Progress",
-      "pid": 1174982,
-      "project": "blofin-stack",
-      "dispatchedAt": "2026-03-04T09:25:44Z"
-    },
-    {
-      "id": "c_d4377c79fe229_19cb815011a",
-      "title": "[NQ] Diagnose equal_tops_bottoms / orb / vwap_fade live collapse — BT 3.0+ PF vs -$6K live",
-      "status": "In Progress",
-      "pid": 1174988,
-      "project": "NQ-Trading-PIPELINE",
-      "dispatchedAt": "2026-03-04T09:25:44Z"
-    }
-  ],
-  "lastDispatch": "2026-03-04T09:25:44Z",
-  "lastHealthCheck": "2026-03-04T09:25:44Z",
-  "systemHealth": {
-    "cpuTemp": "82.0°C",
-    "diskUsage": "54% (238G/468G)",
-    "servicesActive": 5,
-    "criticalAlerts": 0
+  "activeTasks": [],
+  "lastDispatch": "2026-03-04T09:55:41Z",
+  "lastHealthCheck": "2026-03-04T09:55:41Z",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "stopped": 9,
+    "done": 741
   },
-  "recentDeployments": {
-    "verified": 3,
-    "nqServices": "active",
-    "blofinServices": "active",
-    "dashboards": "200 OK"
-  }
+  "recentDeployments": [
+    {
+      "card": "[Blofin] Promote and expand bb_squeeze_v2",
+      "completedAt": "18 min ago",
+      "status": "VERIFIED"
+    },
+    {
+      "card": "[NQ] Diagnose equal_tops_bottoms / orb / vwap_fade live collapse",
+      "completedAt": "27 min ago",
+      "status": "VERIFIED"
+    },
+    {
+      "card": "[Moonshot] Optimize ML entry thresholds",
+      "completedAt": "28 min ago",
+      "status": "VERIFIED"
+    }
+  ]
 }

@@ -1,22 +1,82 @@
 {
+  "timestamp": "2026-03-03T21:55:00-07:00",
+  "dispatchCycleId": "36f47279-520f-4ce7-8f9c-a7c44be0771a",
+  "lastHealthCheck": "2026-03-03T21:55:00-07:00",
+  "lastDispatch": "2026-03-03T21:58:00-07:00",
+  "systemHealth": {
+    "cpu_temp_c": 61,
+    "disk_usage_pct": 48,
+    "services_active": 5,
+    "critical_services": ["openclaw-gateway.service", "blofin-stack-ingestor.service", "blofin-stack-paper.service", "nq-smb-watcher.service", "nq-dashboard.service"]
+  },
+  "alerts": {
+    "critical_alert_check": "PASS",
+    "count": 0
+  },
+  "boardState": {
+    "in_progress": 3,
+    "planned": 4,
+    "inbox_ready": 0,
+    "done_recent_1h": 0
+  },
   "activeTasks": [
     {
-      "id": "c_75417c70f135_19cb6cb2dd5",
-      "title": "[NQ] Debug equal_tops_bottoms — 0% live WR despite registration",
-      "status": "In Progress",
-      "pid": 654363,
-      "startedAt": 1772598327045
+      "id": "c_2cb4f7a1f207d_19cb7264dd6",
+      "title": "[NQ] God Model position management",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "pid": 723182,
+      "started_at": "2026-03-03T21:57:30-07:00"
     },
     {
-      "id": "c_5356a2eb9f131_19cb65d793f",
-      "title": "[NQ] diagnose ORB live collapse — bt 3.0 PF vs live 16% WR (-$1,404)",
-      "status": "In Progress",
-      "pid": 654350,
-      "startedAt": 1772598326981
+      "id": "c_03c9542449559_19cb7236322",
+      "title": "[NQ] Fix strategy_registry data gaps",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "pid": 723193,
+      "started_at": "2026-03-03T21:58:00-07:00"
+    },
+    {
+      "id": "c_ff84de4cd02_19cb722f86b",
+      "title": "[NQ] Fix strategy wiring integrity",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "pid": 723438,
+      "started_at": "2026-03-03T21:58:30-07:00"
     }
   ],
-  "lastDispatch": "2026-03-04T04:25:39Z",
-  "lastHealthCheck": "2026-03-04T04:25:39Z",
-  "dispatcherVersion": "1.0",
-  "summary": "2 NQ diagnostic cards dispatched. All services active (CPU 80C, Disk 48%). No critical alerts. Recently completed cards verified deployed."
+  "queuedForNextDispatch": [
+    {
+      "id": "c_d7b6cff196f78_19cb728e0b0",
+      "title": "add the carrier app to the master status page",
+      "status": "enriched"
+    },
+    {
+      "id": "c_ee6928681d34e_19cb7225973",
+      "title": "retrain all models with new session changes on NQ pipeline",
+      "status": "enriched (blocked until c_37858aef01fb8)"
+    },
+    {
+      "id": "c_665c0cc36d50f_19cb6cb2e09",
+      "title": "[Blofin] Fix orderflow_imbalance gate failure",
+      "status": "ready"
+    },
+    {
+      "id": "c_5356a2eb9f131_19c9205a0a9",
+      "title": "[NQ] diagnose ORB live collapse",
+      "status": "ready"
+    }
+  ],
+  "enrichmentSummary": {
+    "total_planned": 7,
+    "enriched": 2,
+    "ready": 7
+  },
+  "dispatchSummary": {
+    "dispatched_this_cycle": 3,
+    "max_capacity": 3,
+    "next_slot_when": "when In Progress task completes"
+  },
+  "deploymentVerification": {
+    "recent_done_cards_checked": 0,
+    "services_restarted_this_cycle": 0,
+    "status": "PASS"
+  }
 }

@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-03-03T22:25:00-07:00",
+  "timestamp": "2026-03-03T22:55:00-07:00",
   "dispatchCycleId": "36f47279-520f-4ce7-8f9c-a7c44be0771a",
-  "lastHealthCheck": "2026-03-03T22:25:00-07:00",
-  "lastDispatch": "2026-03-03T22:25:00-07:00",
+  "lastHealthCheck": "2026-03-03T22:55:00-07:00",
+  "lastDispatch": "2026-03-03T22:55:00-07:00",
   "systemHealth": {
-    "cpu_temp_c": 81,
+    "cpu_temp_c": 57,
     "disk_usage_pct": 48,
     "services_active": 5,
     "critical_services": ["openclaw-gateway.service", "blofin-stack-ingestor.service", "blofin-stack-paper.service", "nq-smb-watcher.service", "nq-dashboard.service"],
@@ -15,89 +15,45 @@
     "count": 0
   },
   "boardState": {
-    "in_progress": 5,
+    "in_progress": 0,
     "planned": 0,
     "inbox_ready": 0,
     "done_recent_1h": 3
   },
-  "activeTasks": [
+  "activeTasks": [],
+  "recentlyCompletedCards": [
     {
-      "id": "c_74641d1eccb1f_19cb7377979",
-      "title": "[NQ] Add 1h confirmation features — RSI/MACD/EMA/vol on hourly timeframe",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "pid": 778729,
-      "started_at": "2026-03-03T22:25:00-07:00",
-      "status": "Running"
+      "id": "c_84aff99cf2e2b_19cb6267eac",
+      "title": "[Blofin] Investigate paper trading losses — 7d overall negative despite 3 strategies at T1-T2",
+      "age_min": 11.3,
+      "status": "Verified"
     },
     {
       "id": "c_d7b6cff196f78_19cb728e0b0",
       "title": "add the carrier app to the master status page, and research options to have users pay monthly for access",
-      "project_path": "/home/rob/.openclaw/workspace/master-dashboard",
-      "pid": 778734,
-      "started_at": "2026-03-03T22:25:00-07:00",
-      "status": "Running"
-    },
-    {
-      "id": "c_37858aef01fb8_19cb7216ae0",
-      "title": "[NQ] Add PreNY session (08:30-09:30 ET) — split LondonNY at the 8:30 macro data boundary",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "pid": 778737,
-      "started_at": "2026-03-03T22:25:00-07:00",
-      "status": "Running"
+      "age_min": 12.6,
+      "status": "Verified"
     },
     {
       "id": "c_665c0cc36d50f_19cb6cb2e09",
       "title": "[Blofin] Fix orderflow_imbalance gate failure (PF=1.00, below 1.35 threshold)",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "pid": 778764,
-      "started_at": "2026-03-03T22:25:00-07:00",
-      "status": "Running"
-    },
-    {
-      "id": "c_5356a2eb9f131_19cb65d793f",
-      "title": "[NQ] diagnose ORB live collapse — bt 3.0 PF vs live 16% WR (-$1,404)",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "pid": 778790,
-      "started_at": "2026-03-03T22:25:00-07:00",
-      "status": "Running"
-    }
-  ],
-  "recentlyCompletedCards": [
-    {
-      "id": "c_03c9542449559_19cb7236322",
-      "title": "[NQ] Fix strategy_registry data gaps — missing BT stats, corrupted entries, stale ETB",
-      "age_min": 16.6,
-      "status": "Verified"
-    },
-    {
-      "id": "c_02386543d5ccb_19cb73af40c",
-      "title": "[cleanup] placeholder card — delete me",
-      "age_min": 21.7,
-      "status": "Skip (non-essential)"
-    },
-    {
-      "id": "c_2cb4f7a1f207d_19cb7264dd6",
-      "title": "[NQ] God Model position management — backtest concurrent/consensus strategies, deploy best",
-      "age_min": 24.4,
+      "age_min": 12.6,
       "status": "Verified"
     }
   ],
   "dispatchSummary": {
-    "cycle": "22:25 UTC-7",
-    "dispatched_this_cycle": 5,
-    "builders_allocated": 5,
+    "cycle": "22:55 UTC-7",
+    "dispatched_this_cycle": 0,
+    "builders_allocated": 0,
     "max_capacity": 5,
-    "queue_status": "FULL — at capacity",
-    "next_dispatch": "When 1+ In Progress cards complete"
+    "queue_status": "IDLE — 0 cards in queue",
+    "next_dispatch": "Waiting for cards in Planned status"
   },
   "deploymentVerification": {
     "recent_done_cards_checked": 3,
-    "services_verified": ["nq-smb-watcher.service", "nq-dashboard.service"],
-    "http_health_checks": ["nq-dashboard: 200"],
+    "services_verified": ["blofin-stack-ingestor.service", "blofin-stack-paper.service", "blofin-dashboard.service"],
+    "http_health_checks": ["master-dashboard: 200"],
     "status": "PASS"
   },
-  "enrichmentReport": {
-    "phase_5_cards_enriched": 0,
-    "notes": "All 5 Planned cards had complete descriptions; no enrichment needed"
-  }
+  "notes": "Board is empty. No work dispatched. All recent cards (within last 15min) verified as deployed."
 }

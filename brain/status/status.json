@@ -1,5 +1,24 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-04T22:19:48.362154+00:00",
-  "lastHealthCheck": "2026-03-04T22:19:48.362154+00:00"
+  "activeTasks": [
+    {
+      "id": "c_87939d086b8af_19cb7704379",
+      "title": "[Blofin] Fix orderflow_imbalance T2 gate failure \u2014 PF=1.00 below 1.35 threshold",
+      "assignee": "claude",
+      "updated_at": 1772664597205
+    },
+    {
+      "id": "c_e2eb4d196a4ba_19cb7de548d",
+      "title": "[Moonshot] Analyze position outcomes \u2014 optimize entry thresholds based on win/loss patterns",
+      "assignee": "claude",
+      "updated_at": 1772664597165
+    },
+    {
+      "id": "c_8732cd0a8874_19cb8831b04",
+      "title": "[NQ] Debug zscore_vwap_mr forward test \u2014 highest BT performer (PF 8.74) stuck at T0",
+      "assignee": "claude",
+      "updated_at": 1772664597123
+    }
+  ],
+  "lastDispatch": "2026-03-04T22:49:57.255119+00:00",
+  "lastHealthCheck": "2026-03-04T22:49:57.255134+00:00"
 }

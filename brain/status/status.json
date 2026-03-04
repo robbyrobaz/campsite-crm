@@ -1,24 +1,24 @@
 {
   "activeTasks": [
     {
-      "id": "c_725098201ccb6_19cb928214c",
-      "title": "[NQ] Verify equal_tops_bottoms live signal path in god_model_dispatcher and patch if missing",
-      "assignee": "claude",
-      "updated_at": 1772642244313
+      "id": "c_81ac2f4e1babe_19cb8b9fcfa",
+      "title": "[NQ] Diagnose live underperformance in prev_day (WR 23.8%/21 trades)",
+      "status": "In Progress",
+      "updated_at": 1772644047698
     },
     {
-      "id": "c_5a87cf878e779_19cb9282174",
-      "title": "[Blofin] Expand top FT strategy eligibility to additional coin pairs with guard metrics",
-      "assignee": "claude",
-      "updated_at": 1772642244267
+      "id": "c_313646837d8dd_19cb8b9fd1c",
+      "title": "[Blofin] Diagnose T2 gate-fail execution path for cross_asset_correlation",
+      "status": "In Progress",
+      "updated_at": 1772644047661
     },
     {
-      "id": "c_52f952f45c225_19cb9282192",
-      "title": "[Moonshot] Add CoinGecko market-cap enrichment for scoring features",
-      "assignee": "claude",
-      "updated_at": 1772642244222
+      "id": "c_eb1020d4de3ee_19cb920ccc1",
+      "title": "[Blofin] New Strategy: high_volume_reversal \u2014 PF=1.25 estimated, 335 events",
+      "status": "In Progress",
+      "updated_at": 1772644047622
     }
   ],
-  "lastDispatch": "2026-03-04T16:37:23.727892+00:00",
-  "lastHealthCheck": "2026-03-04T16:37:23.727892+00:00"
+  "lastDispatch": "2026-03-04T17:07:27.733318+00:00",
+  "lastHealthCheck": "2026-03-04T17:07:27.733329+00:00"
 }

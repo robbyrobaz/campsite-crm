@@ -1,5 +1,24 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-04T14:55:55.214611+00:00",
-  "lastHealthCheck": "2026-03-04T14:55:55.214621+00:00"
+  "activeTasks": [
+    {
+      "id": "c_725098201ccb6_19cb928214c",
+      "title": "[NQ] Verify equal_tops_bottoms live signal path in god_model_dispatcher and patch if missing",
+      "assignee": "claude",
+      "updated_at": 1772642244313
+    },
+    {
+      "id": "c_5a87cf878e779_19cb9282174",
+      "title": "[Blofin] Expand top FT strategy eligibility to additional coin pairs with guard metrics",
+      "assignee": "claude",
+      "updated_at": 1772642244267
+    },
+    {
+      "id": "c_52f952f45c225_19cb9282192",
+      "title": "[Moonshot] Add CoinGecko market-cap enrichment for scoring features",
+      "assignee": "claude",
+      "updated_at": 1772642244222
+    }
+  ],
+  "lastDispatch": "2026-03-04T16:37:23.727892+00:00",
+  "lastHealthCheck": "2026-03-04T16:37:23.727892+00:00"
 }

@@ -1,29 +1,25 @@
 {
-  "timestamp": "2026-03-03T19:46:00-07:00",
-  "phase": "DISPATCH_COMPLETE",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "done": 707,
-    "failed": 1,
-    "inbox": 2,
-    "stopped": 7
-  },
-  "lastDispatch": "2026-03-03T19:46:00-07:00",
-  "lastHealthCheck": "2026-03-03T19:46:00-07:00",
-  "systemHealth": {
-    "cpu_temp_c": 76,
-    "disk_used_percent": 48,
-    "gateway": "active",
-    "nq_pipeline": "active",
-    "blofin_stack": "active",
-    "all_dashboards": "responding"
-  },
-  "alerts": [
+  "activeTasks": [
     {
-      "severity": "low",
-      "message": "Failed card: [Blofin] Diagnose registry collapse — needs review"
+      "id": "c_665c0cc36d50f_19cb6cb2e09",
+      "title": "[Blofin] Fix orderflow_imbalance gate failure (PF=1.00, below 1.35 threshold)",
+      "project": "/home/rob/.openclaw/workspace/blofin-stack"
+    },
+    {
+      "id": "c_a5e5436df0749_19cb6cb3ed2",
+      "title": "[Moonshot] Validate 4h cycle timer is firing and exit logic processes positions",
+      "project": "/home/rob/.openclaw/workspace/blofin-moonshot"
+    },
+    {
+      "id": "c_ade702dcbc59_19cb6e0b998",
+      "title": "[Blofin] Fix ingestor CPU runaway — sklearn warning spam on every tick",
+      "project": "/home/rob/.openclaw/workspace/blofin-stack"
     }
   ],
-  "nextDispatchCycle": "2026-03-03T20:16:00-07:00"
+  "lastDispatch": "2026-03-03T20:25:42-0700",
+  "lastHealthCheck": "2026-03-03T20:25:42-0700",
+  "cycleTime": "8:25 PM MST (Tuesday)",
+  "inProgressCount": 3,
+  "plannedCount": 1,
+  "note": "Max 3 concurrent builders reached. NQ equal_tops_bottoms queued for next cycle."
 }

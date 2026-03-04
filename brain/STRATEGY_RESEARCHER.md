@@ -187,7 +187,7 @@ curl -s -X POST http://127.0.0.1:8787/api/cards \
   -d '{
     "title": "[NQ] New Strategy: <NAME> — <key metric from test>",
     "status": "Planned",
-    "assignee": "claude",
+    "assignee": "codex",
     "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
     "description": "## Research Findings\n<paste the actual numbers from your quick test>\n<e.g.: 847 events across 335 days. WR=61.2% at TP=SL=8pt. PF=1.58 estimated.>\n\n## What to Build\n<full implementation spec — file to create, signal conditions, ML features, backtest instructions>\n\n## Implementation\n1. Create strategies/<name>.py following exact pattern of strategies/momentum.py\n2. Signal conditions: <exact code or pseudocode>\n3. ML features: <list specific features to test>\n4. Train using walk-forward (pipeline/train_strategies.py or equivalent)\n5. Full backtest via pipeline/backtester.py on full dataset\n6. Register: INSERT INTO strategy_registry (strategy_name, live_enabled, gate_status, bt_profit_factor) VALUES (name, 0, pending, <quick_test_pf>)\n7. If full BT PF > 1.3: update gate_status=pass (tournament will pick it up automatically)\n\n## Success Criteria\n- Full backtest PF > 1.3 with > 100 trades\n- Model saved to ml/god_model/models/<name>/\n- strategy_registry entry confirmed\n- git commit && git push\n\n## Long-Running Script Rules\nIf training > 10 min: nohup python3 train_<name>.py > /tmp/<name>_train.log 2>&1 &\nDo NOT retry if exec times out. Check: ps aux | grep <name> before any re-run.\n\n## Execution Rules\n- Do NOT ask Ready to proceed — just execute\n- Do NOT mark Done until backtest PF is confirmed\n- Commit all changes before marking Done"
   }'

@@ -213,7 +213,7 @@ if needs_wiring:
         card_body = {
             "title": f"[NQ] Wire {strategy} into live forward test",
             "status": "Planned",
-            "assignee": "claude",
+            "assignee": "codex",
             "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
             "description": f"""Wire the newly gate-passing strategy '{strategy}' into the live smb_watcher forward test.
 
@@ -397,7 +397,7 @@ CARD=$(curl -s -X POST http://127.0.0.1:8787/api/cards \
   -d '{
     "title": "TITLE",
     "status": "Planned",
-    "assignee": "claude",
+    "assignee": "codex",
     "project_path": "PROJECT_PATH",
     "description": "FULL DESCRIPTION with file paths, DB queries for context, what to build, success criteria, deploy steps, constraints"
   }')
@@ -438,7 +438,7 @@ AUTO-GENERATOR: Launched 3 builders
 - Gate: In Progress + Planned >= 3 → skip, do nothing (don't flood the board)
 - **NEVER call `/run` on cards** — leave in Planned, dispatcher picks up within 30min
 - **NEVER set status to "In Progress"** — that is the dispatcher's job after running
-- assignee = always "claude"
+- assignee = always "codex"
 - NEVER enable live trading, fire TradersPost webhooks, or activate prop firm evals
 - NEVER suggest per-coin ML models for Blofin
 - NEVER use `build_features()` for NQ model training (RTH-only) — use `build_session_aware_features()`

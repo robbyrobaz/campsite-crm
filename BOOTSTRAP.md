@@ -144,7 +144,9 @@ Default operating mode: **FT-PL ON, BLE OFF**.
 
 ## ⛔ HARD RULES — NEVER VIOLATE
 - **NEVER enable BLE for NQ or start any prop firm eval (Lucid, FTMO, etc.) without Rob's explicit approval** — no webhooks, no live orders, no eval activation, nothing
-- **NQ live model = GOD MODEL** — a single unified model combining all strategies; NOT individual strategies (momentum/orb/etc.)
+- **NQ live model = GOD MODEL** — a single unified model combining selected experts; NOT individual strategies (momentum/orb/etc.)
+- **God candidate gate (new):** Top 5 by FT PF, min 50 trades, min PF 1.35, exclude recent 20-trade PF < 1.0
+- **God cohesion bucket (new):** 3-day joint `god_model_forward_test` with strict consensus (min 2 agree, any opposing signal => skip), single-position only before BLE eligibility
 
 ## Key Facts (often forgotten, very expensive to re-derive)
 - **NQ data feed**: NinjaTrader SMB → `/mnt/nt_bridge/bars.csv` (read-only) → `nq-smb-watcher.service` → `NQ_continuous_1min.csv` (UTC). Live. IBKR/nq-bar-feed is RETIRED.

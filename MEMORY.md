@@ -93,6 +93,8 @@ Entry/exit used different feature sets when a regime-aware model was promoted. E
 
 ### NQ Live Strategy: GOD MODEL
 - NOT individual strategies — those are components of a single unified God Model
+- God candidate gate: top 5 by FT PF, min 50 trades, min PF 1.35, recent 20-trade PF >= 1.0
+- God cohesion bucket: 3-day joint forward test with strict consensus (min 2 agree, disagreements skip)
 - Do not reference individual strategy PFs when discussing live trading readiness
 
 ### Architecture (locked)

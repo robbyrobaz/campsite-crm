@@ -1,24 +1,5 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_81ac2f4e1babe_19cb8b9fcfa",
-      "title": "[NQ] Diagnose live underperformance in prev_day (WR 23.8%/21 trades)",
-      "status": "In Progress",
-      "updated_at": 1772644047698
-    },
-    {
-      "id": "c_313646837d8dd_19cb8b9fd1c",
-      "title": "[Blofin] Diagnose T2 gate-fail execution path for cross_asset_correlation",
-      "status": "In Progress",
-      "updated_at": 1772644047661
-    },
-    {
-      "id": "c_eb1020d4de3ee_19cb920ccc1",
-      "title": "[Blofin] New Strategy: high_volume_reversal \u2014 PF=1.25 estimated, 335 events",
-      "status": "In Progress",
-      "updated_at": 1772644047622
-    }
-  ],
-  "lastDispatch": "2026-03-04T17:07:27.733318+00:00",
-  "lastHealthCheck": "2026-03-04T17:07:27.733329+00:00"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-04T17:37:29.669403+00:00",
+  "lastHealthCheck": "2026-03-04T17:37:29.669403+00:00"
 }

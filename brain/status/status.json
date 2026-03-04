@@ -1,45 +1,22 @@
 {
   "activeTasks": [
     {
-      "id": "c_665c0cc36d50f_19cb6cb2e09",
-      "title": "[Blofin] Fix orderflow_imbalance gate failure (PF=1.00, below 1.35 threshold)",
-      "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "started": "1772594732303"
+      "id": "c_75417c70f135_19cb6cb2dd5",
+      "title": "[NQ] Debug equal_tops_bottoms — 0% live WR despite registration",
+      "status": "In Progress",
+      "pid": 654363,
+      "startedAt": 1772598327045
     },
-    {
-      "id": "c_bede53038d66_19cb513d94e",
-      "title": "[Moonshot] Verify 4h cycle timer and exit pipeline — all running cleanly?",
-      "project": "/home/rob/.openclaw/workspace/blofin-moonshot",
-      "pid": 604380,
-      "dispatchedAt": "2026-03-03T20:55:00-0700"
-    },
-    {
-      "id": "c_84aff99cf2e2b_19cb6267eac",
-      "title": "[Blofin] Investigate paper trading losses — 7d overall negative despite 3 strategies at T1-T2",
-      "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "pid": 604433,
-      "dispatchedAt": "2026-03-03T20:55:00-0700"
-    }
-  ],
-  "plannedQueue": [
     {
       "id": "c_5356a2eb9f131_19cb65d793f",
       "title": "[NQ] diagnose ORB live collapse — bt 3.0 PF vs live 16% WR (-$1,404)",
-      "project": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
-    },
-    {
-      "id": "c_75417c70f135_19cb6cb2dd5",
-      "title": "[NQ] Debug equal_tops_bottoms — 0% live WR despite registration",
-      "project": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
+      "status": "In Progress",
+      "pid": 654350,
+      "startedAt": 1772598326981
     }
   ],
-  "lastDispatch": "2026-03-03T20:55:00-0700",
-  "lastHealthCheck": "2026-03-03T20:55:00-0700",
-  "cycleTime": "8:55 PM MST (Tuesday)",
-  "inProgressCount": 3,
-  "plannedCount": 2,
-  "deploymentWarnings": [
-    "⚠️ blofin-moonshot.service MISSING — unit file not found. Service inactive, unable to verify Moonshot card deployment. Investigating via dispatched card."
-  ],
-  "note": "Max 3 concurrent builders at capacity. 2 remaining NQ cards queued for next 30-min cycle."
+  "lastDispatch": "2026-03-04T04:25:39Z",
+  "lastHealthCheck": "2026-03-04T04:25:39Z",
+  "dispatcherVersion": "1.0",
+  "summary": "2 NQ diagnostic cards dispatched. All services active (CPU 80C, Disk 48%). No critical alerts. Recently completed cards verified deployed."
 }

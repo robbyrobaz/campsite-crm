@@ -317,3 +317,49 @@ nq-dashboard.service was inactive because dashboard/app.py was running as an orp
 **Status:** ✓ Resolved
 
 The timer was not active, which would have prevented the 4h training cycle from running. This was caught during deployment verification and fixed.
+
+## 2026-03-03 19:16 MST — Moonshot Service Missing + Strategy Registration Failures
+
+**Incident Time:** Jarvis Pulse (Dispatch) — 19:16 MST (7:16 PM)
+
+**Issues Detected:**
+
+1. **blofin-moonshot.service** — NOT ACTIVE
+   - Service unit file missing (not-found)
+   - Process killed 2h 45min ago (16:31 MST) with SIGTERM
+   - Service was running but terminated, unit file no longer exists
+   - Status: FAILED (Result: signal) — will not restart automatically
+   - **Impact:** Moonshot model training stopped; positions may not be updating
+
+2. **Strategy Registration Failures (Silent Deployments):**
+   - Card: "[NQ] New Strategy: zscore_from_vwap — WR=89.7%, PF~8.74"
+     - Status: Done (updated 1 sec ago)
+     - Registry check: **NOT FOUND** in strategy_registry
+     - Deployment failed silently; card marked Done but work not deployed
+   
+   - Card: "[Blofin] New Strategy: mtf_ensemble_gate — WR=56.0%, PF=1.27"
+     - Status: Done (updated 1 sec ago)
+     - Registry check: **NOT FOUND** in strategy_registry
+     - Deployment failed silently; card marked Done but work not deployed
+
+3. **Moonshot FT Scorer Fix** — Partial Deployment
+   - Card: "[Moonshot] Fix FT scorer: 'could not convert string to float: price_vs_52w_high'"
+   - Status: Done (updated 1 sec ago)
+   - Service status: Inactive (no service unit to verify)
+   - Impact: Code changes may exist but not running due to missing service
+
+**System Status (Otherwise Healthy):**
+- CPU: 86°C (within limits)
+- Disk: 48% (OK)
+- Gateway: active ✓
+- Blofin ingestor: active ✓
+- Blofin paper: active ✓
+- NQ dashboard: HTTP 200 ✓
+- Critical alerts: EXIT 0 ✓
+
+**Action Required:**
+1. Recreate or restore blofin-moonshot.service unit file
+2. Investigate why strategy registrations complete without actually registering (likely builder deployment step failing silently)
+3. Verify the 2 builder outputs — code may exist but not deployed to registry
+
+**Dispatcher Decision:** All 3 In Progress cards still active (last updated 5 min ago). Awaiting Rob's guidance on service restoration before restarting builders.

@@ -1,30 +1,54 @@
 {
   "activeTasks": [
     {
-      "id": "c_d47fbec84aec3_19cb6869945",
-      "title": "[Moonshot] Fix FT scorer: 'could not convert string to float: price_vs_52w_high'",
-      "status": "In Progress",
-      "project": "blofin-moonshot-v2",
-      "updatedAt": "2026-03-04T01:46:40.399Z"
-    },
-    {
-      "id": "c_4b647c7160602_19cb686b645",
-      "title": "[Blofin] New Strategy: mtf_ensemble_gate — WR=56.0%, PF=1.27",
-      "status": "In Progress",
-      "project": "blofin-stack",
-      "pid": 445686,
-      "dispatchedAt": "2026-03-04T01:47:17Z"
-    },
-    {
-      "id": "c_a7abcb6fdbcce_19cb686b234",
-      "title": "[NQ] New Strategy: zscore_from_vwap — WR=89.7%, PF~8.74",
+      "id": "c_df06c26792061_19cb694cc7a",
+      "title": "[NQ] Fix dispatcher gate check — stop trading fail strategies",
       "status": "In Progress",
       "project": "NQ-Trading-PIPELINE",
-      "pid": 445698,
-      "dispatchedAt": "2026-03-04T01:47:17Z"
+      "updatedAt": "2026-03-04T02:16:13.052Z"
+    },
+    {
+      "id": "c_3f921b57e1de8_19cb694ed61",
+      "title": "[Blofin] Diagnose registry collapse — only 3 strategies vs 28 expected",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "updatedAt": "2026-03-04T02:16:12.975Z"
+    },
+    {
+      "id": "c_72abdb247ee4a_19cb69511b6",
+      "title": "[Moonshot] Analyze position exit efficiency",
+      "status": "In Progress",
+      "project": "blofin-moonshot",
+      "updatedAt": "2026-03-04T02:16:12.885Z"
     }
   ],
-  "lastDispatch": "2026-03-04T01:47:17Z",
-  "lastHealthCheck": "2026-03-04T01:47:17Z",
-  "summary": "3 builders active (Moonshot FT fix continuing; Blofin + NQ strategies just dispatched). All services healthy. 3 Done cards verified deployed."
+  "lastDispatch": "2026-03-04T02:16:13Z",
+  "lastHealthCheck": "2026-03-04T02:16:13Z",
+  "deploymentIssues": [
+    {
+      "severity": "CRITICAL",
+      "service": "blofin-moonshot.service",
+      "issue": "Service unit file missing; process killed 2h45m ago",
+      "impact": "Moonshot model training offline"
+    },
+    {
+      "severity": "HIGH",
+      "card": "zscore_from_vwap",
+      "issue": "Strategy NOT in registry despite Done status",
+      "impact": "New NQ strategy not deployed"
+    },
+    {
+      "severity": "HIGH",
+      "card": "mtf_ensemble_gate",
+      "issue": "Strategy NOT in registry despite Done status",
+      "impact": "New Blofin strategy not deployed"
+    }
+  ],
+  "systemStatus": {
+    "cpuTemp": "86.0°C",
+    "diskUsage": "48%",
+    "criticalAlerts": 0,
+    "servicesActive": "gateway, blofin-ingestor, blofin-paper, nq-dashboard, nq-smb-watcher"
+  },
+  "summary": "3 builders active. System healthy but 3 critical deployment issues detected: moonshot service down + 2 strategy registrations failed silently. Logged to incidents.md. Awaiting intervention."
 }

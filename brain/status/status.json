@@ -1,24 +1,5 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_894eec544d372_19cb8f10b20",
-      "title": "[Moonshot] Validate exit engine per cycle and fix stale-position handling",
-      "assignee": "claude",
-      "updated_at": 1772634370031
-    },
-    {
-      "id": "c_ab59b51af9d38_19cb8f10ad6",
-      "title": "[NQ] Root-cause vwap_fade + gap_fill live bleed (WR<15%) and implement guardrails",
-      "assignee": "claude",
-      "updated_at": 1772634369965
-    },
-    {
-      "id": "c_08319368f6e26_19cb8f10b00",
-      "title": "[Blofin] Expand top eligibility strategy to 5 new symbols via global-model coin screening",
-      "assignee": "claude",
-      "updated_at": 1772634369894
-    }
-  ],
-  "lastDispatch": "2026-03-04T07:26:10.066860",
-  "lastHealthCheck": "2026-03-04T07:26:10.066869"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-04T14:55:55.214611+00:00",
+  "lastHealthCheck": "2026-03-04T14:55:55.214621+00:00"
 }

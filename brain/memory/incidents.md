@@ -379,3 +379,9 @@ The timer was not active, which would have prevented the 4h training cycle from 
 - Related Planned card ("[Moonshot] Verify 4h cycle timer") dispatched (PID 604380) to investigate root cause
 
 **Status:** Escalating to Rob via ntfy. Dispatcher continuing with 2 additional builders active (at 3-builder cap).
+
+## 2026-03-03 23:55 — Moonshot Service Restart
+**Card:** c_fa2d2eebc7f31_19cb7704398 (4h cycle timer validation)  
+**Issue:** Service was inactive post-deployment, restarted.  
+**Status:** Now initializing (Phase 2 running), dashboard HTTP 200.  
+**Action:** None needed, service recovering normally.

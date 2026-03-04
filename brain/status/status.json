@@ -1,24 +1,31 @@
 {
+  "lastDispatch": "2026-03-03T23:56:26.162922Z",
+  "lastHealthCheck": "2026-03-03T23:56:26.162935Z",
   "activeTasks": [
     {
-      "id": "c_87939d086b8af_19cb7704379",
-      "title": "[Blofin] Fix orderflow_imbalance T2 gate failure — PF=1.00 below 1.35 threshold"
+      "id": "c_0bfb540db85e_19cb76f51a8",
+      "title": "[NQ] Wire opening_momentum_bias into live forward test",
+      "project": "NQ-Trading-PIPELINE"
     },
     {
-      "id": "c_fa2d2eebc7f31_19cb7704398",
-      "title": "[Moonshot] Validate 4h cycle timer — verify timer fires & scoring is live"
+      "id": "c_085d0daa0c2cd_19cb7704359",
+      "title": "[NQ] Debug equal_tops_bottoms live collapse \u2014 gate=fail with 0 BT PF yet still trading (-$1,864)",
+      "project": "NQ-Trading-PIPELINE"
+    },
+    {
+      "id": "c_87939d086b8af_19cb7704379",
+      "title": "[Blofin] Fix orderflow_imbalance T2 gate failure \u2014 PF=1.00 below 1.35 threshold",
+      "project": "blofin-stack"
     },
     {
       "id": "c_c67d0a3563bc_19cb7836d47",
-      "title": "[NQ] Backtest 5 new strategies: micro_pullback, failed_breakout, atr_breakout, vwap_stretch, session_open_drive"
+      "title": "[NQ] Backtest 5 new strategies: micro_pullback, failed_breakout, atr_breakout, vwap_stretch, session_open_drive",
+      "project": "NQ-Trading-PIPELINE"
     }
   ],
-  "lastDispatch": "2026-03-04T06:25:59+00:00",
-  "lastHealthCheck": "2026-03-04T06:25:59+00:00",
-  "dispatchSummary": {
-    "cardsDispatched": 2,
-    "inProgress": 3,
-    "maxCapacity": 3,
-    "note": "Queue at capacity (3/3). 2 new cards dispatched this cycle. Remaining 2 Planned cards ([NQ] Debug equal_tops_bottoms, [NQ] Wire opening_momentum_bias) queued for next cycle."
-  }
+  "taskCount": {
+    "inProgress": 4,
+    "planned": 0
+  },
+  "notes": "Dispatched debug equal_tops + wire opening_momentum at 23:31. Moonshot service restarted. All critical services active."
 }

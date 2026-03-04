@@ -136,6 +136,7 @@ incident (2026-03-03) was caused by a builder exec timing out and re-running the
 2. Run: `ps aux | grep <script_name> | grep -v grep` — if the process is ALREADY running, **DO NOT dispatch again**
 3. If a card shows Failed but the log's last line contains `"subtype":"success"` → mark it Done, do NOT re-dispatch
 4. Failed cards that ran in the last 2 hours: **NEVER auto-re-dispatch** — flag for Rob instead
+5. **Failed card sweep** runs every Pulse cycle (Phase 4.5) AND every Oversight heartbeat — see BOOTSTRAP.md Phase 4.5 for the exact logic. Summary: check log for false-success → re-queue with retry tag → flag after 3 failures
 5. Max 3 concurrent builders (existing rule) — count running `python3 scripts/` processes, not just kanban status
 
 **Kanban runner bug (confirmed 2026-03-03):** Builders that run long jobs exit non-zero → kanban marks Failed even on success. Pulse MUST check the log before re-dispatching. `tail -5 logs/<id>.log | grep subtype:success` → if found, mark Done and skip.

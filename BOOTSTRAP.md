@@ -75,6 +75,19 @@ curl -s "http://127.0.0.1:8787/api/cards?status=Planned"
 
 **Phase 4 — Stale recovery:** any In Progress card untouched >30 min → PATCH back to Planned for redispatch
 
+**Phase 4.5 — Failed card sweep (NON-OPTIONAL):**
+```bash
+curl -s "http://127.0.0.1:8787/api/cards?status=Failed"
+```
+For each Failed card:
+1. Check log: `tail -5 kanban-dashboard/logs/<id>.log | grep -i "subtype.*success\|complete\|✅"` — if success found → PATCH status=Done, skip re-queue
+2. Check age: if `updated_at` < 2h ago → leave it, flag to Rob if it's blocking
+3. If older than 2h AND log shows genuine failure → check description for `[auto-retry #N]`:
+   - No retry tag yet: add `[auto-retry #1]` to description, PATCH status=Planned
+   - `[auto-retry #1]`: update to `[auto-retry #2]`, PATCH status=Planned
+   - `[auto-retry #2]` or more: **STOP — flag to Rob** ("Card X has failed 3 times, needs human review"), do NOT re-queue
+4. Never re-queue a card whose failure is clearly permanent (e.g., "strategy not found", "file missing" — those need a fix, not a retry)
+
 **Phase 5 — ENRICH PLANNED CARDS (do not skip):**
 A card is ready when it has: `assignee=claude`, `project_path` set, and a description specific enough to execute.
 If any are missing or vague — **enrich before running.**

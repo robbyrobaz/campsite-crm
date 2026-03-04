@@ -77,6 +77,20 @@
 - If 5h output tokens exceed 500K, flag as heavy usage
 - This file is updated every 15 min by systemd timer (zero AI cost)
 
+## Failed Card Sweep (EVERY HEARTBEAT)
+- Query: `curl -s "http://127.0.0.1:8787/api/cards?status=Failed"`
+- For each Failed card:
+  1. **Check log first:** `tail -5 /home/rob/.openclaw/workspace/kanban-dashboard/logs/<id>.log | grep -iE "subtype.*success|complete|✅"`
+     - If success found → PATCH status=Done (runner bug — long jobs exit non-zero even on success)
+  2. **Check age** (`updated_at`): if failed < 2h ago → skip (too fresh, may still be recoverable)
+  3. **If genuine failure and older than 2h:**
+     - Check description for `[auto-retry #N]` tag:
+       - No tag → add `[auto-retry #1]` to description, PATCH status=Planned
+       - `#1` tag → update to `#2`, PATCH status=Planned
+       - `#2` or higher → **FLAG TO ROB** via ntfy: "Card '[title]' has failed 3 times — needs manual review". Do NOT re-queue again.
+  4. **Never re-queue permanent failures:** if log contains "FileNotFoundError", "ModuleNotFoundError", "strategy not found" → flag immediately, do not retry
+- Report count: "N Failed cards: X resolved, Y re-queued, Z flagged"
+
 ## "Done" Audit (EVERY HEARTBEAT)
 - Query `curl -s http://127.0.0.1:8787/api/cards?status=Done` — count total Done cards
 - Report the count

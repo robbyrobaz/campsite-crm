@@ -1,35 +1,21 @@
 {
   "activeTasks": [
     {
-      "id": "c_1a8fd8377c6ca_19cb87c5b4a",
-      "title": "[NQ] Train 5 new strategies — micro_pullback, failed_breakout, atr_breakout, vwap_stretch, session_open_drive",
-      "project": "NQ-Trading-PIPELINE",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-04T00:21:23.621Z"
-    }
-  ],
-  "lastDispatch": "2026-03-04T03:55:00Z",
-  "lastHealthCheck": "2026-03-04T03:55:00Z",
-  "boardState": {
-    "inProgress": 1,
-    "planned": 0,
-    "done": 743
-  },
-  "systemHealth": {
-    "cpuTemp": "71.0°C",
-    "diskUsage": "48%",
-    "criticalServices": "all active"
-  },
-  "recentDeployments": [
-    {
-      "card": "[Moonshot] Optimize exit strategy with trailing stops - VAL AUC 0.844, RIVER +22%",
-      "completedAt": "2026-03-04T03:31:11Z",
-      "status": "VERIFIED"
+      "id": "c_d7857e94704aa_19cb8831b27",
+      "title": "[Blofin] Promote top T1 strategy to T2 \u2014 expand eligible coins and start forward test",
+      "updated_at": 1772623570594
     },
     {
-      "card": "[Blofin] Diagnose T1 to T2 promotion stall - 12 T1 waiting, only 1 T2 in forward test",
-      "completedAt": "2026-03-04T03:28:29Z",
-      "status": "VERIFIED"
+      "id": "c_f124974326196_19cb8831b5f",
+      "title": "[Moonshot] Verify 4h cycle timer and exit processing \u2014 ensure positions monitored correctly",
+      "updated_at": 1772623570536
+    },
+    {
+      "id": "c_1a8fd8377c6ca_19cb87c5b4a",
+      "title": "[NQ] Train 5 new strategies \u2014 micro_pullback, failed_breakout, atr_breakout, vwap_stretch, session_open_drive",
+      "updated_at": 1772623570466
     }
-  ]
+  ],
+  "lastDispatch": "2026-03-04T11:26:10.252954+00:00",
+  "lastHealthCheck": "2026-03-04T11:26:10.252954+00:00"
 }

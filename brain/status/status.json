@@ -1,24 +1,24 @@
 {
   "activeTasks": [
     {
-      "id": "c_87939d086b8af_19cb7704379",
-      "title": "[Blofin] Fix orderflow_imbalance T2 gate failure \u2014 PF=1.00 below 1.35 threshold",
-      "assignee": "claude",
-      "updated_at": 1772664597205
+      "id": "c_19fda5805316c_19cba7f8a79",
+      "title": "[Moonshot] Verify 4h timer and eliminate null ml_scores in scoring cycle",
+      "assignee": "codex",
+      "updated_at": 1772667548274
     },
     {
-      "id": "c_e2eb4d196a4ba_19cb7de548d",
-      "title": "[Moonshot] Analyze position outcomes \u2014 optimize entry thresholds based on win/loss patterns",
-      "assignee": "claude",
-      "updated_at": 1772664597165
+      "id": "c_2b97a7ea6cb04_19cba7f8a5b",
+      "title": "[Blofin] Diagnose T2 gate-fail strategies with missing FT data and restore paper execution",
+      "assignee": "codex",
+      "updated_at": 1772667548236
     },
     {
-      "id": "c_8732cd0a8874_19cb8831b04",
-      "title": "[NQ] Debug zscore_vwap_mr forward test \u2014 highest BT performer (PF 8.74) stuck at T0",
-      "assignee": "claude",
-      "updated_at": 1772664597123
+      "id": "c_4e842af9dc634_19cbb2d419d",
+      "title": "[NQ] Implement and test YouTube 8:15 break-and-retest midpoint strategy (8-Wbq5I\u2026",
+      "assignee": "codex",
+      "updated_at": 1772666849801
     }
   ],
-  "lastDispatch": "2026-03-04T22:49:57.255119+00:00",
-  "lastHealthCheck": "2026-03-04T22:49:57.255134+00:00"
+  "lastDispatch": "2026-03-04T23:39:14.652874+00:00",
+  "lastHealthCheck": "2026-03-04T23:39:14.652874+00:00"
 }

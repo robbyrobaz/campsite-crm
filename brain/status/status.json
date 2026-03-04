@@ -1,68 +1,22 @@
 {
-  "timestamp": "2026-03-03T16:47:00-07:00",
-  "dispatchCycle": "Jarvis Pulse (Sonnet) — Dispatch 4/3",
-  "board": {
-    "inProgress": 3,
+  "activeTasks": [],
+  "lastDispatch": "2026-03-03T17:16:00-07:00",
+  "lastHealthCheck": "2026-03-03T17:16:00-07:00",
+  "boardStatus": {
+    "inProgress": 0,
     "planned": 0,
     "done": 3
   },
-  "activeTasks": [
-    {
-      "id": "c_341d6a29ccc2e_19cb581d9ee",
-      "title": "[NQ] Investigate vwap_fade bleeding (10% WR 7d)",
-      "project": "NQ-Trading-PIPELINE",
-      "status": "In Progress",
-      "pid": 4104665,
-      "dispatched_min": 0
-    },
-    {
-      "id": "c_186333e7ac2fc_19cb54ad38e",
-      "title": "[NQ] Diagnose equal_tops_bottoms collapse — bt 0.67 fail, live -$1,864",
-      "project": "NQ-Trading-PIPELINE",
-      "status": "In Progress",
-      "pid": 4104652,
-      "dispatched_min": 0
-    },
-    {
-      "id": "c_bede53038d66_19cb513d94e",
-      "title": "[Moonshot] Verify 4h cycle timer and exit pipeline",
-      "project": "blofin-moonshot",
-      "status": "In Progress",
-      "pid": 4104626,
-      "dispatched_min": 0
-    }
-  ],
-  "recentlyCompleted": [
-    {
-      "id": "c_a03e1a71647d2",
-      "title": "[moonshot] analyze runner positions and optimize tp/sl",
-      "completed_min": 15,
-      "verified": "dashboard 200, services active"
-    },
-    {
-      "id": "c_b8b249d9e1c8a",
-      "title": "[blofin] expand orderflow_imbalance to top coin pairs",
-      "completed_min": 16,
-      "verified": "dashboard 200, services active"
-    },
-    {
-      "id": "c_747ca6e7ac2fc",
-      "title": "[NQ] Retrain vwap_reclaim ML model",
-      "completed_min": 30,
-      "verified": "dashboard 200, services active"
-    }
-  ],
-  "events": [
-    {
-      "time": "2026-03-03T16:47:00-07:00",
-      "action": "Dispatch cycle complete",
-      "detail": "4 cards dispatched (3 now In Progress, 1 queued). 3 recent Done cards verified."
-    }
-  ],
-  "health": {
-    "cpu_temp_c": 90,
-    "disk_usage_pct": 47,
-    "services_alive": 5,
-    "kanban_api": "ok"
-  }
+  "systemHealth": {
+    "cpu_temp": "82°C",
+    "disk_usage": "47%",
+    "services": [
+      "openclaw-gateway (active)",
+      "blofin-stack-ingestor (active)",
+      "blofin-stack-paper (active)",
+      "nq-smb-watcher (active)",
+      "nq-dashboard (active)"
+    ]
+  },
+  "notes": "Dispatch cycle complete. Board is clear. No work queued. All services healthy and recently completed tasks verified deployed."
 }

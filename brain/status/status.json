@@ -1,16 +1,5 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_3299f4b6a930a_19cbd3c3c61",
-      "title": "[NQ] Fix gap_fill stale-model drift and enforce model-version parity in live watcher",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
-    },
-    {
-      "id": "c_08f8481a9b3ed_19cbd3c3c88",
-      "title": "[Blofin] Diagnose zero paper-trade flow in last 24h and restore FT-PL signal-to-trade path",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack"
-    }
-  ],
-  "lastDispatch": "2026-03-05T09:11:11.931841+00:00",
-  "lastHealthCheck": "2026-03-05T09:11:11.931841+00:00"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-05T02:41:32.855957-07:00",
+  "lastHealthCheck": "2026-03-05T02:41:32.855957-07:00"
 }

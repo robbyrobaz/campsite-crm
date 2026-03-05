@@ -1,6 +1,8 @@
 ## ⛔ AUTH FLOWS — NEVER AUTO-RETRY (learned the hard way, Feb 28)
 **Ring, IBKR, any 2FA service:** ONE attempt only. Stop. Wait for Rob to complete 2FA/SMS. Check result. Never loop, never auto-restart, never retry without Rob explicitly saying go. Repeated attempts = account lockouts that last hours. This has happened with Ring (locked for days) and IBKR (locked 1hr today).
 
+**IBKR Docker specifically:** `TWOFA_TIMEOUT_ACTION=exit` + `RELOGIN_AFTER_TWOFA_TIMEOUT=no` — ALWAYS. Never set to `restart/yes`. If the container exits on 2FA timeout, do NOT `docker compose up` again until Rob says his phone is ready. The daily 11:59 PM IBC restart does NOT require new 2FA (internal session). Only a cold start (fresh container) triggers 2FA.
+
 # BOOTSTRAP.md — Session Startup Context
 > Auto-loaded every session. Updated by cron. Last updated: see timestamp below.
 > **This file is the minimum context needed before responding to Rob.**

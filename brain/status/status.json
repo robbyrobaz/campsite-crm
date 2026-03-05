@@ -1,30 +1,46 @@
 {
-  "activeTasks": [
+  "activeTasks": [],
+  "boardState": {
+    "total_cards": 799,
+    "done": 789,
+    "inbox": 1,
+    "planned": 0,
+    "in_progress": 0,
+    "stopped": 9
+  },
+  "lastDispatch": "2026-03-05T13:42:02Z",
+  "lastHealthCheck": "2026-03-05T13:42:02Z",
+  "healthStatus": "GREEN",
+  "services": {
+    "openclaw_gateway": "active",
+    "nq_smb_watcher": "active",
+    "nq_dashboard": "active",
+    "blofin_ingestor": "active",
+    "blofin_paper": "active",
+    "blofin_dashboard": "active"
+  },
+  "recentDeployments": [
     {
-      "id": "c_f69cb876a8bba_19cbe1aa553",
-      "title": "[NQ] Diagnose zero live trades — strategies running but nothing recording",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "assignee": "claude",
-      "status": "In Progress"
-    },
-    {
-      "id": "c_e66c18af5c534_19cbdd7021c",
-      "title": "NQ guardrail: auto-demote stale pass strategies when rolling paper expectancy turns negative",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "assignee": "codex",
-      "status": "In Progress",
-      "pid": 7316
-    },
-    {
-      "id": "c_3d2ba1dcd03f8_19cbdd701f9",
       "title": "NQ psych_levels: add regime/session guardrails to stop negative live expectancy drift",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "assignee": "codex",
-      "status": "In Progress",
-      "pid": 7324
+      "completed_at": "2026-03-05T13:51:40Z",
+      "minutes_ago": 11,
+      "status": "deployed",
+      "verified": true
+    },
+    {
+      "title": "[NQ] Diagnose zero live trades — strategies running but nothing recording",
+      "completed_at": "2026-03-05T13:51:59Z",
+      "minutes_ago": 13,
+      "status": "deployed",
+      "verified": true
+    },
+    {
+      "title": "NQ guardrail: auto-demote stale pass strategies when rolling paper expectancy turns negative",
+      "completed_at": "2026-03-05T13:42:14Z",
+      "minutes_ago": 26,
+      "status": "deployed",
+      "verified": true
     }
   ],
-  "lastDispatch": "2026-03-05T13:10:00Z",
-  "lastHealthCheck": "2026-03-05T13:10:00Z",
-  "notes": "ibkr-nq-feed.service deployed and active (done 7min ago). Pre-market: zero ticks expected, L2 DOM active (585 rows). 3 builders now at capacity."
+  "notes": "Board queue empty — all Planned cards have been processed and moved to Done or stopped intentionally. No new work available for dispatch. NQ and Blofin dashboards operational."
 }

@@ -390,3 +390,5 @@ The timer was not active, which would have prevented the 4h training cycle from 
 - 2026-03-04 06:27 MST — Dispatcher attempted to run 6 planned cards; kanban runner sessions immediately failed with Claude seven_day rate-limit rejection ("You've hit your limit · resets Mar 5, 9pm"). Cards auto-returned to Planned; no active builders.
 
 - 2026-03-04T20:40:35 Recovered stale card to Planned: [NQ] Sweep eight_am_break_retest variants to increase trade frequency and select… (c_93c123e59eaec_19cbb574d19) after 39.6m without updates.
+2026-03-04T21:40:47.201597 Restarted Jarvis Home service for done card c_1891fc4059522_19cb5bc7bb1
+2026-03-04T21:40:52.937490 Deployment verification: attempted restart of jarvis-home.service but unit not found; needs service name/path validation.

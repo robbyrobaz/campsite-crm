@@ -1,24 +1,24 @@
 {
   "activeTasks": [
     {
-      "id": "c_5ee1791cfb8_19cbc2e3055",
-      "title": "[NQ] Build uncertainty-zone dual-account framework (ORB/VWAP/PrevDay proximity) \u2026",
+      "id": "c_eb1020d4de3ee_19cb920ccc1",
+      "title": "[Blofin] New Strategy: high_volume_reversal \u2014 PF=1.25 estimated, 335 events",
       "assignee": "codex",
-      "updated_at": 1772683669679
+      "updated_at": 1772685645295
     },
     {
-      "id": "c_e216221e5da1f_19cbc2a3c8c",
-      "title": "[NQ] Port NT ORB_Dynamic_V14_SingleEntry into pipeline + run 5min ORB variant to\u2026",
+      "id": "c_894eec544d372_19cb8f10b20",
+      "title": "[Moonshot] Validate exit engine per cycle and fix stale-position handling",
       "assignee": "codex",
-      "updated_at": 1772683410669
+      "updated_at": 1772685645257
     },
     {
-      "id": "c_93c123e59eaec_19cbb574d19",
-      "title": "[NQ] Sweep eight_am_break_retest variants to increase trade frequency and select\u2026",
+      "id": "c_08319368f6e26_19cb8f10b00",
+      "title": "[Blofin] Expand top eligibility strategy to 5 new symbols via global-model coin screening",
       "assignee": "codex",
-      "updated_at": 1772682051108
+      "updated_at": 1772685645216
     }
   ],
-  "lastDispatch": "2026-03-04T21:10:47.193977-07:00",
-  "lastHealthCheck": "2026-03-04T21:10:47.193977-07:00"
+  "lastDispatch": "2026-03-05T04:40:45.036534+00:00",
+  "lastHealthCheck": "2026-03-05T04:40:45.036534+00:00"
 }

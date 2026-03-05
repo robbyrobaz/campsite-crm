@@ -1,16 +1,30 @@
 {
   "activeTasks": [
     {
-      "id": "c_6d8ee6afc5773_19cbd68c0df",
-      "title": "NQ anti-clone guard: detect near-identical strategy outputs before promotion",
-      "updated_at": 1772707270780
+      "id": "c_8ce9c83f3a026_19cbda9acfd",
+      "title": "[Blofin] Fix T2 strategies stuck gate=fail with missing FT flow",
+      "status": "In Progress",
+      "assignee": "codex",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
+      "updated_at": 1772709078600
     },
     {
-      "id": "c_32940811eb531_19cbd68c0ab",
-      "title": "NQ FT freshness gate: block stale Tier-1 promotions with zero FT evidence",
-      "updated_at": 1772707270739
+      "id": "c_5faa1fa17cc1b_19cbda98691",
+      "title": "[Moonshot] Validate 4h timer and exit cycle reliability",
+      "status": "In Progress",
+      "assignee": "codex",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot",
+      "updated_at": 1772709078553
+    },
+    {
+      "id": "c_ccde9f04d1c02_19cbda98671",
+      "title": "[NQ] Diagnose live WR collapse for vwap_fade/gap_fill and patch filters",
+      "status": "In Progress",
+      "assignee": "codex",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "updated_at": 1772709078511
     }
   ],
-  "lastDispatch": "2026-03-05T10:41:10.618061+00:00",
-  "lastHealthCheck": "2026-03-05T10:41:10.618061+00:00"
+  "lastDispatch": "2026-03-05T11:11:41.124696+00:00",
+  "lastHealthCheck": "2026-03-05T11:11:41.124696+00:00"
 }

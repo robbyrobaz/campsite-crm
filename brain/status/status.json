@@ -1,24 +1,27 @@
 {
   "activeTasks": [
     {
-      "id": "c_19fda5805316c_19cba7f8a79",
-      "title": "[Moonshot] Verify 4h timer and eliminate null ml_scores in scoring cycle",
+      "id": "c_281d0c91bae67_19cba7e1f7f",
+      "title": "[NQ] New Strategy: pre_close_drift \u2014 WR=68.40%, PF=2.16 (quick test)",
       "assignee": "codex",
-      "updated_at": 1772667548274
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "updated_at": 1772669306148
     },
     {
-      "id": "c_2b97a7ea6cb04_19cba7f8a5b",
-      "title": "[Blofin] Diagnose T2 gate-fail strategies with missing FT data and restore paper execution",
+      "id": "c_f243e5ed793c8_19cba7f8a3b",
+      "title": "[NQ] Verify equal_tops_bottoms is active in God Model dispatcher and producing live signals",
       "assignee": "codex",
-      "updated_at": 1772667548236
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "updated_at": 1772669306106
     },
     {
-      "id": "c_4e842af9dc634_19cbb2d419d",
-      "title": "[NQ] Implement and test YouTube 8:15 break-and-retest midpoint strategy (8-Wbq5I\u2026",
+      "id": "c_2ce2754f0d12b_19cba7e1f9e",
+      "title": "[Blofin] New Strategy: consecutive_green_fade \u2014 PF=1.67 estimated, 497 events",
       "assignee": "codex",
-      "updated_at": 1772666849801
+      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
+      "updated_at": 1772669306068
     }
   ],
-  "lastDispatch": "2026-03-04T23:39:14.652874+00:00",
-  "lastHealthCheck": "2026-03-04T23:39:14.652874+00:00"
+  "lastDispatch": "2026-03-05T00:08:42.712162+00:00",
+  "lastHealthCheck": "2026-03-05T00:08:42.712162+00:00"
 }

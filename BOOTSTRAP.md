@@ -149,7 +149,7 @@ Default operating mode: **FT-PL ON, BLE OFF**.
 - **God cohesion bucket (new):** 3-day joint `god_model_forward_test` with strict consensus (min 2 agree, any opposing signal => skip), single-position only before BLE eligibility
 
 ## Key Facts (often forgotten, very expensive to re-derive)
-- **NQ data feed**: NinjaTrader SMB → `/mnt/nt_bridge/bars.csv` (read-only) → `nq-smb-watcher.service` → `NQ_continuous_1min.csv` (UTC). Live. IBKR/nq-bar-feed is RETIRED.
+- **NQ data feed**: NinjaTrader SMB → `/mnt/nt_bridge/bars.csv` → `nq-smb-watcher.service` → `NQ_continuous_1min.csv` (UTC). Still active. **NEW: IBKR tick+L2 feed live** — `ibkr-nq-feed.service`, data at `/home/rob/infrastructure/ibkr/data/nq_feed.duckdb` + `NQ_ibkr_1min.csv`. IB Gateway on Docker (`ib-gateway` container, port 4002, `restart=unless-stopped`).
 - **NQ execution chain (future, Rob approves)**: God Model signal → TradersPost webhook → Tradovate → Lucid prop accounts. Currently DRY_RUN=True always.
 - **ETB (equal_tops_bottoms) is UNBLACKLISTED** — PF 3.02, Sharpe 7.97. Best strategy. NOT yet in live inference — top priority.
 - **NQ ML feature function**: ALWAYS use `build_session_aware_features()`. NEVER `build_features()` (RTH-only, wrong).

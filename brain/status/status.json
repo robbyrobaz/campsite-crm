@@ -1,24 +1,24 @@
 {
   "activeTasks": [
     {
-      "id": "c_c3b9fadd90e28_19cba3acf8c",
-      "title": "[Blofin] Expand top FT strategy to additional eligible coin pairs",
+      "id": "c_52f952f45c225_19cb9282192",
+      "title": "[Moonshot] Add CoinGecko market-cap enrichment for scoring features",
       "assignee": "codex",
-      "updated_at": 1772687426229
+      "updated_at": 1772700051358
     },
     {
-      "id": "c_a379b53e91bc4_19cba3acfae",
-      "title": "[Moonshot] Validate 4h timer and exit cycle reliability",
+      "id": "c_725098201ccb6_19cb928214c",
+      "title": "[NQ] Verify equal_tops_bottoms live signal path in god_model_dispatcher and patch if missing",
       "assignee": "codex",
-      "updated_at": 1772687426189
+      "updated_at": 1772700051304
     },
     {
-      "id": "c_ff888fefec2d6_19cba3acf68",
-      "title": "[NQ] Diagnose psych_levels live bleed (WR 19%/16 trades) and tighten filters",
+      "id": "c_5a87cf878e779_19cb9282174",
+      "title": "[Blofin] Expand top FT strategy eligibility to additional coin pairs with guard metrics",
       "assignee": "codex",
-      "updated_at": 1772687426148
+      "updated_at": 1772700051251
     }
   ],
-  "lastDispatch": "2026-03-05T05:11:54.338228+00:00",
-  "lastHealthCheck": "2026-03-05T05:11:54.338228+00:00"
+  "lastDispatch": "2026-03-05T01:41:01-07:00",
+  "lastHealthCheck": "2026-03-05T01:41:01-07:00"
 }

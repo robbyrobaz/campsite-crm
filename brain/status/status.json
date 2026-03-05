@@ -1,24 +1,24 @@
 {
   "activeTasks": [
     {
-      "id": "c_eb1020d4de3ee_19cb920ccc1",
-      "title": "[Blofin] New Strategy: high_volume_reversal \u2014 PF=1.25 estimated, 335 events",
+      "id": "c_c3b9fadd90e28_19cba3acf8c",
+      "title": "[Blofin] Expand top FT strategy to additional eligible coin pairs",
       "assignee": "codex",
-      "updated_at": 1772685645295
+      "updated_at": 1772687426229
     },
     {
-      "id": "c_894eec544d372_19cb8f10b20",
-      "title": "[Moonshot] Validate exit engine per cycle and fix stale-position handling",
+      "id": "c_a379b53e91bc4_19cba3acfae",
+      "title": "[Moonshot] Validate 4h timer and exit cycle reliability",
       "assignee": "codex",
-      "updated_at": 1772685645257
+      "updated_at": 1772687426189
     },
     {
-      "id": "c_08319368f6e26_19cb8f10b00",
-      "title": "[Blofin] Expand top eligibility strategy to 5 new symbols via global-model coin screening",
+      "id": "c_ff888fefec2d6_19cba3acf68",
+      "title": "[NQ] Diagnose psych_levels live bleed (WR 19%/16 trades) and tighten filters",
       "assignee": "codex",
-      "updated_at": 1772685645216
+      "updated_at": 1772687426148
     }
   ],
-  "lastDispatch": "2026-03-05T04:40:45.036534+00:00",
-  "lastHealthCheck": "2026-03-05T04:40:45.036534+00:00"
+  "lastDispatch": "2026-03-05T05:11:54.338228+00:00",
+  "lastHealthCheck": "2026-03-05T05:11:54.338228+00:00"
 }

@@ -1,27 +1,27 @@
 {
   "activeTasks": [
     {
-      "id": "c_281d0c91bae67_19cba7e1f7f",
-      "title": "[NQ] New Strategy: pre_close_drift \u2014 WR=68.40%, PF=2.16 (quick test)",
+      "id": "c_ab59b51af9d38_19cb8f10ad6",
+      "title": "[NQ] Root-cause vwap_fade + gap_fill live bleed (WR<15%) and implement guardrails",
       "assignee": "codex",
       "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "updated_at": 1772669306148
+      "updated_at": 1772682051210
     },
     {
-      "id": "c_f243e5ed793c8_19cba7f8a3b",
-      "title": "[NQ] Verify equal_tops_bottoms is active in God Model dispatcher and producing live signals",
+      "id": "c_1713094f12718_19cb8b9fd3d",
+      "title": "[Moonshot] Train/repair ML scoring pipeline to remove null ml_scores",
+      "assignee": "codex",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot",
+      "updated_at": 1772682051160
+    },
+    {
+      "id": "c_93c123e59eaec_19cbb574d19",
+      "title": "[NQ] Sweep eight_am_break_retest variants to increase trade frequency and select\u2026",
       "assignee": "codex",
       "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "updated_at": 1772669306106
-    },
-    {
-      "id": "c_2ce2754f0d12b_19cba7e1f9e",
-      "title": "[Blofin] New Strategy: consecutive_green_fade \u2014 PF=1.67 estimated, 497 events",
-      "assignee": "codex",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "updated_at": 1772669306068
+      "updated_at": 1772682051108
     }
   ],
-  "lastDispatch": "2026-03-05T00:08:42.712162+00:00",
-  "lastHealthCheck": "2026-03-05T00:08:42.712162+00:00"
+  "lastDispatch": "2026-03-05T03:41:11.189651+00:00",
+  "lastHealthCheck": "2026-03-05T03:41:11.189651+00:00"
 }

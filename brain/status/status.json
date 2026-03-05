@@ -1,5 +1,30 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-05T11:41:59.533217+00:00",
-  "lastHealthCheck": "2026-03-05T11:41:59.533230+00:00"
+  "activeTasks": [
+    {
+      "id": "c_f69cb876a8bba_19cbe1aa553",
+      "title": "[NQ] Diagnose zero live trades — strategies running but nothing recording",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "assignee": "claude",
+      "status": "In Progress"
+    },
+    {
+      "id": "c_e66c18af5c534_19cbdd7021c",
+      "title": "NQ guardrail: auto-demote stale pass strategies when rolling paper expectancy turns negative",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "assignee": "codex",
+      "status": "In Progress",
+      "pid": 7316
+    },
+    {
+      "id": "c_3d2ba1dcd03f8_19cbdd701f9",
+      "title": "NQ psych_levels: add regime/session guardrails to stop negative live expectancy drift",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "assignee": "codex",
+      "status": "In Progress",
+      "pid": 7324
+    }
+  ],
+  "lastDispatch": "2026-03-05T13:10:00Z",
+  "lastHealthCheck": "2026-03-05T13:10:00Z",
+  "notes": "ibkr-nq-feed.service deployed and active (done 7min ago). Pre-market: zero ticks expected, L2 DOM active (585 rows). 3 builders now at capacity."
 }

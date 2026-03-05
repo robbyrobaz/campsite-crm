@@ -1,5 +1,27 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-05T02:41:32.855957-07:00",
-  "lastHealthCheck": "2026-03-05T02:41:32.855957-07:00"
+  "activeTasks": [
+    {
+      "id": "c_acd585e79e899_19cbd72920f",
+      "title": "[NQ] Diagnose God Model candidate starvation and cohesion gate failures",
+      "assignee": "codex",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "updated_at": 1772705450081
+    },
+    {
+      "id": "c_0d7cff984ff8a_19cbd72922f",
+      "title": "[Blofin] Restore FT metrics pipeline for strategy_coin_eligibility ranking",
+      "assignee": "codex",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
+      "updated_at": 1772705450034
+    },
+    {
+      "id": "c_43caa7c4c71ad_19cbd72924e",
+      "title": "[Moonshot] Validate high_water and exit-cycle integrity for open positions",
+      "assignee": "codex",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot",
+      "updated_at": 1772705449989
+    }
+  ],
+  "lastDispatch": "2026-03-05T10:11:27.864877+00:00",
+  "lastHealthCheck": "2026-03-05T10:11:27.864877+00:00"
 }

@@ -89,7 +89,7 @@ For each Failed card:
 4. Never re-queue a card whose failure is clearly permanent (e.g., "strategy not found", "file missing" — those need a fix, not a retry)
 
 **Phase 5 — ENRICH PLANNED CARDS (do not skip):**
-A card is ready when it has: `assignee=claude`, `project_path` set, and a description specific enough to execute.
+A card is ready when it has: `assignee=codex`, `project_path` set, and a description specific enough to execute.
 If any are missing or vague — **enrich before running.**
 
 Enrichment must include: what to do, exact file paths, context from DB/logs, success criteria, deploy steps, hard constraints.
@@ -104,7 +104,7 @@ Project path matching:
 | Numerai, tournament, era-boost | `/home/rob/.openclaw/workspace/numerai-tournament` |
 | Kanban, claw-kanban | `/home/rob/.openclaw/workspace/kanban-dashboard` |
 
-PATCH the card: `curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-type: application/json' -d '{"assignee":"claude","project_path":"...","description":"..."}'`
+PATCH the card: `curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-type: application/json' -d '{"assignee":"codex","project_path":"...","description":"..."}'`
 
 **Phase 6 — Dispatch:** if < 3 In Progress → run oldest Planned card: `curl -X POST http://127.0.0.1:8787/api/cards/<id>/run` — verify `"ok":true` + pid
 

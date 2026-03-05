@@ -1,27 +1,24 @@
 {
   "activeTasks": [
     {
-      "id": "c_ab59b51af9d38_19cb8f10ad6",
-      "title": "[NQ] Root-cause vwap_fade + gap_fill live bleed (WR<15%) and implement guardrails",
+      "id": "c_5ee1791cfb8_19cbc2e3055",
+      "title": "[NQ] Build uncertainty-zone dual-account framework (ORB/VWAP/PrevDay proximity) \u2026",
       "assignee": "codex",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "updated_at": 1772682051210
+      "updated_at": 1772683669679
     },
     {
-      "id": "c_1713094f12718_19cb8b9fd3d",
-      "title": "[Moonshot] Train/repair ML scoring pipeline to remove null ml_scores",
+      "id": "c_e216221e5da1f_19cbc2a3c8c",
+      "title": "[NQ] Port NT ORB_Dynamic_V14_SingleEntry into pipeline + run 5min ORB variant to\u2026",
       "assignee": "codex",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot",
-      "updated_at": 1772682051160
+      "updated_at": 1772683410669
     },
     {
       "id": "c_93c123e59eaec_19cbb574d19",
       "title": "[NQ] Sweep eight_am_break_retest variants to increase trade frequency and select\u2026",
       "assignee": "codex",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
       "updated_at": 1772682051108
     }
   ],
-  "lastDispatch": "2026-03-05T03:41:11.189651+00:00",
-  "lastHealthCheck": "2026-03-05T03:41:11.189651+00:00"
+  "lastDispatch": "2026-03-04T21:10:47.193977-07:00",
+  "lastHealthCheck": "2026-03-04T21:10:47.193977-07:00"
 }

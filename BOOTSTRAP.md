@@ -131,9 +131,9 @@ PATCH the card: `curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-
 | Cron | Schedule | What it does |
 |------|----------|-------------|
 | Auto Card Generator | Hourly :00 (Sonnet) | Reads live NQ+Blofin state → creates 2 NQ + 1 Blofin cards in Planned. Gates if queue ≥ 2. Instructions: `brain/AUTO_CARD_GENERATOR.md` |
-| Blofin Pipeline | Every 4h (Haiku) | Runs `run_pipeline.py` — backtest, promote/demote |
+| Blofin Pipeline | Every 4h (**Sonnet**) | Runs `run_pipeline.py` — backtest, promote/demote |
 | Jarvis Pulse | Every 30min (**Sonnet**) | Health + **enrich vague cards** + dispatch + **verify deployment** of completed work |
-| Oversight | Every 2h (Haiku) | HEARTBEAT.md server checks |
+| Oversight | Every 2h (Haiku) | HEARTBEAT.md server checks (basic only — no code) |
 
 ## Mode Naming (Canonical)
 - **Backtest** = historical replay/offline validation.
@@ -156,7 +156,7 @@ Default operating mode: **FT-PL ON, BLE OFF**.
 - **Blofin ranking**: `bt_pnl_pct` (compounded PnL%). NOT EEP scoring — EEP is dead, removed Feb 26.
 - **Blofin promotion gates**: min 100 trades, PF≥1.35, MDD<50%, PnL>0. FT demotion: PF<1.1 or MDD>50% after 20 FT trades. Early crash-stop: PF<0.5 with ≥5 FT trades.
 - **Blofin dashboard**: port 8892. NEVER show aggregate/system-wide PF or WR — always top-N pairs by FT PF.
-- **Model routing**: Sonnet for all reasoning/code/orchestration. Haiku for crons. **Opus is banned.** If you ever see Opus in session_status, fix it immediately.
+- **Model routing**: **Sonnet for EVERYTHING** — main session, all builders, kanban runners. Haiku ONLY for simple heartbeat/token audit crons. **Opus is banned. Codex is banned.** If you ever see either in session_status or kanban settings, fix it immediately.
 - **Jarvis Pulse cron**: upgraded to Sonnet (Feb 26). Dispatcher is too important for Haiku.
 - **Max concurrent builders**: 3 (raised from 1, Feb 26).
 - **Jinja/JS**: Always use `&quot;` not `\'` in JS strings inside Jinja templates.

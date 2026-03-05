@@ -67,17 +67,18 @@ When delegating to Builder subagents:
 - Prefer 1-2 active subagents unless the task genuinely requires parallelism
 - Never spawn subagents in a loop without a termination condition
 
-## Model Routing (Claude-only, updated 2026-03-02)
+## Model Routing (Claude-only, updated 2026-03-05)
 
 | Alias | Model | Use For |
 |-------|-------|---------|
-| `sonnet` | claude-sonnet-4-6 | **Primary (Jarvis main session).** Conversations, planning, orchestration. Jarvis Pulse dispatcher. |
-| `haiku` | claude-haiku-4-5 | **ALL builders/crons.** Code gen, refactors, bug fixes, health checks, heartbeats. **Kanban runner CLI format: `claude-haiku-4-5`** (no `anthropic/` prefix) |
+| `sonnet` | claude-sonnet-4-6 | **Everything.** Main session, all builders, kanban runners, orchestration. |
+| `haiku` | claude-haiku-4-5 | Simple cron heartbeats only (oversight check, token audit). NOT for code builders. |
 
-**Opus is BANNED.** Fallback chain: `sonnet → haiku`. All Claude, no OpenAI.
+**Opus is BANNED.** All Claude, no OpenAI. Codex BANNED (out of credits, incomplete work).
 
-**Use `model=haiku`** for all builder subagents and cron jobs.
-**Use `model=sonnet`** only for main Jarvis session and Jarvis Pulse dispatcher.
+**Use `model=sonnet`** for ALL builder subagents, kanban runners, and main session.
+**Use `model=haiku`** ONLY for the most basic isolated cron jobs (heartbeat, token audit) — never for code generation.
+**Kanban runner CLI format: `claude-sonnet-4-6`** (no `anthropic/` prefix)
 
 ## GitHub Issue Workflow (AI Workshop)
 

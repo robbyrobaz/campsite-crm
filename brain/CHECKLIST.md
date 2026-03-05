@@ -125,6 +125,15 @@ incident (2026-03-03) was caused by a builder exec timing out and re-running the
 - [ ] Pick up next card autonomously — don't wait for Rob
 - [ ] Monitor running processes (quick poll, NOT blocking)
 
+## Strategy Research & Profitability Mandate (added 2026-03-04)
+When Rob asks for a new strategy test, do NOT stop at a single backtest verdict.
+- [ ] Run an iteration loop to find edge: test variants (entries, exits, time filters, volatility filters, risk sizing, session windows)
+- [ ] Optimize for robust profitability, not vanity metrics (avoid PF-only selection)
+- [ ] Require robustness checks before recommendation (sample size, fold stability, recent-window performance, drawdown behavior)
+- [ ] If base idea is weak, propose concrete profitable alternatives in the same family and test them immediately
+- [ ] Always return: top 3 candidate configs, why they might work, and the one recommended for FT-PL
+- [ ] Never claim guaranteed profit; treat all findings as probabilistic and regime-dependent
+
 ## Communication Rules:
 - ❌ NEVER say "I'll leave it running and report when done" — you have no mechanism to check back proactively. Either check now or tell Rob to ping you when ready.
 - ❌ NEVER say "I'll monitor this" or "I'll check back in X minutes" — you won't. Be honest.

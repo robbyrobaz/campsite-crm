@@ -1,13 +1,6 @@
 {
   "activeTasks": [
     {
-      "id": "cron_464f448f",
-      "title": "Auto Card Generator run (NQ+Blofin) + god bucket status",
-      "assignee": "codex",
-      "project_path": "/home/rob/.openclaw/workspace/brain",
-      "updated_at": 1772679653718
-    },
-    {
       "id": "c_281d0c91bae67_19cba7e1f7f",
       "title": "[NQ] New Strategy: pre_close_drift \u2014 WR=68.40%, PF=2.16 (quick test)",
       "assignee": "codex",

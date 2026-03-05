@@ -399,3 +399,6 @@ The timer was not active, which would have prevented the 4h training cycle from 
   - `nq-smb-watcher.service`, `nq-dashboard.service`
   - `blofin-stack-ingestor.service`, `blofin-stack-paper.service`, `blofin-dashboard.service`
 - Post-restart verification: all services active; dashboards 8891/8892 return HTTP 200.
+- [2026-03-05 04:41:59] Jarvis Pulse deployment verification restarted services for card c_5faa1fa17cc1b_19cbda98691: [Moonshot] Validate 4h timer and exit cycle reliability
+- [2026-03-05 04:41:59] Jarvis Pulse deployment verification restarted services for card c_ccde9f04d1c02_19cbda98671: [NQ] Diagnose live WR collapse for vwap_fade/gap_fill and patch filters
+- [2026-03-05 04:41:59] Jarvis Pulse deployment verification restarted services for card c_8ce9c83f3a026_19cbda9acfd: [Blofin] Fix T2 strategies stuck gate=fail with missing FT flow

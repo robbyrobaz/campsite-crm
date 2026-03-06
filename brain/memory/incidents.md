@@ -423,3 +423,8 @@ The timer was not active, which would have prevented the 4h training cycle from 
 - Service exited with status=1 but cycle completed; timer still active/waiting
 - This is a pre-existing code bug (not from recent card deployment)
 - Action: Logged. Timer will trigger next run on schedule. Consider queuing a fix card.
+
+## 2026-03-06 15:55 MST — Stale card recovery
+- Card `c_28e22b83f10d7_19cc4bfc962` ("[Blofin] high_volume_reversal expand coin pairs") was In Progress for 59.6 minutes with no update (builder died)
+- Recovered to Planned, updated assignee to `codex`, re-dispatched (PID 271461)
+- FVG + momentum NQ cards verified deployed: services active, NQ dashboard HTTP 200

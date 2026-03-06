@@ -2,14 +2,14 @@
   "activeTasks": [
     {
       "id": "c_28e22b83f10d7_19cc4bfc962",
-      "title": "[Blofin] high_volume_reversal FT PF 1.57 (top T2) — expand to additional coin pairs via eligibility scan",
+      "title": "[Blofin] high_volume_reversal FT PF 1.57 (top T2) \u2014 expand to additional coin pairs via eligibility scan",
       "status": "In Progress",
-      "assignee": "claude",
+      "pid": 271461,
       "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "age_minutes": 29
+      "dispatchedAt": "2026-03-06T22:55:00Z"
     }
   ],
-  "lastDispatch": "2026-03-06T22:25:00Z",
-  "lastHealthCheck": "2026-03-06T22:25:00Z",
-  "notes": "No Planned cards. 1 In Progress (Blofin high_volume_reversal expansion, 29 min - just under stale threshold). Two NQ Done cards verified deployed: fair_value_gap session filter + momentum ML retrain (momentum_live_v2.pkl loaded). Services all active, DRY_RUN confirmed, disk 50%, CPU 86°C (hot but within range)."
+  "lastDispatch": "2026-03-06T22:55:00Z",
+  "lastHealthCheck": "2026-03-06T22:54:00Z",
+  "notes": "Recovered stale card (59.6min) and re-dispatched. FVG + momentum NQ cards verified deployed \u2014 services active, dashboard 200."
 }

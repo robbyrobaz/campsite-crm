@@ -1,32 +1,26 @@
 {
   "activeTasks": [
     {
-      "id": "c_687731e5a285a_19cc4b6282e",
-      "title": "Fix ORPHANED_RESTART: exit at SL/TP level, not adverse bar close — recover -$466…",
-      "project": "NQ-Trading-PIPELINE",
-      "pid": 4078458,
-      "dispatchedAt": "2026-03-06T13:15:00-07:00"
+      "id": "c_b7576c3db1f6_19cc4c02bc9",
+      "title": "[Moonshot] calibrate ml_score entry threshold",
+      "status": "In Progress",
+      "project": "blofin-moonshot"
     },
     {
-      "id": "c_d3d43274c308e_19cc4b5b3d0",
-      "title": "God Model v3: Add vol_contraction to composite — fix 0% Lucid pass rate",
-      "project": "NQ-Trading-PIPELINE",
-      "pid": 4078479,
-      "dispatchedAt": "2026-03-06T13:15:00-07:00"
+      "id": "c_28e22b83f10d7_19cc4bfc962",
+      "title": "[Blofin] high_volume_reversal FT PF 1.57 — expand to additional coin pairs",
+      "status": "In Progress",
+      "project": "blofin-stack",
+      "pid": 4153114
     },
     {
       "id": "c_816de8759d6c5_19cc4bf696f",
-      "title": "[NQ] fair_value_gap: #1 7d FT performer (+$572, 13 trades) but bt_pf=0.711 — investigate live edge, retrain",
+      "title": "[NQ] fair_value_gap: #1 7d FT performer — investigate live edge, retrain",
+      "status": "In Progress",
       "project": "NQ-Trading-PIPELINE",
-      "pid": 4078538,
-      "dispatchedAt": "2026-03-06T13:15:00-07:00"
+      "pid": 4153281
     }
   ],
-  "plannedRemaining": [
-    "c_b7576c3db1f6_19cc4c02bc9 — [Moonshot] calibrate ml_score entry threshold",
-    "c_28e22b83f10d7_19cc4bfc962 — [Blofin] high_volume_reversal expand coin pairs"
-  ],
-  "lastDispatch": "2026-03-06T13:15:00-07:00",
-  "lastHealthCheck": "2026-03-06T13:15:00-07:00",
-  "notes": "moonshot-v2.service cycle 41 exited with 1 error (XGBClassifier not subscriptable — pre-existing bug). Timer still active. Logged to incidents.md."
+  "lastDispatch": "2026-03-06T20:50:00Z",
+  "lastHealthCheck": "2026-03-06T20:50:00Z"
 }

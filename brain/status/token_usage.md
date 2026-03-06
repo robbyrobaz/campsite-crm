@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-03-05 18:45 MST
+**Updated:** 2026-03-05 19:00 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -21,7 +21,7 @@
 | haiku | 28 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 32.7M (578 requests)
+- **Total Tokens:** 32.7M (576 requests)
 - **Output Tokens:** 156.7K
 - **Cost (est):** $35.16
 
@@ -29,7 +29,7 @@
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
 | sonnet | 362 | 30.1M | 116.7K | $33.58 |
-| codex/mini | 116 | 2.3M | 37.6K | $1.51 |
+| codex/mini | 114 | 2.3M | 37.6K | $1.51 |
 | haiku | 100 | 280.3K | 2.4K | $0.07 |
 
 ---

@@ -410,3 +410,9 @@ The timer was not active, which would have prevented the 4h training cycle from 
 ## 2026-03-06 06:45 MST — moonshot-v2.service failed + blofin service hot-fix deploy
 - `moonshot-v2.service` exited with code 1 at 04:33 AM. Root cause: mass 429 rate-limit errors fetching candles for 342 coins AND two FT models paused (drawdown 3798.2% and 266.0%). Timer will retry at 08:05 MST. Not restarted manually — pre-existing issue, builder card should investigate drawdown tracking logic.
 - Blofin commit `1e08fd9` (6:12 AM, "fix: restore volatility_expansion_volume_breakout signals + unlock orderflow quorum") deployed AFTER blofin services last started (6:07-6:09 AM). Dispatcher restarted blofin services at 6:45 AM to pick up the fix.
+
+## 2026-03-06 10:06 MST — Stale Card Recovery
+- Card: c_8bdcd90dd4b65_19cc3e4cd0e
+- Title: [Blofin] Demote volatility_expansion_volume_breakout: FT PF 0.929, MDD 79%
+- Age: 35.3 minutes (> 30 min threshold)
+- Action: PATCH status → Planned for redispatch

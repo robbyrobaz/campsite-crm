@@ -1,27 +1,32 @@
 {
   "activeTasks": [
     {
-      "id": "c_132a19463230a_19cc3e46b67",
-      "title": "[NQ] Debug zero-signal strategies in smb_watcher: break_retest_815, eight_am_break_retest, atr_breakout all registered but 0 FT trades",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "status": "In Progress",
-      "pid": 3813977
-    },
-    {
       "id": "c_8bdcd90dd4b65_19cc3e4cd0e",
-      "title": "[Blofin] Demote volatility_expansion_volume_breakout: FT PF 0.929, MDD 79% — then run strategy_designer for replacement",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "status": "In Progress",
-      "pid": 3813838
+      "title": "[Blofin] Demote volatility_expansion_volume_breakout: FT PF 0.929, MDD 79% \u2014 then run strategy_designer for replacement",
+      "pid": 3854192
     },
     {
-      "id": "c_f58c90daf4399_19cc3e5311c",
-      "title": "[Moonshot] Retrain champion model using 88 closed position outcomes: extract entry features, label by exit_type, compare val_auc to current 0.844",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot",
-      "status": "In Progress",
-      "pid": 3813684
+      "id": "c_d477c604b715d_19cc41cc6ef",
+      "title": "[Moonshot] Analyze 88 closed trade exit patterns \u2014 tune TP/SL/time-stop based on results",
+      "pid": 3854353
+    },
+    {
+      "id": "c_7a4a74474137c_19cc41cc6ce",
+      "title": "[Blofin] vwap_reversion pair cleanup: strategy FT PF 1.09 but H-USDT at 17.49 \u2014 blacklist losing pairs",
+      "pid": 3854493
     }
   ],
-  "lastDispatch": "2026-03-06T09:30:00-07:00",
-  "lastHealthCheck": "2026-03-06T09:30:00-07:00"
+  "pendingPlanned": [
+    {
+      "id": "c_ac6653a46c4ac_19cc41b3f2a",
+      "title": "[NQ] Investigate signals_today=0: 621 bars processed, 14 strategies active, zero triggers fired Mar 6"
+    }
+  ],
+  "lastDispatch": "2026-03-06T17:07:50.518089+00:00",
+  "lastHealthCheck": "2026-03-06T17:07:50.518100+00:00",
+  "health": {
+    "cpu_temp": "56C",
+    "disk": "49% used (228G free)",
+    "services": "all active"
+  }
 }

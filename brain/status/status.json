@@ -1,23 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_fd84a2bd45613_19cc36f0813",
-      "title": "[NQ] Fix psych_levels FT registry sync - stale 13 trades/$351 vs actual 24/-$1,690",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 3666036,
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
-    },
-    {
-      "id": "c_3d0a078767677_19cc36ea6d3",
-      "title": "[NQ] psych_levels: add RTH-only filter - 24 FT trades PF 0.72, overnight -$2,500 at 8% WR",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 3666045,
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
-    }
-  ],
-  "lastDispatch": "2026-03-06T07:24:30-07:00",
-  "lastHealthCheck": "2026-03-06T07:20:00-07:00",
-  "notes": "Codex out of credits - both cards re-queued with claude assignee and dispatched successfully. moonshot-v2.service failed at 04:33 (pre-existing, timer will retry). All other services healthy."
+  "activeTasks": [],
+  "lastDispatch": "2026-03-06T07:50:00-07:00",
+  "lastHealthCheck": "2026-03-06T07:50:00-07:00",
+  "notes": "Board clear. No Planned or In Progress cards. 3 recent Done cards verified deployed: [NQ] psych_levels RTH filter (registry updated 07:27), [NQ] psych_levels FT registry sync (25 FT trades now synced), [Moonshot] entry score threshold calibration (moonshot-v2 services active). All services healthy. CPU 72C, disk 49%."
 }

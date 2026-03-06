@@ -416,3 +416,10 @@ The timer was not active, which would have prevented the 4h training cycle from 
 - Title: [Blofin] Demote volatility_expansion_volume_breakout: FT PF 0.929, MDD 79%
 - Age: 35.3 minutes (> 30 min threshold)
 - Action: PATCH status → Planned for redispatch
+
+## 2026-03-06 13:15 MST — moonshot-v2.service cycle error
+- Service: moonshot-v2.service (timer-triggered, runs every 4h)
+- Cycle 41 completed with 1 error: `TypeError: 'XGBClassifier' object is not subscriptable`
+- Service exited with status=1 but cycle completed; timer still active/waiting
+- This is a pre-existing code bug (not from recent card deployment)
+- Action: Logged. Timer will trigger next run on schedule. Consider queuing a fix card.

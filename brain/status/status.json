@@ -1,15 +1,32 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-06T19:48:00.000Z",
-  "lastHealthCheck": "2026-03-06T19:48:00.000Z",
-  "notes": [
-    "Queue empty — 0 Planned, 0 In Progress. Nothing to dispatch.",
-    "3 recently Done cards verified deployed:",
-    "  - [NQ] Momentum regime filter: committed, nq-smb-watcher active ✓",
-    "  - [Blofin] consecutive_green_fade pair cleanup: 4 pairs blacklisted in strategy_coin_eligibility (APE, BOME, SHIB, DOT) ✓",
-    "  - [Moonshot] confidence_decay exit gate (0.10 threshold): committed to blofin-moonshot, moonshot-v2 active cycle running ✓",
-    "CPU: 87°C (ok, limit 100°C). Disk: 49%. All core services active.",
-    "blofin-stack-paper: DB lock warnings since 12:17 (pipeline holding lock). Normal — pipeline started 11:42 and is still running backtests.",
-    "blofin-moonshot.service (v1): killed after 3h 54min (exceeded TimeoutStartSec=3h). No timer — won't auto-restart. moonshot-v2 is the active pipeline."
-  ]
+  "activeTasks": [
+    {
+      "id": "c_687731e5a285a_19cc4b6282e",
+      "title": "Fix ORPHANED_RESTART: exit at SL/TP level, not adverse bar close — recover -$466…",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 4078458,
+      "dispatchedAt": "2026-03-06T13:15:00-07:00"
+    },
+    {
+      "id": "c_d3d43274c308e_19cc4b5b3d0",
+      "title": "God Model v3: Add vol_contraction to composite — fix 0% Lucid pass rate",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 4078479,
+      "dispatchedAt": "2026-03-06T13:15:00-07:00"
+    },
+    {
+      "id": "c_816de8759d6c5_19cc4bf696f",
+      "title": "[NQ] fair_value_gap: #1 7d FT performer (+$572, 13 trades) but bt_pf=0.711 — investigate live edge, retrain",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 4078538,
+      "dispatchedAt": "2026-03-06T13:15:00-07:00"
+    }
+  ],
+  "plannedRemaining": [
+    "c_b7576c3db1f6_19cc4c02bc9 — [Moonshot] calibrate ml_score entry threshold",
+    "c_28e22b83f10d7_19cc4bfc962 — [Blofin] high_volume_reversal expand coin pairs"
+  ],
+  "lastDispatch": "2026-03-06T13:15:00-07:00",
+  "lastHealthCheck": "2026-03-06T13:15:00-07:00",
+  "notes": "moonshot-v2.service cycle 41 exited with 1 error (XGBClassifier not subscriptable — pre-existing bug). Timer still active. Logged to incidents.md."
 }

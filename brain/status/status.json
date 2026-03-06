@@ -1,22 +1,21 @@
 {
   "activeTasks": [
     {
-      "id": "c_effb22d2e2918_19cc452f746",
-      "title": "[Moonshot] audit 4h cycle health and open position exit logic — 3 positions at stale high_water",
-      "status": "In Progress",
-      "pid": 3966693,
-      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot",
-      "dispatched_at": "2026-03-06T18:40:00Z"
+      "id": "c_a0c7ceedc8911_19cc489e61b",
+      "title": "[Moonshot] Add dynamic re-scoring exit gate: force-exit open positions when current ml_score drops below 0.10",
+      "pid": 3997639
     },
     {
-      "id": "c_5e8dbe563acd6_19cc452f70a",
-      "title": "[Blofin] vwap_reversion approaching demotion (FT PF 1.09) — diagnose losing pairs and blacklist or demote",
-      "status": "In Progress",
-      "pid": 3966694,
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "dispatched_at": "2026-03-06T18:40:00Z"
+      "id": "c_fb3da273b15dc_19cc489e5e9",
+      "title": "[Blofin] consecutive_green_fade pair cleanup: FT PF 1.30 below 1.35 gate \u2014 blacklist losing pairs to recover",
+      "pid": 3998052
+    },
+    {
+      "id": "c_2d1e4f38d1167_19cc489cfca",
+      "title": "[NQ] Momentum regime filter: 7d PF 0.48 (WR 40%, -$1,281) \u2014 add ADX/trend gate to stop live bleed",
+      "pid": 3998054
     }
   ],
-  "lastDispatch": "2026-03-06T18:40:00Z",
-  "lastHealthCheck": "2026-03-06T18:40:00Z"
+  "lastDispatch": "2026-03-06T19:10:00Z",
+  "lastHealthCheck": "2026-03-06T19:10:00Z"
 }

@@ -1,15 +1,30 @@
 {
   "activeTasks": [
     {
-      "id": "c_28e22b83f10d7_19cc4bfc962",
-      "title": "[Blofin] high_volume_reversal FT PF 1.57 (top T2) \u2014 expand to additional coin pairs via eligibility scan",
+      "id": "c_9b85dc9eccc02_19cc5698a55",
+      "title": "[Moonshot] score-band audit: analyze 88 closed trades by ml_score_entry quartile",
       "status": "In Progress",
-      "pid": 271461,
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "dispatchedAt": "2026-03-06T22:55:00Z"
+      "pid": 324902,
+      "project": "blofin-moonshot",
+      "dispatched_at": "2026-03-06T23:25:00Z"
+    },
+    {
+      "id": "c_e40e105effb5c_19cc5698a0a",
+      "title": "[Blofin] high_volume_reversal T2 FT sync gap: ft_trade_count=0 in eligibility table",
+      "status": "In Progress",
+      "pid": 325096,
+      "project": "blofin-stack",
+      "dispatched_at": "2026-03-06T23:25:00Z"
+    },
+    {
+      "id": "c_30edc69b82b72_19cc56989c2",
+      "title": "[NQ] vwap_fade: 0% live WR in 7d (-$2,124, 8 trades) vs BT PF 1.96",
+      "status": "In Progress",
+      "pid": 325271,
+      "project": "NQ-Trading-PIPELINE",
+      "dispatched_at": "2026-03-06T23:25:00Z"
     }
   ],
-  "lastDispatch": "2026-03-06T22:55:00Z",
-  "lastHealthCheck": "2026-03-06T22:54:00Z",
-  "notes": "Recovered stale card (59.6min) and re-dispatched. FVG + momentum NQ cards verified deployed \u2014 services active, dashboard 200."
+  "lastDispatch": "2026-03-06T23:25:00Z",
+  "lastHealthCheck": "2026-03-06T23:25:00Z"
 }

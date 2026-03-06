@@ -1,32 +1,14 @@
 {
   "activeTasks": [
     {
-      "id": "c_8bdcd90dd4b65_19cc3e4cd0e",
-      "title": "[Blofin] Demote volatility_expansion_volume_breakout: FT PF 0.929, MDD 79% \u2014 then run strategy_designer for replacement",
-      "pid": 3854192
-    },
-    {
-      "id": "c_d477c604b715d_19cc41cc6ef",
-      "title": "[Moonshot] Analyze 88 closed trade exit patterns \u2014 tune TP/SL/time-stop based on results",
-      "pid": 3854353
-    },
-    {
-      "id": "c_7a4a74474137c_19cc41cc6ce",
-      "title": "[Blofin] vwap_reversion pair cleanup: strategy FT PF 1.09 but H-USDT at 17.49 \u2014 blacklist losing pairs",
-      "pid": 3854493
-    }
-  ],
-  "pendingPlanned": [
-    {
       "id": "c_ac6653a46c4ac_19cc41b3f2a",
-      "title": "[NQ] Investigate signals_today=0: 621 bars processed, 14 strategies active, zero triggers fired Mar 6"
+      "title": "[NQ] Investigate signals_today=0: 621 bars processed, 14 strategies active, zero triggers fired Mar 6",
+      "status": "In Progress",
+      "pid": 3889525,
+      "dispatched_at": "2026-03-06T17:36:00Z"
     }
   ],
-  "lastDispatch": "2026-03-06T17:07:50.518089+00:00",
-  "lastHealthCheck": "2026-03-06T17:07:50.518100+00:00",
-  "health": {
-    "cpu_temp": "56C",
-    "disk": "49% used (228G free)",
-    "services": "all active"
-  }
+  "lastDispatch": "2026-03-06T17:36:00Z",
+  "lastHealthCheck": "2026-03-06T17:36:00Z",
+  "notes": "Dispatched NQ signals_today=0 investigation (PID 3889525). Recently completed: vwap_reversion pair cleanup (FT PF 1.73\u21922.03), moonshot TP_PCT 10%\u21928%, volatility_expansion_volume_breakout demotion."
 }

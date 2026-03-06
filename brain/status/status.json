@@ -1,56 +1,5 @@
 {
   "activeTasks": [],
-  "boardState": {
-    "total_cards": 799,
-    "done": 789,
-    "inbox": 1,
-    "planned": 0,
-    "in_progress": 0,
-    "stopped": 9
-  },
-  "lastDispatch": "2026-03-05T13:42:02Z",
-  "lastHealthCheck": "2026-03-05T13:42:02Z",
-  "healthStatus": "GREEN",
-  "services": {
-    "openclaw_gateway": "active",
-    "nq_smb_watcher": "active",
-    "nq_dashboard": "active",
-    "blofin_ingestor": "active",
-    "blofin_paper": "active",
-    "blofin_dashboard": "active"
-  },
-  "recentDeployments": [
-    {
-      "title": "NQ psych_levels: add regime/session guardrails to stop negative live expectancy drift",
-      "completed_at": "2026-03-05T13:51:40Z",
-      "minutes_ago": 11,
-      "status": "deployed",
-      "verified": true
-    },
-    {
-      "title": "[NQ] Diagnose zero live trades \u2014 strategies running but nothing recording",
-      "completed_at": "2026-03-05T13:51:59Z",
-      "minutes_ago": 13,
-      "status": "deployed",
-      "verified": true
-    },
-    {
-      "title": "NQ guardrail: auto-demote stale pass strategies when rolling paper expectancy turns negative",
-      "completed_at": "2026-03-05T13:42:14Z",
-      "minutes_ago": 26,
-      "status": "deployed",
-      "verified": true
-    }
-  ],
-  "notes": "Board queue empty \u2014 all Planned cards have been processed and moved to Done or stopped intentionally. No new work available for dispatch. NQ and Blofin dashboards operational.",
-  "reminders": [
-    {
-      "id": "nq_ft_check_20260306_1048",
-      "type": "reminder",
-      "title": "NQ Forward Test Check \u2014 did the zero-trade strategies start firing?",
-      "due": "2026-03-06T10:48:00-07:00",
-      "details": "Check paper_trades for: atr_breakout, micro_pullback, failed_breakout, session_open_drive, vwap_stretch, orb, break_retest_815, eight_am_break_retest. Should have FT trades now (thresholds lowered to 0.40, score gates to 0.20). If still zero: dig deeper into score_bar output. Also check newly enabled: ETB, prev_day, orb, psych_levels, vwap_fade.",
-      "created": "2026-03-05T22:48:00-07:00"
-    }
-  ]
+  "lastDispatch": "2026-03-06T01:13:00-07:00",
+  "lastHealthCheck": "2026-03-06T01:13:00-07:00"
 }

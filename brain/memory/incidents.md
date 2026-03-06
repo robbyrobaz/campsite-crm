@@ -402,3 +402,7 @@ The timer was not active, which would have prevented the 4h training cycle from 
 - [2026-03-05 04:41:59] Jarvis Pulse deployment verification restarted services for card c_5faa1fa17cc1b_19cbda98691: [Moonshot] Validate 4h timer and exit cycle reliability
 - [2026-03-05 04:41:59] Jarvis Pulse deployment verification restarted services for card c_ccde9f04d1c02_19cbda98671: [NQ] Diagnose live WR collapse for vwap_fade/gap_fill and patch filters
 - [2026-03-05 04:41:59] Jarvis Pulse deployment verification restarted services for card c_8ce9c83f3a026_19cbda9acfd: [Blofin] Fix T2 strategies stuck gate=fail with missing FT flow
+
+## 2026-03-06 06:15 MST — Stale Card Recovery
+- Card `c_1fa3ff2c84bd2_19cc3099416` ([Blofin] Diagnose orderflow_imbalance + volatility_expansion_volume_breakout) was In Progress for 31.9 minutes with no update — builder likely died.
+- Recovered to Planned, redispatched (pid 3587639).

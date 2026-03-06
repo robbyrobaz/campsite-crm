@@ -1,20 +1,41 @@
 {
   "activeTasks": [
     {
-      "id": "c_7421734717742_19cc309943d",
-      "title": "[Moonshot] Investigate 82/88 INVALIDATION exits: trail activation miscalibrated?",
-      "project": "/home/rob/.openclaw/workspace/blofin-moonshot",
-      "pid": 3549725,
-      "dispatchedAt": "2026-03-06T05:43 MST"
+      "card_id": "c_1fa3ff2c84bd2_19cc3099416",
+      "title": "[Blofin] Diagnose orderflow_imbalance + volatility_expansion_volume_breakout",
+      "pid": 3587639,
+      "project": "blofin-stack",
+      "dispatched": "2026-03-06T13:18:45.797645+00:00"
     },
     {
-      "id": "c_1fa3ff2c84bd2_19cc3099416",
-      "title": "[Blofin] Diagnose orderflow_imbalance + volatility_expansion_volume_breakout: T2/pass but zero FT trades",
-      "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "pid": 3549968,
-      "dispatchedAt": "2026-03-06T05:43 MST"
+      "card_id": "c_3d5c1eadbd4e3_19cc3408ce7",
+      "title": "[NQ] Investigate momentum degradation \u2014 7d PF 0.48",
+      "pid": 3587716,
+      "project": "NQ-Trading-PIPELINE",
+      "dispatched": "2026-03-06T13:18:45.797645+00:00"
+    },
+    {
+      "card_id": "c_e29ac157cf101_19cc3408d23",
+      "title": "[Blofin] consecutive_green_fade: blacklist losing coin pairs",
+      "pid": 3587973,
+      "project": "blofin-stack",
+      "dispatched": "2026-03-06T13:18:45.797645+00:00"
     }
   ],
-  "lastDispatch": "2026-03-06T05:43:00-07:00",
-  "lastHealthCheck": "2026-03-06T05:43:00-07:00"
+  "queuedNext": [
+    "c_60958f7ea67eb_19cc3408d62 [Moonshot] Calibrate entry score threshold"
+  ],
+  "lastDispatch": "2026-03-06T13:18:45.797645+00:00",
+  "lastHealthCheck": "2026-03-06T13:18:45.797645+00:00",
+  "services": {
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
+    "nq-smb-watcher": "active",
+    "nq-dashboard": "active",
+    "blofin-moonshot-timer": "active (next: 08:01 MST)",
+    "cpu_temp": "79C",
+    "disk_usage": "49%"
+  },
+  "staleRecovery": "Recovered c_1fa3ff2c84bd2 ([Blofin] orderflow_imbalance) after 31.9min stale \u2014 redispatched"
 }

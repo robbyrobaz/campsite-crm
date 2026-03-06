@@ -1,27 +1,40 @@
 {
   "activeTasks": [
     {
-      "id": "c_74185ccc06ab7_19cc2d6286e",
-      "title": "[Moonshot] Analyze 85 closed trades: WR, PnL, hold time — tune TP/SL/time-stop params",
-      "status": "In Progress",
-      "pid": 3443945,
-      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot"
-    },
-    {
       "id": "c_0144d2f75d8d5_19cc2d5cbb5",
       "title": "[Blofin] Promote high_volume_reversal to T2: start forward test (BT PF 1.50, 4033 trades, gate=pass)",
       "status": "In Progress",
-      "pid": 3444182,
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack"
-    },
-    {
-      "id": "c_5566b698b858f_19cc2d57d46",
-      "title": "[NQ] Wire eight_am_break_retest + break_retest_815 into live forward test (BT PF 5.14)",
-      "status": "In Progress",
-      "pid": 3444407,
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
+      "age_minutes": 22.8
     }
   ],
-  "lastDispatch": "2026-03-06T04:13:00-07:00",
-  "lastHealthCheck": "2026-03-06T04:13:00-07:00"
+  "lastDispatch": "2026-03-06T11:43:00.000Z",
+  "lastHealthCheck": "2026-03-06T11:43:00.000Z",
+  "healthSummary": {
+    "cpu_temp_c": 50,
+    "disk_used_pct": 49,
+    "services_ok": ["openclaw-gateway", "blofin-stack-ingestor", "blofin-stack-paper", "nq-smb-watcher", "nq-dashboard"],
+    "critical_alerts": false
+  },
+  "lastDeploymentVerification": {
+    "timestamp": "2026-03-06T11:43:00.000Z",
+    "cards_checked": [
+      {
+        "title": "[NQ] Wire eight_am_break_retest + break_retest_815 into live forward test",
+        "status": "verified",
+        "detail": "Both in strategy_registry tier=2, live_enabled=1. nq-smb-watcher active, dashboard 200."
+      },
+      {
+        "title": "[Blofin] Expand vwap_reversion to top coin pairs",
+        "status": "verified",
+        "detail": "vwap_reversion tier=2, ft_status=active in DB. Blofin services all active, dashboard 200."
+      },
+      {
+        "title": "[Moonshot] Analyze 85 closed trades: tune TP/SL/time-stop params",
+        "status": "verified",
+        "detail": "Commit 6b3e90c present. No persistent service required for moonshot analysis."
+      }
+    ]
+  }
 }

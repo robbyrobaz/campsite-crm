@@ -2,25 +2,21 @@
   "activeTasks": [
     {
       "id": "c_28e22b83f10d7_19cc4bfc962",
-      "title": "[Blofin] high_volume_reversal FT PF 1.57 — expand to additional coin pairs via eligibility scan",
-      "status": "In Progress",
-      "project": "blofin-stack"
+      "title": "[Blofin] high_volume_reversal FT PF 1.57 \u2014 expand to additional coin pairs via eligibility scan",
+      "pid": 126438
     },
     {
-      "id": "c_d3d43274c308e_19cc4b5b3d0",
-      "title": "God Model v3: Add vol_contraction to composite — fix 0% Lucid pass rate",
-      "status": "In Progress",
-      "project": "NQ-Trading-PIPELINE",
-      "pid": 40507
+      "id": "c_fb9c6994f7ae9_19cc525a341",
+      "title": "[NQ] momentum ML retraining \u2014 add session+regime features to boost WR from 52% to 57%+",
+      "pid": 126588
     },
     {
-      "id": "c_687731e5a285a_19cc4b6282e",
-      "title": "Fix ORPHANED_RESTART: exit at SL/TP level, not adverse bar close",
-      "status": "In Progress",
-      "project": "NQ-Trading-PIPELINE",
-      "pid": 40538
+      "id": "c_86b0ca320b84f_19cc5253564",
+      "title": "[NQ] fair_value_gap \u2014 Add PostMarket session filter to stop FT bleeding",
+      "pid": 126755
     }
   ],
-  "lastDispatch": "2026-03-06T21:20:00Z",
-  "lastHealthCheck": "2026-03-06T21:20:00Z"
+  "lastDispatch": "2026-03-06T21:55:00Z",
+  "lastHealthCheck": "2026-03-06T21:55:00Z",
+  "notes": "Stale [Blofin] high_volume_reversal card recovered after 63.9min and re-dispatched. God Model v3 (PF 1.263\u21922.423, LPR 0%\u2192100%) + ORPHANED_RESTART fix deployed via service restart at 14:28 MST. FVG retrain live (paper FT only, no BLE)."
 }

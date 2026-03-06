@@ -1,6 +1,24 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-06T07:50:00-07:00",
-  "lastHealthCheck": "2026-03-06T07:50:00-07:00",
-  "notes": "Board clear. No Planned or In Progress cards. 3 recent Done cards verified deployed: [NQ] psych_levels RTH filter (registry updated 07:27), [NQ] psych_levels FT registry sync (25 FT trades now synced), [Moonshot] entry score threshold calibration (moonshot-v2 services active). All services healthy. CPU 72C, disk 49%."
+  "activeTasks": [
+    {
+      "id": "c_999049b75a3ab_19cc3add4f2",
+      "title": "[Moonshot] Add CoinGecko market cap enrichment for new_listing_age + market_cap_tier features",
+      "pid": 3737270,
+      "repo": "blofin-moonshot"
+    },
+    {
+      "id": "c_de3a377f73cf3_19cc3ad6f75",
+      "title": "[Blofin] Demote orderflow_imbalance: 95 FT trades at PF 0.48 — well below 1.1 demotion gate",
+      "pid": 3737318,
+      "repo": "blofin-stack"
+    },
+    {
+      "id": "c_9c0742b9130ff_19cc3ad158e",
+      "title": "[NQ] Re-run ema_pullback walkforward: registry gate=fail but #1 live FT (7d PF 2.93, +$1,375)",
+      "pid": 3737469,
+      "repo": "NQ-Trading-PIPELINE"
+    }
+  ],
+  "lastDispatch": "2026-03-06T15:25:00Z",
+  "lastHealthCheck": "2026-03-06T15:25:00Z"
 }

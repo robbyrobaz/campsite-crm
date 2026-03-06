@@ -164,7 +164,7 @@ Default operating mode: **FT-PL ON, BLE OFF**.
 - **Jinja/JS**: Always use `&quot;` not `\'` in JS strings inside Jinja templates.
 - **Kanban API**: POST to `/api/inbox` with field `text` (not `body`). Kanban runner model string: `claude-haiku-4-5` (no `anthropic/` prefix — CLI format). **ALL coding agents use Haiku** — Sonnet reserved for main Jarvis session only.
 - **Always restart service after code changes**: `systemctl --user restart <service>`
-- **Webhook**: `https://webhooks.traderspost.io/trading/webhook/51e37934-7a18-4e37-9dc5-33416a36d579/2ddfa7c41bcf347dc1a599108945b07a`
+- **Webhook**: `https://webhooks.traderspost.io/trading/webhook/51e37934-7a18-4e37-9dc5-33416a36d579/222ee493f97b98194432f483f0434b95`
 
 ---
 

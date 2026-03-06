@@ -1,14 +1,42 @@
 {
   "activeTasks": [
     {
-      "id": "c_ac6653a46c4ac_19cc41b3f2a",
-      "title": "[NQ] Investigate signals_today=0: 621 bars processed, 14 strategies active, zero triggers fired Mar 6",
+      "id": "c_ad977509f5624_19cc449ff37",
+      "title": "[NQ] Re-run God Model tournament: champion PF 0.816 losing money, challenger combos ready",
+      "status": "Done",
+      "note": "Completed ~11:06 MST. New champion: ema_pullback + momentum (vwap_fade excluded). Service restarted 11:06:26 MST."
+    },
+    {
+      "id": "c_d807971115b9a_19cc451be7a",
+      "title": "[NQ] emergency: equal_tops_bottoms -$11,709 in 7d (0/4 WR) — trace FT signal source and disable",
       "status": "In Progress",
-      "pid": 3889525,
-      "dispatched_at": "2026-03-06T17:36:00Z"
+      "pid": 3924809,
+      "dispatched": "2026-03-06T18:06:00Z"
+    },
+    {
+      "id": "c_fd1a16a64fe79_19cc4496a89",
+      "title": "[NQ] vwap_fade: Add strong-trend regime kill-switch to stop FT bleed (PF 0.011, -$3,239)",
+      "status": "In Progress",
+      "pid": 3924810,
+      "dispatched": "2026-03-06T18:06:00Z"
     }
   ],
-  "lastDispatch": "2026-03-06T17:36:00Z",
-  "lastHealthCheck": "2026-03-06T17:36:00Z",
-  "notes": "Dispatched NQ signals_today=0 investigation (PID 3889525). Recently completed: vwap_reversion pair cleanup (FT PF 1.73\u21922.03), moonshot TP_PCT 10%\u21928%, volatility_expansion_volume_breakout demotion."
+  "plannedQueue": [
+    {
+      "id": "c_effb22d2e2918_19cc452f746",
+      "title": "[Moonshot] audit 4h cycle health and open position exit logic — 3 positions at stale high_water"
+    },
+    {
+      "id": "c_5e8dbe563acd6_19cc452f70a",
+      "title": "[Blofin] vwap_reversion approaching demotion (FT PF 1.09) — diagnose losing pairs and blacklist or demote"
+    }
+  ],
+  "lastDispatch": "2026-03-06T18:06:00Z",
+  "lastHealthCheck": "2026-03-06T18:06:00Z",
+  "health": {
+    "cpu_temp": "72°C",
+    "disk_used": "49%",
+    "services": "all active",
+    "criticalAlerts": "none"
+  }
 }

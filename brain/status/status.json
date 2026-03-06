@@ -1,5 +1,24 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-06T01:43:00-07:00",
-  "lastHealthCheck": "2026-03-06T01:43:00-07:00"
+  "activeTasks": [
+    {
+      "id": "c_9b292000b83be_19cc263cf56",
+      "title": "[Moonshot] Investigate 0 open positions: model active but no entries firing",
+      "project": "blofin-moonshot",
+      "pid": 3299759
+    },
+    {
+      "id": "c_fcf9c85c34203_19cc263cf36",
+      "title": "[Blofin] Diagnose T2 strategies with no FT data: bb_squeeze_v2, orderflow_imbalance, consecutive_green_fade",
+      "project": "blofin-stack",
+      "pid": 3300075
+    },
+    {
+      "id": "c_678cb82e2b921_19cc263cf14",
+      "title": "[NQ] Debug equal_tops_bottoms: 0 wins, -$11,709 in 4 FT trades",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 3300113
+    }
+  ],
+  "lastDispatch": "2026-03-06T02:13:00-07:00",
+  "lastHealthCheck": "2026-03-06T02:13:00-07:00"
 }

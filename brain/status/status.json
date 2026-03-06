@@ -1,6 +1,40 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-06T02:44:00-07:00",
-  "lastHealthCheck": "2026-03-06T02:43:00-07:00",
-  "notes": "Dispatch cycle 02:43 MST. No Planned/InProgress cards. 3 Done cards verified: NQ equal_tops_bottoms fix + Blofin T2 fix required service restarts (commits post-dated restarts); restarted nq-smb-watcher + blofin services with latest code. Moonshot timer active, next run 04:04 MST with commit fc852c9. All services healthy. CPU 49C, disk 48%."
+  "activeTasks": [
+    {
+      "id": "c_1cf956f6531ac_19cc290cab8",
+      "title": "Fix ORPHANED_RESTART for overnight/pre-market paper trades",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 3376263,
+      "dispatchedAt": "2026-03-06T03:13:00-07:00"
+    },
+    {
+      "id": "c_1412092784787_19cc291ed12",
+      "title": "Wire pre_close_drift into paper trading (OOS PF=1.89, Sharpe=4.98, 65K trades)",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 3376468,
+      "dispatchedAt": "2026-03-06T03:13:00-07:00"
+    },
+    {
+      "id": "c_c8f3838031b04_19cc299e97b",
+      "title": "[NQ] Wire ema_pullback into god model dispatcher (top 7d FT: PF 2.93)",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 3376737,
+      "dispatchedAt": "2026-03-06T03:13:00-07:00"
+    }
+  ],
+  "pendingPlanned": [
+    {
+      "id": "c_36b609d4afda6_19cc29af945",
+      "title": "[Blofin] Expand vwap_reversion to top coin pairs",
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_2f8c9fa392d5b_19cc29b80dd",
+      "title": "[Moonshot] Analyze 85 closed trade exits — tune TP/SL/time-stop parameters",
+      "project": "blofin-moonshot"
+    }
+  ],
+  "lastDispatch": "2026-03-06T03:13:00-07:00",
+  "lastHealthCheck": "2026-03-06T03:13:00-07:00",
+  "notes": "CPU 78C, disk 49%, all services active. 3 builders launched. 2 Planned cards held for next cycle (builder cap reached)."
 }

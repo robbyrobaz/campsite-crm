@@ -1,21 +1,15 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_a0c7ceedc8911_19cc489e61b",
-      "title": "[Moonshot] Add dynamic re-scoring exit gate: force-exit open positions when current ml_score drops below 0.10",
-      "pid": 3997639
-    },
-    {
-      "id": "c_fb3da273b15dc_19cc489e5e9",
-      "title": "[Blofin] consecutive_green_fade pair cleanup: FT PF 1.30 below 1.35 gate \u2014 blacklist losing pairs to recover",
-      "pid": 3998052
-    },
-    {
-      "id": "c_2d1e4f38d1167_19cc489cfca",
-      "title": "[NQ] Momentum regime filter: 7d PF 0.48 (WR 40%, -$1,281) \u2014 add ADX/trend gate to stop live bleed",
-      "pid": 3998054
-    }
-  ],
-  "lastDispatch": "2026-03-06T19:10:00Z",
-  "lastHealthCheck": "2026-03-06T19:10:00Z"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-06T19:48:00.000Z",
+  "lastHealthCheck": "2026-03-06T19:48:00.000Z",
+  "notes": [
+    "Queue empty — 0 Planned, 0 In Progress. Nothing to dispatch.",
+    "3 recently Done cards verified deployed:",
+    "  - [NQ] Momentum regime filter: committed, nq-smb-watcher active ✓",
+    "  - [Blofin] consecutive_green_fade pair cleanup: 4 pairs blacklisted in strategy_coin_eligibility (APE, BOME, SHIB, DOT) ✓",
+    "  - [Moonshot] confidence_decay exit gate (0.10 threshold): committed to blofin-moonshot, moonshot-v2 active cycle running ✓",
+    "CPU: 87°C (ok, limit 100°C). Disk: 49%. All core services active.",
+    "blofin-stack-paper: DB lock warnings since 12:17 (pipeline holding lock). Normal — pipeline started 11:42 and is still running backtests.",
+    "blofin-moonshot.service (v1): killed after 3h 54min (exceeded TimeoutStartSec=3h). No timer — won't auto-restart. moonshot-v2 is the active pipeline."
+  ]
 }

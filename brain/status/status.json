@@ -2,19 +2,33 @@
   "activeTasks": [
     {
       "id": "c_5b3cc5f24b65c_19cc5940c13",
-      "title": "[NQ] orb: add EMA-50 trend regime gate to stop counter-trend SELL signals (6/7 FT losers, -1768)",
+      "title": "[NQ] orb: add EMA-50 trend regime gate to stop counter-trend SELL signals",
       "status": "In Progress",
-      "pid": 362262,
-      "dispatched_at": "2026-03-06T23:55:00Z"
+      "pid": 401821,
+      "project": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
     },
     {
-      "id": "c_399cfa8c2e135_19cc591c951",
-      "title": "[NQ] fair_value_gap: add to LIVE_CONFIGS skip_sessions — stop Asia/PostMarket/NYOpen bleed ($2908 dead sessions)",
+      "id": "c_92c123e0c25bb_19cc59c42d1",
+      "title": "[NQ] Fix ETB multi-day open trades causing -$9,845 single-trade losses",
       "status": "In Progress",
-      "pid": 362555,
-      "dispatched_at": "2026-03-06T23:55:00Z"
+      "pid": 401920,
+      "project": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
+    },
+    {
+      "id": "c_23ace941de816_19cc59c435b",
+      "title": "[Moonshot] Fix INVALIDATION exit: 88/88 closed trades all pnl=$0",
+      "status": "In Progress",
+      "pid": 402058,
+      "project": "/home/rob/.openclaw/workspace/blofin-moonshot"
     }
   ],
-  "lastDispatch": "2026-03-06T23:55:00Z",
-  "lastHealthCheck": "2026-03-06T23:55:00Z"
+  "plannedBacklog": [
+    {
+      "id": "c_1182cbb0fe92f_19cc59c4319",
+      "title": "[Blofin] Diagnose why T2 strategies have no FT data",
+      "note": "Held for next cycle (3-builder cap reached)"
+    }
+  ],
+  "lastDispatch": "2026-03-07T00:28:32.011648+00:00",
+  "lastHealthCheck": "2026-03-07T00:28:32.011648+00:00"
 }

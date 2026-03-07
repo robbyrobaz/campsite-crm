@@ -1,29 +1,53 @@
 {
+  "lastDispatch": "2026-03-07T13:30:00-07:00",
+  "lastHealthCheck": "2026-03-07T13:30:00-07:00",
   "activeTasks": [
-    "[NQ] URGENT: Disable equal_tops_bottoms live signals",
-    "[NQ] Audit vwap_fade signal logic",
-    "[Blofin] Audit T2 strategies \u2014 fix schema issues"
+    {
+      "id": "c_293df40aa458b_19cc9acfc52",
+      "title": "[NQ] URGENT: Disable equal_tops_bottoms live signals — catastrophic bleed (-$11,709)",
+      "status": "In Progress",
+      "pid": 1504973,
+      "assignee": "claude",
+      "priority": "CRITICAL"
+    },
+    {
+      "id": "c_53092f9262a3f_19cc9b18b17",
+      "title": "NQ God Model: Disable 5 FT-losing strategies — $6,600/mo EV swing",
+      "status": "In Progress",
+      "pid": 1504990,
+      "assignee": "claude",
+      "priority": "HIGH"
+    },
+    {
+      "id": "c_7cbe264781f63_19cc9b18b49",
+      "title": "Blofin: Scale vwap_reversion winners 5x — $450/mo EV gain",
+      "status": "In Progress",
+      "pid": 1504991,
+      "assignee": "claude",
+      "priority": "MEDIUM"
+    }
   ],
-  "lastDispatch": "2026-03-07T19:00:00Z",
-  "lastHealthCheck": "2026-03-07T19:00:00Z",
-  "dispatchSummary": {
-    "inProgress": 0,
-    "planned": 4,
-    "cardsJustCreated": 3,
-    "healthStatus": "all_critical_services_active"
-  },
-  "godModelStatus": {
-    "cohesionPass": false,
-    "selectedStrategies": 0,
-    "criticalIssues": [
-      "equal_tops_bottoms: -$11,709 bleed (4 trades, 0 wins)",
-      "vwap_fade: -$1,919 bleed (7 trades, 0% WR)",
-      "momentum: -$1,601 bleed (6 trades, 16.7% WR)"
-    ],
-    "positiveSigns": [
-      "ema_pullback: +$508",
-      "prev_day: +$355",
-      "opening_momentum_bias: +$273"
-    ]
+  "planningQueue": [
+    {
+      "id": "c_0c77dd660b31c_19cc9acfc93",
+      "title": "[Blofin] Audit T2 strategies — fix schema issues in strategy_coin_eligibility query",
+      "priority": "MEDIUM"
+    },
+    {
+      "id": "c_964fee15c1531_19cc9acfc71",
+      "title": "[NQ] Audit vwap_fade signal logic — 0% WR, -$1,919 bleed",
+      "priority": "HIGH"
+    },
+    {
+      "id": "c_49720c25109ad_19cc4b5a5a6",
+      "title": "God Model v3: Add vol_contraction to composite — fix 0% Lucid pass rate",
+      "priority": "LOW"
+    }
+  ],
+  "systemHealth": {
+    "cpuTemp": "73.0°C",
+    "diskUsage": "53%",
+    "servicesStatus": "all active",
+    "criticalAlerts": "none"
   }
 }

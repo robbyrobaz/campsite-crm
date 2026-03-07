@@ -1,24 +1,18 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_8f28fd96c538_19cc71a9333",
-      "title": "[Moonshot] Analyze closed trades & tune ML scoring thresholds",
-      "pid": 1586050,
-      "project": "blofin-moonshot"
-    },
-    {
-      "id": "c_58c390a167282_19cc71a9314",
-      "title": "[Blofin] Audit T2 strategies: high_volume_reversal FT_PF=0.86, consecutive_green_fade FT_PF=0.3",
-      "pid": 1586061,
-      "project": "blofin-stack"
-    },
-    {
-      "id": "c_1c89d3061dbe3_19cc71a92f3",
-      "title": "[NQ] Investigate equal_tops_bottoms: gate=fail but wired & losing $11.7K",
-      "pid": 1586068,
-      "project": "NQ-Trading-PIPELINE"
-    }
-  ],
-  "lastDispatch": "2026-03-07T01:30:00-07:00",
-  "lastHealthCheck": "2026-03-07T01:30:00-07:00"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-07T10:30:48Z",
+  "lastHealthCheck": "2026-03-07T10:30:48Z",
+  "boardState": {
+    "in_progress": 0,
+    "planned": 0,
+    "done_recent": 3
+  },
+  "systemHealth": {
+    "cpu_temp_c": 69,
+    "disk_percent": 52,
+    "services": "all_active",
+    "gateway": "active",
+    "blofin_stack": "active",
+    "nq_pipeline": "active"
+  }
 }

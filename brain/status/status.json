@@ -1,30 +1,20 @@
 {
   "activeTasks": [
     {
-      "id": "c_9b85dc9eccc02_19cc5698a55",
-      "title": "[Moonshot] score-band audit: analyze 88 closed trades by ml_score_entry quartile",
+      "id": "c_5b3cc5f24b65c_19cc5940c13",
+      "title": "[NQ] orb: add EMA-50 trend regime gate to stop counter-trend SELL signals (6/7 FT losers, -1768)",
       "status": "In Progress",
-      "pid": 324902,
-      "project": "blofin-moonshot",
-      "dispatched_at": "2026-03-06T23:25:00Z"
+      "pid": 362262,
+      "dispatched_at": "2026-03-06T23:55:00Z"
     },
     {
-      "id": "c_e40e105effb5c_19cc5698a0a",
-      "title": "[Blofin] high_volume_reversal T2 FT sync gap: ft_trade_count=0 in eligibility table",
+      "id": "c_399cfa8c2e135_19cc591c951",
+      "title": "[NQ] fair_value_gap: add to LIVE_CONFIGS skip_sessions — stop Asia/PostMarket/NYOpen bleed ($2908 dead sessions)",
       "status": "In Progress",
-      "pid": 325096,
-      "project": "blofin-stack",
-      "dispatched_at": "2026-03-06T23:25:00Z"
-    },
-    {
-      "id": "c_30edc69b82b72_19cc56989c2",
-      "title": "[NQ] vwap_fade: 0% live WR in 7d (-$2,124, 8 trades) vs BT PF 1.96",
-      "status": "In Progress",
-      "pid": 325271,
-      "project": "NQ-Trading-PIPELINE",
-      "dispatched_at": "2026-03-06T23:25:00Z"
+      "pid": 362555,
+      "dispatched_at": "2026-03-06T23:55:00Z"
     }
   ],
-  "lastDispatch": "2026-03-06T23:25:00Z",
-  "lastHealthCheck": "2026-03-06T23:25:00Z"
+  "lastDispatch": "2026-03-06T23:55:00Z",
+  "lastHealthCheck": "2026-03-06T23:55:00Z"
 }

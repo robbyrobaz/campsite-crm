@@ -1,19 +1,26 @@
 {
   "activeTasks": [
     {
-      "id": "c_07e5cd1650c91_19cc63e26af",
-      "title": "[NQ] Debug equal_tops_bottoms live bleed (BT PF 3.02 \u2192 FT PF -$11.7K)",
+      "id": "c_574310556b25_19cc67639ba",
+      "title": "[NQ] Enable equal_tops_bottoms in God Model dispatcher (BT PF 3.02, currently -$",
       "assignee": "claude",
-      "pid": 673884,
-      "started_at": "2026-03-06T21:00:00Z"
+      "updated_at": 1772857850387
+    },
+    {
+      "id": "c_f0a6c16f56fba_19cc6763a0b",
+      "title": "[NQ] Investigate momentum drift + bleed (-$1,601 in 7d, WR 17%)",
+      "assignee": "claude",
+      "updated_at": 1772857849822
+    },
+    {
+      "id": "c_fb9688b8e6149_19cc6763a5e",
+      "title": "[Blofin] Diagnose T2 consecutive_green_fade weak FT performance (ft_pf 0.30)",
+      "assignee": "claude",
+      "updated_at": 1772857849247
     }
   ],
-  "lastDispatch": "2026-03-06T21:00:00Z",
-  "lastHealthCheck": "2026-03-06T21:00:00Z",
-  "systemHealth": {
-    "cpu_temp": "85.0\u00b0C",
-    "disk_usage": "49%",
-    "services_active": 5,
-    "critical_alerts": false
-  }
+  "lastDispatch": "2026-03-07T04:31:03.078222Z",
+  "lastHealthCheck": "2026-03-07T04:31:03.078261Z",
+  "dispatchedCards": 3,
+  "inProgressCount": 3
 }

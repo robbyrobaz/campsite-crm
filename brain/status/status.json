@@ -1,11 +1,29 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-07T11:30:00Z",
-  "lastHealthCheck": "2026-03-07T11:30:00Z",
+  "activeTasks": [
+    "[NQ] URGENT: Disable equal_tops_bottoms live signals",
+    "[NQ] Audit vwap_fade signal logic",
+    "[Blofin] Audit T2 strategies \u2014 fix schema issues"
+  ],
+  "lastDispatch": "2026-03-07T19:00:00Z",
+  "lastHealthCheck": "2026-03-07T19:00:00Z",
   "dispatchSummary": {
     "inProgress": 0,
-    "planned": 0,
-    "codexToClaudePatches": 0,
+    "planned": 4,
+    "cardsJustCreated": 3,
     "healthStatus": "all_critical_services_active"
+  },
+  "godModelStatus": {
+    "cohesionPass": false,
+    "selectedStrategies": 0,
+    "criticalIssues": [
+      "equal_tops_bottoms: -$11,709 bleed (4 trades, 0 wins)",
+      "vwap_fade: -$1,919 bleed (7 trades, 0% WR)",
+      "momentum: -$1,601 bleed (6 trades, 16.7% WR)"
+    ],
+    "positiveSigns": [
+      "ema_pullback: +$508",
+      "prev_day: +$355",
+      "opening_momentum_bias: +$273"
+    ]
   }
 }

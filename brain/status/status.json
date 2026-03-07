@@ -1,6 +1,29 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-06T19:59:00-07:00",
-  "lastHealthCheck": "2026-03-06T19:59:00-07:00",
-  "summary": "Dispatch cycle complete. Board empty: 0 In Progress, 0 Planned. All services healthy (5/5 active). No stale recovery needed. No deployments to verify. Next cycle: queue remains empty pending new work."
+  "activeTasks": [
+    {
+      "id": "c_104e8f78c0c5e_19cc63efdbb",
+      "title": "[NQ] Debug equal_tops_bottoms live bleed (BT PF 3.02 → FT -$11.7K)",
+      "assignee": "claude",
+      "pid": 636426,
+      "dispatchedAt": "2026-03-06T20:30:00-07:00"
+    },
+    {
+      "id": "c_6db83357962b3_19cc63eb44c",
+      "title": "[Moonshot] Tune entry scoring thresholds for 468-coin discovery phase",
+      "assignee": "claude",
+      "pid": 636429,
+      "dispatchedAt": "2026-03-06T20:30:00-07:00"
+    },
+    {
+      "id": "c_c19688d42125d_19cc63e8140",
+      "title": "[Blofin] Diagnose T2 forward test execution—paper trade pipeline stalled",
+      "assignee": "claude",
+      "pid": 636447,
+      "dispatchedAt": "2026-03-06T20:30:00-07:00"
+    }
+  ],
+  "lastDispatch": "2026-03-06T20:30:00-07:00",
+  "lastHealthCheck": "2026-03-06T20:30:00-07:00",
+  "summary": "Dispatcher cycle 8:30 PM. Dispatched 3 cards (PIDs: 636426, 636429, 636447). Board healthy: 0 stale, 3/3 slots full, 1 card queued for next cycle. Health: CPU 88°C, disk 50%, all 5 services active, no critical alerts.",
+  "nextActions": "Monitor In Progress cards. Phase 7 verify upon completion. Hold 4th Planned card (c_07e5cd1650c91) for next cycle."
 }

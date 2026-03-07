@@ -1,47 +1,25 @@
 {
-  "timestamp": "2026-03-06T18:56:00Z",
   "activeTasks": [
     {
-      "id": "c_3dd3e97530c58_19cc5d5cc6d",
-      "title": "[Blofin] vwap_reversion exceptional FT coin pairs (DUSK 48x, PLUME 22x)",
-      "assignee": "claude",
-      "status": "In Progress",
-      "updated": 28.3
-    },
-    {
       "id": "c_5f905a10554a4_19cc5d5cc8b",
-      "title": "[Moonshot] ml_score decay exit for open positions",
-      "assignee": "claude",
+      "title": "[Moonshot] Add dynamic ml_score decay exit",
       "status": "In Progress",
-      "updated": 28.9
+      "assignee": "claude",
+      "pid": 562236,
+      "project": "blofin-moonshot"
     },
     {
-      "id": "c_1182cbb0fe92f_19cc59c4319",
-      "title": "[Blofin] T2 strategies no FT data (consecutive_green_fade, high_volume_reversal)",
-      "assignee": "claude",
+      "id": "c_3dd3e97530c58_19cc5d5cc6d",
+      "title": "[Blofin] vwap_reversion exceptional FT coin pairs",
       "status": "In Progress",
-      "updated": 0.1
-    },
-    {
-      "id": "c_6a693d927a6f3_19cc5d5cc4f",
-      "title": "[NQ] Debug zero FT trades eight_am_break_retest + break_retest_815",
       "assignee": "claude",
-      "status": "In Progress",
-      "updated": 0.1
+      "pid": 562238,
+      "project": "blofin-stack"
     }
   ],
-  "buildersActive": 4,
-  "buildersCapacity": 3,
-  "note": "Exceeded capacity (4 active vs 3-builder max) due to dispatch overlap. Two new cards dispatched this cycle.",
-  "lastDispatch": "2026-03-06T18:55:00Z",
-  "lastHealthCheck": "2026-03-06T18:50:00Z",
-  "services": {
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "nq-smb-watcher": "active",
-    "nq-dashboard": "active"
-  },
-  "nextPhase": "PHASE 7 deployment verification (every 60 min for recently completed cards)",
-  "summary": "✓ All services healthy. 4 builders dispatched. Next cycle in 30m."
+  "lastDispatch": "2026-03-06T19:29:00-07:00",
+  "lastHealthCheck": "2026-03-06T19:29:00-07:00",
+  "healthStatus": "all services active",
+  "diskUsage": "50%",
+  "cpuTemp": "71°C"
 }

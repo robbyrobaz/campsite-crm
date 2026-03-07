@@ -428,3 +428,11 @@ The timer was not active, which would have prevented the 4h training cycle from 
 - Card `c_28e22b83f10d7_19cc4bfc962` ("[Blofin] high_volume_reversal expand coin pairs") was In Progress for 59.6 minutes with no update (builder died)
 - Recovered to Planned, updated assignee to `codex`, re-dispatched (PID 271461)
 - FVG + momentum NQ cards verified deployed: services active, NQ dashboard HTTP 200
+
+---
+**2026-03-06 19:29 — Jarvis Pulse Dispatch**
+- **STALE CARD RECOVERY**: Both In Progress cards were 62-63 minutes old (dispatch likely died)
+  - c_3dd3e97530c58_19cc5d5cc6d: [Blofin] vwap_reversion exceptional FT coin pairs
+  - c_5f905a10554a4_19cc5d5cc8b: [Moonshot] Add dynamic ml_score decay exit
+  - Action: Reset both to Planned, redispatched with fresh PIDs (562238, 562236)
+  - Status: All services healthy, dashboards live, deployments verified

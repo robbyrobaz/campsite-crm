@@ -124,8 +124,8 @@ PATCH the card: `curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-
 ---
 
 ## Kanban Status Semantics (CANONICAL)
-- **Inbox** = idea bucket / backlog — dispatcher IGNORES it. Rob's scratchpad.
-- **Planned** = approved, ready to execute — dispatcher picks up within 30min
+- **Inbox** = ONLY for real-money decisions (BLE, live trading, prop firm evals). Everything else goes straight to Planned. Dispatcher IGNORES Inbox.
+- **Planned** = ready to execute — dispatcher picks up within 2h
 - **In Progress** = builder running
 - **Done** = complete (skip Review/Test entirely — go straight to Done)
 

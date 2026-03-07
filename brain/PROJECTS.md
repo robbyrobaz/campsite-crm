@@ -153,7 +153,7 @@
 | AI Token Usage Audit | Weekly Sun 8am | Haiku | Token efficiency report |
 
 ### Kanban Workflow
-- **Inbox** = idea bucket (dispatcher ignores — Rob's scratchpad)
+- **Inbox = ONLY for real-money decisions (BLE, live trading). Dispatcher ignores)
 - **Planned** = should be near-zero. Auto-generator launches cards immediately. If cards are stuck here, dispatcher picks them up within 30min.
 - **In Progress** = builder working
 - **Done** = complete (skip Review/Test entirely)

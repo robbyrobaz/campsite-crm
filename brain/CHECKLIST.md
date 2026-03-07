@@ -187,7 +187,7 @@ When retiring ANY service, ALL of the following must happen or it is NOT retired
 - If a builder died silently, flag it and respawn
 
 ## Kanban Status Semantics (CANONICAL):
-- **Inbox** = idea bucket / backlog. Rob or Jarvis tosses ideas here. Dispatcher IGNORES it.
+- **Inbox** = ONLY for real-money decisions (BLE, live trading, prop firm evals). Everything else goes straight to Planned. Dispatcher IGNORES Inbox.
 - **Planned** = cards waiting to be launched. **Should be near-zero** — auto-generator launches immediately. If you see cards here, dispatch them NOW (don't leave them waiting).
 - **In Progress** = builder actively working
 - **Review/Test** = skip entirely — cards go directly Done after successful run

@@ -1,25 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_5f905a10554a4_19cc5d5cc8b",
-      "title": "[Moonshot] Add dynamic ml_score decay exit",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 562236,
-      "project": "blofin-moonshot"
-    },
-    {
-      "id": "c_3dd3e97530c58_19cc5d5cc6d",
-      "title": "[Blofin] vwap_reversion exceptional FT coin pairs",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 562238,
-      "project": "blofin-stack"
-    }
-  ],
-  "lastDispatch": "2026-03-06T19:29:00-07:00",
-  "lastHealthCheck": "2026-03-06T19:29:00-07:00",
-  "healthStatus": "all services active",
-  "diskUsage": "50%",
-  "cpuTemp": "71°C"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-06T19:59:00-07:00",
+  "lastHealthCheck": "2026-03-06T19:59:00-07:00",
+  "summary": "Dispatch cycle complete. Board empty: 0 In Progress, 0 Planned. All services healthy (5/5 active). No stale recovery needed. No deployments to verify. Next cycle: queue remains empty pending new work."
 }

@@ -1,26 +1,29 @@
 {
   "activeTasks": [
     {
-      "id": "c_574310556b25_19cc67639ba",
-      "title": "[NQ] Enable equal_tops_bottoms in God Model dispatcher (BT PF 3.02, currently -$",
+      "id": "c_14f9d38e1cb94_19cc6ac90a4",
+      "title": "[Moonshot] Validate 4h cycle completion & score distribution analysis",
       "assignee": "claude",
-      "updated_at": 1772857850387
+      "updated_at": 1772860800000,
+      "pid": 1048558
     },
     {
-      "id": "c_f0a6c16f56fba_19cc6763a0b",
-      "title": "[NQ] Investigate momentum drift + bleed (-$1,601 in 7d, WR 17%)",
+      "id": "c_8b7e9050c27fa_19cc6ac907c",
+      "title": "[Blofin] Diagnose consecutive_green_fade T2 forward test failure",
       "assignee": "claude",
-      "updated_at": 1772857849822
+      "updated_at": 1772860800000,
+      "pid": 1048562
     },
     {
-      "id": "c_fb9688b8e6149_19cc6763a5e",
-      "title": "[Blofin] Diagnose T2 consecutive_green_fade weak FT performance (ft_pf 0.30)",
+      "id": "c_588976a77275a_19cc6ac9059",
+      "title": "[NQ] Debug equal_tops_bottoms live bleed (BT PF 3.02 → FT -$11.7K)",
       "assignee": "claude",
-      "updated_at": 1772857849247
+      "updated_at": 1772860800000,
+      "pid": 1048568
     }
   ],
-  "lastDispatch": "2026-03-07T04:31:03.078222Z",
-  "lastHealthCheck": "2026-03-07T04:31:03.078261Z",
+  "lastDispatch": "2026-03-07T04:30:00Z",
+  "lastHealthCheck": "2026-03-07T04:30:00Z",
   "dispatchedCards": 3,
   "inProgressCount": 3
 }

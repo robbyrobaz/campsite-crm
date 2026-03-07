@@ -1,36 +1,11 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_99fd3380ce77e_19cc",
-      "title": "[Blofin] Audit consecutive_green_fade (T2, bleeding: FT PF 0",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_b592fdcf353a9_19cc",
-      "title": "[Moonshot] Promote model 31 (AUC 0.844) to champion if gate-",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_4965e93d1ddfb_19cc",
-      "title": "NQ God Model: Enable ema_pullback strategy (IMMEDIATE $1,375",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_6dab14bf0a5ea_19cc",
-      "title": "NQ: Apply gap_fill PreNY Challenger to God Model + Enable em",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_49720c25109ad_19cc",
-      "title": "God Model v3: Add vol_contraction to composite \u2014 fix 0% Luci",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_372c2117b648f_19cb",
-      "title": "[NQ] Audit VWAP implementation (session-based vs 5pm ET dail",
-      "assignee": "claude"
-    }
-  ],
-  "lastDispatch": "2026-03-07T16:31:31.723827Z",
-  "lastHealthCheck": "2026-03-07T16:31:31.723843Z"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-07T11:30:00Z",
+  "lastHealthCheck": "2026-03-07T11:30:00Z",
+  "dispatchSummary": {
+    "inProgress": 0,
+    "planned": 0,
+    "codexToClaudePatches": 0,
+    "healthStatus": "all_critical_services_active"
+  }
 }

@@ -7380,3 +7380,34 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 2 committed, 7 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+warning: adding embedded git repository: nq-l2-scalping
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint: 
+hint: 	git submodule add <url> nq-l2-scalping
+hint: 
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint: 
+hint: 	git rm --cached nq-l2-scalping
+hint: 
+hint: See "git help submodule" for more information.
+[main 063c4fc3] auto: snapshot 2026-03-07T02:00:01Z
+ 10 files changed, 93 insertions(+), 54 deletions(-)
+ create mode 160000 nq-l2-scalping
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+[main e00edda] auto: snapshot 2026-03-07T02:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED kanban-dashboard
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main abdeeb9a] auto: snapshot 2026-03-07T02:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 3 committed, 6 skipped
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

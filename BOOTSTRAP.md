@@ -144,6 +144,16 @@ PATCH the card: `curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-
 
 Default operating mode: **FT-PL ON, BLE OFF**.
 
+## ⚠️ CRITICAL: Forward Testing is FREE — Never Demote Early
+
+**FT = $0 cost = VALUABLE DATA COLLECTION. BLE = the ONLY thing that loses money.**
+
+- **Never demote from FT for "bad performance"** — that's just data
+- **Only demote if:** PF < 0.5 AND trades > 500 (catastrophic AND statistically significant)
+- **Blacklisting:** ONLY for confirmed bugs, not performance
+- **"Losing" in FT is not losing money** — it's learning what doesn't work
+- **Keep strategies in FT indefinitely** — more data = better decisions later
+
 ## ⛔ HARD RULES — NEVER VIOLATE
 - **NEVER enable BLE for NQ or start any prop firm eval (Lucid, FTMO, etc.) without Rob's explicit approval** — no webhooks, no live orders, no eval activation, nothing
 - **NQ live model = GOD MODEL** — a single unified model combining selected experts; NOT individual strategies (momentum/orb/etc.)

@@ -1,29 +1,24 @@
 {
   "activeTasks": [
     {
-      "id": "c_14f9d38e1cb94_19cc6ac90a4",
-      "title": "[Moonshot] Validate 4h cycle completion & score distribution analysis",
-      "assignee": "claude",
-      "updated_at": 1772860800000,
-      "pid": 1048558
+      "id": "c_8f28fd96c538_19cc71a9333",
+      "title": "[Moonshot] Analyze closed trades & tune ML scoring thresholds",
+      "pid": 1586050,
+      "project": "blofin-moonshot"
     },
     {
-      "id": "c_8b7e9050c27fa_19cc6ac907c",
-      "title": "[Blofin] Diagnose consecutive_green_fade T2 forward test failure",
-      "assignee": "claude",
-      "updated_at": 1772860800000,
-      "pid": 1048562
+      "id": "c_58c390a167282_19cc71a9314",
+      "title": "[Blofin] Audit T2 strategies: high_volume_reversal FT_PF=0.86, consecutive_green_fade FT_PF=0.3",
+      "pid": 1586061,
+      "project": "blofin-stack"
     },
     {
-      "id": "c_588976a77275a_19cc6ac9059",
-      "title": "[NQ] Debug equal_tops_bottoms live bleed (BT PF 3.02 → FT -$11.7K)",
-      "assignee": "claude",
-      "updated_at": 1772860800000,
-      "pid": 1048568
+      "id": "c_1c89d3061dbe3_19cc71a92f3",
+      "title": "[NQ] Investigate equal_tops_bottoms: gate=fail but wired & losing $11.7K",
+      "pid": 1586068,
+      "project": "NQ-Trading-PIPELINE"
     }
   ],
-  "lastDispatch": "2026-03-07T04:30:00Z",
-  "lastHealthCheck": "2026-03-07T04:30:00Z",
-  "dispatchedCards": 3,
-  "inProgressCount": 3
+  "lastDispatch": "2026-03-07T01:30:00-07:00",
+  "lastHealthCheck": "2026-03-07T01:30:00-07:00"
 }

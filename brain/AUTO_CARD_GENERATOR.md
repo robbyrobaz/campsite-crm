@@ -451,3 +451,26 @@ openclaw cron list
 ```
 If `nextRunAtMs` is null or status is `idle` with no next run, the cron is broken — delete and recreate using `openclaw cron add --cron "0 * * * *"`.
 Never create crons by manually editing jobs.json — IDs must be system-generated.
+
+## CRITICAL: Forward Testing is FREE Data Collection
+
+**FT (Forward Test) = paper trades on live data = $0 cost = VALUABLE DATA**
+**BLE (Broker Live Execution) = real money = the ONLY thing that can lose money**
+
+### FT Demotion Policy (VERY LENIENT)
+- **NEVER demote from FT early** — we need the data
+- **Only demote if:** PF < 0.5 AND trades > 500 (catastrophic AND statistically significant)
+- **Default:** Keep everything in FT indefinitely — data collection IS the goal
+- **Blacklisting:** ONLY for strategies with confirmed bugs (not just bad performance)
+
+### What "bad FT performance" actually means
+- PF 0.8 after 50 trades = **KEEP IN FT** (not enough data)
+- PF 0.6 after 200 trades = **KEEP IN FT** (learning)
+- PF 0.4 after 500 trades = **Review, but still keep** (might be regime-dependent)
+- PF 0.3 after 1000 trades = **Consider demotion** (probably no edge)
+
+### BLE Activation (real money) — REQUIRES ROB'S EXPLICIT APPROVAL
+- Never enable BLE, webhooks, or live trading autonomously
+- This is the ONLY decision that goes to Inbox
+- Everything else (FT changes, strategy additions, parameter tweaks) = Planned
+

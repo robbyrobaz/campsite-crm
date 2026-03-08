@@ -1,14 +1,28 @@
 {
   "activeTasks": [
     {
-      "id": "c_49720c25109ad_19cc4b5a5a6",
-      "title": "God Model v3: Add vol_contraction to composite",
-      "status": "In Progress",
-      "pid": 2052945,
-      "dispatchedAt": "2026-03-07T19:30:00-07:00"
+      "id": "c_ed51411855bdd_19ccb64bcd9",
+      "title": "[Moonshot] Validate 4h cycle timer firing and real-time score production",
+      "assignee": "claude",
+      "pid": 2316559,
+      "startedAt": "2026-03-07T21:30:00Z"
+    },
+    {
+      "id": "c_02f5fbc89d10f_19ccb64bcad",
+      "title": "[Blofin] Expand top FT performer vwap_volatility_rebound to new coin pairs",
+      "assignee": "claude",
+      "pid": 2316561,
+      "startedAt": "2026-03-07T21:30:00Z"
+    },
+    {
+      "id": "c_638e548645aa_19ccb64bc7f",
+      "title": "[NQ] Debug & enable equal_tops_bottoms in live dispatcher",
+      "assignee": "claude",
+      "pid": 2316568,
+      "startedAt": "2026-03-07T21:30:00Z"
     }
   ],
-  "lastDispatch": "2026-03-07T19:30:00-07:00",
-  "lastHealthCheck": "2026-03-07T19:30:00-07:00",
-  "summary": "1 builder dispatched (God Model vol_contraction). All services active. No alerts."
+  "lastDispatch": "2026-03-07T21:30:25Z",
+  "lastHealthCheck": "2026-03-07T21:30:00Z",
+  "nextDispatchCycle": "2026-03-07T22:00:00Z"
 }

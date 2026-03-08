@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-03-08 10:30 MST
+**Updated:** 2026-03-08 10:45 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -22,14 +22,14 @@
 | delivery-mirror | 5 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 43.5M (483 requests)
-- **Output Tokens:** 189.8K
-- **Cost (est):** $69.70
+- **Total Tokens:** 42.7M (476 requests)
+- **Output Tokens:** 186.8K
+- **Cost (est):** $67.51
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 227 | 31.4M | 98.6K | $61.72 |
+| opus | 220 | 30.6M | 95.5K | $59.53 |
 | sonnet | 105 | 8.8M | 45.9K | $7.05 |
 | haiku | 130 | 3.4M | 45.3K | $0.93 |
 | delivery-mirror | 21 | 0 | 0 | $0.00 |

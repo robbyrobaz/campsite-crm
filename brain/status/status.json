@@ -1,15 +1,16 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_59ed0e3856fcd_19ccc40e47a",
-      "title": "[Moonshot] Closed-trade analysis + feature proposals",
-      "pid": 2955390,
-      "dispatchedAt": "2026-03-08T01:30:00-07:00",
-      "assignee": "claude",
-      "project": "blofin-moonshot"
-    }
-  ],
-  "lastDispatch": "2026-03-08T01:30:00-07:00",
-  "lastHealthCheck": "2026-03-08T01:30:00-07:00",
-  "note": "Dispatch cycle 1 of 48 (daily). 1 task running. All services healthy. 3 recent Done cards verified live (Blofin + Moonshot deployments). Board clean: queue flowing."
+  "activeTasks": [],
+  "lastDispatch": "2026-03-08T10:30:58Z",
+  "lastHealthCheck": "2026-03-08T10:30:58Z",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 3
+  },
+  "healthStatus": {
+    "gateway": "active",
+    "blofin": "active",
+    "nq": "active",
+    "dashboards": "all responding (200)"
+  }
 }

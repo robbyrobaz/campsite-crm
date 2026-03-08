@@ -1,22 +1,6 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-08T16:30:50.282681Z",
-  "lastHealthCheck": "2026-03-08T16:30:50.282946Z",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "done_recent": 3
-  },
-  "services": {
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "nq-smb-watcher": "active",
-    "nq-dashboard": "active"
-  },
-  "health": {
-    "cpu_temp_c": 86,
-    "disk_percent": 54,
-    "critical_alerts": "none"
-  }
+  "lastDispatch": "2026-03-08T11:30:00Z",
+  "lastHealthCheck": "2026-03-08T11:30:00Z",
+  "summary": "All services healthy. No In Progress or Planned cards. 3 recent Done cards (IBKR infrastructure) verified."
 }

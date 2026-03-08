@@ -1,6 +1,16 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-08T11:30:00Z",
-  "lastHealthCheck": "2026-03-08T11:30:00Z",
-  "summary": "All services healthy. No In Progress or Planned cards. 3 recent Done cards (IBKR infrastructure) verified."
+  "lastDispatch": "2026-03-08T13:30:00-07:00",
+  "lastHealthCheck": "2026-03-08T13:30:00-07:00",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done_recent": 3
+  },
+  "health": {
+    "cpu_temp": "73.0°C",
+    "disk_usage": "55%",
+    "services_active": 5
+  },
+  "notes": "Board clear. No work in queue. All services healthy."
 }

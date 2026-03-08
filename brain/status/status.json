@@ -1,26 +1,28 @@
 {
   "activeTasks": [
     {
-      "id": "c_49720c2510",
-      "title": "God Model v3: Add vol_contraction to composite — fix 0% Lucid",
+      "id": "c_1873346f8854f_19cca895f31",
+      "title": "[NQ] Diagnose God Model dispatcher — cohesion_gate=FAIL, 0 selected strategies",
       "assignee": "claude",
-      "started_at": 1772922641310
+      "projectPath": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
     },
     {
-      "id": "c_964fee15c1",
-      "title": "[NQ] Audit vwap_fade signal logic — 0% WR, -$1,919 bleed",
+      "id": "c_a599c582a9cb9_19cca895f51",
+      "title": "[Blofin] Diagnose high_volume_reversal FT regression (BT 1.50 → FT 0.90)",
       "assignee": "claude",
-      "started_at": 1772922641237
+      "projectPath": "/home/rob/.openclaw/workspace/blofin-stack"
     },
     {
-      "id": "c_0c77dd660b",
-      "title": "[Blofin] Audit T2 strategies — fix schema issues in strategy_coin_eligibility query",
+      "id": "c_85355471bff68_19cca895f72",
+      "title": "[Moonshot] Verify 4h cycle timer and position opening logic",
       "assignee": "claude",
-      "started_at": 1772922641165
+      "projectPath": "/home/rob/.openclaw/workspace/blofin-moonshot"
     }
   ],
-  "lastDispatch": "2026-03-07T22:30:53Z",
-  "lastHealthCheck": "2026-03-07T22:30:53Z",
-  "dispatcher": "Jarvis Pulse",
-  "nextDispatch": "in ~30 minutes"
+  "lastDispatch": "2026-03-07T22:30:00Z",
+  "lastHealthCheck": "2026-03-07T22:30:00Z",
+  "dispatchedThisCycle": 3,
+  "inProgressCount": 3,
+  "healthStatus": "OK",
+  "notes": "All services active. No stale cards. No critical alerts. All 3 Planned cards enriched and dispatched successfully."
 }

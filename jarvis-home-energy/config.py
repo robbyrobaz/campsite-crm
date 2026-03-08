@@ -55,7 +55,7 @@ RING_PASSWORD = "L#MzBsX27h&j.r9"
 # OAuth app: Google Cloud project 574885630755
 NEST_CLIENT_ID = "574885630755-q50rqpgonjsr603ccjkgl5ra25mmp97e.apps.googleusercontent.com"
 NEST_CLIENT_SECRET = "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"
-NEST_REFRESH_TOKEN = "1//06gPKGWopgVBUCgYIARAAGAYSNwF-L9IrCgnJ43ttjwJ9aok18HwaH_QSG1GxA-hDYo1g5JOxjIRcGO3lAcFpDnOfRCnOggM0_RU"
+NEST_REFRESH_TOKEN = "1//06cfH9Fl0hQcSCgYIARAAGAYSNwF-L9Ireo_yyAUyzEGUb-eNVMd-LS91jHgbXrL9jpZT9kRpzxO2UNfN9uFLE7N4ZMYduAVkw_g"
 NEST_PROJECT_ID = "edc12ede-0076-42d4-86d8-c87f49aec4b4"
 NEST_ACCESS_TOKEN = ""  # Auto-refreshed at runtime — leave blank
 

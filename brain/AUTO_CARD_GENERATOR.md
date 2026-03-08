@@ -80,7 +80,7 @@ Autonomous crypto strategy research and paper trading engine targeting consisten
 - **3-tier lifecycle:** T0 (library/backtest) → T1 (backtested, monitoring) → T2 (forward test / paper trading) → T3 (live, future)
 - **Ranking:** Strategies ranked by `bt_pnl_pct` (compounded PnL %). Top N that pass gates get promoted.
 - **Promotion gates (T0→T1):** min 100 trades, PF ≥ 1.35, max drawdown < 50%, PnL > 0
-- **Demotion gates (T2 FT):** after 20 FT trades — PF < 1.1 or MDD > 50% triggers demotion. Early crash-stop: PF < 0.5 with ≥5 FT trades = immediate demotion.
+- **Demotion gates (T2 FT): PF < 0.5 AND trades > 500 only. Early crash-stop: PF < 0.3 AND trades ≥ 50 only. FT data is free and valuable — never remove strategies from FT early.**
 - **Pipeline runs every 4h** via `orchestration/run_pipeline.py`
 
 **Current state:**

@@ -166,7 +166,7 @@ Default operating mode: **FT-PL ON, BLE OFF**.
 - **ETB (equal_tops_bottoms) is UNBLACKLISTED** — PF 3.02, Sharpe 7.97. Best strategy. NOT yet in live inference — top priority.
 - **NQ ML feature function**: ALWAYS use `build_session_aware_features()`. NEVER `build_features()` (RTH-only, wrong).
 - **Blofin ranking**: `bt_pnl_pct` (compounded PnL%). NOT EEP scoring — EEP is dead, removed Feb 26.
-- **Blofin promotion gates**: min 100 trades, PF≥1.35, MDD<50%, PnL>0. FT demotion: PF<1.1 or MDD>50% after 20 FT trades. Early crash-stop: PF<0.5 with ≥5 FT trades.
+- **Blofin promotion gates**: min 100 trades, PF≥1.35, MDD<50%, PnL>0. **FT demotion: PF<0.5 AND trades>500 only. Early crash-stop: PF<0.3 AND trades≥50 only. Never remove FT early — more data is always better.**
 - **Blofin dashboard**: port 8892. NEVER show aggregate/system-wide PF or WR — always top-N pairs by FT PF.
 - **Model routing**: **Sonnet for EVERYTHING** — main session, all builders, kanban runners. Haiku ONLY for simple heartbeat/token audit crons. **Opus is banned. Codex is banned.** If you ever see either in session_status or kanban settings, fix it immediately.
 - **Jarvis Pulse cron**: upgraded to Sonnet (Feb 26). Dispatcher is too important for Haiku.

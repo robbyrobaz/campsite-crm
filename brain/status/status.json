@@ -1,15 +1,22 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-08T14:30:00Z",
-  "lastHealthCheck": "2026-03-08T14:30:00Z",
+  "lastDispatch": "2026-03-08T16:30:50.282681Z",
+  "lastHealthCheck": "2026-03-08T16:30:50.282946Z",
   "boardState": {
+    "inProgress": 0,
     "planned": 0,
-    "in_progress": 0,
-    "recent_done": 3
+    "done_recent": 3
   },
-  "systemHealth": {
-    "cpu": "73°C",
-    "disk": "53% full",
-    "services": "all active"
+  "services": {
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
+    "nq-smb-watcher": "active",
+    "nq-dashboard": "active"
+  },
+  "health": {
+    "cpu_temp_c": 86,
+    "disk_percent": 54,
+    "critical_alerts": "none"
   }
 }

@@ -1,16 +1,15 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-08T10:30:58Z",
-  "lastHealthCheck": "2026-03-08T10:30:58Z",
+  "lastDispatch": "2026-03-08T12:31:11.987140Z",
+  "lastHealthCheck": "2026-03-08T12:31:11.987140Z",
   "boardState": {
-    "inProgress": 0,
     "planned": 0,
-    "done": 3
+    "in_progress": 0,
+    "recent_done": 3
   },
-  "healthStatus": {
-    "gateway": "active",
-    "blofin": "active",
-    "nq": "active",
-    "dashboards": "all responding (200)"
+  "systemHealth": {
+    "cpu": "77\u00b0C",
+    "disk": "53% full",
+    "services": "all active"
   }
 }

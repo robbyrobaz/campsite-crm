@@ -1,39 +1,42 @@
 {
-  "timestamp": "2026-03-09T20:30:00Z",
+  "timestamp": "2026-03-09T21:16:00Z",
   "activeTasks": [
     {
-      "id": "c_040d45cb1323b_19cd3fe2698",
-      "title": "Scale underlevered Blofin winners: TIA-USDT + APT-USDT 1x→3x leverage",
-      "assignee": "claude",
-      "project": "blofin-stack",
-      "pid": 2529281
-    },
-    {
-      "id": "c_f6364ccdd1a94_19cd3e65ebb",
-      "title": "8:15am Break-Retest standalone backtest — trailing stop",
-      "assignee": "claude",
-      "project": "NQ-Trading-PIPELINE",
-      "pid": 2529298
-    },
-    {
-      "id": "c_3b275f182311f_19cd3e638a6",
-      "title": "ETB standalone backtest — trailing stop treatment",
-      "assignee": "claude",
-      "project": "NQ-Trading-PIPELINE",
-      "pid": 2529323
+      "id": "c_723bd066fdb1a_19cd4668ebb",
+      "title": "NQ L2 backtest re-run with fresh IBKR data",
+      "assignee": "codex",
+      "project": "nq-l2-scalping",
+      "status": "running",
+      "note": "On strategy 005-006, ~30% complete"
     }
   ],
-  "lastDispatch": "2026-03-09T20:30:00Z",
-  "lastHealthCheck": "2026-03-09T20:30:00Z",
+  "planned": [
+    {
+      "id": "c_6b1d2eb8dd116_19cd469e3ac",
+      "title": "[NQ L2] Session-aware backtesting — all 9 sessions",
+      "note": "Waiting for L2 backtest to complete"
+    }
+  ],
+  "alerts": [
+    "CPU temp 93C (threshold 85C) — L2 backtest saturating CPU, holding moonshot-v2 restart until done",
+    "blofin-moonshot v1 was NOT masked — fixed, now masked",
+    "moonshot-v2 4h timer dead (killed TERM at 13:46) — will restart after L2 backtest",
+    "Opus usage 13 requests in 24h — needs investigation"
+  ],
+  "lastHealthCheck": "2026-03-09T21:16:00Z",
   "system": {
-    "temp_c": 78.0,
+    "temp_c": 93.0,
     "disk_usage_pct": 58,
     "services": {
       "openclaw_gateway": "active",
       "blofin_ingestor": "active",
       "blofin_paper": "active",
       "nq_smb_watcher": "active",
-      "nq_dashboard": "active"
+      "nq_dashboard": "active",
+      "moonshot_v2_dashboard": "active",
+      "nq_orb_signal": "active",
+      "ibkr_nq_feed": "active",
+      "moonshot_v2_timer": "dead - restart pending"
     }
   }
 }

@@ -1,6 +1,30 @@
 {
-  "lastDispatch": "2026-03-08T15:30:00-07:00",
-  "lastHealthCheck": "2026-03-08T15:30:00-07:00",
-  "activeTasks": [],
-  "message": "Idle — no queued work. All services healthy. Blofin/NQ monitoring active."
+  "activeTasks": [
+    {
+      "id": "c_32e955e5704a3_19ccfafb403",
+      "title": "[NQ] Debug why gate_fail strategies are generating live signals",
+      "project": "NQ-Trading-PIPELINE",
+      "assignee": "claude"
+    },
+    {
+      "id": "c_a726b1c6c36dd_19ccfafb424",
+      "title": "[Blofin] Expand consecutive_green_fade to top 20 coin pairs + gate audit",
+      "project": "blofin-stack",
+      "assignee": "claude"
+    },
+    {
+      "id": "c_b383104c997d4_19ccfafb448",
+      "title": "[Moonshot] Verify 4h cycle timer and debug ml_score generation pipeline",
+      "project": "blofin-moonshot",
+      "assignee": "claude"
+    }
+  ],
+  "lastDispatch": "2026-03-08T17:30:00Z",
+  "lastHealthCheck": "2026-03-08T17:30:00Z",
+  "systemStatus": {
+    "cpu_temp": "90.0°C (high threshold: 100°C)",
+    "disk_usage": "214G / 468G (49%)",
+    "critical_services": "all active",
+    "critical_alerts": "none"
+  }
 }

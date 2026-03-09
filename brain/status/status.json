@@ -1,18 +1,10 @@
 {
+  "timestamp": "2026-03-09T23:16:00Z",
   "activeTasks": [
-    {
-      "id": "c_181e920270",
-      "title": "[NQ L2] True L2 signal engine + ML filter for 007 Sweep Fade (5-10 entries/day)",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_10fd30c7fd",
-      "title": "[NQ L2] Fix L2 data usage across 6 strategies — use real ticks/DOM/quotes",
-      "assignee": "codex"
-    }
+    {"title": "[Blofin] Diagnose paper trading PnL drain", "id": "c_ad4dba752cf0c_19cd4d61", "project": "blofin-stack"},
+    {"title": "[NQ] Investigate momentum live collapse", "id": "c_8726b91f8a3f5_19cd4d61", "project": "NQ-Trading-PIPELINE"}
   ],
-  "activeCount": 2,
-  "lastDispatch": "2026-03-09T22:30:59Z",
-  "lastHealthCheck": "2026-03-09T22:30:59Z",
-  "dispatchNotes": "1 Planned dispatched (codex→claude patch), 1 In Progress stale check passed, NQ services verified"
+  "lastDispatch": "2026-03-09T23:16:00Z",
+  "lastHealthCheck": "2026-03-09T23:16:00Z",
+  "system": {"temp_c": 79.0, "disk_usage_pct": 59, "services": {"all_primary": "active"}}
 }

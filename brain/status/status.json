@@ -1,34 +1,26 @@
 {
   "activeTasks": [
     {
-      "id": "c_4e76ae00e2e9c_19cc5d1b51e",
-      "title": "Blofin: Start FT on Top 5 high_volume_reversal Coins",
+      "id": "c_eaa6d2a8bcf88_19ccdf784e5",
+      "title": "Implement & backtest strategy 016: Orderflow Auction Theory Framework",
+      "status": "In Progress",
       "assignee": "claude",
-      "pid": 1974917,
-      "started_at": "2026-03-09T02:31:22.205534+00:00"
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "age_mins": 18.3
     },
     {
-      "id": "c_926f5ea844526_19cc71e9792",
-      "title": "Blofin: Scale ml_gbt_5m position sizes on ETH+SHIB",
+      "id": "c_1f465c7367489_19ccdf78c0a",
+      "title": "Implement & backtest strategy 017: Simple Order Flow Delta Setups",
+      "status": "In Progress",
       "assignee": "claude",
-      "pid": 1974935,
-      "started_at": "2026-03-09T02:31:22.205554+00:00"
-    },
-    {
-      "id": "c_cc5339d10e984_19ccdf77d09",
-      "title": "Implement & backtest strategy 015: Order Flow Market Structure",
-      "assignee": "claude",
-      "pid": 1974955,
-      "started_at": "2026-03-09T02:31:22.205557+00:00"
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "age_mins": 18.3
     }
   ],
-  "queuedCards": 2,
-  "lastDispatch": "2026-03-09T02:31:22.205560+00:00",
-  "lastHealthCheck": "2026-03-09T02:31:22.205562+00:00",
-  "health": {
-    "cpu_temp_c": 92,
-    "disk_used_pct": 50,
-    "services_active": 5,
-    "critical_alerts": false
-  }
+  "plannedQueue": [],
+  "queueCapacity": "2/3 In Progress (1 slot available)",
+  "lastDispatch": "2026-03-09T04:30:00Z",
+  "lastHealthCheck": "2026-03-09T04:30:00Z",
+  "healthStatus": "✓ All systems nominal",
+  "alerts": "none"
 }

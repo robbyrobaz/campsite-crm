@@ -1,42 +1,18 @@
 {
-  "timestamp": "2026-03-09T21:16:00Z",
   "activeTasks": [
     {
-      "id": "c_723bd066fdb1a_19cd4668ebb",
-      "title": "NQ L2 backtest re-run with fresh IBKR data",
-      "assignee": "codex",
-      "project": "nq-l2-scalping",
-      "status": "running",
-      "note": "On strategy 005-006, ~30% complete"
-    }
-  ],
-  "planned": [
+      "id": "c_181e920270",
+      "title": "[NQ L2] True L2 signal engine + ML filter for 007 Sweep Fade (5-10 entries/day)",
+      "assignee": "claude"
+    },
     {
-      "id": "c_6b1d2eb8dd116_19cd469e3ac",
-      "title": "[NQ L2] Session-aware backtesting — all 9 sessions",
-      "note": "Waiting for L2 backtest to complete"
+      "id": "c_10fd30c7fd",
+      "title": "[NQ L2] Fix L2 data usage across 6 strategies — use real ticks/DOM/quotes",
+      "assignee": "codex"
     }
   ],
-  "alerts": [
-    "CPU temp 93C (threshold 85C) — L2 backtest saturating CPU, holding moonshot-v2 restart until done",
-    "blofin-moonshot v1 was NOT masked — fixed, now masked",
-    "moonshot-v2 4h timer dead (killed TERM at 13:46) — will restart after L2 backtest",
-    "Opus usage 13 requests in 24h — needs investigation"
-  ],
-  "lastHealthCheck": "2026-03-09T21:16:00Z",
-  "system": {
-    "temp_c": 93.0,
-    "disk_usage_pct": 58,
-    "services": {
-      "openclaw_gateway": "active",
-      "blofin_ingestor": "active",
-      "blofin_paper": "active",
-      "nq_smb_watcher": "active",
-      "nq_dashboard": "active",
-      "moonshot_v2_dashboard": "active",
-      "nq_orb_signal": "active",
-      "ibkr_nq_feed": "active",
-      "moonshot_v2_timer": "dead - restart pending"
-    }
-  }
+  "activeCount": 2,
+  "lastDispatch": "2026-03-09T22:30:59Z",
+  "lastHealthCheck": "2026-03-09T22:30:59Z",
+  "dispatchNotes": "1 Planned dispatched (codex→claude patch), 1 In Progress stale check passed, NQ services verified"
 }

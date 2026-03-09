@@ -1,28 +1,38 @@
 {
   "activeTasks": [
     {
-      "id": "c_4960bb347ea62_19cd16b25c9",
-      "title": "NQ: Enable 3 gate-passing strategies with $2,700/mo proven FT profits",
+      "id": "c_fa997eec7f3f1_19cd2435bd2",
+      "title": "[NQ] Fix momentum bleed + wire high-PF gate-pass strategies",
       "project": "NQ-Trading-PIPELINE",
-      "pid": 109845,
-      "dispatchedAt": "2026-03-09T10:30:00Z"
+      "priority": "high",
+      "dispatchedAt": "2026-03-09T11:00:00Z",
+      "reason": "momentum bleeding: 7d FT -$1,809 (17% WR, PF 0.31). High-PF gate-pass strategies (order_flow_delta 3.25, eight_am_break_retest 5.14) with 0 live signals."
     },
     {
-      "id": "c_c5c61c36562e2_19cd16b25ee",
-      "title": "Blofin: Scale leverage on high-PF vwap_reversion winners (+15-30% EV)",
+      "id": "c_5c8d08c7a4eb1_19cd2437402",
+      "title": "[Blofin] Diagnose T2 gate_fail + scale paper winners",
       "project": "blofin-stack",
-      "pid": 109852,
-      "dispatchedAt": "2026-03-09T10:30:00Z"
+      "priority": "medium",
+      "dispatchedAt": "2026-03-09T11:00:00Z",
+      "reason": "vwap_reversion T2 gate_fail investigation. Paper trading positive (BIO +8.94%, OPN +5.7%, HOME +5.12% in 24h) but FT data sparse."
+    },
+    {
+      "id": "c_6c3b23945e0d4_19cd2439228",
+      "title": "[Moonshot v2] Backfill historical data + initialize ML tournament",
+      "project": "blofin-moonshot-v2",
+      "priority": "medium",
+      "dispatchedAt": "2026-03-09T11:00:00Z",
+      "reason": "Initialize v2 with 14mo candles, 50 features, LightGBM champion. Services ready, waiting for data backfill."
     }
   ],
-  "plannedRemaining": 0,
-  "lastDispatch": "2026-03-09T10:30:00Z",
-  "lastHealthCheck": "2026-03-09T10:30:00Z",
+  "plannedRemaining": 3,
+  "lastDispatch": "2026-03-09T11:00:00Z",
+  "lastHealthCheck": "2026-03-09T11:00:00Z",
   "systemStatus": {
     "cpu_temp": "68.0°C",
     "disk_usage": "54%",
     "services": "all active",
     "critical_alerts": "none"
   },
-  "notes": "Dispatch cycle complete: 2 builders running, deployment verification passed for 3 recent completions"
+  "notes": "Auto-Generator cycle (3 cards created): NQ momentum bleed (HIGH), Blofin T2 gate diagnosis (MEDIUM), Moonshot v2 init (MEDIUM). Gate check clear (0 In Progress, 0 Planned). Dispatcher will pick up within 30min."
 }

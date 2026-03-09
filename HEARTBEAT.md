@@ -41,14 +41,15 @@
 - Alert must include specific issues found
 
 ## Numerai Submission Readiness (EVERY HEARTBEAT)
-- Check all 3 model directories exist:
-  - `ls -d numerai-tournament/models_elite` (robbyrobml)
-  - `ls -d numerai-tournament/models_elite_robbyrob2` (robbyrob2)
-  - `ls -d numerai-tournament/models_robbyrob3` (robbyrob3)
-- If ANY model dir is missing: **FLAG IMMEDIATELY** — "Numerai model dir missing, daily submission will fail"
+- Check all 3 model directories have the correct model files:
+  - `ls numerai-tournament/models_elite/*.cbm 2>/dev/null | wc -l` → expect ≥10 (CatBoost models, robbyrobml)
+  - `ls numerai-tournament/models_elite_robbyrob2/*.cbm 2>/dev/null | wc -l` → expect ≥10 (CatBoost models, robbyrob2)
+  - `ls numerai-tournament/models_robbyrob3/*.pkl 2>/dev/null | wc -l` → expect ≥10 (neural net pkl, robbyrob3)
+- **IMPORTANT: models_elite and models_elite_robbyrob2 use .cbm/.txt (CatBoost/LightGBM) — NOT .pkl. Never alert on missing .pkl for these two dirs.**
+- If ANY dir has 0 model files of the correct type: **FLAG** — "Numerai model files missing, daily submission will fail"
 - Check `systemctl --user status numerai-daily-bot.service` — if failed, read the journal to find WHY (don't just say "failed, will retry")
 - If journal shows FileNotFoundError or model errors: **FIX IT** — train the missing models, don't wait
-- After any Numerai retrain card completes: verify ALL 3 model dirs exist and run `multi_model_daily_bot.py --test` dry run
+- After any Numerai retrain card completes: verify ALL 3 model dirs and run `multi_model_daily_bot.py --test` dry run
 
 ## GCP BTC Dip Trader Check (once daily, morning)
 

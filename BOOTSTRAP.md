@@ -235,6 +235,28 @@ Default operating mode: **FT-PL ON, BLE OFF**.
 ## Recent Changes (rolling 48h — update this at session end whenever significant changes happen)
 > This replaces needing to read the daily memory log on startup. Key decisions only.
 
+**Mar 9 2026 (5 AM MST) — ORB ENGINE LIVE:**
+- **nq-orb-signal.service** running, DRY_RUN=False, QUANTITY=1 MNQ, production 9:30 ET
+- **Test trade completed**: LONG @ 24418.75 → exit @ 24432.25 = **+$27 on 1 MNQ** ✅
+- **DST fix applied**: production UTC hour 14→13 (9:30 ET = 13:30 UTC post-DST). Would have fired 1hr late without fix.
+- **Engine**: `NQ-Trading-PIPELINE/pipeline/orb_signal_engine.py`
+- **State**: `data/orb_engine_state.json` | **Log**: `data/orb_engine.log`
+- **Execution**: TradersPost webhook → Tradovate → Lucid Flex 50K `LFE0506429036012` (Auto Submit ON, both sides)
+- **Webhook URL**: `https://webhooks.traderspost.io/trading/webhook/51e37934-7a18-4e37-9dc5-33416a36d579/222ee493f97b98194432f483f0434b95`
+- **Ticker**: `MNQ` (TradersPost auto-resolves front month)
+- **Backtest**: PF 6.416, WR 86.3%, $4,772/mo EV on 4 MNQ (1 Lucid account)
+- **Scale plan**: Run clean at QUANTITY=1 → scale to 4 after 2-3 good Monday runs
+- **NY open**: 6:30 AM MST (9:30 AM EDT = 13:30 UTC) — engine fires automatically
+- **ORB**: 5-min (13:30–13:34 UTC) + entry at 13:35 UTC bar close above/below OR High/Low
+- **Two-phase exit**: Phase 1 = 25pt hard stop; Phase 2 = when 2.5pt profit → 1.25pt native trail
+- **NQ L2 Scalping**: separate project at `nq-l2-scalping/`, 8+ strategies on IBKR L2 data
+
+**Mar 6 2026 — ORB ENGINE BUILT (see memory/2026-03-06.md for full session log)**
+- TradersPost → Tradovate → Lucid confirmed working (both directions)
+- All bugs fixed: bar timing, trail-on-entry-bar, invalid sentiment field in exit webhook
+- Final working exit webhook: `{"ticker":"MNQ","action":"exit"}` (NO sentiment field)
+- Phase 2 trail activation: `{"quantity":0,"stopLoss":{"type":"trailing_stop","trailAmount":1.25}}`
+
 **Mar 2 2026 (evening) — MAJOR:**
 - **Moonshot v1 RETIRED**: blofin-moonshot.timer, service, dashboard, 2 openclaw crons all disabled
 - **Moonshot v2 LIVE**: clean rewrite, built by agent teams in 14 minutes

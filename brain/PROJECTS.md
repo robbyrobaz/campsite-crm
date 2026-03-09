@@ -40,9 +40,10 @@
 **Status:** LIVE — tested Mar 6 (SHORT +$43) and Mar 9 (LONG +$27). Both clean. ✅
 **Backtest:** 14 months, PF 6.4, WR 86.3%, $4,772/mo EV at 4 MNQ (Lucid Flex 50K)
 
-**Production config:** TEST_MODE=False, OR_OFFSET=30, QUANTITY=1
-**Post-DST NY open:** 13:30 UTC = 6:30 AM MST (Arizona). Engine must fire at 13:xx UTC now.
-**Next:** Scale to QUANTITY=4 after first clean live Monday run. Add 15-min ORB layer.
+**Production config:** TEST_MODE=False, OR_OFFSET=30, QUANTITY=1, **UTC hour=13** (DST-corrected Mar 9)
+**NY open post-DST:** 9:30 AM EDT = 13:30 UTC = 6:30 AM MST. Engine fires at 13:30 UTC. ✅
+**DST fix committed:** `fec3864` — was hardcoded hour=14 (EST), corrected to hour=13 (EDT)
+**Next:** Scale to QUANTITY=4 after first clean live Monday run (today's 6:30 AM). Add 15-min ORB layer.
 
 **Live data feed:** NinjaTrader (Windows 192.168.68.88) → SMB `/mnt/nt_bridge/bars.csv` → `nq-smb-watcher.service` → `NQ_continuous_1min.csv`
 **Forward test run_id:** `smb_live_forward_test` (only valid run — 129 trades Feb 23-26)

@@ -1,3 +1,15 @@
+## ⛔ IBKR GATEWAY — CRITICAL RULES (learned the hard way, Mar 8)
+
+**`docker compose restart ib-gateway` = correct.** The session token is preserved in the container's writable layer. No 2FA needed — paper accounts use password-only auth. Port 4002 comes up in ~30s.
+
+**`docker compose up --force-recreate` = NEVER.** This wipes the container's writable layer, destroying the IBKR session token. IBKR's servers keep the old session alive for 5-15 min, causing error 10189 "competing session from different IP" on ALL subsequent restarts until it expires.
+
+**Error 10189 on tick-by-tick:** competing IBKR session from force-recreate or another client. Fix: wait 10-15 min for old session to expire — DO NOT restart again, it makes it worse.
+
+**`EXISTING_SESSION_DETECTED_ACTION`** must be `primaryoverride` in docker-compose.yml (already set). Do NOT change back to `primary`.
+
+**What actually broke on Mar 6-8:** daily 11:59 PM auto-restart left gateway in "instance of control is not created yet" loop. Simple `docker compose restart` fixed it in 30s — no 2FA, no force-recreate, no VNC needed.
+
 ## ⛔ AUTH FLOWS — NEVER AUTO-RETRY (learned the hard way, Feb 28)
 **Ring, IBKR, any 2FA service:** ONE attempt only. Stop. Wait for Rob to complete 2FA/SMS. Check result. Never loop, never auto-restart, never retry without Rob explicitly saying go. Repeated attempts = account lockouts that last hours. This has happened with Ring (locked for days) and IBKR (locked 1hr today).
 

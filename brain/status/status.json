@@ -1,8 +1,39 @@
 {
-  "activeTasks": [],
-  "activeCount": 0,
-  "lastDispatch": "2026-03-09T18:30:00Z",
-  "lastHealthCheck": "2026-03-09T18:30:00Z",
-  "cycleNumber": 37,
-  "summary": "Board idle. No In Progress or Planned cards. Health OK: CPU 69°C, disk 57%, all services active."
+  "timestamp": "2026-03-09T20:30:00Z",
+  "activeTasks": [
+    {
+      "id": "c_040d45cb1323b_19cd3fe2698",
+      "title": "Scale underlevered Blofin winners: TIA-USDT + APT-USDT 1x→3x leverage",
+      "assignee": "claude",
+      "project": "blofin-stack",
+      "pid": 2529281
+    },
+    {
+      "id": "c_f6364ccdd1a94_19cd3e65ebb",
+      "title": "8:15am Break-Retest standalone backtest — trailing stop",
+      "assignee": "claude",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 2529298
+    },
+    {
+      "id": "c_3b275f182311f_19cd3e638a6",
+      "title": "ETB standalone backtest — trailing stop treatment",
+      "assignee": "claude",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 2529323
+    }
+  ],
+  "lastDispatch": "2026-03-09T20:30:00Z",
+  "lastHealthCheck": "2026-03-09T20:30:00Z",
+  "system": {
+    "temp_c": 78.0,
+    "disk_usage_pct": 58,
+    "services": {
+      "openclaw_gateway": "active",
+      "blofin_ingestor": "active",
+      "blofin_paper": "active",
+      "nq_smb_watcher": "active",
+      "nq_dashboard": "active"
+    }
+  }
 }

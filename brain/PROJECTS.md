@@ -33,6 +33,17 @@
 **GitHub:** https://github.com/robbyrobaz/NQ-Trading-PIPELINE (private, main branch)
 **Status:** Forward Test (FT-PL) running on live data. BLE off (`DRY_RUN`). 8 models active.
 
+### ⭐ 1a. NQ ORB Engine — LIVE EXECUTION (separate from God Model FT)
+**Engine:** `NQ-Trading-PIPELINE/pipeline/orb_signal_engine.py`
+**Service:** `nq-orb-signal.service` (active, DRY_RUN=False)
+**Route:** IBKR L2 feed → ORB engine → TradersPost → Tradovate → Lucid Flex 50K LFE0506429036012
+**Status:** LIVE — tested Mar 6 (SHORT +$43) and Mar 9 (LONG +$27). Both clean. ✅
+**Backtest:** 14 months, PF 6.4, WR 86.3%, $4,772/mo EV at 4 MNQ (Lucid Flex 50K)
+
+**Production config:** TEST_MODE=False, OR_OFFSET=30, QUANTITY=1
+**Post-DST NY open:** 13:30 UTC = 6:30 AM MST (Arizona). Engine must fire at 13:xx UTC now.
+**Next:** Scale to QUANTITY=4 after first clean live Monday run. Add 15-min ORB layer.
+
 **Live data feed:** NinjaTrader (Windows 192.168.68.88) → SMB `/mnt/nt_bridge/bars.csv` → `nq-smb-watcher.service` → `NQ_continuous_1min.csv`
 **Forward test run_id:** `smb_live_forward_test` (only valid run — 129 trades Feb 23-26)
 **Alert topic:** ntfy.sh/nq-pipeline

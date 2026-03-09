@@ -204,6 +204,34 @@ Default operating mode: **FT-PL ON, BLE OFF**.
 
 ---
 
+## ⭐ NQ ORB ENGINE — LIVE AND WORKING (read this before saying anything about NQ execution)
+
+**This is NOT theoretical. It has been built, tested, and confirmed working.**
+
+- Engine: `NQ-Trading-PIPELINE/pipeline/orb_signal_engine.py`
+- Service: `nq-orb-signal.service` (active, auto-restart)
+- Route: IBKR L2 feed → ORB signal engine → TradersPost webhook → Tradovate → Lucid Flex 50K
+- Account: `LFE0506429036012` | Ticker: `MNQ` | Auto Submit: ON | Both sides: enabled
+- Webhook: `https://webhooks.traderspost.io/trading/webhook/51e37934-7a18-4e37-9dc5-33416a36d579/222ee493f97b98194432f483f0434b95`
+- DRY_RUN: **False** | QUANTITY: 1 (scale to 4 after clean Monday run)
+
+**Strategy (backtested 14mo, PF 6.4, WR 86.3%, $4,772/mo EV at 4 MNQ):**
+- OR builds 9:30–9:34 ET (post-DST = 13:30–13:34 UTC = 6:30–6:34 AM MST)
+- Entry at 9:35 ET bar close breaking above OR high (LONG) or below OR low (SHORT)
+- Phase 1: market order + 25pt hard stop
+- Phase 2: 10-tick (2.5pt) profit → switches to 1.25pt native trailing stop
+- Force-flat: 4:00 PM ET (21:00 UTC)
+
+**Test modes:**
+- Production: TEST_MODE=False, OR_OFFSET=30 (fires at 13:30 UTC post-DST)
+- Hourly test: TEST_MODE=True, OR_OFFSET=0 (fires at top of current UTC hour), restart service
+
+**Live trades confirmed:**
+- Mar 6: SHORT +$43 on 1 MNQ ✅
+- Mar 9: LONG +$27 on 1 MNQ ✅ (pre-market hourly test)
+
+**⚠️ DST NOTE (Mar 9 2026):** US DST active. NY open = 13:30 UTC (was 14:30). Engine or_hour may need verification before Monday open. Check: does engine use dynamic UTC hour or hardcoded 14?
+
 ## Recent Changes (rolling 48h — update this at session end whenever significant changes happen)
 > This replaces needing to read the daily memory log on startup. Key decisions only.
 

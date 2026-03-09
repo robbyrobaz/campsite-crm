@@ -1,3 +1,15 @@
+## ⛔ NQ FUTURES MARKET HOURS — READ THIS BEFORE TOUCHING ANYTHING (learned the hard way, Mar 8)
+
+**NQ Futures (CME Globex) is CLOSED Friday ~3:15 PM CT → Sunday 5:00 PM CT. Every single week.**
+
+- Friday close: ~3:15 PM CT (4:15 PM EST, 2:15 PM MST)
+- Sunday open: 5:00 PM CT (6:00 PM EST, 4:00 PM MST)
+- **Stale CSV data on Saturday or Sunday morning = 100% NORMAL. Do NOT touch the gateway.**
+- **Last bar timestamp being Friday afternoon = 100% NORMAL. Do NOT diagnose as outage.**
+- Daily maintenance break: 4:00–5:00 PM CT (Mon–Thu) — brief gap, also normal.
+
+**Before EVER touching the IBKR gateway or feed service, check: is it a weekend? If yes, stop.**
+
 ## ⛔ IBKR GATEWAY — CRITICAL RULES (learned the hard way, Mar 8)
 
 **`docker compose restart ib-gateway` = correct.** The session token is preserved in the container's writable layer. No 2FA needed — paper accounts use password-only auth. Port 4002 comes up in ~30s.

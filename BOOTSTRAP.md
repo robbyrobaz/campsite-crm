@@ -213,19 +213,20 @@ Default operating mode: **FT-PL ON, BLE OFF**.
 - Route: IBKR L2 feed → ORB signal engine → TradersPost webhook → Tradovate → Lucid Flex 50K
 - Account: `LFE0506429036015` (Lucid Trading 15) | Ticker: `NQ` | Auto Submit: ON | Both sides: enabled
 - Webhook: `https://webhooks.traderspost.io/trading/webhook/51e37934-7a18-4e37-9dc5-33416a36d579/222ee493f97b98194432f483f0434b95`
-- DRY_RUN: **False** | QUANTITY: 1 NQ (scale to 4 after 2-3 clean runs)
+- DRY_RUN: **False** | QUANTITY: **4 NQ** (scaled Mar 9 evening after +$95 profitable trade)
 
 **Strategy (backtested 14mo, Suite 5 SL sweep: SL=75pt → EV/mo $5,542, WR 97%, 0 busts):**
 - OR builds 9:30–9:34 ET (post-DST = 13:30–13:34 UTC = 6:30–6:34 AM MST)
 - Entry at 9:35 ET bar close breaking above OR high (LONG) or below OR low (SHORT)
-- Phase 1: market order + 75pt hard stop (300 ticks, $1,500 on 1 NQ = within $2k EOD DD)
+- Phase 1: market order + 75pt hard stop (300 ticks)
 - Phase 2: 10-tick (2.5pt) profit → switches to 1.25pt native trailing stop
 - Force-flat: 4:00 PM ET (21:00 UTC)
 
-**Prop account philosophy:**
-- Ticker: NQ full-size ($20/pt) — NOT MNQ ($2/pt). 1 NQ = 10 MNQ in $ terms.
-- Reset cost: $85-91. Not a true loss. Play to pass quickly.
-- 97% WR at 75pt SL → busts are rare; payout when passing = $1,500
+**Prop account philosophy (4 NQ scale, Mar 10 onward):**
+- Ticker: NQ full-size ($20/pt) — NOT MNQ ($2/pt)
+- Max loss per trade: 4 × $20/pt × 75pt = **$6,000** (blows $2k EOD DD, but 97% WR = almost never happens)
+- Reset cost: $85. Not a true loss. Play to pass quickly and aggressively.
+- 97% WR at 75pt SL → busts are rare; payout when passing = $1,500 × 4 = $6,000
 
 **Test modes:**
 - Production: TEST_MODE=False, OR_OFFSET=30 (fires at 13:30 UTC post-DST)
@@ -240,16 +241,22 @@ Default operating mode: **FT-PL ON, BLE OFF**.
 ## Recent Changes (rolling 48h — update this at session end whenever significant changes happen)
 > This replaces needing to read the daily memory log on startup. Key decisions only.
 
+**Mar 9 2026 (7:10 AM MST) — ORB SCALED TO 4 NQ (PRODUCTION READY FOR MAR 10):**
+- **First real NY open**: SHORT @ 24,413.25 → exit @ 24,407.50 = **+$95 on 1 NQ** ✅
+- **Scale-up**: QUANTITY 1 → 4 after successful first trade
+- **New production config**: `TICKER=NQ`, `QUANTITY=4`, `HARD_SL_PTS=75.0`, `DRY_RUN=False`
+- **Max loss per trade**: 4 × $20/pt × 75pt = $6,000 (blows $2K EOD DD but 97% WR, reset=$85)
+- **Service restarted**: confirmed `QTY=4` in startup log ✅
+- **Engine**: `NQ-Trading-PIPELINE/pipeline/orb_signal_engine.py` | commit `93e4d726`
+- **Mar 10 NY open**: 6:30 AM MST — engine fires with 4 NQ automatically
+- **Philosophy**: aggressive, play to pass quickly; reset costs ($85) < payout ($6K)
+
 **Mar 9 2026 (5:53 AM MST) — ORB ENGINE UPGRADED FOR FIRST REAL NY OPEN:**
 - **Ticker**: NQ (full-size, $20/pt) — was MNQ ($2/pt)
 - **SL**: 75pt (Suite 5 sweep winner) — was 25pt
 - **Account**: `LFE0506429036015` (Lucid Trading 15)
-- **All tests passed**: subscription enabled, full round-trip confirmed (fill, stop, trail, exit)
+- **All tests passed**: subscription enabled, full round-trip confirmed
 - **DST fix applied**: production UTC hour 14→13 (9:30 ET = 13:30 UTC post-DST)
-- **Engine**: `NQ-Trading-PIPELINE/pipeline/orb_signal_engine.py` | commit `91fb8fb`
-- **Scale plan**: 1 NQ now → 4 NQ after 2-3 clean runs
-- **NY open**: 6:30 AM MST (9:30 AM EDT = 13:30 UTC) — engine fires automatically
-- **NQ L2 Scalping**: separate project at `nq-l2-scalping/`, 8+ strategies on IBKR L2 data
 
 **Mar 6 2026 — ORB ENGINE BUILT (see memory/2026-03-06.md for full session log)**
 - TradersPost → Tradovate → Lucid confirmed working (both directions)

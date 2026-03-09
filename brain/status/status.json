@@ -1,38 +1,38 @@
 {
+  "lastDispatch": "2026-03-09T05:30:00-07:00",
+  "lastHealthCheck": "2026-03-09T05:30:00-07:00",
   "activeTasks": [
     {
-      "id": "c_fa997eec7f3f1_19cd2435bd2",
-      "title": "[NQ] Fix momentum bleed + wire high-PF gate-pass strategies",
-      "project": "NQ-Trading-PIPELINE",
-      "priority": "high",
-      "dispatchedAt": "2026-03-09T11:00:00Z",
-      "reason": "momentum bleeding: 7d FT -$1,809 (17% WR, PF 0.31). High-PF gate-pass strategies (order_flow_delta 3.25, eight_am_break_retest 5.14) with 0 live signals."
+      "id": "c_6c3b23945e0d4_19cd2439228",
+      "title": "[Moonshot v2] Backfill historical data + initialize ML tournament",
+      "status": "In Progress",
+      "assignee": "claude",
+      "pid": 309381
     },
     {
       "id": "c_5c8d08c7a4eb1_19cd2437402",
       "title": "[Blofin] Diagnose T2 gate_fail + scale paper winners",
-      "project": "blofin-stack",
-      "priority": "medium",
-      "dispatchedAt": "2026-03-09T11:00:00Z",
-      "reason": "vwap_reversion T2 gate_fail investigation. Paper trading positive (BIO +8.94%, OPN +5.7%, HOME +5.12% in 24h) but FT data sparse."
+      "status": "In Progress",
+      "assignee": "claude",
+      "pid": 309384
     },
     {
-      "id": "c_6c3b23945e0d4_19cd2439228",
-      "title": "[Moonshot v2] Backfill historical data + initialize ML tournament",
-      "project": "blofin-moonshot-v2",
-      "priority": "medium",
-      "dispatchedAt": "2026-03-09T11:00:00Z",
-      "reason": "Initialize v2 with 14mo candles, 50 features, LightGBM champion. Services ready, waiting for data backfill."
+      "id": "c_fa997eec7f3f1_19cd2435bd2",
+      "title": "[NQ] Fix momentum bleed + wire high-PF gate-pass strategies",
+      "status": "In Progress",
+      "assignee": "claude",
+      "pid": 309402
     }
   ],
-  "plannedRemaining": 3,
-  "lastDispatch": "2026-03-09T11:00:00Z",
-  "lastHealthCheck": "2026-03-09T11:00:00Z",
-  "systemStatus": {
-    "cpu_temp": "68.0°C",
-    "disk_usage": "54%",
-    "services": "all active",
-    "critical_alerts": "none"
-  },
-  "notes": "Auto-Generator cycle (3 cards created): NQ momentum bleed (HIGH), Blofin T2 gate diagnosis (MEDIUM), Moonshot v2 init (MEDIUM). Gate check clear (0 In Progress, 0 Planned). Dispatcher will pick up within 30min."
+  "systemHealth": {
+    "cpuTemp": "84.0°C",
+    "diskUsage": "55%",
+    "services": [
+      "openclaw-gateway.service: active",
+      "blofin-stack-ingestor.service: active",
+      "blofin-stack-paper.service: active",
+      "nq-smb-watcher.service: active",
+      "nq-dashboard.service: active"
+    ]
+  }
 }

@@ -1,16 +1,34 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-09T06:30:00Z",
-  "lastHealthCheck": "2026-03-09T06:30:00Z",
-  "queueStatus": {
-    "inProgress": 0,
-    "planned": 0,
-    "done": 3
-  },
-  "systemHealth": {
-    "cpu": "86°C (healthy)",
-    "disk": "54% (236G/468G)",
+  "activeTasks": [
+    {
+      "id": "c_978ddf77c3b57_19cd166d7a1",
+      "title": "[Moonshot] Promote champion model and verify 4h scoring cycle",
+      "project": "blofin-moonshot",
+      "pid": 3312129,
+      "dispatchedAt": "2026-03-09T08:30:00Z"
+    },
+    {
+      "id": "c_44d25ed86f765_19cd166d77f",
+      "title": "[Blofin] Diagnose paper trading inactivity — 0 trades in 24h, only 1 T2 strategy",
+      "project": "blofin-stack",
+      "pid": 3312132,
+      "dispatchedAt": "2026-03-09T08:30:00Z"
+    },
+    {
+      "id": "c_68be4d36cd305_19cd166d75d",
+      "title": "[NQ] Disable equal_tops_bottoms from live dispatcher — catastrophic bleed (-$11,709)",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 3312135,
+      "dispatchedAt": "2026-03-09T08:30:00Z"
+    }
+  ],
+  "plannedRemaining": 2,
+  "lastDispatch": "2026-03-09T08:30:00Z",
+  "lastHealthCheck": "2026-03-09T08:30:00Z",
+  "systemStatus": {
+    "cpu_temp": "72.0°C",
+    "disk_usage": "54%",
     "services": "all active",
-    "alerts": "none"
+    "critical_alerts": "none"
   }
 }

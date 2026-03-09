@@ -211,44 +211,44 @@ Default operating mode: **FT-PL ON, BLE OFF**.
 - Engine: `NQ-Trading-PIPELINE/pipeline/orb_signal_engine.py`
 - Service: `nq-orb-signal.service` (active, auto-restart)
 - Route: IBKR L2 feed → ORB signal engine → TradersPost webhook → Tradovate → Lucid Flex 50K
-- Account: `LFE0506429036012` | Ticker: `MNQ` | Auto Submit: ON | Both sides: enabled
+- Account: `LFE0506429036015` (Lucid Trading 15) | Ticker: `NQ` | Auto Submit: ON | Both sides: enabled
 - Webhook: `https://webhooks.traderspost.io/trading/webhook/51e37934-7a18-4e37-9dc5-33416a36d579/222ee493f97b98194432f483f0434b95`
-- DRY_RUN: **False** | QUANTITY: 1 (scale to 4 after clean Monday run)
+- DRY_RUN: **False** | QUANTITY: 1 NQ (scale to 4 after 2-3 clean runs)
 
-**Strategy (backtested 14mo, PF 6.4, WR 86.3%, $4,772/mo EV at 4 MNQ):**
+**Strategy (backtested 14mo, Suite 5 SL sweep: SL=75pt → EV/mo $5,542, WR 97%, 0 busts):**
 - OR builds 9:30–9:34 ET (post-DST = 13:30–13:34 UTC = 6:30–6:34 AM MST)
 - Entry at 9:35 ET bar close breaking above OR high (LONG) or below OR low (SHORT)
-- Phase 1: market order + 25pt hard stop
+- Phase 1: market order + 75pt hard stop (300 ticks, $1,500 on 1 NQ = within $2k EOD DD)
 - Phase 2: 10-tick (2.5pt) profit → switches to 1.25pt native trailing stop
 - Force-flat: 4:00 PM ET (21:00 UTC)
+
+**Prop account philosophy:**
+- Ticker: NQ full-size ($20/pt) — NOT MNQ ($2/pt). 1 NQ = 10 MNQ in $ terms.
+- Reset cost: $85-91. Not a true loss. Play to pass quickly.
+- 97% WR at 75pt SL → busts are rare; payout when passing = $1,500
 
 **Test modes:**
 - Production: TEST_MODE=False, OR_OFFSET=30 (fires at 13:30 UTC post-DST)
 - Hourly test: TEST_MODE=True, OR_OFFSET=0 (fires at top of current UTC hour), restart service
 
 **Live trades confirmed:**
-- Mar 6: SHORT +$43 on 1 MNQ ✅
-- Mar 9: LONG +$27 on 1 MNQ ✅ (pre-market hourly test)
-
-**⚠️ DST NOTE (Mar 9 2026):** US DST active. NY open = 13:30 UTC (was 14:30). Engine or_hour may need verification before Monday open. Check: does engine use dynamic UTC hour or hardcoded 14?
+- Mar 6: SHORT +$43 on 1 MNQ ✅ (pre-upgrade)
+- Mar 9 05:05 MST: LONG +$27 on 1 MNQ ✅ (pre-market test, subscription was disabled)
+- Mar 9 05:21 MST: LONG fill @ $24,450, stop @ $24,429.75 ✅ (full round-trip confirmed, subscription enabled)
+- **First real NY open: Mar 9 06:30 MST on 1 NQ with 75pt SL**
 
 ## Recent Changes (rolling 48h — update this at session end whenever significant changes happen)
 > This replaces needing to read the daily memory log on startup. Key decisions only.
 
-**Mar 9 2026 (5 AM MST) — ORB ENGINE LIVE:**
-- **nq-orb-signal.service** running, DRY_RUN=False, QUANTITY=1 MNQ, production 9:30 ET
-- **Test trade completed**: LONG @ 24418.75 → exit @ 24432.25 = **+$27 on 1 MNQ** ✅
-- **DST fix applied**: production UTC hour 14→13 (9:30 ET = 13:30 UTC post-DST). Would have fired 1hr late without fix.
-- **Engine**: `NQ-Trading-PIPELINE/pipeline/orb_signal_engine.py`
-- **State**: `data/orb_engine_state.json` | **Log**: `data/orb_engine.log`
-- **Execution**: TradersPost webhook → Tradovate → Lucid Flex 50K `LFE0506429036012` (Auto Submit ON, both sides)
-- **Webhook URL**: `https://webhooks.traderspost.io/trading/webhook/51e37934-7a18-4e37-9dc5-33416a36d579/222ee493f97b98194432f483f0434b95`
-- **Ticker**: `MNQ` (TradersPost auto-resolves front month)
-- **Backtest**: PF 6.416, WR 86.3%, $4,772/mo EV on 4 MNQ (1 Lucid account)
-- **Scale plan**: Run clean at QUANTITY=1 → scale to 4 after 2-3 good Monday runs
+**Mar 9 2026 (5:53 AM MST) — ORB ENGINE UPGRADED FOR FIRST REAL NY OPEN:**
+- **Ticker**: NQ (full-size, $20/pt) — was MNQ ($2/pt)
+- **SL**: 75pt (Suite 5 sweep winner) — was 25pt
+- **Account**: `LFE0506429036015` (Lucid Trading 15)
+- **All tests passed**: subscription enabled, full round-trip confirmed (fill, stop, trail, exit)
+- **DST fix applied**: production UTC hour 14→13 (9:30 ET = 13:30 UTC post-DST)
+- **Engine**: `NQ-Trading-PIPELINE/pipeline/orb_signal_engine.py` | commit `91fb8fb`
+- **Scale plan**: 1 NQ now → 4 NQ after 2-3 clean runs
 - **NY open**: 6:30 AM MST (9:30 AM EDT = 13:30 UTC) — engine fires automatically
-- **ORB**: 5-min (13:30–13:34 UTC) + entry at 13:35 UTC bar close above/below OR High/Low
-- **Two-phase exit**: Phase 1 = 25pt hard stop; Phase 2 = when 2.5pt profit → 1.25pt native trail
 - **NQ L2 Scalping**: separate project at `nq-l2-scalping/`, 8+ strategies on IBKR L2 data
 
 **Mar 6 2026 — ORB ENGINE BUILT (see memory/2026-03-06.md for full session log)**

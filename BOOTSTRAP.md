@@ -20,7 +20,9 @@
 
 **`EXISTING_SESSION_DETECTED_ACTION`** must be `primaryoverride` in docker-compose.yml (already set). Do NOT change back to `primary`.
 
-**What actually broke on Mar 6-8:** daily 11:59 PM auto-restart left gateway in "instance of control is not created yet" loop. Simple `docker compose restart` fixed it in 30s — no 2FA, no force-recreate, no VNC needed.
+**Nightly restart architecture (Mar 8 fix):** IBC's internal `AUTO_RESTART_TIME` was removed — it caused "instance of control is not created yet" stuck states. Replaced with:
+- `ibkr-nightly-restart.timer` — `docker compose restart ib-gateway` at 11:59 PM MST nightly (clean, reliable)
+- `ibkr-gateway-watchdog.timer` — every 5 min, auto-restarts if port 4002 down during Globex hours (skips weekends + maintenance window)
 
 ## ⛔ AUTH FLOWS — NEVER AUTO-RETRY (learned the hard way, Feb 28)
 **Ring, IBKR, any 2FA service:** ONE attempt only. Stop. Wait for Rob to complete 2FA/SMS. Check result. Never loop, never auto-restart, never retry without Rob explicitly saying go. Repeated attempts = account lockouts that last hours. This has happened with Ring (locked for days) and IBKR (locked 1hr today).

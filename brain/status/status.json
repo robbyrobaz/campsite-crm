@@ -1,38 +1,6 @@
 {
-  "lastDispatch": "2026-03-09T05:30:00-07:00",
-  "lastHealthCheck": "2026-03-09T05:30:00-07:00",
-  "activeTasks": [
-    {
-      "id": "c_6c3b23945e0d4_19cd2439228",
-      "title": "[Moonshot v2] Backfill historical data + initialize ML tournament",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 309381
-    },
-    {
-      "id": "c_5c8d08c7a4eb1_19cd2437402",
-      "title": "[Blofin] Diagnose T2 gate_fail + scale paper winners",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 309384
-    },
-    {
-      "id": "c_fa997eec7f3f1_19cd2435bd2",
-      "title": "[NQ] Fix momentum bleed + wire high-PF gate-pass strategies",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 309402
-    }
-  ],
-  "systemHealth": {
-    "cpuTemp": "84.0°C",
-    "diskUsage": "55%",
-    "services": [
-      "openclaw-gateway.service: active",
-      "blofin-stack-ingestor.service: active",
-      "blofin-stack-paper.service: active",
-      "nq-smb-watcher.service: active",
-      "nq-dashboard.service: active"
-    ]
-  }
+  "activeTasks": [],
+  "lastDispatch": "2026-03-09T14:30:00Z",
+  "lastHealthCheck": "2026-03-09T14:30:00Z",
+  "status": "idle"
 }

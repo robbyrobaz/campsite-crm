@@ -8117,3 +8117,18 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 3 committed, 6 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+[main dc830a86] auto: snapshot 2026-03-09T04:00:01Z
+ 6 files changed, 58 insertions(+), 16 deletions(-)
+ create mode 100644 ibgw_screen.png
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main f5d9c52b] auto: snapshot 2026-03-09T04:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 2 committed, 7 skipped
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

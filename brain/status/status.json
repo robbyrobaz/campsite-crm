@@ -1,26 +1,16 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_eaa6d2a8bcf88_19ccdf784e5",
-      "title": "Implement & backtest strategy 016: Orderflow Auction Theory Framework",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "age_mins": 18.3
-    },
-    {
-      "id": "c_1f465c7367489_19ccdf78c0a",
-      "title": "Implement & backtest strategy 017: Simple Order Flow Delta Setups",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "age_mins": 18.3
-    }
-  ],
-  "plannedQueue": [],
-  "queueCapacity": "2/3 In Progress (1 slot available)",
-  "lastDispatch": "2026-03-09T04:30:00Z",
-  "lastHealthCheck": "2026-03-09T04:30:00Z",
-  "healthStatus": "✓ All systems nominal",
-  "alerts": "none"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-09T06:30:00Z",
+  "lastHealthCheck": "2026-03-09T06:30:00Z",
+  "queueStatus": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 3
+  },
+  "systemHealth": {
+    "cpu": "86°C (healthy)",
+    "disk": "54% (236G/468G)",
+    "services": "all active",
+    "alerts": "none"
+  }
 }

@@ -1,6 +1,27 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-09T14:30:00Z",
-  "lastHealthCheck": "2026-03-09T14:30:00Z",
-  "status": "idle"
+  "activeTasks": [
+    {
+      "id": "c_3ee6b07f2d559_19cd31ef214",
+      "title": "[NQ] Wire orderflow_market_structure + auction_theory_framework to live dispatcher",
+      "assignee": "claude",
+      "project": "NQ-Trading-PIPELINE"
+    },
+    {
+      "id": "c_1ccf0344e5db2_19cd31ef247",
+      "title": "[Blofin] Diagnose vwap_reversion T2 gate_fail + retrain with latest data",
+      "assignee": "claude",
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_abf98f13a05a7_19cd31ef266",
+      "title": "[Moonshot] Validate ML scoring + optimize position sizing (91 closed trades)",
+      "assignee": "claude",
+      "project": "blofin-moonshot"
+    }
+  ],
+  "activeCount": 3,
+  "lastDispatch": "2026-03-09T16:30:51Z",
+  "lastHealthCheck": "2026-03-09T16:30:51Z",
+  "cycleNumber": 36,
+  "summary": "Full board dispatched (3/3 slots). NQ+Blofin+Moonshot builders running. No stale cards. All services healthy."
 }

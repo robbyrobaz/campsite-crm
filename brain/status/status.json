@@ -1,17 +1,38 @@
 {
-  "timestamp": "2026-03-10T14:31:05.939745Z",
-  "activeTasks": [
-    {
-      "id": "c_58e58b9eb9fc_19cd824327f",
-      "title": "[NQ Research] High-WR sweep \u2014 tight trails + small TPs across all strategies",
-      "assignee": "codex",
-      "project": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
-    }
+  "timestamp": "2026-03-10T15:01:56.939356+00:00",
+  "activeTasks": [],
+  "inProgressCount": 0,
+  "plannedCount": 3,
+  "lastDispatch": "2026-03-10T15:01:56.939368+00:00",
+  "lastHealthCheck": "2026-03-10T15:01:56.939370+00:00",
+  "lastCardGeneration": "2026-03-10T15:01:56.939371+00:00",
+  "generatedCards": [
+    "NQ: Enable ORB/GAP_FILL in dispatcher + fix cohesion",
+    "Blofin: Analyze H-USDT/vwap_reversion success",
+    "Moonshot: Validate 4h timer + exit logic"
   ],
-  "inProgressCount": 1,
-  "plannedCount": 0,
-  "lastDispatch": "2026-03-10T14:31:05.939807Z",
-  "lastHealthCheck": "2026-03-10T14:31:05.939817Z",
-  "phase7_deployment_verified": true,
-  "phase7_note": "All 3 recently Done cards (ORB-related) verified live on NQ services"
+  "nqGateStatus": {
+    "cohesionPass": false,
+    "cohesionTrades": 1,
+    "cohesionThreshold": 20,
+    "disabledExperts": [
+      "ORB",
+      "GAP_FILL"
+    ],
+    "failingGate": [
+      "equal_tops_bottoms"
+    ]
+  },
+  "blofinState": {
+    "t2Strategies": 4,
+    "t1Strategies": 4,
+    "t0Strategies": 5,
+    "topFtPair": "H-USDT/vwap_reversion (PF 3.83)",
+    "recentPaperPnL": "Positive (CL-USDT +9.3%)"
+  },
+  "moonshot": {
+    "mlScoresNull": "0%",
+    "openPositions": 0,
+    "status": "Healthy"
+  }
 }

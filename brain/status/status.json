@@ -1,13 +1,17 @@
 {
+  "timestamp": "2026-03-10T14:31:05.939745Z",
   "activeTasks": [
-    {"id": "c_0c0ea0a4188f2_19cd76958b3", "title": "[Moonshot v2] Initialize database schema + run first 4h data fetch + train ML model", "assignee": "claude", "pid": 4179934},
-    {"id": "c_d4ba9bc30365b_19cd7695895", "title": "[NQ] Fix momentum degradation + clean up broken strategies (vwap_fade, equal_tops_bottoms)", "assignee": "claude", "pid": 4180058}
+    {
+      "id": "c_58e58b9eb9fc_19cd824327f",
+      "title": "[NQ Research] High-WR sweep \u2014 tight trails + small TPs across all strategies",
+      "assignee": "codex",
+      "project": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
+    }
   ],
-  "lastDispatch": "2026-03-10T05:30:00Z",
-  "lastHealthCheck": "2026-03-10T05:30:00Z",
-  "systemHealth": {
-    "temperature": "76°C",
-    "diskUsage": "63%",
-    "serviceStatus": "all active"
-  }
+  "inProgressCount": 1,
+  "plannedCount": 0,
+  "lastDispatch": "2026-03-10T14:31:05.939807Z",
+  "lastHealthCheck": "2026-03-10T14:31:05.939817Z",
+  "phase7_deployment_verified": true,
+  "phase7_note": "All 3 recently Done cards (ORB-related) verified live on NQ services"
 }

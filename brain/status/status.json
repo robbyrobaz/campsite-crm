@@ -1,6 +1,13 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-10T17:23:00.000000Z",
-  "lastHealthCheck": "2026-03-10T17:23:00.000000Z",
-  "cycleNotes": "Board clear. ETB/ORB fix card completed (all 3 commits verified). ORB feature count mismatch warning (orb_live_v1.pkl trained on 257 features, expected 15) — needs retrain card. All core services active. Numerai model dirs need check."
+  "lastDispatch": "2026-03-10T18:30:00Z",
+  "lastHealthCheck": "2026-03-10T18:30:00Z",
+  "notes": {
+    "inbox": "0 cards",
+    "planned": "0 cards",
+    "in_progress": "0 cards",
+    "kernel_temp": "82°C (normal)",
+    "disk_usage": "75% (115GB free)",
+    "critical_alerts": "none"
+  }
 }

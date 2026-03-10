@@ -1,23 +1,41 @@
 {
-  "lastAutoGenRun": "2026-03-10T19:00:00Z",
-  "lastAutoGenCards": [
-    "c_cae51498dbd83_19cd920891f",
-    "c_345be22e970da_19cd9208949",
-    "c_c94f266fe35f1_19cd9208971"
-  ],
+  "timestamp": "2026-03-10T20:31:04Z",
   "activeTasks": [
-    "ORB live trading (BLEEDING investigation — Mar 10)",
-    "Blofin strategy expansion (vwap_volatility_anchor → T2)",
-    "Moonshot trade analysis (92 closed trades profitability)"
+    {
+      "id": "c_c94f266fe35f1_19cd9208971",
+      "title": "[Moonshot] Analyze first 92 closed trades — profitability patterns",
+      "assignee": "claude"
+    },
+    {
+      "id": "c_6612c9360ce79_19cd92695f1",
+      "title": "BLOFIN: Tune leverage_engine threshold → unlock 5x on APT-USDT cross_asset_correlation",
+      "assignee": "claude"
+    },
+    {
+      "id": "c_bfcc8621227d9_19cd926e1e1",
+      "title": "BLOFIN: Activate rsi_divergence_v1 on FIL-USDT — BT PF=10.78, 0 active FT trades",
+      "assignee": "claude"
+    }
   ],
-  "lastDispatch": "2026-03-10T19:00:00Z",
-  "lastHealthCheck": "2026-03-10T19:00:00Z",
-  "notes": {
-    "inbox": "0 cards",
-    "planned": "3 cards (auto-generated)",
-    "in_progress": "0 cards",
-    "kernel_temp": "82°C (normal)",
-    "disk_usage": "75% (115GB free)",
-    "critical_alerts": "none"
-  }
+  "activeCount": 3,
+  "lastDispatch": "2026-03-10T20:31:04Z",
+  "lastHealthCheck": "2026-03-10T20:31:04Z",
+  "systemStatus": "operational",
+  "recentDispatch": [
+    {
+      "id": "c_bfcc8621227d9_19cd926e1e1",
+      "title": "BLOFIN: Activate rsi_divergence_v1 on FIL-USDT",
+      "pid": 2572677
+    },
+    {
+      "id": "c_6612c9360ce79_19cd92695f1",
+      "title": "BLOFIN: Tune leverage_engine threshold",
+      "pid": 2572679
+    },
+    {
+      "id": "c_c94f266fe35f1_19cd9208971",
+      "title": "[Moonshot] Analyze first 92 closed trades",
+      "pid": 2572688
+    }
+  ]
 }

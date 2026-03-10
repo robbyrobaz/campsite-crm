@@ -24,6 +24,28 @@
 - `ibkr-nightly-restart.timer` — `docker compose restart ib-gateway` at 11:59 PM MST nightly (clean, reliable)
 - `ibkr-gateway-watchdog.timer` — every 5 min, auto-restarts if port 4002 down during Globex hours (skips weekends + maintenance window)
 
+## ⛔ TRADOVATE PROP FIRM API — DOES NOT EXIST (learned the hard way, spent weeks on this)
+
+**Tradovate does NOT provide API access for prop firm (Lucid Flex, FTMO, etc.) accounts. Period.**
+
+This is a platform-level restriction — not a config issue, not a permissions problem. Prop firm accounts at Tradovate are locked to their UI only. No REST API, no websocket, no programmatic fill data.
+
+**Why we use TradersPost:**
+TradersPost is the ONLY way to send automated orders to Tradovate prop accounts. It acts as a webhook middleware. Without it, there is no automated execution path.
+
+**TradersPost limitations:**
+- Webhook push only — no pull API, no trade history endpoint, no fill data retrieval
+- We CANNOT query "what did today's trade actually fill at" via TradersPost
+
+**Consequence — BLE PnL is always an ESTIMATE:**
+Our orb_engine.py detects trail stop hits from 1-min bar closes and fires a market exit webhook. The actual Tradovate fill occurs after the bar closes + webhook latency. On fast moves the fill can be 3-10pt worse than the trail stop price.
+
+Real example (Mar 10 2026): engine computed $1,360 (17pt trail stop). Actual fill = $860 before fees ($846 after). Gap = 6.25pt = $500 on 4 contracts. This is NORMAL for 1-min bar detection + market order.
+
+**Never suggest Tradovate API or direct account query as a solution. It does not work for prop accounts.**
+**Never try to improve PnL accuracy by polling Tradovate — it will never work.**
+BLE PnL shown in dashboard = estimated from trail stop price. Always label as "est." or "~".
+
 ## ⛔ AUTH FLOWS — NEVER AUTO-RETRY (learned the hard way, Feb 28)
 **Ring, IBKR, any 2FA service:** ONE attempt only. Stop. Wait for Rob to complete 2FA/SMS. Check result. Never loop, never auto-restart, never retry without Rob explicitly saying go. Repeated attempts = account lockouts that last hours. This has happened with Ring (locked for days) and IBKR (locked 1hr today).
 

@@ -83,6 +83,19 @@ Entry/exit used different feature sets when a regime-aware model was promoted. E
 - **24/7 means 24/7** — dispatcher must NEVER stop overnight. "Late night" = don't alert Rob, NOT stop dispatching.
 - **Be a COO** — prioritize and execute autonomously between conversations. Don't wait idle.
 
+## BLE Execution Architecture — Prop Firm Constraints (weeks of research, Mar 2026)
+
+### Tradovate prop firm accounts have NO API access
+Platform-level restriction. No REST, no websocket, no fill data. This applies to Lucid Flex, FTMO, and all prop firm accounts at Tradovate. Not fixable, not configurable.
+
+### TradersPost is the only path
+Webhook middleware: our signal → TradersPost → Tradovate prop account. No other automated execution path exists for prop accounts. TradersPost has no pull API — webhook push only. We cannot retrieve trade history programmatically.
+
+### BLE PnL is always estimated — never exact
+Our engine detects trail stop hits from 1-min bar closes and fires a market exit. Actual Tradovate fill happens after bar close + webhook round-trip. On fast moves, fill can be 3-10pt worse than trail stop price. Real observed gap: 6.25pt ($500 on 4 contracts) on Mar 10 2026 trade ($1,360 estimated vs $860 actual).
+
+Dashboard must always label BLE P&L as "~est." — never display it as ground truth.
+
 ## NQ Execution Mode Architecture
 
 ### Mode names

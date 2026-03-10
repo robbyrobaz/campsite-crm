@@ -1,7 +1,8 @@
 {
-  "timestamp": "2026-03-10T01:20:00Z",
-  "activeTasks": [],
-  "lastHealthCheck": "2026-03-10T01:20:00Z",
-  "alerts": ["NQ L2 rebuild: strategies 001/002/003/008 producing 0 signals — params too restrictive or signal logic bug"],
-  "system": {"temp_c": 83.0, "disk_usage_pct": 60, "services": {"all_primary": "active"}}
+  "timestamp": "2026-03-10T02:20:00Z",
+  "activeTasks": [
+    {"id": "c_7ccfc12b4881e_19cd58addc7", "title": "Fix zero-signal strategies 001/002/003/008 + resweep", "project": "nq-l2-scalping"}
+  ],
+  "lastHealthCheck": "2026-03-10T02:20:00Z",
+  "system": {"temp_c": 76.0, "disk_usage_pct": 60, "services": {"all_primary": "active"}}
 }

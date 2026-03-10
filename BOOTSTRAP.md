@@ -163,12 +163,24 @@ PATCH the card: `curl -X PATCH http://127.0.0.1:8787/api/cards/<id> -H 'content-
 | Jarvis Pulse | Every 30min (**Sonnet**) | Health + **enrich vague cards** + dispatch + **verify deployment** of completed work |
 | Oversight | Every 2h (Haiku) | HEARTBEAT.md server checks (basic only — no code) |
 
-## Mode Naming (Canonical)
-- **Backtest** = historical replay/offline validation.
-- **Forward Test (FT-PL)** = live data + paper trades/logging (no broker execution).
-- **BLE (Broker Live Execution)** = real webhook/broker orders.
+## NQ Pipeline Stage Architecture (Canonical — see docs/PIPELINE_STAGES.md)
 
-Default operating mode: **FT-PL ON, BLE OFF**.
+```
+BACKTEST → FORWARD TEST → GOD MODEL → BLE
+```
+
+| Stage | What | Run ID | BLE? |
+|---|---|---|---|
+| Backtest | Offline historical replay | N/A | No |
+| Forward Test | Live data + paper P&L | smb_live_forward_test | No |
+| God Model | FT-proven ensemble, DRY_RUN | god_model_forward_test | No |
+| BLE | Real orders, Rob's explicit choice | N/A | Yes |
+
+**Promotion gates (FT → God Model):** ft_pf >= 1.35, ft_trades >= 50, ft_pnl > 0
+**God Model is NOT BLE.** It is a forward-test ensemble only.
+**BLE = only what Rob explicitly enables.** Currently: 5-min ORB + 15-min ORB.
+**ORB does NOT belong in God Model.** It is BLE-only standalone.
+**Never demote FT early** — wait for 50+ trades before drawing conclusions.
 
 ## ⚠️ CRITICAL: Forward Testing is FREE — Never Demote Early
 

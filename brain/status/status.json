@@ -1,38 +1,14 @@
 {
-  "timestamp": "2026-03-10T15:01:56.939356+00:00",
-  "activeTasks": [],
-  "inProgressCount": 0,
-  "plannedCount": 3,
-  "lastDispatch": "2026-03-10T15:01:56.939368+00:00",
-  "lastHealthCheck": "2026-03-10T15:01:56.939370+00:00",
-  "lastCardGeneration": "2026-03-10T15:01:56.939371+00:00",
-  "generatedCards": [
-    "NQ: Enable ORB/GAP_FILL in dispatcher + fix cohesion",
-    "Blofin: Analyze H-USDT/vwap_reversion success",
-    "Moonshot: Validate 4h timer + exit logic"
+  "activeTasks": [
+    {
+      "id": "c_6f7dda2385af1_19cd8952baa",
+      "title": "[NQ] Fix ETB permanent blacklist + wire tight ORB configs (orb + orb_15min) to FT list",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
+    }
   ],
-  "nqGateStatus": {
-    "cohesionPass": false,
-    "cohesionTrades": 1,
-    "cohesionThreshold": 20,
-    "disabledExperts": [
-      "ORB",
-      "GAP_FILL"
-    ],
-    "failingGate": [
-      "equal_tops_bottoms"
-    ]
-  },
-  "blofinState": {
-    "t2Strategies": 4,
-    "t1Strategies": 4,
-    "t0Strategies": 5,
-    "topFtPair": "H-USDT/vwap_reversion (PF 3.83)",
-    "recentPaperPnL": "Positive (CL-USDT +9.3%)"
-  },
-  "moonshot": {
-    "mlScoresNull": "0%",
-    "openPositions": 0,
-    "status": "Healthy"
-  }
+  "lastDispatch": "2026-03-10T16:31:20.912316Z",
+  "lastHealthCheck": "2026-03-10T16:31:20.912349Z",
+  "cycleNotes": "1 builder (claude) running ETB/ORB fix. 3 recent Done cards verified deployed (NQ Real God Model cleanup, Blofin candle_momentum_burst, Blofin cross_asset_correlation). Blofin dashboard 200 OK. NQ dashboard masked intentional. All critical services active."
 }

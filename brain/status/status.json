@@ -1,14 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_6f7dda2385af1_19cd8952baa",
-      "title": "[NQ] Fix ETB permanent blacklist + wire tight ORB configs (orb + orb_15min) to FT list",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"
-    }
-  ],
-  "lastDispatch": "2026-03-10T16:31:20.912316Z",
-  "lastHealthCheck": "2026-03-10T16:31:20.912349Z",
-  "cycleNotes": "1 builder (claude) running ETB/ORB fix. 3 recent Done cards verified deployed (NQ Real God Model cleanup, Blofin candle_momentum_burst, Blofin cross_asset_correlation). Blofin dashboard 200 OK. NQ dashboard masked intentional. All critical services active."
+  "activeTasks": [],
+  "lastDispatch": "2026-03-10T17:23:00.000000Z",
+  "lastHealthCheck": "2026-03-10T17:23:00.000000Z",
+  "cycleNotes": "Board clear. ETB/ORB fix card completed (all 3 commits verified). ORB feature count mismatch warning (orb_live_v1.pkl trained on 257 features, expected 15) — needs retrain card. All core services active. Numerai model dirs need check."
 }

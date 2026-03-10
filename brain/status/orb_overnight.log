@@ -629,3 +629,7 @@
 [2026-03-10 07:33] Completed:  exit_opt 15min_orb 8am_orb final_report
 [2026-03-10 07:33] In Progress: 1 | Planned ORB: 0
 [2026-03-10 07:33] Morning report sent to ntfy
+[2026-03-10 08:03] ORB overnight check running
+[2026-03-10 08:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 08:03] In Progress: 0 | Planned ORB: 1
+[2026-03-10 08:03] Dispatched c_4c94688924ae6_19cd844a9d7: {"ok":true,"pid":1299542,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_4c94688924ae6_19cd844a9d7.log","cwd":"/home/rob/.openclaw/workspace/blofin-moonshot"}

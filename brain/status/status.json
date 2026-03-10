@@ -1,8 +1,16 @@
 {
-  "timestamp": "2026-03-10T02:42:00Z",
+  "timestamp": "2026-03-10T03:58:00Z",
   "activeTasks": [
-    {"id": "c_7ccfc12b4881e_19cd58addc7", "title": "Fix zero-signal 001/002/003/008 — Sonnet builder running (12min)", "project": "nq-l2-scalping"}
+    {
+      "id": "c_7ccfc12b4881e_19cd58addc7",
+      "title": "NQ L2 fix 001/002/003/008 \u2014 Planned (re-queued, builder had hung)",
+      "status": "Planned"
+    }
   ],
-  "lastHealthCheck": "2026-03-10T02:42:00Z",
-  "system": {"temp_c": 63.0, "disk_usage_pct": 60, "services": {"all_primary": "active"}}
+  "lastHealthCheck": "2026-03-10T03:58:00Z",
+  "system": {
+    "temp_c": 56,
+    "disk_pct": 60,
+    "services": "all_primary_active"
+  }
 }

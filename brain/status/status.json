@@ -1,10 +1,20 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-10T18:30:00Z",
-  "lastHealthCheck": "2026-03-10T18:30:00Z",
+  "lastAutoGenRun": "2026-03-10T19:00:00Z",
+  "lastAutoGenCards": [
+    "c_cae51498dbd83_19cd920891f",
+    "c_345be22e970da_19cd9208949",
+    "c_c94f266fe35f1_19cd9208971"
+  ],
+  "activeTasks": [
+    "ORB live trading (BLEEDING investigation — Mar 10)",
+    "Blofin strategy expansion (vwap_volatility_anchor → T2)",
+    "Moonshot trade analysis (92 closed trades profitability)"
+  ],
+  "lastDispatch": "2026-03-10T19:00:00Z",
+  "lastHealthCheck": "2026-03-10T19:00:00Z",
   "notes": {
     "inbox": "0 cards",
-    "planned": "0 cards",
+    "planned": "3 cards (auto-generated)",
     "in_progress": "0 cards",
     "kernel_temp": "82°C (normal)",
     "disk_usage": "75% (115GB free)",

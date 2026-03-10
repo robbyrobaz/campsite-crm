@@ -1,41 +1,20 @@
 {
-  "timestamp": "2026-03-10T20:31:04Z",
-  "activeTasks": [
-    {
-      "id": "c_c94f266fe35f1_19cd9208971",
-      "title": "[Moonshot] Analyze first 92 closed trades — profitability patterns",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_6612c9360ce79_19cd92695f1",
-      "title": "BLOFIN: Tune leverage_engine threshold → unlock 5x on APT-USDT cross_asset_correlation",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_bfcc8621227d9_19cd926e1e1",
-      "title": "BLOFIN: Activate rsi_divergence_v1 on FIL-USDT — BT PF=10.78, 0 active FT trades",
-      "assignee": "claude"
-    }
-  ],
-  "activeCount": 3,
-  "lastDispatch": "2026-03-10T20:31:04Z",
-  "lastHealthCheck": "2026-03-10T20:31:04Z",
-  "systemStatus": "operational",
-  "recentDispatch": [
-    {
-      "id": "c_bfcc8621227d9_19cd926e1e1",
-      "title": "BLOFIN: Activate rsi_divergence_v1 on FIL-USDT",
-      "pid": 2572677
-    },
-    {
-      "id": "c_6612c9360ce79_19cd92695f1",
-      "title": "BLOFIN: Tune leverage_engine threshold",
-      "pid": 2572679
-    },
-    {
-      "id": "c_c94f266fe35f1_19cd9208971",
-      "title": "[Moonshot] Analyze first 92 closed trades",
-      "pid": 2572688
-    }
-  ]
+  "timestamp": "2026-03-10T22:30:00Z",
+  "dispatchCycle": "03-10 15:30 MST",
+  "health": {
+    "cpu_temp_c": 85,
+    "disk_pct": 77,
+    "critical_services": ["openclaw-gateway", "blofin-stack-ingestor", "blofin-stack-paper", "nq-smb-watcher", "nq-dashboard-v3"],
+    "alerts": ["nq-dashboard-v3 was masked and restarted — now online on port 8895"]
+  },
+  "board": {
+    "done": 976,
+    "stopped": 9,
+    "inProgress": 0,
+    "planned": 0
+  },
+  "activeTasks": [],
+  "lastDispatch": "2026-03-10T22:30:00Z",
+  "lastHealthCheck": "2026-03-10T22:30:00Z",
+  "notes": "Board is empty — no work queued. All critical services healthy. nq-dashboard-v3 service unit was masked (probably from prior debugging). Unmasked and restarted, now responding on port 8895."
 }

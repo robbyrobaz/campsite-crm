@@ -436,3 +436,26 @@ The timer was not active, which would have prevented the 4h training cycle from 
   - c_5f905a10554a4_19cc5d5cc8b: [Moonshot] Add dynamic ml_score decay exit
   - Action: Reset both to Planned, redispatched with fresh PIDs (562238, 562236)
   - Status: All services healthy, dashboards live, deployments verified
+
+---
+
+## 2026-03-10 15:30 MST — nq-dashboard-v3 Service Recovery
+
+**Incident:** `nq-dashboard.service` was reported as inactive in health check. Investigation revealed:
+- Service was masked (explicitly disabled)
+- Unit file `nq-dashboard.service` no longer exists
+- Current unit is `nq-dashboard-v3.service` (newer version)
+- Service was active but process wasn't running
+
+**Root Cause:** Service unit was likely masked during debugging and never unmasked. Naming scheme changed from `nq-dashboard` to versioned units (v2, v3).
+
+**Action:**
+1. Unmask the defunct `nq-dashboard.service` unit (removed from /home/rob/.config/systemd/user/)
+2. Restarted `nq-dashboard-v3.service` 
+3. Verified connectivity: HTTP 200 on port 8895 (NOT 8891 as in older config)
+4. Updated status.json with alert note
+
+**Impact:** Dashboard was briefly unavailable during restart. SMB watcher and trading pipeline unaffected.
+
+**Note for future:** DISPATCHER.md references port 8891, but v3 runs on 8895. Consider updating verification checks.
+

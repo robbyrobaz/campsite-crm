@@ -1,18 +1,46 @@
 {
-  "timestamp": "2026-03-10T00:20:00Z",
-  "activeTasks": [
+  "timestamp": "2026-03-10T00:30:00Z",
+  "activeTasks": [],
+  "recentlyCompleted": [
     {
       "id": "c_36f26e884cec9_19cd4e6900a",
-      "title": "NQ L2 full rebuild — 14 strategies from scratch",
+      "title": "[NQ L2] FULL REBUILD — all 14 strategies from scratch + ML filter",
       "project": "nq-l2-scalping",
-      "note": "Strategies 001-014 rewritten, optimize sweep running"
+      "completedAt": "2026-03-09T23:52:25Z"
+    },
+    {
+      "id": "c_ad4dba752cf0c_19cd4d6103a",
+      "title": "[Blofin] Diagnose paper trading PnL drain",
+      "project": "blofin-stack",
+      "completedAt": "2026-03-09T23:45:01Z"
+    },
+    {
+      "id": "c_8726b91f8a3f5_19cd4d6101a",
+      "title": "[NQ] Investigate momentum strategy live collapse",
+      "project": "NQ-Trading-PIPELINE",
+      "completedAt": "2026-03-09T23:30:00Z"
     }
   ],
-  "lastDispatch": "2026-03-09T23:17:00Z",
-  "lastHealthCheck": "2026-03-10T00:20:00Z",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 3
+  },
+  "lastDispatch": "2026-03-10T00:30:00Z",
+  "lastHealthCheck": "2026-03-10T00:30:00Z",
   "system": {
-    "temp_c": 87.0,
+    "temp_c": 73,
     "disk_usage_pct": 59,
-    "services": {"all_primary": "active"}
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-smb-watcher": "active",
+      "nq-dashboard": "active"
+    },
+    "dashboards": {
+      "blofin": "http://127.0.0.1:8892 (HTTP 200)",
+      "nq": "http://127.0.0.1:8891 (HTTP 200)"
+    }
   }
 }

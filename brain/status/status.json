@@ -1,10 +1,10 @@
 {
-  "timestamp": "2026-03-10T06:56:00Z",
   "activeTasks": [],
-  "lastHealthCheck": "2026-03-10T06:56:00Z",
-  "note": "NQ L2 optimize sweep COMPLETE. Winners: 003 London+NY PF1.09/71t, 013 London+NY PF1.02/365t, 014 London+NY PF1.13/64t",
-  "system": {
-    "temp_c": 76,
-    "disk_pct": 60
+  "lastDispatch": "2026-03-10T08:31:04.122613Z",
+  "lastHealthCheck": "2026-03-10T08:31:04.122631Z",
+  "dispatchSummary": {
+    "cardsDispatched": 5,
+    "inProgress": 0,
+    "planned": 5
   }
 }

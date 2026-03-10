@@ -1,16 +1,22 @@
 {
-  "timestamp": "2026-03-10T03:58:00Z",
   "activeTasks": [
     {
+      "id": "c_ad8210143c87e_19cd5b14d26",
+      "title": "[Blofin] Investigate vwap_reversion T2 gate_fail & zero FT PnL",
+      "assignee": "claude"
+    },
+    {
+      "id": "c_e98ce678361fc_19cd5b14d4b",
+      "title": "[Moonshot] Validate model v31 (AUC 0.844) & set as champion",
+      "assignee": "claude"
+    },
+    {
       "id": "c_7ccfc12b4881e_19cd58addc7",
-      "title": "NQ L2 fix 001/002/003/008 \u2014 Planned (re-queued, builder had hung)",
-      "status": "Planned"
+      "title": "[NQ L2] Fix zero-signal strategies (001/002/003/008) + full resweep",
+      "assignee": "claude"
     }
   ],
-  "lastHealthCheck": "2026-03-10T03:58:00Z",
-  "system": {
-    "temp_c": 56,
-    "disk_pct": 60,
-    "services": "all_primary_active"
-  }
+  "lastDispatch": "2026-03-10T04:30:54Z",
+  "lastHealthCheck": "2026-03-10T04:30:54Z",
+  "dispatchNotes": "3 cards running (NQ L2 fix, Moonshot v31 validation, Blofin vwap investigation). 1 card remaining in Planned queue."
 }

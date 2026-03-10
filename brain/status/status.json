@@ -1,10 +1,18 @@
 {
-  "timestamp": "2026-03-09T23:16:00Z",
+  "timestamp": "2026-03-10T00:20:00Z",
   "activeTasks": [
-    {"title": "[Blofin] Diagnose paper trading PnL drain", "id": "c_ad4dba752cf0c_19cd4d61", "project": "blofin-stack"},
-    {"title": "[NQ] Investigate momentum live collapse", "id": "c_8726b91f8a3f5_19cd4d61", "project": "NQ-Trading-PIPELINE"}
+    {
+      "id": "c_36f26e884cec9_19cd4e6900a",
+      "title": "NQ L2 full rebuild — 14 strategies from scratch",
+      "project": "nq-l2-scalping",
+      "note": "Strategies 001-014 rewritten, optimize sweep running"
+    }
   ],
-  "lastDispatch": "2026-03-09T23:16:00Z",
-  "lastHealthCheck": "2026-03-09T23:16:00Z",
-  "system": {"temp_c": 79.0, "disk_usage_pct": 59, "services": {"all_primary": "active"}}
+  "lastDispatch": "2026-03-09T23:17:00Z",
+  "lastHealthCheck": "2026-03-10T00:20:00Z",
+  "system": {
+    "temp_c": 87.0,
+    "disk_usage_pct": 59,
+    "services": {"all_primary": "active"}
+  }
 }

@@ -1,15 +1,8 @@
 {
+  "timestamp": "2026-03-10T02:42:00Z",
   "activeTasks": [
-    {
-      "id": "c_7ccfc12b4881e_19cd58addc7",
-      "title": "[NQ L2] Fix zero-signal strategies (001/002/003/008) + full resweep",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "status": "In Progress",
-      "updated_at": 1773109551637
-    }
+    {"id": "c_7ccfc12b4881e_19cd58addc7", "title": "Fix zero-signal 001/002/003/008 — Sonnet builder running (12min)", "project": "nq-l2-scalping"}
   ],
-  "lastDispatch": "2026-03-10T02:30:47.447397Z",
-  "lastHealthCheck": "2026-03-10T02:30:47.447435Z",
-  "notes": "Codex\u2192claude migration complete. 0 Planned cards. Health check passed (78\u00b0C, 60% disk). Critical alert check OK."
+  "lastHealthCheck": "2026-03-10T02:42:00Z",
+  "system": {"temp_c": 63.0, "disk_usage_pct": 60, "services": {"all_primary": "active"}}
 }

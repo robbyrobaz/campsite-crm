@@ -1,54 +1,13 @@
 {
   "activeTasks": [
-    "ORB post-scale bleeding diagnosis (card: c_8ab853c5d8552_19cd7695870)",
-    "Momentum degradation fix + strategy cleanup (card: c_d4ba9bc30365b_19cd7695895)",
-    "Moonshot v2 DB init + ML training (card: c_0c0ea0a4188f2_19cd76958b3)"
+    {"id": "c_0c0ea0a4188f2_19cd76958b3", "title": "[Moonshot v2] Initialize database schema + run first 4h data fetch + train ML model", "assignee": "claude", "pid": 4179934},
+    {"id": "c_d4ba9bc30365b_19cd7695895", "title": "[NQ] Fix momentum degradation + clean up broken strategies (vwap_fade, equal_tops_bottoms)", "assignee": "claude", "pid": 4180058}
   ],
-  "lastDispatch": "2026-03-10T11:02:19.457850Z",
-  "lastHealthCheck": "2026-03-10T11:02:19.457882Z",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 3,
-    "done": 0
-  },
-  "notes": "Auto-generator cycle 4:00 AM MST (11:00 UTC, Mar 10 2026). Gate checks passed. 3 cards queued in Planned for dispatcher pickup. ORB bleeding post-scale is CRITICAL.",
-  "cron_findings": {
-    "nq_orb_urgent": {
-      "status": "BLEEDING",
-      "recent_pf": 0.312,
-      "recent_pnl": "-$1,769 in 7 trades",
-      "root_cause": "Unknown \u2014 SL assumption failure at 4 contracts OR market regime change",
-      "action": "Urgent diagnosis card created"
-    },
-    "nq_momentum": {
-      "overall_pf": 1.326,
-      "recent20_pf": 0.873,
-      "status": "DEGRADING",
-      "action": "Investigate time-of-day dependency"
-    },
-    "nq_vwap_fade": {
-      "status": "FAILING",
-      "gate": "fail",
-      "live_pnl": "-$531 in 3 trades, WR 0%",
-      "action": "Remove from dispatcher"
-    },
-    "nq_equal_tops_bottoms": {
-      "status": "ANOMALY",
-      "tier": 3,
-      "gate": "fail",
-      "expected": "tier=1, gate=pass",
-      "action": "Investigate registration"
-    },
-    "blofin_health": {
-      "T2_strategies": 4,
-      "T1_strategies": 4,
-      "T0_strategies": 5,
-      "status": "NORMAL"
-    },
-    "moonshot_v2": {
-      "status": "EMPTY",
-      "db_tables": 0,
-      "action": "Initialize schema + first training"
-    }
+  "lastDispatch": "2026-03-10T05:30:00Z",
+  "lastHealthCheck": "2026-03-10T05:30:00Z",
+  "systemHealth": {
+    "temperature": "76°C",
+    "diskUsage": "63%",
+    "serviceStatus": "all active"
   }
 }

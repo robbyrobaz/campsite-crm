@@ -1,40 +1,58 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_810b635404d3d_19cdc8f5d5a",
-      "title": "[Moonshot] Validate 4h cycle timer and expand entry frequency",
-      "status": "In Progress",
-      "dispatched_at": "2026-03-11T12:31:33.915905Z",
-      "pid": 3624221
-    },
-    {
-      "id": "c_9a2e925d4c3b5_19cdc8f5d32",
-      "title": "[Blofin] Scale high_volume_reversal (top FT performer, 1.21 PF)",
-      "status": "In Progress",
-      "dispatched_at": "2026-03-11T12:31:33.915905Z",
-      "pid": 3624222
-    },
-    {
-      "id": "c_b1278d441f11b_19cdc8f5d02",
-      "title": "[NQ] Wire equal_tops_bottoms (PF 3.02) into live god_model_dispatcher",
-      "status": "In Progress",
-      "dispatched_at": "2026-03-11T12:31:33.915905Z",
-      "pid": 3624225
-    }
-  ],
-  "lastDispatch": "2026-03-11T12:31:33.915905Z",
-  "lastHealthCheck": "2026-03-11T12:31:33.915905Z",
-  "systemHealth": {
-    "cpu_temp_c": 80,
-    "disk_usage_percent": 81,
+  "timestamp": "2026-03-11T14:30:00Z",
+  "activeTasks": [],
+  "inProgressCount": 0,
+  "plannedCount": 0,
+  "lastDispatch": "2026-03-11T14:30:00Z",
+  "lastHealthCheck": "2026-03-11T14:30:00Z",
+  "healthStatus": {
+    "cpuTemp": "87°C (nominal)",
+    "diskUsage": "73% (322G/468G)",
     "services": {
-      "openclaw_gateway": "active",
-      "blofin_ingestor": "active",
-      "blofin_paper": "active",
-      "nq_smb_watcher": "active",
-      "nq_dashboard_v3": "active",
-      "blofin_moonshot": "MISSING"
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-smb-watcher": "active",
+      "nq-dashboard-v3": "active (port 8895)",
+      "blofin-dashboard": "active (port 8892)",
+      "moonshot-v2-dashboard": "active (port 8893)"
+    },
+    "criticalAlerts": "none",
+    "dashboards": {
+      "nq": "HTTP 200 (8895)",
+      "blofin": "HTTP 200 (8892)",
+      "moonshot": "HTTP 200 (8893)"
     }
   },
-  "notes": "3 builders dispatched. Moonshot service missing (masked/uninstalled) \u2014 needs Rob review. NQ dashboard migrated to port 8895 (v3)."
+  "cardMetrics": {
+    "total": 1000,
+    "done": 991,
+    "stopped": 9,
+    "planned": 0,
+    "inProgress": 0
+  },
+  "recentWork": [
+    {
+      "id": "c_e2eb4d196a4ba_19cb7de548d",
+      "title": "[Moonshot] Analyze position outcomes",
+      "status": "Done",
+      "completedAgo": "19.3 min",
+      "verified": true
+    },
+    {
+      "id": "c_8732cd0a8874_19cb8831b04",
+      "title": "[NQ] Debug zscore_vwap_mr forward test",
+      "status": "Done",
+      "completedAgo": "19.3 min",
+      "verified": true
+    },
+    {
+      "id": "c_87939d086b8af_19cb7704379",
+      "title": "[Blofin] Fix orderflow_imbalance T2 gate",
+      "status": "Done",
+      "completedAgo": "19.3 min",
+      "verified": true
+    }
+  ],
+  "notes": "Codex migration complete: 70 cards patched codex→claude. No active work queue. All recent deployments verified live."
 }

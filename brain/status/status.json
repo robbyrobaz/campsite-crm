@@ -1,8 +1,27 @@
 {
-  "dispatchCycle": "2026-03-11T06:30:00Z",
-  "timestamp": "2026-03-11T06:30:00Z",
+  "dispatchCycle": "2026-03-11T07:00:00Z",
+  "timestamp": "2026-03-11T07:00:00Z",
   "activeTasks": [],
-  "plannedQueue": [],
+  "plannedQueue": [
+    {
+      "id": "c_1aa2d2c9b3977_19cdbb39176",
+      "title": "[NQ] Wire equal_tops_bottoms (PF 3.0) into live god_model_dispatcher",
+      "status": "Planned",
+      "priority": "high"
+    },
+    {
+      "id": "c_ffe69f6694783_19cdbb3919f",
+      "title": "[Blofin] Expand top FT pair (high_volume_reversal/JELLYJELLY) to 5+ coins",
+      "status": "Planned",
+      "priority": "medium"
+    },
+    {
+      "id": "c_03bd17cdf251f_19cdbb391c9",
+      "title": "[Moonshot] Enable position auto-entry and validate paper trading lifecycle",
+      "status": "Planned",
+      "priority": "medium"
+    }
+  ],
   "systemStatus": {
     "cpuTemp": 84.0,
     "diskUsage": "78%",
@@ -14,5 +33,25 @@
       "nq-dashboard-v3": "active"
     }
   },
-  "notes": "Board is empty — no active tasks or planned work. Last completions 8+ hours ago."
+  "pipelineStatus": {
+    "nq": {
+      "watcher": "running",
+      "mode": "DRY_RUN",
+      "bars_today": 414,
+      "signals_today": 8,
+      "forward_test_7d": "5 trades (low volume)"
+    },
+    "blofin": {
+      "tier_2_strategies": 5,
+      "recent_pnl_24h": "+1,563% (6 trades)",
+      "gate_status": "all pass"
+    },
+    "moonshot": {
+      "model": "v31 (AUC 0.844)",
+      "ml_score_coverage": "100%",
+      "open_positions": 0,
+      "status": "blocker - no active positions"
+    }
+  },
+  "notes": "Auto Card Generator cycle: 3 cards created (NQ high-priority, Blofin opportunity, Moonshot blocker). Dispatcher will pick up within 30 min."
 }

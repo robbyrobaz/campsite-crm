@@ -1,36 +1,23 @@
 {
-    "timestamp": "2026-03-11T18:30:00Z",
-    "activeTasks": [
-        {
-            "id": "c_859d0e5287e21_19cdd6ba0c8",
-            "title": "[Blofin] Diagnose cross_asset_correlation T2 gate failure",
-            "status": "In Progress",
-            "pid": 1567077,
-            "assignee": "claude",
-            "startedAt": "2026-03-11T18:30:00Z"
-        },
-        {
-            "id": "c_2dd5ca6de06da_19cdd6ba09a",
-            "title": "[NQ] Debug equal_tops_bottoms live bleed",
-            "status": "In Progress",
-            "pid": 1567210,
-            "assignee": "claude",
-            "startedAt": "2026-03-11T18:30:00Z"
-        }
-    ],
-    "plannedCards": 0,
-    "lastDispatch": "2026-03-11T18:30:00Z",
-    "lastHealthCheck": "2026-03-11T18:30:00Z",
-    "systemHealth": {
-        "cpu_temp_c": 82,
-        "disk_usage_pct": 75,
-        "services": {
-            "openclaw_gateway": "active",
-            "blofin_stack_ingestor": "active",
-            "blofin_stack_paper": "active",
-            "nq_smb_watcher": "active",
-            "nq_dashboard": "inactive"
-        }
-    },
-    "notes": "nq-dashboard.service unit not found \u2014 core NQ pipeline (smb-watcher) is active. No critical alerts. Codex\u2192claude conversion completed pre-dispatch."
+  "timestamp": "2026-03-11T20:30:54Z",
+  "activeTasks": [],
+  "lastDispatch": "2026-03-11T20:30:54Z",
+  "lastHealthCheck": "2026-03-11T20:30:54Z",
+  "systemHealth": {
+    "cpu_temp_c": 75,
+    "disk_usage_pct": 76,
+    "services": {
+      "openclaw_gateway": "active",
+      "blofin_stack_ingestor": "active",
+      "blofin_stack_paper": "active",
+      "nq_smb_watcher": "active",
+      "nq_dashboard": "inactive"
+    }
+  },
+  "boards": {
+    "in_progress": 0,
+    "planned": 0,
+    "done_last_24h": 0
+  },
+  "notes": "Clean board. No dispatch — all In Progress and Planned are empty. Services healthy except nq-dashboard (unit not found)."
 }

@@ -359,3 +359,15 @@ BACKTEST → FORWARD TEST → GOD MODEL → BLE
 
 ---
 *Updated: 2026-02-26 23:45 MST*
+
+## ⛔ NQ DATA SOURCES — NEVER COMPARE IBKR TO SMB (learned the hard way, Mar 11)
+
+**IBKR is canonical.** File: `/home/rob/infrastructure/ibkr/data/NQ_ibkr_1min.csv`
+- Format: `YYYY-MM-DDTHH:MM:SSZ` (UTC)
+- This is what ORB engines use
+
+**SMB is fallback only.** File: `processed_data/NQ_continuous_1min.csv`
+- Different OHLC values than IBKR (different feed/aggregation)
+- Never compare SMB to IBKR expecting them to match
+
+If debugging OR values, check IBKR first. See `NQ-Trading-PIPELINE/DATA_SOURCES.md`.

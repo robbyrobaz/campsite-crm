@@ -126,3 +126,17 @@ EXECUTION:  (Future, Rob approves) Signal engine → TradersPost → Tradovate �
 ### Data File
 - `processed_data/NQ_continuous_1min.csv` — 403K+ rows, Jan 2025→present, all UTC
 - Contracts roll quarterly — next roll NQM6 March 13 2026
+
+## NQ Data Source Hierarchy (Mar 11, 2026)
+
+**CANONICAL SOURCE: IBKR**
+- File: `/home/rob/infrastructure/ibkr/data/NQ_ibkr_1min.csv`
+- Format: `YYYY-MM-DDTHH:MM:SSZ` (UTC)
+- ORB engines read this FIRST
+
+**FALLBACK ONLY: SMB/NinjaTrader**
+- File: `processed_data/NQ_continuous_1min.csv`
+- Only for historical backtest or if IBKR unavailable
+- **Values differ from IBKR — never compare them directly**
+
+**Lesson:** The engine uses IBKR. Don't debug by comparing to SMB data.

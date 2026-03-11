@@ -1,29 +1,12 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_29d18be01f506_19cd9fc5781",
-      "title": "[NQ] Investigate God Model dispatcher cohesion failure (1 trade/3 days)",
-      "updated_at": 1773189055868,
-      "project": "NQ-Trading-PIPELINE"
-    },
-    {
-      "id": "c_8b8f103b24adf_19cd9fc5998",
-      "title": "[Blofin] Diagnose why strategy+coin pairs have <20 FT trades",
-      "updated_at": 1773189055809,
-      "project": "blofin-stack"
-    },
-    {
-      "id": "c_7996a3b790d2c_19cd9fc5bb5",
-      "title": "[Moonshot] Validate scoring cycle and design next feature vector",
-      "updated_at": 1773189055716,
-      "project": "blofin-moonshot"
-    }
-  ],
-  "lastDispatch": "2026-03-11T00:31:03Z",
-  "lastHealthCheck": "2026-03-11T00:31:03Z",
-  "dispatchSummary": {
-    "plannedCount": 0,
-    "inProgressCount": 3,
-    "health": "OK"
-  }
+  "activeTasks": [],
+  "lastDispatch": "2026-03-11T02:30:00Z",
+  "lastHealthCheck": "2026-03-11T02:31:00Z",
+  "notes": [
+    "Board empty: 0 In Progress, 0 Planned",
+    "All critical services active (gateway, blofin-ingestor, blofin-paper)",
+    "NQ DB corruption detected and recovered — service rebuilt fresh DB at 19:31",
+    "Blofin services healthy, dashboard responding HTTP 200",
+    "Disk 79% full (347G/468G used)"
+  ]
 }

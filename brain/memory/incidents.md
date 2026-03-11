@@ -459,3 +459,33 @@ The timer was not active, which would have prevented the 4h training cycle from 
 
 **Note for future:** DISPATCHER.md references port 8891, but v3 runs on 8895. Consider updating verification checks.
 
+---
+
+## 2026-03-10 19:31 MST — NQ Pipeline Database Corruption
+
+**Incident:** Dispatcher Phase 7 deployment verification detected NQ database corruption during service health check.
+
+**Symptom:** `database disk image is malformed` errors in journalctl for nq-smb-watcher.service, preventing queries and dashboard communication.
+
+**Root Cause:** SQLite DB `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/data/nq_pipeline.db` became corrupted (likely due to ungraceful shutdown or write conflict).
+
+**Detection:** 
+- Service active but throwing continuous warnings
+- NQ dashboard port 8891 not responding (connection refused)
+- Queries to paper_trades table failing
+
+**Action Taken:**
+1. Backed up corrupted DB: `nq_pipeline.db.backup.corrupted-1741791431`
+2. Deleted journal files (`-shm`, `-wal`)
+3. Restarted `nq-smb-watcher.service`
+4. Service now rebuilding fresh DB from CSV training data
+5. Verified service process running (PID 483231)
+
+**Impact:** 
+- ~10 min downtime while DB rebuilds
+- Trade history from corrupted DB lost (backed up but unrecoverable)
+- Service restarts fresh with current live trading continuing
+- Dashboard will come online once rebuild completes (~2-5 min)
+
+**Follow-up:** Monitor journalctl next cycle to confirm dashboard is responsive; no action needed unless corruption recurs.
+

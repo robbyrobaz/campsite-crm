@@ -1,43 +1,18 @@
 {
-  "lastDispatch": "2026-03-11T04:30:00Z",
-  "lastHealthCheck": "2026-03-11T04:30:00Z",
-  "dispatchCycle": "Jarvis Pulse (every 30min)",
-  "activeTasks": [
-    {
-      "id": "c_560e57e2c6e63_19cdad83e69",
-      "title": "[Moonshot] Validate 4h cycle timer and score generation",
-      "assignee": "claude",
-      "pid": 1489972,
-      "status": "In Progress"
-    },
-    {
-      "id": "c_287571bdf75f2_19cdad83e3a",
-      "title": "[Blofin] Diagnose why paper trading has no recent closes and fix FT cycle",
-      "assignee": "claude",
-      "pid": 1489975,
-      "status": "In Progress"
-    },
-    {
-      "id": "c_8f1806fa0398c_19cdad83e18",
-      "title": "[NQ] Reinitialize forward test database and resume live signals",
-      "assignee": "claude",
-      "pid": 1489978,
-      "status": "In Progress"
-    }
-  ],
-  "systemHealth": {
-    "cpuTemp": "71.0°C",
-    "diskUsage": "77% (/dev/nvme0n1p2)",
+  "dispatchCycle": "2026-03-11T06:30:00Z",
+  "timestamp": "2026-03-11T06:30:00Z",
+  "activeTasks": [],
+  "plannedQueue": [],
+  "systemStatus": {
+    "cpuTemp": 84.0,
+    "diskUsage": "78%",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
       "blofin-stack-paper": "active",
       "nq-smb-watcher": "active",
-      "nq-dashboard": "MISSING (unit not found)"
+      "nq-dashboard-v3": "active"
     }
   },
-  "alerts": [
-    "nq-dashboard.service does not exist — check systemd unit file"
-  ],
-  "nextDispatch": "2026-03-11T05:00:00Z"
+  "notes": "Board is empty — no active tasks or planned work. Last completions 8+ hours ago."
 }

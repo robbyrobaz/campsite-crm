@@ -1,35 +1,36 @@
 {
-  "dispatch_cycle": "2026-03-11T09:30:00Z",
-  "phase": 8,
-  "dispatched_cards": [
-    {
-      "id": "c_08dfa2f145d83_19cdd6c676b",
-      "title": "Download IBKR historical NQ data",
-      "assignee": "claude",
-      "status": "In Progress",
-      "pid": 540466
+    "timestamp": "2026-03-11T18:30:00Z",
+    "activeTasks": [
+        {
+            "id": "c_859d0e5287e21_19cdd6ba0c8",
+            "title": "[Blofin] Diagnose cross_asset_correlation T2 gate failure",
+            "status": "In Progress",
+            "pid": 1567077,
+            "assignee": "claude",
+            "startedAt": "2026-03-11T18:30:00Z"
+        },
+        {
+            "id": "c_2dd5ca6de06da_19cdd6ba09a",
+            "title": "[NQ] Debug equal_tops_bottoms live bleed",
+            "status": "In Progress",
+            "pid": 1567210,
+            "assignee": "claude",
+            "startedAt": "2026-03-11T18:30:00Z"
+        }
+    ],
+    "plannedCards": 0,
+    "lastDispatch": "2026-03-11T18:30:00Z",
+    "lastHealthCheck": "2026-03-11T18:30:00Z",
+    "systemHealth": {
+        "cpu_temp_c": 82,
+        "disk_usage_pct": 75,
+        "services": {
+            "openclaw_gateway": "active",
+            "blofin_stack_ingestor": "active",
+            "blofin_stack_paper": "active",
+            "nq_smb_watcher": "active",
+            "nq_dashboard": "inactive"
+        }
     },
-    {
-      "id": "c_0ac8a1efee0a7_19cdd6c678b",
-      "title": "Compare IBKR vs NinjaTrader data",
-      "assignee": "claude",
-      "status": "In Progress",
-      "pid": 540937
-    },
-    {
-      "id": "c_f5e078bb51d1_19cdd6ba0ef",
-      "title": "Moonshot v31 champion test + debug",
-      "assignee": "claude",
-      "status": "In Progress",
-      "pid": 541706
-    }
-  ],
-  "queued_cards": 2,
-  "health": {
-    "cpu_temp": "76°C",
-    "disk_usage": "74%",
-    "critical_services": "All operational (nq-dashboard-v3 active, others healthy)",
-    "alerts": "nq-postmerge-check failed (hourly check, non-critical)"
-  },
-  "next_dispatch": "When builders complete or at next 30min cycle"
+    "notes": "nq-dashboard.service unit not found \u2014 core NQ pipeline (smb-watcher) is active. No critical alerts. Codex\u2192claude conversion completed pre-dispatch."
 }

@@ -1,58 +1,35 @@
 {
-  "timestamp": "2026-03-11T14:30:00Z",
-  "activeTasks": [],
-  "inProgressCount": 0,
-  "plannedCount": 0,
-  "lastDispatch": "2026-03-11T14:30:00Z",
-  "lastHealthCheck": "2026-03-11T14:30:00Z",
-  "healthStatus": {
-    "cpuTemp": "87°C (nominal)",
-    "diskUsage": "73% (322G/468G)",
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "nq-smb-watcher": "active",
-      "nq-dashboard-v3": "active (port 8895)",
-      "blofin-dashboard": "active (port 8892)",
-      "moonshot-v2-dashboard": "active (port 8893)"
-    },
-    "criticalAlerts": "none",
-    "dashboards": {
-      "nq": "HTTP 200 (8895)",
-      "blofin": "HTTP 200 (8892)",
-      "moonshot": "HTTP 200 (8893)"
-    }
-  },
-  "cardMetrics": {
-    "total": 1000,
-    "done": 991,
-    "stopped": 9,
-    "planned": 0,
-    "inProgress": 0
-  },
-  "recentWork": [
+  "dispatch_cycle": "2026-03-11T09:30:00Z",
+  "phase": 8,
+  "dispatched_cards": [
     {
-      "id": "c_e2eb4d196a4ba_19cb7de548d",
-      "title": "[Moonshot] Analyze position outcomes",
-      "status": "Done",
-      "completedAgo": "19.3 min",
-      "verified": true
+      "id": "c_08dfa2f145d83_19cdd6c676b",
+      "title": "Download IBKR historical NQ data",
+      "assignee": "claude",
+      "status": "In Progress",
+      "pid": 540466
     },
     {
-      "id": "c_8732cd0a8874_19cb8831b04",
-      "title": "[NQ] Debug zscore_vwap_mr forward test",
-      "status": "Done",
-      "completedAgo": "19.3 min",
-      "verified": true
+      "id": "c_0ac8a1efee0a7_19cdd6c678b",
+      "title": "Compare IBKR vs NinjaTrader data",
+      "assignee": "claude",
+      "status": "In Progress",
+      "pid": 540937
     },
     {
-      "id": "c_87939d086b8af_19cb7704379",
-      "title": "[Blofin] Fix orderflow_imbalance T2 gate",
-      "status": "Done",
-      "completedAgo": "19.3 min",
-      "verified": true
+      "id": "c_f5e078bb51d1_19cdd6ba0ef",
+      "title": "Moonshot v31 champion test + debug",
+      "assignee": "claude",
+      "status": "In Progress",
+      "pid": 541706
     }
   ],
-  "notes": "Codex migration complete: 70 cards patched codex→claude. No active work queue. All recent deployments verified live."
+  "queued_cards": 2,
+  "health": {
+    "cpu_temp": "76°C",
+    "disk_usage": "74%",
+    "critical_services": "All operational (nq-dashboard-v3 active, others healthy)",
+    "alerts": "nq-postmerge-check failed (hourly check, non-critical)"
+  },
+  "next_dispatch": "When builders complete or at next 30min cycle"
 }

@@ -499,3 +499,14 @@ The timer was not active, which would have prevented the 4h training cycle from 
 
 **Follow-up:** Monitor journalctl next cycle to confirm dashboard is responsive; no action needed unless corruption recurs.
 
+
+## 2026-03-11 09:30 — Health Check
+
+- CPU: 76°C (normal)
+- Disk: 74% (normal)
+- **nq-dashboard.service** unit name was stale (no longer exists)
+  - Actual active unit: **nq-dashboard-v3.service** ✓ running
+- nq-postmerge-check.service failed (temporary hourly check — low priority)
+- nq-tournament.service in auto-restart (normal, scheduled runner)
+
+**Action:** Phase 1 complete, all critical services operational.

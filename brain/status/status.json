@@ -1,42 +1,40 @@
 {
-  "lastDispatch": "2026-03-11T08:31:42.533781Z",
-  "lastHealthCheck": "2026-03-11T08:31:42.533795Z",
   "activeTasks": [
     {
-      "id": "c_05af58df8b",
-      "title": "[Blofin] Batch leverage scale-up: 5 under-leveraged winners",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "status": "In Progress",
-      "pid": 2564500
+      "id": "c_03bd17cdf251f_19cdbb391c9",
+      "title": "[Moonshot] Enable position auto-entry and validate paper trading lifecycle",
+      "project": "blofin-moonshot",
+      "pid": 2824244,
+      "dispatchedAt": "2026-03-11T10:30:00Z"
     },
     {
-      "id": "c_168754d3af",
-      "title": "[Blofin] Scale JUP-USDT cross_asset_correlation 3x to 5x (copy 1)",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "status": "In Progress",
-      "pid": 2564501
+      "id": "c_ffe69f6694783_19cdbb3919f",
+      "title": "[Blofin] Expand top FT pair (high_volume_reversal/JELLYJELLY) to 5+ coins",
+      "project": "blofin-stack",
+      "pid": 2824247,
+      "dispatchedAt": "2026-03-11T10:30:00Z"
     },
     {
-      "id": "c_7cede1016c",
-      "title": "[Blofin] Scale JUP-USDT cross_asset_correlation 3x \u2192 5x (copy 2)",
-      "assignee": "claude",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-stack",
-      "status": "In Progress",
-      "pid": 2564504
+      "id": "c_1aa2d2c9b3977_19cdbb39176",
+      "title": "[NQ] Wire equal_tops_bottoms (PF 3.0) into live god_model_dispatcher",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 2824252,
+      "dispatchedAt": "2026-03-11T10:30:00Z"
     }
   ],
-  "systemHealth": {
-    "cpu_temp": "62\u00b0C",
-    "disk_usage": "79% (96G free)",
-    "critical_services": {
+  "lastDispatch": "2026-03-11T10:30:00Z",
+  "lastHealthCheck": "2026-03-11T10:30:00Z",
+  "systemStatus": {
+    "cpu_temp": "87°C",
+    "disk_usage": "80%",
+    "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
       "blofin-stack-paper": "active",
-      "nq-smb-watcher": "active"
-    }
-  },
-  "dispatcherMode": "Planned \u2192 In Progress",
-  "plannedRemaining": 3
+      "nq-smb-watcher": "active",
+      "nq-dashboard-v3": "active"
+    },
+    "critical_alerts": false,
+    "incident": "nq-postmerge-check.service failed (temporary, low priority)"
+  }
 }

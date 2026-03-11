@@ -1,5 +1,15 @@
 # Incidents & Resolutions
 
+## Mar 11, 2026 04:30 MST - nq-dashboard.service Missing
+
+**Incident:** Dispatcher health check reported `nq-dashboard.service` does not exist.
+
+**Status:** Non-critical. Service referenced in Phase 1 health check but unit file missing from systemd.
+
+**Action:** Investigate if this service ever existed or if it was removed. Check git history. If intentional removal, update DISPATCHER.md Phase 1 service list.
+
+---
+
 ## Feb 18, 2026 18:00 MST - Dashboard Service Restart
 
 **Incident:** blofin-dashboard.service crashed with exit code 1 (1768 restart attempts). dashboard-health-check.service also failed (missing script).

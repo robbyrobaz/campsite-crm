@@ -1,23 +1,38 @@
 {
-  "timestamp": "2026-03-11T20:30:54Z",
-  "activeTasks": [],
-  "lastDispatch": "2026-03-11T20:30:54Z",
-  "lastHealthCheck": "2026-03-11T20:30:54Z",
+  "lastDispatch": "2026-03-11T22:30:00Z",
+  "lastHealthCheck": "2026-03-11T22:30:00Z",
+  "activeTasks": [
+    {
+      "id": "c_42389a417caca_19cdead3d7a",
+      "title": "[Moonshot] Re-run ALL backtests, redo rankings, use 14-day FT results",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "blofin-moonshot-v2",
+      "startedAt": "2026-03-11T22:27:25Z"
+    },
+    {
+      "id": "c_77dbe90aee9c2_19cdecc22de",
+      "title": "[Church] Textbelt two-way SMS with FastAPI webhook",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "church-volunteer-coordinator",
+      "pid": 3561248,
+      "startedAt": "2026-03-11T22:30:00Z"
+    }
+  ],
+  "concurrentBuilders": 2,
+  "maxConcurrency": 3,
   "systemHealth": {
-    "cpu_temp_c": 75,
-    "disk_usage_pct": 76,
-    "services": {
-      "openclaw_gateway": "active",
-      "blofin_stack_ingestor": "active",
-      "blofin_stack_paper": "active",
-      "nq_smb_watcher": "active",
-      "nq_dashboard": "inactive"
+    "cpuTemp": "79°C",
+    "diskUsage": "76%",
+    "servicesStatus": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-smb-watcher": "active",
+      "nq-dashboard": "active"
     }
   },
-  "boards": {
-    "in_progress": 0,
-    "planned": 0,
-    "done_last_24h": 0
-  },
-  "notes": "Clean board. No dispatch — all In Progress and Planned are empty. Services healthy except nq-dashboard (unit not found)."
+  "criticalAlerts": 0,
+  "notes": "Dispatch cycle complete. nq-dashboard restarted (was inactive). Codex sweep: no codex assignments found in Planned queue. All services healthy."
 }

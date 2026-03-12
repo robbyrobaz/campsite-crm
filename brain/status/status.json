@@ -1,30 +1,13 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_b8094f2fc2721_19ce375c479",
-      "title": "[Moonshot] Validate 4h cycle and expand position coverage",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-12T19:22:06.670766Z"
-    },
-    {
-      "id": "c_2a6020e44d934_19ce375c457",
-      "title": "[Blofin] Evaluate and promote top 5 T0 strategies to T1",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-12T19:22:06.670788Z"
-    },
-    {
-      "id": "c_0588413a4cf93_19ce375c42e",
-      "title": "[NQ] Investigate why all strategies are losing live",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-12T19:22:06.670798Z"
-    }
-  ],
-  "lastDispatch": "2026-03-12T19:22:06.670806Z",
-  "lastHealthCheck": "2026-03-12T19:22:06.670814Z",
+  "activeTasks": [],
+  "lastDispatch": "2026-03-12T20:16:00.000000Z",
+  "lastHealthCheck": "2026-03-12T20:13:00.000000Z",
   "notes": [
-    "3 builders dispatched at 12:21 AM MST",
-    "All cards fully enriched (assignee + project_path + descriptions)",
-    "Kanban was at 0 In Progress when dispatched",
-    "Max 3 concurrent builders \u2014 slots now full"
+    "Phase 7 verification completed on last 5 Done cards",
+    "2 cards moved back to Planned (no work applied despite being marked Done)",
+    "3 cards verified: WAL checkpoint live, CPU runaway fixed, candle_momentum tier=2",
+    "Both Planned cards re-enriched with strict execution rules and verification steps",
+    "Temperature: 88°C (high). Monitor CPU — builder process may be stuck",
+    "Token usage: 96% on 7-day limit (resets 21:00 MST)"
   ]
 }

@@ -585,3 +585,22 @@ Action: Log the failure, monitor on next dispatch cycle.
 3. Blofin services (ingestor, paper, pipeline) will restart once DB is available
 4. Monitor: `systemctl --user is-active blofin-stack-*`
 
+
+## 2026-03-12 12:09 — blofin-stack-paper crash loop
+
+**Incident:** blofin-stack-paper.service was in crash loop with:
+- `sqlite3.OperationalError: no such table: strategy_registry`
+- Then: `sqlite3.OperationalError: no such column: r.gate_status`
+
+**Root Cause:** The strategy_registry table migration script existed but had never been run. The table was referenced by paper_engine.py but didn't exist in the database. Additionally, the table schema was missing the `gate_status` column that the code required.
+
+**Resolution:**
+1. Ran migrate_strategy_registry.py to create table and populate with 68 strategies
+2. Added missing `gate_status` column (DEFAULT='pass') via ALTER TABLE
+3. Restarted blofin-stack-paper.service — service came up cleanly
+
+**Status:** RESOLVED ✓
+- All critical services now active
+- Strategy registry populated with 68 T0 strategies (awaiting tier promotion)
+- Paper engine operational
+

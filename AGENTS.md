@@ -67,14 +67,15 @@ When delegating to Builder subagents:
 - Prefer 1-2 active subagents unless the task genuinely requires parallelism
 - Never spawn subagents in a loop without a termination condition
 
-## Model Routing (Claude-only, updated 2026-03-05)
+## Model Routing (updated 2026-03-12)
 
 | Alias | Model | Use For |
 |-------|-------|---------|
-| `sonnet` | claude-sonnet-4-6 | **Everything.** Main session, all builders, kanban runners, orchestration. |
+| `sonnet` | claude-sonnet-4-6 | Main session only (direct chat with Rob). |
 | `haiku` | claude-haiku-4-5 | Simple cron heartbeats only (oversight check, token audit). NOT for code builders. |
+| `codex` | OpenAI Codex (ChatGPT Plus) | **All builders / kanban runners.** Saves Sonnet quota. assignee=codex on all cards. |
 
-**Opus is BANNED.** All Claude, no OpenAI. Codex BANNED (out of credits, incomplete work).
+**Opus is BANNED.** **Codex is ACTIVE** (re-enabled 2026-03-12 — credits confirmed). Use `assignee=codex` for ALL kanban builder cards. Main session stays Sonnet.
 
 **Use `model=sonnet`** for ALL builder subagents, kanban runners, and main session.
 **Use `model=haiku`** ONLY for the most basic isolated cron jobs (heartbeat, token audit) — never for code generation.

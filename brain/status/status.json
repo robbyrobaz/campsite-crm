@@ -20,7 +20,7 @@
     }
   ],
   "lastDispatch": "2026-03-12T00:30:00Z",
-  "lastHealthCheck": "2026-03-12T00:36:38Z",
+  "lastHealthCheck": "2026-03-12T02:35:43Z",
   "lastChurchSMSPoll": "2026-03-12T01:38:30Z",
-  "notes": "PIPELINE RESTARTED & RUNNING (activating since 17:35, 2.9G/3.0G RAM, singleton lock added). [Blofin diagnosis] COMPLETED: cross_asset_correlation demoted (zombie), vwap_rebound under watch, volatility_mrv stuck (no override). 2 active builders (Moonshot, NQ debug — both >24h old, check if stale). 1 Planned card ready ([NQ] Wire equal_tops_bottoms). Critical alerts: clean. Numerai models: all 3 dirs ✅. Git hygiene: committed. IBKR service inactive (expected post-market)."
+  "notes": "🔴 PIPELINE TIMEOUT RECOVERED: (1) 17:35-19:35 run timed out at 2h limit (stuck in Phase 2.5 parallel re-backtest of Tier1 strategies). (2) Killed zombie ingestor/paper-engine briefly (auto-restarted OK). (3) Increased TimeoutSec 2h → 3h. (4) Removed stale pipeline.lock. (5) Restarted at 19:35:43 with new 3h timeout (eta ~22:35 UTC). Monitoring for completion."
 }

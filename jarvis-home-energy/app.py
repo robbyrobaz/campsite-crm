@@ -3447,17 +3447,17 @@ def ring_page():
 
 # ── RTSP camera frame cache (background ffmpeg threads) ───────────────────────
 _RTSP_CAM_URLS = {
-    "front-side-cam": "rtsp://127.0.0.1:8554/front-side-cam",  # via docker-wyze-bridge
-    "upstairs-cam":   "rtsp://127.0.0.1:8554/upstairs-cam",    # via docker-wyze-bridge
-    "downstairs-cam": "rtsp://127.0.0.1:8554/downstairs-cam",  # via docker-wyze-bridge
+    "front-side-cam": "rtsp://127.0.0.1:8554/front-side-cam",
+    "upstairs-cam":   "rtsp://127.0.0.1:8554/upstairs-cam",
+    "downstairs-cam": "rtsp://127.0.0.1:8554/downstairs-cam",
 }
-_rtsp_frame_cache: dict = {}   # cam_id → latest JPEG bytes
+_rtsp_frame_cache: dict = {}        # cam_id → (jpeg_bytes, captured_at_epoch)
 _rtsp_capture_threads: dict = {}
+FRAME_MAX_AGE_S = 45                # serve 204 if frame older than this
 
 def _rtsp_capture_loop(cam_id: str, rtsp_url: str):
-    """Background thread: keep ffmpeg alive, update frame cache on every keyframe."""
-    import subprocess as _sp
-    import os as _os
+    """Background thread: pull frames from wyze-bridge via ffmpeg, cache latest."""
+    import subprocess as _sp, os as _os
     log.info("RTSP capture thread starting for %s", cam_id)
     while True:
         try:
@@ -3468,20 +3468,17 @@ def _rtsp_capture_loop(cam_id: str, rtsp_url: str):
                 '-vf', 'scale=640:-2',
                 '-f', 'image2pipe',
                 '-vcodec', 'mjpeg',
-                '-q:v', '4',   # quality
-                '-r', '0.2',   # 1 frame/5s — reduces CPU ~90% vs 2fps; plenty for dashboard tiles
+                '-q:v', '5',
+                '-r', '0.5',   # 1 frame every 2s — fresh enough, low CPU
                 'pipe:1',
             ]
-            # bufsize=0: unbuffered so os.read returns as soon as any bytes arrive
             proc = _sp.Popen(cmd, stdout=_sp.PIPE, stderr=_sp.DEVNULL, bufsize=0)
             buf = b''
             while True:
-                # os.read returns as soon as ANY data is available (no blocking until full)
                 chunk = _os.read(proc.stdout.fileno(), 65536)
                 if not chunk:
                     break
                 buf += chunk
-                # Parse JPEG frames by SOI/EOI markers
                 while True:
                     s = buf.find(b'\xff\xd8')
                     if s == -1:
@@ -3490,50 +3487,51 @@ def _rtsp_capture_loop(cam_id: str, rtsp_url: str):
                     e = buf.find(b'\xff\xd9', s + 2)
                     if e == -1:
                         break
-                    _rtsp_frame_cache[cam_id] = buf[s:e + 2]
+                    _rtsp_frame_cache[cam_id] = (buf[s:e + 2], time.time())
                     buf = buf[e + 2:]
             proc.wait()
             log.info("RTSP ffmpeg exited for %s, reconnecting in 3s", cam_id)
         except Exception as exc:
             log.warning("RTSP capture error for %s: %s", cam_id, exc)
-        time.sleep(3)   # brief pause before reconnect
+        time.sleep(3)
 
 def _rtsp_watchdog():
-    """Watchdog thread: every 30s respawn any dead RTSP capture threads."""
+    """Watchdog: respawn dead RTSP capture threads every 30s."""
     while True:
         time.sleep(30)
         for cam_id, rtsp_url in _RTSP_CAM_URLS.items():
             t = _rtsp_capture_threads.get(cam_id)
             if t is None or not t.is_alive():
-                log.warning("RTSP watchdog: thread dead for %s, respawning", cam_id)
+                log.warning("RTSP watchdog: respawning thread for %s", cam_id)
                 nt = threading.Thread(target=_rtsp_capture_loop, args=(cam_id, rtsp_url),
                                       daemon=True, name=f"rtsp-{cam_id}")
                 nt.start()
                 _rtsp_capture_threads[cam_id] = nt
 
 def _start_rtsp_threads():
-    """Start background RTSP capture threads (called once on app startup)."""
     for cam_id, rtsp_url in _RTSP_CAM_URLS.items():
         if cam_id not in _rtsp_capture_threads:
             t = threading.Thread(target=_rtsp_capture_loop, args=(cam_id, rtsp_url),
                                  daemon=True, name=f"rtsp-{cam_id}")
             t.start()
             _rtsp_capture_threads[cam_id] = t
-            log.info("Started RTSP capture thread: %s", cam_id)
-    # Watchdog: respawn dead threads every 30s
     wd = threading.Thread(target=_rtsp_watchdog, daemon=True, name="rtsp-watchdog")
     wd.start()
-    log.info("Started RTSP watchdog thread")
 
 @app.route("/api/camera/<cam_id>/frame")
 def camera_frame(cam_id):
-    """Return the latest cached JPEG frame for an RTSP camera."""
-    frame = _rtsp_frame_cache.get(cam_id)
-    if not frame:
-        return '', 204   # not ready yet — browser will retry
-    resp = Response(frame, mimetype='image/jpeg')
-    resp.headers['Cache-Control'] = 'no-cache, no-store'
-    return resp
+    """Return latest cached JPEG frame — 204 if missing or stale (>45s)."""
+    entry = _rtsp_frame_cache.get(cam_id)
+    if entry:
+        frame_bytes, captured_at = entry
+        if time.time() - captured_at <= FRAME_MAX_AGE_S:
+            resp = Response(frame_bytes, mimetype='image/jpeg')
+            resp.headers['Cache-Control'] = 'no-cache, no-store'
+            return resp
+        else:
+            log.debug("Stale frame for %s (%.0fs old), returning 204", cam_id,
+                      time.time() - captured_at)
+    return '', 204
 
 
 @app.route("/api/nest/setpoint", methods=["POST"])
@@ -9578,7 +9576,9 @@ if __name__ == "__main__":
     t = threading.Thread(target=_poll_loop, daemon=True)
     t.start()
 
-    _start_rtsp_threads()   # start background RTSP frame capture
+    # Wyze camera RTSP frame cache threads (all 3 cams via wyze-bridge)
+    _start_rtsp_threads()
+    log.info("RTSP camera capture threads started for: %s", list(_RTSP_CAM_URLS.keys()))
 
     # Ring doorbell background threads (snapshot + event polling)
     if _ring_token_data:

@@ -1,47 +1,30 @@
 {
-  "cycle": "Jarvis Pulse (Dispatch)",
-  "timestamp": "2026-03-12T19:15:00Z",
-  "time_local": "Thursday, March 12th, 2026 — 12:15 PM MST",
-  "health": {
-    "cpu_temp_c": 85,
-    "disk_usage_pct": 44,
-    "services": {
-      "openclaw_gateway": "active",
-      "blofin_stack_ingestor": "active",
-      "blofin_stack_paper": "active",
-      "nq_smb_watcher": "active"
-    },
-    "critical_alerts": "none"
-  },
-  "board_state": {
-    "inbox": 2,
-    "planned": 0,
-    "in_progress": 0,
-    "review_test": 0,
-    "done": 1031
-  },
-  "dispatch_actions": {
-    "stale_recovered": 0,
-    "cards_enriched": 0,
-    "cards_dispatched": 0,
-    "recent_deployments_verified": 0,
-    "incidents_resolved": 1
-  },
-  "activeTasks": [],
-  "lastDispatch": "2026-03-12T19:15:00Z",
-  "lastHealthCheck": "2026-03-12T19:15:00Z",
-  "incidents_this_cycle": [
+  "activeTasks": [
     {
-      "service": "blofin-stack-paper",
-      "issue": "crash loop (missing strategy_registry table and gate_status column)",
-      "action": "ran migrate_strategy_registry.py, added gate_status column, restarted service",
-      "status": "RESOLVED"
+      "id": "c_b8094f2fc2721_19ce375c479",
+      "title": "[Moonshot] Validate 4h cycle and expand position coverage",
+      "status": "In Progress",
+      "dispatchedAt": "2026-03-12T19:22:06.670766Z"
+    },
+    {
+      "id": "c_2a6020e44d934_19ce375c457",
+      "title": "[Blofin] Evaluate and promote top 5 T0 strategies to T1",
+      "status": "In Progress",
+      "dispatchedAt": "2026-03-12T19:22:06.670788Z"
+    },
+    {
+      "id": "c_0588413a4cf93_19ce375c42e",
+      "title": "[NQ] Investigate why all strategies are losing live",
+      "status": "In Progress",
+      "dispatchedAt": "2026-03-12T19:22:06.670798Z"
     }
   ],
+  "lastDispatch": "2026-03-12T19:22:06.670806Z",
+  "lastHealthCheck": "2026-03-12T19:22:06.670814Z",
   "notes": [
-    "No Planned cards in queue — Inbox has 2 Blofin-related cards (CPU runaway, WAL checkpoint) awaiting Rob's approval",
-    "blofin-stack-paper recovered from crash loop — strategy registry now populated with 68 strategies",
-    "All critical services healthy",
-    "Ready to dispatch when Planned cards are available"
+    "3 builders dispatched at 12:21 AM MST",
+    "All cards fully enriched (assignee + project_path + descriptions)",
+    "Kanban was at 0 In Progress when dispatched",
+    "Max 3 concurrent builders \u2014 slots now full"
   ]
 }

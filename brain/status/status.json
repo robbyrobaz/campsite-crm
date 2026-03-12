@@ -1,13 +1,30 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-12T20:16:00.000000Z",
-  "lastHealthCheck": "2026-03-12T20:13:00.000000Z",
-  "notes": [
-    "Phase 7 verification completed on last 5 Done cards",
-    "2 cards moved back to Planned (no work applied despite being marked Done)",
-    "3 cards verified: WAL checkpoint live, CPU runaway fixed, candle_momentum tier=2",
-    "Both Planned cards re-enriched with strict execution rules and verification steps",
-    "Temperature: 88°C (high). Monitor CPU — builder process may be stuck",
-    "Token usage: 96% on 7-day limit (resets 21:00 MST)"
-  ]
+  "timestamp": "2026-03-12T20:22:00Z",
+  "cycle": "jarvis_pulse_dispatch",
+  "health": {
+    "cpu_temp_c": 86.0,
+    "disk_usage_pct": 44,
+    "critical_alerts": 0,
+    "services_status": {
+      "openclaw_gateway": "active",
+      "blofin_stack_ingestor": "active",
+      "blofin_stack_paper": "activating",
+      "nq_smb_watcher": "active",
+      "nq_dashboard": "inactive"
+    }
+  },
+  "activeTasks": [
+    {
+      "id": "c_e58aba44bbba8_19ce3779097",
+      "title": "[Moonshot] Raise entry threshold to 0.75+ (exclude low-confidence positions)",
+      "status": "In Progress",
+      "pid": 3386723,
+      "assignee": "codex",
+      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot",
+      "dispatched_at": "2026-03-12T20:22:00Z"
+    }
+  ],
+  "lastDispatch": "2026-03-12T20:22:00Z",
+  "lastHealthCheck": "2026-03-12T20:22:00Z",
+  "summary": "PHASE 5 enrichment: 1 Planned card (Moonshot threshold). PHASE 6 dispatch: Dispatched to codex (PID 3386723). Capacity: 1/3. Next cycle: check for completions, potentially dispatch more."
 }

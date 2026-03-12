@@ -1,43 +1,10 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_d2e5cbcfa3618_19ce1b5f04e",
-      "title": "[Blofin] Diagnose why candle_momentum_burst (T2) has no FT data after 20 days",
-      "assignee": "claude",
-      "status": "In Progress",
-      "pid": 2847360,
-      "recovered_from_stale": true
-    },
-    {
-      "id": "c_5dce845b495bb_19ce2917638",
-      "title": "[Moonshot] Validate 4h cycle timer is firing and positions are being exited properly",
-      "assignee": "claude",
-      "status": "In Progress",
-      "pid": 2847367
-    },
-    {
-      "id": "c_c560f5bd4350a_19ce2917506",
-      "title": "[Blofin] Diagnose why candle_momentum_burst (T2) has 0 FT trades across 57 coins",
-      "assignee": "claude",
-      "status": "In Progress",
-      "pid": 2847390
-    },
-    {
-      "id": "c_b50ae43abef7a_19ce2917337",
-      "title": "[NQ] Fix smb_watcher status.json updates and strategy loading visibility",
-      "assignee": "claude",
-      "status": "In Progress",
-      "pid": 2847409
-    }
-  ],
-  "lastDispatch": "2026-03-12T16:18:40.117378+00:00",
-  "lastHealthCheck": "2026-03-12T16:18:40.117378+00:00",
+  "activeTasks": [],
+  "lastDispatch": "2026-03-12T16:26:55.700464+00:00",
+  "lastHealthCheck": "2026-03-12T16:26:55.700476+00:00",
   "notes": [
-    "CRITICAL: Database corruption in blofin_monitor.db (15GB corrupted file)",
-    "Recovery: Restoring from blofin_monitor_OLD.db (107GB copy in progress)",
-    "Stale card recovered: candle_momentum_burst diagnosis (664 min old) \u2192 Planned \u2192 Dispatched",
-    "All 4 Planned cards dispatched to claude builder (assignee confirmed)",
-    "Blofin services inactive pending DB restore completion",
-    "NQ services active and healthy"
+    "4 claude builder cards completed (runner bug: marked Failed but logs show success)",
+    "Fixed to Done status",
+    "Blofin DB restored and services restarted"
   ]
 }

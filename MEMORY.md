@@ -104,8 +104,47 @@ Autonomous SMS system for Hastings Farms 2nd Ward Saturday church cleaning volun
 - URL whitelist pending (can't send links until verified)
 - ~$0.01/SMS
 
+## NQ Dashboard Architecture (Mar 11 2026)
+
+- **app_v3.py = THE ONLY NQ DASHBOARD = port 8895**
+- `app.py` (port 8891) is LEGACY — do not use or modify
+- Service: `nq-dashboard-v3.service`
+- BT baseline comes from `strategies/orb/opus_review/` validated analysis (hardcoded)
+- BLE Accumulated pulls from `live_trades` table
+
+**Recovery lesson:** If dashboard seems missing, check `git reflog` — it shows detached HEAD commits. Never overwrite app_v3.py without checking reflog first.
+
+## IBKR Historical Data (Mar 11 2026)
+
+- **7 months of 1-min NQ data** (202,831 bars, Aug 2025 → Mar 2026)
+- Script: `/home/rob/infrastructure/ibkr/scripts/download_nq_historical_1min.py`
+- Output: `/home/rob/infrastructure/ibkr/data/NQ_ibkr_historical_1min.csv`
+- **Workaround for error 10339:** Can't request continuous contract history — must stitch quarterly contracts (NQU5, NQZ5, NQH6)
+
+### IBKR vs NinjaTrader Differences
+- Avg OR HIGH diff: 8.07 pts
+- Avg OR LOW diff: 11.00 pts
+- Worst case: 193 pts
+- **Conclusion:** NinjaTrader data is NOT reliable for validating IBKR strategies. Always use IBKR data for IBKR-targeted research.
+
+## 15-min ORB Bug (Mar 11 2026)
+
+**Bug:** Engine tracked OR window but state file showed null at entry time.
+
+**Root cause:** `trade_date` was only set on position entry. During OR window it was `None`, so `new_day` check was always True. At entry start, `fresh_state()` wiped `or_high/or_low` before entry check ran.
+
+**Fix:** Set `trade_date` when first capturing OR range, not just on position entry.
+
+## Moonshot v2 Gate Changes (Mar 11 2026)
+
+Per Rob's "FT is FREE" rule, promotion gates lowered:
+- `MIN_BT_PF`: 2.0 → **1.0**
+- `MIN_BT_PRECISION`: 0.40 → **0.20**
+- File: `blofin-moonshot-v2/src/config.py`
+
 ## Lessons Learned
 
+- **Haiku WILL hallucinate** if not forced to call APIs explicitly. Must include step-by-step API call instructions with "WARNING: Do NOT make up data."
 - **Subagents die on heavy data tasks.** Multi-GB parquet loads → run in main session, not builders.
 - **Builders die silently.** Always check sessions_list after spawn.
 - **Claude rate limits are per-minute** (1000 RPM), not per billing window.

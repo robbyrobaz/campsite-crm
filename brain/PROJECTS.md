@@ -146,6 +146,7 @@ Autonomous SMS system for Hastings Farms 2nd Ward Saturday church cleaning.
 - Mar 14: Rob Hartwig
 - Mar 21: Adam Little
 - Mar 28: Rob Hartwig
+- Apr 11: Rob Hartwig
 
 **Pending:** Textbelt URL whitelist approval (links blocked until verified)
 

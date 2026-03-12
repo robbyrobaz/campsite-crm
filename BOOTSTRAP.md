@@ -275,6 +275,19 @@ BACKTEST → FORWARD TEST → GOD MODEL → BLE
 ## Recent Changes (rolling 48h — update this at session end whenever significant changes happen)
 > This replaces needing to read the daily memory log on startup. Key decisions only.
 
+**Mar 11 2026:**
+- **BLE Running Total: 4 trades, $1,276, 100% WR** (Mar 6 +$43, Mar 9 +$27, Mar 10 +$860, Mar 11 +$346)
+- **NQ Dashboard = app_v3.py = port 8895** — app.py (8891) is LEGACY, do not use
+- **15-min ORB bug fixed**: `trade_date` must be set during OR capture, not just position entry (commit 1a07991)
+- **IBKR historical data**: 7 months downloaded (202K bars), quarterly contract stitching workaround for error 10339
+- **Moonshot v2 gates lowered**: MIN_BT_PF 2.0→1.0, MIN_BT_PRECISION 0.40→0.20 (FT is FREE)
+- **Church SMS LIVE**: 3 crons running, NO AI mention (sign as "-- Rob Hartwig"), household grouping for couples
+
+**Mar 10 2026:**
+- **BLE Trade #3**: SHORT @ 24,980.25 → +$860 (4 NQ) — trail config validated
+- **Tradovate $1,500 daily cap** set for eval 50% consistency rule — remove on funded accounts
+- **Trail config REVERTED** to baseline (10tk/5tk) — tight trails (4tk/2tk) get shaken out on chop
+
 **Mar 9 2026 (7:10 AM MST) — ORB SCALED TO 4 NQ (PRODUCTION READY FOR MAR 10):**
 - **First real NY open**: SHORT @ 24,413.25 → exit @ 24,407.50 = **+$95 on 1 NQ** ✅
 - **Scale-up**: QUANTITY 1 → 4 after successful first trade
@@ -344,7 +357,7 @@ BACKTEST → FORWARD TEST → GOD MODEL → BLE
 |-----------|-----|
 | Master | http://192.168.68.72:8890 |
 | BloFin | http://192.168.68.72:8892 |
-| NQ Pipeline | http://192.168.68.72:8891 |
+| NQ Pipeline | http://192.168.68.72:8895 |
 | Home Energy | http://192.168.68.72:8793 |
 | Kanban | http://192.168.68.72:8787 |
 

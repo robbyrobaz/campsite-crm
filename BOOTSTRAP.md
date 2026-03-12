@@ -1,21 +1,40 @@
-## ⛔ NEVER mv DATA FILES — COPY FIRST, VERIFY, THEN DELETE (learned the catastrophically hard way, Mar 12 2026)
+## ⛔⛔⛔ DATA MIGRATION CATASTROPHE — Mar 12 2026 (DO NOT REPEAT)
 
-**`mv` across filesystems = copy+delete with NO safety net. If anything goes wrong mid-transfer, data is gone.**
+**CONTEXT:** blofin_monitor.db hit 107GB + 56GB WAL. Disk crisis required moving data off NVMe to `/mnt/data` (new WD HDD). Migration failed catastrophically.
 
-**The ONLY safe sequence for moving any database or large data file:**
-1. `cp source destination` (or `rsync`) — full copy, wait for completion
-2. Verify: open destination, check size, confirm integrity (`sqlite3 dest .tables`, `md5sum`, etc.)
-3. Only after verification passes: `rm source`
-4. **NEVER background a data move with `&` or `nohup`**
-5. **NEVER `rm` the source until you have personally confirmed the destination is intact**
-6. **NEVER `mv` a live database — stop the service first, cp, verify, then delete**
+**THE FAILURE:**
+1. Attempted to move (not copy) blofin_monitor.db across filesystems using `mv` — **NO SAFETY NET**
+2. Ran in background (`nohup mv ... &`) — **UNMONITORED**
+3. Process hung/died mid-transfer → destination was corrupt
+4. **Deleted the corrupt destination DB without attempting repair** — FATAL
+5. Killed the `mv` process thinking data was "safely deleted" — **IT WASN'T**
+6. **RESULT: 107GB of 3 weeks of Blofin tick data PERMANENTLY LOST** (Aug 2025 - Mar 12 2026, ~18M ticks)
 
-**What happened Mar 12 2026:** 107GB blofin_monitor.db (3 weeks of tick data) was destroyed in 4 cascading failures:
-1. Used `mv` instead of `cp` across filesystems — no safety net
-2. Ran it in background (`nohup &`) without monitoring
-3. Killed the mv process without understanding it held the only copy
-4. Deleted the "malformed" destination DB without attempting repair
-Any ONE of these handled correctly would have saved the data. All 3 weeks of Blofin tick history lost permanently.
+**ROOT CAUSE CHAIN:**
+- `mv` across filesystems = copy+delete. If mid-transfer fail → only one copy exists and it's corrupted
+- Background + unmonitored = no visibility into failure state
+- Killed process = destroyed the only copy
+- No backup, no way to recover
+
+**THE ONLY SAFE SEQUENCE FOR DATA MIGRATIONS:**
+1. **STOP the service that owns the data first.** `systemctl --user stop blofin-stack-ingestor`
+2. **Use `cp` or `rsync`, NEVER `mv`.** `cp -v source destination` — watch it complete
+3. **Verify destination:** `sqlite3 destination .tables`, `ls -lh destination`, `du -sh destination`
+4. **Checksum validation:** `md5sum source destination` — must match exactly
+5. **Only after verification is 100% confirmed: `rm source`** — and keep the terminal open to watch
+6. **Check destination one more time:** `sqlite3 destination "SELECT COUNT(*) FROM ticks;"` — should match source count
+7. **Restart the service.** `systemctl --user start blofin-stack-ingestor`
+
+**WHAT WE LEARNED (burned in permanently):**
+- ❌ NEVER use `mv` for database files (use `cp` then `rm` after verification)
+- ❌ NEVER background a data operation (watch it finish)
+- ❌ NEVER `rm` until you have verified destination is byte-for-byte identical
+- ❌ NEVER assume a corrupt file is "safe to delete" without attempting repair
+- ✅ Stop the service first — live databases can't be safely moved
+- ✅ Use checksums (md5sum) to verify integrity
+- ✅ Keep the migration window visible — no nohup, no &
+
+**The data is gone. It cannot be recovered. Don't let this happen to another system.**
 
 ## ⛔ NQ FUTURES MARKET HOURS — READ THIS BEFORE TOUCHING ANYTHING (learned the hard way, Mar 8)
 

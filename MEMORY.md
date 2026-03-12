@@ -80,7 +80,8 @@ Autonomous SMS system for Hastings Farms 2nd Ward Saturday church cleaning volun
 ### Key decisions
 - Contact order: H→A (reverse alpha, starting from H — Rob did Z→H manually)
 - Sunday dates → always book nearest Saturday BEFORE (not after)
-- All SMS include "- Rob's AI assistant" signature
+- **NO AI mention** — all SMS sign off as `-- Rob Hartwig` only
+- **Household grouping:** singles contacted individually; couples/families with same `householdId` get texted together in one batch
 - 30-day booking window only
 
 ### Spam prevention (after Mar 11 incident)

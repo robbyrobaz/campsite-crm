@@ -567,3 +567,21 @@ Action: Log the failure, monitor on next dispatch cycle.
 - **Dispatched:** 3 builders (Moonshot ML, Blofin vwap, NQ equal_tops)
 - **Queued:** 1 (Blofin Solana, priority=2, next cycle)
 
+
+## 2026-03-12 09:13 — Stale Builder + DB Corruption
+
+**Stale Card:** Blofin candle_momentum_burst diagnosis (c_d2e5cbcfa3618_19ce1b5f04e)
+- 664 minutes (11+ hours) in "In Progress" status
+- Builder likely crashed; recovered to Planned
+
+**Critical DB Corruption:** blofin_monitor.db
+- 15GB corrupted file (sqlite3.DatabaseError: file is not a database)
+- Restored from blofin_monitor_OLD.db (107GB valid copy)
+- Copy in progress at dispatch time
+
+**Recovery Actions:**
+1. ✓ Recovered stale card to Planned
+2. ⏳ DB restore copy running (may take 30-60min, running in background)
+3. Blofin services (ingestor, paper, pipeline) will restart once DB is available
+4. Monitor: `systemctl --user is-active blofin-stack-*`
+

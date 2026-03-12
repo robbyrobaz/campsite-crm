@@ -1,22 +1,36 @@
 {
   "activeTasks": [
     {
-      "id": "c_00fd83c48c92f_19ce1b5effa",
-      "title": "[NQ] Debug equal_tops_bottoms BT/FT gap: -$2,005 live vs PF 3.02 backtest",
-      "assignee": "claude"
+      "id": "c_069e7ff2d486d_19ce264863d",
+      "title": "Research: ORB Retest Strategy Backtest (5-min and 15-min)",
+      "assignee": "claude",
+      "status": "In Progress"
     },
     {
       "id": "c_d2e5cbcfa3618_19ce1b5f04e",
       "title": "[Blofin] Diagnose why candle_momentum_burst (T2) has no FT data after 20 days",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_599b6d1706984_19ce1b5f0a1",
-      "title": "[Moonshot] Validate 4h cycle is running and positions are being exited properly",
-      "assignee": "claude"
+      "assignee": "claude",
+      "status": "In Progress"
     }
   ],
-  "totalInProgress": 3,
-  "lastDispatch": "2026-03-12T12:13:36Z",
-  "lastHealthCheck": "2026-03-12T12:13:36Z"
+  "lastDispatch": "2026-03-12T14:13:00Z",
+  "lastHealthCheck": "2026-03-12T14:13:00Z",
+  "systemHealth": {
+    "cpu_temp": "65.0°C",
+    "disk_usage": "84%",
+    "critical_services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-smb-watcher": "active",
+      "blofin-moonshot-dashboard": "active"
+    },
+    "notes": "nq-dashboard.service not found (removed/renamed). All other critical services healthy."
+  },
+  "boardState": {
+    "inProgress": 2,
+    "planned": 0,
+    "done": 3,
+    "maxConcurrentBuilders": 3
+  }
 }

@@ -7761,15 +7761,15 @@ function renderCameras(cameras) {
 
     let thumbHtml, sourceBadge;
     if (cam.type === 'ring') {
-      const streamUrl = `http://${location.hostname}:1984/stream.html?src=ring_door&ts=${Date.now()}`;
+      const streamUrl = `http://${location.hostname}:1984/stream.html?src=ring_door`;
       thumbHtml = `
-        <iframe id="cam-img-ring_door"
-          src="${streamUrl}"
-          class="camera-thumb"
-          style="border:none;background:#000"
-          allowfullscreen>
-        </iframe>`;
-      sourceBadge = `<span class="badge" style="background:rgba(0,255,128,.15);color:#00ff80;margin-right:6px">WebRTC</span>`;
+        <div id="cam-img-ring_door" class="camera-thumb"
+          style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#111;cursor:pointer;gap:8px"
+          onclick="window.open('${streamUrl}','_blank')">
+          <span style="font-size:2rem">🔔</span>
+          <span style="font-size:11px;color:#aaa">Tap to view live</span>
+        </div>`;
+      sourceBadge = `<span class="badge" style="background:rgba(0,255,128,.15);color:#00ff80;margin-right:6px">On-demand</span>`;
     } else if (rtspId) {
       // RTSP — poll /frame every 500ms (single JPEG per request, no multipart needed)
       thumbHtml = `<img id="cam-img-${mac}" class="camera-thumb"

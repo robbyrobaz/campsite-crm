@@ -1,3 +1,22 @@
+## ⛔ NEVER mv DATA FILES — COPY FIRST, VERIFY, THEN DELETE (learned the catastrophically hard way, Mar 12 2026)
+
+**`mv` across filesystems = copy+delete with NO safety net. If anything goes wrong mid-transfer, data is gone.**
+
+**The ONLY safe sequence for moving any database or large data file:**
+1. `cp source destination` (or `rsync`) — full copy, wait for completion
+2. Verify: open destination, check size, confirm integrity (`sqlite3 dest .tables`, `md5sum`, etc.)
+3. Only after verification passes: `rm source`
+4. **NEVER background a data move with `&` or `nohup`**
+5. **NEVER `rm` the source until you have personally confirmed the destination is intact**
+6. **NEVER `mv` a live database — stop the service first, cp, verify, then delete**
+
+**What happened Mar 12 2026:** 107GB blofin_monitor.db (3 weeks of tick data) was destroyed in 4 cascading failures:
+1. Used `mv` instead of `cp` across filesystems — no safety net
+2. Ran it in background (`nohup &`) without monitoring
+3. Killed the mv process without understanding it held the only copy
+4. Deleted the "malformed" destination DB without attempting repair
+Any ONE of these handled correctly would have saved the data. All 3 weeks of Blofin tick history lost permanently.
+
 ## ⛔ NQ FUTURES MARKET HOURS — READ THIS BEFORE TOUCHING ANYTHING (learned the hard way, Mar 8)
 
 **NQ Futures (CME Globex) is CLOSED Friday ~3:15 PM CT → Sunday 5:00 PM CT. Every single week.**

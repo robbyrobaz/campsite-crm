@@ -1,38 +1,25 @@
 {
-  "lastDispatch": "2026-03-11T22:30:00Z",
-  "lastHealthCheck": "2026-03-11T22:30:00Z",
   "activeTasks": [
     {
-      "id": "c_42389a417caca_19cdead3d7a",
-      "title": "[Moonshot] Re-run ALL backtests, redo rankings, use 14-day FT results",
+      "id": "c_8dedb35b237af_19cdf228f92",
+      "title": "[Moonshot] Expand open positions: analyze high-scoring coins and entry timing",
       "status": "In Progress",
       "assignee": "claude",
-      "project": "blofin-moonshot-v2",
-      "startedAt": "2026-03-11T22:27:25Z"
+      "project": "blofin-moonshot",
+      "pid": 375839,
+      "startedAt": "2026-03-11T21:00:00Z"
     },
     {
-      "id": "c_77dbe90aee9c2_19cdecc22de",
-      "title": "[Church] Textbelt two-way SMS with FastAPI webhook",
+      "id": "c_54b2131ce1e4d_19cdf228f38",
+      "title": "[NQ] Debug equal_tops_bottoms live signal quality",
       "status": "In Progress",
       "assignee": "claude",
-      "project": "church-volunteer-coordinator",
-      "pid": 3561248,
-      "startedAt": "2026-03-11T22:30:00Z"
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 376404,
+      "startedAt": "2026-03-10T22:00:00Z"
     }
   ],
-  "concurrentBuilders": 2,
-  "maxConcurrency": 3,
-  "systemHealth": {
-    "cpuTemp": "79°C",
-    "diskUsage": "76%",
-    "servicesStatus": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "nq-smb-watcher": "active",
-      "nq-dashboard": "active"
-    }
-  },
-  "criticalAlerts": 0,
-  "notes": "Dispatch cycle complete. nq-dashboard restarted (was inactive). Codex sweep: no codex assignments found in Planned queue. All services healthy."
+  "lastDispatch": "2026-03-12T00:30:00Z",
+  "lastHealthCheck": "2026-03-12T00:36:38Z",
+  "notes": "PIPELINE RESTARTED & RUNNING (activating since 17:35, 2.9G/3.0G RAM, singleton lock added). [Blofin diagnosis] COMPLETED: cross_asset_correlation demoted (zombie), vwap_rebound under watch, volatility_mrv stuck (no override). 2 active builders (Moonshot, NQ debug — both >24h old, check if stale). 1 Planned card ready ([NQ] Wire equal_tops_bottoms). Critical alerts: clean. Numerai models: all 3 dirs ✅. Git hygiene: committed. IBKR service inactive (expected post-market)."
 }

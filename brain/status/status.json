@@ -1,10 +1,11 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-12T16:26:55.700464+00:00",
-  "lastHealthCheck": "2026-03-12T16:26:55.700476+00:00",
+  "lastDispatch": "2026-03-12T17:00:00.000000+00:00",
+  "lastHealthCheck": "2026-03-12T17:00:00.000000+00:00",
   "notes": [
-    "4 claude builder cards completed (runner bug: marked Failed but logs show success)",
-    "Fixed to Done status",
-    "Blofin DB restored and services restarted"
+    "ALL models switched to Haiku (kanban runner + crons + builders)",
+    "Mar 12 data loss incident documented in BOOTSTRAP.md with detailed failure analysis",
+    "Disk crisis: DB clone still in progress (130+ min), moved to /mnt/data planned",
+    "ORB trades: 4 live trades $1,966 total, Lucid consistency rule: 60.49% (need ~$682 more)"
   ]
 }

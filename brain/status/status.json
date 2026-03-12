@@ -1,7 +1,47 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-12T03:44:00Z",
-  "lastHealthCheck": "2026-03-12T03:44:00Z",
-  "notes": "Blofin ingestor fixed (WS ping tuning, memory, div/0). Camera live frames wired. Both services restarted and verified.",
-  "dispatcherVersion": "3.0.0"
+  "timestamp": "2026-03-12T04:13:00Z",
+  "dispatchCycle": "Jarvis Pulse #36f47279",
+  "healthCheck": {
+    "cpu": "92.0°C (hot, stable)",
+    "disk": "79% (98GB available)",
+    "services": "4/5 critical active (nq-dashboard-v3 active, nq-postmerge-check failed but temporary)"
+  },
+  "boardState": {
+    "inProgress": 0,
+    "planned": 3,
+    "done": 237
+  },
+  "dispatchSummary": {
+    "codexSweep": "✓ All 3 Planned cards already assignee='claude'",
+    "phase5Enrichment": "✓ All 3 cards fully enriched",
+    "dispatch": "✓ 3 cards dispatched (PIDs: 1630324, 1630335, 1630348)",
+    "phase7Verification": "✓ No recent Done cards to verify (last completions 2-3 weeks old)"
+  },
+  "activeCards": [
+    {
+      "id": "c_62b565256258c_19ce015571f",
+      "title": "[Moonshot] Analyze closed trades and tune entry/exit parameters",
+      "status": "In Progress",
+      "pid": 1630324,
+      "startedAt": "2026-03-12T04:13:12Z"
+    },
+    {
+      "id": "c_8cd1911467c_19ce01556f6",
+      "title": "[Blofin] Expand top FT performer to additional coin pairs",
+      "status": "In Progress",
+      "pid": 1630335,
+      "startedAt": "2026-03-12T04:13:23Z"
+    },
+    {
+      "id": "c_9fe172cd85607_19ce01556ab",
+      "title": "[NQ] Fix equal_tops_bottoms signal generation (FT -$2005 vs BT_PF 3.02)",
+      "status": "In Progress",
+      "pid": 1630348,
+      "startedAt": "2026-03-12T04:13:34Z"
+    }
+  ],
+  "lastDispatch": "2026-03-12T04:13:00Z",
+  "lastHealthCheck": "2026-03-12T04:13:00Z",
+  "nextDispatch": "2026-03-12T04:43:00Z (30min)",
+  "notes": "All 3 builders running. CPU hot but stable. All critical services active. Board moving smoothly."
 }

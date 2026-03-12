@@ -1,43 +1,22 @@
 {
   "activeTasks": [
     {
-      "id": "c_35c9e2507a94f_19ce0dfa7db",
-      "title": "Blofin: Expand momentum strategy to Solana-ecosystem perps (JTO-USDT is +42% FT return)",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project": "blofin-stack",
-      "pid": 2265548,
-      "dispatchedAt": "2026-03-12T10:13:48Z"
-    }
-  ],
-  "lastDispatch": "2026-03-12T10:13:48Z",
-  "lastAutoCardGen": "2026-03-12T11:00:00Z",
-  "autoCardGenCreated": [
-    {
       "id": "c_00fd83c48c92f_19ce1b5effa",
-      "title": "[NQ] Debug equal_tops_bottoms BT/FT gap",
-      "priority": "CRITICAL",
-      "status": "Planned"
+      "title": "[NQ] Debug equal_tops_bottoms BT/FT gap: -$2,005 live vs PF 3.02 backtest",
+      "assignee": "claude"
     },
     {
       "id": "c_d2e5cbcfa3618_19ce1b5f04e",
-      "title": "[Blofin] Diagnose candle_momentum_burst FT orphan",
-      "priority": "HIGH",
-      "status": "Planned"
+      "title": "[Blofin] Diagnose why candle_momentum_burst (T2) has no FT data after 20 days",
+      "assignee": "claude"
     },
     {
       "id": "c_599b6d1706984_19ce1b5f0a1",
-      "title": "[Moonshot] Validate 4h cycle",
-      "priority": "MEDIUM",
-      "status": "Planned"
+      "title": "[Moonshot] Validate 4h cycle is running and positions are being exited properly",
+      "assignee": "claude"
     }
   ],
-  "lastHealthCheck": "2026-03-12T10:13:48Z",
-  "healthStatus": {
-    "cpu": "51°C (OK)",
-    "disk": "79% (OK)",
-    "services": "all critical services active",
-    "criticalAlerts": "NONE"
-  },
-  "notes": "AUTO CARD GEN: 3 cards created (Planned). NQ: equal_tops_bottoms catastrophic FT bleed (-$2,005). Blofin: candle_momentum_burst stuck at T2 with no FT data. Moonshot: v31 champion ready, validating cycle."
+  "totalInProgress": 3,
+  "lastDispatch": "2026-03-12T12:13:36Z",
+  "lastHealthCheck": "2026-03-12T12:13:36Z"
 }

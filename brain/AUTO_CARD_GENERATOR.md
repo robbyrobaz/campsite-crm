@@ -386,9 +386,11 @@ EOF
 
 ---
 
-## STEP 5 — CREATE CARDS (leave in Planned for dispatcher)
+## STEP 5 — CREATE CARDS (MUST be in Planned, NEVER Inbox)
 
-Create **1 NQ card + 1 Blofin v1 card + 1 Moonshot card**. Leave them in **Planned** — the Jarvis Pulse dispatcher picks them up every 30 minutes.
+Create **1 NQ card + 1 Blofin v1 card + 1 Moonshot card**. Create them **DIRECTLY in Planned status** — the Jarvis Pulse dispatcher picks them up every 30 minutes.
+
+⚠️ **CRITICAL:** `"status": "Planned"` is REQUIRED. Cards that end up in Inbox will NOT be dispatched. Nobody moves cards from Inbox to Planned.
 
 ```bash
 # Create directly in Planned (no intermediate Inbox step)
@@ -402,6 +404,9 @@ CARD=$(curl -s -X POST http://127.0.0.1:8787/api/cards \
     "description": "FULL DESCRIPTION with file paths, DB queries for context, what to build, success criteria, deploy steps, constraints"
   }')
 CARD_ID=$(echo "$CARD" | python3 -c "import sys,json; print(json.load(sys.stdin)['id'])")
+
+# Verify card is in Planned (NOT Inbox)
+curl -s http://127.0.0.1:8787/api/cards/$CARD_ID | python3 -c "import sys,json; card=json.load(sys.stdin); print(f'✓ {card[\"title\"][:40]} | Status: {card[\"status\"]}')" || echo "ERROR: Card creation failed"
 
 # STOP HERE. Do NOT call /run. Dispatcher handles it.
 echo "Card $CARD_ID created in Planned. Dispatcher will pick up within 30min."

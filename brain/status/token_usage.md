@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-03-12 16:00 MST
+**Updated:** 2026-03-12 16:15 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -9,26 +9,26 @@
 | 7-day (Sonnet) | **92.0%** | Mar 12 09:00 PM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 42.1M (590 requests)
-- **Input:** 5.8K | **Output:** 167.3K
-- **Cache Read:** 38.5M | **Cache Write:** 3.5M
-- **Cost (est):** $9.02
+- **Total Tokens:** 41.5M (571 requests)
+- **Input:** 5.7K | **Output:** 162.0K
+- **Cache Read:** 37.9M | **Cache Write:** 3.4M
+- **Cost (est):** $8.91
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| haiku | 589 | 42.1M | 167.3K | $9.02 |
+| haiku | 570 | 41.5M | 162.0K | $8.91 |
 | gateway-injected | 1 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 45.4M (658 requests)
-- **Output Tokens:** 198.7K
-- **Cost (est):** $10.14
+- **Total Tokens:** 44.7M (639 requests)
+- **Output Tokens:** 193.3K
+- **Cost (est):** $10.03
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| haiku | 637 | 44.8M | 186.6K | $9.65 |
+| haiku | 618 | 44.1M | 181.3K | $9.54 |
 | sonnet | 20 | 602.6K | 12.1K | $0.49 |
 | gateway-injected | 1 | 0 | 0 | $0.00 |
 

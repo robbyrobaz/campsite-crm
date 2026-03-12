@@ -144,6 +144,23 @@ Per Rob's "FT is FREE" rule, promotion gates lowered:
 
 ## Lessons Learned
 
+### ⛔ CRITICAL: Always READ the source first, never GUESS (Mar 12 2026)
+**What happened:** Rob asked why the dispatcher wasn't dispatching cards. I guessed they were in Inbox without checking. Then read the file and saw they were already in Planned. Then got defensive instead of admitting the guess was wrong.
+
+**The lesson:** 
+1. **Always read the actual file/code/DB first** before making any claim about what's happening
+2. **Never guess or assume** — check the reality
+3. **When wrong, say it directly** — "I was wrong, I guessed without checking" — don't deflect or be evasive
+4. The actual answer was correct: dispatcher ran at 12:13, cards were created after 12:13 by Auto Card Generator, next dispatch at ~12:43 would have picked them up. That's normal and working as designed.
+
+**How to avoid:** Before answering "why didn't X happen," always:
+- Read the relevant source code/instructions
+- Check the actual state (curl APIs, logs, DB queries)
+- Trace the timeline of events
+- Only then answer
+
+Don't make up explanations. It's annoying and wastes time.
+
 - **Haiku WILL hallucinate** if not forced to call APIs explicitly. Must include step-by-step API call instructions with "WARNING: Do NOT make up data."
 - **Subagents die on heavy data tasks.** Multi-GB parquet loads → run in main session, not builders.
 - **Builders die silently.** Always check sessions_list after spawn.

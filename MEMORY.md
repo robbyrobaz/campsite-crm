@@ -61,6 +61,48 @@ Persistent engine finding big moves (±30%) on any of 343 Blofin USDT pairs.
 ### Why v1 died
 Entry/exit used different feature sets when a regime-aware model was promoted. Exit called predict_proba() without symbol/ts_ms → regime features defaulted to 0.0 → all scores 0.129 → 15 profitable positions killed. v2 prevents this with feature_version hashing.
 
+## Church Volunteer Coordinator (Mar 11 2026)
+
+### What is it
+Autonomous SMS system for Hastings Farms 2nd Ward Saturday church cleaning volunteers.
+- **Repo:** https://github.com/robbyrobaz/church-volunteer-coordinator
+- **Live:** https://church-volunteer-coordinator.vercel.app
+- **Password:** `hastings2nd`
+
+### Architecture
+- **Textbelt** for SMS (switched from Twilio — no A2P registration needed)
+- **Vercel** hosting with Upstash Redis for volunteer data
+- **3 OpenClaw crons** (all Haiku, isolated sessions):
+  - SMS Poll (every 2 min): zero tokens when idle, wakes AI only if unprocessed > 0
+  - Daily Recruitment (10am): texts 2-3 people H→A order
+  - Friday Reminder (Fri 10am): reminds Saturday volunteers
+
+### Key decisions
+- Contact order: H→A (reverse alpha, starting from H — Rob did Z→H manually)
+- Sunday dates → always book nearest Saturday BEFORE (not after)
+- All SMS include "- Rob's AI assistant" signature
+- 30-day booking window only
+
+### Spam prevention (after Mar 11 incident)
+- Cache-busting headers on poll API (Vercel edge caching was causing stale reads)
+- 5-minute per-phone duplicate protection
+- Phone normalization: strip leading 1 (`14802323922` → `4802323922`)
+
+### API quirks
+- DELETE /api/signup to cancel (not PATCH)
+- Outbound logging via POST /api/sms/outbound
+- Poll returns `Cache-Control: no-store`
+
+### Cron IDs
+- SMS Poll: `12fd710c-e6ea-4ef0-970a-7bd0fd155ff2`
+- Daily Recruitment: `46a5aa19-63c7-471d-bfe2-ed510eb409e2`
+- Friday Reminder: `1debcdf0-b262-4113-8bd9-7b884900d879`
+
+### Textbelt
+- API key in TOOLS.md
+- URL whitelist pending (can't send links until verified)
+- ~$0.01/SMS
+
 ## Lessons Learned
 
 - **Subagents die on heavy data tasks.** Multi-GB parquet loads → run in main session, not builders.

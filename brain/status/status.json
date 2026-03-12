@@ -1,26 +1,14 @@
 {
   "activeTasks": [
     {
-      "id": "c_8dedb35b237af_19cdf228f92",
-      "title": "[Moonshot] Expand open positions: analyze high-scoring coins and entry timing",
-      "status": "In Progress",
+      "id": "c_ad196531f4192_19cdf21aa76",
+      "title": "[NQ] Wire equal_tops_bottoms into live forward test",
       "assignee": "claude",
-      "project": "blofin-moonshot",
-      "pid": 375839,
-      "startedAt": "2026-03-11T21:00:00Z"
-    },
-    {
-      "id": "c_54b2131ce1e4d_19cdf228f38",
-      "title": "[NQ] Debug equal_tops_bottoms live signal quality",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project": "NQ-Trading-PIPELINE",
-      "pid": 376404,
-      "startedAt": "2026-03-10T22:00:00Z"
+      "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+      "created_at": 1773270051445
     }
   ],
-  "lastDispatch": "2026-03-12T00:30:00Z",
-  "lastHealthCheck": "2026-03-12T02:35:43Z",
-  "lastChurchSMSPoll": "2026-03-12T01:38:30Z",
-  "notes": "🔴 PIPELINE TIMEOUT RECOVERED: (1) 17:35-19:35 run timed out at 2h limit (stuck in Phase 2.5 parallel re-backtest of Tier1 strategies). (2) Killed zombie ingestor/paper-engine briefly (auto-restarted OK). (3) Increased TimeoutSec 2h → 3h. (4) Removed stale pipeline.lock. (5) Restarted at 19:35:43 with new 3h timeout (eta ~22:35 UTC). Monitoring for completion."
+  "lastDispatch": "2026-03-12T03:25:40.901806+00:00",
+  "lastHealthCheck": "2026-03-12T03:25:40.901806+00:00",
+  "dispatcherVersion": "3.0.0"
 }

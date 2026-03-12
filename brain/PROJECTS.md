@@ -132,13 +132,32 @@
 
 ## 🟡 SECONDARY (active but not primary focus)
 
-### 3. Jarvis Home Energy Dashboard
+### 3. Church Volunteer Coordinator ⭐ NEW
+**Repo:** `church-volunteer-coordinator/` | **Path:** `/home/rob/.openclaw/workspace/church-volunteer-coordinator/`
+**Live:** https://church-volunteer-coordinator.vercel.app | **Password:** `hastings2nd`
+**Status:** LIVE — 3 crons running, fully automated
+
+Autonomous SMS system for Hastings Farms 2nd Ward Saturday church cleaning.
+- **SMS Provider:** Textbelt (switched from Twilio — simpler, no A2P registration)
+- **Crons:** SMS Poll (2min), Daily Recruitment (10am), Friday Reminder (Fri 10am)
+- **Volunteers:** 175 total, 106 contacted (Z→H by Rob), 67 remaining for automation (H→A)
+
+**Current Calendar:**
+- Mar 14: Rob Hartwig
+- Mar 21: Adam Little
+- Mar 28: Rob Hartwig
+
+**Pending:** Textbelt URL whitelist approval (links blocked until verified)
+
+---
+
+### 4. Jarvis Home Energy Dashboard
 **Repo:** `jarvis-home-energy/` | **Port:** 8793
 **Status:** Live. Nest/SPAN/Tesla/Wyze/GE appliances integrated.
 **Known issue:** Washer showing "disconnected" despite GE API showing ONLINE — investigation mid-stream (GE services all stale: lastSyncTime 17 days old)
 **Blocked:** Ring integration (2FA lockout — complete interactively when lockout clears)
 
-### 4. Numerai Tournament
+### 5. Numerai Tournament
 **Models:** robbyrobml, robbyrob2, robbyrob3 (submitting daily)
 **Status:** Stable. Era-boosting promising but full retrain pending.
 **Not a primary focus right now.**

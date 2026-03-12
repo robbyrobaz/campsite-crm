@@ -498,32 +498,6 @@ def _ring_event_poller():
     # This is integrated into the main 5s loop but only executes every 3 iterations
     history_counter = [0]
 
-def _ring_health_poller():
-    """Background thread: fetch ring device health every 30 min for battery/status."""
-    import asyncio
-    time.sleep(10)  # wait for app to fully start
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-    while True:
-        if _ring_token_data:
-            try:
-                ring = loop.run_until_complete(_ring_build(update=True))
-                devices = list(ring.video_devices())
-                if devices:
-                    dev = devices[0]
-                    attrs = getattr(dev, '_attrs', {})
-                    health = attrs.get('health', {})
-                    battery = health.get('battery_percentage', None)
-                    if battery is not None:
-                        with _ring_status_lock:
-                            _ring_status['battery'] = battery
-                            _ring_status['last_updated'] = datetime.now().isoformat()
-                        log.info("Ring health poll: battery=%s%%", battery)
-            except Exception as e:
-                log.warning("Ring health poll error: %s", e)
-        time.sleep(1800)  # 30 min
-
-
 def _get_wyze_client(force_refresh=False):
     """Return a cached Wyze Client, creating/refreshing only when needed.
     Implements backoff: after a failed auth, wait 5 min before retrying."""
@@ -1202,18 +1176,7 @@ def poll_cameras():
             _wyze_client = None  # force re-auth next cycle
 
     # RING DISABLED — do not poll. triggers 2FA SMS on every auth attempt. No token cached.
-    # Inject static ring camera entry so it appears in the cameras grid (no auth needed).
-    cameras.append({
-        "name": "Front Door",
-        "mac": "ring_door",
-        "type": "ring",
-        "status": "online",
-        "snapshot_path": "/api/camera/ring_door/frame",
-        "thumbnail_url": "",
-        "last_seen": "",
-        "last_motion": "",
-        "battery": _ring_status.get('battery'),
-    })
+    pass  # Ring removed from poll loop
 
     with _state_lock:
         _state["cameras"] = cameras
@@ -3554,19 +3517,6 @@ def _start_rtsp_threads():
             _rtsp_capture_threads[cam_id] = t
     wd = threading.Thread(target=_rtsp_watchdog, daemon=True, name="rtsp-watchdog")
     wd.start()
-
-@app.route("/api/camera/ring_door/frame")
-def ring_door_frame():
-    """Proxy latest JPEG frame from go2rtc for the Ring doorbell camera."""
-    try:
-        r = _requests.get("http://127.0.0.1:1984/api/frame.jpeg?src=ring_door", timeout=3)
-        if r.status_code == 200 and r.content:
-            resp = Response(r.content, mimetype='image/jpeg')
-            resp.headers['Cache-Control'] = 'no-cache, no-store'
-            return resp
-    except Exception as e:
-        log.warning("go2rtc ring_door frame error: %s", e)
-    return '', 204
 
 @app.route("/api/camera/<cam_id>/frame")
 def camera_frame(cam_id):
@@ -7550,7 +7500,6 @@ let _camDataCache = {};  // mac → cam data for modal
 const _FRONT_SIDE_MAC = 'D03F275A9799';
 
 function _getRtspId(cam) {
-  if (cam.type === 'ring' || cam.mac === 'ring_door') return 'ring_door'; // via go2rtc
   const n = (cam.name || '').toLowerCase();
   if (n.includes('upstairs'))   return 'upstairs-cam';    // via docker-wyze-bridge
   if (n.includes('downstairs')) return 'downstairs-cam';  // via docker-wyze-bridge
@@ -7559,7 +7508,6 @@ function _getRtspId(cam) {
 }
 
 function refreshCameraImg(mac) {
-  if (mac === 'ring_door') return; // WebRTC iframe self-manages
   const cam    = _camDataCache[mac];
   const rtspId = cam ? _getRtspId(cam) : null;
   const img    = document.getElementById('cam-img-' + mac);
@@ -7751,26 +7699,16 @@ function renderCameras(cameras) {
     const badgeClass = cam.type === 'wyze' ? 'badge-wyze' : 'badge-ring';
     const icon       = cam.type === 'wyze' ? '📷' : '🔔';
     const isOnline   = cam.status === 'online';
-    const lastInfo   = cam.type === 'ring'
-      ? (cam.battery != null ? `Battery: ${cam.battery}%` : '')
-      : (cam.last_motion ? `Last motion: ${cam.last_motion}` : (cam.last_seen ? `Last seen: ${cam.last_seen}` : ''));
+    const lastInfo   = cam.last_motion
+      ? `Last motion: ${cam.last_motion}`
+      : (cam.last_seen ? `Last seen: ${cam.last_seen}` : '');
     const liveDot = isOnline ? '<span class="cam-live-dot" title="Live"></span>' : '';
     const statusBadge = `<span class="badge ${isOnline?'online':'offline'}">${cam.status||'?'}</span>`;
     const rtspId    = _getRtspId(cam);
     const isFront   = mac === _FRONT_SIDE_MAC;
 
     let thumbHtml, sourceBadge;
-    if (cam.type === 'ring') {
-      const streamUrl = `http://${location.hostname}:1984/stream.html?src=ring_door`;
-      thumbHtml = `
-        <div id="cam-img-ring_door" class="camera-thumb"
-          style="display:flex;flex-direction:column;align-items:center;justify-content:center;background:#111;cursor:pointer;gap:8px"
-          onclick="window.open('${streamUrl}','_blank')">
-          <span style="font-size:2rem">🔔</span>
-          <span style="font-size:11px;color:#aaa">Tap to view live</span>
-        </div>`;
-      sourceBadge = `<span class="badge" style="background:rgba(0,255,128,.15);color:#00ff80;margin-right:6px">On-demand</span>`;
-    } else if (rtspId) {
+    if (rtspId) {
       // RTSP — poll /frame every 500ms (single JPEG per request, no multipart needed)
       thumbHtml = `<img id="cam-img-${mac}" class="camera-thumb"
            src="/api/camera/${rtspId}/frame?t=${Date.now()}"
@@ -7817,7 +7755,6 @@ function renderCameras(cameras) {
     const mac    = cam.mac || cam.type;
     const rtspId = _getRtspId(cam);
     if (!_camRefreshTimers[mac]) {
-      if (mac === 'ring_door') return; // WebRTC, no polling
       const interval = rtspId ? 2000 : 30000;
       _camRefreshTimers[mac] = setInterval(() => refreshCameraImg(mac), interval);
     }
@@ -9647,7 +9584,6 @@ if __name__ == "__main__":
     if _ring_token_data:
         # snapshot poller removed — Ring's snapshot API is blocked, always 204
         threading.Thread(target=_ring_event_poller, daemon=True, name="ring-events").start()
-        threading.Thread(target=_ring_health_poller, daemon=True, name="ring-health").start()
         log.info("Ring background threads started")
 
     log.info("Discovering Roku devices via SSDP ...")

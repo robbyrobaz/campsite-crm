@@ -1,49 +1,22 @@
 {
-  "dispatchCycleTime": "2026-03-12T08:15:27.917633+00:00",
-  "inProgressCards": [
-    {
-      "id": "c_c116b218b9777_19ce0d9dc4c",
-      "title": "Moonshot ML validation",
-      "pid": 2064174
-    },
-    {
-      "id": "c_a426e5ed3041_19ce0d9dbfb",
-      "title": "Blofin vwap_reversion expansion",
-      "pid": 2064184
-    },
-    {
-      "id": "c_696c8ac007df9_19ce0d9dbb2",
-      "title": "NQ equal_tops_bottoms diagnosis",
-      "pid": 2064193
-    }
-  ],
-  "queuedCards": [
+  "activeTasks": [
     {
       "id": "c_35c9e2507a94f_19ce0dfa7db",
-      "title": "Blofin Solana momentum expansion",
-      "priority": 2
+      "title": "Blofin: Expand momentum strategy to Solana-ecosystem perps (JTO-USDT is +42% FT return)",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "blofin-stack",
+      "pid": 2265548,
+      "dispatchedAt": "2026-03-12T10:13:48Z"
     }
   ],
-  "systemHealth": {
-    "cpuTemp_c": 64,
-    "diskUsage_pct": 99,
-    "openclaw_gateway": "active",
-    "blofin_ingestor": "active",
-    "blofin_paper": "active",
-    "nq_smb_watcher": "active",
-    "nq_dashboard_v3": "active",
-    "blofin_dashboard": "active"
+  "lastDispatch": "2026-03-12T10:13:48Z",
+  "lastHealthCheck": "2026-03-12T10:13:48Z",
+  "healthStatus": {
+    "cpu": "51°C (OK)",
+    "disk": "79% (OK)",
+    "services": "all critical services active",
+    "criticalAlerts": "NONE"
   },
-  "recentVerifications": {
-    "nqDashboard": {
-      "port": 8895,
-      "status": "HTTP 200",
-      "verified": "2026-03-12T08:15:27.917633+00:00"
-    },
-    "blofinDashboard": {
-      "port": 8892,
-      "status": "HTTP 200",
-      "verified": "2026-03-12T08:15:27.917633+00:00"
-    }
-  }
+  "notes": "blofin-stack-ingestor restarted. nq-postmerge-check.service in failed state (temporary healthcheck, low priority)."
 }

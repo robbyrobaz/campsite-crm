@@ -521,3 +521,49 @@ systemctl --user status nq-postmerge-check.service
 
 Action: Log the failure, monitor on next dispatch cycle.
 
+---
+
+## 2026-03-12 01:15 MST — Dispatch Cycle: Disk at 99%, NQ Dashboard Port Mismatch
+
+**Incident Time:** 01:15 AM MST (Thursday, Dispatch Cycle #36f47279)
+
+**Issues Detected:**
+
+1. **CRITICAL: Disk Usage at 99%** (437G / 468G)
+   - Severity: CRITICAL — only 7.6GB free
+   - Root cause: Unknown (needs analysis)
+   - Action: LOGGED FOR CLEANUP — requires manual intervention or auto-cleanup task
+   - Impact: System may fail if disk fills completely; services may start failing
+
+2. **blofin-stack-ingestor.service was INACTIVE**
+   - Action: Restarted, now active ✓
+   - Likely reason: Service crash or automatic stop
+
+3. **NQ Dashboard Service Port Mismatch**
+   - Issue: Old config references port 8891, but nq-dashboard-v3 runs on port 8895
+   - Service name: Health check looked for `nq-dashboard.service` (doesn't exist), actual is `nq-dashboard-v3.service`
+   - Dashboard crashed with Jinja2 template error (UndefinedError: 'None' has no attribute 'get')
+   - Action: Restarted service, dashboard now responding HTTP 200 on port 8895 ✓
+   - Impact: Temporary outage, deployment verified OK
+
+4. **Recent Deployment Verified**
+   - Card: c_d77259b9c422_19ce0df62c8 ("NQ ORB: Prepare Lucid 100k Account Scale Plan")
+   - Status: Services active, NQ dashboard responding, SMB watcher processing bars live ✓
+
+**System Status (Otherwise Healthy):**
+- CPU: 64°C ✓
+- Critical alerts: EXIT 0 ✓
+- blofin-ingestor: active ✓
+- blofin-paper: active ✓
+- nq-smb-watcher: active ✓ (processing bars every 1 min)
+- nq-dashboard-v3: active ✓ (HTTP 200 on port 8895)
+
+**Action Items:**
+1. **URGENT:** Disk cleanup — 437G at 99% is critical
+2. **Update DISPATCHER.md:** Phase 1 health check references stale service name + old port number
+3. Monitor disk on next cycle
+
+**Dispatcher Status:**
+- **Dispatched:** 3 builders (Moonshot ML, Blofin vwap, NQ equal_tops)
+- **Queued:** 1 (Blofin Solana, priority=2, next cycle)
+

@@ -1,21 +1,49 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-12T06:13:40.521171+00:00",
-  "lastHealthCheck": "2026-03-12T06:13:40.521184+00:00",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0
-  },
-  "serviceStatus": {
+  "dispatchCycleTime": "2026-03-12T08:15:27.917633+00:00",
+  "inProgressCards": [
+    {
+      "id": "c_c116b218b9777_19ce0d9dc4c",
+      "title": "Moonshot ML validation",
+      "pid": 2064174
+    },
+    {
+      "id": "c_a426e5ed3041_19ce0d9dbfb",
+      "title": "Blofin vwap_reversion expansion",
+      "pid": 2064184
+    },
+    {
+      "id": "c_696c8ac007df9_19ce0d9dbb2",
+      "title": "NQ equal_tops_bottoms diagnosis",
+      "pid": 2064193
+    }
+  ],
+  "queuedCards": [
+    {
+      "id": "c_35c9e2507a94f_19ce0dfa7db",
+      "title": "Blofin Solana momentum expansion",
+      "priority": 2
+    }
+  ],
+  "systemHealth": {
+    "cpuTemp_c": 64,
+    "diskUsage_pct": 99,
     "openclaw_gateway": "active",
     "blofin_ingestor": "active",
     "blofin_paper": "active",
     "nq_smb_watcher": "active",
-    "nq_dashboard_v3": "active"
+    "nq_dashboard_v3": "active",
+    "blofin_dashboard": "active"
   },
-  "notes": [
-    "Codex sweep: no codex assignees found",
-    "Queue empty: no dispatch this cycle",
-    "nq-postmerge-check.service failed \u2014 needs investigation"
-  ]
+  "recentVerifications": {
+    "nqDashboard": {
+      "port": 8895,
+      "status": "HTTP 200",
+      "verified": "2026-03-12T08:15:27.917633+00:00"
+    },
+    "blofinDashboard": {
+      "port": 8892,
+      "status": "HTTP 200",
+      "verified": "2026-03-12T08:15:27.917633+00:00"
+    }
+  }
 }

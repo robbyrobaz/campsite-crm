@@ -510,3 +510,14 @@ The timer was not active, which would have prevented the 4h training cycle from 
 - nq-tournament.service in auto-restart (normal, scheduled runner)
 
 **Action:** Phase 1 complete, all critical services operational.
+
+## 2026-03-11 23:13 — nq-postmerge-check failed
+
+Service `nq-postmerge-check.service` entered failed state. This is a temporary service for hourly NQ health check. Status: needs investigation.
+
+```
+systemctl --user status nq-postmerge-check.service
+```
+
+Action: Log the failure, monitor on next dispatch cycle.
+

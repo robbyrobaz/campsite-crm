@@ -1,14 +1,14 @@
 {
-  "timestamp": "2026-03-13T09:22:00Z",
-  "cycleTime": "2026-03-13T02:22:00-07:00",
+  "timestamp": "2026-03-13T09:52:00Z",
+  "cycleTime": "2026-03-13T02:52:00-07:00",
   "activeTasks": [],
   "inProgressCount": 0,
   "plannedCount": 0,
-  "lastDispatch": "2026-03-13T09:22:00Z",
-  "lastHealthCheck": "2026-03-13T09:22:00Z",
+  "lastDispatch": "2026-03-13T09:52:00Z",
+  "lastHealthCheck": "2026-03-13T09:52:00Z",
   "systemHealth": {
-    "cpu": "57°C",
-    "disk": "51%",
+    "cpu": "79°C",
+    "disk": "226G/468G (51%)",
     "gatewayStatus": "active",
     "criticalAlerts": "none"
   },
@@ -20,10 +20,14 @@
     "nq-dashboard-v3": "active"
   },
   "boardState": {
-    "done": 1043,
     "inProgress": 0,
     "planned": 0,
-    "stopped": 9
+    "done": 1043
+  },
+  "deployment": {
+    "lastVerified": "2026-03-13T09:52:00Z",
+    "nq-watcher": "active + HTTP 200 (dashboard)",
+    "blofin-stack": "active"
   },
   "dispatch": {
     "slots": "0/3 in use",

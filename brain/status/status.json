@@ -1,11 +1,45 @@
 {
+  "dispatchCycle": "2026-03-13T18:22:00Z",
   "activeTasks": [],
-  "lastDispatch": "2026-03-13T18:18:00Z",
-  "lastHealthCheck": "2026-03-13T18:18:00Z",
-  "boardState": {
+  "recentlyCompleted": [
+    {
+      "id": "c_b4f677",
+      "title": "[Blofin] Investigate T0→T1 promotion bottleneck (94 T0, 2 T1, 1 T2)",
+      "completedAt": "2026-03-13T18:30:00Z",
+      "verified": true
+    },
+    {
+      "id": "c_ade589",
+      "title": "Multi-Breakout ORB strategies + Retest BT results",
+      "completedAt": "2026-03-13T17:30:00Z",
+      "verified": true
+    },
+    {
+      "id": "c_8cc0b8",
+      "title": "[Moonshot] Validate entry thresholds and expand from 1 to 5+ open positions",
+      "completedAt": "2026-03-13T17:28:00Z",
+      "verified": true
+    }
+  ],
+  "lastHealthCheck": "2026-03-13T18:22:00Z",
+  "services": {
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
+    "nq-watcher": "active",
+    "nq-dashboard-v3": "active",
+    "moonshot-v2-dashboard": "active",
+    "blofin-moonshot": "activating"
+  },
+  "board": {
     "inProgress": 0,
     "planned": 0,
-    "done": 1051
+    "done": 1051,
+    "stopped": 9
   },
-  "notes": "Heartbeat 11:18 MST. CPU 88C (blofin ingestor + dashboard). GCP BTC dip trader failing - API key expired. Backup retry triggered. All NQ/Blofin services active. Numerai models OK."
+  "metrics": {
+    "cpuTemp": "82°C",
+    "diskUsage": "56%",
+    "criticalAlerts": 0
+  }
 }

@@ -13,18 +13,8 @@
       "nq_dashboard": "inactive"
     }
   },
-  "activeTasks": [
-    {
-      "id": "c_e58aba44bbba8_19ce3779097",
-      "title": "[Moonshot] Raise entry threshold to 0.75+ (exclude low-confidence positions)",
-      "status": "In Progress",
-      "pid": 3386723,
-      "assignee": "codex",
-      "project_path": "/home/rob/.openclaw/workspace/blofin-moonshot",
-      "dispatched_at": "2026-03-12T20:22:00Z"
-    }
-  ],
+  "activeTasks": [],
   "lastDispatch": "2026-03-12T20:22:00Z",
   "lastHealthCheck": "2026-03-12T20:22:00Z",
-  "summary": "PHASE 5 enrichment: 1 Planned card (Moonshot threshold). PHASE 6 dispatch: Dispatched to codex (PID 3386723). Capacity: 1/3. Next cycle: check for completions, potentially dispatch more."
+  "summary": "Heartbeat cleanup: orphaned Moonshot card cleared (PID dead). Board: 0 In Progress, 0 Failed."
 }

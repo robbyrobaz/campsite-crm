@@ -1498,9 +1498,14 @@ def poll_bhyve():
         out_devices = []
         out_zones = []
 
+        # Devices to hide (no longer in use)
+        _BHYVE_HIDDEN_DEVICES = {"Smart Hose Tap Timer"}
+
         for dev in devices_raw:
             dev_id = dev.get("id", "")
             dev_name = dev.get("name", "Unknown Device")
+            if dev_name in _BHYVE_HIDDEN_DEVICES:
+                continue
             fw = dev.get("firmware_version", "")
             dev_type = dev.get("type", "")
 
@@ -3520,7 +3525,7 @@ def _start_rtsp_threads():
 
 @app.route("/api/camera/<cam_id>/frame")
 def camera_frame(cam_id):
-    """Return latest cached JPEG frame — 204 if missing or stale (>45s)."""
+    """Return latest cached JPEG frame. Falls back to Wyze cloud snapshot if RTSP is stale/missing."""
     entry = _rtsp_frame_cache.get(cam_id)
     if entry:
         frame_bytes, captured_at = entry
@@ -3529,8 +3534,29 @@ def camera_frame(cam_id):
             resp.headers['Cache-Control'] = 'no-cache, no-store'
             return resp
         else:
-            log.debug("Stale frame for %s (%.0fs old), returning 204", cam_id,
+            log.debug("Stale frame for %s (%.0fs old), trying Wyze snapshot fallback", cam_id,
                       time.time() - captured_at)
+    # Fallback: try Wyze cloud thumbnail for this camera
+    _cam_name_to_rtsp = {v: k for k, v in {
+        "front-side-cam": "front", "upstairs-cam": "upstairs", "downstairs-cam": "downstairs"
+    }.items()}
+    match_keyword = {"front-side-cam": "front", "upstairs-cam": "upstairs", "downstairs-cam": "downstairs"}.get(cam_id)
+    if match_keyword:
+        with _state_lock:
+            cam_data = next((c for c in _state.get('cameras', [])
+                             if match_keyword in (c.get('name', '') or '').lower()
+                             and c.get('type') == 'wyze'), None)
+        if cam_data and cam_data.get('thumbnail_url'):
+            try:
+                r = _requests.get(cam_data['thumbnail_url'], timeout=8,
+                                  headers={"User-Agent": "WyzeAndroid/2.47.0"})
+                if r.status_code == 200 and r.content:
+                    ct = r.headers.get('Content-Type', 'image/jpeg')
+                    resp = Response(r.content, mimetype=ct if 'image' in ct else 'image/jpeg')
+                    resp.headers['Cache-Control'] = 'no-cache, no-store'
+                    return resp
+            except Exception:
+                pass
     return '', 204
 
 
@@ -4088,15 +4114,21 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   /* Pool — redesigned */
   .pc-grid { display: grid; grid-template-columns: 260px 1fr; gap: 12px; }
   @media (max-width: 700px) { .pc-grid { grid-template-columns: 1fr; } }
-  .pc-hero-card { background: rgba(255,120,0,0.07); border: 1.5px solid rgba(255,120,0,0.22); border-radius: 14px; padding: 20px 16px; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: border-color .3s, box-shadow .3s; }
-  .pc-hero-card.spa-on { border-color: rgba(255,120,0,0.75); box-shadow: 0 0 30px rgba(255,120,0,0.25); }
+  .pc-hero-card { background: var(--surface2); border: 2px solid var(--border); border-radius: 14px; padding: 20px 16px; display: flex; flex-direction: column; align-items: center; gap: 4px; transition: border-color .3s, box-shadow .3s, background .3s; }
+  .pc-hero-card.spa-on { background: rgba(255,120,0,0.10); border-color: rgba(255,120,0,0.75); box-shadow: 0 0 30px rgba(255,120,0,0.25); }
   .pc-section-lbl { font-size: 10px; font-weight: 700; letter-spacing: 2px; color: rgba(255,255,255,0.35); text-transform: uppercase; }
+  .pc-hero-status { font-size: 28px; font-weight: 800; letter-spacing: 2px; margin: 4px 0 0; }
+  .pc-hero-status.status-off { color: var(--text-dim); }
+  .pc-hero-status.status-on  { color: #FF7820; text-shadow: 0 0 20px rgba(255,120,0,0.5); }
   .pc-hero-temp { font-size: 76px; font-weight: 800; color: #FF7820; line-height: 1; margin: 8px 0 2px; }
+  .pc-hero-card:not(.spa-on) .pc-hero-temp { color: var(--text-dim); }
   .pc-hero-setpt { font-size: 13px; color: rgba(255,255,255,0.45); }
   .pc-hero-actions { display: flex; gap: 10px; margin-top: 18px; width: 100%; }
   .pc-action-btn { flex: 1; padding: 15px 0; border-radius: 10px; border: none; font-size: 15px; font-weight: 700; letter-spacing: 0.5px; cursor: pointer; font-family: inherit; transition: filter .15s, background .15s; }
-  .pc-btn-on  { background: linear-gradient(135deg,#FF7820,#FF4500); color: #fff; }
-  .pc-btn-on:hover  { filter: brightness(1.15); }
+  .pc-btn-on  { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.65); }
+  .pc-btn-on:hover  { background: rgba(255,255,255,0.12); }
+  .pc-hero-card.spa-on .pc-btn-on { background: linear-gradient(135deg,#FF7820,#FF4500); border: none; color: #fff; }
+  .pc-hero-card.spa-on .pc-btn-on:hover { filter: brightness(1.15); }
   .pc-btn-off { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18); color: rgba(255,255,255,0.65); }
   .pc-btn-off:hover { background: rgba(255,255,255,0.12); }
   .pc-right { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; align-content: start; }
@@ -5260,7 +5292,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     <!-- LEFT — Hot Tub Hero Card -->
     <div class="pc-hero-card" id="pc-spa-hero">
       <div class="pc-section-lbl">HOT TUB</div>
-      <span class="badge" id="pc-spa-badge" style="margin-top:4px">—</span>
+      <div class="pc-hero-status status-off" id="pc-spa-status">OFF</div>
       <div class="pc-hero-temp" id="pc-spa-temp">—<sup>°F</sup></div>
       <div class="pc-hero-setpt" id="pc-spa-setpoint">Target: — °F</div>
       <div class="pc-hero-actions">
@@ -6776,8 +6808,8 @@ function renderState(s) {
   const spaOn = spa.status === 'ON';
   const spaHero = document.getElementById('pc-spa-hero');
   if (spaHero) { spaHero.classList.toggle('spa-on', spaOn); }
-  const pcSpaBadge = document.getElementById('pc-spa-badge');
-  if (pcSpaBadge) { pcSpaBadge.textContent = spa.status||'?'; pcSpaBadge.className = 'badge ' + (spaOn?'online':'offline'); }
+  const pcSpaStatus = document.getElementById('pc-spa-status');
+  if (pcSpaStatus) { pcSpaStatus.textContent = spaOn ? 'ON' : 'OFF'; pcSpaStatus.className = 'pc-hero-status ' + (spaOn ? 'status-on' : 'status-off'); }
   const pcSpaTemp = document.getElementById('pc-spa-temp');
   if (pcSpaTemp) pcSpaTemp.innerHTML = spa.temp ? spa.temp+'<sup>°F</sup>' : '—<sup>°F</sup>';
   const pcSpaSp = document.getElementById('pc-spa-setpoint');

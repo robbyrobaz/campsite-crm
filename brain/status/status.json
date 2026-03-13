@@ -1,22 +1,8 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_7c9d92cc43237_19ce893cdd5",
-      "title": "[Blofin] Audit strategy_registry — 94 T1 strategies with no FT data",
-      "assignee": "claude",
-      "project": "/home/rob/.openclaw/workspace/blofin-stack",
-      "startedAt": "2026-03-13T12:23:03.528000"
-    },
-    {
-      "id": "c_909672b6a4055_19ce893e864",
-      "title": "[Moonshot] Train initial LightGBM ML scoring model",
-      "assignee": "claude",
-      "project": "/home/rob/.openclaw/workspace/blofin-moonshot",
-      "startedAt": "2026-03-13T12:23:01.587000"
-    }
-  ],
+  "activeTasks": [],
   "lastDispatch": "2026-03-13T19:23:21Z",
-  "lastHealthCheck": "2026-03-13T19:23:21Z",
-  "dispatchSummary": "Dispatched 2 cards (Moonshot ML training, Blofin audit). 0 stale recovered. Services healthy.",
-  "nextDispatch": "2026-03-13T19:53:21Z"
+  "lastHealthCheck": "2026-03-13T19:51:00Z",
+  "dispatchSummary": "No active tasks. Board clear. Heartbeat 19:51 UTC.",
+  "nextDispatch": "2026-03-13T20:23:00Z",
+  "notes": "Two tasks from 12:23 UTC (Blofin audit, Moonshot ML) had no matching kanban cards - cleared as orphaned."
 }

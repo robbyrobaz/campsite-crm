@@ -1,24 +1,16 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-13T21:24:00Z",
-  "lastHealthCheck": "2026-03-13T21:24:00Z",
-  "health": {
-    "cpu_temp": "78.0°C",
-    "disk_usage": "56%",
-    "services": {
-      "openclaw_gateway": "active",
-      "blofin_ingestor": "active",
-      "blofin_paper": "active",
-      "nq_watcher": "active",
-      "nq_dashboard": "active"
-    }
+  "lastDispatch": "2026-03-13T21:54:00Z",
+  "lastHealthCheck": "2026-03-13T21:54:00Z",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done_recent": 3
   },
-  "critical_alerts": false,
-  "dispatch_status": "Queue empty — no Planned cards",
-  "deployment_verification": {
-    "recently_completed": 3,
-    "blofin_services_verified": true,
-    "dashboard_http": 200
+  "systemHealth": {
+    "cpuTemp": "77.0°C",
+    "diskUsage": "57%",
+    "criticalServices": "all active"
   },
-  "notes": "All 3 recently completed Blofin cards deployed and live. Services running, dashboards responsive. 0 concurrent builders. Kanban ready for next batch."
+  "notes": "Queue empty — no dispatch needed. Blofin services nominal."
 }

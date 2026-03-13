@@ -1,35 +1,18 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-13T19:55:05Z",
-  "lastHealthCheck": "2026-03-13T19:55:05Z",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "done": 1055,
-    "stopped": 9
+  "lastDispatch": "2026-03-13T20:24:00Z",
+  "lastHealthCheck": "2026-03-13T20:24:00Z",
+  "note": "Board clean. All Done cards verified deployed. No Planned/In Progress work.",
+  "serviceStatus": {
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
+    "nq-watcher": "active",
+    "nq-dashboard-v3": "active"
   },
-  "recentDeployments": [
-    {
-      "title": "[Blofin] Fix T1 deadlock: change tier>=2 to tier>=1 in paper_engine.py",
-      "completedAgo": "6 min",
-      "verified": true,
-      "services": ["blofin-stack-ingestor", "blofin-stack-paper", "blofin-dashboard"]
-    },
-    {
-      "title": "[Blofin] Investigate T0→T1 promotion bottleneck (94 T0, 2 T1, 1 T2)",
-      "completedAgo": "10 min",
-      "verified": true
-    },
-    {
-      "title": "[Blofin] Audit strategy_registry — 94 T1 strategies with no FT data",
-      "completedAgo": "15 min",
-      "verified": true
-    }
-  ],
-  "health": {
-    "cpuTemp": "76°C",
+  "systemHealth": {
+    "temperature": "58.0°C",
     "diskUsage": "56%",
-    "criticalServices": "all active",
-    "criticalAlerts": "none"
+    "alerts": "none"
   }
 }

@@ -1,18 +1,19 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-13T20:24:00Z",
-  "lastHealthCheck": "2026-03-13T20:24:00Z",
-  "note": "Board clean. All Done cards verified deployed. No Planned/In Progress work.",
-  "serviceStatus": {
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "nq-watcher": "active",
-    "nq-dashboard-v3": "active"
+  "lastDispatch": "2026-03-13T20:54:00Z",
+  "lastHealthCheck": "2026-03-13T20:54:00Z",
+  "health": {
+    "cpu_temp": "74.0°C",
+    "disk_usage": "56%",
+    "services": {
+      "openclaw_gateway": "active",
+      "blofin_ingestor": "active",
+      "blofin_paper": "active",
+      "nq_watcher": "active",
+      "nq_dashboard": "active"
+    }
   },
-  "systemHealth": {
-    "temperature": "58.0°C",
-    "diskUsage": "56%",
-    "alerts": "none"
-  }
+  "critical_alerts": false,
+  "dispatch_status": "No work in queue",
+  "notes": "Kanban board empty (all cards Done or Stopped). Health check clean. No stale builds. All services running. 0 concurrent builders."
 }

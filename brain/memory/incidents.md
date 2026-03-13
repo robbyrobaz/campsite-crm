@@ -630,3 +630,22 @@ Action: Log the failure, monitor on next dispatch cycle.
 
 **Follow-up:** Monitor on next dispatch cycle. If issue persists >4 hours, consider rate-limit mitigation (exponential backoff, caching, or adding API key).
 
+## 2026-03-13 08:52 MST — Stale Card Recovery (Database Lock Contention)
+
+**Incident:** "[Blofin] Investigate T0→T1 promotion bottleneck" (c_b4f677d215bc2_19ce7b898f8)
+- In Progress for exactly 30 minutes (borderline stale threshold)
+- Claude builder process still running but appears stuck
+- **Root Cause:** blofin-stack-ingestor.service throwing repeated "database is locked" errors
+  - 2026-03-13 08:37:18 - 08:52:36 (continuous lock errors every 1-2 min)
+  - Builder attempting database queries while ingestor has exclusive lock
+  - Deadlock situation preventing progress
+
+**Action Taken:**
+- Recovered card to Planned status (PATCH endpoint responded `ok:true`)
+- Will be redispatched in Phase 6 with fresh builder session
+
+**Status:** RESOLVED
+- Card ready for re-dispatch
+- Database lock contention is known issue (separate from this card's problem)
+- Next attempt should proceed once ingestor releases lock or builder uses connection pooling with retries
+

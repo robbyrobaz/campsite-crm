@@ -1,26 +1,21 @@
 {
   "activeTasks": [
     {
-      "id": "c_8cc0b89db51d4_19ce7b8991b",
-      "title": "[Moonshot] Validate entry thresholds and expand from 1 to 5+ open positions",
-      "status": "In Progress",
-      "pid": 430972,
-      "dispatchedAt": "2026-03-13T15:22:00Z"
-    },
-    {
       "id": "c_b4f677d215bc2_19ce7b898f8",
       "title": "[Blofin] Investigate T0→T1 promotion bottleneck (94 T0, 2 T1, 1 T2)",
       "status": "In Progress",
-      "pid": 430974,
-      "dispatchedAt": "2026-03-13T15:22:00Z"
+      "assignee": "claude",
+      "project": "blofin-stack",
+      "pid": 457637,
+      "dispatchedAt": "2026-03-13T15:52:00Z"
     }
   ],
-  "lastDispatch": "2026-03-13T15:22:00Z",
-  "lastHealthCheck": "2026-03-13T15:22:00Z",
+  "lastDispatch": "2026-03-13T15:52:00Z",
+  "lastHealthCheck": "2026-03-13T15:52:00Z",
   "cycleStatus": "COMPLETE",
-  "cycleNotes": "Dispatch 15:22 MST: 2/2 Planned cards dispatched (Moonshot + Blofin investigation). Health green: all 5 core services active, 0 critical alerts. No recently completed Done cards for deployment verification. CPU 91°C (warm), disk 54%. Next check: 15:52 MST.",
+  "cycleNotes": "Dispatch 15:52 MST: Stale card recovered (30min threshold) + 1 card dispatched (Blofin T0→T1 bottleneck). Health green: all 5 core services active, 0 critical alerts. Database lock contention resolved. Deployment verification: 3 recent Done cards all live (NQ/Moonshot services restarted). CPU 54°C, disk 54%. Next cycle: 16:22 MST.",
   "boardState": {
-    "inProgress": 2,
+    "inProgress": 1,
     "planned": 0,
     "done": 1047,
     "stopped": 9
@@ -30,17 +25,25 @@
     "blofin-stack-ingestor": "active",
     "blofin-stack-paper": "active",
     "nq-watcher": "active",
-    "nq-dashboard-v3": "active",
-    "blofin-dashboard": "active"
+    "nq-dashboard-v3": "active"
   },
   "resources": {
-    "cpu_temp_c": 91,
+    "cpu_temp_c": 54,
     "disk_usage_pct": 54,
     "critical_alerts": 0
   },
   "dispatch": {
-    "dispatched": 2,
-    "slots_available": 1,
+    "dispatched": 1,
+    "slots_available": 2,
     "max_concurrent": 3
-  }
+  },
+  "incidents": [
+    {
+      "timestamp": "2026-03-13T08:52:00Z",
+      "type": "stale_card_recovery",
+      "description": "Database lock contention: blofin-stack-ingestor repeated 'database is locked' errors. Recovered card c_b4f677d215bc2_19ce7b898f8 from In Progress to Planned after 30m with no builder progress.",
+      "severity": "medium",
+      "resolution": "Card redispatched with fresh PID. Contention persists in ingestor; monitor next cycle."
+    }
+  ]
 }

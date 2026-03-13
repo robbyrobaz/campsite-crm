@@ -1,17 +1,42 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-13T10:52:45Z",
-  "lastHealthCheck": "2026-03-13T10:52:45Z",
-  "boardStatus": {
-    "inProgress": 0,
-    "planned": 0,
-    "done": 3
+  "dispatchCycle": "2026-03-13 04:22 AM MST",
+  "timestamp": "2026-03-13T11:22:51Z",
+  "health": {
+    "cpu_temp": "84.0°C (safe)",
+    "disk_usage": "52% (229G/468G)",
+    "services": "all active (5/5)"
   },
-  "systemStatus": {
-    "cpuTemp": "59.0°C",
-    "diskUsage": "52%",
-    "services": "all active",
-    "criticalAlerts": "none"
+  "activeTasks": [
+    {
+      "id": "c_38621e9f189fc_19ce6dbec69",
+      "title": "[Moonshot] Validate 4h cycle timer and feature health",
+      "project": "blofin-moonshot",
+      "assignee": "claude",
+      "pid": 161708,
+      "status": "In Progress"
+    },
+    {
+      "id": "c_e49eecc6207b5_19ce6dbec4a",
+      "title": "[Blofin] Diagnose T2 candle_momentum_burst: missing FT data?",
+      "project": "blofin-stack",
+      "assignee": "claude",
+      "pid": 161710,
+      "status": "In Progress"
+    },
+    {
+      "id": "c_9370867333622_19ce6dbec19",
+      "title": "[NQ] Debug equal_tops_bottoms: BT PF 3.01 vs Live -$2005 (7d)",
+      "project": "NQ-Trading-PIPELINE",
+      "assignee": "claude",
+      "pid": 161714,
+      "status": "In Progress"
+    }
+  ],
+  "dispatch_summary": {
+    "planned_cards_processed": 3,
+    "dispatched": 3,
+    "enriched": 0,
+    "skipped": 0
   },
-  "notes": "Dispatch cycle complete. Queue empty — no work dispatched this cycle. All services healthy. Recently completed: [NQ] Full Phase 2 retrain, [NQ] equal_tops_bottoms diagnosis, [Blofin] vwap_volatility_rebound expansion."
+  "next_dispatch": "2026-03-13 04:52 AM MST (30min)"
 }

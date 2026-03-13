@@ -1,36 +1,15 @@
 {
-  "timestamp": "2026-03-13T09:52:00Z",
-  "cycleTime": "2026-03-13T02:52:00-07:00",
   "activeTasks": [],
-  "inProgressCount": 0,
-  "plannedCount": 0,
-  "lastDispatch": "2026-03-13T09:52:00Z",
-  "lastHealthCheck": "2026-03-13T09:52:00Z",
-  "systemHealth": {
-    "cpu": "79°C",
-    "disk": "226G/468G (51%)",
-    "gatewayStatus": "active",
-    "criticalAlerts": "none"
-  },
-  "services": {
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "nq-watcher": "active",
-    "nq-dashboard-v3": "active"
-  },
+  "lastDispatch": "2026-03-13T10:22:00Z",
+  "lastHealthCheck": "2026-03-13T10:22:00Z",
   "boardState": {
     "inProgress": 0,
     "planned": 0,
-    "done": 1043
+    "done": 3
   },
-  "deployment": {
-    "lastVerified": "2026-03-13T09:52:00Z",
-    "nq-watcher": "active + HTTP 200 (dashboard)",
-    "blofin-stack": "active"
-  },
-  "dispatch": {
-    "slots": "0/3 in use",
-    "action": "no work queued"
+  "systemHealth": {
+    "cpu": "73°C",
+    "disk": "51%",
+    "services": "all active"
   }
 }

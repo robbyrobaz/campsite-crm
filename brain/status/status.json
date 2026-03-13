@@ -1,17 +1,11 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-13T16:52:00Z",
-  "lastHealthCheck": "2026-03-13T16:52:00Z",
+  "lastDispatch": "2026-03-13T17:22:00Z",
+  "lastHealthCheck": "2026-03-13T17:22:00Z",
   "boardState": {
     "inProgress": 0,
     "planned": 0,
     "done": 3
   },
-  "systemHealth": {
-    "cpu_temp": "58°C",
-    "disk_usage": "55%",
-    "critical_alerts": "none",
-    "services_active": 5
-  },
-  "note": "Queue empty. All services nominal. 3 recent completed cards verified deployed."
+  "notes": "Dispatch cycle clean. No active work. Queue empty. Card c_b4f677d215bc2 (Blofin T0→T1 promotion) verified deployed 52 min ago. CPU 77°C, disk 55%. All services active."
 }

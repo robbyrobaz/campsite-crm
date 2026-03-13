@@ -1,8 +1,35 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-13T19:23:21Z",
-  "lastHealthCheck": "2026-03-13T19:51:00Z",
-  "dispatchSummary": "No active tasks. Board clear. Heartbeat 19:51 UTC.",
-  "nextDispatch": "2026-03-13T20:23:00Z",
-  "notes": "Two tasks from 12:23 UTC (Blofin audit, Moonshot ML) had no matching kanban cards - cleared as orphaned."
+  "lastDispatch": "2026-03-13T19:55:05Z",
+  "lastHealthCheck": "2026-03-13T19:55:05Z",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 1055,
+    "stopped": 9
+  },
+  "recentDeployments": [
+    {
+      "title": "[Blofin] Fix T1 deadlock: change tier>=2 to tier>=1 in paper_engine.py",
+      "completedAgo": "6 min",
+      "verified": true,
+      "services": ["blofin-stack-ingestor", "blofin-stack-paper", "blofin-dashboard"]
+    },
+    {
+      "title": "[Blofin] Investigate T0→T1 promotion bottleneck (94 T0, 2 T1, 1 T2)",
+      "completedAgo": "10 min",
+      "verified": true
+    },
+    {
+      "title": "[Blofin] Audit strategy_registry — 94 T1 strategies with no FT data",
+      "completedAgo": "15 min",
+      "verified": true
+    }
+  ],
+  "health": {
+    "cpuTemp": "76°C",
+    "diskUsage": "56%",
+    "criticalServices": "all active",
+    "criticalAlerts": "none"
+  }
 }

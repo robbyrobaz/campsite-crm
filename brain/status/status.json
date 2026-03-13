@@ -4,29 +4,32 @@
       "id": "c_b8094f2fc2721_19ce375c479",
       "title": "[Moonshot] Validate 4h cycle and expand position coverage from 1 to 5+ opens",
       "assignee": "claude",
-      "pid": 247182,
-      "status": "In Progress"
-    },
-    {
-      "id": "c_be1776eff7d89_19ce61576de",
-      "title": "[Moonshot] Optimize SUN-USDT position exit logic and validate champion model",
-      "assignee": "claude",
-      "pid": 247254,
-      "status": "In Progress"
-    },
-    {
-      "id": "c_d4dc90174fd2d_19ce615403e",
-      "title": "[Blofin] Expand vwap_volatility_rebound to additional BTC/ETH pairs",
-      "assignee": "claude",
-      "pid": 247374,
-      "status": "In Progress"
+      "pid": 284877,
+      "status": "In Progress",
+      "dispatchedAt": "2026-03-13T13:22:00Z"
     }
   ],
-  "lastDispatch": "2026-03-13T12:52:00Z",
-  "lastHealthCheck": "2026-03-13T12:52:00Z",
+  "lastDispatch": "2026-03-13T13:22:00Z",
+  "lastHealthCheck": "2026-03-13T13:22:00Z",
   "systemHealth": {
-    "cpu_temp": "82.0°C",
+    "cpu_temp": "74.0°C",
     "disk_usage": "53%",
-    "services_active": 5
-  }
+    "services_active": 5,
+    "openclaw_gateway": "active",
+    "blofin_ingestor": "active",
+    "blofin_paper": "active",
+    "nq_watcher": "active",
+    "nq_dashboard": "active"
+  },
+  "dispatcherPhases": {
+    "phase1_health": "PASS",
+    "phase2_alerts": "PASS (no critical alerts)",
+    "phase3_fetch": "OK - 1 Planned, 0 In Progress after recovery",
+    "phase4_stale_recovery": "1 card recovered (30.1 min old, reset to Planned)",
+    "phase5_enrichment": "OK - Moonshot card ready (assignee=claude, project_path set, description complete)",
+    "phase6_dispatch": "1 card dispatched (PID 284877)",
+    "phase7_verification": "No recent Done cards (all >48h old)",
+    "phase8_status": "Updated"
+  },
+  "notes": "Stale Moonshot card recovered and redispatched. Services healthy, no critical alerts."
 }

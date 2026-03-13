@@ -398,6 +398,7 @@ BACKTEST → FORWARD TEST → GOD MODEL → BLE
 | NQ Pipeline | http://192.168.68.72:8895 |
 | Home Energy | http://192.168.68.72:8793 |
 | Kanban | http://192.168.68.72:8787 |
+| Church Volunteers | https://church-volunteer-coordinator.vercel.app/admin (pw: `hastings2nd`) |
 
 ## Key Infrastructure
 | Service | Detail |

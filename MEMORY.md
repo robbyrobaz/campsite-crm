@@ -67,6 +67,7 @@ Entry/exit used different feature sets when a regime-aware model was promoted. E
 Autonomous SMS system for Hastings Farms 2nd Ward Saturday church cleaning volunteers.
 - **Repo:** https://github.com/robbyrobaz/church-volunteer-coordinator
 - **Live:** https://church-volunteer-coordinator.vercel.app
+- **Admin:** https://church-volunteer-coordinator.vercel.app/admin
 - **Password:** `hastings2nd`
 
 ### Architecture

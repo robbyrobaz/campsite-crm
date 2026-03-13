@@ -1,5 +1,5 @@
 {
-  "dispatchCycle": "2026-03-13T18:37:00Z",
+  "dispatchCycle": "2026-03-13T18:52:00Z",
   "activeTasks": [],
   "recentlyCompleted": [
     {
@@ -9,30 +9,26 @@
       "verified": true
     }
   ],
-  "lastHealthCheck": "2026-03-13T18:37:00Z",
+  "lastHealthCheck": "2026-03-13T18:52:00Z",
   "services": {
     "openclaw-gateway": "active",
     "blofin-stack-ingestor": "active",
     "blofin-stack-paper": "active",
     "nq-watcher": "active",
-    "moonshot-v2-dashboard": "active",
-    "ibkr-ib-gateway": "restarted"
+    "nq-dashboard-v3": "active",
+    "ibkr-ib-gateway": "running"
   },
-  "alerts": [
-    "GCP BTC Dip Trader: blofin API key invalid (code 152401) — exit 1",
-    "openclaw-full-restore-backup: HTTP 500 on git push (will retry ~13:20 MST)",
-    "blofin-moonshot-dashboard.service stale reference (old unit name)"
-  ],
+  "systemHealth": {
+    "cpuTemp": "85°C",
+    "diskUsage": "56%",
+    "diskAvail": "199G"
+  },
   "board": {
     "inProgress": 0,
     "planned": 0,
-    "done": 1051,
-    "failed": 0
+    "done": 1060,
+    "totalCards": 1060
   },
-  "metrics": {
-    "cpuTemp": "68°C",
-    "diskUsage": "56%",
-    "criticalAlerts": 1,
-    "tokenUsage5h": "176.7K output / $15.27"
-  }
+  "dispatchStatus": "no_work_queued",
+  "notes": "All services nominal. Zero Planned cards — awaiting Auto Card Generator (hourly). No recent deployments to verify (last Done >60min). Queue ready for work."
 }

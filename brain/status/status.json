@@ -1,42 +1,63 @@
 {
-  "dispatchCycle": "2026-03-13 04:22 AM MST",
-  "timestamp": "2026-03-13T11:22:51Z",
-  "health": {
-    "cpu_temp": "84.0°C (safe)",
-    "disk_usage": "52% (229G/468G)",
-    "services": "all active (5/5)"
+  "timestamp": "2026-03-13T11:52:00Z",
+  "timezone": "America/Phoenix",
+  "session": "dispatch-36f47279-520f-4ce7-8f9c-a7c44be0771a",
+  
+  "phase": "Complete",
+  "cycle_duration_seconds": 180,
+  "dispatch_result": {
+    "in_progress_count": 0,
+    "planned_count": 0,
+    "dispatched_count": 0,
+    "board_status": "idle"
   },
-  "activeTasks": [
-    {
-      "id": "c_38621e9f189fc_19ce6dbec69",
-      "title": "[Moonshot] Validate 4h cycle timer and feature health",
-      "project": "blofin-moonshot",
-      "assignee": "claude",
-      "pid": 161708,
-      "status": "In Progress"
+  
+  "system_health": {
+    "cpu_temp_c": 90,
+    "cpu_safe": true,
+    "disk_used_pct": 52,
+    "disk_safe": true,
+    "services_active": [
+      "openclaw-gateway.service",
+      "blofin-stack-ingestor.service",
+      "blofin-stack-paper.service",
+      "nq-watcher.service",
+      "nq-dashboard-v3.service"
+    ],
+    "services_count": "5/5",
+    "critical_alerts": 0
+  },
+  
+  "board_state": {
+    "in_progress": [],
+    "planned": [],
+    "done_recent_3h": []
+  },
+  
+  "active_projects": {
+    "blofin_stack": {
+      "status": "running",
+      "last_backtest": "2026-02-23T06:34:00Z",
+      "strategy_count": 45,
+      "tier_distribution": { "t0": 38, "t1": 5, "t2": 2 },
+      "next_run": "scheduled"
     },
-    {
-      "id": "c_e49eecc6207b5_19ce6dbec4a",
-      "title": "[Blofin] Diagnose T2 candle_momentum_burst: missing FT data?",
-      "project": "blofin-stack",
-      "assignee": "claude",
-      "pid": 161710,
-      "status": "In Progress"
+    "numerai_tournament": {
+      "status": "stable",
+      "last_submission": "recent",
+      "models_active": 25
     },
-    {
-      "id": "c_9370867333622_19ce6dbec19",
-      "title": "[NQ] Debug equal_tops_bottoms: BT PF 3.01 vs Live -$2005 (7d)",
-      "project": "NQ-Trading-PIPELINE",
-      "assignee": "claude",
-      "pid": 161714,
-      "status": "In Progress"
+    "ninja_trader_strategies": {
+      "status": "idle",
+      "strategies_ready": 6,
+      "requires_live_data": true
     }
-  ],
-  "dispatch_summary": {
-    "planned_cards_processed": 3,
-    "dispatched": 3,
-    "enriched": 0,
-    "skipped": 0
   },
-  "next_dispatch": "2026-03-13 04:52 AM MST (30min)"
+  
+  "notes": [
+    "Board idle - no work in progress",
+    "All core services healthy",
+    "CPU at 90C (safe threshold)",
+    "Pipeline automation running on schedule"
+  ]
 }

@@ -1,40 +1,32 @@
 {
-  "dispatchCycle": "Jarvis Pulse (2026-03-13 05:22 MST)",
-  "activeTasks": [],
-  "queuedTasks": [],
-  "recentlyCompleted": [
+  "activeTasks": [
     {
-      "id": "c_38621e9f189fc_19ce6dbec69",
-      "title": "[Moonshot] Validate 4h cycle timer and feature health",
-      "completedAt": "2026-03-13T11:30Z (52m ago)"
+      "id": "c_b8094f2fc2721_19ce375c479",
+      "title": "[Moonshot] Validate 4h cycle and expand position coverage from 1 to 5+ opens",
+      "assignee": "claude",
+      "pid": 247182,
+      "status": "In Progress"
     },
     {
-      "id": "c_e49eecc6207b5_19ce6dbec4a",
-      "title": "[Blofin] Diagnose T2 candle_momentum_burst: missing FT data?",
-      "completedAt": "2026-03-13T11:30Z (52m ago)"
+      "id": "c_be1776eff7d89_19ce61576de",
+      "title": "[Moonshot] Optimize SUN-USDT position exit logic and validate champion model",
+      "assignee": "claude",
+      "pid": 247254,
+      "status": "In Progress"
     },
     {
-      "id": "c_9370867333622_19ce6dbec19",
-      "title": "[NQ] Debug equal_tops_bottoms: BT PF 3.01 vs Live -$2005 (7d)",
-      "completedAt": "2026-03-13T11:30Z (52m ago)"
+      "id": "c_d4dc90174fd2d_19ce615403e",
+      "title": "[Blofin] Expand vwap_volatility_rebound to additional BTC/ETH pairs",
+      "assignee": "claude",
+      "pid": 247374,
+      "status": "In Progress"
     }
   ],
-  "health": {
-    "cpu": "81°C (safe)",
-    "disk": "52% used (214G free)",
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "nq-watcher": "active",
-      "nq-dashboard-v3": "active"
-    },
-    "dashboards": {
-      "nq": "HTTP 200",
-      "blofin": "HTTP 200"
-    }
-  },
-  "lastDispatch": "2026-03-13T12:22:52Z",
-  "lastHealthCheck": "2026-03-13T12:22:52Z",
-  "notes": "Clean queue. No active tasks. All services healthy. Ready for new work."
+  "lastDispatch": "2026-03-13T12:52:00Z",
+  "lastHealthCheck": "2026-03-13T12:52:00Z",
+  "systemHealth": {
+    "cpu_temp": "82.0°C",
+    "disk_usage": "53%",
+    "services_active": 5
+  }
 }

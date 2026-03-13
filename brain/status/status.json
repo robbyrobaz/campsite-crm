@@ -1,63 +1,40 @@
 {
-  "timestamp": "2026-03-13T11:52:00Z",
-  "timezone": "America/Phoenix",
-  "session": "dispatch-36f47279-520f-4ce7-8f9c-a7c44be0771a",
-  
-  "phase": "Complete",
-  "cycle_duration_seconds": 180,
-  "dispatch_result": {
-    "in_progress_count": 0,
-    "planned_count": 0,
-    "dispatched_count": 0,
-    "board_status": "idle"
-  },
-  
-  "system_health": {
-    "cpu_temp_c": 90,
-    "cpu_safe": true,
-    "disk_used_pct": 52,
-    "disk_safe": true,
-    "services_active": [
-      "openclaw-gateway.service",
-      "blofin-stack-ingestor.service",
-      "blofin-stack-paper.service",
-      "nq-watcher.service",
-      "nq-dashboard-v3.service"
-    ],
-    "services_count": "5/5",
-    "critical_alerts": 0
-  },
-  
-  "board_state": {
-    "in_progress": [],
-    "planned": [],
-    "done_recent_3h": []
-  },
-  
-  "active_projects": {
-    "blofin_stack": {
-      "status": "running",
-      "last_backtest": "2026-02-23T06:34:00Z",
-      "strategy_count": 45,
-      "tier_distribution": { "t0": 38, "t1": 5, "t2": 2 },
-      "next_run": "scheduled"
+  "dispatchCycle": "Jarvis Pulse (2026-03-13 05:22 MST)",
+  "activeTasks": [],
+  "queuedTasks": [],
+  "recentlyCompleted": [
+    {
+      "id": "c_38621e9f189fc_19ce6dbec69",
+      "title": "[Moonshot] Validate 4h cycle timer and feature health",
+      "completedAt": "2026-03-13T11:30Z (52m ago)"
     },
-    "numerai_tournament": {
-      "status": "stable",
-      "last_submission": "recent",
-      "models_active": 25
+    {
+      "id": "c_e49eecc6207b5_19ce6dbec4a",
+      "title": "[Blofin] Diagnose T2 candle_momentum_burst: missing FT data?",
+      "completedAt": "2026-03-13T11:30Z (52m ago)"
     },
-    "ninja_trader_strategies": {
-      "status": "idle",
-      "strategies_ready": 6,
-      "requires_live_data": true
+    {
+      "id": "c_9370867333622_19ce6dbec19",
+      "title": "[NQ] Debug equal_tops_bottoms: BT PF 3.01 vs Live -$2005 (7d)",
+      "completedAt": "2026-03-13T11:30Z (52m ago)"
+    }
+  ],
+  "health": {
+    "cpu": "81°C (safe)",
+    "disk": "52% used (214G free)",
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-watcher": "active",
+      "nq-dashboard-v3": "active"
+    },
+    "dashboards": {
+      "nq": "HTTP 200",
+      "blofin": "HTTP 200"
     }
   },
-  
-  "notes": [
-    "Board idle - no work in progress",
-    "All core services healthy",
-    "CPU at 90C (safe threshold)",
-    "Pipeline automation running on schedule"
-  ]
+  "lastDispatch": "2026-03-13T12:22:52Z",
+  "lastHealthCheck": "2026-03-13T12:22:52Z",
+  "notes": "Clean queue. No active tasks. All services healthy. Ready for new work."
 }

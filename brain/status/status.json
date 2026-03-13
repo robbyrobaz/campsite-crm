@@ -1,24 +1,13 @@
 {
-  "timestamp": "2026-03-13T08:22:00Z",
-  "dispatchCycle": "active",
-  "activeTasks": [
-    {
-      "id": "c_14fe14fc6b8e9_19ce63260df",
-      "title": "[NQ] Full Phase 2 retrain — all ML strategies on IBKR+historical data",
-      "status": "In Progress",
-      "assignee": "codex",
-      "project": "NQ-Trading-PIPELINE",
-      "pid": 4178034,
-      "age_minutes": 25,
-      "cpu_usage": "157%"
-    }
-  ],
+  "timestamp": "2026-03-13T08:52:00Z",
+  "dispatchCycle": "complete",
+  "activeTasks": [],
   "plannedQueue": [],
-  "lastDispatch": "2026-03-13T08:22:00Z",
-  "lastHealthCheck": "2026-03-13T08:22:00Z",
+  "lastDispatch": "2026-03-13T08:52:00Z",
+  "lastHealthCheck": "2026-03-13T08:52:00Z",
   "systemHealth": {
-    "cpu_temp": "76.0°C (safe)",
-    "disk_usage": "50% (safe)",
+    "cpu_temp": "71.0°C (safe)",
+    "disk_usage": "51% (safe)",
     "critical_services": "5/5 active",
     "critical_alerts": "none"
   },
@@ -26,5 +15,25 @@
     "nq_pipeline": "deployed (8895 responsive)",
     "blofin_stack": "deployed (8892 responsive)",
     "moonshot_v2": "deployed (8893 responsive)"
-  }
+  },
+  "recentlyCompleted": [
+    {
+      "id": "c_14fe14fc6b8e9_19ce63260df",
+      "title": "[NQ] Full Phase 2 retrain — all ML strategies on IBKR+historical data",
+      "completedAt": "2026-03-13T08:30:00Z",
+      "verified": true
+    },
+    {
+      "id": "c_1d306e75e37ea_19ce6150ac5",
+      "title": "[NQ] Diagnose equal_tops_bottoms FT collapse",
+      "completedAt": "2026-03-13T08:15:00Z",
+      "verified": true
+    },
+    {
+      "id": "c_d4dc90174fd2d_19ce615403e",
+      "title": "[Blofin] Expand vwap_volatility_rebound to additional BTC/ETH pairs",
+      "completedAt": "2026-03-13T08:02:00Z",
+      "verified": true
+    }
+  ]
 }

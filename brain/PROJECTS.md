@@ -29,50 +29,59 @@
 
 ### 1. NQ Futures Trading Pipeline
 **Repo:** `NQ-Trading-PIPELINE/` | **Path:** `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/`
-**Dashboard:** http://127.0.0.1:8895 (v3, also :8895 on LAN)
+**Dashboard:** http://127.0.0.1:8895 (v3, also :8895 on LAN) | **Service:** `nq-dashboard-v3.service`
 **GitHub:** https://github.com/robbyrobaz/NQ-Trading-PIPELINE (private, main branch)
-**Status:** FT running on IBKR data (9 experts, unlimited concurrent). BLE ORBs LIVE (paying out). Data isolated: BLE reads IBKR original, FT reads synced copy.
+**Status:** 23 strategies in FT. 2 live BLE engines paying out. All-time BLE: 7 trades, $5,118, 86% WR.
 
-### ⭐ 1a. NQ ORB Engine — LIVE EXECUTION (separate from God Model FT)
-**Engine:** `NQ-Trading-PIPELINE/pipeline/orb_signal_engine.py`
-**Service:** `nq-orb-signal.service` (active, DRY_RUN=False)
-**Route:** IBKR L2 feed → ORB engine → TradersPost → Tradovate → Lucid Flex 50K LFE0506429036015
-**Status:** LIVE — tested Mar 6 (SHORT +$43) and Mar 9 (LONG +$27). Both clean. ✅
-**Backtest:** 14 months, PF 6.4, WR 86.3%, $4,772/mo EV at 4 MNQ (Lucid Flex 50K)
+### ⭐ 1a. NQ ORB Engine — LIVE BLE EXECUTION
+**Live BLE strategies (2):**
+| Strategy | Engine | Service | DRY_RUN |
+|----------|--------|---------|---------|
+| `orb` | `pipeline/orb_signal_engine.py` | `nq-orb-signal.service` | False (LIVE) |
+| `orb_15min` | `pipeline/orb_15min_signal_engine.py` | `nq-orb15-signal.service` | False (LIVE) |
 
-**Production config:** TEST_MODE=False, OR_OFFSET=30, QUANTITY=1, **UTC hour=13** (DST-corrected Mar 9)
-**NY open post-DST:** 9:30 AM EDT = 13:30 UTC = 6:30 AM MST. Engine fires at 13:30 UTC. ✅
-**DST fix committed:** `fec3864` — was hardcoded hour=14 (EST), corrected to hour=13 (EDT)
-**Next:** Scale to QUANTITY=4 after first clean live Monday run (today's 6:30 AM). Add 15-min ORB layer.
+**Route:** IBKR data → engine → TradersPost → Tradovate → Lucid Flex 50K (LFE0506429036015)
+**All-time BLE PnL:** 7 trades, $5,118, 86% WR, PF 24.3 (as of Mar 13 2026)
+**BT Baseline:** 14mo backtest, PF 6.4, WR 86.3%
 
-**Live data feed:** IBKR feed → `NQ_ibkr_1min.csv` (UTC) → `nq-data-sync.service` → `NQ_ibkr_ft.csv` → `nq-watcher.service`. BLE reads IBKR original directly.
-**Forward test run_id:** `smb_live_forward_test` (only valid run — 129 trades Feb 23-26)
-**Alert topic:** ntfy.sh/nq-pipeline
+### Dashboard Strategy Library — Display Rules (Mar 13 2026)
+The Strategy Library is a **combined FT competition board** — all strategies that may eventually promote to BLE.
 
-**Forward Test Results (Feb 23-26):**
-- momentum: 99 trades, 62% WR, +$5,900 ✅
-- vol_contraction: 13 trades, 62% WR, +$160 ✅
-- gapfill: 7 trades, 14% WR, -$2,565 ❌ (investigate)
-- vwapfade: 9 trades, 11% WR, -$2,750 ❌ (investigate)
-- Feb 26 had 100 trades in one day — possible overtrading during volatile session
+**Status badge logic:**
+- `BLE` (green) = live with real broker NOW. Only `orb` + `orb_15min`.
+- `FT` (green) = paper trading on live IBKR data. Competing for BLE promotion.
+- `OFF` (grey) = disabled (`live_enabled=0`). Not trading.
+- `BLKD` (dark) = blacklisted (circuit broken).
 
-**Strategy Registry (all tier=1, gate_status=pass):**
-- equal_tops_bottoms: PF 3.02, Sharpe 7.97 (NOT YET in live inference — add to God Model)
-- orb: PF 2.92, Sharpe 7.59
-- momentum: PF 2.82, Sharpe 7.38 (carrying live forward test)
-- vwap_fade: PF 2.17, psych_levels: PF 1.92, gap_fill: PF 2.07, vol_contraction: PF 1.96
+**Type badge logic (shown after status):**
+- `RULE` (amber) = rule-based strategy (deterministic, no ML model)
+- `ML` (blue) = machine learning strategy (trained model + confidence score)
 
-**God Model:** Ensemble dispatcher — runs all experts per bar, dispatches highest-confidence signal. Tournament table tracks challenger vs champion.
+**Architecture rule:** FT and BLE are NOT separate tracks. Any strategy can be promoted to BLE by Rob after proving itself in FT. The BLE badge in the library shows which are live today.
 
-**Next actions:**
-- [ ] Register equal_tops_bottoms in live God Model inference (high priority — best PF, not generating signals)
-- [ ] Investigate gapfill and vwapfade live signal quality (14% WR is broken)
-- [ ] Investigate Feb 26 trade flood (100 trades in one day — momentum firing too aggressively?)
-- [ ] Run God Model tournament update to include ETB as challenger
-- [ ] Verify psych_levels is generating live signals
+**Top section (ORB Live Engines) is entirely BLE** — "BLE Today", "BLE Accumulated", "Drift (BLE vs BT)" all correct there. That section ≠ Strategy Library.
+
+### Current 23-Strategy Registry (Mar 13 2026)
+**BLE Live:** `orb` (ML), `orb_15min` (RULE)
+**FT Rule-based (6):** orb_rth (PF 99), orb_multi_5min (PF 5.76), orb_multi_15min (PF 5.34), orb_retest_15min (PF 2.61), orb_retest_5min (PF 1.52)
+**FT ML (13):** london_killzone (PF 3.62), momentum (PF 3.04), power_hour (PF 3.02), fair_value_gap (PF 3.02), equal_tops_bottoms (PF 3.01), measured_move, initial_balance_ext, ema_pullback, vol_contraction, liquidity_sweep, vwap_fade, prev_day, gap_fill
+**OFF (4):** equal_tops_bottoms, overnight_range_breakout, psych_levels, opening_drive
+
+**Known pending issues:**
+- [ ] `ft_trades` column in strategy_registry shows 0 — paper_trades → registry sync not wired in nq_watcher.py
+- [ ] `prev_day` expert showing PDH=19040 (2025 levels) — feature builder date grouping bug
+
+**Live data feed:** IBKR → `NQ_ibkr_1min.csv` → `nq-data-sync.service` → `NQ_ibkr_ft.csv` → `nq-watcher.service`
+BLE engines read IBKR original directly. FT/BT reads the synced copy. Zero contention.
+
+**Next BLE promotion candidates (by BT PF, need FT validation):**
+1. orb_rth (PF 99, rule-based — needs FT data)
+2. orb_multi_5min (PF 5.76) / orb_multi_15min (PF 5.34)
+3. orb_retest_15min (PF 2.61) — strongest retest candidate
 
 **Constraints:**
-- ⛔ FT-PL only by default (live data + paper trades). BLE remains OFF (`DRY_RUN`) — no TradersPost webhooks/live orders/prop eval activation without Rob's explicit approval.
+- ⛔ Only Rob can promote a strategy to BLE. Never change `ORB_ENGINES` or flip `DRY_RUN=False` without explicit approval.
+- ⛔ Never modify the two live BLE engine services without explicit approval.
 - ⛔ God Model = single unified ensemble, NOT individual strategies
 - SMB mount is read-only — never write to `/mnt/nt_bridge/`
 

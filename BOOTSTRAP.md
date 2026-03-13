@@ -313,6 +313,13 @@ BACKTEST → FORWARD TEST → GOD MODEL → BLE
 ## Recent Changes (rolling 48h — update this at session end whenever significant changes happen)
 > This replaces needing to read the daily memory log on startup. Key decisions only.
 
+**Mar 13 2026:**
+- **BLE All-time: 7 trades, $5,118, 86% WR, PF 24.3** — 50K eval PASSED, now on funded account LFE0506429036015
+- **Strategy Library (dashboard):** 23 strategies. BLE badge = live with broker (only `orb` + `orb_15min`). FT badge = paper competing for BLE. Type badge: amber RULE or blue ML. Top ORB section = dedicated BLE display. Strategy Library = combined FT competition board, all can promote to BLE.
+- **Dashboard README updated**: `dashboard/README.md` — canonical reference for display rules
+- **ft_trades sync bug**: paper_trades has 125+ trades but strategy_registry shows 0 — nq_watcher.py never calls update_registry_metrics(). Pending fix.
+- **prev_day PDH/PDL bug**: showing 2025 levels (19040) instead of current (~24700) — date grouping bug in add_prior_day_features(). Pending fix.
+
 **Mar 11 2026:**
 - **BLE Running Total: 4 trades, $1,276, 100% WR** (Mar 6 +$43, Mar 9 +$27, Mar 10 +$860, Mar 11 +$346)
 - **NQ Dashboard = app_v3.py = port 8895** — app.py (8891) is LEGACY, do not use

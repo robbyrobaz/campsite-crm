@@ -1,25 +1,50 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-13T22:55:25.157801Z",
-  "lastHealthCheck": "2026-03-13T22:55:25.157840Z",
+  "activeTasks": [
+    {
+      "id": "c_e4e4d50949fb3_19ce96f4e1e",
+      "title": "[Moonshot] Implement adaptive TP/SL based on entry ML score + position TTL",
+      "assignee": "claude",
+      "status": "In Progress",
+      "pid": 902848,
+      "dispatchedAt": "2026-03-13T23:24:00Z"
+    },
+    {
+      "id": "c_8910eaea2502_19ce96f4dff",
+      "title": "[Blofin] Diagnose candle_momentum_burst: why FT PF 0.66 when it's T2?",
+      "assignee": "claude",
+      "status": "In Progress",
+      "pid": 902855,
+      "dispatchedAt": "2026-03-13T23:24:00Z"
+    }
+  ],
+  "lastDispatch": "2026-03-13T23:24:00Z",
+  "lastHealthCheck": "2026-03-13T23:24:00Z",
   "boardStatus": {
     "totalCards": 1064,
     "done": 1055,
     "stopped": 9,
-    "inProgress": 0,
+    "inProgress": 2,
     "planned": 0
   },
   "servicesStatus": {
     "openclaw-gateway": "active",
     "blofin-stack-ingestor": "active",
     "blofin-stack-paper": "active",
-    "blofin-dashboard": "active (HTTP 200)",
+    "blofin-dashboard": "active",
     "nq-watcher": "active",
-    "nq-dashboard-v3": "active (HTTP 200)"
+    "nq-dashboard-v3": "active (HTTP 200)",
+    "jarvis-home": "active"
   },
   "systemHealth": {
-    "cpu_temp": "86\u00b0C (OK)",
-    "disk_usage": "57% (193G free)",
+    "cpu_temp": "86°C (nominal)",
+    "disk_usage": "57% (192G free)",
     "critical_alerts": "none"
+  },
+  "lastDispatchActions": {
+    "phasesCompleted": 8,
+    "cardsEnriched": 0,
+    "cardsDispatched": 2,
+    "deploymentsVerified": 1,
+    "incidentsLogged": 0
   }
 }

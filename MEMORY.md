@@ -89,20 +89,49 @@ Autonomous SMS system for Hastings Farms 2nd Ward Saturday church cleaning volun
 - 5-minute per-phone duplicate protection
 - Phone normalization: strip leading 1 (`14802323922` → `4802323922`)
 
+### ⛔ Textbelt: Send from omen-claw, NEVER Vercel (Mar 12 2026)
+- **Vercel shared IPs are rate-limited by Textbelt.** Same API key works from omen-claw but fails from Vercel.
+- All crons send directly to `https://textbelt.com/text` from omen-claw's dedicated IP
+- Vercel only handles: calendar UI, volunteer DB, inbound webhooks, outbound logging
+- **NEVER route SMS sends through Vercel /api/sms endpoint**
+
+### ⛔ No Emojis in SMS (Mar 12 2026)
+- Emojis force Unicode encoding: 70 chars/segment instead of 160 (GSM-7)
+- A 220-char message with 2 emojis = **4 SMS credits** instead of 2
+- **All SMS must be plain text, no emojis, ever**
+
+### ⛔ Outbound Log ≠ Delivery Confirmation (Mar 12 2026)
+- The outbound log records what we ATTEMPTED to send, not what Textbelt accepted
+- Empty SID in outbound = Textbelt rejected the send (rate limit, quota, etc.)
+- **Always verify delivery via `https://textbelt.com/status/<textId>`**
+- If no textId/SID came back from the send, IT DID NOT GO THROUGH
+
+### ⛔ Cron SMS Poll MUST signup before replying (Mar 12 2026)
+- Old bug: Haiku received "Yes" → sent nice confirmation → never called POST /api/signup
+- Volunteer got a confirmation text but was NOT on the calendar
+- **Rule: POST /api/signup FIRST, verify success, THEN reply**
+
+### Cron Configuration (updated Mar 12 2026)
+- **All 3 crons on Sonnet** (Haiku hallucinated phone numbers, skipped signups, made up data)
+- SMS Poll: `12fd710c-e6ea-4ef0-970a-7bd0fd155ff2` (every 2 min, Sonnet, direct Textbelt)
+- Daily Recruitment: `46a5aa19-63c7-471d-bfe2-ed510eb409e2` (10am daily, Sonnet, direct Textbelt)
+- Friday Reminder: `1debcdf0-b262-4113-8bd9-7b884900d879` (Fri 10am, Sonnet, **DISABLED**)
+
+### Recruitment message (approved by Rob)
+"Hey [FirstName]! I've been asked to find helpers to clean the church this Saturday ([date]) at 8am. Would you mind helping out? Let me know, or if another Saturday works better instead! -- Rob Hartwig"
+
 ### API quirks
 - DELETE /api/signup to cancel (not PATCH)
 - Outbound logging via POST /api/sms/outbound
 - Poll returns `Cache-Control: no-store`
-
-### Cron IDs
-- SMS Poll: `12fd710c-e6ea-4ef0-970a-7bd0fd155ff2`
-- Daily Recruitment: `46a5aa19-63c7-471d-bfe2-ed510eb409e2`
-- Friday Reminder: `1debcdf0-b262-4113-8bd9-7b884900d879`
+- POST /api/sms/poll with `{messageIds: [...], force: true}` to mark processed without a reply
 
 ### Textbelt
-- API key in TOOLS.md
+- API key 1: `13aa08...` (52 credits remaining as of Mar 12)
+- API key 2: `012042...` in TOOLS.md (195 credits remaining as of Mar 12)
 - URL whitelist pending (can't send links until verified)
-- ~$0.01/SMS
+- ~$0.01/SMS but emojis multiply cost 2-4x
+- Daily send cap exists per source IP (undocumented) — omen-claw's IP is not capped
 
 ## NQ Dashboard Architecture (Mar 11 2026)
 

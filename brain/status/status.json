@@ -1,11 +1,26 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-13T14:52:00Z",
-  "lastHealthCheck": "2026-03-13T14:56:00Z",
-  "cycleStatus": "COMPLETED",
-  "cycleNotes": "Heartbeat 07:56 MST: All core services active. Board clean (0 IP, 0 Planned, 0 Failed). GCP BTC dip trader failing (Blofin API key invalid - exit(1) last 2 runs). Backup service failed (HTTP 500 on git push). NQ repo gitignore updated for live data files. 1047 Done cards. CPU 64°C, disk 54%.",
+  "activeTasks": [
+    {
+      "id": "c_8cc0b89db51d4_19ce7b8991b",
+      "title": "[Moonshot] Validate entry thresholds and expand from 1 to 5+ open positions",
+      "status": "In Progress",
+      "pid": 430972,
+      "dispatchedAt": "2026-03-13T15:22:00Z"
+    },
+    {
+      "id": "c_b4f677d215bc2_19ce7b898f8",
+      "title": "[Blofin] Investigate T0→T1 promotion bottleneck (94 T0, 2 T1, 1 T2)",
+      "status": "In Progress",
+      "pid": 430974,
+      "dispatchedAt": "2026-03-13T15:22:00Z"
+    }
+  ],
+  "lastDispatch": "2026-03-13T15:22:00Z",
+  "lastHealthCheck": "2026-03-13T15:22:00Z",
+  "cycleStatus": "COMPLETE",
+  "cycleNotes": "Dispatch 15:22 MST: 2/2 Planned cards dispatched (Moonshot + Blofin investigation). Health green: all 5 core services active, 0 critical alerts. No recently completed Done cards for deployment verification. CPU 91°C (warm), disk 54%. Next check: 15:52 MST.",
   "boardState": {
-    "inProgress": 0,
+    "inProgress": 2,
     "planned": 0,
     "done": 1047,
     "stopped": 9
@@ -14,20 +29,18 @@
     "openclaw-gateway": "active",
     "blofin-stack-ingestor": "active",
     "blofin-stack-paper": "active",
-    "blofin-dashboard": "active",
     "nq-watcher": "active",
-    "nq-data-sync": "active",
-    "ibkr-options": "inactive",
-    "wyze-bridge": "running",
-    "numerai-daily-bot": "inactive (last run success, timer-driven)"
+    "nq-dashboard-v3": "active",
+    "blofin-dashboard": "active"
   },
   "resources": {
-    "cpu_temp_c": 64,
+    "cpu_temp_c": 91,
     "disk_usage_pct": 54,
     "critical_alerts": 0
   },
-  "flags": {
-    "gcp_btc_dip_trader": "FAILING - Blofin API key invalid (Access key does not exist), exit(1) last 2 runs",
-    "backup_service": "FAILED - HTTP 500 on git push (remote end hung up)"
+  "dispatch": {
+    "dispatched": 2,
+    "slots_available": 1,
+    "max_concurrent": 3
   }
 }

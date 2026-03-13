@@ -11,7 +11,7 @@
 
 ### NQ Futures Pipeline — Overall Goal
 Build an always-running, self-improving NQ futures pipeline that:
-1. Ingests live 1-min bars from SMB share (`/mnt/nt_bridge/bars.csv`) via `nq-smb-watcher.service`
+1. Ingests live 1-min bars from SMB share (`IBKR feed`) via `nq-watcher.service`
 2. Runs expert strategies through the God Model dispatcher on every bar
 3. Papers trades on live data (DRY_RUN=True), logs to `data/nq_pipeline.db` run_id=`smb_live_forward_test`
 4. Graduates experts to live trading via TradersPost → Tradovate → Lucid prop accounts (Rob approves each go-live)
@@ -38,20 +38,20 @@ Research Idea → Backtest (WF: PF≥1.5, trades≥50, DD<$3K, eval_pass≥40%) 
 **Key paths:**
 - Repo: `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/`
 - DB: `data/nq_pipeline.db`
-- Watcher: `pipeline/smb_watcher.py` + `pipeline/god_model_dispatcher.py`
+- Watcher: `pipeline/nq_watcher.py` + `pipeline/god_model_dispatcher.py`
 - Strategies: `strategies/*.py`
 - ML features: `ml/features.py` — use `build_session_aware_features()` ONLY (not `build_features()` — RTH-only, wrong)
 - Models: `models/<strategy>/<strategy>_live_v1.pkl`
 - Status: `pipeline/logs/smb_status.json`
 - Forward test log: `pipeline/logs/forward_test_signals.csv`
-- Services: `nq-smb-watcher.service`, `nq-dashboard.service`
+- Services: `nq-watcher.service`, `nq-dashboard.service`
 
 **NQ hard constraints (never violate):**
 - ⛔ DRY_RUN=True always — NEVER enable live trading or fire TradersPost webhooks without Rob's explicit approval
 - ⛔ Never write to `/mnt/nt_bridge/` — read-only SMB mount
 - ⛔ God Model = single unified ensemble — do NOT treat individual strategies as the live model
 - ⛔ Only `build_session_aware_features()` for any new/retrained model — never `build_features()`
-- ⛔ All timestamps internal = UTC. ET→UTC conversion happens once in `smb_watcher._validate_bar()`
+- ⛔ All timestamps internal = UTC. ET→UTC conversion happens once in `nq_watcher._validate_bar()`
 
 **What good NQ cards look like:**
 - Register ETB (equal_tops_bottoms) in the live God Model dispatcher so it generates real signals
@@ -184,7 +184,7 @@ Missing this step = strategies exist in the registry but never generate signals.
 import sqlite3, subprocess, json
 
 db = '/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/data/nq_pipeline.db'
-watcher = '/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/pipeline/smb_watcher.py'
+watcher = '/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/pipeline/nq_watcher.py'
 run_phase2 = '/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/ml/run_phase2.py'
 models_dir = '/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/ml/models'
 
@@ -215,7 +215,7 @@ if needs_wiring:
             "status": "Planned",
             "assignee": "claude",
             "project_path": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-            "description": f"""Wire the newly gate-passing strategy '{strategy}' into the live smb_watcher forward test.
+            "description": f"""Wire the newly gate-passing strategy '{strategy}' into the live nq_watcher forward test.
 
 ## What to do:
 1. Add import to `ml/run_phase2.py`:
@@ -223,23 +223,23 @@ if needs_wiring:
    - Add: `from strategies.{strategy} import <ClassName>`
    - Add to `_STRATEGY_CLASS_MAP`: `"{strategy}": <ClassName>,`
 
-2. Add to `pipeline/smb_watcher.py` STRATEGIES list:
+2. Add to `pipeline/nq_watcher.py` STRATEGIES list:
    - Add `"{strategy}",` with a comment noting gate=pass, BT PF, and date added
 
 3. Fix pkl filename if needed:
-   - smb_watcher expects: `ml/models/{strategy}/{strategy}_live_v1.pkl`
+   - nq_watcher expects: `ml/models/{strategy}/{strategy}_live_v1.pkl`
    - If only `{strategy}_v1.pkl` exists: copy it to `{strategy}_live_v1.pkl`
    - If pkl has key `features` but not `feat_cols`: add `cache['feat_cols'] = cache['features']` and re-save
 
-4. Restart service: `systemctl --user restart nq-smb-watcher.service`
+4. Restart service: `systemctl --user restart nq-watcher.service`
 
-5. Verify: `journalctl --user -u nq-smb-watcher.service -n 30 --no-pager | grep -E "{strategy}|Loaded|Training"`
+5. Verify: `journalctl --user -u nq-watcher.service -n 30 --no-pager | grep -E "{strategy}|Loaded|Training"`
    - Should see "Loaded cache: {strategy}" or "Training {strategy} ..." followed by "Saved"
 
 6. Commit: `git add -A && git commit -m "wire {strategy} into live forward test" && git push`
 
 ## Success criteria:
-- smb_watcher.service is active
+- nq_watcher.service is active
 - `{strategy}` appears in service logs as "Loaded cache" or "Training ... Saved"
 - No errors in journal for this strategy
 

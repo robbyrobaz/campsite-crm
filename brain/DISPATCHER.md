@@ -14,7 +14,7 @@ You enrich vague cards, verify completed work is actually deployed, and keep the
 ```bash
 sensors | grep 'Package id 0'
 df -h / | tail -1
-systemctl --user is-active openclaw-gateway.service blofin-stack-ingestor.service blofin-stack-paper.service nq-smb-watcher.service nq-dashboard.service
+systemctl --user is-active openclaw-gateway.service blofin-stack-ingestor.service blofin-stack-paper.service nq-watcher.service nq-dashboard-v3.service
 ```
 If any critical service is down: restart it, log to `brain/memory/incidents.md`, continue.
 
@@ -60,7 +60,7 @@ Read the card title and description. Match to the correct project:
 
 | Keywords | project_path |
 |----------|-------------|
-| NQ, futures, momentum, orb, gap_fill, vwap_fade, God Model, smb_watcher, forward test, strategy_registry (NQ), ETB, psych_levels | `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE` |
+| NQ, futures, momentum, orb, gap_fill, vwap_fade, God Model, nq_watcher, forward test, strategy_registry (NQ), ETB, psych_levels | `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE` |
 | Blofin, crypto, coin, paper trade, strategy_registry (Blofin), T1/T2/T0, ML pipeline, backtester, pnl_rank, bt_pnl_pct | `/home/rob/.openclaw/workspace/blofin-stack` |
 | Jarvis home, energy, Nest, SPAN, Tesla, Wyze, Ring, camera, GE appliance, washer | `/home/rob/.openclaw/workspace/jarvis-home-energy` |
 | Master dashboard, usage dashboard | `/home/rob/.openclaw/workspace/master-dashboard` |
@@ -87,8 +87,8 @@ Investigate why gap_fill has only 14% win rate on live forward test (vs 62% in b
 3. Compare entry conditions between winning and losing trades — look for time-of-day patterns, volatility regime, signal confidence distribution
 4. Propose and implement one targeted fix (e.g. add session_volatility_gate, tighten confidence threshold from 0.5 to 0.65, or add time-of-day filter)
 5. Run backtest to verify fix doesn't destroy BT metrics: python3 scripts/run_walk_forward.py --strategy gap_fill
-6. Restart service after changes: systemctl --user restart nq-smb-watcher.service nq-dashboard.service
-7. Verify service is active and dashboard loads: curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8891/
+6. Restart service after changes: systemctl --user restart nq-watcher.service nq-dashboard-v3.service
+7. Verify service is active and dashboard loads: curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8895/
 SUCCESS: A specific root cause identified and one fix implemented and tested.
 CONSTRAINT: DRY_RUN only — do NOT enable live trading or fire TradersPost webhooks.
 ```
@@ -133,10 +133,10 @@ For each recently Done card (completed in last 60 minutes), verify the work is a
 
 | Card involves | Verify with |
 |---------------|-------------|
-| NQ pipeline code change | `systemctl --user is-active nq-smb-watcher.service` AND `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8891/` |
+| NQ pipeline code change | `systemctl --user is-active nq-watcher.service` AND `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8895/` |
 | Blofin code change | `systemctl --user is-active blofin-stack-ingestor.service blofin-stack-paper.service blofin-dashboard.service` |
 | Jarvis home code change | `systemctl --user is-active jarvis-home.service` AND `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8793/` |
-| ML model change (NQ) | Check `smb_status.json` → `models_loaded` count; restart `nq-smb-watcher.service` if model files changed |
+| ML model change (NQ) | Check `nq_watcher_status.json` → `models_loaded` count; restart `nq-watcher.service` if model files changed |
 | ML model change (Blofin) | `systemctl --user restart blofin-stack-ingestor.service` to reload models |
 | Dashboard change | Load the dashboard page, verify HTTP 200 |
 | New strategy registered | Query `strategy_registry` to confirm it's there |
@@ -147,7 +147,7 @@ For each recently Done card (completed in last 60 minutes), verify the work is a
 
 ```bash
 # Restart command reference:
-systemctl --user restart nq-smb-watcher.service nq-dashboard.service   # NQ changes
+systemctl --user restart nq-watcher.service nq-dashboard-v3.service   # NQ changes
 systemctl --user restart blofin-stack-ingestor.service blofin-stack-paper.service blofin-dashboard.service  # Blofin changes
 systemctl --user restart jarvis-home.service   # Jarvis home changes
 ```

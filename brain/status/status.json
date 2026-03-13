@@ -1,22 +1,12 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_b4f677d215bc2_19ce7b898f8",
-      "title": "[Blofin] Investigate T0→T1 promotion bottleneck (94 T0, 2 T1, 1 T2)",
-      "status": "In Progress",
-      "assignee": "claude",
-      "project": "blofin-stack",
-      "pid": 457637,
-      "dispatchedAt": "2026-03-13T15:52:00Z"
-    }
-  ],
+  "activeTasks": [],
   "lastDispatch": "2026-03-13T15:52:00Z",
-  "lastHealthCheck": "2026-03-13T15:52:00Z",
-  "cycleStatus": "COMPLETE",
-  "cycleNotes": "Dispatch 15:52 MST: Stale card recovered (30min threshold) + 1 card dispatched (Blofin T0→T1 bottleneck). Health green: all 5 core services active, 0 critical alerts. Database lock contention resolved. Deployment verification: 3 recent Done cards all live (NQ/Moonshot services restarted). CPU 54°C, disk 54%. Next cycle: 16:22 MST.",
+  "lastHealthCheck": "2026-03-13T16:18:00Z",
+  "cycleStatus": "ALERT",
+  "cycleNotes": "09:18 MST: CPU temp 89°C (threshold 85°C). blofin-dashboard 8.5GB RAM — OOM pressure killing blofin-stack-pipeline repeatedly (SIGKILL after ~10s). Builder PID 457637 dead, card re-queued to Planned [auto-retry #1]. Alerting Rob.",
   "boardState": {
-    "inProgress": 1,
-    "planned": 0,
+    "inProgress": 0,
+    "planned": 1,
     "done": 1047,
     "stopped": 9
   },
@@ -25,25 +15,20 @@
     "blofin-stack-ingestor": "active",
     "blofin-stack-paper": "active",
     "nq-watcher": "active",
-    "nq-dashboard-v3": "active"
+    "blofin-dashboard": "active (8.5GB RAM, high CPU)"
   },
   "resources": {
-    "cpu_temp_c": 54,
+    "cpu_temp_c": 89,
     "disk_usage_pct": 54,
-    "critical_alerts": 0
-  },
-  "dispatch": {
-    "dispatched": 1,
-    "slots_available": 2,
-    "max_concurrent": 3
+    "critical_alerts": 2
   },
   "incidents": [
     {
-      "timestamp": "2026-03-13T08:52:00Z",
-      "type": "stale_card_recovery",
-      "description": "Database lock contention: blofin-stack-ingestor repeated 'database is locked' errors. Recovered card c_b4f677d215bc2_19ce7b898f8 from In Progress to Planned after 30m with no builder progress.",
-      "severity": "medium",
-      "resolution": "Card redispatched with fresh PID. Contention persists in ingestor; monitor next cycle."
+      "timestamp": "2026-03-13T16:18:00Z",
+      "type": "cpu_temp_alert",
+      "description": "CPU temp 89°C (threshold 85°C). Load avg 14.00. blofin-dashboard at 8.5GB RAM + 68% CPU avg causing OOM kills of blofin-stack-pipeline (SIGKILL ~10s after start). Builder PID 457637 found dead, card re-queued.",
+      "severity": "high",
+      "resolution": "Pending — alerting Rob"
     }
   ]
 }

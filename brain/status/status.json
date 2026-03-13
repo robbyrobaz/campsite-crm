@@ -1,34 +1,32 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-13T15:52:00Z",
-  "lastHealthCheck": "2026-03-13T16:18:00Z",
-  "cycleStatus": "ALERT",
-  "cycleNotes": "09:18 MST: CPU temp 89°C (threshold 85°C). blofin-dashboard 8.5GB RAM — OOM pressure killing blofin-stack-pipeline repeatedly (SIGKILL after ~10s). Builder PID 457637 dead, card re-queued to Planned [auto-retry #1]. Alerting Rob.",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 1,
-    "done": 1047,
-    "stopped": 9
-  },
-  "services": {
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "nq-watcher": "active",
-    "blofin-dashboard": "active (8.5GB RAM, high CPU)"
-  },
-  "resources": {
-    "cpu_temp_c": 89,
-    "disk_usage_pct": 54,
-    "critical_alerts": 2
-  },
-  "incidents": [
+  "timestamp": "2026-03-13T16:22:00Z",
+  "session": "jarvis-pulse-dispatch",
+  "activeTasks": [
     {
-      "timestamp": "2026-03-13T16:18:00Z",
-      "type": "cpu_temp_alert",
-      "description": "CPU temp 89°C (threshold 85°C). Load avg 14.00. blofin-dashboard at 8.5GB RAM + 68% CPU avg causing OOM kills of blofin-stack-pipeline (SIGKILL ~10s after start). Builder PID 457637 found dead, card re-queued.",
-      "severity": "high",
-      "resolution": "Pending — alerting Rob"
+      "id": "c_b4f677d215bc2_19ce7b898f8",
+      "title": "[Blofin] Investigate T0→T1 promotion bottleneck",
+      "assignee": "claude",
+      "pid": 490957,
+      "status": "In Progress",
+      "started": "2026-03-13T16:22:00Z"
     }
-  ]
+  ],
+  "lastDispatch": "2026-03-13T16:22:00Z",
+  "lastHealthCheck": "2026-03-13T16:22:00Z",
+  "systemHealth": {
+    "cpu_temp_c": 84,
+    "disk_used_pct": 54,
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-watcher": "active",
+      "nq-dashboard-v3": "active"
+    }
+  },
+  "boardState": {
+    "inProgress": 1,
+    "planned": 0,
+    "capacity": "2/3 slots available"
+  }
 }

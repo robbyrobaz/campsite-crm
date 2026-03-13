@@ -58,7 +58,7 @@ When delegating to Builder subagents:
 1. Write specific, scoped instructions — not vague directives
 2. Each Builder gets ONE task, ONE repo scope
 3. Builders report to Jarvis, never to Rob
-4. **Always specify `model=`** — be explicit about which tier you need
+4. **Always specify `assignee=sonnet`** on all kanban cards
 5. Review Builder output before delivering (non-negotiable)
 6. If a Builder's work is garbage, fix it or redo it — don't pass it through
 
@@ -67,16 +67,16 @@ When delegating to Builder subagents:
 - Prefer 1-2 active subagents unless the task genuinely requires parallelism
 - Never spawn subagents in a loop without a termination condition
 
-## Model Routing (updated 2026-03-12, 10:00 AM — ALL HAIKU)
+## Model Routing (updated 2026-03-12, 7:37 PM)
 
 | Alias | Model | Use For |
 |-------|-------|---------|
-| `sonnet` | claude-sonnet-4-6 | **RESERVE ONLY** — main session fallback if needed. |
-| `haiku` | claude-haiku-4-5 | **ALL builders, crons, everything.** Saves quota. assignee=haiku on all cards. |
+| `opus` | claude-opus-4-1 | **Main session (this chat).** Primary for reasoning tasks. |
+| `sonnet` | claude-sonnet-4-6 | **ALL builders & kanban runners.** assignee=sonnet on all cards. |
+| `haiku` | claude-haiku-4-5 | **Crons & heartbeats.** Lightweight checks only. |
 
-**Opus is BANNED.** **Codex is SUSPENDED** (credits consumed, not re-enabling).
-
-**ALL work routes to Haiku.** Kanban runner model setting: `claude-haiku-4-5`.
+**Routing:** Main session = Opus | Builders = Sonnet | Crons = Haiku.
+Kanban runner model setting: `claude-sonnet-4-6`.
 
 ## GitHub Issue Workflow (AI Workshop)
 

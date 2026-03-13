@@ -2750,7 +2750,7 @@ def ring_webrtc_proxy():
     try:
         sdp = request.get_data()
         req = _ur.Request(
-            "http://127.0.0.1:1984/api/webrtc?src=ring_door",
+            "http://127.0.0.1:8558/api/webrtc?src=9884e3d2f0af_live",
             data=sdp,
             headers={"Content-Type": "application/x-www-form-urlencoded"},
             method="POST"
@@ -3329,9 +3329,9 @@ def ring_page():
 
         async function checkStreamHealth() {
             try {
-                const resp = await fetch('http://192.168.68.72:1984/api/streams');
+                const resp = await fetch('http://192.168.68.72:8558/api/streams');
                 const data = await resp.json();
-                const stream = data.ring_door;
+                const stream = data["9884e3d2f0af_live"];
                 // If stream has no consumers after 5s, show setup notice
                 if (!stream || !stream.consumers || stream.consumers.length === 0) {
                     document.getElementById('streamSetupNotice').style.display = 'block';
@@ -3341,7 +3341,7 @@ def ring_page():
             }
         }
 
-        const GO2RTC_STREAM_URL = 'http://192.168.68.72:1984/stream.html?src=ring_door';
+        const GO2RTC_STREAM_URL = 'http://192.168.68.72:8558/stream.html?src=9884e3d2f0af_live';
 
         function toggleStream() {
             const btn   = document.getElementById('toggleStreamBtn');
@@ -6242,7 +6242,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   <div style="color:rgba(255,255,255,0.65);font-size:1rem" id="ring-popup-time">&#8212;</div>
   <div style="color:rgba(255,255,255,0.45);font-size:0.9rem" id="ring-popup-device">Front Door</div>
   <div style="display:flex;gap:16px;margin-top:4px;flex-wrap:wrap;justify-content:center">
-    <button onclick="dismissDoorbellPopup();showView('ring');setTimeout(()=>{const f=document.getElementById('streamFrame');const a=document.getElementById('streamArea');if(f&&a&&!a.classList.contains('show')){f.src='http://192.168.68.72:1984/stream.html?src=ring_door&ts='+Date.now();a.classList.add('show');}},400)"
+    <button onclick="dismissDoorbellPopup();showView('ring');setTimeout(()=>{const f=document.getElementById('streamFrame');const a=document.getElementById('streamArea');if(f&&a&&!a.classList.contains('show')){f.src='http://192.168.68.72:8558/stream.html?src=9884e3d2f0af_live&ts='+Date.now();a.classList.add('show');}},400)"
       style="padding:18px 40px;font-size:1.3rem;font-weight:800;background:#22c55e;color:#000;border:none;border-radius:12px;cursor:pointer;min-height:64px;touch-action:manipulation;letter-spacing:0.5px">
       ▶ View Live
     </button>

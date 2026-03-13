@@ -1,27 +1,22 @@
 {
-  "dispatchCycle": "2026-03-13T19:06:10.020703Z",
-  "activeTasks": [],
-  "recentlyCompleted": [],
-  "lastHealthCheck": "2026-03-13T19:06:10.020734Z",
-  "services": {
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "nq-watcher": "active",
-    "nq-dashboard-v3": "active",
-    "ibkr-ib-gateway": "running"
-  },
-  "systemHealth": {
-    "cpuTemp": "86\u00b0C",
-    "diskUsage": "56%",
-    "diskAvail": "199G"
-  },
-  "board": {
-    "inProgress": 0,
-    "planned": 2,
-    "done": 1060,
-    "totalCards": 1062
-  },
-  "dispatchStatus": "2_profit_hunter_cards_queued",
-  "notes": "Profit Hunter: Identified 2 high-EV opportunities (NQ scale $25-35K/mo, Moonshot scale $8-12K/mo). Cards queued. Blofin strategy deeply underwater (-157% PnL) \u2014 not a winner."
+  "activeTasks": [
+    {
+      "id": "c_7c9d92cc43237_19ce893cdd5",
+      "title": "[Blofin] Audit strategy_registry — 94 T1 strategies with no FT data",
+      "assignee": "claude",
+      "project": "/home/rob/.openclaw/workspace/blofin-stack",
+      "startedAt": "2026-03-13T12:23:03.528000"
+    },
+    {
+      "id": "c_909672b6a4055_19ce893e864",
+      "title": "[Moonshot] Train initial LightGBM ML scoring model",
+      "assignee": "claude",
+      "project": "/home/rob/.openclaw/workspace/blofin-moonshot",
+      "startedAt": "2026-03-13T12:23:01.587000"
+    }
+  ],
+  "lastDispatch": "2026-03-13T19:23:21Z",
+  "lastHealthCheck": "2026-03-13T19:23:21Z",
+  "dispatchSummary": "Dispatched 2 cards (Moonshot ML training, Blofin audit). 0 stale recovered. Services healthy.",
+  "nextDispatch": "2026-03-13T19:53:21Z"
 }

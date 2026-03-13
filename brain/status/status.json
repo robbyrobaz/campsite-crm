@@ -1,16 +1,16 @@
 {
+  "dispatchCycle": "2026-03-13T22:24:00Z",
   "activeTasks": [],
-  "lastDispatch": "2026-03-13T21:54:00Z",
-  "lastHealthCheck": "2026-03-13T21:54:00Z",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "done_recent": 3
-  },
+  "inProgress": 0,
+  "planned": 0,
+  "inbox": 0,
+  "boardStatus": "clear",
+  "lastDispatch": "2026-03-13T22:24:00Z",
+  "lastHealthCheck": "2026-03-13T22:24:00Z",
   "systemHealth": {
-    "cpuTemp": "77.0°C",
+    "cpuTemp": "78°C",
     "diskUsage": "57%",
     "criticalServices": "all active"
   },
-  "notes": "Queue empty — no dispatch needed. Blofin services nominal."
+  "note": "Board is clear. All critical services operational. No dispatch needed this cycle."
 }

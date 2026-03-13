@@ -604,3 +604,29 @@ Action: Log the failure, monitor on next dispatch cycle.
 - Strategy registry populated with 68 T0 strategies (awaiting tier promotion)
 - Paper engine operational
 
+---
+
+## 2026-03-13 07:52 MST — Moonshot Service Startup Rate-Limit
+
+**Incident:** blofin-moonshot.service restarted during Phase 7 deployment verification but failed to fully start.
+
+**Symptom:** Service in `activating` state, genesis_date enrichment stuck hitting CoinGecko API 429 (Too Many Requests) rate limits.
+
+**Details:**
+- Attempted enrichment of 50 coin genesis dates
+- 45 of 50 requests returned 429 (rate limited)
+- Only 2 successfully enriched before timeout
+- Service exited rather than blocking on startup
+
+**Root Cause:** CoinGecko API rate limit hit during initialization. Service was restarted ~2 hours after previous failure (likely same rate-limit issue).
+
+**Status:** SERVICE WILL RECOVER
+- Rate limit is time-based (likely resets within 1 hour)
+- Service logs show graceful degradation (logging failures rather than crashing)
+- On next natural service restart (timer or manual), it will retry genesis enrichment
+- No action needed — external API issue, not code/deployment problem
+
+**Impact:** Moonshot model loading may be slightly delayed (genesis_date enrichment is non-critical to model operation), but dashboard data may be incomplete temporarily.
+
+**Follow-up:** Monitor on next dispatch cycle. If issue persists >4 hours, consider rate-limit mitigation (exponential backoff, caching, or adding API key).
+

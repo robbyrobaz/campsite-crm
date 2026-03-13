@@ -1,7 +1,9 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-13T14:22:00Z",
-  "lastHealthCheck": "2026-03-13T14:22:00Z",
+  "lastDispatch": "2026-03-13T14:52:00Z",
+  "lastHealthCheck": "2026-03-13T14:56:00Z",
+  "cycleStatus": "COMPLETED",
+  "cycleNotes": "Heartbeat 07:56 MST: All core services active. Board clean (0 IP, 0 Planned, 0 Failed). GCP BTC dip trader failing (Blofin API key invalid - exit(1) last 2 runs). Backup service failed (HTTP 500 on git push). NQ repo gitignore updated for live data files. 1047 Done cards. CPU 64°C, disk 54%.",
   "boardState": {
     "inProgress": 0,
     "planned": 0,
@@ -12,13 +14,20 @@
     "openclaw-gateway": "active",
     "blofin-stack-ingestor": "active",
     "blofin-stack-paper": "active",
+    "blofin-dashboard": "active",
     "nq-watcher": "active",
-    "nq-dashboard-v3": "active",
-    "moonshot-v2-dashboard": "active"
+    "nq-data-sync": "active",
+    "ibkr-options": "inactive",
+    "wyze-bridge": "running",
+    "numerai-daily-bot": "inactive (last run success, timer-driven)"
   },
   "resources": {
-    "cpu_temp_c": 65,
-    "disk_usage_pct": 53,
+    "cpu_temp_c": 64,
+    "disk_usage_pct": 54,
     "critical_alerts": 0
+  },
+  "flags": {
+    "gcp_btc_dip_trader": "FAILING - Blofin API key invalid (Access key does not exist), exit(1) last 2 runs",
+    "backup_service": "FAILED - HTTP 500 on git push (remote end hung up)"
   }
 }

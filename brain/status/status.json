@@ -1,41 +1,30 @@
 {
-  "dispatchCycle": "2026-03-13T07:52:00Z",
-  "lastDispatch": "2026-03-13T07:52:00Z",
-  "lastHealthCheck": "2026-03-13T07:52:00Z",
-  "systemHealth": {
-    "cpu": "84°C (OK)",
-    "disk": "50% used (223G/468G)",
-    "gateway": "active",
-    "blofin_services": "all active",
-    "nq_services": "partial (nq-watcher active, nq-smb-watcher inactive)"
-  },
-  "alerts": "None critical",
+  "timestamp": "2026-03-13T08:22:00Z",
+  "dispatchCycle": "active",
   "activeTasks": [
     {
-      "id": "c_1d306e75e37ea_19ce6150ac5",
-      "title": "[NQ] Diagnose equal_tops_bottoms FT collapse (-$2,005 vs BT PF 3.02)",
-      "assignee": "claude",
+      "id": "c_14fe14fc6b8e9_19ce63260df",
+      "title": "[NQ] Full Phase 2 retrain — all ML strategies on IBKR+historical data",
+      "status": "In Progress",
+      "assignee": "codex",
       "project": "NQ-Trading-PIPELINE",
-      "pid": 4112050,
-      "dispatchedAt": "2026-03-13T07:52:00Z"
-    },
-    {
-      "id": "c_d4dc90174fd2d_19ce615403e",
-      "title": "[Blofin] Expand vwap_volatility_rebound to additional BTC/ETH pairs",
-      "assignee": "claude",
-      "project": "blofin-stack",
-      "pid": 4112030,
-      "dispatchedAt": "2026-03-13T07:52:00Z"
-    },
-    {
-      "id": "c_be1776eff7d89_19ce61576de",
-      "title": "[Moonshot] Optimize SUN-USDT position exit logic and validate champion model",
-      "assignee": "claude",
-      "project": "blofin-moonshot",
-      "pid": 4112026,
-      "dispatchedAt": "2026-03-13T07:52:00Z"
+      "pid": 4178034,
+      "age_minutes": 25,
+      "cpu_usage": "157%"
     }
   ],
-  "plannedQueue": "0 (all dispatched)",
-  "completedThisHour": "1 (Blofin debug card, 22.9 min ago, deployed ✓)"
+  "plannedQueue": [],
+  "lastDispatch": "2026-03-13T08:22:00Z",
+  "lastHealthCheck": "2026-03-13T08:22:00Z",
+  "systemHealth": {
+    "cpu_temp": "76.0°C (safe)",
+    "disk_usage": "50% (safe)",
+    "critical_services": "5/5 active",
+    "critical_alerts": "none"
+  },
+  "deploymentStatus": {
+    "nq_pipeline": "deployed (8895 responsive)",
+    "blofin_stack": "deployed (8892 responsive)",
+    "moonshot_v2": "deployed (8893 responsive)"
+  }
 }

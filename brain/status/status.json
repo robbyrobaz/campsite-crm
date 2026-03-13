@@ -1,20 +1,48 @@
 {
-  "timestamp": "2026-03-12T20:22:00Z",
-  "cycle": "jarvis_pulse_dispatch",
-  "health": {
-    "cpu_temp_c": 86.0,
-    "disk_usage_pct": 44,
-    "critical_alerts": 0,
-    "services_status": {
+  "activeTasks": [],
+  "lastCardGeneration": "2026-03-13T07:25:00Z",
+  "generatedCards": [
+    {
+      "id": "c_1d306e75e37ea_19ce6150ac5",
+      "title": "[NQ] Diagnose equal_tops_bottoms FT collapse (-$2,005 vs BT PF 3.02)",
+      "status": "Planned",
+      "priority": "CRITICAL — feature leakage/overfitting diagnosis"
+    },
+    {
+      "id": "c_d4dc90174fd2d_19ce615403e",
+      "title": "[Blofin] Expand vwap_volatility_rebound to additional BTC/ETH pairs",
+      "status": "Planned",
+      "priority": "HIGH — grow top FT performer coverage"
+    },
+    {
+      "id": "c_be1776eff7d89_19ce61576de",
+      "title": "[Moonshot] Optimize SUN-USDT position exit logic and validate champion model",
+      "status": "Planned",
+      "priority": "MEDIUM — refine exit thresholds, confirm VAL_AUC 0.844"
+    }
+  ],
+  "lastDispatch": "2026-03-13T07:22:00Z",
+  "lastHealthCheck": "2026-03-13T07:30:00Z",
+  "systemHealth": {
+    "cpu_temp_c": 78,
+    "disk_used_pct": 50,
+    "services": {
       "openclaw_gateway": "active",
-      "blofin_stack_ingestor": "active",
-      "blofin_stack_paper": "activating",
+      "blofin_ingestor": "active",
+      "blofin_paper": "active",
       "nq_smb_watcher": "active",
       "nq_dashboard": "inactive"
     }
   },
-  "activeTasks": [],
-  "lastDispatch": "2026-03-12T20:22:00Z",
-  "lastHealthCheck": "2026-03-12T20:22:00Z",
-  "summary": "Heartbeat cleanup: orphaned Moonshot card cleared (PID dead). Board: 0 In Progress, 0 Failed."
+  "dispatchCapacity": {
+    "inProgress": 0,
+    "planned": 3,
+    "capacity": 3,
+    "canDispatch": true
+  },
+  "notes": {
+    "recent_fixes": "Blofin paper trading unblocked: DB migration (leverage column), TOD bootstrap gate for new T2 strategies",
+    "nq_alerts": "equal_tops_bottoms FT collapse (-$2005) critical flag queued",
+    "git_hygiene": "NQ-Trading-PIPELINE auto-committed, all dirty repos cleared"
+  }
 }

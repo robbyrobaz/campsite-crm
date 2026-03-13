@@ -1,16 +1,25 @@
 {
-  "dispatchCycle": "2026-03-13T22:24:00Z",
   "activeTasks": [],
-  "inProgress": 0,
-  "planned": 0,
-  "inbox": 0,
-  "boardStatus": "clear",
-  "lastDispatch": "2026-03-13T22:24:00Z",
-  "lastHealthCheck": "2026-03-13T22:24:00Z",
-  "systemHealth": {
-    "cpuTemp": "78°C",
-    "diskUsage": "57%",
-    "criticalServices": "all active"
+  "lastDispatch": "2026-03-13T22:55:25.157801Z",
+  "lastHealthCheck": "2026-03-13T22:55:25.157840Z",
+  "boardStatus": {
+    "totalCards": 1064,
+    "done": 1055,
+    "stopped": 9,
+    "inProgress": 0,
+    "planned": 0
   },
-  "note": "Board is clear. All critical services operational. No dispatch needed this cycle."
+  "servicesStatus": {
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
+    "blofin-dashboard": "active (HTTP 200)",
+    "nq-watcher": "active",
+    "nq-dashboard-v3": "active (HTTP 200)"
+  },
+  "systemHealth": {
+    "cpu_temp": "86\u00b0C (OK)",
+    "disk_usage": "57% (193G free)",
+    "critical_alerts": "none"
+  }
 }

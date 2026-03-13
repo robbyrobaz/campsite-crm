@@ -1,48 +1,41 @@
 {
-  "activeTasks": [],
-  "lastCardGeneration": "2026-03-13T07:25:00Z",
-  "generatedCards": [
+  "dispatchCycle": "2026-03-13T07:52:00Z",
+  "lastDispatch": "2026-03-13T07:52:00Z",
+  "lastHealthCheck": "2026-03-13T07:52:00Z",
+  "systemHealth": {
+    "cpu": "84°C (OK)",
+    "disk": "50% used (223G/468G)",
+    "gateway": "active",
+    "blofin_services": "all active",
+    "nq_services": "partial (nq-watcher active, nq-smb-watcher inactive)"
+  },
+  "alerts": "None critical",
+  "activeTasks": [
     {
       "id": "c_1d306e75e37ea_19ce6150ac5",
       "title": "[NQ] Diagnose equal_tops_bottoms FT collapse (-$2,005 vs BT PF 3.02)",
-      "status": "Planned",
-      "priority": "CRITICAL — feature leakage/overfitting diagnosis"
+      "assignee": "claude",
+      "project": "NQ-Trading-PIPELINE",
+      "pid": 4112050,
+      "dispatchedAt": "2026-03-13T07:52:00Z"
     },
     {
       "id": "c_d4dc90174fd2d_19ce615403e",
       "title": "[Blofin] Expand vwap_volatility_rebound to additional BTC/ETH pairs",
-      "status": "Planned",
-      "priority": "HIGH — grow top FT performer coverage"
+      "assignee": "claude",
+      "project": "blofin-stack",
+      "pid": 4112030,
+      "dispatchedAt": "2026-03-13T07:52:00Z"
     },
     {
       "id": "c_be1776eff7d89_19ce61576de",
       "title": "[Moonshot] Optimize SUN-USDT position exit logic and validate champion model",
-      "status": "Planned",
-      "priority": "MEDIUM — refine exit thresholds, confirm VAL_AUC 0.844"
+      "assignee": "claude",
+      "project": "blofin-moonshot",
+      "pid": 4112026,
+      "dispatchedAt": "2026-03-13T07:52:00Z"
     }
   ],
-  "lastDispatch": "2026-03-13T07:22:00Z",
-  "lastHealthCheck": "2026-03-13T07:30:00Z",
-  "systemHealth": {
-    "cpu_temp_c": 78,
-    "disk_used_pct": 50,
-    "services": {
-      "openclaw_gateway": "active",
-      "blofin_ingestor": "active",
-      "blofin_paper": "active",
-      "nq_smb_watcher": "active",
-      "nq_dashboard": "inactive"
-    }
-  },
-  "dispatchCapacity": {
-    "inProgress": 0,
-    "planned": 3,
-    "capacity": 3,
-    "canDispatch": true
-  },
-  "notes": {
-    "recent_fixes": "Blofin paper trading unblocked: DB migration (leverage column), TOD bootstrap gate for new T2 strategies",
-    "nq_alerts": "equal_tops_bottoms FT collapse (-$2005) critical flag queued",
-    "git_hygiene": "NQ-Trading-PIPELINE auto-committed, all dirty repos cleared"
-  }
+  "plannedQueue": "0 (all dispatched)",
+  "completedThisHour": "1 (Blofin debug card, 22.9 min ago, deployed ✓)"
 }

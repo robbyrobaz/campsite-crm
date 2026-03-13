@@ -15,9 +15,12 @@
 - Blofin dashboard: `systemctl --user is-active blofin-dashboard.service` (**port 8892** — moved from 8888 Feb 25)
 - Blofin paper trading: `systemctl --user is-active blofin-stack-paper.service`
 - **Do NOT check** `blofin-stack-api.service` — intentionally removed Feb 18
-- **NQ SMB watcher**: `systemctl --user is-active nq-smb-watcher.service`
-  - Expected: `active` — this is the live NQ data feed (NinjaTrader SMB bridge → NQ_continuous_1min.csv)
-  - If inactive: `systemctl --user start nq-smb-watcher.service` and alert Rob
+- **NQ Watcher (FT engine)**: `systemctl --user is-active nq-watcher.service`
+  - Expected: `active` — runs 9 experts on IBKR data, unlimited concurrent paper positions
+  - If inactive: `systemctl --user start nq-watcher.service` and alert Rob
+- **NQ Data Sync**: `systemctl --user is-active nq-data-sync.service`
+  - Expected: `active` — copies IBKR data every 5s for FT/BT isolation
+  - If inactive: `systemctl --user start nq-data-sync.service`
   - **NQ Futures trading hours (CME Globex):**
     - **RTH (Regular Trading Hours):** Mon–Fri 8:30 AM – 3:15 PM CT (7:30 AM – 2:15 PM MST)
     - **Globex overnight:** Sun 5 PM CT – Mon 8:30 AM CT, then Mon–Thu 3:30 PM – 8:30 AM CT next day

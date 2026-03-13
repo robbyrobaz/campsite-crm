@@ -29,9 +29,9 @@
 
 ### 1. NQ Futures Trading Pipeline
 **Repo:** `NQ-Trading-PIPELINE/` | **Path:** `/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/`
-**Dashboard:** http://127.0.0.1:8891 (also :8891 on LAN)
+**Dashboard:** http://127.0.0.1:8895 (v3, also :8895 on LAN)
 **GitHub:** https://github.com/robbyrobaz/NQ-Trading-PIPELINE (private, main branch)
-**Status:** Forward Test (FT-PL) running on live data. BLE off (`DRY_RUN`). 8 models active.
+**Status:** FT running on IBKR data (9 experts, unlimited concurrent). BLE ORBs LIVE (paying out). Data isolated: BLE reads IBKR original, FT reads synced copy.
 
 ### ⭐ 1a. NQ ORB Engine — LIVE EXECUTION (separate from God Model FT)
 **Engine:** `NQ-Trading-PIPELINE/pipeline/orb_signal_engine.py`
@@ -45,7 +45,7 @@
 **DST fix committed:** `fec3864` — was hardcoded hour=14 (EST), corrected to hour=13 (EDT)
 **Next:** Scale to QUANTITY=4 after first clean live Monday run (today's 6:30 AM). Add 15-min ORB layer.
 
-**Live data feed:** NinjaTrader (Windows 192.168.68.88) → SMB `/mnt/nt_bridge/bars.csv` → `nq-smb-watcher.service` → `NQ_continuous_1min.csv`
+**Live data feed:** IBKR feed → `NQ_ibkr_1min.csv` (UTC) → `nq-data-sync.service` → `NQ_ibkr_ft.csv` → `nq-watcher.service`. BLE reads IBKR original directly.
 **Forward test run_id:** `smb_live_forward_test` (only valid run — 129 trades Feb 23-26)
 **Alert topic:** ntfy.sh/nq-pipeline
 

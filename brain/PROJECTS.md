@@ -36,7 +36,7 @@
 ### ⭐ 1a. NQ ORB Engine — LIVE EXECUTION (separate from God Model FT)
 **Engine:** `NQ-Trading-PIPELINE/pipeline/orb_signal_engine.py`
 **Service:** `nq-orb-signal.service` (active, DRY_RUN=False)
-**Route:** IBKR L2 feed → ORB engine → TradersPost → Tradovate → Lucid Flex 50K LFE0506429036012
+**Route:** IBKR L2 feed → ORB engine → TradersPost → Tradovate → Lucid Flex 50K LFE0506429036015
 **Status:** LIVE — tested Mar 6 (SHORT +$43) and Mar 9 (LONG +$27). Both clean. ✅
 **Backtest:** 14 months, PF 6.4, WR 86.3%, $4,772/mo EV at 4 MNQ (Lucid Flex 50K)
 

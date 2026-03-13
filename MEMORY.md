@@ -119,7 +119,7 @@ Autonomous SMS system for Hastings Farms 2nd Ward Saturday church cleaning volun
 - Friday Reminder: `1debcdf0-b262-4113-8bd9-7b884900d879` (Fri 10am, Sonnet, **DISABLED**)
 
 ### Recruitment message (approved by Rob)
-"Hey [FirstName]! I've been asked to find helpers to clean the church this Saturday ([date]) at 8am. Would you mind helping out? Let me know, or if another Saturday works better instead! -- Rob Hartwig"
+"Hey [FirstName]! I've been asked to find helpers to clean the church this Saturday ([date]) at 8am. Would you be willing to help? -- Rob Hartwig"
 
 ### API quirks
 - DELETE /api/signup to cancel (not PATCH)

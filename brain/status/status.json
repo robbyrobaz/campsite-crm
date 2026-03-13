@@ -1,6 +1,24 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-13T13:53:28Z",
-  "lastHealthCheck": "2026-03-13T13:53:28Z",
-  "notes": "No cards in Planned or In Progress. Board clear. All services active. Deployment verification passed for 3 recent Done cards."
+  "lastDispatch": "2026-03-13T14:22:00Z",
+  "lastHealthCheck": "2026-03-13T14:22:00Z",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 1047,
+    "stopped": 9
+  },
+  "services": {
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
+    "nq-watcher": "active",
+    "nq-dashboard-v3": "active",
+    "moonshot-v2-dashboard": "active"
+  },
+  "resources": {
+    "cpu_temp_c": 65,
+    "disk_usage_pct": 53,
+    "critical_alerts": 0
+  }
 }

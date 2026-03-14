@@ -658,3 +658,16 @@ Action: Log the failure, monitor on next dispatch cycle.
 
 **Status:** Recovered. Service will stabilize in 2-5 minutes.
 
+
+## 2026-03-14 — 12:54 AM MST — Port 8893 Conflict (Dispatch Cycle)
+
+**Service:** blofin-moonshot-dashboard.service
+**Port:** 8893 (Flask)
+**Issue:** Service entering restart loop (171+ restarts) — "Address already in use"
+**Root Cause:** Orphan process holding port after previous session
+**Resolution:** 
+- Killed orphan process: `lsof -ti :8893 | xargs kill -9`
+- Restarted service: `systemctl --user restart blofin-moonshot-dashboard.service`
+- Verified: HTTP 200 from http://127.0.0.1:8893/
+**Status:** Resolved ✓
+

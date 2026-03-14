@@ -1,45 +1,14 @@
 {
-  "activeTasks": [
+  "lastDispatch": "2026-03-14T07:55:32.568423Z",
+  "lastHealthCheck": "2026-03-14T07:55:32.568444Z",
+  "activeTasks": [],
+  "summary": "Idle \u2014 no Planned or In Progress cards. All services healthy.",
+  "incidents": [
     {
-      "id": "c_1c30d80b9ab07_19ceb27402d",
-      "title": "[Moonshot] Monitor SUN-USDT open position + validate score quality",
-      "assignee": "claude",
-      "pid": 1384015,
-      "dispatchedAt": "2026-03-14T07:24:00Z"
-    },
-    {
-      "id": "c_f1af2bfa32bf3_19ceb271f5d",
-      "title": "[Blofin] Diagnose candle_momentum_burst T2 demotion + reversal T2 promotion readiness",
-      "assignee": "claude",
-      "pid": 1384019,
-      "dispatchedAt": "2026-03-14T07:24:00Z"
-    },
-    {
-      "id": "c_e852a70b4d5c5_19ceb271edd",
-      "title": "[NQ] Debug equal_tops_bottoms signal generation — live -$2005 vs BT PF 3.01",
-      "assignee": "claude",
-      "pid": 1384024,
-      "dispatchedAt": "2026-03-14T07:24:00Z"
+      "time": "2026-03-14T07:55:32.568453Z",
+      "severity": "resolved",
+      "issue": "blofin-moonshot-dashboard port 8893 conflict",
+      "action": "killed orphan process, restarted service, verified HTTP 200"
     }
-  ],
-  "lastDispatch": "2026-03-14T07:24:00Z",
-  "lastHealthCheck": "2026-03-14T07:24:00Z",
-  "serviceStatus": {
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "nq-watcher": "active",
-    "nq-dashboard-v3": "active",
-    "blofin-moonshot-dashboard": "active"
-  },
-  "deploymentStatus": {
-    "blofin": "verified",
-    "moonshot": "verified",
-    "nq": "verified"
-  },
-  "systemHealth": {
-    "cpu": "91°C",
-    "disk": "60%",
-    "criticalAlerts": "none"
-  }
+  ]
 }

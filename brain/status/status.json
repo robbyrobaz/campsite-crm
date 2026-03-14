@@ -1,17 +1,16 @@
 {
-  "timestamp": "2026-03-14T22:02:00Z",
   "activeTasks": [],
-  "lastCompleted": [
-    {
-      "task": "Moonshot challenger count raised 10→25 (100/day)",
-      "status": "deployed",
-      "timestamp": "2026-03-14T22:00:00Z"
-    },
-    {
-      "task": "Crons updated to read TOURNAMENT_PHILOSOPHY.md",
-      "status": "deployed",
-      "timestamp": "2026-03-14T22:01:00Z"
-    }
-  ],
-  "notes": "System configured for autonomous operation. Crons will enforce tournament philosophy (find 0.5% winners, let 95% fail). No intervention needed."
+  "lastDispatch": "2026-03-14T22:25:00Z",
+  "lastHealthCheck": "2026-03-14T22:25:00Z",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 3
+  },
+  "systemHealth": {
+    "cpuTemp": "88\u00b0C",
+    "disk": "77% full",
+    "services": "all active"
+  },
+  "note": "Kanban board is idle. No active tasks, no pending dispatch. Services healthy."
 }

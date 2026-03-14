@@ -14,8 +14,9 @@ services:
       - TZ=America/Phoenix
       - RTSP_PORT=8559
       - MEDIAMTX_RTSPADDRESS=:8559
-      - WB_PORT=8558
+      - WB_PORT=8560
       - WB_IP=192.168.68.85
+      - FLASK_RUN_PORT=8560
     volumes:
       - ./tokens:/tokens
       - ./config:/config

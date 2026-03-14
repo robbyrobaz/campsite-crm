@@ -1,17 +1,11 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-14T01:25:24.011718Z",
-  "lastHealthCheck": "2026-03-14T01:30:00Z",
+  "lastDispatch": "2026-03-14T01:55:08Z",
+  "lastHealthCheck": "2026-03-14T01:55:08Z",
   "boardState": {
     "inProgress": 0,
     "planned": 0,
-    "done": 1058,
-    "stopped": 9
+    "queue_full": false
   },
-  "systemHealth": {
-    "cpuTemp": "77°C",
-    "diskUsage": "58%",
-    "servicesActive": 8,
-    "criticalAlerts": 0
-  }
+  "note": "Dispatch cycle: all services healthy, no pending work"
 }

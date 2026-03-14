@@ -1,15 +1,16 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-14T17:54:00.000000+00:00",
-  "lastHealthCheck": "2026-03-14T17:54:00.000000+00:00",
+  "lastDispatch": "2026-03-14T18:24:00.000000+00:00",
+  "lastHealthCheck": "2026-03-14T18:24:00.000000+00:00",
   "boardState": {
     "inProgress": 0,
     "planned": 0,
     "done": 3
   },
   "health": {
-    "cpuTemp": "85°C",
+    "cpuTemp": "76°C",
     "diskUsage": "71%",
     "servicesActive": 5
-  }
+  },
+  "dispatchSummary": "Board empty — no cards to dispatch. All services healthy."
 }

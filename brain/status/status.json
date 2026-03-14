@@ -1,37 +1,17 @@
 {
-  "dispatchCycle": "2026-03-14T21:55:00Z",
-  "queue": {
-    "inbox": 4,
-    "planned": 0,
-    "inProgress": 0,
-    "done": 1079
-  },
+  "timestamp": "2026-03-14T22:02:00Z",
   "activeTasks": [],
-  "healthStatus": {
-    "cpu": "65°C",
-    "disk": "77%",
-    "services": "all active (5/5)"
-  },
-  "recentlyCompleted": [
+  "lastCompleted": [
     {
-      "id": "c_a624a6",
-      "title": "Test card",
-      "completedAt": "2026-03-14T14:30:00Z",
-      "status": "completed"
+      "task": "Moonshot challenger count raised 10→25 (100/day)",
+      "status": "deployed",
+      "timestamp": "2026-03-14T22:00:00Z"
     },
     {
-      "id": "c_2ebdac",
-      "title": "Moonshot: Add random feature subset generation to tournament",
-      "completedAt": "2026-03-14T13:59:28Z",
-      "status": "deployed"
-    },
-    {
-      "id": "c_e2d4a5",
-      "title": "Investigate Moonshot invalidation crisis (76% exit rate)",
-      "completedAt": "2026-03-14T13:45:00Z",
-      "status": "deployed"
+      "task": "Crons updated to read TOURNAMENT_PHILOSOPHY.md",
+      "status": "deployed",
+      "timestamp": "2026-03-14T22:01:00Z"
     }
   ],
-  "lastHealthCheck": "2026-03-14T21:55:00Z",
-  "notes": "Queue empty — no dispatch needed. All services active, recent Moonshot work deployed."
+  "notes": "System configured for autonomous operation. Crons will enforce tournament philosophy (find 0.5% winners, let 95% fail). No intervention needed."
 }

@@ -1,22 +1,24 @@
 {
-  "timestamp": "2026-03-14T13:52:00-07:00",
-  "activeTasks": [],
-  "lastCompleted": [
+  "activeTasks": [
     {
-      "task": "Moonshot invalidation fix (lock features at entry)",
-      "status": "deployed",
-      "timestamp": "2026-03-14T13:52:00-07:00"
-    },
-    {
-      "task": "Moonshot TP/SL tuning (15/5 → 10/5)",
-      "status": "deployed",
-      "timestamp": "2026-03-14T13:52:00-07:00"
-    },
-    {
-      "task": "Moonshot social signals disabled (0% contribution)",
-      "status": "deployed",
-      "timestamp": "2026-03-14T13:52:00-07:00"
+      "id": "c_2ebdac3dc7eb7_19cee0cc741",
+      "title": "Moonshot: Add random feature subset generation to tournament",
+      "status": "In Progress",
+      "assignee": "codex",
+      "pid": 2185497,
+      "started": "2026-03-14T20:55:00Z"
     }
   ],
-  "notes": "All 3 Moonshot improvements deployed. Services restarted. Next: PnL accounting fix + entry threshold tuning + feature subset expansion (Card 4)."
+  "lastDispatch": "2026-03-14T20:55:00Z",
+  "lastHealthCheck": "2026-03-14T20:55:00Z",
+  "systemHealth": {
+    "cpu": "62°C",
+    "disk": "77%",
+    "servicesActive": 5
+  },
+  "recentlyDone": [
+    "Investigate Moonshot invalidation crisis (76% exit rate) — deployed",
+    "Moonshot social signals audit — deployed",
+    "Moonshot TP/SL tuning — deployed"
+  ]
 }

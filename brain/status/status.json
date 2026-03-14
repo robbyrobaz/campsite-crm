@@ -1,16 +1,26 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-14T22:25:00Z",
-  "lastHealthCheck": "2026-03-14T22:25:00Z",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "done": 3
-  },
+  "activeTasks": [
+    {
+      "id": "c_436082dd508b7_19cedbd21ec",
+      "title": "ADD SESSION: NQ ORB London Killzone (2-5 AM ET)",
+      "pid": 2309230,
+      "project": "NQ-Trading-PIPELINE",
+      "dispatched_at": "2026-03-14T22:55:00Z"
+    },
+    {
+      "id": "c_fde527d5c0be4_19cedbcf081",
+      "title": "SCALE WINNER: Moonshot v2 Champion — 2x leverage",
+      "pid": 2309231,
+      "project": "blofin-moonshot-v2",
+      "dispatched_at": "2026-03-14T22:55:00Z"
+    }
+  ],
+  "lastDispatch": "2026-03-14T22:55:00Z",
+  "lastHealthCheck": "2026-03-14T22:55:00Z",
   "systemHealth": {
-    "cpuTemp": "88\u00b0C",
-    "disk": "77% full",
-    "services": "all active"
-  },
-  "note": "Kanban board is idle. No active tasks, no pending dispatch. Services healthy."
+    "cpu_temp": "75C",
+    "disk_usage": "77%",
+    "services": "all_active",
+    "critical_alerts": "none"
+  }
 }

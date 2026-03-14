@@ -1,28 +1,19 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_d02df66f414c_19cedbad23e",
-      "title": "[Blofin] Expand FT pair coverage: retrain ML for top paper trade symbols",
-      "assignee": "claude",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-14T19:26:00.152092+00:00",
-      "pid": 2095195
-    },
-    {
-      "id": "c_c728852deef5d_19cedba8a15",
-      "title": "[NQ] Wire 10 gate-pass strategies into live god_model_dispatcher",
-      "assignee": "claude",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-14T19:26:00.152112+00:00",
-      "pid": 2095198
-    }
-  ],
-  "lastDispatch": "2026-03-14T19:26:00.152116+00:00",
-  "lastHealthCheck": "2026-03-14T19:26:00.152119+00:00",
+  "activeTasks": [],
+  "lastDispatch": "2026-03-14T19:55:00.000000+00:00",
+  "lastHealthCheck": "2026-03-14T19:55:00.000000+00:00",
   "systemState": {
-    "cpuTemp": "95\u00b0C",
-    "diskUsage": "72% (128GB free)",
+    "cpuTemp": "76°C",
+    "diskUsage": "71% (130GB free)",
     "servicesActive": 5,
     "criticalAlerts": 0
-  }
+  },
+  "boardStatus": {
+    "inProgress": 0,
+    "planned": 0,
+    "inbox": 2,
+    "stopped": 9,
+    "done": 1074
+  },
+  "lastVerified": "2026-03-14T19:55:00.000000+00:00"
 }

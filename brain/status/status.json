@@ -1,14 +1,7 @@
 {
-  "lastDispatch": "2026-03-14T07:55:32.568423Z",
-  "lastHealthCheck": "2026-03-14T07:55:32.568444Z",
   "activeTasks": [],
-  "summary": "Idle \u2014 no Planned or In Progress cards. All services healthy.",
-  "incidents": [
-    {
-      "time": "2026-03-14T07:55:32.568453Z",
-      "severity": "resolved",
-      "issue": "blofin-moonshot-dashboard port 8893 conflict",
-      "action": "killed orphan process, restarted service, verified HTTP 200"
-    }
-  ]
+  "lastDispatch": "2026-03-14T08:24:00Z",
+  "lastHealthCheck": "2026-03-14T08:24:00Z",
+  "timestamp": "2026-03-14T08:24:00Z",
+  "summary": "Dispatch cycle complete. Board clear (0 Planned, 0 In Progress). All services active. 3 completed cards verified deployed (Blofin + NQ work live)."
 }

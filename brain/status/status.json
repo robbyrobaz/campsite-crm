@@ -1,37 +1,33 @@
 {
-  "timestamp": "2026-03-14T16:01:00Z",
-  "activeTasks": [
-    {
-      "id": "c_5c070c9abaad4_19cecde28c8",
-      "title": "[Blofin] Fix strategy_coin_eligibility schema",
-      "status": "In Progress",
-      "started": "2026-03-14T15:54:00Z",
-      "runtime_minutes": 187
-    }
-  ],
-  "inProgress": 1,
-  "planned": 0,
-  "lastDispatch": "2026-03-14T15:54:00Z",
-  "lastHealthCheck": "2026-03-14T16:01:00Z",
-  "systemHealth": {
-    "cpu": "71°C (cool)",
-    "disk": "68% (144G free)",
-    "services": "gateway active, moonshot dashboard active"
-  },
+  "activeTasks": [],
   "boardState": {
-    "done": 1074,
-    "failed": 0,
-    "inbox": 0,
+    "inProgress": 0,
     "planned": 0,
-    "inProgress": 1
+    "done": 1072,
+    "stopped": 9
   },
-  "moonshot": {
-    "dashboard": "active (200)",
-    "ft_models": 150,
-    "champion": "de44f72dbb01 PF=2.22 (388 trades)",
-    "cycle_95": "HUNG (started 04:05, never completed - OOM likely)",
-    "cycle_97": "IN PROGRESS (started 08:25, 36min elapsed)",
-    "db_size": "5.2GB"
+  "lastDispatch": "2026-03-14T16:25:20Z",
+  "lastHealthCheck": "2026-03-14T16:25:20Z",
+  "healthStatus": {
+    "cpu_temp_celsius": 85,
+    "disk_usage_percent": 69,
+    "critical_services": "all_active"
   },
-  "note": "Cycle 95 hung (OOM), Cycle 97 running with fixes. FT backlog 150 (above 50 threshold but cleanup cards just deployed). Builder active (PID 1896064, 3h runtime). Church SMS investigation complete (cron disabled, calendar fixed)."
+  "recentCompletions": [
+    {
+      "title": "[Blofin] Fix strategy_coin_eligibility schema (missing FT columns)",
+      "completed_ago_minutes": 10,
+      "verified": true
+    },
+    {
+      "title": "[NQ] Investigate equal_tops_bottoms overfit (-$2,005 live vs BT PF 3.01)",
+      "completed_ago_minutes": 55,
+      "verified": true
+    },
+    {
+      "title": "[Moonshot v2] Verify first cycle running, tune initial parameters",
+      "completed_ago_minutes": 58,
+      "verified": true
+    }
+  ]
 }

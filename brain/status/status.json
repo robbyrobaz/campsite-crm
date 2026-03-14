@@ -1,24 +1,32 @@
 {
   "activeTasks": [
     {
-      "id": "c_2ebdac3dc7eb7_19cee0cc741",
-      "title": "Moonshot: Add random feature subset generation to tournament",
-      "status": "In Progress",
+      "id": "c_a624a63142b8d_19cedeff29a",
+      "title": "Test card",
       "assignee": "codex",
-      "pid": 2185497,
-      "started": "2026-03-14T20:55:00Z"
+      "pid": 2213974,
+      "dispatchedAt": "2026-03-14T21:25:00Z"
     }
   ],
-  "lastDispatch": "2026-03-14T20:55:00Z",
-  "lastHealthCheck": "2026-03-14T20:55:00Z",
-  "systemHealth": {
-    "cpu": "62°C",
+  "lastDispatch": "2026-03-14T21:25:00Z",
+  "lastHealthCheck": "2026-03-14T21:25:00Z",
+  "healthStatus": {
+    "cpu": "83°C",
     "disk": "77%",
-    "servicesActive": 5
+    "services": "all active"
   },
-  "recentlyDone": [
-    "Investigate Moonshot invalidation crisis (76% exit rate) — deployed",
-    "Moonshot social signals audit — deployed",
-    "Moonshot TP/SL tuning — deployed"
+  "recentlyCompleted": [
+    {
+      "id": "c_2ebdac3dc7eb7_19cee0cc741",
+      "title": "Moonshot: Add random feature subset generation to tournament",
+      "completedAge": "25.9m",
+      "status": "deployed"
+    },
+    {
+      "id": "c_e2d4a5d9c68c8_19cedf032ba",
+      "title": "Investigate Moonshot invalidation crisis",
+      "completedAge": "40.4m",
+      "status": "deployed"
+    }
   ]
 }

@@ -1,43 +1,50 @@
 {
-  "timestamp": "2026-03-14T04:54:00Z",
+  "timestamp": "2026-03-14T05:30:00Z",
   "activeTasks": [],
   "inProgressCount": 0,
   "plannedCount": 0,
-  "lastDispatch": "2026-03-14T04:54:00Z",
-  "lastHealthCheck": "2026-03-14T04:54:00Z",
+  "lastDispatch": "2026-03-14T05:24:00Z",
+  "lastHealthCheck": "2026-03-14T05:30:00Z",
   "systemHealth": {
-    "cpu_temp_c": 83,
+    "cpu_temp_c": 81,
     "disk_usage_percent": 59,
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
       "blofin-stack-paper": "active",
+      "blofin-dashboard": "active",
       "nq-watcher": "active",
-      "nq-dashboard-v3": "active"
-    }
+      "nq-data-sync": "active"
+    },
+    "failed_services": [
+      {
+        "name": "blofin-data-retention.service",
+        "reason": "timeout (exit 124)",
+        "severity": "low",
+        "last_run": "2026-03-13T21:00:30Z"
+      },
+      {
+        "name": "blofin-stack-pipeline.service",
+        "reason": "timeout after 3h (expected 4h cycle)",
+        "severity": "medium",
+        "last_run": "2026-03-13T15:30:23Z"
+      },
+      {
+        "name": "nq-postmerge-check.service",
+        "reason": "script not found (exit 203/EXEC)",
+        "severity": "low",
+        "last_run": "2026-03-13T22:00:00Z"
+      }
+    ]
   },
   "recentCompletions": [
     {
       "id": "c_8910eaea2502_19ce96f4dff",
-      "title": "[Blofin] Diagnose candle_momentum_burst: why FT PF 0.66 when it's T2?",
+      "title": "[Blofin] Diagnose candle_momentum_burst: why FT PF 0.66 when its T2?",
       "completedAt": "2026-03-14T04:23:20Z",
       "verified": true,
-      "service": "blofin-stack (dashboard 200)"
-    },
-    {
-      "id": "c_e4e4d50949fb3_19ce96f4e1e",
-      "title": "[Moonshot] Implement adaptive TP/SL based on entry ML score + position TTL",
-      "completedAt": "2026-03-14T04:23:20Z",
-      "verified": true,
-      "service": "moonshot-v2-dashboard (port 8893, 200)"
-    },
-    {
-      "id": "c_e950f278de0bd_19ce96f4dda",
-      "title": "[NQ] Wire orb_retest_5min/15min & orb_multi_5min/15min into live dispatcher",
-      "completedAt": "2026-03-14T04:21:40Z",
-      "verified": true,
-      "service": "nq-watcher (dashboard 200)"
+      "service": "blofin-stack"
     }
   ],
-  "notes": "Dispatch cycle 30-min: COMPLETE. No Planned/In Progress cards. Board idle. All 5 services active + healthy. CPU 83°C (nominal), disk 59% free. Critical alerts: PASS. Next dispatch: 2026-03-14T05:24Z."
+  "notes": "Heartbeat 05:30 UTC: CPU temp recovered (85→81°C, blofin-dashboard restart fixed runaway process). 3 non-critical service failures. All main services active. Board idle. Disk 59%. Critical alerts: PASS. Token usage: 38% 5h window."
 }

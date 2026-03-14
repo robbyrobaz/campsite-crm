@@ -1,65 +1,50 @@
 {
-  "lastAutoCardGeneration": "2026-03-14T23:00:00Z",
-  "cardsCreated": 3,
-  "plannedCards": [
+  "activeTasks": [
     {
-      "id": "c_ac5bac7858e72_19cee957cb4",
-      "title": "[NQ] Diagnose empty FT DB + start forward test collection",
-      "type": "diagnostic",
-      "priority": "high"
+      "id": "c_7dbebe92a0bb5_19cee957d1d",
+      "title": "[Moonshot] Diagnose why no open positions despite ML scores",
+      "pid": 2338166,
+      "project": "blofin-moonshot",
+      "dispatched_at": "2026-03-14T23:25:00Z"
     },
     {
       "id": "c_98b5551449979_19cee957ce5",
       "title": "[Blofin] Promote top T1 strategies to T2 forward test",
-      "type": "diagnostic",
-      "priority": "high"
+      "pid": 2338170,
+      "project": "blofin-stack",
+      "dispatched_at": "2026-03-14T23:25:00Z"
     },
     {
-      "id": "c_7dbebe92a0bb5_19cee957d1d",
-      "title": "[Moonshot] Diagnose why no open positions despite ML scores",
-      "type": "diagnostic",
-      "priority": "medium"
-    }
-  ],
-  "pipelineStatus": {
-    "NQ": {
-      "state": "empty_db",
-      "issue": "Forward test data not collecting — nq-watcher may not be running",
-      "action": "Diagnostic card created to restart and verify"
-    },
-    "Blofin": {
-      "state": "no_t2",
-      "issue": "94 T1 strategies ready but 0 in T2 forward test",
-      "action": "Promotion card created to move top 5 T1→T2"
-    },
-    "Moonshot": {
-      "state": "no_positions",
-      "issue": "0 open positions despite trained model (v31 AUC 0.844) and populated ml_scores",
-      "action": "Entry logic diagnostic card created"
-    }
-  },
-  "activeTasks": [
-    {
-      "id": "c_436082dd508b7_19cedbd21ec",
-      "title": "ADD SESSION: NQ ORB London Killzone (2-5 AM ET)",
-      "pid": 2309230,
+      "id": "c_ac5bac7858e72_19cee957cb4",
+      "title": "[NQ] Diagnose empty FT DB + start forward test collection",
+      "pid": 2338172,
       "project": "NQ-Trading-PIPELINE",
-      "dispatched_at": "2026-03-14T22:55:00Z"
-    },
-    {
-      "id": "c_fde527d5c0be4_19cedbcf081",
-      "title": "SCALE WINNER: Moonshot v2 Champion — 2x leverage",
-      "pid": 2309231,
-      "project": "blofin-moonshot-v2",
-      "dispatched_at": "2026-03-14T22:55:00Z"
+      "dispatched_at": "2026-03-14T23:25:00Z"
     }
   ],
-  "lastDispatch": "2026-03-14T22:55:00Z",
-  "lastHealthCheck": "2026-03-14T23:00:00Z",
+  "lastDispatch": "2026-03-14T23:25:00Z",
+  "lastHealthCheck": "2026-03-14T23:25:00Z",
+  "lastDeploymentVerification": "2026-03-14T23:25:00Z",
   "systemHealth": {
-    "cpu_temp": "75C",
+    "cpu_temp": "58C",
     "disk_usage": "77%",
     "services": "all_active",
     "critical_alerts": "none"
-  }
+  },
+  "recentlyCompleted": [
+    {
+      "id": "c_436082dd508b7_19cedbd21ec",
+      "title": "[NQ] ADD SESSION: NQ ORB London Killzone (2-5 AM ET)",
+      "completed_at": "2026-03-14T23:15:00Z",
+      "verified": true,
+      "verification_status": "London Killzone entry logic committed and deployed to orb_signal_engine.py. Service restarted."
+    },
+    {
+      "id": "c_fde527d5c0be4_19cedbcf081",
+      "title": "[Moonshot] SCALE WINNER: 2x leverage",
+      "completed_at": "2026-03-14T22:40:00Z",
+      "verified": true,
+      "verification_status": "Leverage = 2 in config.py. Blofin services active and dashboard responding."
+    }
+  ]
 }

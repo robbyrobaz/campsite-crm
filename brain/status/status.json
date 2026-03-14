@@ -1,8 +1,8 @@
 {
-  "dispatchCycle": "2026-03-14T11:31:00Z",
-  "timestamp": "2026-03-14T11:31:00Z",
-  "healthStatus": "RECOVERING",
-  "cpuTemp": "77°C",
+  "dispatchCycle": "2026-03-14T11:33:00Z",
+  "timestamp": "2026-03-14T11:33:00Z",
+  "healthStatus": "HEALTHY",
+  "cpuTemp": "84°C",
   "diskUsage": "62% (272G / 468G)",
   "criticalServices": [
     {
@@ -19,7 +19,7 @@
     },
     {
       "service": "nq-watcher",
-      "status": "restarting"
+      "status": "stopped (weekend market closure - expected)"
     },
     {
       "service": "nq-data-sync",
@@ -31,46 +31,31 @@
       "id": "c_e7adb3a9a0c7_19cec0230fa",
       "title": "Moonshot: Optimize entry/exit thresholds from 93 trades",
       "assignee": "claude",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-14T11:24:00Z"
+      "status": "In Progress"
     },
     {
       "id": "c_3e971e5e9a32f_19cec0230d2",
       "title": "Blofin: Fix schema queries + verify T2 FT status",
       "assignee": "claude",
-      "status": "In Progress",
-      "dispatchedAt": "2026-03-14T11:24:00Z"
+      "status": "In Progress"
     }
   ],
   "incidents": [
     {
-      "severity": "WARNING",
-      "issue": "blofin-moonshot-v2 runaway process at 490% CPU",
-      "action": "Killed (04:31 MST)",
-      "status": "resolved"
-    },
-    {
-      "severity": "WARNING",
-      "issue": "blofin-stack-paper.service DB lock + termination",
-      "action": "Restarted (04:30 MST)",
-      "status": "recovered"
-    },
-    {
       "severity": "INFO",
-      "issue": "nq-watcher.service failed (mount check passes, service restarted)",
-      "action": "Restarted at 04:30, waiting for clean startup",
-      "status": "monitoring"
+      "issue": "NinjaTrader host 192.168.68.88 unreachable (weekend closure)",
+      "action": "nq-watcher stopped, will resume Sunday evening",
+      "status": "expected"
     }
   ],
-  "failedCards": 1,
-  "failedCardNote": "Momentum Strategy card too fresh (<2h), will auto-retry on next cycle",
+  "marketStatus": "WEEKEND_CLOSURE",
+  "marketNote": "NQ futures closed Fri 3:15 PM CT → Sun 5 PM CT. NinjaTrader host down is normal.",
   "gitBackupStatus": "complete",
   "boardState": {
     "inProgress": 2,
     "planned": 0,
     "failed": 1,
-    "done": 1061,
-    "builderCapacity": "2/3"
+    "done": 1061
   },
-  "lastHealthCheck": "2026-03-14T11:31:00Z"
+  "lastHealthCheck": "2026-03-14T11:33:00Z"
 }

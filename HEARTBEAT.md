@@ -139,6 +139,25 @@
 - Paper account: mkhhjz078 / DUH860616 — API port 4002
 - Weekend/closed market: service will log "market closed" — this is NORMAL, do not alert
 
+## Moonshot v2 Health Check (EVERY HEARTBEAT)
+- Check services:
+  - `systemctl --user is-active moonshot-v2-dashboard.service` → expect `active`
+  - Dashboard at port 8893 should return 200: `curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:8893/`
+- Check recent cycle completion:
+  - `journalctl --user -u moonshot-v2.service --since "8 hours ago" | grep "Cycle.*started\|Cycle.*done" | tail -4`
+  - Last cycle should have started AND completed (no OOM kills, no hangs)
+  - If cycle started but never completed → **FLAG** "Moonshot cycle hung or OOM killed"
+- Check FT backlog (should stay ≤30 after cleanup):
+  - `cd blofin-moonshot-v2 && .venv/bin/python -c "from src.db.schema import get_db; print(get_db().execute('SELECT COUNT(*) FROM tournament_models WHERE stage=\"forward_test\"').fetchone()[0])"`
+  - If FT count >50 → **FLAG** "Moonshot FT backlog growing again"
+- Check champion health:
+  - `cd blofin-moonshot-v2 && .venv/bin/python -c "from src.db.schema import get_db; c=get_db().execute('SELECT model_id,ft_pf,ft_trades FROM tournament_models WHERE stage=\"champion\"').fetchone(); print(f'{c[0]} PF={c[1]:.2f} trades={c[2]}' if c else 'NO CHAMPION')"`
+  - If NO CHAMPION → **FLAG** "Moonshot has no champion"
+  - If champion FT PF <1.5 after 200+ trades → **FLAG** "Champion underperforming"
+- Check DB size (alert if >10GB):
+  - `du -sh blofin-moonshot-v2/data/moonshot_v2.db`
+- If all OK: reply HEARTBEAT_OK
+
 ## Rules
 
 - If a service is down, restart it and log to incidents.md

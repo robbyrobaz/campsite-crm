@@ -1,20 +1,20 @@
 {
-  "lastDispatchCycle": "2026-03-13T20:25:44-07:00",
+  "timestamp": "2026-03-14T03:54:00Z",
   "activeTasks": [],
   "inProgressCount": 0,
   "plannedCount": 0,
-  "lastHealthCheck": "2026-03-13T20:25:44-07:00",
+  "lastDispatch": "2026-03-14T03:54:00Z",
+  "lastHealthCheck": "2026-03-14T03:54:00Z",
   "systemHealth": {
-    "cpu_temp": "83°C (safe)",
-    "disk": "58% (/)",
+    "cpu_temp_c": 84,
+    "disk_usage_percent": 58,
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
       "blofin-stack-paper": "active",
       "nq-watcher": "active",
-      "nq-dashboard-v3": "active",
-      "blofin-moonshot": "activating (CoinGecko rate-limiting startup)"
+      "nq-dashboard-v3": "active"
     }
   },
-  "lastAction": "Auto-restarted blofin-moonshot.service (was inactive)"
+  "notes": "Dispatch cycle complete. No cards in queue. Board empty. All services healthy. Next dispatch: 8:24 PM MST (30min cycle)."
 }

@@ -3329,7 +3329,7 @@ def ring_page():
 
         async function checkStreamHealth() {
             try {
-                const resp = await fetch('http://192.168.68.72:8558/api/streams');
+                const resp = await fetch('http://' + window.location.hostname + ':8558/api/streams');
                 const data = await resp.json();
                 const stream = data["9884e3d2f0af_live"];
                 // If stream has no consumers after 5s, show setup notice
@@ -3341,7 +3341,7 @@ def ring_page():
             }
         }
 
-        const GO2RTC_STREAM_URL = 'http://192.168.68.72:8558/stream.html?src=9884e3d2f0af_live';
+        const GO2RTC_STREAM_URL = 'http://' + window.location.hostname + ':8558/stream.html?src=9884e3d2f0af_live';
 
         function toggleStream() {
             const btn   = document.getElementById('toggleStreamBtn');
@@ -4223,13 +4223,13 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .ct-mini-spark { position: absolute; bottom: 0; left: 0; right: 0; height: 18px; opacity: 0.7; }
 
   /* ── Cameras ── */
-  .camera-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; cursor: pointer; transition: border-color .2s; }
+  .camera-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; cursor: pointer; transition: border-color .2s; max-width: 75%; margin: 0 auto; }
   .camera-card:hover { border-color: rgba(255,255,255,.25); }
   .camera-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--surface2); display: block; }
-  .camera-thumb-placeholder { width: 100%; aspect-ratio: 16/9; background: var(--surface2); display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 32px; flex-direction: column; gap: 4px; }
-  .camera-info { padding: 10px 12px; }
-  .camera-name { font-weight: 700; font-size: 13px; margin-bottom: 6px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
-  .camera-meta { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .camera-thumb-placeholder { width: 100%; aspect-ratio: 16/9; background: var(--surface2); display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 24px; flex-direction: column; gap: 4px; }
+  .camera-info { padding: 6px 8px; }
+  .camera-name { font-weight: 700; font-size: 11px; margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+  .camera-meta { font-size: 9px; color: var(--text-dim); margin-top: 2px; }
   .badge-wyze { background: rgba(0,212,255,.15); color: #00d4ff; }
   .badge-ring { background: rgba(16,185,129,.15); color: var(--battery); }
   .cam-live-dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:var(--online); box-shadow:0 0 5px var(--online); margin-right:4px; animation:pulse-run 1.5s infinite; vertical-align:middle; }
@@ -4462,7 +4462,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 <header>
   <div class="header-top">
-    <a href="http://192.168.68.72:8793" class="logo" style="text-decoration:none;color:inherit">🏠 <span>Jarvis Home</span></a>
+    <a href="/" class="logo" style="text-decoration:none;color:inherit">🏠 <span>Jarvis Home</span></a>
     <div class="status-bar">
       <div id="span-dot" class="dot offline" title="SPAN Panel"></div>
       <div id="enphase-dot" class="dot offline" title="Enphase"></div>
@@ -5761,8 +5761,8 @@ DASHBOARD_HTML = """<!DOCTYPE html>
 
 
 <!-- ═══ CAMERAS ══════════════════════════════════════════════════════════════ -->
-<div id="view-cameras" class="view">
-  <div class="section-title">Security Cameras</div>
+<div id="view-cameras" class="view" style="padding:4px 8px">
+  <div class="section-title" style="margin-bottom:4px">Security Cameras</div>
   <div id="cameras-setup-card" class="card" style="border-color:var(--warning);display:none">
     <div class="card-header">
       <span class="card-title">📷 No cameras configured</span>
@@ -5773,7 +5773,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
     </div>
     <button class="btn primary" onclick="showView('settings')">Go to Settings →</button>
   </div>
-  <div id="camera-grid" class="grid grid-2" style="margin-bottom:16px"></div>
+  <div id="camera-grid" class="grid grid-2" style="margin-bottom:4px;gap:4px"></div>
 </div><!-- /cameras -->
 
 <!-- ═══ ROKU TVs ══════════════════════════════════════════════════════════════ -->
@@ -6242,7 +6242,7 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   <div style="color:rgba(255,255,255,0.65);font-size:1rem" id="ring-popup-time">&#8212;</div>
   <div style="color:rgba(255,255,255,0.45);font-size:0.9rem" id="ring-popup-device">Front Door</div>
   <div style="display:flex;gap:16px;margin-top:4px;flex-wrap:wrap;justify-content:center">
-    <button onclick="dismissDoorbellPopup();showView('ring');setTimeout(()=>{const f=document.getElementById('streamFrame');const a=document.getElementById('streamArea');if(f&&a&&!a.classList.contains('show')){f.src='http://192.168.68.72:8558/stream.html?src=9884e3d2f0af_live&ts='+Date.now();a.classList.add('show');}},400)"
+    <button onclick="dismissDoorbellPopup();showView('ring');setTimeout(()=>{const f=document.getElementById('streamFrame');const a=document.getElementById('streamArea');if(f&&a&&!a.classList.contains('show')){f.src='http://'+window.location.hostname+':8558/stream.html?src=9884e3d2f0af_live&ts='+Date.now();a.classList.add('show');}},400)"
       style="padding:18px 40px;font-size:1.3rem;font-weight:800;background:#22c55e;color:#000;border:none;border-radius:12px;cursor:pointer;min-height:64px;touch-action:manipulation;letter-spacing:0.5px">
       ▶ View Live
     </button>
@@ -7710,6 +7710,7 @@ function rokuLaunch(ip, appId) {
 
 // Roku data comes from SSE state (s.roku) — no separate polling needed
 
+let _camListCache = [];  // Cache previous camera list to detect changes
 
 function renderCameras(cameras) {
   const grid = document.getElementById('camera-grid');
@@ -7718,6 +7719,7 @@ function renderCameras(cameras) {
   if (!cameras || cameras.length === 0) {
     grid.innerHTML = '';
     if (setupCard) setupCard.style.display = 'block';
+    _camListCache = [];
     return;
   }
   if (setupCard) setupCard.style.display = 'none';
@@ -7725,80 +7727,117 @@ function renderCameras(cameras) {
   // Update cache for modal
   cameras.forEach(cam => { _camDataCache[cam.mac || cam.type] = cam; });
 
-  // Build HTML for each camera
-  grid.innerHTML = cameras.map(cam => {
-    const mac        = cam.mac || cam.type;
-    const badgeClass = cam.type === 'wyze' ? 'badge-wyze' : 'badge-ring';
-    const icon       = cam.type === 'wyze' ? '📷' : '🔔';
-    const isOnline   = cam.status === 'online';
-    const lastInfo   = cam.last_motion
-      ? `Last motion: ${cam.last_motion}`
-      : (cam.last_seen ? `Last seen: ${cam.last_seen}` : '');
-    const liveDot = isOnline ? '<span class="cam-live-dot" title="Live"></span>' : '';
-    const statusBadge = `<span class="badge ${isOnline?'online':'offline'}">${cam.status||'?'}</span>`;
-    const rtspId    = _getRtspId(cam);
-    const isFront   = mac === _FRONT_SIDE_MAC;
+  // Check if camera list actually changed (by MAC/type IDs)
+  const currentIds = cameras.map(c => c.mac || c.type).sort().join(',');
+  const cachedIds = _camListCache.map(c => c.mac || c.type).sort().join(',');
+  const listChanged = currentIds !== cachedIds;
 
-    let thumbHtml, sourceBadge;
-    if (rtspId) {
-      // RTSP — poll /frame every 500ms (single JPEG per request, no multipart needed)
-      thumbHtml = `<img id="cam-img-${mac}" class="camera-thumb"
-           src="/api/camera/${rtspId}/frame?t=${Date.now()}"
-           onerror="this.style.display='none';document.getElementById('cam-ph-${mac}').style.display='flex'"
-           onload="document.getElementById('cam-ph-${mac}').style.display='none';this.style.display='block'"
-           alt="${cam.name}">
-      <div id="cam-ph-${mac}" class="camera-thumb-placeholder" style="display:flex">${icon}<div style="font-size:10px;color:var(--text-dim)">Connecting…</div></div>`;
-      sourceBadge = `<span class="badge" style="background:rgba(0,255,128,.15);color:#00ff80;margin-right:6px">LIVE</span>`;
-    } else if (isFront) {
-      // No RTSP — snapshot with fast refresh every 5 s
-      thumbHtml = `<img id="cam-img-${mac}" class="camera-thumb"
-           src="/api/camera/${mac}/snapshot?t=${Date.now()}"
-           onerror="this.style.display='none';document.getElementById('cam-ph-${mac}').style.display='flex'"
-           onload="document.getElementById('cam-ph-${mac}').style.display='none';this.style.display='block'"
-           alt="${cam.name}">
-      <div id="cam-ph-${mac}" class="camera-thumb-placeholder" style="display:none">${icon}<div style="font-size:10px;color:var(--text-dim)">No snapshot</div></div>`;
-      sourceBadge = `<span class="badge" style="background:rgba(255,165,0,.15);color:orange;margin-right:6px">Snapshot (no RTSP)</span>`;
-    } else {
-      thumbHtml = `<img id="cam-img-${mac}" class="camera-thumb"
-           src="/api/camera/${mac}/snapshot?t=${Date.now()}"
-           onerror="this.style.display='none';document.getElementById('cam-ph-${mac}').style.display='flex'"
-           onload="document.getElementById('cam-ph-${mac}').style.display='none';this.style.display='block'"
-           alt="${cam.name}">
-      <div id="cam-ph-${mac}" class="camera-thumb-placeholder" style="display:flex">${icon}<div style="font-size:10px;color:var(--text-dim)">No snapshot</div></div>`;
-      sourceBadge = `<span class="badge ${badgeClass}" style="margin-right:6px">${cam.type||'?'}</span>`;
-    }
+  // Only rebuild HTML if cameras added/removed
+  if (listChanged) {
+    grid.innerHTML = cameras.map(cam => {
+      const mac        = cam.mac || cam.type;
+      const badgeClass = cam.type === 'wyze' ? 'badge-wyze' : 'badge-ring';
+      const icon       = cam.type === 'wyze' ? '📷' : '🔔';
+      const isOnline   = cam.status === 'online';
+      const lastInfo   = cam.last_motion
+        ? `Last motion: ${cam.last_motion}`
+        : (cam.last_seen ? `Last seen: ${cam.last_seen}` : '');
+      const liveDot = isOnline ? '<span class="cam-live-dot" title="Live"></span>' : '';
+      const statusBadge = `<span id="cam-status-${mac}" class="badge ${isOnline?'online':'offline'}">${cam.status||'?'}</span>`;
+      const rtspId    = _getRtspId(cam);
+      const isFront   = mac === _FRONT_SIDE_MAC;
 
-    return `<div class="camera-card" onclick="openCameraModal('${mac}')">
-      ${thumbHtml}
-      <div class="camera-info">
-        <div class="camera-name">
-          <span>${liveDot}${cam.name}</span>
-          ${statusBadge}
+      let thumbHtml, sourceBadge;
+      if (rtspId) {
+        // TRUE LIVE VIDEO via MediaMTX HLS — real streaming video with <3s latency
+        thumbHtml = `<iframe id="cam-stream-${mac}" 
+             src="http://${window.location.hostname}:8888/${rtspId}/"
+             class="camera-thumb" 
+             style="border:none;background:#000;width:100%;height:100%;aspect-ratio:16/9"
+             allow="autoplay"
+             sandbox="allow-scripts allow-same-origin"></iframe>`;
+        sourceBadge = `<span class="badge" style="background:rgba(0,255,128,.15);color:#00ff80;margin-right:6px">🔴 LIVE VIDEO</span>`;
+      } else if (isFront) {
+        // No RTSP — snapshot with fast refresh every 5s
+        thumbHtml = `<img id="cam-img-${mac}" class="camera-thumb"
+             src="/api/camera/${mac}/snapshot?t=${Date.now()}"
+             onerror="this.style.display='none';document.getElementById('cam-ph-${mac}').style.display='flex'"
+             onload="document.getElementById('cam-ph-${mac}').style.display='none';this.style.display='block'"
+             alt="${cam.name}">
+        <div id="cam-ph-${mac}" class="camera-thumb-placeholder" style="display:none">${icon}<div style="font-size:10px;color:var(--text-dim)">No snapshot</div></div>`;
+        sourceBadge = `<span class="badge" style="background:rgba(255,165,0,.15);color:orange;margin-right:6px">Snapshot (no RTSP)</span>`;
+      } else {
+        thumbHtml = `<img id="cam-img-${mac}" class="camera-thumb"
+             src="/api/camera/${mac}/snapshot?t=${Date.now()}"
+             onerror="this.style.display='none';document.getElementById('cam-ph-${mac}').style.display='flex'"
+             onload="document.getElementById('cam-ph-${mac}').style.display='none';this.style.display='block'"
+             alt="${cam.name}">
+        <div id="cam-ph-${mac}" class="camera-thumb-placeholder" style="display:flex">${icon}<div style="font-size:10px;color:var(--text-dim)">No snapshot</div></div>`;
+        sourceBadge = `<span class="badge ${badgeClass}" style="margin-right:6px">${cam.type||'?'}</span>`;
+      }
+
+      return `<div class="camera-card" onclick="openCameraModal('${mac}')">
+        ${thumbHtml}
+        <div class="camera-info">
+          <div class="camera-name" id="cam-name-${mac}">
+            <span>${liveDot}${cam.name}</span>
+            ${statusBadge}
+          </div>
+          <div class="camera-meta" id="cam-meta-${mac}">
+            ${sourceBadge}${lastInfo}
+          </div>
         </div>
-        <div class="camera-meta">
-          ${sourceBadge}${lastInfo}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+      </div>`;
+    }).join('');
 
-  // Auto-refresh intervals: 2s for RTSP (matches ffmpeg 0.5fps capture rate), 30s for CDN snapshots
-  cameras.forEach(cam => {
-    const mac    = cam.mac || cam.type;
-    const rtspId = _getRtspId(cam);
-    if (!_camRefreshTimers[mac]) {
-      const interval = rtspId ? 2000 : 30000;
-      _camRefreshTimers[mac] = setInterval(() => refreshCameraImg(mac), interval);
-    }
-  });
+    _camListCache = cameras;  // Update cache
 
-  // Cancel timers for cameras that disappeared
-  Object.keys(_camRefreshTimers).forEach(mac => {
-    if (!cameras.some(c => (c.mac || c.type) === mac)) {
-      clearInterval(_camRefreshTimers[mac]);
-      delete _camRefreshTimers[mac];
-    }
-  });
+    // Setup refresh timers only for non-streaming cameras (Ring, etc.)
+    cameras.forEach(cam => {
+      const mac    = cam.mac || cam.type;
+      const rtspId = _getRtspId(cam);
+      // Only need polling for non-streaming cameras (HLS iframes handle their own refresh)
+      if (!rtspId && !_camRefreshTimers[mac]) {
+        const interval = 30000;  // 30s for snapshots
+        _camRefreshTimers[mac] = setInterval(() => refreshCameraImg(mac), interval);
+      }
+    });
+
+    // Cancel timers for cameras that disappeared
+    Object.keys(_camRefreshTimers).forEach(mac => {
+      if (!cameras.some(c => (c.mac || c.type) === mac)) {
+        clearInterval(_camRefreshTimers[mac]);
+        delete _camRefreshTimers[mac];
+      }
+    });
+  } else {
+    // List didn't change — just update status badges and metadata (no DOM rebuild)
+    cameras.forEach(cam => {
+      const mac = cam.mac || cam.type;
+      const isOnline = cam.status === 'online';
+      const statusBadge = document.getElementById('cam-status-' + mac);
+      if (statusBadge) {
+        statusBadge.textContent = cam.status || '?';
+        statusBadge.className = 'badge ' + (isOnline ? 'online' : 'offline');
+      }
+      const metaEl = document.getElementById('cam-meta-' + mac);
+      if (metaEl) {
+        const lastInfo = cam.last_motion ? `Last motion: ${cam.last_motion}` : (cam.last_seen ? `Last seen: ${cam.last_seen}` : '');
+        const rtspId = _getRtspId(cam);
+        const isFront = mac === _FRONT_SIDE_MAC;
+        const badgeClass = cam.type === 'wyze' ? 'badge-wyze' : 'badge-ring';
+        let sourceBadge;
+        if (rtspId) {
+          sourceBadge = `<span class="badge" style="background:rgba(0,255,128,.15);color:#00ff80;margin-right:6px">LIVE</span>`;
+        } else if (isFront) {
+          sourceBadge = `<span class="badge" style="background:rgba(255,165,0,.15);color:orange;margin-right:6px">Snapshot (no RTSP)</span>`;
+        } else {
+          sourceBadge = `<span class="badge ${badgeClass}" style="margin-right:6px">${cam.type||'?'}</span>`;
+        }
+        metaEl.innerHTML = sourceBadge + lastInfo;
+      }
+    });
+  }
 }
 
 // ══ Nest helpers ══════════════════════════════════════════════════════════════

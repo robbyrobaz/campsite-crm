@@ -1,31 +1,33 @@
 {
-  "timestamp": "2026-03-14T15:26:07Z",
-  "activeTasks": [
-    {
-      "id": "c_0da1010404ccf_19cecde28a4",
-      "title": "[NQ] Investigate equal_tops_bottoms overfit (-$2,005 live vs BT PF 3.01)",
-      "assignee": "claude",
-      "status": "In Progress"
-    },
-    {
-      "id": "c_5c070c9abaad4_19cecde28c8",
-      "title": "[Blofin] Fix strategy_coin_eligibility schema (missing FT columns)",
-      "assignee": "claude",
-      "status": "In Progress"
-    },
-    {
-      "id": "c_0f8762bc428fc_19cecde28f3",
-      "title": "[Moonshot v2] Verify first cycle running, tune initial parameters",
-      "assignee": "claude",
-      "status": "In Progress"
-    }
-  ],
-  "lastDispatch": "2026-03-14T15:26:07Z",
-  "lastHealthCheck": "2026-03-14T15:26:07Z",
-  "dispatchedCount": 3,
-  "serverHealth": {
-    "temp": "83°C",
-    "disk": "63% (/)",
+  "timestamp": "2026-03-14T15:32:00Z",
+  "activeTasks": [],
+  "inProgress": 1,
+  "planned": 0,
+  "lastDispatch": "2026-03-14T14:10:00Z",
+  "lastHealthCheck": "2026-03-14T15:32:00Z",
+  "systemHealth": {
+    "cpu": "78°C (cooled from 88°C)",
+    "disk": "66% (167G free)",
     "services": "all active"
-  }
+  },
+  "boardState": {
+    "done": 1069,
+    "failed": 0,
+    "inbox": 0,
+    "planned": 0,
+    "inProgress": 1
+  },
+  "moonshot": {
+    "dashboard": "active (port 8893)",
+    "ft_models": 146,
+    "manual_cycle_completed": "2026-03-14T08:18 (41min runtime)",
+    "agent_team_dashboard": "running (session quick-sable)"
+  },
+  "churchSMS": {
+    "status": "investigation_complete",
+    "poll_cron": "DISABLED (job 12fd710c-e6ea-4ef0-970a-7bd0fd155ff2)",
+    "root_cause": "Textbelt webhook delivery failure",
+    "calendar_fixed": true
+  },
+  "note": "Temp cooled to 78°C (killed moonshot v1 zombie). Church SMS issue resolved - Textbelt webhook failed to deliver Jeremy/Mark replies. Calendar manually fixed."
 }

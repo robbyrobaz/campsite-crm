@@ -1,29 +1,76 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-14T10:55:12Z",
-  "lastHealthCheck": "2026-03-14T10:55:12Z",
+  "dispatchCycle": "2026-03-14T11:31:00Z",
+  "timestamp": "2026-03-14T11:31:00Z",
+  "healthStatus": "RECOVERING",
+  "cpuTemp": "77°C",
+  "diskUsage": "62% (272G / 468G)",
+  "criticalServices": [
+    {
+      "service": "openclaw-gateway",
+      "status": "active"
+    },
+    {
+      "service": "blofin-stack-ingestor",
+      "status": "active"
+    },
+    {
+      "service": "blofin-stack-paper",
+      "status": "active"
+    },
+    {
+      "service": "nq-watcher",
+      "status": "restarting"
+    },
+    {
+      "service": "nq-data-sync",
+      "status": "active"
+    }
+  ],
+  "activeTasks": [
+    {
+      "id": "c_e7adb3a9a0c7_19cec0230fa",
+      "title": "Moonshot: Optimize entry/exit thresholds from 93 trades",
+      "assignee": "claude",
+      "status": "In Progress",
+      "dispatchedAt": "2026-03-14T11:24:00Z"
+    },
+    {
+      "id": "c_3e971e5e9a32f_19cec0230d2",
+      "title": "Blofin: Fix schema queries + verify T2 FT status",
+      "assignee": "claude",
+      "status": "In Progress",
+      "dispatchedAt": "2026-03-14T11:24:00Z"
+    }
+  ],
+  "incidents": [
+    {
+      "severity": "WARNING",
+      "issue": "blofin-moonshot-v2 runaway process at 490% CPU",
+      "action": "Killed (04:31 MST)",
+      "status": "resolved"
+    },
+    {
+      "severity": "WARNING",
+      "issue": "blofin-stack-paper.service DB lock + termination",
+      "action": "Restarted (04:30 MST)",
+      "status": "recovered"
+    },
+    {
+      "severity": "INFO",
+      "issue": "nq-watcher.service failed (mount check passes, service restarted)",
+      "action": "Restarted at 04:30, waiting for clean startup",
+      "status": "monitoring"
+    }
+  ],
+  "failedCards": 1,
+  "failedCardNote": "Momentum Strategy card too fresh (<2h), will auto-retry on next cycle",
+  "gitBackupStatus": "complete",
   "boardState": {
-    "inProgress": 0,
+    "inProgress": 2,
     "planned": 0,
+    "failed": 1,
     "done": 1061,
-    "stopped": 9
+    "builderCapacity": "2/3"
   },
-  "services": {
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "nq-watcher": "active",
-    "nq-dashboard-v3": "active",
-    "blofin-dashboard": "active"
-  },
-  "dashboards": {
-    "nq": "HTTP 200",
-    "blofin": "HTTP 200"
-  },
-  "systemHealth": {
-    "cpuTemp": "87°C",
-    "diskUsage": "62%",
-    "diskFree": "173GB"
-  },
-  "alerts": "none"
+  "lastHealthCheck": "2026-03-14T11:31:00Z"
 }

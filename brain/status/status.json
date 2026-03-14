@@ -1,19 +1,26 @@
 {
-  "dispatchCycle": "2026-03-14T05:54:00-07:00",
-  "boardSummary": {
-    "inProgress": 0,
-    "planned": 0,
-    "inbox": 0,
-    "done_total": 1064
-  },
+  "timestamp": "2026-03-14T13:24:00Z",
   "activeTasks": [],
-  "recentlyDeployed": [],
-  "healthCheck": {
-    "cpu_temp": "+76.0°C (healthy)",
-    "disk_usage": "62% (170G free)",
-    "critical_services": "all active (nq-watcher activating)",
-    "critical_alerts": "none"
+  "inProgress": 0,
+  "planned": 0,
+  "lastDispatch": "2026-03-14T13:24:00Z",
+  "lastHealthCheck": "2026-03-14T13:24:00Z",
+  "systemHealth": {
+    "cpu": "85°C",
+    "disk": "62% (169G free)",
+    "services": "all active"
   },
-  "lastHealthCheck": "2026-03-14T05:54:15-07:00",
-  "nextDispatch": "2026-03-14T06:24:00-07:00"
+  "boardState": {
+    "done": 1064,
+    "stopped": 9,
+    "inbox": 0,
+    "planned": 0,
+    "inProgress": 0
+  },
+  "deploymentVerified": {
+    "nqPipeline": "active",
+    "blofinStack": "active",
+    "moonshot": "active"
+  },
+  "note": "Board empty — no active work queued. All completed tasks verified deployed."
 }

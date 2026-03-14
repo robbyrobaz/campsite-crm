@@ -1,32 +1,37 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_a624a63142b8d_19cedeff29a",
-      "title": "Test card",
-      "assignee": "codex",
-      "pid": 2213974,
-      "dispatchedAt": "2026-03-14T21:25:00Z"
-    }
-  ],
-  "lastDispatch": "2026-03-14T21:25:00Z",
-  "lastHealthCheck": "2026-03-14T21:25:00Z",
+  "dispatchCycle": "2026-03-14T21:55:00Z",
+  "queue": {
+    "inbox": 4,
+    "planned": 0,
+    "inProgress": 0,
+    "done": 1079
+  },
+  "activeTasks": [],
   "healthStatus": {
-    "cpu": "83°C",
+    "cpu": "65°C",
     "disk": "77%",
-    "services": "all active"
+    "services": "all active (5/5)"
   },
   "recentlyCompleted": [
     {
-      "id": "c_2ebdac3dc7eb7_19cee0cc741",
+      "id": "c_a624a6",
+      "title": "Test card",
+      "completedAt": "2026-03-14T14:30:00Z",
+      "status": "completed"
+    },
+    {
+      "id": "c_2ebdac",
       "title": "Moonshot: Add random feature subset generation to tournament",
-      "completedAge": "25.9m",
+      "completedAt": "2026-03-14T13:59:28Z",
       "status": "deployed"
     },
     {
-      "id": "c_e2d4a5d9c68c8_19cedf032ba",
-      "title": "Investigate Moonshot invalidation crisis",
-      "completedAge": "40.4m",
+      "id": "c_e2d4a5",
+      "title": "Investigate Moonshot invalidation crisis (76% exit rate)",
+      "completedAt": "2026-03-14T13:45:00Z",
       "status": "deployed"
     }
-  ]
+  ],
+  "lastHealthCheck": "2026-03-14T21:55:00Z",
+  "notes": "Queue empty — no dispatch needed. All services active, recent Moonshot work deployed."
 }

@@ -1,5 +1,5 @@
 {
-  "dispatchCycle": "2026-03-14T16:54:00Z",
+  "dispatchCycle": "2026-03-14T17:21:00Z",
   "activeTasks": [],
   "plannedTasks": [],
   "recentCompletions": [
@@ -7,23 +7,23 @@
       "id": "c_5c070c9abaad4_19cecde2",
       "title": "[Blofin] Fix strategy_coin_eligibility schema",
       "completedAt": "2026-03-14T16:48:20Z",
-      "minutesAgo": 5
+      "minutesAgo": 33
     },
     {
       "id": "c_0da1010404ccf_19cecde2",
       "title": "[NQ] Investigate equal_tops_bottoms overfit",
       "completedAt": "2026-03-14T16:33:20Z",
-      "minutesAgo": 20
+      "minutesAgo": 48
     },
     {
       "id": "c_0f8762bc428fc_19cecde2",
       "title": "[Moonshot v2] Verify first cycle running",
       "completedAt": "2026-03-14T16:33:28Z",
-      "minutesAgo": 21
+      "minutesAgo": 48
     }
   ],
   "healthStatus": {
-    "cpu": "89.0°C",
+    "cpu": "82.0°C",
     "disk": "69%",
     "services": {
       "openclaw-gateway": "active",
@@ -31,10 +31,10 @@
       "blofin-stack-paper": "active",
       "nq-watcher": "active",
       "nq-dashboard-v3": "active",
-      "blofin-moonshot": "restarting"
+      "moonshot-v2-dashboard": "active"
     }
   },
-  "lastHealthCheck": "2026-03-14T16:54:00Z",
+  "lastHealthCheck": "2026-03-14T17:21:00Z",
   "dispatcherStatus": "idle_no_work",
-  "notes": "Board is clear. No cards in Planned or In Progress. All critical services healthy. Blofin, NQ, Moonshot services restarted after recent completions. Auto Card Generator will queue new work when standards are met."
+  "notes": "Board clear. All services healthy. Old Moonshot v1 runaway process (1000% CPU) killed at 10:19 MST, timer disabled. Moonshot v2 cycle 97 completed 10:18 MST (champion PF=2.22, FT backlog 161 models). CPU temp recovering (89°C → 82°C)."
 }

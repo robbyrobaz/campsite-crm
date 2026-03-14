@@ -1,19 +1,30 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-14T19:55:00.000000+00:00",
-  "lastHealthCheck": "2026-03-14T19:55:00.000000+00:00",
-  "systemState": {
-    "cpuTemp": "76°C",
-    "diskUsage": "71% (130GB free)",
-    "servicesActive": 5,
-    "criticalAlerts": 0
-  },
-  "boardStatus": {
-    "inProgress": 0,
-    "planned": 0,
-    "inbox": 2,
-    "stopped": 9,
-    "done": 1074
-  },
-  "lastVerified": "2026-03-14T19:55:00.000000+00:00"
+  "activeTasks": [
+    {
+      "id": "c_e2d4a5d9c68c8_19cedf032ba",
+      "title": "Investigate Moonshot invalidation crisis (76% exit rate)",
+      "pid": 2151026,
+      "project": "blofin-moonshot-v2"
+    },
+    {
+      "id": "c_73eb03a515699_19cedf032fa",
+      "title": "Moonshot social signals audit",
+      "pid": 2151047,
+      "project": "blofin-moonshot-v2"
+    },
+    {
+      "id": "c_43b54212e5001_19cedf032dc",
+      "title": "Moonshot TP/SL tuning — only 2% TP hit rate",
+      "pid": 2151104,
+      "project": "blofin-moonshot-v2"
+    }
+  ],
+  "lastDispatch": "2026-03-14T20:25:00Z",
+  "lastHealthCheck": "2026-03-14T20:25:00Z",
+  "systemStatus": {
+    "cpu_temp": "82°C",
+    "disk_usage": "71%",
+    "critical_services": "all active",
+    "critical_alerts": "none"
+  }
 }

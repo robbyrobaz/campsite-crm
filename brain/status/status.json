@@ -1,13 +1,13 @@
 {
-  "timestamp": "2026-03-14T03:54:00Z",
+  "timestamp": "2026-03-14T04:24:00Z",
   "activeTasks": [],
   "inProgressCount": 0,
   "plannedCount": 0,
-  "lastDispatch": "2026-03-14T03:54:00Z",
-  "lastHealthCheck": "2026-03-14T03:54:00Z",
+  "lastDispatch": "2026-03-14T04:24:00Z",
+  "lastHealthCheck": "2026-03-14T04:24:00Z",
   "systemHealth": {
-    "cpu_temp_c": 84,
-    "disk_usage_percent": 58,
+    "cpu_temp_c": 86,
+    "disk_usage_percent": 59,
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
@@ -16,5 +16,28 @@
       "nq-dashboard-v3": "active"
     }
   },
-  "notes": "Dispatch cycle complete. No cards in queue. Board empty. All services healthy. Next dispatch: 8:24 PM MST (30min cycle)."
+  "recentCompletions": [
+    {
+      "id": "c_8910eaea2502_19ce96f4dff",
+      "title": "[Blofin] Diagnose candle_momentum_burst: why FT PF 0.66 when it's T2?",
+      "completedAt": "2026-03-14T04:23:20Z",
+      "verified": true,
+      "service": "blofin-stack (dashboard 200)"
+    },
+    {
+      "id": "c_e4e4d50949fb3_19ce96f4e1e",
+      "title": "[Moonshot] Implement adaptive TP/SL based on entry ML score + position TTL",
+      "completedAt": "2026-03-14T04:23:20Z",
+      "verified": true,
+      "service": "moonshot-v2-dashboard (port 8893, 200)"
+    },
+    {
+      "id": "c_e950f278de0bd_19ce96f4dda",
+      "title": "[NQ] Wire orb_retest_5min/15min & orb_multi_5min/15min into live dispatcher",
+      "completedAt": "2026-03-14T04:21:40Z",
+      "verified": true,
+      "service": "nq-watcher (dashboard 200)"
+    }
+  ],
+  "notes": "Dispatch cycle complete. No cards in Planned queue. Board has 1058 Done cards, 9 Stopped. All 3 most recent completions verified live. System healthy. CPU 86°C (warm, normal), disk 59%. Next dispatch: 8:54 PM MST (30min cycle)."
 }

@@ -1,11 +1,45 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-14T06:54:00Z",
-  "lastHealthCheck": "2026-03-14T06:54:00Z",
-  "cycleStatus": "IDLE",
-  "cpuTemp": "89°C",
-  "diskUsage": "60%",
-  "servicesStatus": "all_active",
-  "timestamp": "2026-03-14T06:54:00Z",
-  "notes": "Dispatch cycle 2026-03-14 11:54 PM MST: 0 In Progress, 0 Planned, 0 dispatched. Board empty. All systems nominal."
+  "activeTasks": [
+    {
+      "id": "c_1c30d80b9ab07_19ceb27402d",
+      "title": "[Moonshot] Monitor SUN-USDT open position + validate score quality",
+      "assignee": "claude",
+      "pid": 1384015,
+      "dispatchedAt": "2026-03-14T07:24:00Z"
+    },
+    {
+      "id": "c_f1af2bfa32bf3_19ceb271f5d",
+      "title": "[Blofin] Diagnose candle_momentum_burst T2 demotion + reversal T2 promotion readiness",
+      "assignee": "claude",
+      "pid": 1384019,
+      "dispatchedAt": "2026-03-14T07:24:00Z"
+    },
+    {
+      "id": "c_e852a70b4d5c5_19ceb271edd",
+      "title": "[NQ] Debug equal_tops_bottoms signal generation — live -$2005 vs BT PF 3.01",
+      "assignee": "claude",
+      "pid": 1384024,
+      "dispatchedAt": "2026-03-14T07:24:00Z"
+    }
+  ],
+  "lastDispatch": "2026-03-14T07:24:00Z",
+  "lastHealthCheck": "2026-03-14T07:24:00Z",
+  "serviceStatus": {
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
+    "nq-watcher": "active",
+    "nq-dashboard-v3": "active",
+    "blofin-moonshot-dashboard": "active"
+  },
+  "deploymentStatus": {
+    "blofin": "verified",
+    "moonshot": "verified",
+    "nq": "verified"
+  },
+  "systemHealth": {
+    "cpu": "91°C",
+    "disk": "60%",
+    "criticalAlerts": "none"
+  }
 }

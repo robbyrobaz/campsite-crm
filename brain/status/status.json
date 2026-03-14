@@ -1,11 +1,20 @@
 {
+  "lastDispatchCycle": "2026-03-13T20:25:44-07:00",
   "activeTasks": [],
-  "lastDispatch": "2026-03-14T01:55:08Z",
-  "lastHealthCheck": "2026-03-14T01:55:08Z",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "queue_full": false
+  "inProgressCount": 0,
+  "plannedCount": 0,
+  "lastHealthCheck": "2026-03-13T20:25:44-07:00",
+  "systemHealth": {
+    "cpu_temp": "83°C (safe)",
+    "disk": "58% (/)",
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-watcher": "active",
+      "nq-dashboard-v3": "active",
+      "blofin-moonshot": "activating (CoinGecko rate-limiting startup)"
+    }
   },
-  "note": "Dispatch cycle: all services healthy, no pending work"
+  "lastAction": "Auto-restarted blofin-moonshot.service (was inactive)"
 }

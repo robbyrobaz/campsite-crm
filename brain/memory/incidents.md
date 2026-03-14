@@ -649,3 +649,12 @@ Action: Log the failure, monitor on next dispatch cycle.
 - Database lock contention is known issue (separate from this card's problem)
 - Next attempt should proceed once ingestor releases lock or builder uses connection pooling with retries
 
+
+## Mar 13, 2026 20:25 MST - blofin-moonshot.service Auto-Start
+
+**Incident:** Dispatcher Phase 7 detected `blofin-moonshot.service` was inactive.
+
+**Action:** Restarted service. Service activating with CoinGecko rate-limit recovery (429 errors on genesis_date lookups for 40+ tokens). Normal backoff behavior observed.
+
+**Status:** Recovered. Service will stabilize in 2-5 minutes.
+

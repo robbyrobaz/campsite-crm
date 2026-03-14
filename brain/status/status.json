@@ -1,61 +1,28 @@
 {
-  "dispatchCycle": "2026-03-14T11:33:00Z",
-  "timestamp": "2026-03-14T11:33:00Z",
-  "healthStatus": "HEALTHY",
-  "cpuTemp": "84°C",
-  "diskUsage": "62% (272G / 468G)",
-  "criticalServices": [
-    {
-      "service": "openclaw-gateway",
-      "status": "active"
-    },
-    {
-      "service": "blofin-stack-ingestor",
-      "status": "active"
-    },
-    {
-      "service": "blofin-stack-paper",
-      "status": "active"
-    },
-    {
-      "service": "nq-watcher",
-      "status": "stopped (weekend market closure - expected)"
-    },
-    {
-      "service": "nq-data-sync",
-      "status": "active"
-    }
-  ],
   "activeTasks": [
     {
       "id": "c_e7adb3a9a0c7_19cec0230fa",
       "title": "Moonshot: Optimize entry/exit thresholds from 93 trades",
+      "status": "In Progress",
       "assignee": "claude",
-      "status": "In Progress"
-    },
-    {
-      "id": "c_3e971e5e9a32f_19cec0230d2",
-      "title": "Blofin: Fix schema queries + verify T2 FT status",
-      "assignee": "claude",
-      "status": "In Progress"
+      "pid": 1630313,
+      "dispatched_at": "2026-03-14T11:54:00Z"
     }
   ],
-  "incidents": [
-    {
-      "severity": "INFO",
-      "issue": "NinjaTrader host 192.168.68.88 unreachable (weekend closure)",
-      "action": "nq-watcher stopped, will resume Sunday evening",
-      "status": "expected"
-    }
-  ],
-  "marketStatus": "WEEKEND_CLOSURE",
-  "marketNote": "NQ futures closed Fri 3:15 PM CT → Sun 5 PM CT. NinjaTrader host down is normal.",
-  "gitBackupStatus": "complete",
-  "boardState": {
-    "inProgress": 2,
-    "planned": 0,
-    "failed": 1,
-    "done": 1061
+  "lastDispatch": "2026-03-14T11:54:00Z",
+  "lastHealthCheck": "2026-03-14T11:54:00Z",
+  "healthStatus": {
+    "cpu_temp_c": 82,
+    "disk_percent": 62,
+    "services_active": 5,
+    "critical_alerts": 0
   },
-  "lastHealthCheck": "2026-03-14T11:33:00Z"
+  "recoveredCards": [
+    {
+      "id": "c_e7adb3a9a0c7_19cec0230fa",
+      "title": "Moonshot: Optimize entry/exit thresholds from 93 trades",
+      "recovered_from_minutes": 450
+    }
+  ],
+  "timestamp": "2026-03-14T11:56:14.507874Z"
 }

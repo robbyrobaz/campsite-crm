@@ -1,16 +1,49 @@
 {
-  "dispatchCycle": "2026-03-14T14:54:00Z",
+  "timestamp": "2026-03-14T15:19:00Z",
   "activeTasks": [],
   "inProgress": 0,
-  "planned": 0,
-  "inbox": 0,
-  "recentlyCompleted": 3,
-  "lastHealthCheck": "2026-03-14T14:54:00Z",
+  "planned": 1,
+  "lastDispatch": "2026-03-14T14:10:00Z",
+  "lastHealthCheck": "2026-03-14T15:19:00Z",
   "systemHealth": {
-    "cpuTemp": "88°C",
-    "diskUsage": "63%",
-    "servicesActive": 5,
-    "criticalAlerts": 0
+    "cpu": "86°C (cooling from 92°C after killing runaway moonshot process)",
+    "disk": "63% (167G free)",
+    "services": "core services active, several failed oneshot timers"
   },
-  "notes": "Queue clear. All services healthy. 3 Moonshot cards completed and deployed in last 36 minutes."
+  "boardState": {
+    "done": 1069,
+    "stopped": 9,
+    "inbox": 0,
+    "planned": 1,
+    "inProgress": 0
+  },
+  "incidents": [
+    {
+      "timestamp": "2026-03-14T15:17:00Z",
+      "severity": "critical",
+      "issue": "Runaway moonshot-v2 process (PID 1824608) consuming 517% CPU, overheated to 92°C",
+      "action": "Killed runaway process, temp cooling to 86°C, load dropping from 35 to 23",
+      "root_cause": "Orphaned moonshot-v2 cycle from 07:37 (run_cycle.py) - likely OOM killed by systemd but process survived"
+    },
+    {
+      "timestamp": "2026-03-14T08:05:33Z",
+      "severity": "warning",
+      "issue": "moonshot-v2.service failed - another cycle already running",
+      "action": "Timer tried to start new cycle while runaway process still running, correctly rejected"
+    },
+    {
+      "timestamp": "2026-03-14T08:17:27Z",
+      "severity": "warning",
+      "issue": "blofin-moonshot.service (v1) killed by systemd after 4h runtime",
+      "action": "Likely OOM killed, old moonshot v1 deprecated anyway"
+    }
+  ],
+  "moonshot": {
+    "dashboard": "active (port 8893)",
+    "ft_models": 146,
+    "champion": "de44f72dbb01 PF=2.22 (388 trades)",
+    "last_cycle": "Cycle 94 completed 00:44:39, Cycle 95 started 04:05:45 but NEVER COMPLETED (hung/OOM killed)",
+    "status": "Runaway process killed, system cooling, ready for next timer trigger"
+  },
+  "note": "Critical incident resolved: Killed orphaned moonshot-v2 process causing 92°C overheat and 35 load avg. System recovering (86°C, load 23). All core services active. 1 Planned card waiting."
 }

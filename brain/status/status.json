@@ -1,33 +1,40 @@
 {
+  "dispatchCycle": "2026-03-14T16:54:00Z",
   "activeTasks": [],
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "done": 1072,
-    "stopped": 9
-  },
-  "lastDispatch": "2026-03-14T16:25:20Z",
-  "lastHealthCheck": "2026-03-14T16:25:20Z",
-  "healthStatus": {
-    "cpu_temp_celsius": 85,
-    "disk_usage_percent": 69,
-    "critical_services": "all_active"
-  },
+  "plannedTasks": [],
   "recentCompletions": [
     {
-      "title": "[Blofin] Fix strategy_coin_eligibility schema (missing FT columns)",
-      "completed_ago_minutes": 10,
-      "verified": true
+      "id": "c_5c070c9abaad4_19cecde2",
+      "title": "[Blofin] Fix strategy_coin_eligibility schema",
+      "completedAt": "2026-03-14T16:48:20Z",
+      "minutesAgo": 5
     },
     {
-      "title": "[NQ] Investigate equal_tops_bottoms overfit (-$2,005 live vs BT PF 3.01)",
-      "completed_ago_minutes": 55,
-      "verified": true
+      "id": "c_0da1010404ccf_19cecde2",
+      "title": "[NQ] Investigate equal_tops_bottoms overfit",
+      "completedAt": "2026-03-14T16:33:20Z",
+      "minutesAgo": 20
     },
     {
-      "title": "[Moonshot v2] Verify first cycle running, tune initial parameters",
-      "completed_ago_minutes": 58,
-      "verified": true
+      "id": "c_0f8762bc428fc_19cecde2",
+      "title": "[Moonshot v2] Verify first cycle running",
+      "completedAt": "2026-03-14T16:33:28Z",
+      "minutesAgo": 21
     }
-  ]
+  ],
+  "healthStatus": {
+    "cpu": "89.0°C",
+    "disk": "69%",
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-watcher": "active",
+      "nq-dashboard-v3": "active",
+      "blofin-moonshot": "restarting"
+    }
+  },
+  "lastHealthCheck": "2026-03-14T16:54:00Z",
+  "dispatcherStatus": "idle_no_work",
+  "notes": "Board is clear. No cards in Planned or In Progress. All critical services healthy. Blofin, NQ, Moonshot services restarted after recent completions. Auto Card Generator will queue new work when standards are met."
 }

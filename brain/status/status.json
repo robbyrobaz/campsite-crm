@@ -1,21 +1,24 @@
 {
+  "timestamp": "2026-03-14T09:24:00Z",
+  "dispatcher_cycle": "2026-03-14T09:24 UTC (Sat 2:24 AM MST)",
   "activeTasks": [],
-  "lastDispatch": "2026-03-14T08:54:00Z",
-  "lastHealthCheck": "2026-03-14T08:54:00Z",
-  "dispatchSummary": {
-    "inProgress": 0,
-    "planned": 0,
-    "doneRecent": "none detected",
-    "phaseStatus": {
-      "phase1_healthcheck": "PASS (all services active, disk 61%, CPU 82°C)",
-      "phase2_alertcheck": "PASS (no critical alerts)",
-      "phase3_boardstate": "COMPLETE (0 In Progress, 0 Planned)",
-      "phase4_stalerecovery": "COMPLETE (no stale cards)",
-      "phase5_enrichment": "COMPLETE (no cards to enrich)",
-      "phase6_dispatch": "SKIPPED (no planned cards)",
-      "phase7_verification": "COMPLETE (no recent done cards)",
-      "phase8_status": "UPDATED"
+  "inProgress": 0,
+  "planned": 0,
+  "inbox": 0,
+  "stopped": 9,
+  "done": 1061,
+  "lastDispatch": "2026-03-14T09:24:00Z",
+  "lastHealthCheck": "2026-03-14T09:24:00Z",
+  "healthStatus": {
+    "cpu_temp_c": 90,
+    "disk_usage_pct": 61,
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-watcher": "active",
+      "nq-dashboard-v3": "active"
     }
   },
-  "timestamp": "2026-03-14T08:54:00Z"
+  "alerts": "none"
 }

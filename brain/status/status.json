@@ -1,40 +1,15 @@
 {
-  "dispatchCycle": "2026-03-14T17:21:00Z",
   "activeTasks": [],
-  "plannedTasks": [],
-  "recentCompletions": [
-    {
-      "id": "c_5c070c9abaad4_19cecde2",
-      "title": "[Blofin] Fix strategy_coin_eligibility schema",
-      "completedAt": "2026-03-14T16:48:20Z",
-      "minutesAgo": 33
-    },
-    {
-      "id": "c_0da1010404ccf_19cecde2",
-      "title": "[NQ] Investigate equal_tops_bottoms overfit",
-      "completedAt": "2026-03-14T16:33:20Z",
-      "minutesAgo": 48
-    },
-    {
-      "id": "c_0f8762bc428fc_19cecde2",
-      "title": "[Moonshot v2] Verify first cycle running",
-      "completedAt": "2026-03-14T16:33:28Z",
-      "minutesAgo": 48
-    }
-  ],
-  "healthStatus": {
-    "cpu": "82.0°C",
-    "disk": "69%",
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "nq-watcher": "active",
-      "nq-dashboard-v3": "active",
-      "moonshot-v2-dashboard": "active"
-    }
+  "lastDispatch": "2026-03-14T17:25:17.052605+00:00",
+  "lastHealthCheck": "2026-03-14T17:25:17.052613+00:00",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 3
   },
-  "lastHealthCheck": "2026-03-14T17:21:00Z",
-  "dispatcherStatus": "idle_no_work",
-  "notes": "Board clear. All services healthy. Old Moonshot v1 runaway process (1000% CPU) killed at 10:19 MST, timer disabled. Moonshot v2 cycle 97 completed 10:18 MST (champion PF=2.22, FT backlog 161 models). CPU temp recovering (89°C → 82°C)."
+  "health": {
+    "cpuTemp": "84\u00b0C",
+    "diskUsage": "69%",
+    "servicesActive": 5
+  }
 }

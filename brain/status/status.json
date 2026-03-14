@@ -1,71 +1,19 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-14T00:24:00Z",
-  "lastHealthCheck": "2026-03-14T00:24:00Z",
-  "currentTime": "2026-03-13T17:24:00-0700 (Friday 5:24 PM MST)",
-  "boardStatus": {
-    "totalCards": 1067,
+  "lastDispatch": "2026-03-14T00:55:26.198337Z",
+  "lastHealthCheck": "2026-03-14T00:55:26.198361Z",
+  "boardState": {
     "done": 1058,
-    "stopped": 9,
-    "inProgress": 0,
-    "planned": 0
+    "in_progress": 0,
+    "planned": 0,
+    "stopped": 9
   },
-  "servicesStatus": {
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "blofin-dashboard": "active (HTTP 200)",
-    "nq-watcher": "active",
-    "nq-dashboard-v3": "active (HTTP 200)",
-    "jarvis-home": "active"
+  "services": {
+    "openclaw_gateway": "active",
+    "blofin_stack_ingestor": "active",
+    "blofin_stack_paper": "active",
+    "nq_watcher": "active",
+    "nq_dashboard_v3": "active"
   },
-  "systemHealth": {
-    "cpu_temp": "87°C (nominal, high = 100°C)",
-    "disk_usage": "58% (189G free of 468G)",
-    "critical_alerts": "none"
-  },
-  "recentlyCompletedCards": [
-    {
-      "id": "c_8910eaea2502_19ce96f4dff",
-      "title": "[Blofin] Diagnose candle_momentum_burst...",
-      "completedAgo": "~52 min",
-      "project": "blofin-stack",
-      "verificationStatus": "VERIFIED - dashboard active, services restarted"
-    },
-    {
-      "id": "c_e4e4d50949fb3_19ce96f4e1e",
-      "title": "[Moonshot] Implement adaptive TP/SL...",
-      "completedAgo": "~52 min",
-      "project": "blofin-moonshot",
-      "verificationStatus": "VERIFIED - implementation docs fresh, code deployed"
-    },
-    {
-      "id": "c_e950f278de0bd_19ce96f4dda",
-      "title": "[NQ] Wire orb_retest variants...",
-      "completedAgo": "~143 min",
-      "project": "NQ-Trading-PIPELINE",
-      "verificationStatus": "VERIFIED - nq-watcher active, dashboard HTTP 200"
-    }
-  ],
-  "dispatchCycleSummary": {
-    "timestamp": "2026-03-14T00:24:00Z",
-    "phasesCompleted": 8,
-    "phases": {
-      "1_health_check": "PASS",
-      "2_critical_alerts": "PASS (exit 0)",
-      "3_board_fetch": "PASS (1067 cards)",
-      "4_stale_recovery": "SKIPPED (0 In Progress)",
-      "5_enrichment": "SKIPPED (0 Planned)",
-      "6_dispatch": "SKIPPED (0 Planned, ≤3 concurrent enforced)",
-      "7_deployment_verification": "PASS (3 recent Done cards verified)",
-      "8_status_update": "IN PROGRESS"
-    },
-    "actionsThisCycle": {
-      "cardsEnriched": 0,
-      "cardsDispatched": 0,
-      "deploymentsVerified": 3,
-      "incidentsLogged": 0
-    }
-  },
-  "summary": "Pulse cycle complete. No work in Planned queue — all dispatch slots available but board is idle. Recent deployments verified as live. System health nominal."
+  "alerts": "none"
 }

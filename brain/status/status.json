@@ -1,28 +1,39 @@
 {
+  "dispatchCycle": "2026-03-14T05:24:00-07:00",
+  "boardSummary": {
+    "inProgress": 1,
+    "planned": 0,
+    "done_recent_1h": 2
+  },
   "activeTasks": [
     {
       "id": "c_e7adb3a9a0c7_19cec0230fa",
       "title": "Moonshot: Optimize entry/exit thresholds from 93 trades",
-      "status": "In Progress",
       "assignee": "claude",
-      "pid": 1630313,
-      "dispatched_at": "2026-03-14T11:54:00Z"
+      "project": "blofin-moonshot",
+      "age_minutes": 29.4,
+      "status": "In Progress"
     }
   ],
-  "lastDispatch": "2026-03-14T11:54:00Z",
-  "lastHealthCheck": "2026-03-14T11:54:00Z",
-  "healthStatus": {
-    "cpu_temp_c": 82,
-    "disk_percent": 62,
-    "services_active": 5,
-    "critical_alerts": 0
-  },
-  "recoveredCards": [
+  "recentlyDeployed": [
     {
-      "id": "c_e7adb3a9a0c7_19cec0230fa",
-      "title": "Moonshot: Optimize entry/exit thresholds from 93 trades",
-      "recovered_from_minutes": 450
+      "id": "c_0dead7c0eaa5f_19cec0230a3",
+      "title": "Momentum Strategy Bleeding: Diagnose 33% WR Decay",
+      "project": "NQ-Trading-PIPELINE",
+      "deployed_minutes_ago": 40.2
+    },
+    {
+      "id": "c_3e971e5e9a32f_19cec0230d2",
+      "title": "Blofin: Fix schema queries + verify T2 FT status",
+      "project": "blofin-stack",
+      "deployed_minutes_ago": 51.1
     }
   ],
-  "timestamp": "2026-03-14T11:56:14.507874Z"
+  "healthCheck": {
+    "cpu_temp": "78°C (healthy)",
+    "disk_usage": "62% (172G free)",
+    "critical_services": "all active",
+    "critical_alerts": "none"
+  },
+  "lastHealthCheck": "2026-03-14T05:24:30-07:00"
 }

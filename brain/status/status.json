@@ -1,15 +1,7 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-14T09:55:24Z",
-  "lastHealthCheck": "2026-03-14T09:55:24Z",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "done": 3
-  },
-  "recentDeployments": {
-    "blofin": "verified",
-    "moonshot": "verified", 
-    "nq": "verified"
-  }
+  "lastDispatch": "2026-03-14T10:24:00Z",
+  "lastHealthCheck": "2026-03-14T10:24:00Z",
+  "cycleStatus": "idle",
+  "timestamp": "2026-03-14T10:24:00Z"
 }

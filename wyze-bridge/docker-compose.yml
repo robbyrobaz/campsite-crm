@@ -15,7 +15,7 @@ services:
       - RTSP_PORT=8559
       - MEDIAMTX_RTSPADDRESS=:8559
       - WB_PORT=8558
-      - WB_IP=192.168.68.72
+      - WB_IP=192.168.68.85
     volumes:
       - ./tokens:/tokens
       - ./config:/config

@@ -1,12 +1,10 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-14T05:54:00Z",
-  "lastHealthCheck": "2026-03-14T05:54:00Z",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "done": 1058,
-    "stopped": 9
-  },
-  "notes": "Dispatch cycle complete. Board empty. No In Progress, no Planned. 0 strategies to dispatch. No recent deployments to verify. All critical services active (CPU 88°C, disk 60%, no alerts)."
+  "lastDispatch": "2026-03-14T06:24:00Z",
+  "lastHealthCheck": "2026-03-14T06:30:00Z",
+  "cycleStatus": "IDLE",
+  "cpuTemp": "85°C",
+  "diskUsage": "60%",
+  "servicesStatus": "all_active",
+  "timestamp": "2026-03-14T06:30:00Z"
 }

@@ -19,7 +19,7 @@ from datetime import datetime
 from pathlib import Path
 import requests as _requests
 import teslapy
-from flask import Flask, Response, jsonify, render_template_string, request, stream_with_context
+from flask import Flask, Response, jsonify, render_template_string, request, stream_with_context, make_response
 from energy_analytics import (
     init_db, log_telemetry, compute_hourly_aggregates, compute_daily_aggregates,
     get_usage_patterns, calculate_powerwall_roi, get_recent_daily_trends
@@ -2299,7 +2299,13 @@ def _broadcast_sse():
 
 @app.route("/")
 def index():
-    return render_template_string(DASHBOARD_HTML)
+    import time
+    html = DASHBOARD_HTML.replace('<style>', f'<style>/* v{int(time.time())} */')
+    resp = make_response(render_template_string(html))
+    resp.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate, max-age=0'
+    resp.headers['Pragma'] = 'no-cache'
+    resp.headers['Expires'] = '0'
+    return resp
 
 
 @app.route("/api/state")
@@ -4223,10 +4229,10 @@ DASHBOARD_HTML = """<!DOCTYPE html>
   .ct-mini-spark { position: absolute; bottom: 0; left: 0; right: 0; height: 18px; opacity: 0.7; }
 
   /* ── Cameras ── */
-  .camera-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; cursor: pointer; transition: border-color .2s; max-width: 75%; margin: 0 auto; }
+  .camera-card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; cursor: pointer; transition: border-color .2s; }
   .camera-card:hover { border-color: rgba(255,255,255,.25); }
-  .camera-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; background: var(--surface2); display: block; }
-  .camera-thumb-placeholder { width: 100%; aspect-ratio: 16/9; background: var(--surface2); display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 24px; flex-direction: column; gap: 4px; }
+  .camera-thumb { width: 100%; height: calc(100vh / 3); object-fit: cover; background: var(--surface2); display: block; }
+  .camera-thumb-placeholder { width: 100%; height: calc(100vh / 3); background: var(--surface2); display: flex; align-items: center; justify-content: center; color: var(--text-dim); font-size: 24px; flex-direction: column; gap: 4px; }
   .camera-info { padding: 6px 8px; }
   .camera-name { font-weight: 700; font-size: 11px; margin-bottom: 4px; display: flex; align-items: center; justify-content: space-between; gap: 6px; }
   .camera-meta { font-size: 9px; color: var(--text-dim); margin-top: 2px; }
@@ -7753,7 +7759,7 @@ function renderCameras(cameras) {
         thumbHtml = `<iframe id="cam-stream-${mac}" 
              src="http://${window.location.hostname}:8888/${rtspId}/"
              class="camera-thumb" 
-             style="border:none;background:#000;width:100%;height:100%;aspect-ratio:16/9"
+             style="border:none;background:#000"
              allow="autoplay"
              sandbox="allow-scripts allow-same-origin"></iframe>`;
         sourceBadge = `<span class="badge" style="background:rgba(0,255,128,.15);color:#00ff80;margin-right:6px">🔴 LIVE VIDEO</span>`;

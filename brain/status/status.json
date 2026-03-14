@@ -1,26 +1,16 @@
 {
-  "timestamp": "2026-03-14T14:24:00Z",
+  "dispatchCycle": "2026-03-14T14:54:00Z",
   "activeTasks": [],
   "inProgress": 0,
   "planned": 0,
-  "lastDispatch": "2026-03-14T14:10:00Z",
-  "lastHealthCheck": "2026-03-14T14:24:00Z",
+  "inbox": 0,
+  "recentlyCompleted": 3,
+  "lastHealthCheck": "2026-03-14T14:54:00Z",
   "systemHealth": {
-    "cpu": "84°C",
-    "disk": "63% (168G free)",
-    "services": "all active"
+    "cpuTemp": "88°C",
+    "diskUsage": "63%",
+    "servicesActive": 5,
+    "criticalAlerts": 0
   },
-  "boardState": {
-    "done": 1067,
-    "stopped": 0,
-    "inbox": 0,
-    "planned": 0,
-    "inProgress": 0
-  },
-  "deploymentVerified": {
-    "nqPipeline": "active (HTTP 200)",
-    "blofinStack": "active (HTTP 200)",
-    "moonshot": "active (service restarted 07:25)"
-  },
-  "note": "All in-progress Moonshot work complete. 3 recent cards verified deployed: label audit, feature migration, FT backlog clear. Board idle — ready for new dispatch."
+  "notes": "Queue clear. All services healthy. 3 Moonshot cards completed and deployed in last 36 minutes."
 }

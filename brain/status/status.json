@@ -1,13 +1,44 @@
 {
-  "timestamp": "2026-03-14T13:54:00Z",
-  "activeTasks": [],
-  "inProgress": 0,
+  "timestamp": "2026-03-14T14:13:00Z",
+  "activeTasks": [
+    {
+      "id": "c_1cfb5394623ee_19ceca67d4a",
+      "title": "Moonshot: Feature JSON migration",
+      "status": "In Progress",
+      "started": "2026-03-14T14:10:00Z"
+    },
+    {
+      "id": "c_9358733c8999c_19ceca67ce2",
+      "title": "Moonshot: OOM root cause analysis",
+      "status": "In Progress",
+      "started": "2026-03-14T14:10:00Z"
+    },
+    {
+      "id": "c_4592549f8b4a9_19ceca67c8b",
+      "title": "Moonshot: Label audit (long direction)",
+      "status": "In Progress",
+      "started": "2026-03-14T14:10:00Z"
+    },
+    {
+      "id": "c_488eeddbf42bd_19ceca67c34",
+      "title": "Moonshot: Champion promotion investigation",
+      "status": "In Progress",
+      "started": "2026-03-14T14:10:00Z"
+    },
+    {
+      "id": "c_42d91937c7b0c_19ceca67bbd",
+      "title": "Moonshot: Clear FT backlog",
+      "status": "In Progress",
+      "started": "2026-03-14T14:10:00Z"
+    }
+  ],
+  "inProgress": 5,
   "planned": 0,
-  "lastDispatch": "2026-03-14T13:54:00Z",
-  "lastHealthCheck": "2026-03-14T13:54:00Z",
+  "lastDispatch": "2026-03-14T14:10:00Z",
+  "lastHealthCheck": "2026-03-14T13:24:00Z",
   "systemHealth": {
-    "cpu": "81°C",
-    "disk": "63% (169G free)",
+    "cpu": "85°C",
+    "disk": "62% (169G free)",
     "services": "all active"
   },
   "boardState": {
@@ -15,12 +46,12 @@
     "stopped": 9,
     "inbox": 0,
     "planned": 0,
-    "inProgress": 0
+    "inProgress": 5
   },
   "deploymentVerified": {
     "nqPipeline": "active",
     "blofinStack": "active",
-    "moonshot": "active — verified 70min ago"
+    "moonshot": "active"
   },
-  "note": "Dispatch cycle complete. Board empty — no active work. All critical systems healthy. Most recent Moonshot deployment verified."
+  "note": "5 Moonshot fix cards dispatched: FT backlog clear, champion promotion analysis, label audit, OOM root cause, feature JSON migration. Agent Team (quick-sable) building new Vault-focused dashboard."
 }

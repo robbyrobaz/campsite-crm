@@ -1,15 +1,15 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-14T17:25:17.052605+00:00",
-  "lastHealthCheck": "2026-03-14T17:25:17.052613+00:00",
+  "lastDispatch": "2026-03-14T17:54:00.000000+00:00",
+  "lastHealthCheck": "2026-03-14T17:54:00.000000+00:00",
   "boardState": {
     "inProgress": 0,
     "planned": 0,
     "done": 3
   },
   "health": {
-    "cpuTemp": "84\u00b0C",
-    "diskUsage": "69%",
+    "cpuTemp": "85°C",
+    "diskUsage": "71%",
     "servicesActive": 5
   }
 }

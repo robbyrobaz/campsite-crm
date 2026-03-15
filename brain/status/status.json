@@ -1,6 +1,20 @@
 {
   "activeTasks": [],
   "lastDispatch": "2026-03-15T18:22:00Z",
-  "lastHealthCheck": "2026-03-15T18:22:00Z",
-  "notes": "Board empty (0 In Progress, 0 Planned). Moonshot v2 cycle running normally (PID 189764, active backtesting). NQ-watcher activating. 3 recent Done cards were redundant — Moonshot already has active backtest pipeline."
+  "lastHealthCheck": "2026-03-15T18:29:00Z",
+  "recentActions": [
+    {
+      "timestamp": "2026-03-15T18:29:00Z",
+      "action": "Git auto-commit blofin-stack — cleared .git/index.lock (stale from prior push failure), committed 4 files including new backfill/demo scripts. Push in progress.",
+      "repo": "blofin-stack"
+    }
+  ],
+  "systemHealth": {
+    "cpuTemp": "89°C (elevated, moonshot cycle active)",
+    "diskUsage": "77%",
+    "moonshotCycle": "108 (started 11:07 AM, running normally)",
+    "moonshotFtBacklog": 222,
+    "tokenUsage5h": "1.0% (low after rate limit reset)",
+    "kanbanStatus": "0 In Progress, 0 Planned, 1 Done, 0 Failed"
+  }
 }

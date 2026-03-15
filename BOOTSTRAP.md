@@ -1,3 +1,20 @@
+## ⛔ NQ SMB/NINJATRADER SERVICES — MASKED PERMANENTLY (Mar 15 2026)
+
+**CONTEXT:** nq-watcher.service crash-looped (146+ restarts) looking for `/mnt/nt_bridge` (SMB share from Windows NinjaTrader machine). This data path is **obsolete** — IBKR is now the canonical NQ data source.
+
+**SERVICES MASKED:**
+- `nq-watcher.service` — old SMB-based forward test watcher
+- `nq-smb-watcher.service` — SMB mount + NinjaTrader CSV sync
+
+**CURRENT NQ ARCHITECTURE (IBKR-based):**
+- **Data:** `nq-data-sync.service` copies IBKR data every 5s → `processed_data/NQ_continuous_1min.csv`
+- **Dashboard:** `nq-dashboard-v3.service` (port 8895)
+- **NO forward test watcher running** — forward testing happens on-demand via kanban cards, not as a live service
+
+**LESSON:** When you switch data sources, kill the old services immediately. Don't let them crash-loop for months.
+
+---
+
 ## ⛔ NQ-TOURNAMENT SERVICE — MASKED PERMANENTLY (Mar 15 2026)
 
 **CONTEXT:** nq-tournament.service crash-looped every 10 seconds — 101,176 restarts total before masking.

@@ -1,22 +1,28 @@
 {
-  "timestamp": "2026-03-15T09:40:00-07:00",
   "activeTasks": [
     {
-      "id": "parquet-migration-autonomous",
-      "title": "Blofin Parquet Migration (Autonomous)",
-      "status": "monitoring",
-      "started": "2026-03-15T09:32:00-07:00",
-      "description": "Phases 1-4 complete. Phase 5 waiting 24h verification. Cron checks every 10 min.",
-      "nextAction": "Cron will announce when 24h complete, ready for manual cleanup"
+      "id": "c_670695c427278_19cf204a7d7",
+      "title": "Implement 020 Simplest Orderflow Model backtest",
+      "assignee": "claude",
+      "project": "nq-l2-scalping",
+      "updated_at": "2026-03-15T16:36:26Z"
     },
     {
-      "id": "moonshot-pivot-2026-03-15",
-      "title": "Moonshot v2 Pivot — New Coin Long Spikes",
-      "status": "complete",
-      "started": "2026-03-15T08:25:00-07:00",
-      "completed": "2026-03-15T08:49:00-07:00",
-      "description": "Longs enabled, 10 positions, 30% TP, 5x new listing boost. Cycle 107 running."
+      "id": "c_48860ca62cc1d_19cf2048da6",
+      "title": "Implement 019 Order Flow Priority 2026 backtest",
+      "assignee": "claude",
+      "project": "nq-l2-scalping",
+      "updated_at": "2026-03-15T16:36:26Z"
+    },
+    {
+      "id": "c_cd93483f3265a_19cf20473c8",
+      "title": "Implement 018 Delta Absorption Live Trade backtest",
+      "assignee": "claude",
+      "project": "nq-l2-scalping",
+      "updated_at": "2026-03-15T16:36:26Z"
     }
   ],
-  "lastUpdate": "2026-03-15T09:40:00-07:00"
+  "lastDispatch": "2026-03-15T16:52:00Z",
+  "lastHealthCheck": "2026-03-15T16:52:00Z",
+  "notes": "3/3 builder slots occupied. nq-watcher.service was inactive, restarted successfully. No Planned cards queued."
 }

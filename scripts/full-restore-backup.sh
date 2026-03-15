@@ -116,5 +116,11 @@ fi
 git config user.name "Rob Hartwig"
 git config user.email "rob.hartwig@gmail.com"
 git commit -m "backup: full-restore snapshot ${stamp}" >/dev/null
-git push --force -u origin "$BRANCH" >/dev/null
+# Kill stale pushes from previous runs before starting
+pkill -f "git-remote-https.*openclaw-full-restore" 2>/dev/null || true
+# Push with 180s timeout to prevent hanging CPU hogs
+timeout 180 git push --force -u origin "$BRANCH" >/dev/null || {
+  echo "WARNING: git push timed out after 180s"
+  exit 1
+}
 echo "Created + pushed snapshot: $OWNER/$REPO snapshots/workspace-${stamp}.tar.gz ($(du -h "$archive" | cut -f1))"

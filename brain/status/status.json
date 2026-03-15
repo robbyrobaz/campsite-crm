@@ -1,12 +1,53 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-15T06:55:00Z",
+  "activeTasks": [
+    {
+      "id": "c_3540f06261d9d_19cf0505aee",
+      "title": "[NQ ORB] Evaluate Lucid Flex 50K scale → 10-15 contracts",
+      "status": "Queued (agent spawn issue)",
+      "priority": "HIGH",
+      "ev": "+$3-5K/month"
+    },
+    {
+      "id": "c_c67aa0205f6ba_19cf0506276",
+      "title": "[Blofin] Live FT Profitability Dashboard",
+      "status": "Queued (agent spawn issue)",
+      "priority": "HIGH",
+      "ev": "+$2-3K/month"
+    }
+  ],
+  "lastDispatch": "2026-03-15T07:04:00Z",
   "lastHealthCheck": "2026-03-15T06:55:00Z",
-  "timestamp": "2026-03-15T06:55:00Z",
-  "dispatchNotes": "No Planned cards in queue. Board is idle. All critical services healthy (CPU 58°C, disk 79%, 0/3 builder slots occupied).",
+  "timestamp": "2026-03-15T07:04:00Z",
+  "profitHunterScan": {
+    "cycle": "2026-03-15 00:04 MST",
+    "topOpportunities": [
+      {
+        "rank": 1,
+        "name": "NQ ORB Scale to 10-15 Contracts",
+        "current": "4 contracts, 7 BLE trades, $5,118 all-time, 86% WR, PF 24.3",
+        "monthly_ev": "+$3-5K (scaling to 3x leverage on Lucid Flex 50K)",
+        "effort": "LOW (analysis only)",
+        "risk": "MEDIUM (requires explicit approval for BLE activation)",
+        "action": "Card c_3540f06261d9d_19cf0505aee queued"
+      },
+      {
+        "rank": 2,
+        "name": "Blofin FT Profitability Dashboard",
+        "current": "40+ strategies in paper trading, no FT profit visibility",
+        "monthly_ev": "+$2-3K (identify & scale top 3 winners)",
+        "effort": "MEDIUM (DB query, new dashboard page)",
+        "risk": "LOW",
+        "action": "Card c_c67aa0205f6ba_19cf0506276 queued"
+      }
+    ],
+    "excluded": [
+      "Moonshot v2 is new (3 days old), no profitable strategies yet — watch next 14d",
+      "Blofin BT-only strategies not included (need FT validation first)"
+    ]
+  },
   "boardState": {
     "inProgress": 0,
-    "planned": 0,
+    "planned": 2,
     "done": 3,
     "doneRecent": [
       {
@@ -31,5 +72,6 @@
     "disk_usage": "79%",
     "criticalServices": "all_active",
     "alertStatus": "clear"
-  }
+  },
+  "notes": "Kanban agent spawning issue detected (claude/codex agents not available). Cards created but queued pending agent infrastructure fix. NQ ORB shows strongest near-term upside; Blofin needs visibility into FT winner identification."
 }

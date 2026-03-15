@@ -723,3 +723,13 @@ Action: Log the failure, monitor on next dispatch cycle.
 Next pulse: 2026-03-15 03:22 MST (in 30 minutes)
 2026-03-15T09:52:50-07:00 - nq-watcher.service was inactive, restarted successfully
 2026-03-15T10:22:43-07:00 - blofin-stack-ingestor.service was inactive, restarted successfully
+
+## 2026-03-15 10:52 AM MST — Kanban API Hung
+
+**Symptom:** All API endpoints timeout. Multiple stuck curl processes from previous dispatcher runs.
+
+**Root cause:** Unknown (likely DB lock or unhandled promise rejection in Node).
+
+**Fix:** Killed stuck curl processes, killed port 8787 node process, restarted kanban server.
+
+**Prevention:** Monitor for hung API calls. Consider adding request timeout middleware to kanban server.

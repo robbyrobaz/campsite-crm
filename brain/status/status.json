@@ -1,11 +1,20 @@
 {
+  "timestamp": "2026-03-15T14:22:00Z",
   "activeTasks": [],
-  "lastDispatch": "2026-03-15T13:52:00Z",
-  "lastHealthCheck": "2026-03-15T13:52:00Z",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 1,
-    "done_recent": 3,
-    "note": "1 Planned card is orphaned (assignee=claude, no valid project context). No valid tasks to dispatch."
-  }
+  "plannedQueue": [],
+  "inProgressCount": 0,
+  "lastDispatch": "2026-03-15T14:22:00Z",
+  "lastHealthCheck": "2026-03-15T14:22:00Z",
+  "systemHealth": {
+    "cpu_temp": "71°C",
+    "disk_usage": "81%",
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-watcher": "active",
+      "nq-dashboard-v3": "active"
+    }
+  },
+  "notes": "Queue empty. All services healthy. No dispatch needed."
 }

@@ -14,6 +14,9 @@ Before doing anything else:
 6. Read `brain/status/status.json` — what's happening right now (immediate tasks)
 7. **Read `memory/YYYY-MM-DD.md` (today + yesterday)** — this is NON-OPTIONAL. Recent decisions, session changes, and context that hasn't been distilled into MEMORY.md yet. Without this, you will repeat mistakes and ask Rob things he already answered.
 8. **If in MAIN SESSION** (direct chat with Rob): Also read `MEMORY.md` (learnings & reference only)
+9. **Read `blofin-moonshot-v2/MOONSHOT_GOALS.md`** — Moonshot v2 mission (updated Mar 15 2026)
+10. **Read `blofin-moonshot-v2/CORE_PHILOSOPHY.md`** — FT is free, expect 95% losers
+11. **Read `blofin-stack/CORE_PHILOSOPHY.md`** — Blofin vs Moonshot differentiation
 
 Don't ask permission. Just do it.
 

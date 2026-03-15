@@ -1,7 +1,28 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-15T08:25:00Z",
-  "lastHealthCheck": "2026-03-15T08:25:00Z",
-  "healthStatus": "OK",
-  "notes": "Dispatch cycle: 0 In Progress, 0 Planned. Queue empty. Moonshot dashboard recovered (port 8893, import path fixed). FT Profitability Dashboard card failed — reset to Planned for redispatch."
+  "activeTasks": [
+    {
+      "id": "c_c67aa0205f6ba_19cf0506276",
+      "title": "[Blofin] Live FT Profitability Dashboard — rank strategies by ft_pnl",
+      "assignee": "claude",
+      "status": "In Progress",
+      "pid": 2921337,
+      "dispatchedAt": "2026-03-15T08:55:00Z",
+      "logPath": "/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_c67aa0205f6ba_19cf0506276.log"
+    }
+  ],
+  "lastDispatch": "2026-03-15T08:55:00Z",
+  "lastHealthCheck": "2026-03-15T08:55:00Z",
+  "recentlyCompleted": [
+    {
+      "id": "c_e765903f04092_19cf04d5c8f",
+      "title": "[Blofin] Expand top T1 strategy to 3 new coins",
+      "status": "Done",
+      "completedAt": "2026-03-15T08:45:00Z"
+    }
+  ],
+  "systemHealth": {
+    "cpu": "84°C (normal)",
+    "disk": "80% full (93G available)",
+    "services": "all active"
+  }
 }

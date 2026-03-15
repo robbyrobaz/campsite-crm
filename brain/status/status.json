@@ -1,16 +1,6 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-15T20:54:02.164095+00:00",
-  "lastHealthCheck": "2026-03-15T20:54:02.164105+00:00",
-  "queueState": {
-    "inProgress": 0,
-    "planned": 0,
-    "recentlyCompleted": [
-      {
-        "title": "[Moonshot] Promote better LONG champion (current PF 1.01 barely profitable)",
-        "completedMinutesAgo": 39,
-        "note": "No viable LONG FT models found (0 models with \u226520 trades)"
-      }
-    ]
-  }
+  "lastDispatch": "2026-03-15T21:23:27.447208+00:00",
+  "lastHealthCheck": "2026-03-15T21:23:27.447216+00:00",
+  "notes": "No cards in queue. All services active. Blofin Moonshot DB empty (needs investigation)."
 }

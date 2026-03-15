@@ -8674,16 +8674,24 @@ function getSRPRatePeriod() {
   const now = new Date(); const h = now.getHours();
   const dow = now.getDay(); const month = now.getMonth();
   const isWeekday = dow >= 1 && dow <= 5;
-  const isSummer  = month >= 5 && month <= 8; // Jun-Sep
-  if (isSummer && isWeekday) {
-    if (h >= 15 && h < 20) return { label:'On-Peak',   cls:'peak',     rate:0.23 };
-    if ((h >= 9 && h < 15) || (h >= 20 && h < 23)) return { label:'Shoulder', cls:'shoulder',  rate:0.18 };
-    return { label:'Off-Peak', cls:'off-peak', rate:0.10 };
+  // SRP E-27 has THREE seasons:
+  // Winter: Nov-Apr (months 10,11,0,1,2,3)
+  // Summer: May,Jun,Sep,Oct (months 4,5,8,9)
+  // Summer Peak: Jul,Aug (months 6,7) — same hours, higher rates
+  const isWinter = (month >= 10 || month <= 3); // Nov-Apr
+  const isSummerPeak = (month === 6 || month === 7); // Jul-Aug
+  const isSummer = (month === 4 || month === 5 || month === 8 || month === 9); // May,Jun,Sep,Oct
+  
+  if (isWeekday) {
+    if (isWinter) {
+      // Winter on-peak: 05:00-09:00 AND 17:00-21:00
+      if ((h >= 5 && h < 9) || (h >= 17 && h < 21)) return { label:'On-Peak', cls:'peak', rate:0.23 };
+    } else if (isSummer || isSummerPeak) {
+      // Summer & Summer Peak on-peak: 14:00-20:00
+      if (h >= 14 && h < 20) return { label:'On-Peak', cls:'peak', rate:0.23 };
+    }
   }
-  if (!isSummer && isWeekday) {
-    if (h >= 5 && h < 21) return { label:'On-Peak', cls:'shoulder', rate:0.18 };
-    return { label:'Off-Peak', cls:'off-peak', rate:0.10 };
-  }
+  // Weekends, holidays, and all off-peak hours
   return { label:'Off-Peak', cls:'off-peak', rate:0.10 };
 }
 

@@ -1,21 +1,28 @@
 {
-  "timestamp": "2026-03-15T02:25:29Z",
-  "cycle": "jarvis-pulse-dispatch",
   "activeTasks": [],
-  "plannedQueue": 0,
-  "inProgressCount": 0,
-  "lastDispatch": "2026-03-15T02:25:29Z",
-  "lastHealthCheck": "2026-03-15T02:25:29Z",
-  "systemHealth": {
-    "cpu_temp_c": 77,
-    "disk_used_pct": 78,
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "nq-watcher": "active",
-      "nq-dashboard-v3": "active"
-    }
+  "lastDispatch": "2026-03-15T02:55:34Z",
+  "lastHealthCheck": "2026-03-15T02:55:34Z",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 3
   },
-  "notes": "Board clear. No cards in Planned or In Progress. Most recent work (Blofin promotion, Moonshot diagnostics, NQ FT diagnostics, NQ London session, Moonshot leverage scaling) completed 160-205m ago. All services verified active. No critical alerts. Next dispatch will wait for new Planned cards."
+  "recentlyCompleted": [
+    "[Blofin] Promote top T1 strategies to T2 forward test",
+    "[Moonshot] Diagnose why no open positions despite ML scores",
+    "[NQ] Diagnose empty FT DB + start forward test collection"
+  ],
+  "services": {
+    "openclaw-gateway": "active",
+    "blofin-ingestor": "active",
+    "blofin-paper": "active",
+    "blofin-dashboard": "active (HTTP 200)",
+    "nq-watcher": "active",
+    "nq-dashboard": "active (HTTP 200)"
+  },
+  "health": {
+    "cpu_temp_c": 61,
+    "disk_usage_pct": 78,
+    "critical_alerts": 0
+  }
 }

@@ -1,28 +1,35 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-15T02:55:34Z",
-  "lastHealthCheck": "2026-03-15T02:55:34Z",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "done": 3
-  },
-  "recentlyCompleted": [
-    "[Blofin] Promote top T1 strategies to T2 forward test",
-    "[Moonshot] Diagnose why no open positions despite ML scores",
-    "[NQ] Diagnose empty FT DB + start forward test collection"
+  "activeTasks": [
+    {
+      "id": "c_a57fd1afadc69_19cef723a14",
+      "title": "[Moonshot] Validate 4h cycle + assess invalidation rate per TOURNAMENT_PHILOSOPHY",
+      "assignee": "claude",
+      "project": "blofin-moonshot",
+      "status": "In Progress",
+      "pid": 2585772
+    },
+    {
+      "id": "c_4a62541e2f2f_19cef7239f5",
+      "title": "[Blofin] Validate T2 forward test data flow + expand top performer",
+      "assignee": "claude",
+      "project": "blofin-stack",
+      "status": "In Progress",
+      "pid": 2585776
+    },
+    {
+      "id": "c_38cb5fbb818d4_19cef7239d2",
+      "title": "[NQ] Diagnose equal_tops_bottoms live bleed (-$2K/7d) vs backtest PF 3.01",
+      "assignee": "claude",
+      "project": "NQ-Trading-PIPELINE",
+      "status": "In Progress",
+      "pid": 2585782
+    }
   ],
-  "services": {
-    "openclaw-gateway": "active",
-    "blofin-ingestor": "active",
-    "blofin-paper": "active",
-    "blofin-dashboard": "active (HTTP 200)",
-    "nq-watcher": "active",
-    "nq-dashboard": "active (HTTP 200)"
-  },
-  "health": {
-    "cpu_temp_c": 61,
-    "disk_usage_pct": 78,
-    "critical_alerts": 0
+  "lastDispatch": "2026-03-15T03:25:47Z",
+  "lastHealthCheck": "2026-03-15T03:25:47Z",
+  "systemHealth": {
+    "cpu_temp": "85.0°C",
+    "disk_usage": "78%",
+    "critical_services": "all_active"
   }
 }

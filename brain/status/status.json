@@ -1,20 +1,22 @@
 {
+  "timestamp": "2026-03-15T04:55:00Z",
   "activeTasks": [],
-  "lastDispatch": "2026-03-15T04:25:00Z",
-  "lastHealthCheck": "2026-03-15T04:25:00Z",
-  "boardStatus": {
-    "InProgress": 0,
-    "Planned": 0,
-    "Done": 3,
-    "recentlyCompleted": [
-      "[Blofin] Validate T2 forward test data flow (46min ago)",
-      "[NQ] Diagnose equal_tops_bottoms (-$2K/7d) (55min ago)",
-      "[Moonshot] Validate 4h cycle + assess invalidation (57min ago)"
-    ]
+  "lastDispatch": "2026-03-15T04:55:00Z",
+  "lastHealthCheck": "2026-03-15T04:55:00Z",
+  "boardState": {
+    "inProgress": 0,
+    "planned": 0,
+    "done": 3
   },
-  "systemHealth": {
-    "cpu": "76°C (healthy)",
-    "disk": "78% full",
-    "services": "all active"
-  }
+  "recentDeployments": {
+    "blofin": "ok - all services active, dashboard 200",
+    "nq": "ok - all services active, dashboard 200",
+    "moonshot": "ok - services active, transient db lock recovered"
+  },
+  "health": {
+    "cpu": "85C",
+    "disk": "78% (/)",
+    "services": "all_active"
+  },
+  "notes": "Kanban queue empty. Auto Card Generator will populate next run. All recent deployments verified and live."
 }

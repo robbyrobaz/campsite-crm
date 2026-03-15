@@ -740,3 +740,9 @@ Next pulse: 2026-03-15 03:22 MST (in 30 minutes)
 **Impact:** NQ forward test paused until Monday (no live data feed)
 **Action:** None — this is expected on weekends. Service will recover when Windows machine restarts.
 **Restart count:** 339 (systemd will keep trying)
+
+## 2026-03-15 13:22 — nq-watcher.service dependency failure
+- **Status:** Crash-looping (restart counter 395+)
+- **Root cause:** `/mnt/nt_bridge` not mounted (NinjaTrader SMB share)
+- **Impact:** No NQ pipeline data ingestion or forward test execution
+- **Action:** Logged incident, continuing dispatcher work. Rob needs to mount SMB share or disable nq-watcher dependency on it.

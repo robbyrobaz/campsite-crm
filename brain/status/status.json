@@ -1,28 +1,21 @@
 {
   "activeTasks": [
     {
-      "id": "c_670695c427278_19cf204a7d7",
-      "title": "Implement 020 Simplest Orderflow Model backtest",
-      "assignee": "claude",
-      "project": "nq-l2-scalping",
-      "updated_at": "2026-03-15T16:36:26Z"
+      "id": "c_cd93483f3265a_19cf20473c8",
+      "title": "Implement 018 Delta Absorption Live Trade backtest",
+      "pid": 121244
     },
     {
       "id": "c_48860ca62cc1d_19cf2048da6",
       "title": "Implement 019 Order Flow Priority 2026 backtest",
-      "assignee": "claude",
-      "project": "nq-l2-scalping",
-      "updated_at": "2026-03-15T16:36:26Z"
+      "pid": 121198
     },
     {
-      "id": "c_cd93483f3265a_19cf20473c8",
-      "title": "Implement 018 Delta Absorption Live Trade backtest",
-      "assignee": "claude",
-      "project": "nq-l2-scalping",
-      "updated_at": "2026-03-15T16:36:26Z"
+      "id": "c_670695c427278_19cf204a7d7",
+      "title": "Implement 020 Simplest Orderflow Model backtest",
+      "pid": 121188
     }
   ],
-  "lastDispatch": "2026-03-15T16:52:00Z",
-  "lastHealthCheck": "2026-03-15T16:52:00Z",
-  "notes": "3/3 builder slots occupied. nq-watcher.service was inactive, restarted successfully. No Planned cards queued."
+  "lastDispatch": "2026-03-15T17:22:59Z",
+  "lastHealthCheck": "2026-03-15T17:22:59Z"
 }

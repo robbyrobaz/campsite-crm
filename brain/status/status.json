@@ -1,23 +1,11 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_3540f06261d9d_19cf0505aee",
-      "title": "[NQ ORB] Evaluate Lucid Flex 50K scale → 10-15 contracts | EV: +$3-5K/month",
-      "pid": 3211414,
-      "dispatched": "2026-03-15T13:22:57Z"
-    },
-    {
-      "id": "c_04093a53948a1_19cf19827a9",
-      "title": "Add PnL time-normalization metrics to Moonshot v2 tournament models",
-      "pid": 3211954,
-      "dispatched": "2026-03-15T13:22:57Z"
-    }
-  ],
-  "lastDispatch": "2026-03-15T13:22:57Z",
-  "lastHealthCheck": "2026-03-15T13:22:57Z",
+  "activeTasks": [],
+  "lastDispatch": "2026-03-15T13:52:00Z",
+  "lastHealthCheck": "2026-03-15T13:52:00Z",
   "boardState": {
-    "inProgress": 2,
-    "planned": 0,
-    "done_recent": 1
+    "inProgress": 0,
+    "planned": 1,
+    "done_recent": 3,
+    "note": "1 Planned card is orphaned (assignee=claude, no valid project context). No valid tasks to dispatch."
   }
 }

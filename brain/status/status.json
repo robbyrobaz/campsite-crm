@@ -3,19 +3,17 @@
     {
       "id": "c_cd93483f3265a_19cf20473c8",
       "title": "Implement 018 Delta Absorption Live Trade backtest",
-      "pid": 121244
+      "pid": 121244,
+      "status": "active - 14:21 elapsed"
     },
     {
       "id": "c_48860ca62cc1d_19cf2048da6",
       "title": "Implement 019 Order Flow Priority 2026 backtest",
-      "pid": 121198
-    },
-    {
-      "id": "c_670695c427278_19cf204a7d7",
-      "title": "Implement 020 Simplest Orderflow Model backtest",
-      "pid": 121188
+      "pid": 121198,
+      "status": "active (D state) - 14:25 elapsed"
     }
   ],
   "lastDispatch": "2026-03-15T17:22:59Z",
-  "lastHealthCheck": "2026-03-15T17:22:59Z"
+  "lastHealthCheck": "2026-03-15T17:37:50Z",
+  "notes": "PID 121188 (card c_670695c427278) died - removed from activeTasks. Moonshot cycle 107 started 08:49, no completion yet (cycles typically complete in ~30min-1.5h). CPU temp 86°C (load 44.62) - within safe range but high load from Moonshot v2. Blofin-stack and moonshot-v2 repos auto-committed and pushed."
 }

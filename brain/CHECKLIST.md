@@ -88,6 +88,20 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - Commit all changes: `git add -A && git commit -m "..." && git push`
 ```
 
+## ⚠️ RESEARCH FIRST - NO ASSUMPTIONS (added 2026-03-15 after Blofin backfill debacle):
+**Before configuring ANY external API or service:**
+1. **Check actual API docs** - don't assume rate limits, batch sizes, or capabilities
+2. **Test with curl/requests** - verify what the API actually supports
+3. **Look for existing working code** - check if we already have a working implementation
+4. **Never make up numbers** - "I think it's probably X" = WRONG, test it
+
+**Examples of stupid assumptions to avoid:**
+- ❌ "API probably supports 100 items/request" → TEST IT (was 1000!)
+- ❌ "Rate limit is probably 10 req/sec" → LOOK IT UP (was network-limited ~4 req/sec)
+- ❌ "We should backfill 50 symbols" → CHECK WHAT'S LIVE (was 469!)
+
+**The rule:** If you don't have a doc reference or test result, you don't know. Research before coding.
+
 ## ⚠️ Heavy-Compute Card Rules (added 2026-03-03 after duplicate sweep incident):
 Any card that runs a script expected to take >10 minutes MUST include this in the description:
 

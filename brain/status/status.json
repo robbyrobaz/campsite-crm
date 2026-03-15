@@ -4,21 +4,23 @@
       "id": "c_192105fa5f998_19cf3bdadec",
       "title": "[Moonshot] Generate long champion (missing) + promote better short champion",
       "pid": 667742,
-      "started": "2026-03-15T23:22:00Z"
+      "started": "2026-03-15T23:22:00Z",
+      "duration_minutes": 20
     },
     {
       "id": "c_8c7e6cec9c093_19cf3bd5ad3",
       "title": "[Blofin] Expand bb_squeeze to new high-vol coins",
       "pid": 667739,
-      "started": "2026-03-15T23:22:00Z"
+      "started": "2026-03-15T23:22:00Z",
+      "duration_minutes": 20
     }
   ],
   "lastDispatch": "2026-03-15T23:22:00Z",
-  "lastHealthCheck": "2026-03-15T23:30:00Z",
+  "lastHealthCheck": "2026-03-15T23:42:00Z",
   "health": {
-    "cpu_temp": "86°C",
+    "cpu_temp": "87°C",
     "disk_usage": "79%",
-    "load": "29.22 (heavy — Moonshot + 2 builders)",
+    "load": "9.09 (improved — cycle 109 crashed, load dropped)",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
@@ -27,13 +29,11 @@
       "moonshot-v2-dashboard": "active"
     },
     "issues": [
-      "CPU temp 86°C (high load, within limits)",
-      "blofin-stack git push hung (39 commits ahead, killed)",
-      "Failed services: blofin-stack-gapfill, nq-postmerge-check, openclaw-full-restore-backup (all known, non-critical)",
-      "Temp cleanup needed: blofin-stack has 6 untracked scripts (expand_bb_squeeze*.py, check*.py)",
-      "Moonshot cycle 109 running (16:05 start), cycle 108 completed successfully",
-      "Moonshot FT backlog: 225 (warning threshold 50 exceeded — needs FT cleanup card)",
-      "Moonshot champion: short only, PF 0.73 (losing), no long champion (builder c_192105fa5f998 addressing)"
+      "🚨 CRITICAL: Moonshot cycle 109 CRASHED with CUDA OOM at 16:39 (out of memory)",
+      "🚨 CRITICAL: Moonshot FT backlog 225 (5x warning threshold)",
+      "Moonshot champion: still short only PF 0.73, no long champion (builder c_192105fa5f998 running 20min)",
+      "blofin-stack git repo corrupted (from previous check — git add bus error, 40 commits at risk)",
+      "Failed services: moonshot-v2 (OOM crash), nq-postmerge-check, openclaw-full-restore-backup (all known)"
     ]
   }
 }

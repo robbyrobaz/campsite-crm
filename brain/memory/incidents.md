@@ -746,3 +746,30 @@ Next pulse: 2026-03-15 03:22 MST (in 30 minutes)
 - **Root cause:** `/mnt/nt_bridge` not mounted (NinjaTrader SMB share)
 - **Impact:** No NQ pipeline data ingestion or forward test execution
 - **Action:** Logged incident, continuing dispatcher work. Rob needs to mount SMB share or disable nq-watcher dependency on it.
+## 2026-03-15 16:38 MST — Git Corruption + CPU Critical
+
+**Severity:** CRITICAL
+
+**Issues:**
+1. blofin-stack git repo corrupted:
+   - git add crashes with bus error (signal 135)
+   - git push hangs and times out
+   - 40 commits ahead of origin, cannot push
+   - Stale index.lock keeps reappearing
+2. CPU temperature 93°C (threshold 85°C, crit 100°C)
+   - Load 29.64 (Moonshot cycle 109 + 2 builders)
+   - Top processes: python 438% CPU, python3 300% CPU
+3. Moonshot FT backlog 225 models (5x warning threshold)
+
+**Impact:**
+- 40 blofin-stack commits at risk of loss
+- Ticker data auto-commit failing (git-remote-https SIGTERM)
+- Server thermal stress (no immediate risk, but concerning)
+
+**Next Steps:**
+1. Manual git repo repair needed (gc --prune=now or full clone)
+2. Consider pausing non-critical work until temp drops
+3. Moonshot FT cleanup needed (separate card)
+
+**Status:** Unresolved — requires Rob's manual intervention
+

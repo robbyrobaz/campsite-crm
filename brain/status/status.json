@@ -1,17 +1,17 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-15T05:55:00Z",
-  "lastHealthCheck": "2026-03-15T05:55:00Z",
+  "lastDispatch": "2026-03-15T06:25:00Z",
+  "lastHealthCheck": "2026-03-15T06:25:00Z",
+  "timestamp": "2026-03-15T06:25:00Z",
   "boardState": {
     "inProgress": 0,
     "planned": 0,
-    "done": 3
+    "done": 0
   },
-  "systemHealth": {
-    "cpuTemp": "66.0°C",
-    "diskUsage": "79%",
-    "services": ["openclaw-gateway", "blofin-stack-ingestor", "blofin-stack-paper", "nq-watcher", "nq-dashboard-v3"],
-    "servicesStatus": "all-active"
-  },
-  "notes": "Queue empty. No alerts. All systems nominal."
+  "healthStatus": {
+    "cpu_temp": "64.0°C",
+    "disk_usage": "79%",
+    "criticalServices": "all_active",
+    "alertStatus": "clear"
+  }
 }

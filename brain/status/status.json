@@ -1,5 +1,28 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-15T15:22:30Z",
-  "lastHealthCheck": "2026-03-15T15:36:00Z"
+  "activeTasks": [
+    {
+      "id": "c_cd93483f3265a_19cf20473c8",
+      "title": "Implement 018 Delta Absorption Live Trade backtest",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "nq-l2-scalping"
+    },
+    {
+      "id": "c_48860ca62cc1d_19cf2048da6",
+      "title": "Implement 019 Order Flow Priority 2026 backtest",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "nq-l2-scalping"
+    },
+    {
+      "id": "c_670695c427278_19cf204a7d7",
+      "title": "Implement 020 Simplest Orderflow Model backtest",
+      "status": "In Progress",
+      "assignee": "claude",
+      "project": "nq-l2-scalping"
+    }
+  ],
+  "lastDispatch": "2026-03-15T15:52:00Z",
+  "lastHealthCheck": "2026-03-15T15:52:00Z",
+  "notes": "3/3 builder slots active (all nq-l2-scalping), 0 Planned cards, all services healthy"
 }

@@ -1,20 +1,6 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-15T18:22:00Z",
-  "lastHealthCheck": "2026-03-15T18:29:00Z",
-  "recentActions": [
-    {
-      "timestamp": "2026-03-15T18:29:00Z",
-      "action": "Git auto-commit blofin-stack — cleared .git/index.lock (stale from prior push failure), committed 4 files including new backfill/demo scripts. Push in progress.",
-      "repo": "blofin-stack"
-    }
-  ],
-  "systemHealth": {
-    "cpuTemp": "89°C (elevated, moonshot cycle active)",
-    "diskUsage": "77%",
-    "moonshotCycle": "108 (started 11:07 AM, running normally)",
-    "moonshotFtBacklog": 222,
-    "tokenUsage5h": "1.0% (low after rate limit reset)",
-    "kanbanStatus": "0 In Progress, 0 Planned, 1 Done, 0 Failed"
-  }
+  "lastDispatch": "2026-03-15T18:53:46.636668+00:00",
+  "lastHealthCheck": "2026-03-15T18:53:46.636679+00:00",
+  "notes": "No cards in Planned queue. Inbox has 1 card (not dispatched per DISPATCHER.md rules). All services active."
 }

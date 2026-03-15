@@ -1,6 +1,16 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-15T20:22:00Z",
-  "lastHealthCheck": "2026-03-15T20:22:00Z",
-  "notes": "No Planned or In Progress cards. nq-watcher.service crash-looping due to unmounted /mnt/nt_bridge (NinjaTrader SMB share). Recent deployments verified: Moonshot LONG champion promoted (0 trades yet), Blofin T2 strategies backtest gaps fixed (all now have PF values)."
+  "lastDispatch": "2026-03-15T20:54:02.164095+00:00",
+  "lastHealthCheck": "2026-03-15T20:54:02.164105+00:00",
+  "queueState": {
+    "inProgress": 0,
+    "planned": 0,
+    "recentlyCompleted": [
+      {
+        "title": "[Moonshot] Promote better LONG champion (current PF 1.01 barely profitable)",
+        "completedMinutesAgo": 39,
+        "note": "No viable LONG FT models found (0 models with \u226520 trades)"
+      }
+    ]
+  }
 }

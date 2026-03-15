@@ -1,3 +1,24 @@
+## ⚡ RECENT CHANGES (Mar 15 2026)
+
+### Blofin Parquet Migration (AUTONOMOUS, IN PROGRESS)
+**Status:** Phases 1-4 complete, Phase 5 waiting 24h verification  
+**Cron:** `41d87ae8-adf9-42a0-9b0e-1f3f0b7e28d4` checks every 10 min  
+**Old ingestor:** SQLite, 24GB on HDD, still running  
+**New ingestor:** Parquet, ~1MB on NVMe, 880 ticks/sec, 12x compression  
+**Storage plan:** NVMe (data/ticks/*.parquet, rolling 90d), HDD (backtest_results.db, archive)  
+**After 24h:** Cron announces "ready for manual cleanup" → COPY old DB to archive, VERIFY, stop old ingestor  
+**State:** `blofin-stack/brain/parquet_migration_state.json`  
+**Docs:** `blofin-stack/brain/DUCKDB_ARCHITECTURE.md`, `PARQUET_MIGRATION_STATUS.md`
+
+### Moonshot v2 Pivot (COMPLETE)
+**Mission:** Hunt 30%+ spikes on new coins (<30d old)  
+**Changes:** Longs enabled (10 positions), shorts backup (2), TP 10%→30%, entry 0.70→0.50, 5x new listing boost  
+**Validation:** 45.5% of new coins hit +30% in last 30d (ROBO +44%, MANTRA +39%, KAT +31%)  
+**Docs:** `blofin-moonshot-v2/MOONSHOT_GOALS.md`, `CORE_PHILOSOPHY.md` (mandatory reads every session)  
+**Branch:** `feature/moonshot-2x-leverage`
+
+---
+
 ## ⛔ NQ SMB/NINJATRADER SERVICES — MASKED PERMANENTLY (Mar 15 2026)
 
 **CONTEXT:** nq-watcher.service crash-looped (146+ restarts) looking for `/mnt/nt_bridge` (SMB share from Windows NinjaTrader machine). This data path is **obsolete** — IBKR is now the canonical NQ data source.
@@ -407,6 +428,18 @@ BACKTEST → FORWARD TEST → GOD MODEL → BLE
 - **MOONSHOT_V2_PRD.md**: full spec at https://github.com/robbyrobaz/blofin-moonshot/blob/moonshot-v2-plan/MOONSHOT_V2_PRD.md
 - **72h audit completed**: MOONSHOT_AUDIT.md on branch moonshot-audit-20260302 in blofin-moonshot repo
 - Root cause of v1 mass exit: exit.py called predict_proba() without symbol/ts_ms → regime features=0.0 → all scores 0.129 → 15 profitable positions killed
+
+**Mar 15 2026 (Blofin Parquet Migration):**
+- **AUTONOMOUS MIGRATION IN PROGRESS** — Phases 1-4 complete, Phase 5 waiting 24h verification
+- Old ingestor (SQLite, 24GB) + new ingestor (Parquet, ~1MB) running side-by-side
+- Parquet: 368K+ ticks in 7 min (~880 ticks/sec), 12x compression, zero errors
+- Storage: NVMe (data/ticks/*.parquet, rolling 90d), HDD (backtest_results.db, archive)
+- **Cron job** `41d87ae8-adf9-42a0-9b0e-1f3f0b7e28d4` checks every 10 min, advances phases
+- After 24h: cron will announce "ready for manual cleanup"
+- **MANUAL CLEANUP (after 24h):** COPY old DB to archive, VERIFY, stop old ingestor, monitor 7d, delete archive
+- **CRITICAL:** COPY-VERIFY-DELETE only (learned from 107GB loss Mar 12)
+- Status: `blofin-stack/brain/parquet_migration_state.json`
+- Docs: `blofin-stack/brain/DUCKDB_ARCHITECTURE.md`, `PARQUET_MIGRATION_STATUS.md`
 
 **Feb 28 2026 (afternoon):**
 - IBKR pipeline LIVE: IB Gateway Docker running, paper account DUH860616, port 4002, no 2FA needed

@@ -46,7 +46,65 @@
 - **Only track top performers** — champion PnL, top 5 strategies, top 10 pairs
 - Always filter to top performers FIRST, ignore the rest
 
-## Moonshot v2 Architecture (2026-03-02)
+## Blofin Parquet Migration (2026-03-15)
+
+**Problem:** 24GB SQLite DB on HDD, ingestor + paper engine + backtester all fighting for DB lock, "DB locked" warnings weekly.
+
+**Solution:** DuckDB + Parquet (autonomous migration via cron)
+
+**Architecture:**
+```
+WebSocket → ingestor_parquet.py → data/ticks/*.parquet (NVMe, 12x compression)
+Paper engine → DuckDB reads from Parquet, writes to data/paper_trading.db (NVMe)
+Backtester → DuckDB reads from Parquet, writes to /mnt/data/backtest_results.db (HDD)
+```
+
+**Timeline:**
+- Phase 1 (09:32): Parquet ingestor running (368K ticks in 7 min, 880 ticks/sec)
+- Phase 2 (09:39): Created paper_trading.db, tick_reader.py
+- Phase 3 (09:39): Created /mnt/data/backtest_results.db
+- Phase 4 (09:39): Verified dashboard can query all new DBs
+- Phase 5 (pending): Waiting 24h before cleanup
+
+**Cron:** `41d87ae8-adf9-42a0-9b0e-1f3f0b7e28d4` runs every 10 min, progresses phases automatically
+
+**Manual cleanup (after 24h):**
+1. COPY old DB: `cp /mnt/data/blofin_monitor.db /mnt/data/archive/`
+2. VERIFY: `ls -lh /mnt/data/archive/blofin_monitor.db`
+3. Stop old: `systemctl --user stop blofin-stack-ingestor.service`
+4. Monitor 7 days, delete archive if stable
+
+**Files:**
+- `scripts/parquet_migration_runner.py` — autonomous runner
+- `brain/parquet_migration_state.json` — state tracker
+- `brain/DUCKDB_ARCHITECTURE.md` — full design doc
+
+**Lesson:** COPY-VERIFY-DELETE only (learned from 107GB loss Mar 12). Never move without backup.
+
+---
+
+## Moonshot v2 Architecture (2026-03-02, PIVOTED MAR 15)
+
+**NEW MISSION (Mar 15):** Hunt 30%+ spikes on new coins (<30d old), not shorts.
+
+**Pivot changes:**
+- Longs enabled (10 positions), shorts backup (2)
+- TP raised 10%→30% (hunt bigger moves)
+- Entry threshold lowered 0.70→0.50 (more lottery tickets)
+- 5x boost for new listings (<30d old)
+- BT gates relaxed: PF 0.7→0.5, precision 0.22→0.15 (expect 95% losers)
+- Invalidation grace 2→20 bars (let longs breathe)
+
+**Validation:** 45.5% of new coins (<30d) hit +30% in last month:
+- ROBO-USDT: +44.3%
+- MANTRA-USDT: +39.3%
+- KAT-USDT: +30.6%
+- CL-USDT: +30.1%
+- OPN-USDT: +30.1%
+
+**Philosophy:** FT is free. Expect 95% losers. Only top 5 winners matter. Never optimize for aggregate metrics.
+
+**Docs:** `blofin-moonshot-v2/MOONSHOT_GOALS.md`, `CORE_PHILOSOPHY.md` (mandatory reads)
 
 ### What is it
 Persistent engine finding big moves (±30%) on any of 343 Blofin USDT pairs.

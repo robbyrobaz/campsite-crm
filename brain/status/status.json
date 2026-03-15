@@ -1,21 +1,27 @@
 {
-  "activeTasks": [
+  "activeTasks": [],
+  "lastDispatch": "2026-03-15T17:54:30Z",
+  "lastHealthCheck": "2026-03-15T18:08:30Z",
+  "recentActions": [
     {
-      "id": "c_cd93483f3265a_19cf20473c8",
-      "title": "Implement 018 Delta Absorption Live Trade backtest",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 168692
+      "timestamp": "2026-03-15T18:08:30Z",
+      "action": "Heartbeat: Cleared stale activeTasks (PIDs 168692, 168700 no longer running)"
     },
     {
-      "id": "c_670695c427278_19cf204a7d7",
-      "title": "Implement 020 Simplest Orderflow Model backtest",
-      "status": "In Progress",
-      "assignee": "claude",
-      "pid": 168700
+      "timestamp": "2026-03-15T18:07:16Z",
+      "action": "Restarted moonshot-v2.service after timeout (Cycle 107 killed by systemd). Cycle 108 started.",
+      "service": "moonshot-v2.service"
+    },
+    {
+      "timestamp": "2026-03-15T18:07:30Z",
+      "action": "Git auto-commit: blofin-stack (today's tick data parquet modified)"
     }
   ],
-  "lastDispatch": "2026-03-15T17:54:30Z",
-  "lastHealthCheck": "2026-03-15T17:54:30Z",
-  "notes": "Recovered 2 stale cards (>30min). Restarted kanban API (was hung). Dispatched both cards."
+  "alerts": [
+    {
+      "severity": "warning",
+      "message": "Moonshot FT backlog remains high at 222 strategies. Cycle 108 running normally.",
+      "timestamp": "2026-03-15T18:08:30Z"
+    }
+  ]
 }

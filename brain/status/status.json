@@ -1,17 +1,20 @@
 {
-  "timestamp": "2026-03-14T20:55:00-07:00",
   "activeTasks": [],
-  "recentlyCompleted": [
-    "[Blofin] Validate T2 forward test data flow + expand top performer",
-    "[NQ] Diagnose equal_tops_bottoms live bleed vs backtest PF 3.01",
-    "[Moonshot] Validate 4h cycle + assess invalidation rate"
-  ],
-  "queueStatus": "empty",
-  "lastDispatch": "2026-03-14T20:55:00-07:00",
-  "lastHealthCheck": "2026-03-14T20:55:00-07:00",
+  "lastDispatch": "2026-03-15T04:25:00Z",
+  "lastHealthCheck": "2026-03-15T04:25:00Z",
+  "boardStatus": {
+    "InProgress": 0,
+    "Planned": 0,
+    "Done": 3,
+    "recentlyCompleted": [
+      "[Blofin] Validate T2 forward test data flow (46min ago)",
+      "[NQ] Diagnose equal_tops_bottoms (-$2K/7d) (55min ago)",
+      "[Moonshot] Validate 4h cycle + assess invalidation (57min ago)"
+    ]
+  },
   "systemHealth": {
-    "cpu_temp": "85.0°C",
-    "disk": "78%",
-    "services": "all_active"
+    "cpu": "76°C (healthy)",
+    "disk": "78% full",
+    "services": "all active"
   }
 }

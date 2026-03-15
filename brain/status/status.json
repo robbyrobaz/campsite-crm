@@ -1,32 +1,33 @@
 {
-  "timestamp": "2026-03-15T11:22:00Z",
-  "lastDispatch": "2026-03-15T11:22:00Z",
-  "lastHealthCheck": "2026-03-15T11:22:00Z",
+  "timestamp": "2026-03-15T11:52:00Z",
+  "lastDispatch": "2026-03-15T11:52:00Z",
+  "lastHealthCheck": "2026-03-15T11:52:00Z",
   "activeTasks": [
-    {
-      "id": "c_161032faa3468_19cf128b9ba",
-      "title": "[Moonshot] Validate exit logic + analyze 94 closed trades",
-      "project": "blofin-moonshot",
-      "assignee": "claude",
-      "pid": 3087599
-    },
-    {
-      "id": "c_3bd35b43fdee9_19cf128b94f",
-      "title": "[Blofin] Promote 2 top T1 strategies to T2 forward test",
-      "project": "blofin-stack",
-      "assignee": "claude",
-      "pid": 3087397
-    },
     {
       "id": "c_5092ff5234a13_19cf128b8ff",
       "title": "[NQ] Fix equal_tops_bottoms live bleed (-$2K, WR 20%)",
       "project": "NQ-Trading-PIPELINE",
       "assignee": "claude",
-      "pid": 3087398
+      "pid": 3087398,
+      "status": "In Progress"
+    }
+  ],
+  "recentlyCompleted": [
+    {
+      "id": "c_161032faa3468_19cf128b9ba",
+      "title": "[Moonshot] Validate exit logic + analyze 94 closed trades",
+      "completed": "2026-03-15T11:30:00Z",
+      "verified": true
+    },
+    {
+      "id": "c_3bd35b43fdee9_19cf128b94f",
+      "title": "[Blofin] Promote 2 top T1 strategies to T2 forward test",
+      "completed": "2026-03-15T11:30:00Z",
+      "verified": true
     }
   ],
   "systemHealth": {
-    "cpu_temp": "77.0°C",
+    "cpu_temp": "89.0°C",
     "disk_used": "81%",
     "services": [
       "openclaw-gateway: active",

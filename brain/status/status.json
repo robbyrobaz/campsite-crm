@@ -1,50 +1,40 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_7dbebe92a0bb5_19cee957d1d",
-      "title": "[Moonshot] Diagnose why no open positions despite ML scores",
-      "pid": 2338166,
-      "project": "blofin-moonshot",
-      "dispatched_at": "2026-03-14T23:25:00Z"
-    },
-    {
-      "id": "c_98b5551449979_19cee957ce5",
-      "title": "[Blofin] Promote top T1 strategies to T2 forward test",
-      "pid": 2338170,
-      "project": "blofin-stack",
-      "dispatched_at": "2026-03-14T23:25:00Z"
-    },
-    {
-      "id": "c_ac5bac7858e72_19cee957cb4",
-      "title": "[NQ] Diagnose empty FT DB + start forward test collection",
-      "pid": 2338172,
-      "project": "NQ-Trading-PIPELINE",
-      "dispatched_at": "2026-03-14T23:25:00Z"
-    }
-  ],
-  "lastDispatch": "2026-03-14T23:25:00Z",
-  "lastHealthCheck": "2026-03-14T23:25:00Z",
-  "lastDeploymentVerification": "2026-03-14T23:25:00Z",
+  "activeTasks": [],
+  "lastDispatch": "2026-03-14T23:55:00Z",
+  "lastHealthCheck": "2026-03-14T23:55:00Z",
+  "lastDeploymentVerification": "2026-03-14T23:55:00Z",
   "systemHealth": {
-    "cpu_temp": "58C",
+    "cpu_temp": "62C",
     "disk_usage": "77%",
     "services": "all_active",
     "critical_alerts": "none"
   },
+  "boardState": {
+    "in_progress": 0,
+    "planned": 0,
+    "recently_completed": 3
+  },
   "recentlyCompleted": [
     {
-      "id": "c_436082dd508b7_19cedbd21ec",
-      "title": "[NQ] ADD SESSION: NQ ORB London Killzone (2-5 AM ET)",
-      "completed_at": "2026-03-14T23:15:00Z",
+      "id": "c_98b555",
+      "title": "[Blofin] Promote top T1 strategies to T2 forward test",
+      "completed_at": "2026-03-14T23:45:00Z",
       "verified": true,
-      "verification_status": "London Killzone entry logic committed and deployed to orb_signal_engine.py. Service restarted."
+      "verification_status": "Blofin services active, dashboard HTTP 200"
     },
     {
-      "id": "c_fde527d5c0be4_19cedbcf081",
-      "title": "[Moonshot] SCALE WINNER: 2x leverage",
-      "completed_at": "2026-03-14T22:40:00Z",
+      "id": "c_7dbebe",
+      "title": "[Moonshot] Diagnose why no open positions despite ML scores",
+      "completed_at": "2026-03-14T23:31:00Z",
       "verified": true,
-      "verification_status": "Leverage = 2 in config.py. Blofin services active and dashboard responding."
+      "verification_status": "Moonshot engine running, services active"
+    },
+    {
+      "id": "c_ac5bac",
+      "title": "[NQ] Diagnose empty FT DB + start forward test collection",
+      "completed_at": "2026-03-14T23:30:00Z",
+      "verified": true,
+      "verification_status": "NQ watcher and dashboard active, HTTP 200"
     }
   ]
 }

@@ -3,37 +3,19 @@
     {
       "id": "c_192105fa5f998_19cf3bdadec",
       "title": "[Moonshot] Generate long champion (missing) + promote better short champion",
-      "pid": 667742,
-      "started": "2026-03-15T23:22:00Z",
-      "duration_minutes": 20
+      "assignee": "claude",
+      "project": "blofin-moonshot-v2",
+      "started": "2026-03-15T23:22:59Z"
     },
     {
       "id": "c_8c7e6cec9c093_19cf3bd5ad3",
       "title": "[Blofin] Expand bb_squeeze to new high-vol coins",
-      "pid": 667739,
-      "started": "2026-03-15T23:22:00Z",
-      "duration_minutes": 20
+      "assignee": "claude",
+      "project": "blofin-stack",
+      "started": "2026-03-15T23:22:59Z"
     }
   ],
-  "lastDispatch": "2026-03-15T23:22:00Z",
-  "lastHealthCheck": "2026-03-15T23:42:00Z",
-  "health": {
-    "cpu_temp": "87°C",
-    "disk_usage": "79%",
-    "load": "9.09 (improved — cycle 109 crashed, load dropped)",
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "nq-data-sync": "active",
-      "moonshot-v2-dashboard": "active"
-    },
-    "issues": [
-      "🚨 CRITICAL: Moonshot cycle 109 CRASHED with CUDA OOM at 16:39 (out of memory)",
-      "🚨 CRITICAL: Moonshot FT backlog 225 (5x warning threshold)",
-      "Moonshot champion: still short only PF 0.73, no long champion (builder c_192105fa5f998 running 20min)",
-      "blofin-stack git repo corrupted (from previous check — git add bus error, 40 commits at risk)",
-      "Failed services: moonshot-v2 (OOM crash), nq-postmerge-check, openclaw-full-restore-backup (all known)"
-    ]
-  }
+  "lastDispatch": "2026-03-15T23:52:47Z",
+  "lastHealthCheck": "2026-03-15T23:52:47Z",
+  "summary": "2 builders running (Moonshot champion fix + Blofin bb_squeeze expansion). No dispatch — queue empty."
 }

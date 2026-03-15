@@ -1,27 +1,23 @@
 {
-  "lastDispatch": "2026-03-15T12:52:00Z",
-  "lastHealthCheck": "2026-03-15T12:52:00Z",
-  "activeTasks": [],
+  "activeTasks": [
+    {
+      "id": "c_3540f06261d9d_19cf0505aee",
+      "title": "[NQ ORB] Evaluate Lucid Flex 50K scale → 10-15 contracts | EV: +$3-5K/month",
+      "pid": 3211414,
+      "dispatched": "2026-03-15T13:22:57Z"
+    },
+    {
+      "id": "c_04093a53948a1_19cf19827a9",
+      "title": "Add PnL time-normalization metrics to Moonshot v2 tournament models",
+      "pid": 3211954,
+      "dispatched": "2026-03-15T13:22:57Z"
+    }
+  ],
+  "lastDispatch": "2026-03-15T13:22:57Z",
+  "lastHealthCheck": "2026-03-15T13:22:57Z",
   "boardState": {
-    "inProgress": 0,
+    "inProgress": 2,
     "planned": 0,
     "done_recent": 1
-  },
-  "recentCompletion": {
-    "cardId": "c_5092ff5234a13_19cf128b8ff",
-    "title": "[NQ] Fix equal_tops_bottoms live bleed (-$2K, WR 20%)",
-    "completedAgo": "52 minutes",
-    "verified": "active + HTTP 200"
-  },
-  "systemHealth": {
-    "cpuTemp": "76°C",
-    "diskUsage": "81%",
-    "coreServices": [
-      "openclaw-gateway (active)",
-      "blofin-stack-ingestor (active)",
-      "blofin-stack-paper (active)",
-      "nq-watcher (active)",
-      "nq-dashboard-v3 (active)"
-    ]
   }
 }

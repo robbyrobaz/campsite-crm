@@ -1335,3 +1335,6 @@
 [2026-03-15 03:22] Completed: 
 [2026-03-15 03:22] In Progress: 1 | Planned ORB: 1
 [2026-03-15 03:22] Dispatched c_3540f06261d9d_19cf0505aee: {"ok":true,"pid":null,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_3540f06261d9d_19cf0505aee.log","cwd":"NQ-Trading-PIPELINE"}
+[2026-03-15 03:52] ORB overnight check running
+[2026-03-15 03:52] Completed: 
+[2026-03-15 03:52] In Progress: 0 | Planned ORB: 0

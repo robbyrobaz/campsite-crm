@@ -1,27 +1,6 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-15T17:54:30Z",
-  "lastHealthCheck": "2026-03-15T18:08:30Z",
-  "recentActions": [
-    {
-      "timestamp": "2026-03-15T18:08:30Z",
-      "action": "Heartbeat: Cleared stale activeTasks (PIDs 168692, 168700 no longer running)"
-    },
-    {
-      "timestamp": "2026-03-15T18:07:16Z",
-      "action": "Restarted moonshot-v2.service after timeout (Cycle 107 killed by systemd). Cycle 108 started.",
-      "service": "moonshot-v2.service"
-    },
-    {
-      "timestamp": "2026-03-15T18:07:30Z",
-      "action": "Git auto-commit: blofin-stack (today's tick data parquet modified)"
-    }
-  ],
-  "alerts": [
-    {
-      "severity": "warning",
-      "message": "Moonshot FT backlog remains high at 222 strategies. Cycle 108 running normally.",
-      "timestamp": "2026-03-15T18:08:30Z"
-    }
-  ]
+  "lastDispatch": "2026-03-15T18:22:00Z",
+  "lastHealthCheck": "2026-03-15T18:22:00Z",
+  "notes": "Board empty (0 In Progress, 0 Planned). Moonshot v2 cycle running normally (PID 189764, active backtesting). NQ-watcher activating. 3 recent Done cards were redundant — Moonshot already has active backtest pipeline."
 }

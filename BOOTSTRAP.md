@@ -439,7 +439,7 @@ BACKTEST → FORWARD TEST → GOD MODEL → BLE
 - **MANUAL CLEANUP (after 24h):** COPY old DB to archive, VERIFY, stop old ingestor, monitor 7d, delete archive
 - **CRITICAL:** COPY-VERIFY-DELETE only (learned from 107GB loss Mar 12)
 - Status: `blofin-stack/brain/parquet_migration_state.json`
-- Docs: `blofin-stack/brain/DUCKDB_ARCHITECTURE.md`, `PARQUET_MIGRATION_STATUS.md`
+- Docs: `blofin-stack/brain/DATA_ARCHITECTURE_FINAL.md` (**CANONICAL — read first**)
 
 **Feb 28 2026 (afternoon):**
 - IBKR pipeline LIVE: IB Gateway Docker running, paper account DUH860616, port 4002, no 2FA needed

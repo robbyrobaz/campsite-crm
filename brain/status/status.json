@@ -1,6 +1,24 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-15T18:53:46.636668+00:00",
-  "lastHealthCheck": "2026-03-15T18:53:46.636679+00:00",
-  "notes": "No cards in Planned queue. Inbox has 1 card (not dispatched per DISPATCHER.md rules). All services active."
+  "activeTasks": [
+    {
+      "id": "c_32f450f552e65_19cf2e40219",
+      "title": "[Moonshot] Promote better LONG champion (current PF 1.01 barely profitable)",
+      "pid": 312282,
+      "project": "blofin-moonshot-v2"
+    },
+    {
+      "id": "c_7dc8bc87fe722_19cf2e401f4",
+      "title": "[Blofin] Fix T2 strategy backtest gaps (all show NULL bt_pf)",
+      "pid": 312283,
+      "project": "blofin-stack"
+    },
+    {
+      "id": "c_3595bb6a0bd55_19cf2e401bd",
+      "title": "[NQ] Investigate equal_tops_bottoms FT bleeding (-$2K, 20% WR)",
+      "pid": 312285,
+      "project": "NQ-Trading-PIPELINE"
+    }
+  ],
+  "lastDispatch": "2026-03-15T19:22:45Z",
+  "lastHealthCheck": "2026-03-15T19:22:45Z"
 }

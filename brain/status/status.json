@@ -1,15 +1,33 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-15T06:25:00Z",
-  "lastHealthCheck": "2026-03-15T06:25:00Z",
-  "timestamp": "2026-03-15T06:25:00Z",
+  "lastDispatch": "2026-03-15T06:55:00Z",
+  "lastHealthCheck": "2026-03-15T06:55:00Z",
+  "timestamp": "2026-03-15T06:55:00Z",
+  "dispatchNotes": "No Planned cards in queue. Board is idle. All critical services healthy (CPU 58°C, disk 79%, 0/3 builder slots occupied).",
   "boardState": {
     "inProgress": 0,
     "planned": 0,
-    "done": 0
+    "done": 3,
+    "doneRecent": [
+      {
+        "id": "c_4a6254",
+        "title": "[Blofin] Validate T2 forward test data flow",
+        "completedAt": "2026-03-15T06:18:19Z"
+      },
+      {
+        "id": "c_38cb5f",
+        "title": "[NQ] Diagnose equal_tops_bottoms live bleed",
+        "completedAt": "2026-03-15T06:03:20Z"
+      },
+      {
+        "id": "c_a57fd1",
+        "title": "[Moonshot] Validate 4h cycle + assess invalidation",
+        "completedAt": "2026-03-15T05:47:42Z"
+      }
+    ]
   },
   "healthStatus": {
-    "cpu_temp": "64.0°C",
+    "cpu_temp": "58.0°C",
     "disk_usage": "79%",
     "criticalServices": "all_active",
     "alertStatus": "clear"

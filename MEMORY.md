@@ -156,11 +156,10 @@ Autonomous SMS system for Hastings Farms 2nd Ward Saturday church cleaning volun
 - Output: `/home/rob/infrastructure/ibkr/data/NQ_ibkr_historical_1min.csv`
 - **Workaround for error 10339:** Can't request continuous contract history — must stitch quarterly contracts (NQU5, NQZ5, NQH6)
 
-### IBKR vs NinjaTrader Differences
-- Avg OR HIGH diff: 8.07 pts
-- Avg OR LOW diff: 11.00 pts
-- Worst case: 193 pts
-- **Conclusion:** NinjaTrader data is NOT reliable for validating IBKR strategies. Always use IBKR data for IBKR-targeted research.
+### IBKR Data (Canonical Source)
+- **Only source for NQ pipeline:** `/home/rob/infrastructure/ibkr/data/NQ_ibkr_1min.csv`
+- 7 months historical (202K+ bars, Aug 2025 → Mar 2026)
+- Old NinjaTrader/SMB path retired Mar 15 2026 — do not compare sources
 
 ## 15-min ORB Bug (Mar 11 2026)
 
@@ -244,33 +243,29 @@ Dashboard must always label BLE P&L as "~est." — never display it as ground tr
 - God cohesion bucket: 3-day joint forward test with strict consensus (min 2 agree, disagreements skip)
 - Do not reference individual strategy PFs when discussing live trading readiness
 
-### Architecture (locked)
+### Architecture (current)
 ```
-DATA:       NinjaTrader (Windows 192.168.68.88) → SMB /mnt/nt_bridge/bars.csv (ET timestamps)
-            → nq-smb-watcher.service converts ET→UTC, appends to NQ_continuous_1min.csv
-            → God Model inference on every bar (DRY_RUN=True)
+DATA:       IBKR → `/home/rob/infrastructure/ibkr/data/NQ_ibkr_1min.csv`
+            → nq-data-sync.service copies every 5s → `processed_data/NQ_continuous_1min.csv`
+            → Used by dashboard + on-demand backtests
 EXECUTION:  (Future, Rob approves) Signal engine → TradersPost → Tradovate → Lucid prop accounts
 ```
 
 ### Services
-- `nq-smb-watcher.service` — **ACTIVE LIVE FEED**
-- `nq-dashboard.service` — Dashboard at port 8891
-- `nq-tradovate-feed.service` — DISABLED (optional future upgrade)
+- `nq-data-sync.service` — IBKR data sync (active)
+- `nq-dashboard-v3.service` — Dashboard at port 8895 (active)
+- OLD: nq-watcher, nq-smb-watcher — **MASKED Mar 15 2026** (obsolete SMB/NinjaTrader path)
 
 ### Data File
-- `processed_data/NQ_continuous_1min.csv` — 403K+ rows, Jan 2025→present, all UTC
-- Contracts roll quarterly — next roll NQM6 March 13 2026
+- **Canonical:** `/home/rob/infrastructure/ibkr/data/NQ_ibkr_1min.csv` (202K+ bars, Aug 2025→Mar 2026)
+- **Copy for isolation:** `processed_data/NQ_continuous_1min.csv`
+- Contracts roll quarterly
 
-## NQ Data Source Hierarchy (Mar 11, 2026)
+## NQ Data Source (Mar 15, 2026)
 
-**CANONICAL SOURCE: IBKR**
+**ONLY SOURCE: IBKR**
 - File: `/home/rob/infrastructure/ibkr/data/NQ_ibkr_1min.csv`
 - Format: `YYYY-MM-DDTHH:MM:SSZ` (UTC)
-- ORB engines read this FIRST
+- Service: `nq-data-sync.service` copies to `processed_data/NQ_continuous_1min.csv` every 5s
 
-**FALLBACK ONLY: SMB/NinjaTrader**
-- File: `processed_data/NQ_continuous_1min.csv`
-- Only for historical backtest or if IBKR unavailable
-- **Values differ from IBKR — never compare them directly**
-
-**Lesson:** The engine uses IBKR. Don't debug by comparing to SMB data.
+**OLD: SMB/NinjaTrader path RETIRED Mar 15 2026** — services masked, no longer in use.

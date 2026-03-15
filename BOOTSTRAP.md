@@ -161,19 +161,21 @@ If you skip these and get corrected, that's the most expensive thing that happen
 
 ---
 
-## ⚠️ THREE PIPELINES = THREE ARENAS (Core Philosophy)
+## ⚠️ THREE PIPELINES = THREE ARENAS (Core Philosophy — UPDATED MAR 15 2026)
 
-**NQ Pipeline, Blofin v1, and Blofin Moonshot are INDEPENDENT systems.** We do NOT combine them, average them, or merge their outputs.
+**NQ Pipeline, Blofin Stack, and Moonshot v2 are INDEPENDENT systems.** We do NOT combine them, average them, or merge their outputs.
 
 **The goal:** Cherry-pick the TOP PERFORMERS from each arena independently.
-- **NQ Pipeline:** Take the 2-3 strategies with PF ≥ 2.5 in forward test → God Model
-- **Blofin v1:** Take strategy+coin pairs with FT PF ≥ 1.35 → leverage tiers (5x/3x/2x/1x)
-- **Blofin Moonshot:** Take coins with ml_score confidence ≥ 0.7 AND FT validation
+- **NQ Pipeline:** Take the 2-3 strategies with FT PF ≥ 2.5 → God Model (futures scalping)
+- **Blofin Stack:** Take strategy+coin pairs with FT PF ≥ 1.35 → leverage tiers (consistent grind on established coins)
+- **Moonshot v2:** Hunt 30%+ spikes on new coins (<30d old) — longs primary, shorts backup
 
 **What this means operationally:**
-- NEVER look at overall/aggregate performance across all strategies — it's meaningless noise
-- ALWAYS filter to top performers first, THEN analyze
-- Each arena has different success criteria (NQ = Lucid prop gates, Blofin v1 = FT PF, Moonshot = ml_score + FT)
+- **FT is FREE** — paper trading costs nothing, losers don't hurt us
+- **We EXPECT 95% losers** — only hunting for the top 5 winners out of hundreds
+- **NEVER look at overall/aggregate performance** — system-wide win rate, average PF, total PnL are meaningless noise
+- **ALWAYS filter to top performers first** — champion PnL, top 5 strategies, top 10 pairs
+- Each arena has different success criteria (NQ = prop gates, Blofin = FT PF, Moonshot = +30% spikes)
 - Leverage, position sizing, and risk management are per-arena decisions
 
 **Why this matters:** The average of 100 strategies is garbage. The top 5 strategies are gold. We're building systems to automatically identify, promote, and amplify the gold while dropping the garbage. That's the whole game.
@@ -186,7 +188,7 @@ Rob will ask you to dispatch work in any session. Know this cold.
 
 **8 phases (run in order):**
 
-**Phase 1 — Health check:** services alive? (gateway, blofin-ingestor, blofin-paper, nq-watcher, nq-data-sync, nq-dashboard-v3)
+**Phase 1 — Health check:** services alive? (gateway, blofin-ingestor, blofin-paper, nq-data-sync, nq-dashboard-v3)
 
 **Phase 2 — Critical alert check:** `cd blofin-stack && .venv/bin/python critical_alert_monitor.py` — if exit 1, ntfy Rob immediately
 
@@ -294,7 +296,7 @@ BACKTEST → FORWARD TEST → GOD MODEL → BLE
 - **God cohesion bucket (new):** 3-day joint `god_model_forward_test` with strict consensus (min 2 agree, any opposing signal => skip), single-position only before BLE eligibility
 
 ## Key Facts (often forgotten, very expensive to re-derive)
-- **NQ data feed**: NinjaTrader SMB → `/mnt/nt_bridge/bars.csv` → `nq-watcher.service` → `NQ_continuous_1min.csv` (UTC). Still active. **NEW: IBKR tick+L2 feed live** — `ibkr-nq-feed.service`, data at `/home/rob/infrastructure/ibkr/data/nq_feed.duckdb` + `NQ_ibkr_1min.csv`. IB Gateway on Docker (`ib-gateway` container, port 4002, `restart=unless-stopped`).
+- **NQ data feed**: IBKR only (canonical source). `nq-data-sync.service` copies IBKR data every 5s → `processed_data/NQ_continuous_1min.csv`. Dashboard: `nq-dashboard-v3.service` (port 8895). **OLD SMB/NinjaTrader path is DEAD** — services masked permanently Mar 15.
 - **NQ execution chain (future, Rob approves)**: God Model signal → TradersPost webhook → Tradovate → Lucid prop accounts. Currently DRY_RUN=True always.
 - **ETB (equal_tops_bottoms) is UNBLACKLISTED** — PF 3.02, Sharpe 7.97. Best strategy. NOT yet in live inference — top priority.
 - **NQ ML feature function**: ALWAYS use `build_session_aware_features()`. NEVER `build_features()` (RTH-only, wrong).
@@ -422,7 +424,6 @@ BACKTEST → FORWARD TEST → GOD MODEL → BLE
 - EEP scoring dead. Blofin ranking = `bt_pnl_pct`. Gates: 100 trades, PF≥1.35, MDD<50%, PnL>0
 - equal_tops_bottoms (PF 3.02) is the #1 priority — NOT yet in live inference, needs to be added to God Model
 - gapfill + vwapfade bleeding live (14%/11% WR) — under investigation
-- IBKR/nq-bar-feed retired. SMB watcher is the only live feed.
 - DISPATCHER.md added to mandatory startup reads (step 5 in BOOTSTRAP) — Rob will ask for dispatch work in any session
 - QA sentinel removed. Builder self-verifies. Dispatcher Phase 7 + Oversight cron double-check Done cards are live.
 - No Review/Test status ever. Cards go In Progress → Done directly.

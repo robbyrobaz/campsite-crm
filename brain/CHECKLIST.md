@@ -56,7 +56,7 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 - [ ] **Commit and push the work.** Builder must `git add -A && git commit && git push` before marking Done. Code that isn't committed isn't real.
 - [ ] If card auto-moves to "Review/Test" (kanban runner behavior), immediately PATCH it to "Done"
 - [ ] **DEPLOY — restart the relevant service(s).** Code done ≠ deployed. Nothing happens until the service reloads.
-  - NQ changes: `systemctl --user restart nq-smb-watcher.service nq-dashboard.service`
+  - NQ changes: `systemctl --user restart nq-data-sync.service nq-dashboard-v3.service`
   - Blofin changes: `systemctl --user restart blofin-stack-ingestor.service blofin-stack-paper.service blofin-dashboard.service`
   - Jarvis home: `systemctl --user restart jarvis-home.service`
   - ML model retrained: restart the inference service to load new weights

@@ -71,8 +71,8 @@ The Strategy Library is a **combined FT competition board** — all strategies t
 - [ ] `ft_trades` column in strategy_registry shows 0 — paper_trades → registry sync not wired in nq_watcher.py
 - [ ] `prev_day` expert showing PDH=19040 (2025 levels) — feature builder date grouping bug
 
-**Live data feed:** IBKR → `NQ_ibkr_1min.csv` → `nq-data-sync.service` → `NQ_ibkr_ft.csv` → `nq-watcher.service`
-BLE engines read IBKR original directly. FT/BT reads the synced copy. Zero contention.
+**Live data feed:** IBKR → `NQ_ibkr_1min.csv` → `nq-data-sync.service` → `NQ_ibkr_ft.csv`
+BLE engines read IBKR original directly. Dashboard + on-demand backtests read the synced copy. Zero contention.
 
 **Next BLE promotion candidates (by BT PF, need FT validation):**
 1. orb_rth (PF 99, rule-based — needs FT data)
@@ -83,7 +83,6 @@ BLE engines read IBKR original directly. FT/BT reads the synced copy. Zero conte
 - ⛔ Only Rob can promote a strategy to BLE. Never change `ORB_ENGINES` or flip `DRY_RUN=False` without explicit approval.
 - ⛔ Never modify the two live BLE engine services without explicit approval.
 - ⛔ God Model = single unified ensemble, NOT individual strategies
-- SMB mount is read-only — never write to `/mnt/nt_bridge/`
 
 ---
 

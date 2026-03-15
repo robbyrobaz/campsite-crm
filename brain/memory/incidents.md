@@ -733,3 +733,10 @@ Next pulse: 2026-03-15 03:22 MST (in 30 minutes)
 **Fix:** Killed stuck curl processes, killed port 8787 node process, restarted kanban server.
 
 **Prevention:** Monitor for hung API calls. Consider adding request timeout middleware to kanban server.
+
+## 2026-03-15 12:52 — nq-watcher crash loop (expected on weekends)
+**Status:** Known issue (not actionable)
+**Cause:** /mnt/nt_bridge not mounted (Rob's Windows/NinjaTrader machine off)
+**Impact:** NQ forward test paused until Monday (no live data feed)
+**Action:** None — this is expected on weekends. Service will recover when Windows machine restarts.
+**Restart count:** 339 (systemd will keep trying)

@@ -33,13 +33,18 @@
 - Gateway config: `~/.openclaw/openclaw.json` → `.agents.defaults.model.primary`
 - **Opus is BANNED** — never let it back in. Rob was very angry about silent Opus usage.
 
-### Three Pipelines Philosophy (Core Architecture)
-**NQ Pipeline, Blofin v1, and Blofin Moonshot are THREE INDEPENDENT ARENAS.** Never combine outputs.
+### Three Pipelines Philosophy (Core Architecture — CRITICAL)
+**NQ Pipeline, Blofin Stack, and Moonshot v2 are THREE INDEPENDENT ARENAS.** Never combine outputs.
 - **NQ Pipeline:** Top 2-3 strategies with FT PF ≥ 2.5 → God Model
-- **Blofin v1:** Strategy+coin pairs with FT PF ≥ 1.35 → dynamic leverage tiers
-- **Blofin Moonshot:** Coins with ml_score confidence ≥ 0.7 + FT validation
+- **Blofin Stack:** Strategy+coin pairs with FT PF ≥ 1.35 → dynamic leverage tiers (consistent money on established coins)
+- **Moonshot v2:** ML models finding ±30% moves on 343 coins (big moves, bias toward new listings)
 
-**Key insight:** Overall/aggregate performance is meaningless. The top 5 performers are gold. Always filter to top performers FIRST.
+**CRITICAL INSIGHT (Rob's directive, Mar 15 2026):**
+- **FT is FREE** — paper trading costs nothing, losers don't hurt us
+- **We EXPECT 95% losers** — only hunting for the top 5 winners out of hundreds
+- **NEVER report aggregate metrics** — system-wide win rate, average PF, total PnL are meaningless
+- **Only track top performers** — champion PnL, top 5 strategies, top 10 pairs
+- Always filter to top performers FIRST, ignore the rest
 
 ## Moonshot v2 Architecture (2026-03-02)
 

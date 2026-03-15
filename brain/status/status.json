@@ -1,7 +1,7 @@
 {
-  "timestamp": "2026-03-15T11:52:00Z",
+  "timestamp": "2026-03-15T12:04:42Z",
   "lastDispatch": "2026-03-15T11:52:00Z",
-  "lastHealthCheck": "2026-03-15T11:52:00Z",
+  "lastHealthCheck": "2026-03-15T12:04:42Z",
   "activeTasks": [
     {
       "id": "c_5092ff5234a13_19cf128b8ff",
@@ -9,7 +9,7 @@
       "project": "NQ-Trading-PIPELINE",
       "assignee": "claude",
       "pid": 3087398,
-      "status": "In Progress"
+      "status": "In Progress (process not found — likely finished or died)"
     }
   ],
   "recentlyCompleted": [
@@ -27,15 +27,26 @@
     }
   ],
   "systemHealth": {
-    "cpu_temp": "89.0°C",
+    "cpu_temp": "79.0°C",
     "disk_used": "81%",
     "services": [
       "openclaw-gateway: active",
       "blofin-stack-ingestor: active",
       "blofin-stack-paper: active",
       "nq-watcher: active",
-      "nq-dashboard-v3: active"
+      "nq-dashboard-v3: active",
+      "moonshot-v2: active",
+      "moonshot-v2-dashboard: active"
     ],
-    "alerts": "none"
+    "warnings": [
+      "IBKR Options service inactive (Weekend, expected)",
+      "IB Gateway container not running (Weekend, expected)",
+      "Moonshot Cycle 103 started 04:05, still running (expected ~1h runtime)",
+      "Moonshot FT backlog: 212 (high, but managed)",
+      "GitHub push error resolved (HTTP 500 was transient, subsequent push succeeded)"
+    ],
+    "alerts": [
+      "Card c_3540f06261d9d_19cf0505aee failed 3 times (kanban runner ENOENT) — flagged for manual review"
+    ]
   }
 }

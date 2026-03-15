@@ -1,22 +1,29 @@
 {
-  "timestamp": "2026-03-15T04:55:00Z",
+  "timestamp": "2026-03-15T05:25:00Z",
   "activeTasks": [],
-  "lastDispatch": "2026-03-15T04:55:00Z",
-  "lastHealthCheck": "2026-03-15T04:55:00Z",
+  "lastDispatch": "2026-03-15T05:25:00Z",
+  "lastHealthCheck": "2026-03-15T05:25:00Z",
   "boardState": {
     "inProgress": 0,
     "planned": 0,
-    "done": 3
-  },
-  "recentDeployments": {
-    "blofin": "ok - all services active, dashboard 200",
-    "nq": "ok - all services active, dashboard 200",
-    "moonshot": "ok - services active, transient db lock recovered"
+    "done": 3,
+    "recentDoneCards": [
+      "c_4a62541e2f2f_19cef7239f5 | [Blofin] Validate T2 forward test data flow + expand top performer (107min ago)",
+      "c_38cb5fbb818d4_19cef7239d2 | [NQ] Diagnose equal_tops_bottoms live bleed (-$2K/7d) vs backtest PF 3.01 (115min ago)",
+      "c_a57fd1afadc69_19cef723a14 | [Moonshot] Validate 4h cycle + assess invalidation rate per TOURNAMENT_PHILOSOPHY (118min ago)"
+    ]
   },
   "health": {
-    "cpu": "85C",
-    "disk": "78% (/)",
-    "services": "all_active"
+    "cpu": "71C",
+    "disk": "79% (/)",
+    "services": "all_active",
+    "alerts": "none"
   },
-  "notes": "Kanban queue empty. Auto Card Generator will populate next run. All recent deployments verified and live."
+  "dispatch_result": {
+    "status": "no_action",
+    "reason": "kanban_queue_empty",
+    "slots_available": 3,
+    "next_action": "waiting_for_auto_card_generator"
+  },
+  "notes": "Dispatch cycle clean. All services healthy. Kanban Planned queue empty — Auto Card Generator will queue work on next run (hourly). Board ready for incoming tasks."
 }

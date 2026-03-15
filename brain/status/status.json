@@ -1,34 +1,34 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-15T00:55:00Z",
-  "lastHealthCheck": "2026-03-15T00:55:00Z",
-  "queueStatus": "empty",
-  "boardState": {
-    "inProgress": 0,
-    "planned": 0,
-    "capacity": "3/3 slots available"
-  },
-  "recentCompleted": [
-    {
-      "id": "c_98b5551449979_19cee957ce5",
-      "title": "[Blofin] Promote top T1 strategies to T2 forward test",
-      "completedAgo": "70 min"
-    },
-    {
-      "id": "c_7dbebe92a0bb5_19cee957d1d",
-      "title": "[Moonshot] Diagnose why no open positions despite ML scores",
-      "completedAgo": "84 min"
-    },
-    {
-      "id": "c_ac5bac7858e72_19cee957cb4",
-      "title": "[NQ] Diagnose empty FT DB + start forward test collection",
-      "completedAgo": "85 min"
-    }
-  ],
+  "lastDispatch": "2026-03-15T01:25:29Z",
+  "lastHealthCheck": "2026-03-15T01:25:29Z",
   "systemStatus": {
-    "cpu": "62°C",
-    "disk": "78% (342G/468G)",
-    "services": "✓ all 5 active",
-    "criticalAlerts": "none"
-  }
+    "cpu_temp": "90.0°C",
+    "disk_used": "78%",
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-watcher": "active",
+      "nq-dashboard-v3": "active"
+    },
+    "critical_alerts": 0
+  },
+  "recentlyCompleted": [
+    {
+      "title": "[Blofin] Promote top T1 strategies to T2 forward test",
+      "completedAt": "2026-03-15T01:25:00Z",
+      "verified": true
+    },
+    {
+      "title": "[Moonshot] Diagnose why no open positions despite ML scores",
+      "completedAt": "2026-03-15T01:24:42Z",
+      "verified": true
+    },
+    {
+      "title": "[NQ] Diagnose empty FT DB + start forward test collection",
+      "completedAt": "2026-03-15T01:23:20Z",
+      "verified": true
+    }
+  ]
 }

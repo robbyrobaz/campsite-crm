@@ -1,14 +1,20 @@
 {
-  "lastDispatch": "2026-03-15T12:22:00Z",
-  "lastHealthCheck": "2026-03-15T12:22:00Z",
+  "lastDispatch": "2026-03-15T12:52:00Z",
+  "lastHealthCheck": "2026-03-15T12:52:00Z",
   "activeTasks": [],
   "boardState": {
     "inProgress": 0,
     "planned": 0,
-    "done_recent": 3
+    "done_recent": 1
+  },
+  "recentCompletion": {
+    "cardId": "c_5092ff5234a13_19cf128b8ff",
+    "title": "[NQ] Fix equal_tops_bottoms live bleed (-$2K, WR 20%)",
+    "completedAgo": "52 minutes",
+    "verified": "active + HTTP 200"
   },
   "systemHealth": {
-    "cpuTemp": "78°C",
+    "cpuTemp": "76°C",
     "diskUsage": "81%",
     "coreServices": [
       "openclaw-gateway (active)",

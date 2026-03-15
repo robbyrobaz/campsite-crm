@@ -1,14 +1,14 @@
 ## ⚡ RECENT CHANGES (Mar 15 2026)
 
-### Blofin Parquet Migration (AUTONOMOUS, IN PROGRESS)
-**Status:** Phases 1-4 complete, Phase 5 waiting 24h verification  
-**Cron:** `41d87ae8-adf9-42a0-9b0e-1f3f0b7e28d4` checks every 10 min  
-**Old ingestor:** SQLite, 24GB on HDD, still running  
-**New ingestor:** Parquet, ~1MB on NVMe, 880 ticks/sec, 12x compression  
-**Storage plan:** NVMe (data/ticks/*.parquet, rolling 90d), HDD (backtest_results.db, archive)  
-**After 24h:** Cron announces "ready for manual cleanup" → COPY old DB to archive, VERIFY, stop old ingestor  
-**State:** `blofin-stack/brain/parquet_migration_state.json`  
-**Docs:** `blofin-stack/brain/DUCKDB_ARCHITECTURE.md`, `PARQUET_MIGRATION_STATUS.md`
+### Blofin Parquet Migration ✅ COMPLETE (09:32-09:58 MST, 26 min)
+**Status:** Old ingestor STOPPED, paper engine running on Parquet  
+**Old ingestor:** STOPPED (blofin-stack-ingestor.service)  
+**New ingestor:** Parquet, ~600KB on NVMe, 880 ticks/sec, 12x compression  
+**Paper engine:** Reading ticks from Parquet via DuckDB, zero errors  
+**Storage:** `data/ticks/*.parquet` (NVMe), `/mnt/data/blofin_monitor.db` (HDD, read-only, strategy_registry still used)  
+**24h check:** Cron `5e786162-afc1-4a6f-9f49-6f3712048f8a` fires 2026-03-16 09:58 MST (one-time)  
+**Next:** After 7d stable → COPY old DB to archive, verify, delete after 30d  
+**Docs:** `blofin-stack/brain/DUCKDB_ARCHITECTURE.md`, `utils/duckdb_tick_adapter.py`
 
 ### Moonshot v2 Pivot (COMPLETE)
 **Mission:** Hunt 30%+ spikes on new coins (<30d old)  

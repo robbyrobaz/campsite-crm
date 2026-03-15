@@ -1,35 +1,12 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_a57fd1afadc69_19cef723a14",
-      "title": "[Moonshot] Validate 4h cycle + assess invalidation rate per TOURNAMENT_PHILOSOPHY",
-      "assignee": "claude",
-      "project": "blofin-moonshot",
-      "status": "In Progress",
-      "pid": 2585772
-    },
-    {
-      "id": "c_4a62541e2f2f_19cef7239f5",
-      "title": "[Blofin] Validate T2 forward test data flow + expand top performer",
-      "assignee": "claude",
-      "project": "blofin-stack",
-      "status": "In Progress",
-      "pid": 2585776
-    },
-    {
-      "id": "c_38cb5fbb818d4_19cef7239d2",
-      "title": "[NQ] Diagnose equal_tops_bottoms live bleed (-$2K/7d) vs backtest PF 3.01",
-      "assignee": "claude",
-      "project": "NQ-Trading-PIPELINE",
-      "status": "In Progress",
-      "pid": 2585782
-    }
-  ],
+  "timestamp": "2026-03-15T03:37:00Z",
+  "activeTasks": [],
   "lastDispatch": "2026-03-15T03:25:47Z",
-  "lastHealthCheck": "2026-03-15T03:25:47Z",
+  "lastHealthCheck": "2026-03-15T03:37:00Z",
   "systemHealth": {
-    "cpu_temp": "85.0°C",
+    "cpu_temp": "81.0°C",
     "disk_usage": "78%",
     "critical_services": "all_active"
-  }
+  },
+  "notes": "Heartbeat 8:37pm - All services active. Moonshot Cycle 101 running (31min in). Failed card c_4a62541e2f2f resolved to Done (log showed success). Status.json cleared of stale PIDs."
 }

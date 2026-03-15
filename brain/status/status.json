@@ -5,24 +5,23 @@
       "title": "Implement 018 Delta Absorption Live Trade backtest",
       "status": "In Progress",
       "assignee": "claude",
-      "project": "nq-l2-scalping"
+      "pid": 55277
     },
     {
       "id": "c_48860ca62cc1d_19cf2048da6",
       "title": "Implement 019 Order Flow Priority 2026 backtest",
       "status": "In Progress",
       "assignee": "claude",
-      "project": "nq-l2-scalping"
+      "pid": 55278
     },
     {
       "id": "c_670695c427278_19cf204a7d7",
       "title": "Implement 020 Simplest Orderflow Model backtest",
       "status": "In Progress",
       "assignee": "claude",
-      "project": "nq-l2-scalping"
+      "pid": 55296
     }
   ],
-  "lastDispatch": "2026-03-15T15:52:00Z",
-  "lastHealthCheck": "2026-03-15T15:52:00Z",
-  "notes": "3/3 builder slots active (all nq-l2-scalping), 0 Planned cards, all services healthy"
+  "lastDispatch": "2026-03-15T16:22:57Z",
+  "lastHealthCheck": "2026-03-15T16:22:57Z"
 }

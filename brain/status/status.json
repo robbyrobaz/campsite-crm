@@ -14,16 +14,26 @@
     }
   ],
   "lastDispatch": "2026-03-15T23:22:00Z",
-  "lastHealthCheck": "2026-03-15T23:22:00Z",
+  "lastHealthCheck": "2026-03-15T23:30:00Z",
   "health": {
-    "cpu_temp": "91°C",
+    "cpu_temp": "86°C",
     "disk_usage": "79%",
+    "load": "29.22 (heavy — Moonshot + 2 builders)",
     "services": {
       "openclaw-gateway": "active",
       "blofin-stack-ingestor": "active",
       "blofin-stack-paper": "active",
-      "nq-watcher": "active",
-      "nq-dashboard-v3": "active"
-    }
+      "nq-data-sync": "active",
+      "moonshot-v2-dashboard": "active"
+    },
+    "issues": [
+      "CPU temp 86°C (high load, within limits)",
+      "blofin-stack git push hung (39 commits ahead, killed)",
+      "Failed services: blofin-stack-gapfill, nq-postmerge-check, openclaw-full-restore-backup (all known, non-critical)",
+      "Temp cleanup needed: blofin-stack has 6 untracked scripts (expand_bb_squeeze*.py, check*.py)",
+      "Moonshot cycle 109 running (16:05 start), cycle 108 completed successfully",
+      "Moonshot FT backlog: 225 (warning threshold 50 exceeded — needs FT cleanup card)",
+      "Moonshot champion: short only, PF 0.73 (losing), no long champion (builder c_192105fa5f998 addressing)"
+    ]
   }
 }

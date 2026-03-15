@@ -1,3 +1,21 @@
+## ⛔ NQ-TOURNAMENT SERVICE — MASKED PERMANENTLY (Mar 15 2026)
+
+**CONTEXT:** nq-tournament.service crash-looped every 10 seconds — 101,176 restarts total before masking.
+
+**ROOT CAUSE:** User-level systemd service had `User=rob` and `Group=rob` directives. This is INVALID for user-level units (only allowed in system-level units at `/etc/systemd/system/`). Every start attempt exited with status=216/GROUP.
+
+**FIX:** Symlinked both `nq-tournament.service` and `nq-tournament.timer` to `/dev/null` (permanent mask).
+
+**IF YOU NEED IT BACK:**
+1. Remove the `User=` and `Group=` lines from the service file
+2. `systemctl --user unmask nq-tournament.service nq-tournament.timer`
+3. `systemctl --user daemon-reload`
+4. `systemctl --user enable --now nq-tournament.timer`
+
+**LESSON:** User-level systemd units run as the user who owns the session — NEVER add `User=` or `Group=` directives. That's only for system-level units where you need to drop privileges.
+
+---
+
 ## ⛔⛔⛔ DATA MIGRATION CATASTROPHE — Mar 12 2026 (DO NOT REPEAT)
 
 **CONTEXT:** blofin_monitor.db hit 107GB + 56GB WAL. Disk crisis required moving data off NVMe to `/mnt/data` (new WD HDD). Migration failed catastrophically.

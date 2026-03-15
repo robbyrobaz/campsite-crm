@@ -1,34 +1,24 @@
 {
+  "timestamp": "2026-03-15T01:41:00Z",
   "activeTasks": [],
-  "lastDispatch": "2026-03-15T01:25:29Z",
-  "lastHealthCheck": "2026-03-15T01:25:29Z",
-  "systemStatus": {
-    "cpu_temp": "90.0°C",
-    "disk_used": "78%",
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "nq-watcher": "active",
-      "nq-dashboard-v3": "active"
-    },
+  "lastCompleted": [
+    {
+      "task": "Moonshot direction-specific gates deployed",
+      "status": "awaiting next cycle",
+      "timestamp": "2026-03-14T18:16:00Z",
+      "note": "New gates (long PF≥0.7, short PF≥1.0) deployed. Cycle 101 at ~8pm will test."
+    }
+  ],
+  "systemHealth": {
+    "cpu_temp": "76°C",
+    "disk": "78%",
+    "services": "all active",
     "critical_alerts": 0
   },
-  "recentlyCompleted": [
-    {
-      "title": "[Blofin] Promote top T1 strategies to T2 forward test",
-      "completedAt": "2026-03-15T01:25:00Z",
-      "verified": true
-    },
-    {
-      "title": "[Moonshot] Diagnose why no open positions despite ML scores",
-      "completedAt": "2026-03-15T01:24:42Z",
-      "verified": true
-    },
-    {
-      "title": "[NQ] Diagnose empty FT DB + start forward test collection",
-      "completedAt": "2026-03-15T01:23:20Z",
-      "verified": true
-    }
-  ]
+  "moonshot": {
+    "last_cycle": "Cycle 100 (completed 16:17, 0 errors)",
+    "ft_backlog": 183,
+    "champion": "short de44f72dbb01 PF=2.22",
+    "long_models_status": "507 retired (awaiting Cycle 101 with new gates)"
+  }
 }

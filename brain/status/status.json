@@ -1,5 +1,29 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-15T22:52:59Z",
-  "lastHealthCheck": "2026-03-15T22:52:59Z"
+  "activeTasks": [
+    {
+      "id": "c_192105fa5f998_19cf3bdadec",
+      "title": "[Moonshot] Generate long champion (missing) + promote better short champion",
+      "pid": 667742,
+      "started": "2026-03-15T23:22:00Z"
+    },
+    {
+      "id": "c_8c7e6cec9c093_19cf3bd5ad3",
+      "title": "[Blofin] Expand bb_squeeze to new high-vol coins",
+      "pid": 667739,
+      "started": "2026-03-15T23:22:00Z"
+    }
+  ],
+  "lastDispatch": "2026-03-15T23:22:00Z",
+  "lastHealthCheck": "2026-03-15T23:22:00Z",
+  "health": {
+    "cpu_temp": "91°C",
+    "disk_usage": "79%",
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-watcher": "active",
+      "nq-dashboard-v3": "active"
+    }
+  }
 }

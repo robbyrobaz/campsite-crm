@@ -1,5 +1,21 @@
 # Incidents & Resolutions
 
+## Mar 15, 2026 01:25 MST - Moonshot Dashboard Process Hung (Port Mismatch)
+
+**Incident:** Moonshot dashboard process running but port 8891 not responding. Dispatcher detected during Phase 7 verification.
+
+**Root cause:** Dashboard config expects port 8893, not 8891. Process had been running >143 hours with stale code. Second issue: `dashboard/app.py` had wrong import path for config module (couldn't find `config.py` in parent).
+
+**Fix:**
+1. Killed stale process (pid 1955719)
+2. Fixed import in `dashboard/app.py`: added `sys.path.insert(0, '..')` before `import config`
+3. Restarted dashboard on correct port 8893
+4. Verified HTTP 200 response
+
+**Resolution:** Dashboard restored, running normally.
+
+---
+
 ## Mar 11, 2026 04:30 MST - nq-dashboard.service Missing
 
 **Incident:** Dispatcher health check reported `nq-dashboard.service` does not exist.

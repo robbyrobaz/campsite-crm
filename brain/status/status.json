@@ -1,31 +1,34 @@
 {
-  "timestamp": "2026-03-15T00:25:00Z",
-  "phase": 8,
-  "dispatchCycle": "jarvis-pulse",
-  "health": {
-    "cpu_temp": 83,
-    "disk_usage_pct": 77,
-    "services_alive": 5,
-    "services_total": 5,
-    "critical_alerts": 0
-  },
-  "board_state": {
-    "in_progress": 0,
+  "activeTasks": [],
+  "lastDispatch": "2026-03-15T00:55:00Z",
+  "lastHealthCheck": "2026-03-15T00:55:00Z",
+  "queueStatus": "empty",
+  "boardState": {
+    "inProgress": 0,
     "planned": 0,
-    "active_builders": 0,
-    "can_dispatch": true
+    "capacity": "3/3 slots available"
   },
-  "last_dispatch": "2026-03-15T00:25:00Z",
-  "last_health_check": "2026-03-15T00:25:00Z",
-  "notes": [
-    "✅ PHASE 1: Health check passed — CPU 83°C, disk 77%, all 5 critical services active",
-    "✅ PHASE 2: Critical alert check passed — no alerts",
-    "✅ PHASE 3: Board state fetched — 0 In Progress, 0 Planned",
-    "✅ PHASE 4: Stale recovery — N/A (no In Progress cards)",
-    "✅ PHASE 5: Card enrichment — N/A (no Planned cards)",
-    "✅ PHASE 6: Dispatch — skipped (no Planned cards; max 3 builders policy enforced)",
-    "✅ PHASE 7: Deployment verification — 0 recent Done cards; nothing to verify",
-    "✅ PHASE 8: Status truth written",
-    "📌 DISPATCHER READY for next cycle — queue is clear, max 3 builder slots available"
-  ]
+  "recentCompleted": [
+    {
+      "id": "c_98b5551449979_19cee957ce5",
+      "title": "[Blofin] Promote top T1 strategies to T2 forward test",
+      "completedAgo": "70 min"
+    },
+    {
+      "id": "c_7dbebe92a0bb5_19cee957d1d",
+      "title": "[Moonshot] Diagnose why no open positions despite ML scores",
+      "completedAgo": "84 min"
+    },
+    {
+      "id": "c_ac5bac7858e72_19cee957cb4",
+      "title": "[NQ] Diagnose empty FT DB + start forward test collection",
+      "completedAgo": "85 min"
+    }
+  ],
+  "systemStatus": {
+    "cpu": "62°C",
+    "disk": "78% (342G/468G)",
+    "services": "✓ all 5 active",
+    "criticalAlerts": "none"
+  }
 }

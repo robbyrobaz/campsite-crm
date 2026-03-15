@@ -1,20 +1,6 @@
 {
-  "timestamp": "2026-03-15T14:22:00Z",
   "activeTasks": [],
-  "plannedQueue": [],
-  "inProgressCount": 0,
-  "lastDispatch": "2026-03-15T14:22:00Z",
-  "lastHealthCheck": "2026-03-15T14:22:00Z",
-  "systemHealth": {
-    "cpu_temp": "71°C",
-    "disk_usage": "81%",
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "nq-watcher": "active",
-      "nq-dashboard-v3": "active"
-    }
-  },
-  "notes": "Queue empty. All services healthy. No dispatch needed."
+  "lastDispatch": "2026-03-15T14:53:19.427000Z",
+  "lastHealthCheck": "2026-03-15T14:53:19.427015Z",
+  "summary": "No cards in queue. Last completed card: Research local LLM alternatives (50min ago, research only, no deployment needed)."
 }

@@ -1,12 +1,17 @@
 {
-  "timestamp": "2026-03-15T03:37:00Z",
+  "timestamp": "2026-03-14T20:55:00-07:00",
   "activeTasks": [],
-  "lastDispatch": "2026-03-15T03:25:47Z",
-  "lastHealthCheck": "2026-03-15T03:37:00Z",
+  "recentlyCompleted": [
+    "[Blofin] Validate T2 forward test data flow + expand top performer",
+    "[NQ] Diagnose equal_tops_bottoms live bleed vs backtest PF 3.01",
+    "[Moonshot] Validate 4h cycle + assess invalidation rate"
+  ],
+  "queueStatus": "empty",
+  "lastDispatch": "2026-03-14T20:55:00-07:00",
+  "lastHealthCheck": "2026-03-14T20:55:00-07:00",
   "systemHealth": {
-    "cpu_temp": "81.0°C",
-    "disk_usage": "78%",
-    "critical_services": "all_active"
-  },
-  "notes": "Heartbeat 8:37pm - All services active. Moonshot Cycle 101 running (31min in). Failed card c_4a62541e2f2f resolved to Done (log showed success). Status.json cleared of stale PIDs."
+    "cpu_temp": "85.0°C",
+    "disk": "78%",
+    "services": "all_active"
+  }
 }

@@ -1,5 +1,26 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-16T08:52:59.075357+00:00",
-  "lastHealthCheck": "2026-03-16T08:52:59.075366+00:00"
+  "lastDispatch": "2026-03-16T09:22:00Z",
+  "lastHealthCheck": "2026-03-16T09:22:00Z",
+  "health": {
+    "cpu_temp": "80°C",
+    "disk_usage": "82%",
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-watcher": "active",
+      "nq-dashboard-v3": "active"
+    },
+    "critical_alerts": "none"
+  },
+  "recent_completions": [
+    {
+      "card_id": "c_7a25e2621a431_19cf576d4a2",
+      "title": "[Moonshot] Retire long champion (FT PF 1.006) + promote better short model",
+      "completed": "24min ago",
+      "verified": true,
+      "services_checked": ["blofin-stack-ingestor", "blofin-stack-paper", "blofin-dashboard"]
+    }
+  ]
 }

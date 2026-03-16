@@ -49,7 +49,7 @@ For each **In Progress** card:
 ## PHASE 5 — ENRICH PLANNED CARDS (CRITICAL — do not skip)
 
 For each **Planned** card, check if it's ready to run. A card is ready when it has ALL of:
-- `assignee` set (must be `codex`)
+- `assignee` set (valid: `codex`, `claude`, or any configured agent)
 - `project_path` set to a real path on disk
 - `description` that is specific enough for a builder agent to execute without clarification
 
@@ -97,7 +97,7 @@ CONSTRAINT: DRY_RUN only — do NOT enable live trading or fire TradersPost webh
 ```bash
 curl -s -X PATCH "http://127.0.0.1:8787/api/cards/<id>" \
   -H "content-type: application/json" \
-  -d '{"assignee":"codex","project_path":"/correct/path/here","description":"FULL ENRICHED DESCRIPTION"}'
+  -d '{"assignee":"claude","project_path":"/correct/path/here","description":"FULL ENRICHED DESCRIPTION"}'
 ```
 
 ---

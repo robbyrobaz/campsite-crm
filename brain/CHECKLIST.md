@@ -27,7 +27,7 @@ Directly spawning subagents via `sessions_spawn` bypasses tracking entirely. Rob
 - DO NOT manually spawn agents via `exec` — that bypasses logging and terminal feed
 
 **Before running:** Make sure the card has:
-- `assignee` set (e.g. `codex`)
+- `assignee` set (e.g. `claude`, `codex`)
 - `project_path` set (required — agent won't run without it)
 - `description` with full task details (this IS the prompt the agent receives)
 
@@ -68,7 +68,7 @@ The kanban runner reads the model from settings (`GET /api/settings` → `provid
 ## Before dispatching any Planned card:
 - [ ] **Enrich vague cards** — Rob often adds short descriptions. Before running, flesh out the description so the builder has: exact file paths, context from DB/logs, success criteria, deploy steps, constraints (FT-PL vs BLE, no BLE without approval, etc.)
 - [ ] Verify `project_path` is set correctly — wrong path = builder works in wrong repo silently
-- [ ] Verify `assignee` = `codex`
+- [ ] Verify `assignee` is set (e.g. `claude`, `codex`)
 - [ ] See `brain/DISPATCHER.md` for project path matching table and enrichment examples
 
 ## ⚠️ Builder Behavior Rules (CRITICAL — include in every card description):

@@ -1,6 +1,21 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-16T00:42:00Z",
-  "lastHealthCheck": "2026-03-16T00:42:00Z",
-  "notes": "2 stale tasks cleared (PIDs dead, cards gone). Moonshot timer restarted after SIGABRT crash. Next cycle ~20:05 MST."
+  "lastDispatch": "2026-03-16T00:52:53Z",
+  "lastHealthCheck": "2026-03-16T00:52:53Z",
+  "health": {
+    "cpu_temp_c": 81,
+    "disk_used_pct": 79,
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-watcher": "active",
+      "nq-dashboard-v3": "active"
+    }
+  },
+  "kanban": {
+    "in_progress": 0,
+    "planned": 0,
+    "last_completed": "c_8c7e6cec9c093_19cf3bd5ad3 ([Blofin] Expand bb_squeeze to new high-vol coins)"
+  }
 }

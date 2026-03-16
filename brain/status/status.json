@@ -1,21 +1,6 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-16T00:52:53Z",
-  "lastHealthCheck": "2026-03-16T00:52:53Z",
-  "health": {
-    "cpu_temp_c": 81,
-    "disk_used_pct": 79,
-    "services": {
-      "openclaw-gateway": "active",
-      "blofin-stack-ingestor": "active",
-      "blofin-stack-paper": "active",
-      "nq-watcher": "active",
-      "nq-dashboard-v3": "active"
-    }
-  },
-  "kanban": {
-    "in_progress": 0,
-    "planned": 0,
-    "last_completed": "c_8c7e6cec9c093_19cf3bd5ad3 ([Blofin] Expand bb_squeeze to new high-vol coins)"
-  }
+  "lastDispatch": "2026-03-15T18:22:00-07:00",
+  "lastHealthCheck": "2026-03-15T18:22:00-07:00",
+  "notes": "Board clear. No cards in Planned or In Progress. Recent Done cards verified deployed: Blofin bb_squeeze expansion (ingestor restarted), Moonshot v2 champions (service running cycle)."
 }

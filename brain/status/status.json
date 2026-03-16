@@ -1,21 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "card_id": "c_a1a3e5908ecfe_19cf49adb0f",
-      "title": "[Moonshot] Generate long champion + promote better short champion",
-      "pid": 1096886
-    },
-    {
-      "card_id": "c_fffa36c3422ca_19cf49a7524",
-      "title": "[Blofin] Investigate bb_squeeze FT bleed",
-      "pid": 1096887
-    },
-    {
-      "card_id": "c_a80a9053d8fe3_19cf49909f0",
-      "title": "[NQ] Investigate equal_tops_bottoms WR collapse",
-      "pid": 1096897
-    }
-  ],
-  "lastDispatch": "2026-03-16T04:23:39Z",
-  "lastHealthCheck": "2026-03-16T04:23:39Z"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-16T04:52:00Z",
+  "lastHealthCheck": "2026-03-16T04:52:00Z",
+  "notes": "No cards in queue. Blofin services restarted to load new Moonshot champion models (long+short, updated 21:52). NQ dashboard verified. All services active."
 }

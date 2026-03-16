@@ -1,6 +1,12 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-16T05:23:30Z",
-  "lastHealthCheck": "2026-03-16T05:23:30Z",
-  "notes": "No cards in queue. Fixed blofin-dashboard port conflict (home-energy-os on 8892). All services active."
+  "activeTasks": [
+    {
+      "id": "c_abb30e5967024_19cf5215efd",
+      "title": "Moonshot Dashboard: Fix /api/positions JSON serialization error",
+      "assignee": "claude",
+      "status": "In Progress"
+    }
+  ],
+  "lastDispatch": "2026-03-16T05:52:52Z",
+  "lastHealthCheck": "2026-03-16T05:52:52Z"
 }

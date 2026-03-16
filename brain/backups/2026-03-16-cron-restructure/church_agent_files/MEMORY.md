@@ -1,0 +1,1 @@
+/home/rob/.openclaw/workspace/church-volunteer-coordinator/AGENT_MEMORY.md

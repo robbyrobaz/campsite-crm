@@ -1,0 +1,200 @@
+{
+  "meta": {
+    "lastTouchedVersion": "2026.3.13",
+    "lastTouchedAt": "2026-03-15T19:07:37.294Z"
+  },
+  "env": {},
+  "wizard": {
+    "lastRunAt": "2026-03-04T12:24:35.355Z",
+    "lastRunVersion": "2026.3.1",
+    "lastRunCommand": "configure",
+    "lastRunMode": "local"
+  },
+  "browser": {
+    "enabled": true,
+    "headless": true,
+    "noSandbox": true,
+    "attachOnly": true,
+    "defaultProfile": "openclaw",
+    "profiles": {
+      "openclaw": {
+        "cdpPort": 18800,
+        "cdpUrl": "http://127.0.0.1:18800",
+        "color": "#00AA00"
+      }
+    }
+  },
+  "auth": {
+    "profiles": {
+      "openai-codex:default": {
+        "provider": "openai-codex",
+        "mode": "oauth"
+      },
+      "anthropic:default": {
+        "provider": "anthropic",
+        "mode": "token"
+      },
+      "openai:default": {
+        "provider": "openai",
+        "mode": "oauth"
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "anthropic/claude-sonnet-4-5",
+        "fallbacks": [
+          "anthropic/claude-haiku-4-5"
+        ]
+      },
+      "models": {
+        "anthropic/claude-opus-4-6": {
+          "alias": "opus"
+        },
+        "anthropic/claude-haiku-4-5": {
+          "alias": "haiku"
+        },
+        "anthropic/claude-sonnet-4-5": {
+          "alias": "sonnet"
+        },
+        "anthropic/claude-sonnet-4-6": {
+          "alias": "sonnet46"
+        }
+      },
+      "workspace": "/home/rob/.openclaw/workspace",
+      "maxConcurrent": 6,
+      "subagents": {
+        "maxConcurrent": 8
+      }
+    },
+    "list": [
+      {
+        "id": "main",
+        "default": true,
+        "name": "Jarvis",
+        "workspace": "/home/rob/.openclaw/workspace",
+        "model": "anthropic/claude-sonnet-4-5",
+        "identity": {
+          "name": "Jarvis",
+          "emoji": "🤖"
+        }
+      },
+      {
+        "id": "nq",
+        "name": "NQ Pipeline",
+        "workspace": "/home/rob/.openclaw/workspace",
+        "agentDir": "/home/rob/.openclaw/agents/nq/agent",
+        "model": "anthropic/claude-sonnet-4-5",
+        "identity": {
+          "name": "NQ",
+          "emoji": "📈"
+        }
+      },
+      {
+        "id": "crypto",
+        "name": "Crypto Trading",
+        "workspace": "/home/rob/.openclaw/workspace",
+        "agentDir": "/home/rob/.openclaw/agents/crypto/agent",
+        "model": "anthropic/claude-sonnet-4-5",
+        "identity": {
+          "name": "Crypto",
+          "emoji": "🪙"
+        }
+      },
+      {
+        "id": "church",
+        "name": "Church Volunteers",
+        "workspace": "/home/rob/.openclaw/workspace",
+        "agentDir": "/home/rob/.openclaw/agents/church/agent",
+        "model": "anthropic/claude-sonnet-4-5",
+        "identity": {
+          "name": "Church",
+          "emoji": "⛪"
+        }
+      }
+    ]
+  },
+  "tools": {
+    "web": {
+      "search": {
+        "enabled": false
+      },
+      "fetch": {
+        "enabled": true
+      }
+    },
+    "sessions": {
+      "visibility": "all"
+    },
+    "agentToAgent": {
+      "enabled": true,
+      "allow": [
+        "main",
+        "nq",
+        "crypto",
+        "church"
+      ]
+    }
+  },
+  "messages": {
+    "ackReactionScope": "group-mentions"
+  },
+  "commands": {
+    "native": "auto",
+    "nativeSkills": "auto",
+    "restart": true,
+    "ownerDisplay": "raw"
+  },
+  "session": {
+    "reset": {
+      "mode": "idle",
+      "idleMinutes": 120
+    },
+    "maintenance": {
+      "pruneAfter": "3d"
+    }
+  },
+  "cron": {
+    "sessionRetention": "4h"
+  },
+  "channels": {
+    "telegram": {
+      "enabled": true,
+      "dmPolicy": "pairing",
+      "botToken": "8286388255:AAFXb2VjKA4qmiV3H13mHMhQEwyoYa8Ped4",
+      "allowFrom": [
+        "1585771201"
+      ],
+      "groupPolicy": "allowlist",
+      "streaming": "partial"
+    }
+  },
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "bind": "loopback",
+    "controlUi": {
+      "allowedOrigins": [
+        "https://omen-claw.tail76e7df.ts.net"
+      ],
+      "allowInsecureAuth": true,
+      "dangerouslyDisableDeviceAuth": true
+    },
+    "auth": {
+      "mode": "token",
+      "token": "omen-claw-local"
+    },
+    "tailscale": {
+      "mode": "serve",
+      "resetOnExit": false
+    }
+  },
+  "plugins": {
+    "entries": {
+      "telegram": {
+        "enabled": true
+      }
+    }
+  }
+}

@@ -1,30 +1,23 @@
 {
   "activeTasks": [
     {
-      "id": "c_4ad83c9bff0c6_19cf84bc51e",
-      "title": "Moonshot: Fix invalidation drift — lock entry features",
-      "pid": 2314463,
+      "id": "c_84763bad639c9_19cf8677d19",
+      "title": "Moonshot: Analyze why long champion has 0 trades",
+      "assignee": "claude",
       "project": "blofin-moonshot-v2",
-      "startedAt": "2026-03-16T20:15:47Z"
+      "status": "In Progress",
+      "started": "2026-03-16T21:00:57Z"
+    },
+    {
+      "id": "c_fd3d5852e5579_19cf8741ab1",
+      "title": "NQ: Diagnose equal_tops_bottoms catastrophic FT failure",
+      "assignee": "claude",
+      "project": "NQ-Trading-PIPELINE",
+      "status": "In Progress",
+      "started": "2026-03-16T21:00:12Z"
     }
   ],
-  "lastDispatch": "2026-03-16T20:15:47Z",
-  "lastHealthCheck": "2026-03-16T20:15:00Z",
-  "pipelineStatus": {
-    "moonshot": {
-      "champion": "de44f72dbb01 (short)",
-      "championPF": 2.22,
-      "ftModels": 250,
-      "openPositions": 954,
-      "lastCycle": "122 (13:08 MST)"
-    },
-    "blofin": {
-      "topPerformers": "0 strategies with 100+ FT trades (early data accumulation)",
-      "services": "ingestor/paper/dashboard all active"
-    },
-    "nq": {
-      "services": "watcher/dashboard active",
-      "recentDeployment": "3 cards completed in last hour, services restarted 13:07"
-    }
-  }
+  "lastDispatch": "2026-03-16T21:00:12Z",
+  "lastHealthCheck": "2026-03-16T21:00:00Z",
+  "summary": "2 builders active: Moonshot long champion debug, NQ equal_tops_bottoms FT degradation diagnostic. BLE engines clean (both active). fair_value_gap SL bug fixed and deployed."
 }

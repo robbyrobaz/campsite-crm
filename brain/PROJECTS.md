@@ -105,28 +105,40 @@ BLE engines read IBKR original directly. Dashboard + on-demand backtests read th
 
 ---
 
-### 1b. Moonshot v2 ⭐ NEW (2026-03-02)
+### 1b. Moonshot v2 ⭐ REDESIGNED (2026-03-16)
 **Repo:** https://github.com/robbyrobaz/blofin-moonshot-v2 | **Path:** `/home/rob/.openclaw/workspace/blofin-moonshot-v2/`
 **Dashboard:** http://127.0.0.1:8893
-**Status:** LIVE — first cycle complete, data accumulating, tournament not yet active (needs labels + first challengers)
+**Status:** LIVE — Dual-track system deployed (rule-based entry + ML tournament)
 
-**Architecture (clean rewrite from scratch):**
+**Architecture — DUAL-TRACK SYSTEM:**
+
+**Track 1: Rule-Based Entry (NEW — PRIMARY)**
+- **Auto-enter ALL coins ≤7 days old** (ML can't predict bar 0-10 spikes)
+- Position: 2% per coin, 2x leverage
+- Exit: Trailing stop (activate +15%, trail 10% back), hard stop -5%
+- Horizon: 42 bars (7 days)
+- **Validation:** 60% WR, avg PnL +26.1%, **PF 7.53** on 5 spike coins
+- **Why it works:** 76% of 30%+ moves happen in first 7 days before ML has data
+
+**Track 2: ML Tournament (coins 30+ days old)**
 - 343 USDT pairs, dynamic discovery every 4h
-- Tournament ML: challengers → backtest gate (PF≥2.0, prec≥40%, 50+ trades) → forward test → champion by FT PnL
-- 50 features: price/volume/volatility/structure + funding rate + OI + mark price + tickers + social signals
-- Social (Tier 1 free): Fear & Greed, CoinGecko trending, RSS feeds, Reddit, GitHub
-- Path-dependent labels (hit +30% BEFORE -10%), PnL-weighted training, bootstrap CI on PF
-- Per-model entry/invalidation thresholds (never fixed global values)
+- Tournament ML: challengers → backtest gate → forward test → champion by FT PnL
+- 50 features: price/volume/volatility + funding/OI + social signals
+- Path-dependent labels (hit +30% BEFORE -5%), PnL-weighted training
 - Separate long + short champions
 
 **Services:** moonshot-v2.timer (4h), moonshot-v2-social.timer (1h), moonshot-v2-dashboard.service
-**Old moonshot:** fully shut down (service, timer, dashboard, 2 crons — all disabled)
+
+**Key files:**
+- `src/execution/new_listing_entry.py` — rule-based logic
+- `brain/MOONSHOT_V2_REDESIGN.md` — full proposal + risk assessment
+- `brain/SPIKE_RESEARCH_SUMMARY.md` — research findings + deployment guide
+- `config.py` — NEW_LISTING_ENABLED=True
 
 **Next actions:**
-- [ ] Trigger cycle now with 14-month candle history imported from v1 (865K rows)
-- [ ] Regenerate labels with full history, then run tournament
-- [ ] Add missing PRD features: backfill.py, extended data, social improvements
-- [ ] Confirm no service confusion — all services now named moonshot-v2-*
+- [ ] Monitor first 3-5 new coin entries (watch for edge validation)
+- [ ] After 20+ trades: verify PF >1.5 sustained
+- [ ] Dashboard: add "New Listing Tracker" section
 
 ---
 

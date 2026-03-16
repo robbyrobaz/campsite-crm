@@ -1,4 +1,31 @@
-## ⚡ RECENT CHANGES (Mar 15 2026)
+## ⚠️ NQ BLE STATUS — PRIMARY MISSION (RUNNING LIVE SINCE MAR 9 2026)
+
+**THIS IS JARVIS'S #1 PRIORITY. ALWAYS VERIFY BLE STATUS EVERY SESSION BEFORE ANYTHING ELSE.**
+
+**LIVE BLE ENGINES (REAL MONEY TRADING):**
+- **5-min ORB:** `nq-orb-signal.service` → `pipeline/orb_signal_engine.py`
+  - Status: MUST BE `active (running)` — verify with `systemctl --user status nq-orb-signal.service`
+  - Config: `DRY_RUN = False`, 4 NQ contracts ($20/pt), SL=75pt, Trail=2.5pt/1.25pt
+  - OR window: 6:30-6:34 AM MST (9:30-9:34 ET)
+  - Entry window: 6:35-6:44 AM MST
+  
+- **15-min ORB:** `nq-orb15-signal.service` → `pipeline/orb_15min_signal_engine.py`
+  - Status: MUST BE `active (running)` — verify with `systemctl --user status nq-orb15-signal.service`
+  - Config: `DRY_RUN = False`, 4 NQ contracts, same SL/trail
+  - OR window: 6:30-6:44 AM MST (9:30-9:44 ET)
+  - Entry window: 6:45-6:59 AM MST
+  - Deference: skips if 5-min already in position
+
+**WEBHOOK:** TradersPost → Tradovate → Lucid Flex 50K account LFE0506429036015  
+**ACCOUNT PROTECTION:** $1,500 daily profit cap (Tradovate-side, for eval 50% consistency rule)  
+**STARTED:** Mar 9 2026 — running live for 5+ days, multiple profitable trades executed  
+**DOCS:** `memory/2026-03-10.md`, `NQ-Trading-PIPELINE/README.md`
+
+**IF EITHER SERVICE IS NOT `active (running)` → ALERT ROB IMMEDIATELY. DO NOT PROCEED WITH ANYTHING ELSE.**
+
+---
+
+## ⚡ RECENT CHANGES (Mar 15-16 2026)
 
 ### Blofin Parquet Migration ✅ COMPLETE (09:32-09:58 MST, 26 min)
 **Status:** Old ingestor STOPPED, paper engine running on Parquet  
@@ -149,15 +176,29 @@ BLE PnL shown in dashboard = estimated from trail stop price. Always label as "e
 > Auto-loaded every session. Updated by cron. Last updated: see timestamp below.
 > **This file is the minimum context needed before responding to Rob.**
 
+## ⚠️ FIRST ACTION EVERY SESSION: VERIFY NQ BLE STATUS
+
+**BEFORE READING ANYTHING ELSE, RUN THIS:**
+```bash
+systemctl --user is-active nq-orb-signal.service nq-orb15-signal.service
+```
+**Expected output:** `active` for BOTH services.  
+**If either shows `inactive`, `failed`, or anything else → ALERT ROB IMMEDIATELY.**
+
+BLE engines have been running live (real money) since Mar 9 2026. This is your #1 responsibility.
+
+---
+
 ## MANDATORY: Read These Before Acting
-1. `brain/CHECKLIST.md` — operating rules (read every session, non-negotiable)
-2. `brain/PROJECTS.md` — current project board (what's active, what's next)
-3. `brain/status/status.json` — what's happening right now
+1. **BLE Status section at top of this file** — verify engines are running (NON-NEGOTIABLE)
+2. `brain/CHECKLIST.md` — operating rules (read every session, non-negotiable)
+3. `brain/PROJECTS.md` — current project board (what's active, what's next)
+4. `brain/status/status.json` — what's happening right now
 
 > **Daily memory** is captured in the "Recent Changes" section below — no separate file read needed.
 > **Dispatcher protocol** is inlined below — no separate DISPATCHER.md read needed.
 
-If you skip these and get corrected, that's the most expensive thing that happens.
+If you skip BLE verification and get corrected, that's the most expensive thing that happens.
 
 ---
 

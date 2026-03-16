@@ -10542,3 +10542,8 @@ may have crashed in this repository earlier:
 remove the file manually to continue.
 CLEAN master-dashboard (nothing to commit)
 fatal: failed to read 16384 bytes from 'data/tickers/2026-03-16.parquet'
+CLEAN master-dashboard (nothing to commit)
+[main e44e6cb] auto: snapshot 2026-03-16T13:00:01Z
+ 2 files changed, 0 insertions(+), 0 deletions(-)
+ delete mode 100644 data/blofin_monitor.db.backup.1773501930
+COMMITTED blofin-stack

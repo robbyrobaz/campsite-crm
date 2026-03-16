@@ -1,6 +1,23 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-16T18:14:00Z",
-  "lastHealthCheck": "2026-03-16T18:14:00Z",
-  "notes": "Moonshot new listing auto-entry FIXED and verified working (CFG-USDT entered $0.1890). Feature deployed yesterday but never worked until today. Next 4h cycle will auto-detect new coins. All services active. Historical backfill: 70/469 symbols (14.9%), ~67h remaining."
+  "activeTasks": [
+    {
+      "id": "c_a3289b4ff5109_19cf7de97c2",
+      "title": "Generate confluence-based strategies (not simple breakouts)",
+      "project": "NQ-Trading-PIPELINE",
+      "age_minutes": 4.4
+    }
+  ],
+  "lastDispatch": "2026-03-16T18:22:00Z",
+  "lastHealthCheck": "2026-03-16T18:22:00Z",
+  "services": {
+    "openclaw-gateway": "active",
+    "blofin-stack-ingestor": "active",
+    "blofin-stack-paper": "active",
+    "nq-watcher": "active",
+    "nq-dashboard-v3": "active"
+  },
+  "system": {
+    "cpu_temp": "91C",
+    "disk_used": "64%"
+  }
 }

@@ -10426,3 +10426,29 @@ CLEAN master-dashboard (nothing to commit)
 [main 82d9f0f] auto: snapshot 2026-03-15T23:00:01Z
  1 file changed, 0 insertions(+), 0 deletions(-)
 COMMITTED blofin-stack
+[main 8d89faac] auto: snapshot 2026-03-15T23:00:01Z
+ 4 files changed, 55 insertions(+), 15 deletions(-)
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main 36ee98bf] auto: snapshot 2026-03-15T23:00:01Z
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 3 committed, 6 skipped
+CLEAN master-dashboard (nothing to commit)
+[main 97cc611] auto: snapshot 2026-03-16T00:00:01Z
+ 12 files changed, 981 insertions(+), 34 deletions(-)
+ create mode 100644 check_all_dbs.py
+ create mode 100644 check_blofin_monitor_db.py
+ create mode 100644 check_eligibility_schema.py
+ create mode 100644 check_schema.py
+ create mode 100644 check_strategy_registry_schema.py
+ create mode 100644 expand_bb_squeeze.py
+ create mode 100644 expand_bb_squeeze_from_active.py
+ create mode 100644 expand_bb_squeeze_from_t2.py
+ create mode 100644 expand_bb_squeeze_highvol.py
+ create mode 100644 verify_bb_squeeze_expansion.py
+COMMITTED blofin-stack

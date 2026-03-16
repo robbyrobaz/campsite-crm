@@ -1,6 +1,6 @@
 {
   "activeTasks": [],
   "lastDispatch": "2026-03-16T17:22:00Z",
-  "lastHealthCheck": "2026-03-16T17:22:00Z",
-  "notes": "All clear — no cards in queue, all services active, recent completions verified deployed"
+  "lastHealthCheck": "2026-03-16T17:30:00Z",
+  "notes": "Heartbeat complete — ibkr-options service restarted (WorkingDirectory + venv path fixed), now running but hitting client ID conflict. Moonshot FT backlog at 280 (elevated). All core services active, BLE engines clean."
 }

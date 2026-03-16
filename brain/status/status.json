@@ -1,16 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_8c7e6cec9c093_19cf3bd5ad3",
-      "title": "[Blofin] Expand bb_squeeze to new high-vol coins",
-      "pid": 755435
-    },
-    {
-      "id": "c_192105fa5f998_19cf3bdadec",
-      "title": "[Moonshot] Generate long champion (missing) + promote better short champion",
-      "pid": 755436
-    }
-  ],
-  "lastDispatch": "2026-03-16T00:23:54.285533+00:00",
-  "lastHealthCheck": "2026-03-16T00:23:54.285547+00:00"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-16T00:42:00Z",
+  "lastHealthCheck": "2026-03-16T00:42:00Z",
+  "notes": "2 stale tasks cleared (PIDs dead, cards gone). Moonshot timer restarted after SIGABRT crash. Next cycle ~20:05 MST."
 }

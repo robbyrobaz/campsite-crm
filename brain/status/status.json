@@ -1,6 +1,5 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-15T18:22:00-07:00",
-  "lastHealthCheck": "2026-03-15T18:37:00-07:00",
-  "notes": "Heartbeat 18:37 — CPU temp at threshold 85°C, disk 79%. 2 failed services (blofin-stack-gapfill, nq-postmerge-check — both temporary/expected). Git push for blofin-stack timed out (remote-https SIGTERM) — manual retry needed. All critical services healthy (Gateway, Blofin ingestor/dashboard/paper, NQ data sync, Moonshot v2). Moonshot v2 champion underperforming (PF=0.73 after 752 trades), FT backlog at 227. 1 Done card total (reduced from prior cleanup)."
+  "lastDispatch": "2026-03-16T01:52:00Z",
+  "lastHealthCheck": "2026-03-16T01:52:00Z"
 }

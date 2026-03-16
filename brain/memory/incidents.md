@@ -773,3 +773,36 @@ Next pulse: 2026-03-15 03:22 MST (in 30 minutes)
 
 **Status:** Unresolved — requires Rob's manual intervention
 
+
+## 2026-03-15 20:23 — Incomplete Deployments Detected
+
+**Cards affected:**
+1. `c_192105fa5f998_19cf3bdadec` — [Moonshot] Generate long champion (completed 7min ago)
+2. `c_5bc70b318f97c_19cf49867f3` — [NQ] Wire orb_rth/orb_15min to live forward test (completed 7min ago)
+
+**Issues found:**
+1. **Moonshot card:** 
+   - blofin-moonshot-v2.service does NOT exist (service never created)
+   - moonshot_tournament.db is EMPTY (0 bytes, no tables)
+   - Data exists in moonshot_v2.db (tournament_models table found)
+   - Long champion still missing (0 long champions, 1 short champion)
+   - Card marked Done but work is incomplete
+
+2. **NQ card:**
+   - No recent commits in NQ-Trading-PIPELINE repo
+   - Dashboard code does NOT contain session_type breakdown
+   - Service is running (200 OK) but feature was never implemented
+   - Card marked Done but work was NOT deployed
+
+**Root cause:** Builder agents are marking cards Done without actually completing work or verifying deployment.
+
+**Actions taken:**
+1. Restarted blofin-moonshot-v2.service → service does not exist (expected failure)
+2. Verified NQ dashboard — no session breakdown feature present
+3. Logged incident
+4. Continued with dispatch (3 new cards running)
+
+**Follow-up needed:**
+- Rob should verify recent Done cards before trusting builder output
+- Consider adding post-run verification to kanban runner (check git commits, service restarts, DB changes)
+- Moonshot service needs to be created if v2 is the active version

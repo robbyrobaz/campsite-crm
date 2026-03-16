@@ -1,12 +1,21 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-16T02:52:52Z",
-  "lastHealthCheck": "2026-03-16T02:52:52Z",
-  "health": {
-    "cpu_temp": "88°C",
-    "disk_usage": "80%",
-    "services": "all active",
-    "critical_alerts": "none"
-  },
-  "dispatch_summary": "No cards in queue. All systems nominal."
+  "activeTasks": [
+    {
+      "id": "c_a1a3e5908ecfe_19cf49adb0f",
+      "title": "[Moonshot] Generate long champion (missing) + promote better short champion",
+      "pid": 1012322
+    },
+    {
+      "id": "c_fffa36c3422ca_19cf49a7524",
+      "title": "[Blofin] Investigate bb_squeeze FT bleed (BT PF 2.29 vs FT PF 0.30)",
+      "pid": 1012323
+    },
+    {
+      "id": "c_961e806ca35fd_19cf49a2618",
+      "title": "[NQ] Add session-specific PF breakdown to dashboard",
+      "pid": 1012332
+    }
+  ],
+  "lastDispatch": "2026-03-16T03:25:35Z",
+  "lastHealthCheck": "2026-03-16T03:25:35Z"
 }

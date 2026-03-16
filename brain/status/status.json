@@ -1,24 +1,12 @@
 {
   "activeTasks": [
     {
-      "id": "c_e30a9db24ef84_19cf651c8a4",
-      "title": "[Moonshot] Analyze invalidation=0% and 1 open position",
-      "pid": 1646521,
-      "started": "2026-03-16T11:22:00Z"
-    },
-    {
       "id": "c_bf72ccadb3fb4_19cf6519289",
       "title": "[Blofin] Retrain reversal ML model",
       "pid": 1646522,
       "started": "2026-03-16T11:22:00Z"
-    },
-    {
-      "id": "c_6cf475fc41c96_19cf650a540",
-      "title": "[NQ] Add orb_retest_15min to God Model dispatcher",
-      "pid": 1646531,
-      "started": "2026-03-16T11:22:00Z"
     }
   ],
   "lastDispatch": "2026-03-16T11:22:00Z",
-  "lastHealthCheck": "2026-03-16T11:22:00Z"
+  "lastHealthCheck": "2026-03-16T11:30:00Z"
 }

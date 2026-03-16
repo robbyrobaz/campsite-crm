@@ -806,3 +806,10 @@ Next pulse: 2026-03-15 03:22 MST (in 30 minutes)
 - Rob should verify recent Done cards before trusting builder output
 - Consider adding post-run verification to kanban runner (check git commits, service restarts, DB changes)
 - Moonshot service needs to be created if v2 is the active version
+
+## 2026-03-15 22:23 — Blofin Dashboard Port Conflict
+**Issue:** blofin-dashboard.service stuck in activating, restart counter at 964
+**Root cause:** home-energy-os/app.py was occupying port 8892
+**Fix:** Killed PID 1060887 (home-energy-os), restarted blofin-dashboard
+**Verification:** Service active, dashboard loads at http://127.0.0.1:8892/ (HTTP 200)
+**Action needed:** home-energy-os should use a different port (check config)

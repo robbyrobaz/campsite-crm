@@ -1,6 +1,6 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-16T04:52:00Z",
-  "lastHealthCheck": "2026-03-16T04:52:00Z",
-  "notes": "No cards in queue. Blofin services restarted to load new Moonshot champion models (long+short, updated 21:52). NQ dashboard verified. All services active."
+  "lastDispatch": "2026-03-16T05:23:30Z",
+  "lastHealthCheck": "2026-03-16T05:23:30Z",
+  "notes": "No cards in queue. Fixed blofin-dashboard port conflict (home-energy-os on 8892). All services active."
 }

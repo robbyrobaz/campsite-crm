@@ -1493,3 +1493,6 @@
 [2026-03-16 04:40] Completed: 
 [2026-03-16 04:40] In Progress: 1 | Planned ORB: 1
 [2026-03-16 04:40] Dispatched c_e8f13a7bea602_19cf65033d6: {"ok":true,"pid":1670256,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_e8f13a7bea602_19cf65033d6.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-16 05:10] ORB overnight check running
+[2026-03-16 05:10] Completed: 
+[2026-03-16 05:10] In Progress: 1 | Planned ORB: 0

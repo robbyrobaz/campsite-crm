@@ -1,6 +1,19 @@
 {
-  "activeTasks": [],
+  "activeTasks": [
+    {
+      "id": "blofin-historical-backfill",
+      "title": "Blofin Historical Data Backfill (70-hour job)",
+      "status": "in-progress",
+      "started": "2026-03-16T12:37:00Z",
+      "progress": "67/469 symbols (14.3%)",
+      "eta": "2026-03-18T23:00:00Z",
+      "pid": 1743860,
+      "watchdog": "3128d9ad-1e64-47ba-b73f-7c5cc93aa67c",
+      "docs": "brain/BLOFIN_HISTORICAL_BACKFILL.md",
+      "lastChecked": "2026-03-16T12:40:00Z"
+    }
+  ],
   "lastDispatch": "2026-03-16T12:22:00Z",
   "lastHealthCheck": "2026-03-16T12:22:00Z",
-  "notes": "No cards in Planned or In Progress. All services active. Last 3 Done cards (37-52 min ago) verified: NQ dashboard 200, Moonshot dashboard 200."
+  "notes": "Blofin historical backfill running (PID 1743860, watchdog active). No cards in Planned or In Progress. All services active."
 }

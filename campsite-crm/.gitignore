@@ -1,8 +1,49 @@
-node_modules/
+# Python
+**/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+
+# Secrets/env
 .env
-*.log
-dist/
-build/
+*.env
+*.secret
+process.env
+
+# Databases and runtime data
+*.db
+*.sqlite
+*.sqlite3
+*.sqlite3.gz
+*-wal
+*-shm
+blofin-stack/data/
+blofin-stack/backups/
+blofin-research/data/
+
+# Node
+node_modules/
+
+# OS
 .DS_Store
-backend/backups/crm-backup-*-auto.json
-backend/backups/crm-backup-latest.json
+
+# Repos with their own git (pushed to separate GitHub repos)
+blofin-stack/
+
+# Local external/source repos (kept for reference, not part of core stack)
+external-repos/
+ML_Predict_Assets/
+BTC/
+openclaw/
+tradingview-triggers-1/
+cloud-code-function-tradingview-triggers-bOvuLu/
+.restore-safety/
+AGENTS.md
+BOOTSTRAP.md
+HEARTBEAT.md
+IDENTITY.md
+SOUL.md
+TOOLS.md
+USER.md
+arb-dashboard

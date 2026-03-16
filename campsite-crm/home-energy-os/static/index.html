@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jarvis Home Energy OS</title>
+<style>
+  :root {
+    --bg: #0d0f12;
+    --surface: #161b22;
+    --surface2: #1c2330;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #7d8590;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --red: #f85149;
+    --blue: #58a6ff;
+    --purple: #bc8cff;
+    --orange: #f0883e;
+    --green-dim: #1a3a1f;
+    --yellow-dim: #3a2f0a;
+    --red-dim: #3a1010;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .logo {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    color: var(--blue);
+  }
+
+  .logo span { color: var(--muted); font-weight: 400; font-size: 13px; margin-left: 8px; }
+
+  #status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    display: inline-block;
+    margin-right: 6px;
+    transition: background .3s;
+  }
+  #status-dot.live { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  #status-dot.error { background: var(--red); }
+
+  #last-update { color: var(--muted); font-size: 12px; }
+
+  /* ── Main layout ── */
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* ── KPI row ── */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  .kpi-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .kpi-card.grid-card::before { background: var(--blue); }
+  .kpi-card.solar-card::before { background: var(--yellow); }
+  .kpi-card.load-card::before { background: var(--purple); }
+  .kpi-card.net-card::before { background: var(--green); }
+
+  .kpi-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .kpi-value {
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .kpi-unit { font-size: 18px; font-weight: 400; color: var(--muted); margin-left: 2px; }
+  .kpi-sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .kpi-card.grid-card .kpi-value { color: var(--blue); }
+  .kpi-card.solar-card .kpi-value { color: var(--yellow); }
+  .kpi-card.load-card .kpi-value { color: var(--purple); }
+  .kpi-card.net-card .kpi-value { color: var(--green); }
+
+  .direction-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    margin-top: 4px;
+    width: fit-content;
+  }
+  .direction-badge.import { background: #1a2a3a; color: var(--blue); }
+  .direction-badge.export { background: #1a3a1f; color: var(--green); }
+
+  /* ── Panel state bar ── */
+  .panel-bar {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .panel-bar-label { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    border: 1px solid transparent;
+  }
+  .pill-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  .pill.ok { background: var(--green-dim); border-color: #2a5c33; color: var(--green); }
+  .pill.ok .pill-dot { background: var(--green); }
+  .pill.warn { background: var(--yellow-dim); border-color: #5c4a1a; color: var(--yellow); }
+  .pill.warn .pill-dot { background: var(--yellow); }
+  .pill.err { background: var(--red-dim); border-color: #5c1a1a; color: var(--red); }
+  .pill.err .pill-dot { background: var(--red); }
+  .pill.neutral { background: var(--surface2); border-color: var(--border); color: var(--muted); }
+  .pill.neutral .pill-dot { background: var(--muted); }
+
+  /* ── Section headers ── */
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 2px;
+  }
+  .section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }
+  .section-count { font-size: 11px; color: var(--muted); }
+
+  /* ── Circuit heatmap ── */
+  .circuit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+
+  .circuit-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    transition: border-color .2s, background .2s;
+    position: relative;
+  }
+
+  /* Color tiers */
+  .circuit-card.tier-idle {
+    border-left: 3px solid #333;
+    opacity: .75;
+  }
+  .circuit-card.tier-low {
+    border-left: 3px solid var(--green);
+    background: #111916;
+  }
+  .circuit-card.tier-medium {
+    border-left: 3px solid var(--yellow);
+    background: #181400;
+  }
+  .circuit-card.tier-high {
+    border-left: 3px solid var(--red);
+    background: #160d0d;
+  }
+
+  .circuit-name {
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text);
+  }
+
+  .circuit-watts {
+    font-size: 20px;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .tier-idle .circuit-watts { color: var(--muted); }
+  .tier-low .circuit-watts { color: var(--green); }
+  .tier-medium .circuit-watts { color: var(--yellow); }
+  .tier-high .circuit-watts { color: var(--red); }
+
+  .circuit-meta {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-top: 2px;
+  }
+
+  .circuit-tabs {
+    font-size: 10px;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .circuit-relay {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .circuit-relay.closed { color: var(--green); }
+  .circuit-relay.open { color: var(--red); }
+
+  /* Watt bar */
+  .watt-bar-track {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 4px;
+  }
+  .watt-bar-fill {
+    height: 3px;
+    border-radius: 2px;
+    transition: width .5s ease;
+    max-width: 100%;
+  }
+  .tier-low .watt-bar-fill { background: var(--green); }
+  .tier-medium .watt-bar-fill { background: var(--yellow); }
+  .tier-high .watt-bar-fill { background: var(--red); }
+  .tier-idle .watt-bar-fill { background: var(--muted); }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+  .legend-dot {
+    width: 8px; height: 8px;
+    border-radius: 2px;
+  }
+
+  /* ── Error banner ── */
+  #error-banner {
+    background: #1a0a0a;
+    border: 1px solid #5c1a1a;
+    border-radius: 8px;
+    padding: 10px 16px;
+    color: var(--red);
+    font-size: 12px;
+    display: none;
+  }
+  #error-banner.visible { display: block; }
+
+  /* ── Responsive ── */
+  @media (max-width: 900px) {
+    .kpi-row { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 560px) {
+    .kpi-row { grid-template-columns: 1fr; }
+    main { padding: 12px; }
+  }
+
+  /* ── Animations ── */
+  @keyframes pulse {
+    0% { opacity: 1; } 50% { opacity: .5; } 100% { opacity: 1; }
+  }
+  .stale { animation: pulse 2s infinite; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    ⚡ Jarvis Home Energy OS
+    <span>Phase 1</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <span id="status-dot"></span>
+    <span id="last-update">Connecting…</span>
+  </div>
+</header>
+
+<main>
+  <!-- Error banner -->
+  <div id="error-banner"></div>
+
+  <!-- KPI cards -->
+  <div class="kpi-row">
+    <div class="kpi-card grid-card">
+      <div class="kpi-label">Grid Draw</div>
+      <div class="kpi-value" id="kpi-grid">—<span class="kpi-unit">W</span></div>
+      <div id="grid-direction" class="direction-badge import">—</div>
+      <div class="kpi-sub" id="grid-sub"></div>
+    </div>
+
+    <div class="kpi-card solar-card">
+      <div class="kpi-label">Solar Production</div>
+      <div class="kpi-value" id="kpi-solar">—<span class="kpi-unit">W</span></div>
+      <div class="kpi-sub" id="solar-sub"></div>
+    </div>
+
+    <div class="kpi-card load-card">
+      <div class="kpi-label">Total Home Load</div>
+      <div class="kpi-value" id="kpi-load">—<span class="kpi-unit">W</span></div>
+      <div class="kpi-sub" id="load-sub"></div>
+    </div>
+
+    <div class="kpi-card net-card">
+      <div class="kpi-label">Net (Solar − Load)</div>
+      <div class="kpi-value" id="kpi-net">—<span class="kpi-unit">W</span></div>
+      <div class="kpi-sub" id="net-sub"></div>
+    </div>
+  </div>
+
+  <!-- Panel state bar -->
+  <div class="panel-bar">
+    <span class="panel-bar-label">Panel</span>
+    <div id="pill-grid" class="pill neutral"><span class="pill-dot"></span> Grid</div>
+    <div id="pill-relay" class="pill neutral"><span class="pill-dot"></span> Relay</div>
+    <div id="pill-mode" class="pill neutral"><span class="pill-dot"></span> Mode</div>
+    <div id="pill-dsm" class="pill neutral"><span class="pill-dot"></span> DSM</div>
+  </div>
+
+  <!-- Circuit heatmap -->
+  <div>
+    <div class="section-header">
+      <span class="section-title">Circuit Heatmap</span>
+      <span class="section-count" id="circuit-count"></span>
+      <div class="legend" style="margin-left:auto;">
+        <div class="legend-item"><div class="legend-dot" style="background:#3fb950"></div> &lt;200W</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#d29922"></div> 200–1500W</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f85149"></div> &gt;1500W</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#444"></div> Idle</div>
+      </div>
+    </div>
+    <div class="circuit-grid" id="circuit-grid"></div>
+  </div>
+</main>
+
+<script>
+  const MAX_W = 4000; // scale bar relative to this
+
+  function fmtW(w) {
+    if (w >= 1000) return (w / 1000).toFixed(1) + '<span style="font-size:18px;color:var(--muted)">kW</span>';
+    return Math.round(w) + '<span style="font-size:18px;color:var(--muted)">W</span>';
+  }
+
+  function tierClass(w) {
+    if (w < 5)    return 'tier-idle';
+    if (w < 200)  return 'tier-low';
+    if (w < 1500) return 'tier-medium';
+    return 'tier-high';
+  }
+
+  function fmtTime(ts) {
+    return new Date(ts * 1000).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit', second: '2-digit'});
+  }
+
+  function pillClass(state) {
+    const s = (state || '').toUpperCase();
+    if (s.includes('UP') || s.includes('CLOSED') || s.includes('ON_GRID') || s.includes('GRID')) return 'ok';
+    if (s.includes('ISLAND') || s.includes('OPEN')) return 'warn';
+    return 'neutral';
+  }
+
+  function setPill(id, label, state) {
+    const el = document.getElementById(id);
+    el.className = 'pill ' + pillClass(state);
+    el.innerHTML = `<span class="pill-dot"></span> ${label}: <strong style="margin-left:4px">${state || '—'}</strong>`;
+  }
+
+  let circuitOrder = null; // persist card order across updates
+
+  function renderCircuits(circuits) {
+    const grid = document.getElementById('circuit-grid');
+    document.getElementById('circuit-count').textContent = `${circuits.length} circuits`;
+
+    // Build id→element map for reuse
+    const existing = {};
+    grid.querySelectorAll('.circuit-card').forEach(el => {
+      existing[el.dataset.id] = el;
+    });
+
+    // First render: establish order (don't re-sort after initial)
+    if (!circuitOrder) {
+      circuitOrder = circuits.map(c => c.id);
+    }
+
+    // Ensure grid has cards in established order, with current watt data
+    const byId = {};
+    circuits.forEach(c => byId[c.id] = c);
+
+    // Build sorted list per established order, append new circuits at end
+    const newIds = circuits.map(c => c.id).filter(id => !circuitOrder.includes(id));
+    circuitOrder.push(...newIds);
+    // Remove stale ids
+    circuitOrder = circuitOrder.filter(id => byId[id]);
+
+    circuitOrder.forEach(id => {
+      const c = byId[id];
+      if (!c) return;
+      const tier = tierClass(c.watts);
+      const barPct = Math.min(100, (c.watts / MAX_W) * 100).toFixed(1);
+      const tabs = c.tabs.map(t => `B${t}`).join(', ');
+      const relayClass = c.relay === 'CLOSED' ? 'closed' : 'open';
+
+      let el = existing[id];
+      if (!el) {
+        el = document.createElement('div');
+        el.className = 'circuit-card';
+        el.dataset.id = id;
+        el.innerHTML = `
+          <div class="circuit-name" title="${c.name}">${c.name}</div>
+          <div class="circuit-watts"></div>
+          <div class="watt-bar-track"><div class="watt-bar-fill"></div></div>
+          <div class="circuit-meta">
+            <span class="circuit-tabs"></span>
+            <span class="circuit-relay"></span>
+          </div>
+        `;
+        grid.appendChild(el);
+      }
+
+      el.className = `circuit-card ${tier}`;
+      el.querySelector('.circuit-watts').innerHTML = fmtW(c.watts);
+      el.querySelector('.watt-bar-fill').style.width = barPct + '%';
+      el.querySelector('.circuit-tabs').textContent = tabs;
+      const relayEl = el.querySelector('.circuit-relay');
+      relayEl.textContent = c.relay;
+      relayEl.className = `circuit-relay ${relayClass}`;
+    });
+
+    // Reorder DOM to match circuitOrder
+    circuitOrder.forEach(id => {
+      const el = grid.querySelector(`[data-id="${id}"]`);
+      if (el) grid.appendChild(el); // moves to end in order
+    });
+  }
+
+  function applyState(state) {
+    // Grid
+    const gw = state.grid?.watts ?? 0;
+    const dir = state.grid?.direction ?? 'import';
+    document.getElementById('kpi-grid').innerHTML = fmtW(Math.abs(gw)) ;
+    const dirBadge = document.getElementById('grid-direction');
+    dirBadge.className = `direction-badge ${dir}`;
+    dirBadge.textContent = dir === 'import' ? '↓ Importing from Grid' : '↑ Exporting to Grid';
+
+    // Solar
+    const sw = state.solar?.watts_now ?? 0;
+    document.getElementById('kpi-solar').innerHTML = fmtW(sw);
+    const whToday = state.solar?.wh_today ?? 0;
+    document.getElementById('solar-sub').textContent = state.solar?.available
+      ? `Today: ${(whToday / 1000).toFixed(1)} kWh`
+      : 'Awaiting Enphase token';
+
+    // Load = sum of circuits watts
+    const totalLoad = (state.circuits || []).reduce((s, c) => s + c.watts, 0);
+    document.getElementById('kpi-load').innerHTML = fmtW(totalLoad);
+    document.getElementById('load-sub').textContent = `${(state.circuits || []).length} circuits active`;
+
+    // Net
+    const net = sw - totalLoad;
+    document.getElementById('kpi-net').innerHTML = fmtW(Math.abs(net));
+    const netSub = net >= 0 ? '▲ Surplus' : '▼ Deficit';
+    document.getElementById('net-sub').textContent = netSub;
+
+    // Panel pills
+    const p = state.panel || {};
+    setPill('pill-grid',  'Grid',  p.dsm_grid?.replace('DSM_GRID_', '') ?? '—');
+    setPill('pill-relay', 'Relay', p.relay ?? '—');
+    setPill('pill-mode',  'Config', p.run_config?.replace('PANEL_', '') ?? '—');
+    setPill('pill-dsm',   'DSM',  p.dsm_state?.replace('DSM_', '') ?? '—');
+
+    // Circuits
+    if (state.circuits?.length) renderCircuits(state.circuits);
+
+    // Timestamp
+    document.getElementById('last-update').textContent = `Updated ${fmtTime(state.ts)}`;
+
+    // Errors
+    const errBanner = document.getElementById('error-banner');
+    if (state.errors?.length) {
+      errBanner.textContent = '⚠ ' + state.errors.join(' | ');
+      errBanner.classList.add('visible');
+    } else {
+      errBanner.classList.remove('visible');
+    }
+  }
+
+  // WebSocket connection with auto-reconnect
+  let ws, reconnectTimer;
+
+  function connect() {
+    const dot = document.getElementById('status-dot');
+    dot.className = '';
+    document.getElementById('last-update').textContent = 'Connecting…';
+
+    const proto = location.protocol === 'https:' ? 'wss' : 'ws';
+    ws = new WebSocket(`${proto}://${location.host}/ws`);
+
+    ws.onopen = () => {
+      dot.className = 'live';
+      clearTimeout(reconnectTimer);
+    };
+
+    ws.onmessage = (evt) => {
+      try {
+        const state = JSON.parse(evt.data);
+        applyState(state);
+        dot.className = 'live';
+      } catch(e) {
+        console.error('Parse error:', e);
+      }
+    };
+
+    ws.onerror = () => { dot.className = 'error'; };
+
+    ws.onclose = () => {
+      dot.className = 'error';
+      document.getElementById('last-update').textContent = 'Reconnecting…';
+      reconnectTimer = setTimeout(connect, 3000);
+    };
+
+    // Heartbeat to keep connection alive
+    setInterval(() => {
+      if (ws.readyState === WebSocket.OPEN) ws.send('ping');
+    }, 30000);
+  }
+
+  connect();
+</script>
+</body>
+</html>

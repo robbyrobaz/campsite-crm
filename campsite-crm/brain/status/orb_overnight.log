@@ -1,0 +1,1553 @@
+[2026-03-06 00:59] ORB overnight check running
+[2026-03-06 00:59] Completed:  exit_opt
+[2026-03-06 00:59] In Progress: 0 | Planned ORB: 3
+[2026-03-06 00:59] Dispatched c_b56f09039ebef_19cc22799c8: {"ok":true,"pid":3114756,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_b56f09039ebef_19cc22799c8.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-06 01:29] ORB overnight check running
+[2026-03-06 01:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 01:29] In Progress: 0 | Planned ORB: 0
+[2026-03-06 01:59] ORB overnight check running
+[2026-03-06 01:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 01:59] In Progress: 0 | Planned ORB: 0
+[2026-03-06 02:29] ORB overnight check running
+[2026-03-06 02:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 02:29] In Progress: 0 | Planned ORB: 0
+[2026-03-06 02:59] ORB overnight check running
+[2026-03-06 02:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 02:59] In Progress: 0 | Planned ORB: 0
+[2026-03-06 03:29] ORB overnight check running
+[2026-03-06 03:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 03:29] In Progress: 0 | Planned ORB: 0
+[2026-03-06 03:59] ORB overnight check running
+[2026-03-06 03:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 03:59] In Progress: 0 | Planned ORB: 0
+[2026-03-06 04:29] ORB overnight check running
+[2026-03-06 04:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 04:29] In Progress: 1 | Planned ORB: 0
+[2026-03-06 04:59] ORB overnight check running
+[2026-03-06 04:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 04:59] In Progress: 0 | Planned ORB: 0
+[2026-03-06 05:29] ORB overnight check running
+[2026-03-06 05:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 05:29] In Progress: 0 | Planned ORB: 0
+[2026-03-06 05:59] ORB overnight check running
+[2026-03-06 05:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 05:59] In Progress: 1 | Planned ORB: 0
+[2026-03-06 06:29] ORB overnight check running
+[2026-03-06 06:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 06:29] In Progress: 1 | Planned ORB: 0
+[2026-03-06 06:59] ORB overnight check running
+[2026-03-06 06:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 06:59] In Progress: 2 | Planned ORB: 0
+[2026-03-06 07:29] ORB overnight check running
+[2026-03-06 07:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 07:29] In Progress: 0 | Planned ORB: 0
+[2026-03-06 07:29] Morning report sent to ntfy
+[2026-03-06 07:59] ORB overnight check running
+[2026-03-06 07:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 07:59] In Progress: 0 | Planned ORB: 0
+[2026-03-06 08:29] ORB overnight check running
+[2026-03-06 08:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 08:29] In Progress: 3 | Planned ORB: 0
+[2026-03-06 08:59] ORB overnight check running
+[2026-03-06 08:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 08:59] In Progress: 2 | Planned ORB: 0
+[2026-03-06 09:29] ORB overnight check running
+[2026-03-06 09:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 09:29] In Progress: 0 | Planned ORB: 0
+[2026-03-06 09:59] ORB overnight check running
+[2026-03-06 09:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 09:59] In Progress: 1 | Planned ORB: 0
+[2026-03-06 10:29] ORB overnight check running
+[2026-03-06 10:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 10:29] In Progress: 0 | Planned ORB: 0
+[2026-03-06 10:59] ORB overnight check running
+[2026-03-06 10:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 10:59] In Progress: 0 | Planned ORB: 1
+[2026-03-06 10:59] Dispatched c_ad977509f5624_19cc449ff37: {"ok":true,"pid":3915964,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_ad977509f5624_19cc449ff37.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-06 11:29] ORB overnight check running
+[2026-03-06 11:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 11:29] In Progress: 0 | Planned ORB: 0
+[2026-03-06 11:59] ORB overnight check running
+[2026-03-06 11:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 11:59] In Progress: 0 | Planned ORB: 0
+[2026-03-06 12:29] ORB overnight check running
+[2026-03-06 12:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 12:29] In Progress: 0 | Planned ORB: 0
+[2026-03-06 12:59] ORB overnight check running
+[2026-03-06 12:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 12:59] In Progress: 0 | Planned ORB: 0
+[2026-03-06 13:29] ORB overnight check running
+[2026-03-06 13:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 13:29] In Progress: 0 | Planned ORB: 0
+[2026-03-06 13:59] ORB overnight check running
+[2026-03-06 13:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 13:59] In Progress: 3 | Planned ORB: 0
+[2026-03-06 14:29] ORB overnight check running
+[2026-03-06 14:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 14:29] In Progress: 1 | Planned ORB: 0
+[2026-03-06 14:59] ORB overnight check running
+[2026-03-06 14:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 14:59] In Progress: 3 | Planned ORB: 0
+[2026-03-06 15:29] ORB overnight check running
+[2026-03-06 15:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 15:29] In Progress: 1 | Planned ORB: 0
+[2026-03-06 15:59] ORB overnight check running
+[2026-03-06 15:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 15:59] In Progress: 0 | Planned ORB: 0
+[2026-03-06 16:29] ORB overnight check running
+[2026-03-06 16:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 16:29] In Progress: 3 | Planned ORB: 0
+[2026-03-06 16:59] ORB overnight check running
+[2026-03-06 16:59] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 16:59] In Progress: 0 | Planned ORB: 0
+[2026-03-06 17:29] ORB overnight check running
+[2026-03-06 17:29] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 17:29] In Progress: 3 | Planned ORB: 0
+[2026-03-06 18:00] ORB overnight check running
+[2026-03-06 18:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 18:00] In Progress: 1 | Planned ORB: 0
+[2026-03-06 18:30] ORB overnight check running
+[2026-03-06 18:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 18:30] In Progress: 3 | Planned ORB: 0
+[2026-03-06 19:00] ORB overnight check running
+[2026-03-06 19:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 19:00] In Progress: 3 | Planned ORB: 0
+[2026-03-06 19:30] ORB overnight check running
+[2026-03-06 19:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 19:30] In Progress: 2 | Planned ORB: 0
+[2026-03-06 20:00] ORB overnight check running
+[2026-03-06 20:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 20:00] In Progress: 0 | Planned ORB: 0
+[2026-03-06 20:30] ORB overnight check running
+[2026-03-06 20:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 20:30] In Progress: 0 | Planned ORB: 0
+[2026-03-06 21:00] ORB overnight check running
+[2026-03-06 21:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 21:00] In Progress: 0 | Planned ORB: 0
+[2026-03-06 21:30] ORB overnight check running
+[2026-03-06 21:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 21:30] In Progress: 0 | Planned ORB: 0
+[2026-03-06 22:00] ORB overnight check running
+[2026-03-06 22:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 22:00] In Progress: 0 | Planned ORB: 0
+[2026-03-06 22:30] ORB overnight check running
+[2026-03-06 22:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 22:30] In Progress: 0 | Planned ORB: 0
+[2026-03-06 23:00] ORB overnight check running
+[2026-03-06 23:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 23:00] In Progress: 0 | Planned ORB: 0
+[2026-03-06 23:30] ORB overnight check running
+[2026-03-06 23:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-06 23:30] In Progress: 0 | Planned ORB: 0
+[2026-03-07 00:00] ORB overnight check running
+[2026-03-07 00:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 00:00] In Progress: 0 | Planned ORB: 0
+[2026-03-07 00:30] ORB overnight check running
+[2026-03-07 00:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 00:30] In Progress: 0 | Planned ORB: 0
+[2026-03-07 01:00] ORB overnight check running
+[2026-03-07 01:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 01:00] In Progress: 0 | Planned ORB: 0
+[2026-03-07 01:30] ORB overnight check running
+[2026-03-07 01:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 01:30] In Progress: 0 | Planned ORB: 0
+[2026-03-07 02:00] ORB overnight check running
+[2026-03-07 02:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 02:00] In Progress: 0 | Planned ORB: 0
+[2026-03-07 02:30] ORB overnight check running
+[2026-03-07 02:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 02:30] In Progress: 0 | Planned ORB: 0
+[2026-03-07 03:00] ORB overnight check running
+[2026-03-07 03:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 03:00] In Progress: 0 | Planned ORB: 0
+[2026-03-07 03:30] ORB overnight check running
+[2026-03-07 03:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 03:30] In Progress: 0 | Planned ORB: 0
+[2026-03-07 04:00] ORB overnight check running
+[2026-03-07 04:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 04:00] In Progress: 0 | Planned ORB: 0
+[2026-03-07 04:30] ORB overnight check running
+[2026-03-07 04:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 04:30] In Progress: 0 | Planned ORB: 1
+[2026-03-07 04:30] Dispatched c_cbf57a21ff402_19cc7f60de5: {"ok":true,"pid":2657799,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_cbf57a21ff402_19cc7f60de5.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-07 05:00] ORB overnight check running
+[2026-03-07 05:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 05:00] In Progress: 0 | Planned ORB: 0
+[2026-03-07 05:30] ORB overnight check running
+[2026-03-07 05:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 05:30] In Progress: 0 | Planned ORB: 0
+[2026-03-07 06:00] ORB overnight check running
+[2026-03-07 06:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 06:00] In Progress: 0 | Planned ORB: 0
+[2026-03-07 06:30] ORB overnight check running
+[2026-03-07 06:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 06:30] In Progress: 0 | Planned ORB: 0
+[2026-03-07 07:00] ORB overnight check running
+[2026-03-07 07:00] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 07:00] In Progress: 0 | Planned ORB: 0
+[2026-03-07 07:00] Morning report sent to ntfy
+[2026-03-07 07:30] ORB overnight check running
+[2026-03-07 07:30] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 07:30] In Progress: 0 | Planned ORB: 0
+[2026-03-07 07:30] Morning report sent to ntfy
+[2026-03-07 08:01] ORB overnight check running
+[2026-03-07 08:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 08:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 08:31] ORB overnight check running
+[2026-03-07 08:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 08:31] In Progress: 0 | Planned ORB: 0
+[2026-03-07 09:01] ORB overnight check running
+[2026-03-07 09:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 09:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 09:31] ORB overnight check running
+[2026-03-07 09:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 09:31] In Progress: 0 | Planned ORB: 0
+[2026-03-07 10:01] ORB overnight check running
+[2026-03-07 10:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 10:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 10:31] ORB overnight check running
+[2026-03-07 10:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 10:31] In Progress: 0 | Planned ORB: 0
+[2026-03-07 11:01] ORB overnight check running
+[2026-03-07 11:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 11:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 11:31] ORB overnight check running
+[2026-03-07 11:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 11:31] In Progress: 0 | Planned ORB: 0
+[2026-03-07 12:01] ORB overnight check running
+[2026-03-07 12:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 12:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 12:31] ORB overnight check running
+[2026-03-07 12:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 12:31] In Progress: 0 | Planned ORB: 0
+[2026-03-07 13:01] ORB overnight check running
+[2026-03-07 13:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 13:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 13:31] ORB overnight check running
+[2026-03-07 13:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 13:31] In Progress: 3 | Planned ORB: 0
+[2026-03-07 14:01] ORB overnight check running
+[2026-03-07 14:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 14:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 14:31] ORB overnight check running
+[2026-03-07 14:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 14:31] In Progress: 0 | Planned ORB: 0
+[2026-03-07 15:01] ORB overnight check running
+[2026-03-07 15:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 15:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 15:31] ORB overnight check running
+[2026-03-07 15:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 15:31] In Progress: 3 | Planned ORB: 0
+[2026-03-07 16:01] ORB overnight check running
+[2026-03-07 16:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 16:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 16:31] ORB overnight check running
+[2026-03-07 16:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 16:31] In Progress: 0 | Planned ORB: 0
+[2026-03-07 17:01] ORB overnight check running
+[2026-03-07 17:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 17:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 17:31] ORB overnight check running
+[2026-03-07 17:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 17:31] In Progress: 3 | Planned ORB: 0
+[2026-03-07 18:01] ORB overnight check running
+[2026-03-07 18:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 18:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 18:31] ORB overnight check running
+[2026-03-07 18:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 18:31] In Progress: 0 | Planned ORB: 0
+[2026-03-07 19:01] ORB overnight check running
+[2026-03-07 19:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 19:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 19:31] ORB overnight check running
+[2026-03-07 19:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 19:31] In Progress: 1 | Planned ORB: 0
+[2026-03-07 20:01] ORB overnight check running
+[2026-03-07 20:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 20:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 20:31] ORB overnight check running
+[2026-03-07 20:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 20:31] In Progress: 0 | Planned ORB: 0
+[2026-03-07 21:01] ORB overnight check running
+[2026-03-07 21:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 21:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 21:31] ORB overnight check running
+[2026-03-07 21:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 21:31] In Progress: 3 | Planned ORB: 0
+[2026-03-07 22:01] ORB overnight check running
+[2026-03-07 22:01] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 22:01] In Progress: 0 | Planned ORB: 0
+[2026-03-07 22:31] ORB overnight check running
+[2026-03-07 22:31] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 22:31] In Progress: 0 | Planned ORB: 0
+[2026-03-07 23:02] ORB overnight check running
+[2026-03-07 23:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 23:02] In Progress: 0 | Planned ORB: 0
+[2026-03-07 23:32] ORB overnight check running
+[2026-03-07 23:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-07 23:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 00:02] ORB overnight check running
+[2026-03-08 00:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 00:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 00:32] ORB overnight check running
+[2026-03-08 00:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 00:32] In Progress: 0 | Planned ORB: 1
+[2026-03-08 00:32] Dispatched c_1571fdf5aa619_19ccc40e426: {"ok":true,"pid":2708092,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_1571fdf5aa619_19ccc40e426.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-08 01:02] ORB overnight check running
+[2026-03-08 01:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 01:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 01:32] ORB overnight check running
+[2026-03-08 01:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 01:32] In Progress: 1 | Planned ORB: 0
+[2026-03-08 02:02] ORB overnight check running
+[2026-03-08 02:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 02:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 02:32] ORB overnight check running
+[2026-03-08 02:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 02:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 03:02] ORB overnight check running
+[2026-03-08 03:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 03:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 03:32] ORB overnight check running
+[2026-03-08 03:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 03:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 04:02] ORB overnight check running
+[2026-03-08 04:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 04:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 04:32] ORB overnight check running
+[2026-03-08 04:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 04:32] In Progress: 1 | Planned ORB: 0
+[2026-03-08 05:02] ORB overnight check running
+[2026-03-08 05:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 05:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 05:32] ORB overnight check running
+[2026-03-08 05:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 05:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 06:02] ORB overnight check running
+[2026-03-08 06:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 06:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 06:32] ORB overnight check running
+[2026-03-08 06:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 06:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 07:02] ORB overnight check running
+[2026-03-08 07:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 07:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 07:02] Morning report sent to ntfy
+[2026-03-08 07:32] ORB overnight check running
+[2026-03-08 07:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 07:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 07:32] Morning report sent to ntfy
+[2026-03-08 08:02] ORB overnight check running
+[2026-03-08 08:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 08:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 08:32] ORB overnight check running
+[2026-03-08 08:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 08:32] In Progress: 2 | Planned ORB: 0
+[2026-03-08 09:02] ORB overnight check running
+[2026-03-08 09:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 09:02] In Progress: 1 | Planned ORB: 0
+[2026-03-08 09:32] ORB overnight check running
+[2026-03-08 09:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 09:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 10:02] ORB overnight check running
+[2026-03-08 10:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 10:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 10:32] ORB overnight check running
+[2026-03-08 10:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 10:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 11:02] ORB overnight check running
+[2026-03-08 11:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 11:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 11:32] ORB overnight check running
+[2026-03-08 11:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 11:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 12:02] ORB overnight check running
+[2026-03-08 12:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 12:02] In Progress: 0 | Planned ORB: 1
+[2026-03-08 12:02] Dispatched c_c3e119f7eb417_19cced3b688: {"ok":true,"pid":996201,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_c3e119f7eb417_19cced3b688.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-08 12:32] ORB overnight check running
+[2026-03-08 12:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 12:32] In Progress: 1 | Planned ORB: 0
+[2026-03-08 13:02] ORB overnight check running
+[2026-03-08 13:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 13:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 13:32] ORB overnight check running
+[2026-03-08 13:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 13:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 14:02] ORB overnight check running
+[2026-03-08 14:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 14:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 14:32] ORB overnight check running
+[2026-03-08 14:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 14:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 15:02] ORB overnight check running
+[2026-03-08 15:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 15:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 15:32] ORB overnight check running
+[2026-03-08 15:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 15:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 16:02] ORB overnight check running
+[2026-03-08 16:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 16:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 16:32] ORB overnight check running
+[2026-03-08 16:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 16:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 17:02] ORB overnight check running
+[2026-03-08 17:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 17:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 17:32] ORB overnight check running
+[2026-03-08 17:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 17:32] In Progress: 3 | Planned ORB: 0
+[2026-03-08 18:02] ORB overnight check running
+[2026-03-08 18:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 18:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 18:32] ORB overnight check running
+[2026-03-08 18:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 18:32] In Progress: 0 | Planned ORB: 0
+[2026-03-08 19:02] ORB overnight check running
+[2026-03-08 19:02] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 19:02] In Progress: 0 | Planned ORB: 0
+[2026-03-08 19:32] ORB overnight check running
+[2026-03-08 19:32] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 19:32] In Progress: 3 | Planned ORB: 0
+[2026-03-08 20:03] ORB overnight check running
+[2026-03-08 20:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 20:03] In Progress: 0 | Planned ORB: 0
+[2026-03-08 20:33] ORB overnight check running
+[2026-03-08 20:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 20:33] In Progress: 0 | Planned ORB: 0
+[2026-03-08 21:03] ORB overnight check running
+[2026-03-08 21:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 21:03] In Progress: 0 | Planned ORB: 0
+[2026-03-08 21:33] ORB overnight check running
+[2026-03-08 21:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 21:33] In Progress: 2 | Planned ORB: 0
+[2026-03-08 22:03] ORB overnight check running
+[2026-03-08 22:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 22:03] In Progress: 0 | Planned ORB: 0
+[2026-03-08 22:33] ORB overnight check running
+[2026-03-08 22:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 22:33] In Progress: 0 | Planned ORB: 0
+[2026-03-08 23:03] ORB overnight check running
+[2026-03-08 23:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 23:03] In Progress: 0 | Planned ORB: 0
+[2026-03-08 23:33] ORB overnight check running
+[2026-03-08 23:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-08 23:33] In Progress: 0 | Planned ORB: 0
+[2026-03-09 00:03] ORB overnight check running
+[2026-03-09 00:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 00:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 00:33] ORB overnight check running
+[2026-03-09 00:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 00:33] In Progress: 0 | Planned ORB: 0
+[2026-03-09 01:03] ORB overnight check running
+[2026-03-09 01:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 01:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 01:33] ORB overnight check running
+[2026-03-09 01:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 01:33] In Progress: 3 | Planned ORB: 0
+[2026-03-09 02:03] ORB overnight check running
+[2026-03-09 02:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 02:03] In Progress: 1 | Planned ORB: 0
+[2026-03-09 02:33] ORB overnight check running
+[2026-03-09 02:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 02:33] In Progress: 0 | Planned ORB: 0
+[2026-03-09 03:03] ORB overnight check running
+[2026-03-09 03:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 03:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 03:33] ORB overnight check running
+[2026-03-09 03:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 03:33] In Progress: 2 | Planned ORB: 0
+[2026-03-09 04:03] ORB overnight check running
+[2026-03-09 04:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 04:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 04:33] ORB overnight check running
+[2026-03-09 04:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 04:33] In Progress: 0 | Planned ORB: 0
+[2026-03-09 05:33] ORB overnight check running
+[2026-03-09 05:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 05:33] In Progress: 4 | Planned ORB: 0
+[2026-03-09 06:03] ORB overnight check running
+[2026-03-09 06:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 06:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 06:33] ORB overnight check running
+[2026-03-09 06:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 06:33] In Progress: 0 | Planned ORB: 0
+[2026-03-09 07:03] ORB overnight check running
+[2026-03-09 07:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 07:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 07:03] Morning report sent to ntfy
+[2026-03-09 07:33] ORB overnight check running
+[2026-03-09 07:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 07:33] In Progress: 0 | Planned ORB: 0
+[2026-03-09 07:33] Morning report sent to ntfy
+[2026-03-09 08:03] ORB overnight check running
+[2026-03-09 08:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 08:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 08:33] ORB overnight check running
+[2026-03-09 08:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 08:33] In Progress: 0 | Planned ORB: 0
+[2026-03-09 09:03] ORB overnight check running
+[2026-03-09 09:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 09:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 09:33] ORB overnight check running
+[2026-03-09 09:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 09:33] In Progress: 3 | Planned ORB: 0
+[2026-03-09 10:03] ORB overnight check running
+[2026-03-09 10:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 10:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 10:33] ORB overnight check running
+[2026-03-09 10:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 10:33] In Progress: 0 | Planned ORB: 0
+[2026-03-09 11:03] ORB overnight check running
+[2026-03-09 11:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 11:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 11:33] ORB overnight check running
+[2026-03-09 11:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 11:33] In Progress: 0 | Planned ORB: 0
+[2026-03-09 12:03] ORB overnight check running
+[2026-03-09 12:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 12:03] In Progress: 2 | Planned ORB: 0
+[2026-03-09 12:33] ORB overnight check running
+[2026-03-09 12:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 12:33] In Progress: 1 | Planned ORB: 0
+[2026-03-09 13:03] ORB overnight check running
+[2026-03-09 13:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 13:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 13:33] ORB overnight check running
+[2026-03-09 13:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 13:33] In Progress: 3 | Planned ORB: 0
+[2026-03-09 14:03] ORB overnight check running
+[2026-03-09 14:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 14:03] In Progress: 1 | Planned ORB: 0
+[2026-03-09 14:33] ORB overnight check running
+[2026-03-09 14:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 14:33] In Progress: 1 | Planned ORB: 0
+[2026-03-09 15:03] ORB overnight check running
+[2026-03-09 15:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 15:03] In Progress: 1 | Planned ORB: 0
+[2026-03-09 15:33] ORB overnight check running
+[2026-03-09 15:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 15:33] In Progress: 2 | Planned ORB: 0
+[2026-03-09 16:03] ORB overnight check running
+[2026-03-09 16:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 16:03] In Progress: 0 | Planned ORB: 1
+[2026-03-09 16:03] Dispatched c_df999bebe51b3_19cd4d6105a: {"ok":true,"pid":2747142,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_df999bebe51b3_19cd4d6105a.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-09 16:33] ORB overnight check running
+[2026-03-09 16:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 16:33] In Progress: 1 | Planned ORB: 0
+[2026-03-09 17:03] ORB overnight check running
+[2026-03-09 17:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 17:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 17:33] ORB overnight check running
+[2026-03-09 17:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 17:33] In Progress: 0 | Planned ORB: 0
+[2026-03-09 18:03] ORB overnight check running
+[2026-03-09 18:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 18:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 18:33] ORB overnight check running
+[2026-03-09 18:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 18:33] In Progress: 0 | Planned ORB: 0
+[2026-03-09 19:03] ORB overnight check running
+[2026-03-09 19:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 19:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 19:33] ORB overnight check running
+[2026-03-09 19:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 19:33] In Progress: 1 | Planned ORB: 0
+[2026-03-09 20:03] ORB overnight check running
+[2026-03-09 20:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 20:03] In Progress: 1 | Planned ORB: 0
+[2026-03-09 20:33] ORB overnight check running
+[2026-03-09 20:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 20:33] In Progress: 1 | Planned ORB: 0
+[2026-03-09 21:03] ORB overnight check running
+[2026-03-09 21:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 21:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 21:33] ORB overnight check running
+[2026-03-09 21:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 21:33] In Progress: 3 | Planned ORB: 0
+[2026-03-09 22:03] ORB overnight check running
+[2026-03-09 22:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 22:03] In Progress: 1 | Planned ORB: 0
+[2026-03-09 22:33] ORB overnight check running
+[2026-03-09 22:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 22:33] In Progress: 1 | Planned ORB: 0
+[2026-03-09 23:03] ORB overnight check running
+[2026-03-09 23:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 23:03] In Progress: 0 | Planned ORB: 0
+[2026-03-09 23:33] ORB overnight check running
+[2026-03-09 23:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-09 23:33] In Progress: 2 | Planned ORB: 0
+[2026-03-10 00:03] ORB overnight check running
+[2026-03-10 00:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 00:03] In Progress: 0 | Planned ORB: 0
+[2026-03-10 00:33] ORB overnight check running
+[2026-03-10 00:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 00:33] In Progress: 0 | Planned ORB: 0
+[2026-03-10 01:03] ORB overnight check running
+[2026-03-10 01:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 01:03] In Progress: 0 | Planned ORB: 0
+[2026-03-10 01:33] ORB overnight check running
+[2026-03-10 01:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 01:33] In Progress: 4 | Planned ORB: 0
+[2026-03-10 02:03] ORB overnight check running
+[2026-03-10 02:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 02:03] In Progress: 0 | Planned ORB: 0
+[2026-03-10 02:33] ORB overnight check running
+[2026-03-10 02:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 02:33] In Progress: 0 | Planned ORB: 0
+[2026-03-10 03:03] ORB overnight check running
+[2026-03-10 03:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 03:03] In Progress: 0 | Planned ORB: 0
+[2026-03-10 03:33] ORB overnight check running
+[2026-03-10 03:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 03:33] In Progress: 0 | Planned ORB: 0
+[2026-03-10 04:03] ORB overnight check running
+[2026-03-10 04:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 04:03] In Progress: 0 | Planned ORB: 1
+[2026-03-10 04:03] Dispatched c_8ab853c5d8552_19cd7695870: {"ok":true,"pid":3460322,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_8ab853c5d8552_19cd7695870.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-10 04:33] ORB overnight check running
+[2026-03-10 04:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 04:33] In Progress: 0 | Planned ORB: 0
+[2026-03-10 05:03] ORB overnight check running
+[2026-03-10 05:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 05:03] In Progress: 0 | Planned ORB: 0
+[2026-03-10 05:33] ORB overnight check running
+[2026-03-10 05:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 05:33] In Progress: 1 | Planned ORB: 0
+[2026-03-10 06:03] ORB overnight check running
+[2026-03-10 06:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 06:03] In Progress: 0 | Planned ORB: 0
+[2026-03-10 06:33] ORB overnight check running
+[2026-03-10 06:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 06:33] In Progress: 0 | Planned ORB: 0
+[2026-03-10 07:03] ORB overnight check running
+[2026-03-10 07:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 07:03] In Progress: 2 | Planned ORB: 0
+[2026-03-10 07:03] Morning report sent to ntfy
+[2026-03-10 07:33] ORB overnight check running
+[2026-03-10 07:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 07:33] In Progress: 1 | Planned ORB: 0
+[2026-03-10 07:33] Morning report sent to ntfy
+[2026-03-10 08:03] ORB overnight check running
+[2026-03-10 08:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 08:03] In Progress: 0 | Planned ORB: 1
+[2026-03-10 08:03] Dispatched c_4c94688924ae6_19cd844a9d7: {"ok":true,"pid":1299542,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_4c94688924ae6_19cd844a9d7.log","cwd":"/home/rob/.openclaw/workspace/blofin-moonshot"}
+[2026-03-10 08:33] ORB overnight check running
+[2026-03-10 08:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 08:33] In Progress: 0 | Planned ORB: 0
+[2026-03-10 09:03] ORB overnight check running
+[2026-03-10 09:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 09:03] In Progress: 1 | Planned ORB: 0
+[2026-03-10 09:33] ORB overnight check running
+[2026-03-10 09:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 09:33] In Progress: 1 | Planned ORB: 0
+[2026-03-10 10:03] ORB overnight check running
+[2026-03-10 10:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 10:03] In Progress: 0 | Planned ORB: 0
+[2026-03-10 10:33] ORB overnight check running
+[2026-03-10 10:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 10:33] In Progress: 0 | Planned ORB: 0
+[2026-03-10 11:03] ORB overnight check running
+[2026-03-10 11:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 11:03] In Progress: 0 | Planned ORB: 0
+[2026-03-10 11:33] ORB overnight check running
+[2026-03-10 11:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 11:33] In Progress: 0 | Planned ORB: 0
+[2026-03-10 12:03] ORB overnight check running
+[2026-03-10 12:03] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 12:03] In Progress: 0 | Planned ORB: 1
+[2026-03-10 12:03] Dispatched c_cae51498dbd83_19cd920891f: {"ok":true,"pid":2134432,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_cae51498dbd83_19cd920891f.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-10 12:33] ORB overnight check running
+[2026-03-10 12:33] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 12:33] In Progress: 1 | Planned ORB: 0
+[2026-03-10 13:04] ORB overnight check running
+[2026-03-10 13:04] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 13:04] In Progress: 0 | Planned ORB: 0
+[2026-03-10 13:34] ORB overnight check running
+[2026-03-10 13:34] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 13:34] In Progress: 1 | Planned ORB: 0
+[2026-03-10 14:04] ORB overnight check running
+[2026-03-10 14:04] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 14:04] In Progress: 0 | Planned ORB: 0
+[2026-03-10 14:34] ORB overnight check running
+[2026-03-10 14:34] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 14:34] In Progress: 0 | Planned ORB: 0
+[2026-03-10 15:04] ORB overnight check running
+[2026-03-10 15:04] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 15:04] In Progress: 0 | Planned ORB: 0
+[2026-03-10 15:34] ORB overnight check running
+[2026-03-10 15:34] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 15:34] In Progress: 0 | Planned ORB: 0
+[2026-03-10 16:04] ORB overnight check running
+[2026-03-10 16:04] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 16:04] In Progress: 0 | Planned ORB: 0
+[2026-03-10 16:34] ORB overnight check running
+[2026-03-10 16:34] Completed:  exit_opt 15min_orb 8am_orb final_report
+[2026-03-10 16:34] In Progress: 0 | Planned ORB: 0
+[2026-03-10 17:04] ORB overnight check running
+[2026-03-10 17:04] Completed: 
+[2026-03-10 17:04] In Progress: 0 | Planned ORB: 0
+[2026-03-10 17:34] ORB overnight check running
+[2026-03-10 17:34] Completed: 
+[2026-03-10 17:34] In Progress: 2 | Planned ORB: 0
+[2026-03-10 18:04] ORB overnight check running
+[2026-03-10 18:04] Completed: 
+[2026-03-10 18:04] In Progress: 0 | Planned ORB: 0
+[2026-03-10 18:34] ORB overnight check running
+[2026-03-10 18:34] Completed: 
+[2026-03-10 18:34] In Progress: 0 | Planned ORB: 0
+[2026-03-10 19:04] ORB overnight check running
+[2026-03-10 19:04] Completed: 
+[2026-03-10 19:04] In Progress: 0 | Planned ORB: 0
+[2026-03-10 19:34] ORB overnight check running
+[2026-03-10 19:34] Completed: 
+[2026-03-10 19:34] In Progress: 0 | Planned ORB: 0
+[2026-03-10 20:04] ORB overnight check running
+[2026-03-10 20:04] Completed: 
+[2026-03-10 20:04] In Progress: 0 | Planned ORB: 0
+[2026-03-10 20:34] ORB overnight check running
+[2026-03-10 20:34] Completed: 
+[2026-03-10 20:34] In Progress: 0 | Planned ORB: 0
+[2026-03-10 21:04] ORB overnight check running
+[2026-03-10 21:04] Completed: 
+[2026-03-10 21:04] In Progress: 0 | Planned ORB: 0
+[2026-03-10 21:34] ORB overnight check running
+[2026-03-10 21:34] Completed: 
+[2026-03-10 21:34] In Progress: 3 | Planned ORB: 0
+[2026-03-10 22:04] ORB overnight check running
+[2026-03-10 22:04] Completed: 
+[2026-03-10 22:04] In Progress: 1 | Planned ORB: 0
+[2026-03-10 22:34] ORB overnight check running
+[2026-03-10 22:34] Completed: 
+[2026-03-10 22:34] In Progress: 0 | Planned ORB: 0
+[2026-03-10 23:04] ORB overnight check running
+[2026-03-10 23:04] Completed: 
+[2026-03-10 23:04] In Progress: 0 | Planned ORB: 0
+[2026-03-10 23:34] ORB overnight check running
+[2026-03-10 23:34] Completed: 
+[2026-03-10 23:34] In Progress: 0 | Planned ORB: 0
+[2026-03-11 00:04] ORB overnight check running
+[2026-03-11 00:04] Completed: 
+[2026-03-11 00:04] In Progress: 0 | Planned ORB: 0
+[2026-03-11 00:34] ORB overnight check running
+[2026-03-11 00:34] Completed: 
+[2026-03-11 00:34] In Progress: 0 | Planned ORB: 0
+[2026-03-11 01:04] ORB overnight check running
+[2026-03-11 01:04] Completed: 
+[2026-03-11 01:04] In Progress: 0 | Planned ORB: 0
+[2026-03-11 01:34] ORB overnight check running
+[2026-03-11 01:34] Completed: 
+[2026-03-11 01:34] In Progress: 1 | Planned ORB: 0
+[2026-03-11 02:04] ORB overnight check running
+[2026-03-11 02:04] Completed: 
+[2026-03-11 02:04] In Progress: 0 | Planned ORB: 0
+[2026-03-11 02:34] ORB overnight check running
+[2026-03-11 02:34] Completed: 
+[2026-03-11 02:34] In Progress: 0 | Planned ORB: 0
+[2026-03-11 03:05] ORB overnight check running
+[2026-03-11 03:05] Completed: 
+[2026-03-11 03:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 03:35] ORB overnight check running
+[2026-03-11 03:35] Completed: 
+[2026-03-11 03:35] In Progress: 2 | Planned ORB: 0
+[2026-03-11 04:05] ORB overnight check running
+[2026-03-11 04:05] Completed: 
+[2026-03-11 04:05] In Progress: 1 | Planned ORB: 0
+[2026-03-11 04:35] ORB overnight check running
+[2026-03-11 04:35] Completed: 
+[2026-03-11 04:35] In Progress: 0 | Planned ORB: 0
+[2026-03-11 05:05] ORB overnight check running
+[2026-03-11 05:05] Completed: 
+[2026-03-11 05:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 05:35] ORB overnight check running
+[2026-03-11 05:35] Completed: 
+[2026-03-11 05:35] In Progress: 2 | Planned ORB: 0
+[2026-03-11 06:05] ORB overnight check running
+[2026-03-11 06:05] Completed: 
+[2026-03-11 06:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 06:35] ORB overnight check running
+[2026-03-11 06:35] Completed: 
+[2026-03-11 06:35] In Progress: 0 | Planned ORB: 0
+[2026-03-11 07:05] ORB overnight check running
+[2026-03-11 07:05] Completed: 
+[2026-03-11 07:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 07:05] Morning report sent to ntfy
+[2026-03-11 07:35] ORB overnight check running
+[2026-03-11 07:35] Completed: 
+[2026-03-11 07:35] In Progress: 0 | Planned ORB: 0
+[2026-03-11 08:05] ORB overnight check running
+[2026-03-11 08:05] Completed: 
+[2026-03-11 08:05] In Progress: 0 | Planned ORB: 1
+[2026-03-11 08:05] Dispatched c_75923aef0a71f_19cdd6c67ab: {"ok":true,"pid":4054100,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_75923aef0a71f_19cdd6c67ab.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-11 08:35] ORB overnight check running
+[2026-03-11 08:35] Completed: 
+[2026-03-11 08:35] In Progress: 0 | Planned ORB: 0
+[2026-03-11 09:05] ORB overnight check running
+[2026-03-11 09:05] Completed: 
+[2026-03-11 09:05] In Progress: 1 | Planned ORB: 0
+[2026-03-11 09:35] ORB overnight check running
+[2026-03-11 09:35] Completed: 
+[2026-03-11 09:35] In Progress: 2 | Planned ORB: 0
+[2026-03-11 10:05] ORB overnight check running
+[2026-03-11 10:05] Completed: 
+[2026-03-11 10:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 10:35] ORB overnight check running
+[2026-03-11 10:35] Completed: 
+[2026-03-11 10:35] In Progress: 0 | Planned ORB: 0
+[2026-03-11 11:05] ORB overnight check running
+[2026-03-11 11:05] Completed: 
+[2026-03-11 11:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 11:35] ORB overnight check running
+[2026-03-11 11:35] Completed: 
+[2026-03-11 11:35] In Progress: 2 | Planned ORB: 0
+[2026-03-11 12:05] ORB overnight check running
+[2026-03-11 12:05] Completed: 
+[2026-03-11 12:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 12:35] ORB overnight check running
+[2026-03-11 12:35] Completed: 
+[2026-03-11 12:35] In Progress: 0 | Planned ORB: 0
+[2026-03-11 13:05] ORB overnight check running
+[2026-03-11 13:05] Completed: 
+[2026-03-11 13:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 13:35] ORB overnight check running
+[2026-03-11 13:35] Completed: 
+[2026-03-11 13:35] In Progress: 0 | Planned ORB: 0
+[2026-03-11 14:05] ORB overnight check running
+[2026-03-11 14:05] Completed: 
+[2026-03-11 14:05] In Progress: 1 | Planned ORB: 0
+[2026-03-11 14:35] ORB overnight check running
+[2026-03-11 14:35] Completed: 
+[2026-03-11 14:35] In Progress: 1 | Planned ORB: 0
+[2026-03-11 15:05] ORB overnight check running
+[2026-03-11 15:05] Completed: 
+[2026-03-11 15:05] In Progress: 1 | Planned ORB: 0
+[2026-03-11 15:35] ORB overnight check running
+[2026-03-11 15:35] Completed: 
+[2026-03-11 15:35] In Progress: 2 | Planned ORB: 0
+[2026-03-11 16:05] ORB overnight check running
+[2026-03-11 16:05] Completed: 
+[2026-03-11 16:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 16:35] ORB overnight check running
+[2026-03-11 16:35] Completed: 
+[2026-03-11 16:35] In Progress: 0 | Planned ORB: 0
+[2026-03-11 17:05] ORB overnight check running
+[2026-03-11 17:05] Completed: 
+[2026-03-11 17:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 17:35] ORB overnight check running
+[2026-03-11 17:35] Completed: 
+[2026-03-11 17:35] In Progress: 3 | Planned ORB: 0
+[2026-03-11 18:05] ORB overnight check running
+[2026-03-11 18:05] Completed: 
+[2026-03-11 18:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 18:35] ORB overnight check running
+[2026-03-11 18:35] Completed: 
+[2026-03-11 18:35] In Progress: 0 | Planned ORB: 0
+[2026-03-11 19:05] ORB overnight check running
+[2026-03-11 19:05] Completed: 
+[2026-03-11 19:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 19:35] ORB overnight check running
+[2026-03-11 19:35] Completed: 
+[2026-03-11 19:35] In Progress: 0 | Planned ORB: 0
+[2026-03-11 20:05] ORB overnight check running
+[2026-03-11 20:05] Completed: 
+[2026-03-11 20:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 20:35] ORB overnight check running
+[2026-03-11 20:35] Completed: 
+[2026-03-11 20:35] In Progress: 1 | Planned ORB: 0
+[2026-03-11 21:05] ORB overnight check running
+[2026-03-11 21:05] Completed: 
+[2026-03-11 21:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 21:35] ORB overnight check running
+[2026-03-11 21:35] Completed: 
+[2026-03-11 21:35] In Progress: 0 | Planned ORB: 0
+[2026-03-11 22:05] ORB overnight check running
+[2026-03-11 22:05] Completed: 
+[2026-03-11 22:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 22:35] ORB overnight check running
+[2026-03-11 22:35] Completed: 
+[2026-03-11 22:35] In Progress: 0 | Planned ORB: 0
+[2026-03-11 23:05] ORB overnight check running
+[2026-03-11 23:05] Completed: 
+[2026-03-11 23:05] In Progress: 0 | Planned ORB: 0
+[2026-03-11 23:35] ORB overnight check running
+[2026-03-11 23:35] Completed: 
+[2026-03-11 23:35] In Progress: 0 | Planned ORB: 0
+[2026-03-12 00:05] ORB overnight check running
+[2026-03-12 00:05] Completed: 
+[2026-03-12 00:05] In Progress: 0 | Planned ORB: 0
+[2026-03-12 00:35] ORB overnight check running
+[2026-03-12 00:35] Completed: 
+[2026-03-12 00:35] In Progress: 0 | Planned ORB: 1
+[2026-03-12 00:35] Dispatched c_d77259b9c422_19ce0df62c8: {"ok":true,"pid":2000098,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_d77259b9c422_19ce0df62c8.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-12 01:05] ORB overnight check running
+[2026-03-12 01:05] Completed: 
+[2026-03-12 01:05] In Progress: 0 | Planned ORB: 0
+[2026-03-12 01:35] ORB overnight check running
+[2026-03-12 01:35] Completed: 
+[2026-03-12 01:35] In Progress: 0 | Planned ORB: 0
+[2026-03-12 02:05] ORB overnight check running
+[2026-03-12 02:05] Completed: 
+[2026-03-12 02:05] In Progress: 0 | Planned ORB: 0
+[2026-03-12 02:35] ORB overnight check running
+[2026-03-12 02:35] Completed: 
+[2026-03-12 02:35] In Progress: 0 | Planned ORB: 0
+[2026-03-12 03:05] ORB overnight check running
+[2026-03-12 03:05] Completed: 
+[2026-03-12 03:05] In Progress: 0 | Planned ORB: 0
+[2026-03-12 03:35] ORB overnight check running
+[2026-03-12 03:35] Completed: 
+[2026-03-12 03:35] In Progress: 0 | Planned ORB: 0
+[2026-03-12 04:05] ORB overnight check running
+[2026-03-12 04:05] Completed: 
+[2026-03-12 04:05] In Progress: 0 | Planned ORB: 0
+[2026-03-12 04:35] ORB overnight check running
+[2026-03-12 04:35] Completed: 
+[2026-03-12 04:35] In Progress: 0 | Planned ORB: 0
+[2026-03-12 05:05] ORB overnight check running
+[2026-03-12 05:05] Completed: 
+[2026-03-12 05:05] In Progress: 0 | Planned ORB: 0
+[2026-03-12 05:35] ORB overnight check running
+[2026-03-12 05:35] Completed: 
+[2026-03-12 05:35] In Progress: 2 | Planned ORB: 0
+[2026-03-12 06:05] ORB overnight check running
+[2026-03-12 06:05] Completed: 
+[2026-03-12 06:05] In Progress: 1 | Planned ORB: 0
+[2026-03-12 06:35] ORB overnight check running
+[2026-03-12 06:35] Completed: 
+[2026-03-12 06:35] In Progress: 1 | Planned ORB: 0
+[2026-03-12 07:05] ORB overnight check running
+[2026-03-12 07:05] Completed: 
+[2026-03-12 07:05] In Progress: 1 | Planned ORB: 0
+[2026-03-12 07:05] Morning report sent to ntfy
+[2026-03-12 07:35] ORB overnight check running
+[2026-03-12 07:35] Completed: 
+[2026-03-12 07:35] In Progress: 1 | Planned ORB: 0
+[2026-03-12 08:05] ORB overnight check running
+[2026-03-12 08:05] Completed: 
+[2026-03-12 08:05] In Progress: 1 | Planned ORB: 0
+[2026-03-12 08:35] ORB overnight check running
+[2026-03-12 08:35] Completed: 
+[2026-03-12 08:35] In Progress: 1 | Planned ORB: 0
+[2026-03-12 09:05] ORB overnight check running
+[2026-03-12 09:05] Completed: 
+[2026-03-12 09:05] In Progress: 1 | Planned ORB: 0
+[2026-03-12 09:35] ORB overnight check running
+[2026-03-12 09:35] Completed: 
+[2026-03-12 09:35] In Progress: 0 | Planned ORB: 0
+[2026-03-12 10:05] ORB overnight check running
+[2026-03-12 10:05] Completed: 
+[2026-03-12 10:05] In Progress: 0 | Planned ORB: 0
+[2026-03-12 10:35] ORB overnight check running
+[2026-03-12 10:35] Completed: 
+[2026-03-12 10:35] In Progress: 0 | Planned ORB: 0
+[2026-03-12 11:05] ORB overnight check running
+[2026-03-12 11:05] Completed: 
+[2026-03-12 11:05] In Progress: 0 | Planned ORB: 0
+[2026-03-12 11:35] ORB overnight check running
+[2026-03-12 11:35] Completed: 
+[2026-03-12 11:35] In Progress: 0 | Planned ORB: 0
+[2026-03-12 12:06] ORB overnight check running
+[2026-03-12 12:06] Completed: 
+[2026-03-12 12:06] In Progress: 0 | Planned ORB: 0
+[2026-03-12 12:36] ORB overnight check running
+[2026-03-12 12:36] Completed: 
+[2026-03-12 12:36] In Progress: 0 | Planned ORB: 0
+[2026-03-12 13:06] ORB overnight check running
+[2026-03-12 13:06] Completed: 
+[2026-03-12 13:06] In Progress: 1 | Planned ORB: 0
+[2026-03-12 13:36] ORB overnight check running
+[2026-03-12 13:36] Completed: 
+[2026-03-12 13:36] In Progress: 0 | Planned ORB: 0
+[2026-03-12 14:06] ORB overnight check running
+[2026-03-12 14:06] Completed: 
+[2026-03-12 14:06] In Progress: 0 | Planned ORB: 0
+[2026-03-12 14:36] ORB overnight check running
+[2026-03-12 14:36] Completed: 
+[2026-03-12 14:36] In Progress: 0 | Planned ORB: 0
+[2026-03-12 15:06] ORB overnight check running
+[2026-03-12 15:06] Completed: 
+[2026-03-12 15:06] In Progress: 0 | Planned ORB: 0
+[2026-03-12 15:36] ORB overnight check running
+[2026-03-12 15:36] Completed: 
+[2026-03-12 15:36] In Progress: 0 | Planned ORB: 0
+[2026-03-12 16:06] ORB overnight check running
+[2026-03-12 16:06] Completed: 
+[2026-03-12 16:06] In Progress: 0 | Planned ORB: 0
+[2026-03-12 16:36] ORB overnight check running
+[2026-03-12 16:36] Completed: 
+[2026-03-12 16:36] In Progress: 0 | Planned ORB: 0
+[2026-03-12 17:06] ORB overnight check running
+[2026-03-12 17:06] Completed: 
+[2026-03-12 17:06] In Progress: 0 | Planned ORB: 0
+[2026-03-12 17:36] ORB overnight check running
+[2026-03-12 17:36] Completed: 
+[2026-03-12 17:36] In Progress: 0 | Planned ORB: 0
+[2026-03-12 18:06] ORB overnight check running
+[2026-03-12 18:06] Completed: 
+[2026-03-12 18:06] In Progress: 0 | Planned ORB: 0
+[2026-03-12 18:36] ORB overnight check running
+[2026-03-12 18:36] Completed: 
+[2026-03-12 18:36] In Progress: 0 | Planned ORB: 0
+[2026-03-12 19:06] ORB overnight check running
+[2026-03-12 19:06] Completed: 
+[2026-03-12 19:06] In Progress: 0 | Planned ORB: 0
+[2026-03-12 19:36] ORB overnight check running
+[2026-03-12 19:36] Completed: 
+[2026-03-12 19:36] In Progress: 0 | Planned ORB: 0
+[2026-03-12 20:06] ORB overnight check running
+[2026-03-12 20:06] Completed: 
+[2026-03-12 20:06] In Progress: 0 | Planned ORB: 0
+[2026-03-12 20:36] ORB overnight check running
+[2026-03-12 20:36] Completed: 
+[2026-03-12 20:36] In Progress: 0 | Planned ORB: 0
+[2026-03-12 21:06] ORB overnight check running
+[2026-03-12 21:06] Completed: 
+[2026-03-12 21:06] In Progress: 0 | Planned ORB: 0
+[2026-03-12 21:36] ORB overnight check running
+[2026-03-12 21:36] Completed: 
+[2026-03-12 21:36] In Progress: 0 | Planned ORB: 0
+[2026-03-12 22:06] ORB overnight check running
+[2026-03-12 22:06] Completed: 
+[2026-03-12 22:06] In Progress: 0 | Planned ORB: 0
+[2026-03-12 22:36] ORB overnight check running
+[2026-03-12 22:36] Completed: 
+[2026-03-12 22:36] In Progress: 0 | Planned ORB: 0
+[2026-03-12 23:06] ORB overnight check running
+[2026-03-12 23:06] Completed: 
+[2026-03-12 23:06] In Progress: 0 | Planned ORB: 0
+[2026-03-12 23:36] ORB overnight check running
+[2026-03-12 23:36] Completed: 
+[2026-03-12 23:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 00:06] ORB overnight check running
+[2026-03-13 00:06] Completed: 
+[2026-03-13 00:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 00:36] ORB overnight check running
+[2026-03-13 00:36] Completed: 
+[2026-03-13 00:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 01:06] ORB overnight check running
+[2026-03-13 01:06] Completed: 
+[2026-03-13 01:06] In Progress: 1 | Planned ORB: 0
+[2026-03-13 01:36] ORB overnight check running
+[2026-03-13 01:36] Completed: 
+[2026-03-13 01:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 02:06] ORB overnight check running
+[2026-03-13 02:06] Completed: 
+[2026-03-13 02:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 02:36] ORB overnight check running
+[2026-03-13 02:36] Completed: 
+[2026-03-13 02:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 03:06] ORB overnight check running
+[2026-03-13 03:06] Completed: 
+[2026-03-13 03:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 03:36] ORB overnight check running
+[2026-03-13 03:36] Completed: 
+[2026-03-13 03:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 04:06] ORB overnight check running
+[2026-03-13 04:06] Completed: 
+[2026-03-13 04:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 04:36] ORB overnight check running
+[2026-03-13 04:36] Completed: 
+[2026-03-13 04:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 05:06] ORB overnight check running
+[2026-03-13 05:06] Completed: 
+[2026-03-13 05:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 05:36] ORB overnight check running
+[2026-03-13 05:36] Completed: 
+[2026-03-13 05:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 06:06] ORB overnight check running
+[2026-03-13 06:06] Completed: 
+[2026-03-13 06:06] In Progress: 1 | Planned ORB: 0
+[2026-03-13 06:36] ORB overnight check running
+[2026-03-13 06:36] Completed: 
+[2026-03-13 06:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 07:06] ORB overnight check running
+[2026-03-13 07:06] Completed: 
+[2026-03-13 07:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 07:06] Morning report sent to ntfy
+[2026-03-13 07:36] ORB overnight check running
+[2026-03-13 07:36] Completed: 
+[2026-03-13 07:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 08:06] ORB overnight check running
+[2026-03-13 08:06] Completed: 
+[2026-03-13 08:06] In Progress: 1 | Planned ORB: 1
+[2026-03-13 08:06] Dispatched c_76ec20cb3d201_19ce7b898ce: {"ok":true,"pid":414221,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_76ec20cb3d201_19ce7b898ce.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-13 08:36] ORB overnight check running
+[2026-03-13 08:36] Completed: 
+[2026-03-13 08:36] In Progress: 1 | Planned ORB: 0
+[2026-03-13 09:06] ORB overnight check running
+[2026-03-13 09:06] Completed: 
+[2026-03-13 09:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 09:36] ORB overnight check running
+[2026-03-13 09:36] Completed: 
+[2026-03-13 09:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 10:06] ORB overnight check running
+[2026-03-13 10:06] Completed: 
+[2026-03-13 10:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 10:36] ORB overnight check running
+[2026-03-13 10:36] Completed: 
+[2026-03-13 10:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 11:06] ORB overnight check running
+[2026-03-13 11:06] Completed: 
+[2026-03-13 11:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 11:36] ORB overnight check running
+[2026-03-13 11:36] Completed: 
+[2026-03-13 11:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 12:06] ORB overnight check running
+[2026-03-13 12:06] Completed: 
+[2026-03-13 12:06] In Progress: 0 | Planned ORB: 1
+[2026-03-13 12:06] Dispatched c_b759872cf94c4_19ce893634d: {"ok":true,"pid":640523,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_b759872cf94c4_19ce893634d.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-13 12:36] ORB overnight check running
+[2026-03-13 12:36] Completed: 
+[2026-03-13 12:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 13:06] ORB overnight check running
+[2026-03-13 13:06] Completed: 
+[2026-03-13 13:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 13:36] ORB overnight check running
+[2026-03-13 13:36] Completed: 
+[2026-03-13 13:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 14:06] ORB overnight check running
+[2026-03-13 14:06] Completed: 
+[2026-03-13 14:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 14:36] ORB overnight check running
+[2026-03-13 14:36] Completed: 
+[2026-03-13 14:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 15:06] ORB overnight check running
+[2026-03-13 15:06] Completed: 
+[2026-03-13 15:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 15:36] ORB overnight check running
+[2026-03-13 15:36] Completed: 
+[2026-03-13 15:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 16:06] ORB overnight check running
+[2026-03-13 16:06] Completed: 
+[2026-03-13 16:06] In Progress: 0 | Planned ORB: 1
+[2026-03-13 16:06] Dispatched c_e950f278de0bd_19ce96f4dda: {"ok":true,"pid":883012,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_e950f278de0bd_19ce96f4dda.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-13 16:36] ORB overnight check running
+[2026-03-13 16:36] Completed: 
+[2026-03-13 16:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 17:06] ORB overnight check running
+[2026-03-13 17:06] Completed: 
+[2026-03-13 17:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 17:36] ORB overnight check running
+[2026-03-13 17:36] Completed: 
+[2026-03-13 17:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 18:06] ORB overnight check running
+[2026-03-13 18:06] Completed: 
+[2026-03-13 18:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 18:36] ORB overnight check running
+[2026-03-13 18:36] Completed: 
+[2026-03-13 18:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 19:06] ORB overnight check running
+[2026-03-13 19:06] Completed: 
+[2026-03-13 19:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 19:36] ORB overnight check running
+[2026-03-13 19:36] Completed: 
+[2026-03-13 19:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 20:06] ORB overnight check running
+[2026-03-13 20:06] Completed: 
+[2026-03-13 20:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 20:36] ORB overnight check running
+[2026-03-13 20:36] Completed: 
+[2026-03-13 20:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 21:06] ORB overnight check running
+[2026-03-13 21:06] Completed: 
+[2026-03-13 21:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 21:36] ORB overnight check running
+[2026-03-13 21:36] Completed: 
+[2026-03-13 21:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 22:06] ORB overnight check running
+[2026-03-13 22:06] Completed: 
+[2026-03-13 22:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 22:36] ORB overnight check running
+[2026-03-13 22:36] Completed: 
+[2026-03-13 22:36] In Progress: 0 | Planned ORB: 0
+[2026-03-13 23:06] ORB overnight check running
+[2026-03-13 23:06] Completed: 
+[2026-03-13 23:06] In Progress: 0 | Planned ORB: 0
+[2026-03-13 23:36] ORB overnight check running
+[2026-03-13 23:36] Completed: 
+[2026-03-13 23:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 00:06] ORB overnight check running
+[2026-03-14 00:06] Completed: 
+[2026-03-14 00:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 00:36] ORB overnight check running
+[2026-03-14 00:36] Completed: 
+[2026-03-14 00:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 01:06] ORB overnight check running
+[2026-03-14 01:06] Completed: 
+[2026-03-14 01:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 01:36] ORB overnight check running
+[2026-03-14 01:36] Completed: 
+[2026-03-14 01:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 02:06] ORB overnight check running
+[2026-03-14 02:06] Completed: 
+[2026-03-14 02:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 02:36] ORB overnight check running
+[2026-03-14 02:36] Completed: 
+[2026-03-14 02:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 03:06] ORB overnight check running
+[2026-03-14 03:06] Completed: 
+[2026-03-14 03:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 03:36] ORB overnight check running
+[2026-03-14 03:36] Completed: 
+[2026-03-14 03:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 04:06] ORB overnight check running
+[2026-03-14 04:06] Completed: 
+[2026-03-14 04:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 04:36] ORB overnight check running
+[2026-03-14 04:36] Completed: 
+[2026-03-14 04:36] In Progress: 1 | Planned ORB: 0
+[2026-03-14 05:06] ORB overnight check running
+[2026-03-14 05:06] Completed: 
+[2026-03-14 05:06] In Progress: 1 | Planned ORB: 0
+[2026-03-14 05:36] ORB overnight check running
+[2026-03-14 05:36] Completed: 
+[2026-03-14 05:36] In Progress: 1 | Planned ORB: 0
+[2026-03-14 06:06] ORB overnight check running
+[2026-03-14 06:06] Completed: 
+[2026-03-14 06:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 06:36] ORB overnight check running
+[2026-03-14 06:36] Completed: 
+[2026-03-14 06:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 07:06] ORB overnight check running
+[2026-03-14 07:06] Completed: 
+[2026-03-14 07:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 07:06] Morning report sent to ntfy
+[2026-03-14 07:36] ORB overnight check running
+[2026-03-14 07:36] Completed: 
+[2026-03-14 07:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 08:06] ORB overnight check running
+[2026-03-14 08:06] Completed: 
+[2026-03-14 08:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 08:36] ORB overnight check running
+[2026-03-14 08:36] Completed: 
+[2026-03-14 08:36] In Progress: 1 | Planned ORB: 0
+[2026-03-14 09:06] ORB overnight check running
+[2026-03-14 09:06] Completed: 
+[2026-03-14 09:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 09:36] ORB overnight check running
+[2026-03-14 09:36] Completed: 
+[2026-03-14 09:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 10:06] ORB overnight check running
+[2026-03-14 10:06] Completed: 
+[2026-03-14 10:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 10:36] ORB overnight check running
+[2026-03-14 10:36] Completed: 
+[2026-03-14 10:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 11:06] ORB overnight check running
+[2026-03-14 11:06] Completed: 
+[2026-03-14 11:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 11:36] ORB overnight check running
+[2026-03-14 11:36] Completed: 
+[2026-03-14 11:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 12:06] ORB overnight check running
+[2026-03-14 12:06] Completed: 
+[2026-03-14 12:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 12:36] ORB overnight check running
+[2026-03-14 12:36] Completed: 
+[2026-03-14 12:36] In Progress: 1 | Planned ORB: 0
+[2026-03-14 13:06] ORB overnight check running
+[2026-03-14 13:06] Completed: 
+[2026-03-14 13:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 13:36] ORB overnight check running
+[2026-03-14 13:36] Completed: 
+[2026-03-14 13:36] In Progress: 1 | Planned ORB: 0
+[2026-03-14 14:06] ORB overnight check running
+[2026-03-14 14:06] Completed: 
+[2026-03-14 14:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 14:36] ORB overnight check running
+[2026-03-14 14:36] Completed: 
+[2026-03-14 14:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 15:06] ORB overnight check running
+[2026-03-14 15:06] Completed: 
+[2026-03-14 15:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 15:36] ORB overnight check running
+[2026-03-14 15:36] Completed: 
+[2026-03-14 15:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 16:06] ORB overnight check running
+[2026-03-14 16:06] Completed: 
+[2026-03-14 16:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 16:36] ORB overnight check running
+[2026-03-14 16:36] Completed: 
+[2026-03-14 16:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 17:06] ORB overnight check running
+[2026-03-14 17:06] Completed: 
+[2026-03-14 17:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 17:36] ORB overnight check running
+[2026-03-14 17:36] Completed: 
+[2026-03-14 17:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 18:06] ORB overnight check running
+[2026-03-14 18:06] Completed: 
+[2026-03-14 18:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 18:36] ORB overnight check running
+[2026-03-14 18:36] Completed: 
+[2026-03-14 18:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 19:06] ORB overnight check running
+[2026-03-14 19:06] Completed: 
+[2026-03-14 19:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 19:36] ORB overnight check running
+[2026-03-14 19:36] Completed: 
+[2026-03-14 19:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 20:06] ORB overnight check running
+[2026-03-14 20:06] Completed: 
+[2026-03-14 20:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 20:36] ORB overnight check running
+[2026-03-14 20:36] Completed: 
+[2026-03-14 20:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 21:06] ORB overnight check running
+[2026-03-14 21:06] Completed: 
+[2026-03-14 21:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 21:36] ORB overnight check running
+[2026-03-14 21:36] Completed: 
+[2026-03-14 21:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 22:06] ORB overnight check running
+[2026-03-14 22:06] Completed: 
+[2026-03-14 22:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 22:36] ORB overnight check running
+[2026-03-14 22:36] Completed: 
+[2026-03-14 22:36] In Progress: 0 | Planned ORB: 0
+[2026-03-14 23:06] ORB overnight check running
+[2026-03-14 23:06] Completed: 
+[2026-03-14 23:06] In Progress: 0 | Planned ORB: 0
+[2026-03-14 23:36] ORB overnight check running
+[2026-03-14 23:36] Completed: 
+[2026-03-14 23:36] In Progress: 0 | Planned ORB: 0
+[2026-03-15 00:06] ORB overnight check running
+[2026-03-15 00:06] Completed: 
+[2026-03-15 00:06] In Progress: 0 | Planned ORB: 0
+[2026-03-15 00:36] ORB overnight check running
+[2026-03-15 00:36] Completed: 
+[2026-03-15 00:36] In Progress: 0 | Planned ORB: 1
+[2026-03-15 00:36] Dispatched c_3540f06261d9d_19cf0505aee: {"ok":true,"pid":null,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_3540f06261d9d_19cf0505aee.log","cwd":"NQ-Trading-PIPELINE"}
+[2026-03-15 01:06] ORB overnight check running
+[2026-03-15 01:06] Completed: 
+[2026-03-15 01:06] In Progress: 0 | Planned ORB: 0
+[2026-03-15 01:36] ORB overnight check running
+[2026-03-15 01:36] Completed: 
+[2026-03-15 01:36] In Progress: 0 | Planned ORB: 0
+[2026-03-15 02:06] ORB overnight check running
+[2026-03-15 02:06] Completed: 
+[2026-03-15 02:06] In Progress:  | Planned ORB: 
+[2026-03-15 02:52] ORB overnight check running
+[2026-03-15 02:52] Completed: 
+[2026-03-15 02:52] In Progress:  | Planned ORB: 
+[2026-03-15 03:22] ORB overnight check running
+[2026-03-15 03:22] Completed: 
+[2026-03-15 03:22] In Progress: 1 | Planned ORB: 1
+[2026-03-15 03:22] Dispatched c_3540f06261d9d_19cf0505aee: {"ok":true,"pid":null,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_3540f06261d9d_19cf0505aee.log","cwd":"NQ-Trading-PIPELINE"}
+[2026-03-15 03:52] ORB overnight check running
+[2026-03-15 03:52] Completed: 
+[2026-03-15 03:52] In Progress: 0 | Planned ORB: 0
+[2026-03-15 04:22] ORB overnight check running
+[2026-03-15 04:22] Completed: 
+[2026-03-15 04:22] In Progress: 3 | Planned ORB: 0
+[2026-03-15 04:52] ORB overnight check running
+[2026-03-15 04:52] Completed: 
+[2026-03-15 04:52] In Progress: 1 | Planned ORB: 0
+[2026-03-15 05:22] ORB overnight check running
+[2026-03-15 05:22] Completed: 
+[2026-03-15 05:22] In Progress: 0 | Planned ORB: 0
+[2026-03-15 05:52] ORB overnight check running
+[2026-03-15 05:52] Completed: 
+[2026-03-15 05:52] In Progress: 0 | Planned ORB: 0
+[2026-03-15 06:22] ORB overnight check running
+[2026-03-15 06:22] Completed: 
+[2026-03-15 06:22] In Progress: 2 | Planned ORB: 0
+[2026-03-15 06:52] ORB overnight check running
+[2026-03-15 06:52] Completed: 
+[2026-03-15 06:52] In Progress: 0 | Planned ORB: 0
+[2026-03-15 07:22] ORB overnight check running
+[2026-03-15 07:22] Completed: 
+[2026-03-15 07:22] In Progress: 0 | Planned ORB: 0
+[2026-03-15 07:22] Morning report sent to ntfy
+[2026-03-15 07:52] ORB overnight check running
+[2026-03-15 07:52] Completed: 
+[2026-03-15 07:52] In Progress: 0 | Planned ORB: 0
+[2026-03-15 08:22] ORB overnight check running
+[2026-03-15 08:22] Completed: 
+[2026-03-15 08:22] In Progress: 3 | Planned ORB: 0
+[2026-03-15 08:40] ORB overnight check running
+[2026-03-15 08:40] Completed: 
+[2026-03-15 08:40] In Progress: 3 | Planned ORB: 0
+[2026-03-15 09:10] ORB overnight check running
+[2026-03-15 09:10] Completed: 
+[2026-03-15 09:10] In Progress: 3 | Planned ORB: 0
+[2026-03-15 09:40] ORB overnight check running
+[2026-03-15 09:40] Completed: 
+[2026-03-15 09:40] In Progress: 3 | Planned ORB: 0
+[2026-03-15 10:10] ORB overnight check running
+[2026-03-15 10:10] Completed: 
+[2026-03-15 10:10] In Progress: 3 | Planned ORB: 0
+[2026-03-15 10:40] ORB overnight check running
+[2026-03-15 10:40] Completed: 
+[2026-03-15 10:40] In Progress:  | Planned ORB: 
+[2026-03-15 11:10] ORB overnight check running
+[2026-03-15 11:10] Completed: 
+[2026-03-15 11:10] In Progress: 0 | Planned ORB: 0
+[2026-03-15 11:40] ORB overnight check running
+[2026-03-15 11:40] Completed: 
+[2026-03-15 11:40] In Progress: 0 | Planned ORB: 0
+[2026-03-15 12:10] ORB overnight check running
+[2026-03-15 12:10] Completed: 
+[2026-03-15 12:10] In Progress: 0 | Planned ORB: 0
+[2026-03-15 12:40] ORB overnight check running
+[2026-03-15 12:40] Completed: 
+[2026-03-15 12:40] In Progress: 1 | Planned ORB: 0
+[2026-03-15 13:10] ORB overnight check running
+[2026-03-15 13:10] Completed: 
+[2026-03-15 13:10] In Progress: 1 | Planned ORB: 0
+[2026-03-15 13:40] ORB overnight check running
+[2026-03-15 13:40] Completed: 
+[2026-03-15 13:40] In Progress: 0 | Planned ORB: 0
+[2026-03-15 14:10] ORB overnight check running
+[2026-03-15 14:10] Completed: 
+[2026-03-15 14:10] In Progress: 0 | Planned ORB: 0
+[2026-03-15 14:40] ORB overnight check running
+[2026-03-15 14:40] Completed: 
+[2026-03-15 14:40] In Progress: 0 | Planned ORB: 0
+[2026-03-15 15:10] ORB overnight check running
+[2026-03-15 15:10] Completed: 
+[2026-03-15 15:10] In Progress: 0 | Planned ORB: 0
+[2026-03-15 15:40] ORB overnight check running
+[2026-03-15 15:40] Completed: 
+[2026-03-15 15:40] In Progress: 0 | Planned ORB: 0
+[2026-03-15 16:10] ORB overnight check running
+[2026-03-15 16:10] Completed: 
+[2026-03-15 16:10] In Progress: 0 | Planned ORB: 1
+[2026-03-15 16:10] Dispatched c_6870d7f1e097_19cf3bccf8b: {"ok":true,"pid":649236,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_6870d7f1e097_19cf3bccf8b.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-15 16:40] ORB overnight check running
+[2026-03-15 16:40] Completed: 
+[2026-03-15 16:40] In Progress: 2 | Planned ORB: 0
+[2026-03-15 17:10] ORB overnight check running
+[2026-03-15 17:10] Completed: 
+[2026-03-15 17:10] In Progress: 2 | Planned ORB: 0
+[2026-03-15 17:40] ORB overnight check running
+[2026-03-15 17:40] Completed: 
+[2026-03-15 17:40] In Progress: 0 | Planned ORB: 0
+[2026-03-15 18:10] ORB overnight check running
+[2026-03-15 18:10] Completed: 
+[2026-03-15 18:10] In Progress: 0 | Planned ORB: 0
+[2026-03-15 18:40] ORB overnight check running
+[2026-03-15 18:40] Completed: 
+[2026-03-15 18:40] In Progress: 0 | Planned ORB: 0
+[2026-03-15 19:10] ORB overnight check running
+[2026-03-15 19:10] Completed: 
+[2026-03-15 19:10] In Progress: 0 | Planned ORB: 0
+[2026-03-15 19:40] ORB overnight check running
+[2026-03-15 19:40] Completed: 
+[2026-03-15 19:40] In Progress: 0 | Planned ORB: 0
+[2026-03-15 20:10] ORB overnight check running
+[2026-03-15 20:10] Completed: 
+[2026-03-15 20:10] In Progress: 0 | Planned ORB: 1
+[2026-03-15 20:10] Dispatched c_5bc70b318f97c_19cf49867f3: {"ok":true,"pid":990198,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_5bc70b318f97c_19cf49867f3.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-15 20:40] ORB overnight check running
+[2026-03-15 20:40] Completed: 
+[2026-03-15 20:40] In Progress: 2 | Planned ORB: 0
+[2026-03-15 21:10] ORB overnight check running
+[2026-03-15 21:10] Completed: 
+[2026-03-15 21:10] In Progress: 2 | Planned ORB: 0
+[2026-03-15 21:40] ORB overnight check running
+[2026-03-15 21:40] Completed: 
+[2026-03-15 21:40] In Progress: 0 | Planned ORB: 0
+[2026-03-15 22:10] ORB overnight check running
+[2026-03-15 22:10] Completed: 
+[2026-03-15 22:10] In Progress: 0 | Planned ORB: 0
+[2026-03-15 22:40] ORB overnight check running
+[2026-03-15 22:40] Completed: 
+[2026-03-15 22:40] In Progress: 0 | Planned ORB: 0
+[2026-03-15 23:10] ORB overnight check running
+[2026-03-15 23:10] Completed: 
+[2026-03-15 23:10] In Progress: 0 | Planned ORB: 0
+[2026-03-15 23:40] ORB overnight check running
+[2026-03-15 23:40] Completed: 
+[2026-03-15 23:40] In Progress: 0 | Planned ORB: 0
+[2026-03-16 00:10] ORB overnight check running
+[2026-03-16 00:10] Completed: 
+[2026-03-16 00:10] In Progress: 0 | Planned ORB: 0
+[2026-03-16 00:40] ORB overnight check running
+[2026-03-16 00:40] Completed: 
+[2026-03-16 00:40] In Progress: 1 | Planned ORB: 0
+[2026-03-16 01:10] ORB overnight check running
+[2026-03-16 01:10] Completed: 
+[2026-03-16 01:10] In Progress: 0 | Planned ORB: 0
+[2026-03-16 01:40] ORB overnight check running
+[2026-03-16 01:40] Completed: 
+[2026-03-16 01:40] In Progress: 0 | Planned ORB: 0
+[2026-03-16 02:10] ORB overnight check running
+[2026-03-16 02:10] Completed: 
+[2026-03-16 02:10] In Progress: 0 | Planned ORB: 0
+[2026-03-16 02:40] ORB overnight check running
+[2026-03-16 02:40] Completed: 
+[2026-03-16 02:40] In Progress: 0 | Planned ORB: 0
+[2026-03-16 03:10] ORB overnight check running
+[2026-03-16 03:10] Completed: 
+[2026-03-16 03:10] In Progress: 0 | Planned ORB: 0
+[2026-03-16 03:40] ORB overnight check running
+[2026-03-16 03:40] Completed: 
+[2026-03-16 03:40] In Progress: 0 | Planned ORB: 0
+[2026-03-16 04:10] ORB overnight check running
+[2026-03-16 04:10] Completed: 
+[2026-03-16 04:10] In Progress: 0 | Planned ORB: 3
+[2026-03-16 04:10] Dispatched c_855f3002b47b3_19cf650e15f: {"ok":true,"pid":1630311,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_855f3002b47b3_19cf650e15f.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-16 04:40] ORB overnight check running
+[2026-03-16 04:40] Completed: 
+[2026-03-16 04:40] In Progress: 1 | Planned ORB: 1
+[2026-03-16 04:40] Dispatched c_e8f13a7bea602_19cf65033d6: {"ok":true,"pid":1670256,"logPath":"/home/rob/.openclaw/workspace/kanban-dashboard/logs/c_e8f13a7bea602_19cf65033d6.log","cwd":"/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE"}
+[2026-03-16 05:10] ORB overnight check running
+[2026-03-16 05:10] Completed: 
+[2026-03-16 05:10] In Progress: 1 | Planned ORB: 0
+[2026-03-16 05:40] ORB overnight check running
+[2026-03-16 05:40] Completed: 
+[2026-03-16 05:40] In Progress: 0 | Planned ORB: 0
+[2026-03-16 06:10] ORB overnight check running
+[2026-03-16 06:10] Completed: 
+[2026-03-16 06:10] In Progress: 0 | Planned ORB: 0
+[2026-03-16 06:40] ORB overnight check running
+[2026-03-16 06:40] Completed: 
+[2026-03-16 06:40] In Progress: 0 | Planned ORB: 0
+[2026-03-16 07:10] ORB overnight check running
+[2026-03-16 07:10] Completed: 
+[2026-03-16 07:10] In Progress: 0 | Planned ORB: 0
+[2026-03-16 07:10] Morning report sent to ntfy
+[2026-03-16 07:40] ORB overnight check running
+[2026-03-16 07:40] Completed: 
+[2026-03-16 07:40] In Progress: 0 | Planned ORB: 0
+[2026-03-16 08:10] ORB overnight check running
+[2026-03-16 08:10] Completed: 
+[2026-03-16 08:10] In Progress: 0 | Planned ORB: 0
+[2026-03-16 08:40] ORB overnight check running
+[2026-03-16 08:40] Completed: 
+[2026-03-16 08:40] In Progress: 1 | Planned ORB: 0
+[2026-03-16 09:10] ORB overnight check running
+[2026-03-16 09:10] Completed: 
+[2026-03-16 09:10] In Progress: 0 | Planned ORB: 0
+[2026-03-16 09:40] ORB overnight check running
+[2026-03-16 09:40] Completed: 
+[2026-03-16 09:40] In Progress: 0 | Planned ORB: 0
+[2026-03-16 10:10] ORB overnight check running
+[2026-03-16 10:10] Completed: 
+[2026-03-16 10:10] In Progress: 0 | Planned ORB: 0
+[2026-03-16 10:40] ORB overnight check running
+[2026-03-16 10:40] Completed: 
+[2026-03-16 10:40] In Progress: 2 | Planned ORB: 0
+[2026-03-16 11:10] ORB overnight check running
+[2026-03-16 11:10] Completed: 
+[2026-03-16 11:10] In Progress: 0 | Planned ORB: 0
+[2026-03-16 11:40] ORB overnight check running
+[2026-03-16 11:40] Completed: 
+[2026-03-16 11:40] In Progress: 1 | Planned ORB: 
+[2026-03-16 12:10] ORB overnight check running
+[2026-03-16 12:10] Completed: 
+[2026-03-16 12:10] In Progress: 3 | Planned ORB: 0
+[2026-03-16 12:40] ORB overnight check running
+[2026-03-16 12:40] Completed: 
+[2026-03-16 12:40] In Progress: 0 | Planned ORB: 0
+[2026-03-16 13:10] ORB overnight check running
+[2026-03-16 13:10] Completed: 
+[2026-03-16 13:10] In Progress: 1 | Planned ORB: 0
+[2026-03-16 13:40] ORB overnight check running
+[2026-03-16 13:40] Completed: 
+[2026-03-16 13:40] In Progress: 1 | Planned ORB: 0
+[2026-03-16 14:10] ORB overnight check running
+[2026-03-16 14:10] Completed: 
+[2026-03-16 14:10] In Progress: 1 | Planned ORB: 0

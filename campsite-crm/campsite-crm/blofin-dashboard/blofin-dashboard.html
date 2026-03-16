@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blofin ML Trading Pipeline</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+/* ─── Reset & Base ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0B1120;
+  --card: #151D2E;
+  --card2: #1A2440;
+  --border: #1E2D45;
+  --border2: #243352;
+  --blue: #3B82F6;
+  --blue-dim: rgba(59,130,246,0.15);
+  --green: #10B981;
+  --green-dim: rgba(16,185,129,0.12);
+  --red: #EF4444;
+  --red-dim: rgba(239,68,68,0.12);
+  --amber: #F59E0B;
+  --amber-dim: rgba(245,158,11,0.12);
+  --text: #F8FAFC;
+  --muted: #94A3B8;
+  --dim: #475569;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+html { font-size: 13px; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+a { color: var(--blue); text-decoration: none; }
+button { cursor: pointer; font-family: inherit; }
+
+/* ─── Layout ─────────────────────────────────────────────────────────── */
+.page { max-width: 1400px; margin: 0 auto; padding: 0 16px 32px; }
+
+/* ─── Header ─────────────────────────────────────────────────────────── */
+.header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+}
+.header-title {
+  font-size: 15px; font-weight: 700; letter-spacing: -0.3px; color: var(--text);
+  flex: 1;
+}
+.header-title span { color: var(--blue); }
+.status-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  border: 1px solid currentColor;
+}
+.status-pill.live { color: var(--green); background: var(--green-dim); }
+.status-pill.stale { color: var(--red); background: var(--red-dim); }
+.status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.status-dot.pulse { animation: pulse 1.4s ease infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.refresh-info { font-size: 10px; color: var(--dim); white-space: nowrap; }
+.refresh-btn {
+  background: var(--card); border: 1px solid var(--border2); color: var(--muted);
+  padding: 4px 10px; border-radius: 4px; font-size: 11px;
+  transition: border-color 0.2s, color 0.2s;
+}
+.refresh-btn:hover { border-color: var(--blue); color: var(--blue); }
+
+/* ─── Health Bar ─────────────────────────────────────────────────────── */
+.health-bar {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 6px; padding: 8px 12px; margin-bottom: 14px;
+  align-items: center;
+}
+.health-item {
+  display: flex; align-items: center; gap: 5px;
+  font-size: 11px; color: var(--muted); white-space: nowrap;
+}
+.health-item strong { color: var(--text); }
+.health-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--dim); }
+.health-dot.ok { background: var(--green); }
+.health-dot.warn { background: var(--amber); }
+.health-dot.err { background: var(--red); }
+.health-sep { width: 1px; height: 14px; background: var(--border2); margin: 0 2px; }
+
+/* ─── Section Headers ─────────────────────────────────────────────── */
+.section-header {
+  display: flex; align-items: center; gap: 8px;
+  margin: 16px 0 10px;
+}
+.section-title { font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.8px; color: var(--muted); }
+.section-line { flex: 1; height: 1px; background: var(--border); }
+.section-badge {
+  font-size: 10px; padding: 1px 6px; border-radius: 3px;
+  background: var(--card2); color: var(--muted); border: 1px solid var(--border2);
+}
+
+/* ─── Pipeline Funnel ────────────────────────────────────────────────── */
+.pipeline-wrap {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  gap: 0; align-items: stretch;
+  margin-bottom: 16px;
+}
+.tier-box {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 14px 12px;
+  display: flex; flex-direction: column; gap: 6px;
+  position: relative; overflow: hidden;
+  transition: border-color 0.2s;
+}
+.tier-box::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--tier-color-dim, transparent);
+  pointer-events: none;
+}
+.tier-box:hover { border-color: var(--tier-color, var(--border2)); }
+.tier-box.t0 { --tier-color: var(--blue); --tier-color-dim: var(--blue-dim); }
+.tier-box.t1 { --tier-color: var(--amber); --tier-color-dim: var(--amber-dim); }
+.tier-box.t2 { --tier-color: var(--green); --tier-color-dim: var(--green-dim); }
+.tier-box.t3 { --tier-color: var(--dim); --tier-color-dim: transparent; opacity: 0.5; }
+.tier-label {
+  font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--tier-color, var(--muted));
+}
+.tier-sublabel { font-size: 10px; color: var(--dim); }
+.tier-count {
+  font-size: 28px; font-weight: 800; line-height: 1;
+  color: var(--tier-color, var(--text));
+}
+.tier-count-label { font-size: 10px; color: var(--muted); }
+.tier-metrics { display: flex; flex-direction: column; gap: 3px; margin-top: 4px; }
+.tier-metric { display: flex; justify-content: space-between; font-size: 10px; }
+.tier-metric-label { color: var(--dim); }
+.tier-metric-val { color: var(--text); font-weight: 600; }
+.tier-metric-val.pos { color: var(--green); }
+.tier-metric-val.neg { color: var(--red); }
+
+/* Gate connector */
+.gate-connector {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 0 6px; gap: 4px;
+  min-width: 90px;
+}
+.gate-arrow { color: var(--border2); font-size: 18px; line-height: 1; }
+.gate-requirements {
+  display: flex; flex-direction: column; gap: 2px; align-items: center;
+}
+.gate-req {
+  font-size: 9px; color: var(--dim); background: var(--card);
+  border: 1px solid var(--border); border-radius: 3px;
+  padding: 1px 5px; white-space: nowrap; text-align: center;
+}
+
+/* ─── Strategy Cards (Pipeline Cards) ───────────────────────────────── */
+.tier-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.strat-card {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 6px; padding: 10px 12px;
+  border-left: 3px solid var(--card-accent, var(--border));
+  transition: border-color 0.2s, background 0.2s;
+}
+.strat-card:hover { background: var(--card2); }
+.strat-card.t0 { --card-accent: var(--blue); }
+.strat-card.t1 { --card-accent: var(--amber); }
+.strat-card.t2 { --card-accent: var(--green); }
+.strat-card-name {
+  font-size: 12px; font-weight: 600; color: var(--text);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  margin-bottom: 6px;
+}
+.strat-card-metrics {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px;
+}
+.strat-card-metric { text-align: center; }
+.strat-card-metric-val {
+  font-size: 13px; font-weight: 700; line-height: 1.2;
+}
+.strat-card-metric-val.primary { font-size: 15px; color: var(--blue); }
+.strat-card-metric-val.pos { color: var(--green); }
+.strat-card-metric-val.neg { color: var(--red); }
+.strat-card-metric-val.neutral { color: var(--text); }
+.strat-card-metric-label { font-size: 9px; color: var(--dim); text-transform: uppercase; }
+.gate-bar-wrap { margin-top: 6px; }
+.gate-bar-bg { height: 3px; background: var(--border2); border-radius: 2px; overflow: hidden; }
+.gate-bar-fill {
+  height: 100%; border-radius: 2px;
+  transition: width 0.5s ease;
+}
+.gate-pass { background: var(--green); }
+.gate-fail { background: var(--red); }
+.gate-unknown { background: var(--border2); }
+
+/* ─── Strategy Table ─────────────────────────────────────────────────── */
+.table-controls {
+  display: flex; gap: 8px; align-items: center; flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.tier-filter-btn {
+  padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: 600;
+  border: 1px solid var(--border2); background: var(--card); color: var(--muted);
+  transition: all 0.15s;
+}
+.tier-filter-btn:hover { border-color: var(--blue); color: var(--blue); }
+.tier-filter-btn.active { background: var(--blue); border-color: var(--blue); color: #fff; }
+.tier-filter-btn.t0-active { background: var(--blue); border-color: var(--blue); color: #fff; }
+.tier-filter-btn.t2-active { background: var(--green); border-color: var(--green); color: #fff; }
+.search-input {
+  flex: 1; min-width: 140px; max-width: 220px;
+  background: var(--card); border: 1px solid var(--border2); color: var(--text);
+  padding: 4px 10px; border-radius: 4px; font-size: 11px; font-family: inherit;
+}
+.search-input:focus { outline: none; border-color: var(--blue); }
+.search-input::placeholder { color: var(--dim); }
+.table-count { font-size: 10px; color: var(--dim); margin-left: auto; }
+
+.table-wrap {
+  overflow-x: auto;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 6px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+thead th {
+  padding: 8px 10px; text-align: left;
+  background: var(--card2); color: var(--muted);
+  font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  white-space: nowrap; border-bottom: 1px solid var(--border2);
+  cursor: pointer; user-select: none;
+  position: sticky; top: 0; z-index: 1;
+  transition: color 0.15s;
+}
+thead th:hover { color: var(--blue); }
+thead th.sorted { color: var(--blue); }
+thead th .sort-arrow { display: inline-block; margin-left: 3px; opacity: 0.5; }
+thead th.sorted .sort-arrow { opacity: 1; }
+tbody tr { border-bottom: 1px solid var(--border); transition: background 0.1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--card2); }
+td { padding: 7px 10px; white-space: nowrap; }
+.td-name { font-weight: 600; color: var(--text); max-width: 180px; overflow: hidden; text-overflow: ellipsis; }
+.tier-badge {
+  display: inline-block; padding: 1px 6px; border-radius: 3px;
+  font-size: 10px; font-weight: 700;
+}
+.tier-badge.t0 { background: var(--blue-dim); color: var(--blue); }
+.tier-badge.t1 { background: var(--amber-dim); color: var(--amber); }
+.tier-badge.t2 { background: var(--green-dim); color: var(--green); }
+.tier-badge.t3 { background: rgba(255,255,255,0.05); color: var(--dim); }
+.td-rank {
+  font-weight: 800; font-size: 13px;
+}
+.rank-top { color: var(--green); }
+.rank-mid { color: var(--amber); }
+.rank-none { color: var(--dim); }
+.td-pos { color: var(--green); }
+.td-neg { color: var(--red); }
+.td-muted { color: var(--dim); font-size: 11px; }
+.td-wr { color: var(--dim); font-size: 11px; } /* de-emphasized */
+.status-chip {
+  display: inline-block; padding: 1px 5px; border-radius: 3px; font-size: 10px;
+  font-weight: 600;
+}
+.status-chip.active { background: var(--green-dim); color: var(--green); }
+.status-chip.testing { background: var(--blue-dim); color: var(--blue); }
+.status-chip.library { background: rgba(255,255,255,0.04); color: var(--dim); }
+
+/* ─── ML Models ──────────────────────────────────────────────────────── */
+.ml-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 8px;
+}
+.ml-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+  padding: 12px; position: relative; overflow: hidden;
+}
+.ml-card.leakage {
+  border-color: rgba(239,68,68,0.4);
+  background: linear-gradient(135deg, var(--card), rgba(239,68,68,0.04));
+}
+.leakage-banner {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--red-dim); border: 1px solid rgba(239,68,68,0.3);
+  border-radius: 4px; padding: 4px 8px; margin-bottom: 8px;
+  font-size: 10px; font-weight: 700; color: var(--red); text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.ml-card-name {
+  font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 2px;
+}
+.ml-card-type {
+  font-size: 10px; color: var(--dim); margin-bottom: 8px;
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+.ml-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.ml-metric { }
+.ml-metric-label { font-size: 9px; color: var(--dim); text-transform: uppercase; }
+.ml-metric-val { font-size: 14px; font-weight: 700; color: var(--text); }
+.ml-metric-val.danger { color: var(--red); }
+.ml-leakage-note {
+  font-size: 10px; color: var(--muted); margin-top: 8px; line-height: 1.4;
+  font-style: italic;
+}
+
+/* ─── Live Feed ──────────────────────────────────────────────────────── */
+.feed-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 700px) { .feed-grid { grid-template-columns: 1fr; } }
+.feed-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+  padding: 12px; overflow: hidden;
+}
+.feed-card-title {
+  font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase;
+  letter-spacing: 0.5px; margin-bottom: 8px;
+}
+.feed-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 0; border-bottom: 1px solid var(--border); font-size: 11px;
+}
+.feed-item:last-child { border-bottom: none; }
+.feed-time { color: var(--dim); font-size: 10px; min-width: 56px; font-variant-numeric: tabular-nums; }
+.feed-symbol { font-weight: 700; color: var(--text); min-width: 70px; }
+.feed-signal { font-weight: 700; font-size: 10px; padding: 1px 5px; border-radius: 3px; }
+.feed-signal.buy { background: var(--green-dim); color: var(--green); }
+.feed-signal.sell { background: var(--red-dim); color: var(--red); }
+.feed-strategy { color: var(--dim); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.feed-pnl { font-weight: 600; min-width: 55px; text-align: right; }
+.feed-pnl.pos { color: var(--green); }
+.feed-pnl.neg { color: var(--red); }
+.feed-status { font-size: 10px; color: var(--dim); }
+
+/* ─── Stats Row ──────────────────────────────────────────────────────── */
+.stats-row {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px; margin-bottom: 14px;
+}
+.stat-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+  padding: 10px 12px;
+}
+.stat-label { font-size: 10px; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 3px; }
+.stat-val { font-size: 18px; font-weight: 800; color: var(--text); line-height: 1; }
+.stat-val.pos { color: var(--green); }
+.stat-val.neg { color: var(--red); }
+.stat-val.blue { color: var(--blue); }
+.stat-sub { font-size: 10px; color: var(--dim); margin-top: 2px; }
+
+/* ─── Utility ────────────────────────────────────────────────────────── */
+.empty-state { text-align: center; padding: 20px; color: var(--dim); font-size: 12px; }
+.loading { color: var(--dim); font-size: 11px; text-align: center; padding: 16px; }
+.error-state { color: var(--red); font-size: 11px; text-align: center; padding: 16px; }
+.show-more-btn {
+  width: 100%; padding: 6px; background: transparent; border: 1px dashed var(--border2);
+  border-radius: 0 0 6px 6px; color: var(--dim); font-size: 11px;
+  transition: all 0.15s;
+}
+.show-more-btn:hover { background: var(--card2); color: var(--muted); }
+.no-file-dot { display: inline-block; width: 5px; height: 5px; border-radius: 50%;
+  background: var(--amber); margin-right: 4px; vertical-align: middle; }
+
+/* ─── Responsive ─────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .pipeline-wrap {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto auto;
+  }
+  .gate-connector { display: none; }
+  .tier-cards-grid { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 600px) {
+  html { font-size: 12px; }
+  .pipeline-wrap { grid-template-columns: 1fr 1fr; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .ml-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ── Header ──────────────────────────────────────────────────────────── -->
+<div class="header">
+  <div class="header-title"><span>Blofin</span> ML Trading Pipeline</div>
+  <div id="header-status" class="status-pill stale">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">Loading…</span>
+  </div>
+  <div class="refresh-info">Refresh in <span id="countdown">30</span>s · <span id="last-refresh">—</span></div>
+  <button class="refresh-btn" onclick="refreshAll()">⟳ Refresh</button>
+</div>
+
+<!-- ── Health Bar ───────────────────────────────────────────────────────── -->
+<div class="health-bar" id="health-bar">
+  <div class="health-item">
+    <span class="health-dot" id="hb-data-dot"></span>
+    <span>Data: <strong id="hb-tick-rate">—</strong> ticks/s</span>
+  </div>
+  <div class="health-sep"></div>
+  <div class="health-item">
+    <span class="health-dot" id="hb-signal-dot"></span>
+    <span>Signals: <strong id="hb-signals">—</strong> total · <strong id="hb-signals-1h">—</strong> /1h</span>
+  </div>
+  <div class="health-sep"></div>
+  <div class="health-item">
+    <span class="health-dot" id="hb-trade-dot"></span>
+    <span>Paper Trades: <strong id="hb-trades">—</strong> closed</span>
+  </div>
+  <div class="health-sep"></div>
+  <div class="health-item">
+    <span class="health-dot" id="hb-svc-dot"></span>
+    <span>Services: <strong id="hb-services">—</strong></span>
+  </div>
+  <div class="health-sep"></div>
+  <div class="health-item">
+    <span>Last tick: <strong id="hb-last-tick">—</strong></span>
+  </div>
+</div>
+
+<!-- ── Pipeline Funnel ─────────────────────────────────────────────────── -->
+<div class="section-header">
+  <div class="section-title">Strategy Pipeline</div>
+  <div class="section-line"></div>
+  <div class="section-badge" id="pipeline-badge">Loading…</div>
+</div>
+
+<div class="pipeline-wrap" id="pipeline">
+  <!-- Rendered by JS -->
+  <div class="loading">Loading pipeline…</div>
+</div>
+
+<!-- ── Pipeline Strategy Cards ─────────────────────────────────────────── -->
+<div id="pipeline-cards"></div>
+
+<!-- ── Summary Stats ────────────────────────────────────────────────────── -->
+<div class="section-header">
+  <div class="section-title">Performance Overview</div>
+  <div class="section-line"></div>
+</div>
+<div class="stats-row" id="stats-row">
+  <div class="stat-card"><div class="stat-label">Total Trades</div><div class="stat-val" id="stat-trades">—</div></div>
+  <div class="stat-card"><div class="stat-label">Win Rate</div><div class="stat-val" id="stat-wr">—</div></div>
+  <div class="stat-card"><div class="stat-label">Profit Factor</div><div class="stat-val" id="stat-pf">—</div></div>
+  <div class="stat-card"><div class="stat-label">Avg PnL%</div><div class="stat-val" id="stat-pnl">—</div></div>
+  <div class="stat-card"><div class="stat-label">Sortino</div><div class="stat-val" id="stat-sortino">—</div></div>
+  <div class="stat-card"><div class="stat-label">Max Drawdown</div><div class="stat-val" id="stat-dd">—</div></div>
+</div>
+
+<!-- ── Strategy Detail Table ────────────────────────────────────────────── -->
+<div class="section-header">
+  <div class="section-title">Strategy Detail</div>
+  <div class="section-line"></div>
+  <div class="section-badge" id="table-badge">—</div>
+</div>
+
+<div class="table-controls">
+  <button class="tier-filter-btn active" data-tier="all" onclick="setTierFilter('all',this)">All</button>
+  <button class="tier-filter-btn" data-tier="2" onclick="setTierFilter(2,this)">Tier 2 — Fwd Test</button>
+  <button class="tier-filter-btn" data-tier="1" onclick="setTierFilter(1,this)">Tier 1 — Backtest</button>
+  <button class="tier-filter-btn" data-tier="0" onclick="setTierFilter(0,this)">Tier 0 — Library</button>
+  <input class="search-input" type="text" placeholder="Filter by name…" oninput="setSearch(this.value)">
+  <div class="table-count" id="table-count"></div>
+</div>
+
+<div class="table-wrap">
+  <table id="strategy-table">
+    <thead>
+      <tr>
+        <th onclick="sortTable('name')">Name <span class="sort-arrow">↕</span></th>
+        <th onclick="sortTable('tier')">Tier <span class="sort-arrow">↕</span></th>
+        <th onclick="sortTable('pnl_rank')" class="sorted">Rank <span class="sort-arrow">↓</span></th>
+        <th onclick="sortTable('pf')">Profit Factor <span class="sort-arrow">↕</span></th>
+        <th onclick="sortTable('sharpe')">Sharpe <span class="sort-arrow">↕</span></th>
+        <th onclick="sortTable('maxdd')">Max DD <span class="sort-arrow">↕</span></th>
+        <th onclick="sortTable('trades')">Trades <span class="sort-arrow">↕</span></th>
+        <th onclick="sortTable('pnl')">PnL% <span class="sort-arrow">↕</span></th>
+        <th onclick="sortTable('wr')" title="Win Rate — de-emphasized">WR% <span class="sort-arrow">↕</span></th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="strategy-tbody">
+      <tr><td colspan="10" class="loading">Loading strategies…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ── ML Model Status ──────────────────────────────────────────────────── -->
+<div class="section-header">
+  <div class="section-title">ML Model Status</div>
+  <div class="section-line"></div>
+  <div class="section-badge" id="ml-badge">—</div>
+</div>
+<div class="ml-grid" id="ml-grid">
+  <div class="loading">Loading ML models…</div>
+</div>
+
+<!-- ── Live Data Feed ───────────────────────────────────────────────────── -->
+<div class="section-header">
+  <div class="section-title">Live Data Feed</div>
+  <div class="section-line"></div>
+</div>
+<div class="feed-grid">
+  <div class="feed-card">
+    <div class="feed-card-title">Recent Signals</div>
+    <div id="signals-feed"><div class="loading">Loading…</div></div>
+  </div>
+  <div class="feed-card">
+    <div class="feed-card-title">Paper Trade Activity</div>
+    <div id="trades-feed"><div class="loading">Loading…</div></div>
+  </div>
+</div>
+
+</div><!-- /page -->
+
+<script>
+// ─── State ──────────────────────────────────────────────────────────────────
+const state = {
+  registry: null,
+  mlModels: null,
+  metrics: null,
+  summary: null,
+  sortCol: 'pnl_rank',
+  sortAsc: false,
+  tierFilter: 'all',
+  search: '',
+  countdownSec: 30,
+  countdownTimer: null,
+};
+
+// ─── Utility ────────────────────────────────────────────────────────────────
+function fmt(v, d=2) { return v == null ? '—' : (+v).toFixed(d); }
+function fmtPct(v, d=1) { return v == null ? '—' : (+v).toFixed(d) + '%'; }
+function fmtK(v) {
+  if (v == null) return '—';
+  v = +v;
+  if (v >= 1e6) return (v/1e6).toFixed(1)+'M';
+  if (v >= 1e3) return (v/1e3).toFixed(1)+'K';
+  return v.toString();
+}
+function timeAgo(isoStr) {
+  if (!isoStr) return '—';
+  const d = new Date(isoStr.endsWith('Z') ? isoStr : isoStr + 'Z');
+  const s = Math.round((Date.now() - d) / 1000);
+  if (s < 5) return 'just now';
+  if (s < 60) return s + 's ago';
+  if (s < 3600) return Math.round(s/60) + 'm ago';
+  if (s < 86400) return Math.round(s/3600) + 'h ago';
+  return Math.round(s/86400) + 'd ago';
+}
+function timeShort(isoStr) {
+  if (!isoStr) return '—';
+  const s = isoStr.replace('T', ' ').slice(11, 19);
+  return s;
+}
+function rankClass(rank) {
+  if (rank == null) return 'rank-none';
+  if (rank <= 3) return 'rank-top';
+  if (rank <= 10) return 'rank-mid';
+  return 'rank-none';
+}
+function gateBarClass(status) {
+  if (status === 'pass') return 'gate-pass';
+  if (status === 'fail') return 'gate-fail';
+  return 'gate-unknown';
+}
+function signClass(v) { return v > 0 ? 'pos' : v < 0 ? 'neg' : ''; }
+function tierName(t) {
+  return { 0: 'T0', 1: 'T1', 2: 'T2', 3: 'T3' }[t] ?? 'T?';
+}
+function tierLabel(t) {
+  return { 0: 'Library', 1: 'Backtest', 2: 'Forward Test', 3: 'Live' }[t] ?? '?';
+}
+
+// ─── Fetch ──────────────────────────────────────────────────────────────────
+async function safeFetch(url) {
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw new Error(r.status);
+    return await r.json();
+  } catch(e) {
+    console.error('fetch', url, e);
+    return null;
+  }
+}
+
+async function refreshAll() {
+  resetCountdown();
+  const [registry, mlModels, metrics, summary] = await Promise.all([
+    safeFetch('/api/registry'),
+    safeFetch('/api/ml_models'),
+    safeFetch('/api/advanced_metrics'),
+    safeFetch('/api/summary'),
+  ]);
+  state.registry = registry;
+  state.mlModels = mlModels;
+  state.metrics = metrics;
+  state.summary = summary;
+
+  renderHeader();
+  renderHealthBar();
+  renderPipeline();
+  renderPipelineCards();
+  renderStatsRow();
+  renderTable();
+  renderMLModels();
+  renderLiveFeed();
+}
+
+// ─── Header ─────────────────────────────────────────────────────────────────
+function renderHeader() {
+  const sum = state.summary;
+  const isLive = sum?.live_status?.is_live ?? false;
+  const pill = document.getElementById('header-status');
+  const dot = document.getElementById('status-dot');
+  const txt = document.getElementById('status-text');
+  pill.className = 'status-pill ' + (isLive ? 'live' : 'stale');
+  dot.className = 'status-dot ' + (isLive ? 'pulse' : '');
+  txt.textContent = isLive ? 'LIVE' : 'STALE';
+  document.getElementById('last-refresh').textContent = 'Updated ' + new Date().toLocaleTimeString();
+}
+
+// ─── Health Bar ─────────────────────────────────────────────────────────────
+function renderHealthBar() {
+  const sum = state.summary;
+  const ls = sum?.live_status;
+  const ps = sum?.paper_stats;
+
+  // Tick rate
+  const tickRate = ls?.tick_rate_per_sec ?? 0;
+  const isFlowing = ls?.is_live ?? false;
+  document.getElementById('hb-tick-rate').textContent = tickRate.toFixed(1);
+  document.getElementById('hb-data-dot').className = 'health-dot ' + (isFlowing ? 'ok' : (tickRate > 0 ? 'warn' : 'err'));
+
+  // Signals
+  const sigTotal = sum?.signals_count ?? 0;
+  const sig1h = Object.values(sum?.signals_1h_by_type ?? {}).reduce((a,b)=>a+b, 0);
+  document.getElementById('hb-signals').textContent = fmtK(sigTotal);
+  document.getElementById('hb-signals-1h').textContent = sig1h;
+  document.getElementById('hb-signal-dot').className = 'health-dot ' + (sig1h > 0 ? 'ok' : 'warn');
+
+  // Trades
+  const tradesClose = ps?.closed ?? 0;
+  document.getElementById('hb-trades').textContent = fmtK(tradesClose);
+  document.getElementById('hb-trade-dot').className = 'health-dot ' + (tradesClose > 0 ? 'ok' : 'warn');
+
+  // Services
+  const svcs = sum?.services ?? [];
+  const aliveCount = svcs.filter(s => s.alive).length;
+  document.getElementById('hb-services').textContent = aliveCount + '/' + svcs.length + ' alive';
+  document.getElementById('hb-svc-dot').className = 'health-dot ' + (aliveCount >= 2 ? 'ok' : aliveCount > 0 ? 'warn' : 'err');
+
+  // Last tick
+  document.getElementById('hb-last-tick').textContent = timeAgo(ls?.last_tick_iso);
+}
+
+// ─── Pipeline Funnel ────────────────────────────────────────────────────────
+function renderPipeline() {
+  const reg = state.registry;
+  if (!reg) return;
+
+  const strategies = reg.strategies ?? [];
+
+  // Compute tier stats
+  const tiers = { 0: [], 1: [], 2: [], 3: [] };
+  strategies.forEach(s => {
+    const t = s.tier ?? 0;
+    if (tiers[t]) tiers[t].push(s);
+  });
+
+  function tierStats(arr) {
+    if (!arr.length) return { count: 0, bestPnl: 0, avgPnl: 0, topName: '—' };
+    const pnls = arr.map(s => s.bt_pnl_pct ?? 0);
+    const bestPnl = Math.max(...pnls);
+    const avgPnl = pnls.reduce((a,b)=>a+b,0) / pnls.length;
+    // top = ranked #1 if any, else best PnL
+    const ranked = arr.filter(s => s.pnl_rank != null).sort((a,b) => a.pnl_rank - b.pnl_rank);
+    const top = ranked.length ? ranked[0] : arr.reduce((a,b) => (b.bt_pnl_pct??0) > (a.bt_pnl_pct??0) ? b : a, arr[0]);
+    return { count: arr.length, bestPnl, avgPnl, topName: top.name };
+  }
+
+  const t0s = tierStats(tiers[0]);
+  const t1s = tierStats(tiers[1]);
+  const t2s = tierStats(tiers[2]);
+  const t3s = tierStats(tiers[3]);
+
+  const total = strategies.length;
+  document.getElementById('pipeline-badge').textContent = total + ' strategies total';
+
+  const tierBoxHTML = (cls, label, sublabel, stats, emptyMsg) => {
+    const best = stats.bestPnl;
+    const avg = stats.avgPnl;
+    const isEmpty = stats.count === 0;
+    return `
+    <div class="tier-box ${cls}">
+      <div class="tier-label">${label}</div>
+      <div class="tier-sublabel">${sublabel}</div>
+      <div class="tier-count">${stats.count}</div>
+      <div class="tier-count-label">strategies</div>
+      ${isEmpty ? `<div class="tier-metrics" style="color:var(--dim);font-size:10px;margin-top:4px;">${emptyMsg}</div>` : `
+      <div class="tier-metrics">
+        <div class="tier-metric">
+          <span class="tier-metric-label">Best PnL</span>
+          <span class="tier-metric-val ${best>0?'pos':best<0?'neg':''}">${best.toFixed(1)}%</span>
+        </div>
+        <div class="tier-metric">
+          <span class="tier-metric-label">Avg PnL</span>
+          <span class="tier-metric-val ${avg>0?'pos':avg<0?'neg':''}">${avg.toFixed(1)}%</span>
+        </div>
+        <div class="tier-metric">
+          <span class="tier-metric-label">Top</span>
+          <span class="tier-metric-val" style="font-size:9px;max-width:90px;overflow:hidden;text-overflow:ellipsis;display:block;text-align:right;" title="${stats.topName}">${stats.topName.replace(/_/g,' ')}</span>
+        </div>
+      </div>`}
+    </div>`;
+  };
+
+  const gateHTML = (reqs) => `
+    <div class="gate-connector">
+      <div class="gate-arrow">→</div>
+      <div class="gate-requirements">
+        ${reqs.map(r => `<div class="gate-req">${r}</div>`).join('')}
+      </div>
+    </div>`;
+
+  document.getElementById('pipeline').innerHTML =
+    tierBoxHTML('t0', 'Tier 0', 'Library', t0s, 'No strategies') +
+    gateHTML(['file exists', '≥1 signal']) +
+    tierBoxHTML('t1', 'Tier 1', 'Backtest', t1s, 'No strategies promoted') +
+    gateHTML(['≥50 trades', 'PF≥1.2', 'MDD<50%', 'PnL>0']) +
+    tierBoxHTML('t2', 'Tier 2', 'Forward Test', t2s, 'No strategies') +
+    gateHTML(['FT ≥20 trades', 'FT PF≥1.1', 'FT MDD<50%', 'FT PnL>0']) +
+    tierBoxHTML('t3', 'Tier 3', 'Live Trading', t3s, 'Future — not yet active');
+}
+
+// ─── Pipeline Cards (top strategies per tier) ────────────────────────────────
+function renderPipelineCards() {
+  const reg = state.registry;
+  if (!reg) return;
+  const strategies = reg.strategies ?? [];
+
+  // Show top 5 from Tier 2, then top 6 from Tier 0
+  const t2 = strategies.filter(s => s.tier === 2).slice(0, 5);
+  const t0 = strategies.filter(s => s.tier === 0).slice(0, 6);
+
+  const cardHTML = (s) => {
+    const tier = s.tier ?? 0;
+    const cls = `t${tier}`;
+    // Use forward-test data if tier 2, else backtest
+    const trades = tier >= 2 ? s.ft_trades : s.bt_trades;
+    const sharpe = tier >= 2 ? s.ft_sharpe : s.bt_sharpe;
+    const pnl = tier >= 2 ? s.ft_pnl_pct : s.bt_pnl_pct;
+    const wr = tier >= 2 ? s.ft_win_rate : s.bt_win_rate;
+    const pf = s.bt_profit_factor ?? 0;
+    const gatePass = s.gate_status === 'pass';
+    const rank = s.pnl_rank;
+    const gateCls = gatePass ? 'pos' : 'neg';
+    const rankLabel = rank != null ? '#' + rank : '—';
+    return `
+    <div class="strat-card ${cls}">
+      <div class="strat-card-name" title="${s.name}">${s.name.replace(/_/g,' ')}</div>
+      <div class="strat-card-metrics">
+        <div class="strat-card-metric">
+          <div class="strat-card-metric-val primary ${pnl>0?'pos':'neg'}">${pnl!=null?pnl.toFixed(1)+'%':'—'}</div>
+          <div class="strat-card-metric-label">PnL%</div>
+        </div>
+        <div class="strat-card-metric">
+          <div class="strat-card-metric-val ${gateCls}">${gatePass ? '✓ PASS' : '✗ FAIL'}</div>
+          <div class="strat-card-metric-label">Gates</div>
+        </div>
+        <div class="strat-card-metric">
+          <div class="strat-card-metric-val neutral">${rankLabel}</div>
+          <div class="strat-card-metric-label">Rank</div>
+        </div>
+        <div class="strat-card-metric">
+          <div class="strat-card-metric-val neutral">${pf.toFixed(2)}</div>
+          <div class="strat-card-metric-label">PF</div>
+        </div>
+      </div>
+      ${!gatePass && s.gate_failures ? '<div style="font-size:10px;color:var(--red);margin-top:4px">'+s.gate_failures+'</div>' : ''}
+    </div>`;
+  };
+
+  let html = '';
+  if (t2.length) {
+    html += `<div class="section-header" style="margin-top:12px">
+      <div style="font-size:10px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:0.5px">▶ Tier 2 — Forward Testing (Top ${t2.length})</div>
+      <div class="section-line"></div>
+    </div>
+    <div class="tier-cards-grid">`;
+    t2.forEach(s => html += cardHTML(s));
+    html += '</div>';
+  }
+  if (t0.length) {
+    html += `<div class="section-header" style="margin-top:10px">
+      <div style="font-size:10px;color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:0.5px">▶ Tier 0 — Library (Top ${t0.length} by PnL%)</div>
+      <div class="section-line"></div>
+    </div>
+    <div class="tier-cards-grid">`;
+    t0.forEach(s => html += cardHTML(s));
+    html += '</div>';
+  }
+
+  document.getElementById('pipeline-cards').innerHTML = html;
+}
+
+// ─── Stats Row ───────────────────────────────────────────────────────────────
+function renderStatsRow() {
+  const m = state.metrics;
+  const ps = state.summary?.paper_stats;
+  if (!m && !ps) return;
+
+  const tm = m?.trading_metrics;
+  const rm = m?.risk_metrics;
+
+  const totalTrades = tm?.total_trades ?? ps?.closed ?? 0;
+  const wr = tm?.win_rate ?? ps?.win_rate_pct ?? 0;
+  const pf = tm?.profit_factor ?? ps?.profit_factor ?? 0;
+  const avgPnl = tm?.expectancy ?? ps?.avg_pnl_pct ?? 0;
+  const sortino = rm?.sortino_ratio ?? 0;
+  const dd = rm?.max_drawdown_pct ?? 0;
+
+  const el = (id) => document.getElementById(id);
+  el('stat-trades').textContent = fmtK(totalTrades);
+  el('stat-wr').textContent = fmtPct(wr, 1);
+  el('stat-wr').className = 'stat-val ' + (wr >= 50 ? 'pos' : wr >= 40 ? '' : 'neg');
+  el('stat-pf').textContent = fmt(pf, 2);
+  el('stat-pf').className = 'stat-val ' + (pf >= 1.5 ? 'pos' : pf >= 1.0 ? '' : 'neg');
+  el('stat-pnl').textContent = fmtPct(avgPnl, 3);
+  el('stat-pnl').className = 'stat-val ' + (avgPnl > 0 ? 'pos' : avgPnl < 0 ? 'neg' : '');
+  el('stat-sortino').textContent = fmt(sortino, 2);
+  el('stat-sortino').className = 'stat-val ' + (sortino >= 1 ? 'pos' : sortino >= 0 ? '' : 'neg');
+  el('stat-dd').textContent = fmtPct(dd, 1);
+  el('stat-dd').className = 'stat-val ' + (dd >= 20 ? 'neg' : '');
+}
+
+// ─── Strategy Table ──────────────────────────────────────────────────────────
+function setTierFilter(tier, btn) {
+  state.tierFilter = tier;
+  document.querySelectorAll('.tier-filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+function setSearch(val) {
+  state.search = val.toLowerCase();
+  renderTable();
+}
+function sortTable(col) {
+  if (state.sortCol === col) {
+    state.sortAsc = !state.sortAsc;
+  } else {
+    state.sortCol = col;
+    state.sortAsc = col === 'name';
+  }
+  // Update header arrows
+  document.querySelectorAll('thead th').forEach(th => {
+    th.classList.remove('sorted');
+    const arrow = th.querySelector('.sort-arrow');
+    if (arrow) arrow.textContent = '↕';
+  });
+  // Highlight sorted column
+  const colIdx = { name:0, tier:1, pnl_rank:2, pf:3, sharpe:4, maxdd:5, trades:6, pnl:7, wr:8 }[col];
+  const ths = document.querySelectorAll('thead th');
+  if (colIdx != null && ths[colIdx]) {
+    ths[colIdx].classList.add('sorted');
+    const arrow = ths[colIdx].querySelector('.sort-arrow');
+    if (arrow) arrow.textContent = state.sortAsc ? '↑' : '↓';
+  }
+  renderTable();
+}
+
+function renderTable() {
+  const reg = state.registry;
+  if (!reg) return;
+
+  let strategies = [...(reg.strategies ?? [])];
+
+  // Filter
+  if (state.tierFilter !== 'all') {
+    strategies = strategies.filter(s => s.tier === +state.tierFilter);
+  }
+  if (state.search) {
+    strategies = strategies.filter(s => s.name.toLowerCase().includes(state.search));
+  }
+
+  // Sort
+  const col = state.sortCol;
+  strategies.sort((a, b) => {
+    let av, bv;
+    const at = a.tier ?? 0, bt2 = b.tier ?? 0;
+    if (col === 'name') { av = a.name; bv = b.name; }
+    else if (col === 'tier') { av = at; bv = bt2; }
+    else if (col === 'pnl_rank') { av = a.pnl_rank ?? 0; bv = b.pnl_rank ?? 0; }
+    else if (col === 'pf') {
+      // Use ft_pf if tier 2, else bt (no PF in registry schema — use pnl as proxy)
+      av = at >= 2 ? (a.ft_pnl_pct ?? 0) : (a.bt_pnl_pct ?? 0);
+      bv = bt2 >= 2 ? (b.ft_pnl_pct ?? 0) : (b.bt_pnl_pct ?? 0);
+    }
+    else if (col === 'sharpe') {
+      av = at >= 2 ? (a.ft_sharpe ?? 0) : (a.bt_sharpe ?? 0);
+      bv = bt2 >= 2 ? (b.ft_sharpe ?? 0) : (b.bt_sharpe ?? 0);
+    }
+    else if (col === 'maxdd') {
+      av = at >= 2 ? (a.ft_max_dd ?? 0) : (a.bt_max_dd ?? 0);
+      bv = bt2 >= 2 ? (b.ft_max_dd ?? 0) : (b.bt_max_dd ?? 0);
+    }
+    else if (col === 'trades') {
+      av = at >= 2 ? (a.ft_trades ?? 0) : (a.bt_trades ?? 0);
+      bv = bt2 >= 2 ? (b.ft_trades ?? 0) : (b.bt_trades ?? 0);
+    }
+    else if (col === 'pnl') {
+      av = at >= 2 ? (a.ft_pnl_pct ?? 0) : (a.bt_pnl_pct ?? 0);
+      bv = bt2 >= 2 ? (b.ft_pnl_pct ?? 0) : (b.bt_pnl_pct ?? 0);
+    }
+    else if (col === 'wr') {
+      av = at >= 2 ? (a.ft_win_rate ?? 0) : (a.bt_win_rate ?? 0);
+      bv = bt2 >= 2 ? (b.ft_win_rate ?? 0) : (b.bt_win_rate ?? 0);
+    }
+    if (typeof av === 'string') return state.sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+    return state.sortAsc ? av - bv : bv - av;
+  });
+
+  document.getElementById('table-badge').textContent = strategies.length + ' shown';
+  document.getElementById('table-count').textContent = strategies.length + ' / ' + (reg.strategies?.length ?? 0) + ' strategies';
+
+  if (!strategies.length) {
+    document.getElementById('strategy-tbody').innerHTML =
+      '<tr><td colspan="10" class="empty-state">No strategies match filter</td></tr>';
+    return;
+  }
+
+  const rows = strategies.map(s => {
+    const tier = s.tier ?? 0;
+    const isFT = tier >= 2;
+    const sharpe = isFT ? s.ft_sharpe : s.bt_sharpe;
+    const maxdd = isFT ? s.ft_max_dd : s.bt_max_dd;
+    const trades = isFT ? s.ft_trades : s.bt_trades;
+    const pnl = isFT ? s.ft_pnl_pct : s.bt_pnl_pct;
+    const wr = isFT ? s.ft_win_rate : s.bt_win_rate;
+    const gatePass = s.gate_status === 'pass';
+    const rank = s.pnl_rank;
+    const pnlCls = pnl > 0 ? 'td-pos' : pnl < 0 ? 'td-neg' : '';
+    const sharpeCls = sharpe > 1 ? 'td-pos' : sharpe < 0 ? 'td-neg' : '';
+    const ddCls = maxdd > 20 ? 'td-neg' : '';
+    const statusLabel = tier === 2 ? 'active' : tier === 1 ? 'testing' : 'library';
+
+    const pfVal = isFT ? null : (s.bt_profit_factor ?? null);
+    const pfDisplay = pfVal != null && pfVal > 0 ? fmt(pfVal, 2) : '—';
+    const pfCls = pfVal != null ? (pfVal >= 1.5 ? 'td-pos' : pfVal < 1.0 ? 'td-neg' : '') : '';
+
+    return `<tr>
+      <td class="td-name" title="${s.name}">${s.has_file === false ? '<span class="no-file-dot" title="No .py file on disk"></span>' : ''}${s.name.replace(/_/g,' ')}</td>
+      <td><span class="tier-badge t${tier}">${tierName(tier)} ${tierLabel(tier)}</span></td>
+      <td class="${gatePass ? 'td-pos' : 'td-neg'}" title="${s.gate_failures || ''}">${rank != null ? '#'+rank : (gatePass ? '✓' : '✗')}</td>
+      <td class="${pfCls}">${pfDisplay}</td>
+      <td class="${sharpeCls}">${sharpe != null ? fmt(sharpe, 2) : '—'}</td>
+      <td class="${ddCls}">${maxdd != null ? fmtPct(maxdd, 1) : '—'}</td>
+      <td>${fmtK(trades ?? 0)}</td>
+      <td class="${pnlCls}">${pnl != null ? fmtPct(pnl, 1) : '—'}</td>
+      <td class="td-wr">${wr != null ? fmtPct(wr, 1) : '—'}</td>
+      <td><span class="status-chip ${statusLabel}">${statusLabel}</span></td>
+    </tr>`;
+  }).join('');
+
+  document.getElementById('strategy-tbody').innerHTML = rows;
+}
+
+// ─── ML Models ───────────────────────────────────────────────────────────────
+function renderMLModels() {
+  const data = state.mlModels;
+  if (!data) return;
+  const models = data.models ?? [];
+  const leakCount = data.leakage_count ?? 0;
+
+  document.getElementById('ml-badge').textContent =
+    models.length + ' models · ' + (leakCount > 0 ? '⚠ ' + leakCount + ' LEAKAGE' : 'OK');
+
+  if (!models.length) {
+    document.getElementById('ml-grid').innerHTML = '<div class="empty-state">No ML models found</div>';
+    return;
+  }
+
+  const html = models.map(m => {
+    const leak = m.leakage_suspected;
+    return `
+    <div class="ml-card ${leak ? 'leakage' : ''}">
+      ${leak ? `<div class="leakage-banner">⚠ DATA LEAKAGE SUSPECTED</div>` : ''}
+      <div class="ml-card-name">${m.model_name}</div>
+      <div class="ml-card-type">${m.model_type} ${m.symbol ? '· ' + m.symbol : ''}</div>
+      <div class="ml-metrics">
+        <div class="ml-metric">
+          <div class="ml-metric-label">Train Acc</div>
+          <div class="ml-metric-val ${m.train_accuracy >= 95 ? 'danger' : ''}">${m.train_accuracy != null ? m.train_accuracy.toFixed(1) + '%' : '—'}</div>
+        </div>
+        <div class="ml-metric">
+          <div class="ml-metric-label">Test Acc</div>
+          <div class="ml-metric-val">${m.test_accuracy != null ? m.test_accuracy.toFixed(1) + '%' : '—'}</div>
+        </div>
+        <div class="ml-metric">
+          <div class="ml-metric-label">F1 Score</div>
+          <div class="ml-metric-val">${m.f1_score != null ? m.f1_score.toFixed(3) : '—'}</div>
+        </div>
+        <div class="ml-metric">
+          <div class="ml-metric-label">ROC AUC</div>
+          <div class="ml-metric-val">${m.roc_auc != null ? m.roc_auc.toFixed(3) : '—'}</div>
+        </div>
+      </div>
+      ${leak && m.leakage_note ? `<div class="ml-leakage-note">${m.leakage_note}</div>` : ''}
+      <div style="font-size:10px;color:var(--dim);margin-top:6px;">Trained ${timeAgo(m.last_trained)}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('ml-grid').innerHTML = html;
+}
+
+// ─── Live Feed ───────────────────────────────────────────────────────────────
+function renderLiveFeed() {
+  const sum = state.summary;
+  if (!sum) return;
+
+  // Signals feed
+  const sigs = sum.recent_signals ?? [];
+  let sigHtml = sigs.slice(0, 12).map(s => {
+    const sigCls = s.signal === 'BUY' ? 'buy' : 'sell';
+    return `<div class="feed-item">
+      <span class="feed-time">${timeShort(s.ts_iso)}</span>
+      <span class="feed-symbol">${s.symbol}</span>
+      <span class="feed-signal ${sigCls}">${s.signal}</span>
+      <span class="feed-strategy">${s.strategy || '—'}</span>
+    </div>`;
+  }).join('');
+  if (!sigHtml) sigHtml = '<div class="empty-state">No recent signals</div>';
+  document.getElementById('signals-feed').innerHTML = sigHtml;
+
+  // Trades feed
+  const trades = sum.recent_trades ?? [];
+  let tradeHtml = trades.slice(0, 12).map(t => {
+    const pnl = t.pnl_pct;
+    const cls = pnl > 0 ? 'pos' : pnl < 0 ? 'neg' : '';
+    return `<div class="feed-item">
+      <span class="feed-time">${timeShort(t.opened_ts_iso)}</span>
+      <span class="feed-symbol">${t.symbol}</span>
+      <span class="feed-signal ${t.side === 'BUY' ? 'buy' : 'sell'}">${t.side}</span>
+      <span class="feed-pnl ${cls}">${pnl != null ? fmtPct(pnl, 2) : t.status}</span>
+      <span class="feed-status">${t.status}</span>
+    </div>`;
+  }).join('');
+  if (!tradeHtml) tradeHtml = '<div class="empty-state">No recent trades</div>';
+  document.getElementById('trades-feed').innerHTML = tradeHtml;
+}
+
+// ─── Countdown Timer ────────────────────────────────────────────────────────
+function resetCountdown() {
+  state.countdownSec = 30;
+  document.getElementById('countdown').textContent = '30';
+}
+function tickCountdown() {
+  state.countdownSec--;
+  if (state.countdownSec <= 0) {
+    refreshAll();
+  } else {
+    document.getElementById('countdown').textContent = state.countdownSec;
+  }
+}
+
+// ─── Init ────────────────────────────────────────────────────────────────────
+refreshAll();
+setInterval(tickCountdown, 1000);
+// Refresh every 30s (countdown handles it)
+</script>
+</body>
+</html>

@@ -1,6 +1,12 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-16T02:22:00Z",
-  "lastHealthCheck": "2026-03-16T02:22:00Z",
-  "note": "All services active, no cards in queue. Recent deploys verified (Blofin bb_squeeze expansion, Moonshot long champion generation, NQ orb strategies)."
+  "lastDispatch": "2026-03-16T02:52:52Z",
+  "lastHealthCheck": "2026-03-16T02:52:52Z",
+  "health": {
+    "cpu_temp": "88°C",
+    "disk_usage": "80%",
+    "services": "all active",
+    "critical_alerts": "none"
+  },
+  "dispatch_summary": "No cards in queue. All systems nominal."
 }

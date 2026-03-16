@@ -1,20 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_7a25e2621a431_19cf576d4a2",
-      "title": "[Moonshot] Retire long champion (FT PF 1.006) + promote better short model",
-      "assignee": "claude",
-      "project": "blofin-moonshot-v2",
-      "pid": 1388884
-    },
-    {
-      "id": "c_42dae4f190bf8_19cf564b88d",
-      "title": "Moonshot: Fix data pipeline \u2192 dashboard integration",
-      "assignee": "claude",
-      "project": "blofin-moonshot-v2",
-      "pid": 1388885
-    }
-  ],
-  "lastDispatch": "2026-03-16T07:54:12.699979+00:00",
-  "lastHealthCheck": "2026-03-16T07:54:12.699991+00:00"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-16T08:22:00Z",
+  "lastHealthCheck": "2026-03-16T08:22:00Z",
+  "notes": "No cards in queue. All services active. Recent Done cards verified deployed (Blofin: 200, NQ: 200)."
 }

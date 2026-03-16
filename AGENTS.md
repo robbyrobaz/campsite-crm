@@ -2,9 +2,15 @@
 
 This folder is home. The `brain/` directory is your persistent memory.
 
-## Every Session
+## Every Session — PRIORITY ORDER
 
-Before doing anything else:
+**STEP 0 (BEFORE ANYTHING ELSE): VERIFY NQ BLE IS RUNNING**
+```bash
+systemctl --user is-active nq-orb-signal.service nq-orb15-signal.service
+```
+Expected: `active` for BOTH. If not → ALERT ROB IMMEDIATELY. BLE = real money trading, live since Mar 9 2026.
+
+**Then read these:**
 
 1. Read `SOUL.md` — who you are
 2. Read `USER.md` — who you're helping

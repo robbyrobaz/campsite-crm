@@ -1,23 +1,30 @@
 {
   "activeTasks": [
     {
-      "id": "c_a3289b4ff5109_19cf7de97c2",
-      "title": "Generate confluence-based strategies (not simple breakouts)",
-      "project": "NQ-Trading-PIPELINE",
-      "age_minutes": 4.4
+      "id": "c_4ad83c9bff0c6_19cf84bc51e",
+      "title": "Moonshot: Fix invalidation drift — lock entry features",
+      "pid": 2314463,
+      "project": "blofin-moonshot-v2",
+      "startedAt": "2026-03-16T20:15:47Z"
     }
   ],
-  "lastDispatch": "2026-03-16T18:22:00Z",
-  "lastHealthCheck": "2026-03-16T18:22:00Z",
-  "services": {
-    "openclaw-gateway": "active",
-    "blofin-stack-ingestor": "active",
-    "blofin-stack-paper": "active",
-    "nq-watcher": "active",
-    "nq-dashboard-v3": "active"
-  },
-  "system": {
-    "cpu_temp": "91C",
-    "disk_used": "64%"
+  "lastDispatch": "2026-03-16T20:15:47Z",
+  "lastHealthCheck": "2026-03-16T20:15:00Z",
+  "pipelineStatus": {
+    "moonshot": {
+      "champion": "de44f72dbb01 (short)",
+      "championPF": 2.22,
+      "ftModels": 250,
+      "openPositions": 954,
+      "lastCycle": "122 (13:08 MST)"
+    },
+    "blofin": {
+      "topPerformers": "0 strategies with 100+ FT trades (early data accumulation)",
+      "services": "ingestor/paper/dashboard all active"
+    },
+    "nq": {
+      "services": "watcher/dashboard active",
+      "recentDeployment": "3 cards completed in last hour, services restarted 13:07"
+    }
   }
 }

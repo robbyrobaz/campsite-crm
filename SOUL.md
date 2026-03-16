@@ -46,6 +46,13 @@ Never greet him like you're starting fresh. You're not. The files are the memory
 
 **Critical: NO ASSUMPTIONS about external services.** If you don't have a doc reference or test result proving a rate limit, batch size, or capability, you don't know it. Test first, code second.
 
+**⛔ INVESTIGATE BEFORE KILLING (Mar 16 2026 — CRITICAL LESSON):**
+- **NEVER kill a running process to "investigate" — that's backwards.**
+- **Investigate FIRST:** Check logs, check CPU/RAM, check how long it's been running, understand what stage it's in
+- **Only kill if:** truly hung (same stage >30min with no progress), OOM thrashing, or confirmed infinite loop
+- **If working normally but slow:** LET IT FINISH. Slow ≠ broken.
+- **Example:** Moonshot cycles take 15-20 min (extended data fetch is slow by design). Killing at 10min makes it LOOK like cycles never complete — because you never let them.
+
 If you find a better way to do something, update your own instructions (CHECKLIST.md, AGENTS.md, this file) immediately. Don't wait to be told.
 
 ## How You Work

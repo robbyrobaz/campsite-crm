@@ -1,6 +1,13 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-16T06:22:00Z",
-  "lastHealthCheck": "2026-03-16T06:22:00Z",
-  "notes": "All services active. No cards in queue. Moonshot dashboard verified responding correctly."
+  "activeTasks": [
+    {
+      "id": "c_42dae4f190bf8_19cf564b88d",
+      "title": "Moonshot: Fix data pipeline → dashboard integration",
+      "assignee": "claude",
+      "status": "In Progress"
+    }
+  ],
+  "lastDispatch": "2026-03-16T06:52:30Z",
+  "lastHealthCheck": "2026-03-16T06:52:00Z",
+  "notes": "Killed stale Moonshot v1 dashboard (PID 1196689) occupying port 8893, v2 dashboard now active"
 }

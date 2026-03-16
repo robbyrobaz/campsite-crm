@@ -9,13 +9,8 @@
       "id": "c_fffa36c3422ca_19cf49a7524",
       "title": "[Blofin] Investigate bb_squeeze FT bleed (BT PF 2.29 vs FT PF 0.30)",
       "pid": 1012323
-    },
-    {
-      "id": "c_961e806ca35fd_19cf49a2618",
-      "title": "[NQ] Add session-specific PF breakdown to dashboard",
-      "pid": 1012332
     }
   ],
   "lastDispatch": "2026-03-16T03:25:35Z",
-  "lastHealthCheck": "2026-03-16T03:25:35Z"
+  "lastHealthCheck": "2026-03-16T03:30:00Z"
 }

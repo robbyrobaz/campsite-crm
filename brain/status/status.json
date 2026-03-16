@@ -1,6 +1,24 @@
 {
-  "activeTasks": [],
-  "lastDispatch": "2026-03-16T17:22:00Z",
-  "lastHealthCheck": "2026-03-16T17:30:00Z",
-  "notes": "Heartbeat complete — ibkr-options service restarted (WorkingDirectory + venv path fixed), now running but hitting client ID conflict. Moonshot FT backlog at 280 (elevated). All core services active, BLE engines clean."
+  "activeTasks": [
+    {
+      "id": "c_a6ea2e7dc9f0b_19cf7c6dfa0",
+      "title": "Train XGBoost/LightGBM/CatBoost models on 7 months of NQ data",
+      "status": "In Progress",
+      "project": "NQ-Trading-PIPELINE",
+      "started_at": "2026-03-16T17:45:31Z"
+    }
+  ],
+  "lastDispatch": "2026-03-16T17:52:00Z",
+  "lastHealthCheck": "2026-03-16T17:52:00Z",
+  "systemHealth": {
+    "cpu_temp": "81°C",
+    "disk_usage": "64%",
+    "services": "all active",
+    "critical_alerts": "none"
+  },
+  "recentDeployments": [
+    "NQ strategy_generator expanded (7 min ago)",
+    "NQ backtest_queue wired (7 min ago)",
+    "NQ tier=2 live dispatcher (7 min ago)"
+  ]
 }

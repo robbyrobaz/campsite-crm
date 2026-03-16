@@ -1,13 +1,24 @@
 {
   "activeTasks": [
     {
-      "id": "c_25289840dacfa_19cf71a4afc",
-      "title": "Moonshot Dashboard: Fix loading state + add visual polish",
+      "id": "c_72248fc54ac9_19cf2e5f80f",
+      "title": "Blofin Stack: Restart FT pipeline — Fix zero FT metrics anomaly",
       "assignee": "claude",
-      "pid": 1913956,
-      "startedAt": "2026-03-16T14:52:00Z"
+      "updated_at": 1773674339073
+    },
+    {
+      "id": "c_42085f56c382b_19cf573e39e",
+      "title": "Dashboard caching + query optimization",
+      "assignee": "claude",
+      "pid": 1953963
+    },
+    {
+      "id": "c_f29fa5bcb3a36_19cf7277086",
+      "title": "Portfolio Summary + Visual Performance Indicators",
+      "assignee": "claude",
+      "pid": 1953969
     }
   ],
-  "lastDispatch": "2026-03-16T14:52:00Z",
-  "lastHealthCheck": "2026-03-16T14:52:00Z"
+  "lastDispatch": "2026-03-16T15:22:00Z",
+  "lastHealthCheck": "2026-03-16T15:22:00Z"
 }

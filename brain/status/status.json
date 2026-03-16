@@ -1,6 +1,6 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-16T15:52:00Z",
-  "lastHealthCheck": "2026-03-16T15:52:00Z",
-  "notes": "No cards in queue. blofin-stack-ingestor restarted (was failed). Moonshot dashboard verified active."
+  "lastDispatch": "2026-03-16T16:22:00Z",
+  "lastHealthCheck": "2026-03-16T16:22:00Z",
+  "notes": "Queue empty — no cards in Planned or In Progress. All services healthy."
 }

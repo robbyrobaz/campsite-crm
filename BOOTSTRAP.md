@@ -27,6 +27,22 @@
 
 ## ⚡ RECENT CHANGES (Mar 15-16 2026)
 
+### Moonshot New Listing Auto-Entry FIXED (Mar 16 10:30-10:45 AM)
+**Problem:** Feature deployed Mar 16 07:55 but NEVER FIRED because `days_since_listing` column was always NULL.
+
+**Root causes:**
+1. Discovery module set `first_seen_ts` but never computed `days_since_listing`
+2. `'new_listing'` model_id didn't exist in `tournament_models` → FK constraint blocked inserts
+
+**Fix deployed:**
+1. Created `update_days_since_listing()` in `src/data/discovery.py`
+2. Wired into `orchestration/run_cycle.py` right after coin discovery
+3. Inserted dummy `'new_listing'` model into tournament_models
+
+**Verified working:** CFG-USDT (0 days old) auto-entered at $0.1890, $20 size, 2x leverage (10:45 AM). Next 4h cycle will auto-detect and enter new coins ≤7 days old.
+
+**Files:** `blofin-moonshot-v2/src/data/discovery.py`, `orchestration/run_cycle.py`, commit `49343e8`
+
 ### Blofin Parquet Migration ✅ COMPLETE (09:32-09:58 MST, 26 min)
 **Status:** Old ingestor STOPPED, paper engine running on Parquet  
 **Old ingestor:** STOPPED (blofin-stack-ingestor.service)  

@@ -1,16 +1,31 @@
 {
   "activeTasks": [
     {
-      "id": "c_a1a3e5908ecfe_19cf49adb0f",
-      "title": "[Moonshot] Generate long champion (missing) + promote better short champion",
-      "pid": 1012322
-    },
-    {
       "id": "c_fffa36c3422ca_19cf49a7524",
       "title": "[Blofin] Investigate bb_squeeze FT bleed (BT PF 2.29 vs FT PF 0.30)",
-      "pid": 1012323
+      "assignee": "claude",
+      "project": "blofin-stack",
+      "status": "In Progress",
+      "age_minutes": 28
+    },
+    {
+      "id": "c_a1a3e5908ecfe_19cf49adb0f",
+      "title": "[Moonshot] Generate long champion (missing) + promote better short champion",
+      "assignee": "claude",
+      "project": "blofin-moonshot-v2",
+      "status": "In Progress",
+      "age_minutes": 28
+    },
+    {
+      "id": "c_0845eff7101ab_19cf4998dd7",
+      "title": "[NQ] Add session-specific PF breakdown to dashboard",
+      "assignee": "claude",
+      "project": "NQ-Trading-PIPELINE",
+      "status": "In Progress (just dispatched)",
+      "age_minutes": 0
     }
   ],
-  "lastDispatch": "2026-03-16T03:25:35Z",
-  "lastHealthCheck": "2026-03-16T03:30:00Z"
+  "lastDispatch": "2026-03-16T03:53:05Z",
+  "lastHealthCheck": "2026-03-16T03:53:05Z",
+  "notes": "Dispatched NQ dashboard session breakdown card. 3 builders now active (max cap). Health: all services active, CPU 91C (warm), disk 81%."
 }

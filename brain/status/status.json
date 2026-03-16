@@ -1,6 +1,25 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-16T13:52:00Z",
-  "lastHealthCheck": "2026-03-16T13:52:00Z",
-  "notes": "No cards in Planned or In Progress. Recent Moonshot v2 redesign completed 46min ago - dashboard responding, full services not yet configured (expected for new deployment)."
+  "lastDispatch": "2026-03-16T14:22:00Z",
+  "lastHealthCheck": "2026-03-16T14:22:00Z",
+  "healthStatus": {
+    "cpu_temp": "87°C (normal)",
+    "disk_usage": "62% (275GB used of 468GB)",
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "blofin-dashboard": "active",
+      "nq-watcher": "active",
+      "nq-dashboard-v3": "active"
+    },
+    "critical_alerts": "none",
+    "planned_cards": 0,
+    "in_progress_cards": 0,
+    "recent_completions": [
+      "Moonshot v2: Redesign backtest methodology (completed 75min ago)",
+      "Blofin reversal ML model retrain (completed 97min ago)",
+      "NQ orb_multi FT validation (completed 105min ago)"
+    ]
+  }
 }

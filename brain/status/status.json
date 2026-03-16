@@ -1,20 +1,5 @@
 {
-  "activeTasks": [
-    {
-      "id": "blofin-historical-backfill",
-      "title": "Blofin Historical Data Backfill (70-hour job)",
-      "status": "in-progress",
-      "started": "2026-03-16T12:55:00Z",
-      "progress": "88/469 symbols (18.8%)",
-      "eta": "2026-03-18T20:00:00Z",
-      "pid": 1766514,
-      "watchdog": "3128d9ad-1e64-47ba-b73f-7c5cc93aa67c",
-      "docs": "brain/BLOFIN_HISTORICAL_BACKFILL.md",
-      "lastChecked": "2026-03-16T16:34:00Z",
-      "notes": "Died at 02:10 MST, Rob caught failure at 05:26, watchdog created at 05:37, restarted at 05:55"
-    }
-  ],
-  "lastDispatch": "2026-03-16T15:52:00Z",
-  "lastHealthCheck": "2026-03-16T16:34:00Z",
-  "notes": "Historical backfill running (88/469 symbols). Watchdog created AFTER Rob caught monitoring failure, not before. Blofin FT pipeline fixed (schema migrations complete)."
+  "activeTasks": [],
+  "lastDispatch": "2026-03-16T16:53:04.869165+00:00",
+  "lastHealthCheck": "2026-03-16T16:53:04.869175+00:00"
 }

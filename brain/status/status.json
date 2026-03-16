@@ -1,6 +1,17 @@
 {
   "activeTasks": [],
-  "lastDispatch": "2026-03-16T12:52:00Z",
-  "lastHealthCheck": "2026-03-16T12:52:00Z",
-  "notes": "Blofin ML services restarted to load newly trained reversal model (T2). Zero cards in Planned/In Progress."
+  "lastDispatch": "2026-03-16T13:22:00Z",
+  "lastHealthCheck": "2026-03-16T13:22:00Z",
+  "health": {
+    "cpu_temp": "85C",
+    "disk_usage": "63%",
+    "services": {
+      "openclaw-gateway": "active",
+      "blofin-stack-ingestor": "active",
+      "blofin-stack-paper": "active",
+      "nq-watcher": "active",
+      "nq-dashboard-v3": "active"
+    }
+  },
+  "notes": "Queue empty. Recent Done cards verified: NQ dashboard (200), Blofin dashboard (200), Moonshot backtest redesign complete (no service deployment required)."
 }

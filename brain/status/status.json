@@ -1,14 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_bf72ccadb3fb4_19cf6519289",
-      "title": "[Blofin] Retrain reversal ML model (T2, BT PF 1.77, top BT PnL performer)",
-      "assignee": "claude",
-      "status": "In Progress",
-      "age_minutes": 29
-    }
-  ],
-  "lastDispatch": "2026-03-16T11:52:00Z",
-  "lastHealthCheck": "2026-03-16T11:52:00Z",
-  "summary": "1 builder active (reversal ML retrain), 0 Planned, all services healthy"
+  "activeTasks": [],
+  "lastDispatch": "2026-03-16T12:22:00Z",
+  "lastHealthCheck": "2026-03-16T12:22:00Z",
+  "notes": "No cards in Planned or In Progress. All services active. Last 3 Done cards (37-52 min ago) verified: NQ dashboard 200, Moonshot dashboard 200."
 }

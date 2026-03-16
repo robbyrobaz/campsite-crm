@@ -1,13 +1,21 @@
 {
   "activeTasks": [
     {
-      "id": "c_42dae4f190bf8_19cf564b88d",
-      "title": "Moonshot: Fix data pipeline → dashboard integration",
-      "assignee": "claude",
-      "status": "In Progress"
+      "id": "c_7a25e2621a431_19cf576d4a2",
+      "title": "[Moonshot] Retire long champion (FT PF 1.006) + promote better short model",
+      "pid": 1350044
+    },
+    {
+      "id": "c_af2182978bef2_19cf576d46a",
+      "title": "[Blofin] Diagnose why FT pipeline has no performers with \u226520 trades",
+      "pid": 1350045
+    },
+    {
+      "id": "c_e40964c345b92_19cf576d425",
+      "title": "[NQ] Investigate equal_tops_bottoms forward test bleed (20% WR vs 67% BT)",
+      "pid": 1350046
     }
   ],
-  "lastDispatch": "2026-03-16T06:52:30Z",
-  "lastHealthCheck": "2026-03-16T06:52:00Z",
-  "notes": "Killed stale Moonshot v1 dashboard (PID 1196689) occupying port 8893, v2 dashboard now active"
+  "lastDispatch": "2026-03-16T07:23:30.561389+00:00",
+  "lastHealthCheck": "2026-03-16T07:23:30.561429+00:00"
 }

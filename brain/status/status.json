@@ -1,31 +1,6 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_72248fc54ac9_19cf2e5f80f",
-      "title": "Blofin Stack: Restart FT pipeline — Fix zero FT metrics anomaly",
-      "status": "In Progress",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_91a1a84d46e59_19cf50445a2",
-      "title": "Two UX improvements for Moonshot v2 dashboard (mobile + sparklines)",
-      "status": "In Progress",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_16a16491f1318_19cf4cd6fef",
-      "title": "Moonshot Dashboard: Fix Loading Bug + Mobile Responsive",
-      "status": "In Progress",
-      "assignee": "claude"
-    },
-    {
-      "id": "c_da21a49efd0e4_19cf3e416c2",
-      "title": "Moonshot Dashboard: Add Performance Charts (HIGH priority)",
-      "status": "In Progress",
-      "assignee": "claude"
-    }
-  ],
-  "lastDispatch": "2026-03-16T15:28:30Z",
-  "lastHealthCheck": "2026-03-16T15:33:00Z",
-  "notes": "Heartbeat 8:31 AM: Blofin services restarted (were down, now active). Failed card c_f57...025 recovered (log showed success). Moonshot cycle 119 running (54% CPU, 1GB RAM). Git auto-commit: moonshot-v2 ✓, NQ ✓, blofin-stack push HANGING (killed, needs manual fix). CPU temp spiked to 86°C briefly, now 69°C. Token usage: 12% of 5h limit."
+  "activeTasks": [],
+  "lastDispatch": "2026-03-16T15:52:00Z",
+  "lastHealthCheck": "2026-03-16T15:52:00Z",
+  "notes": "No cards in queue. blofin-stack-ingestor restarted (was failed). Moonshot dashboard verified active."
 }

@@ -817,3 +817,11 @@ Next pulse: 2026-03-15 03:22 MST (in 30 minutes)
 
 ## 2026-03-16T08:29:14-07:00
 Blofin services down (ingestor + paper) — restarted, now active
+
+## 2026-03-16 08:52 — blofin-stack-ingestor failed
+- Found during Jarvis Pulse health check
+- Service status: failed
+- Action: Restarted successfully
+- No obvious error in recent logs
+- Monitoring for recurrence
+

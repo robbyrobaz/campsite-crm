@@ -1,20 +1,7 @@
 {
-  "activeTasks": [
-    {
-      "id": "c_ec5efd7b701e6_19cf9195928",
-      "title": "Generate ML training scripts for 5 orphaned strategies",
-      "pid": 2846422,
-      "project": "NQ-Trading-PIPELINE"
-    },
-    {
-      "id": "c_359ae9805aaf1_19cf995ff2c",
-      "title": "Moonshot: Fix LONG champion - investigate 0.22 PF vs 0.79 BT",
-      "pid": 2846423,
-      "project": "blofin-moonshot-v2"
-    }
-  ],
+  "activeTasks": [],
   "lastDispatch": "2026-03-16T19:31:00-07:00",
-  "lastHealthCheck": "2026-03-16T19:31:00-07:00",
+  "lastHealthCheck": "2026-03-16T21:40:00-07:00",
   "nqServices": {
     "nq-data-sync": "active",
     "nq-dashboard-v3": "active",
@@ -30,5 +17,6 @@
     "tier0": 121,
     "recentFtTrades7d": 167,
     "mlModelsDeployed": 27
-  }
+  },
+  "notes": "Moonshot cycle running (PID 2969523, 38min, active backtest). Blofin ingestor running (PID 1982846, 12h). Both healthy."
 }

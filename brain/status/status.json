@@ -1,18 +1,26 @@
 {
   "activeTasks": [
     {
-      "id": "c_ec5efd7b701e6_19cf9195928",
+      "card_id": "c_ec5efd7b701e6_19cf9195928",
       "title": "Generate ML training scripts for 5 orphaned strategies",
-      "pid": 2687956,
-      "started": "2026-03-16T17:31:00-07:00"
+      "pid": 2727909,
+      "status": "In Progress",
+      "started_at": "2026-03-17T01:03:09.789535+00:00"
     }
   ],
-  "lastDispatch": "2026-03-17T00:32:28.269517Z",
-  "lastHealthCheck": "2026-03-17T00:32:28.269534Z",
-  "servicesActive": {
-    "nq-data-sync": true,
-    "nq-dashboard-v3": true,
-    "nq-orb-signal": true,
-    "nq-orb15-signal": true
+  "lastDispatch": "2026-03-17T01:03:09.789546+00:00",
+  "lastHealthCheck": "2026-03-17T01:03:09.789547+00:00",
+  "services": {
+    "nq_orb_signal": "active",
+    "nq_orb15_signal": "active",
+    "nq_data_sync": "active",
+    "nq_dashboard_v3": "active (HTTP 200)"
+  },
+  "pipeline": {
+    "tier_3_ble": 2,
+    "tier_2_god": 4,
+    "tier_1_ft": 24,
+    "tier_0_research": 121,
+    "recent_ft_trades": 167
   }
 }

@@ -17,6 +17,7 @@ from collections import defaultdict
 
 SESSIONS_DIR = os.path.expanduser("~/.openclaw/agents/main/sessions")
 OUTPUT_FILE = os.path.expanduser("~/.openclaw/workspace/brain/status/token_usage.md")
+RATE_LIMIT_CACHE = os.path.expanduser("~/.openclaw/workspace/brain/status/rate_limit_cache.json")
 MST = timezone(timedelta(hours=-7))
 
 
@@ -157,38 +158,71 @@ def _try_fetch_usage(creds_path):
     return data
 
 
+def _validate_usage_data(data):
+    """Validate that API response contains real numeric utilization values.
+    Returns True only if at least one window has a numeric utilization."""
+    if not isinstance(data, dict):
+        return False
+    for key in ("five_hour", "seven_day", "seven_day_sonnet"):
+        window = data.get(key, {})
+        if isinstance(window, dict):
+            util = window.get("utilization")
+            if isinstance(util, (int, float)):
+                return True
+    return False
+
+
+def _save_rate_limit_cache(data):
+    """Save validated rate limit data to JSON sidecar with timestamp."""
+    try:
+        cache = {
+            "data": data,
+            "fetched_at": datetime.now(MST).isoformat(),
+            "fetched_ts": time.time(),
+        }
+        os.makedirs(os.path.dirname(RATE_LIMIT_CACHE), exist_ok=True)
+        with open(RATE_LIMIT_CACHE, 'w') as f:
+            json.dump(cache, f, indent=2)
+    except Exception:
+        pass
+
+
+def _load_rate_limit_cache(max_age_hours=24):
+    """Load last-known-good rate limit data from JSON sidecar.
+    Returns (data, age_minutes) or (None, None) if missing/expired."""
+    try:
+        if not os.path.exists(RATE_LIMIT_CACHE):
+            return None, None
+        with open(RATE_LIMIT_CACHE, 'r') as f:
+            cache = json.load(f)
+        fetched_ts = cache.get("fetched_ts", 0)
+        age_seconds = time.time() - fetched_ts
+        if age_seconds > max_age_hours * 3600:
+            return None, None
+        return cache.get("data"), round(age_seconds / 60)
+    except Exception:
+        return None, None
+
+
 def fetch_anthropic_usage():
     """Fetch real utilization % from Anthropic OAuth usage endpoint.
-    Retries once after 10s to allow gateway to refresh an expired token."""
+    Retries once after 10s to allow gateway to refresh an expired token.
+    Only returns data with validated numeric utilization values."""
     creds_path = os.path.expanduser("~/.claude/.credentials.json")
     try:
         data = _try_fetch_usage(creds_path)
-        if data is not None:
+        if data is not None and _validate_usage_data(data):
+            _save_rate_limit_cache(data)
             return data
-        # First attempt failed — wait for gateway to refresh token, then retry
+        # First attempt failed or returned non-numeric — wait for gateway to refresh token, then retry
         time.sleep(10)
-        return _try_fetch_usage(creds_path)
+        data = _try_fetch_usage(creds_path)
+        if data is not None and _validate_usage_data(data):
+            _save_rate_limit_cache(data)
+            return data
+        return None
     except Exception:
         return None
-
-
-def read_existing_rate_limits():
-    """Read the existing rate limits block from token_usage.md if API call fails.
-    Returns the raw lines of the section, or None if not found."""
-    try:
-        if not os.path.exists(OUTPUT_FILE):
-            return None
-        content = open(OUTPUT_FILE).read()
-        # Extract the rate limits section between ## ⚡ Anthropic Rate Limits and the next ##
-        m = re.search(r'(## ⚡ Anthropic Rate Limits.*?)(?=\n## |\Z)', content, re.DOTALL)
-        if m:
-            block = m.group(1).strip()
-            # Only preserve if it has real numbers (not ?%)
-            if re.search(r'\*\*\d+\.?\d*%\*\*', block):
-                return block
-    except Exception:
-        pass
-    return None
 
 
 def write_report():
@@ -209,10 +243,16 @@ def write_report():
     ]
     
     # Anthropic real utilization section
-    if usage_api:
-        fh = usage_api.get("five_hour", {})
-        sd = usage_api.get("seven_day", {})
-        sd_sonnet = usage_api.get("seven_day_sonnet", {})
+    # Use fresh API data, or fall back to JSON sidecar cache (never regex-parse markdown)
+    rate_data = usage_api
+    stale_minutes = None
+    if not rate_data:
+        rate_data, stale_minutes = _load_rate_limit_cache(max_age_hours=24)
+    
+    if rate_data:
+        fh = rate_data.get("five_hour", {})
+        sd = rate_data.get("seven_day", {})
+        sd_sonnet = rate_data.get("seven_day_sonnet", {})
         
         fh_pct = fh.get("utilization", "?")
         sd_pct = sd.get("utilization", "?")
@@ -235,8 +275,13 @@ def write_report():
         fh_warn = " ⚠️" if isinstance(fh_pct, (int, float)) and fh_pct >= 70 else ""
         sd_warn = " 🔴" if isinstance(sd_pct, (int, float)) and sd_pct >= 85 else (" ⚠️" if isinstance(sd_pct, (int, float)) and sd_pct >= 60 else "")
         
+        # Label as stale if using cached data
+        header = "## ⚡ Anthropic Rate Limits (Live)"
+        if stale_minutes is not None:
+            header = f"## ⚡ Anthropic Rate Limits (Cached — {stale_minutes}min ago)"
+        
         lines.extend([
-            "## ⚡ Anthropic Rate Limits (Live)",
+            header,
             f"| Window | Usage | Resets At |",
             f"|--------|-------|-----------|",
             f"| 5-hour | **{fh_pct}%**{fh_warn} | {fmt_reset(fh_reset)} |",
@@ -244,11 +289,6 @@ def write_report():
             f"| 7-day (Sonnet) | **{sd_sonnet_pct}%** | {fmt_reset(sd_reset)} |",
             "",
         ])
-    else:
-        # API unavailable — preserve last known good values from existing file
-        preserved = read_existing_rate_limits()
-        if preserved:
-            lines.extend([preserved, ""])
     
     lines.extend([
         "## Rolling 5-Hour Window",

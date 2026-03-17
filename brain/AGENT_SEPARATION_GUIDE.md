@@ -65,10 +65,19 @@ write anywhere. Its files live directly in the agentDir.
 
 ### What's in the Workspace Root?
 
-After separation, the workspace root should have NO identity files. Only:
+⚠️ **OpenClaw auto-regenerates workspace-level .md files (SOUL.md, AGENTS.md, etc.) if they're missing.**
+You CANNOT delete them — they come back. Instead, they are replaced with **neutral stubs** that say
+"read your agentDir files instead." This prevents identity confusion while satisfying the runtime.
+
+The stubs were set on 2026-03-16 20:05 MST after confirming agents were reading workspace-level
+SOUL.md and getting confused about their identity.
+
+Workspace root now contains:
+- Stub `.md` files (SOUL, AGENTS, IDENTITY, USER, MEMORY, TOOLS) — harmless redirects
 - `brain/` — shared brain files (DISPATCHER.md, PROJECTS.md, status/, etc.)
 - `docs/` — OpenClaw documentation
 - Project repos (NQ-Trading-PIPELINE, blofin-stack, blofin-moonshot-v2, etc.)
+- `.archive-identity-templates/` — the original full-content files (backup)
 
 ### Agent-to-Agent Communication
 

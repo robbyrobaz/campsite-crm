@@ -1685,3 +1685,6 @@
 [2026-03-17 12:13] Completed: 
 [2026-03-17 12:13] In Progress: 0 | Planned ORB: 1
 [2026-03-17 12:13] Dispatched c_a2dbf46874fd3_19cfd349be3: {"error":"missing_project_path","message":"project_path is not set. Please set a project path before running the agent."}
+[2026-03-17 12:43] ORB overnight check running
+[2026-03-17 12:43] Completed: 
+[2026-03-17 12:43] In Progress: 0 | Planned ORB: 0

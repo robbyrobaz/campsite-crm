@@ -1,23 +1,18 @@
 {
   "activeTasks": [
     {
-      "id": "c_84763bad639c9_19cf8677d19",
-      "title": "Moonshot: Analyze why long champion has 0 trades",
-      "assignee": "claude",
-      "project": "blofin-moonshot-v2",
-      "status": "In Progress",
-      "started": "2026-03-16T21:00:57Z"
-    },
-    {
-      "id": "c_fd3d5852e5579_19cf8741ab1",
-      "title": "NQ: Diagnose equal_tops_bottoms catastrophic FT failure",
-      "assignee": "claude",
-      "project": "NQ-Trading-PIPELINE",
-      "status": "In Progress",
-      "started": "2026-03-16T21:00:12Z"
+      "id": "c_ec5efd7b701e6_19cf9195928",
+      "title": "Generate ML training scripts for 5 orphaned strategies",
+      "pid": 2687956,
+      "started": "2026-03-16T17:31:00-07:00"
     }
   ],
-  "lastDispatch": "2026-03-16T21:00:12Z",
-  "lastHealthCheck": "2026-03-16T21:00:00Z",
-  "summary": "2 builders active: Moonshot long champion debug, NQ equal_tops_bottoms FT degradation diagnostic. BLE engines clean (both active). fair_value_gap SL bug fixed and deployed."
+  "lastDispatch": "2026-03-17T00:32:28.269517Z",
+  "lastHealthCheck": "2026-03-17T00:32:28.269534Z",
+  "servicesActive": {
+    "nq-data-sync": true,
+    "nq-dashboard-v3": true,
+    "nq-orb-signal": true,
+    "nq-orb15-signal": true
+  }
 }

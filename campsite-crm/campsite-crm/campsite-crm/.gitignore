@@ -1,0 +1,8 @@
+node_modules/
+.env
+*.log
+dist/
+build/
+.DS_Store
+backend/backups/crm-backup-*-auto.json
+backend/backups/crm-backup-latest.json

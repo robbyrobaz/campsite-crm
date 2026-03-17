@@ -1,0 +1,22 @@
+[
+  {"code":"10-4","meaning":"Acknowledged / message received","category":"Ten-Code"},
+  {"code":"10-7","meaning":"Out of service","category":"Ten-Code"},
+  {"code":"10-8","meaning":"In service","category":"Ten-Code"},
+  {"code":"10-9","meaning":"Repeat last transmission","category":"Ten-Code"},
+  {"code":"10-20","meaning":"Location","category":"Ten-Code"},
+  {"code":"10-23","meaning":"Arrived on scene","category":"Ten-Code"},
+  {"code":"10-27","meaning":"Driver license information","category":"Ten-Code"},
+  {"code":"10-28","meaning":"Vehicle registration check","category":"Ten-Code"},
+  {"code":"10-29","meaning":"Wants/warrants check","category":"Ten-Code"},
+  {"code":"10-33","meaning":"Emergency traffic only","category":"Ten-Code"},
+  {"code":"10-97","meaning":"Arrived at scene","category":"Ten-Code"},
+  {"code":"10-98","meaning":"Assignment complete","category":"Ten-Code"},
+  {"code":"Code 3","meaning":"Respond with lights and siren","category":"Response"},
+  {"code":"Code 4","meaning":"No further assistance needed","category":"Response"},
+  {"code":"BOLO","meaning":"Be on the lookout","category":"Broadcast"},
+  {"code":"ATL","meaning":"Attempt to locate","category":"Broadcast"},
+  {"code":"ETA","meaning":"Estimated time of arrival","category":"General"},
+  {"code":"UTL","meaning":"Unable to locate","category":"General"},
+  {"code":"Clear","meaning":"Available for calls","category":"Status"},
+  {"code":"En route","meaning":"On the way to call/location","category":"Status"}
+]

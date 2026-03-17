@@ -8,6 +8,7 @@ Zero extra API calls. Uses data already collected by OpenClaw.
 
 import json
 import os
+import re
 import glob
 import time
 import subprocess
@@ -137,30 +138,63 @@ def format_tokens(n):
     return str(n)
 
 
+def _try_fetch_usage(creds_path):
+    """Single attempt to fetch Anthropic usage with token from creds_path."""
+    with open(creds_path, 'r') as f:
+        creds = json.load(f)
+    token = creds.get("claudeAiOauth", {}).get("accessToken", "")
+    if not token:
+        return None
+    result = subprocess.run(
+        ["curl", "-s", "-H", f"Authorization: Bearer {token}",
+         "-H", "anthropic-beta: oauth-2025-04-20",
+         "https://api.anthropic.com/api/oauth/usage"],
+        capture_output=True, text=True, timeout=10
+    )
+    data = json.loads(result.stdout)
+    if isinstance(data, dict) and data.get('type') == 'error':
+        return None
+    return data
+
+
 def fetch_anthropic_usage():
-    """Fetch real utilization % from Anthropic OAuth usage endpoint."""
+    """Fetch real utilization % from Anthropic OAuth usage endpoint.
+    Retries once after 10s to allow gateway to refresh an expired token."""
     creds_path = os.path.expanduser("~/.claude/.credentials.json")
     try:
-        with open(creds_path, 'r') as f:
-            creds = json.load(f)
-        token = creds.get("claudeAiOauth", {}).get("accessToken", "")
-        if not token:
-            return None
-        result = subprocess.run(
-            ["curl", "-s", "-H", f"Authorization: Bearer {token}",
-             "-H", "anthropic-beta: oauth-2025-04-20",
-             "https://api.anthropic.com/api/oauth/usage"],
-            capture_output=True, text=True, timeout=10
-        )
-        return json.loads(result.stdout)
+        data = _try_fetch_usage(creds_path)
+        if data is not None:
+            return data
+        # First attempt failed — wait for gateway to refresh token, then retry
+        time.sleep(10)
+        return _try_fetch_usage(creds_path)
     except Exception:
         return None
+
+
+def read_existing_rate_limits():
+    """Read the existing rate limits block from token_usage.md if API call fails.
+    Returns the raw lines of the section, or None if not found."""
+    try:
+        if not os.path.exists(OUTPUT_FILE):
+            return None
+        content = open(OUTPUT_FILE).read()
+        # Extract the rate limits section between ## ⚡ Anthropic Rate Limits and the next ##
+        m = re.search(r'(## ⚡ Anthropic Rate Limits.*?)(?=\n## |\Z)', content, re.DOTALL)
+        if m:
+            block = m.group(1).strip()
+            # Only preserve if it has real numbers (not ?%)
+            if re.search(r'\*\*\d+\.?\d*%\*\*', block):
+                return block
+    except Exception:
+        pass
+    return None
 
 
 def write_report():
     now = datetime.now(MST)
     
-    # Fetch real Anthropic utilization
+    # Fetch real Anthropic utilization — use existing values if API temporarily unavailable
     usage_api = fetch_anthropic_usage()
     
     # 5-hour window
@@ -210,6 +244,11 @@ def write_report():
             f"| 7-day (Sonnet) | **{sd_sonnet_pct}%** | {fmt_reset(sd_reset)} |",
             "",
         ])
+    else:
+        # API unavailable — preserve last known good values from existing file
+        preserved = read_existing_rate_limits()
+        if preserved:
+            lines.extend([preserved, ""])
     
     lines.extend([
         "## Rolling 5-Hour Window",

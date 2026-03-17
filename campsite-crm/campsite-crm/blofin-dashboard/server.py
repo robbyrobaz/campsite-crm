@@ -85,6 +85,15 @@ def get_db_connection():
     return conn
 
 
+def table_columns(conn, table_name):
+    """Return column names for a table (empty set if table is missing)."""
+    try:
+        rows = conn.execute(f"PRAGMA table_info({table_name})").fetchall()
+        return {row['name'] for row in rows}
+    except Exception:
+        return set()
+
+
 def safe_query(query_func):
     """Decorator for safe database queries with error handling."""
     @wraps(query_func)
@@ -394,6 +403,7 @@ def api_registry(conn):
                 r.ft_pnl_pct,
                 r.ft_max_dd,
                 r.ft_trades,
+                r.ft_profit_factor,
                 r.gate_status,
                 r.gate_failures,
                 r.pnl_rank,
@@ -427,6 +437,7 @@ def api_registry(conn):
                 "ft_pnl_pct": round(float(row['ft_pnl_pct'] or 0), 2),
                 "ft_max_dd": round(float(row['ft_max_dd'] or 0), 2),
                 "ft_trades": int(row['ft_trades'] or 0),
+                "ft_profit_factor": round(float(row['ft_profit_factor'] or 0), 3) if row['ft_profit_factor'] else None,
                 "gate_status": row['gate_status'] or 'fail',
                 "gate_failures": row['gate_failures'] or '',
                 "pnl_rank": row['pnl_rank'],
@@ -1206,6 +1217,331 @@ def api_summary(conn):
     })
 
 
+@app.route('/api/coin_performance')
+@cache_response(ttl_seconds=30)
+@safe_query
+def api_coin_performance(conn):
+    """
+    Per-coin strategy performance from strategy_coin_eligibility (paper trading stats)
+    joined with strategy_coin_performance (backtest stats).
+    Returns rows sorted by strategy then symbol.
+    """
+    cursor = conn.cursor()
+
+    # Gracefully handle missing tables
+    cursor.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='strategy_coin_eligibility'"
+    )
+    sce_exists = cursor.fetchone() is not None
+    cursor.execute(
+        "SELECT name FROM sqlite_master WHERE type='table' AND name='strategy_coin_performance'"
+    )
+    scp_exists = cursor.fetchone() is not None
+
+    if not sce_exists and not scp_exists:
+        return jsonify({"rows": [], "count": 0, "timestamp": datetime.utcnow().isoformat() + "Z"})
+
+    rows = []
+
+    if sce_exists:
+        join_clause = ""
+        if scp_exists:
+            join_clause = """
+                LEFT JOIN strategy_coin_performance scp
+                    ON sce.strategy_name = scp.strategy_name AND sce.symbol = scp.symbol
+            """
+        cursor.execute(f"""
+            SELECT
+                sce.strategy_name,
+                sce.symbol,
+                sce.total_trades,
+                sce.wins,
+                ROUND(sce.win_rate * 100, 1)    AS win_rate_pct,
+                sce.avg_pnl_pct,
+                sce.sum_pnl_pct,
+                sce.status,
+                sce.reason,
+                {'scp.tier, scp.bt_trades,' if scp_exists else 'NULL AS tier, NULL AS bt_trades,'}
+                {'ROUND(COALESCE(scp.bt_win_rate,0)*100,1) AS bt_win_rate_pct,' if scp_exists else 'NULL AS bt_win_rate_pct,'}
+                {'scp.bt_pnl_pct, scp.bt_profit_factor' if scp_exists else 'NULL AS bt_pnl_pct, NULL AS bt_profit_factor'}
+            FROM strategy_coin_eligibility sce
+            {join_clause}
+            ORDER BY sce.strategy_name, sce.symbol
+        """)
+        for row in cursor.fetchall():
+            rows.append({
+                "strategy":        row['strategy_name'],
+                "symbol":          row['symbol'],
+                "trades":          int(row['total_trades'] or 0),
+                "wins":            int(row['wins'] or 0),
+                "win_rate_pct":    float(row['win_rate_pct'] or 0),
+                "avg_pnl_pct":     round(float(row['avg_pnl_pct'] or 0), 3),
+                "sum_pnl_pct":     round(float(row['sum_pnl_pct'] or 0), 2),
+                "status":          row['status'] or 'active',
+                "reason":          row['reason'] or '',
+                "tier":            row['tier'],
+                "bt_trades":       int(row['bt_trades'] or 0) if row['bt_trades'] is not None else None,
+                "bt_win_rate_pct": float(row['bt_win_rate_pct'] or 0) if row['bt_win_rate_pct'] is not None else None,
+                "bt_pnl_pct":      round(float(row['bt_pnl_pct']), 2) if row['bt_pnl_pct'] is not None else None,
+                "bt_profit_factor": round(float(row['bt_profit_factor']), 3) if row['bt_profit_factor'] is not None else None,
+            })
+    elif scp_exists:
+        # No eligibility data yet — show backtest-only rows
+        cursor.execute("""
+            SELECT
+                strategy_name, symbol, tier,
+                bt_trades,
+                ROUND(COALESCE(bt_win_rate,0)*100,1) AS bt_win_rate_pct,
+                bt_pnl_pct, bt_profit_factor
+            FROM strategy_coin_performance
+            WHERE bt_trades IS NOT NULL AND bt_trades > 0
+            ORDER BY strategy_name, symbol
+        """)
+        for row in cursor.fetchall():
+            rows.append({
+                "strategy":        row['strategy_name'],
+                "symbol":          row['symbol'],
+                "trades":          0,
+                "wins":            0,
+                "win_rate_pct":    0,
+                "avg_pnl_pct":     0,
+                "sum_pnl_pct":     0,
+                "status":          "no_data",
+                "reason":          "",
+                "tier":            row['tier'],
+                "bt_trades":       int(row['bt_trades'] or 0),
+                "bt_win_rate_pct": float(row['bt_win_rate_pct'] or 0),
+                "bt_pnl_pct":      round(float(row['bt_pnl_pct']), 2) if row['bt_pnl_pct'] is not None else None,
+                "bt_profit_factor": round(float(row['bt_profit_factor']), 3) if row['bt_profit_factor'] is not None else None,
+            })
+
+    return jsonify({
+        "rows":      rows,
+        "count":     len(rows),
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+    })
+
+
+@app.route('/api/top_pairs')
+@cache_response(ttl_seconds=30)
+@safe_query
+def api_top_pairs(conn):
+    """
+    Top 10 coin-strategy pairs by FT profit factor (min 20 FT trades).
+    Source: strategy_coin_performance.
+    """
+    cursor = conn.cursor()
+    scp_cols = table_columns(conn, "strategy_coin_performance")
+    sce_cols = table_columns(conn, "strategy_coin_eligibility")
+
+    source = None
+    if {"strategy_name", "symbol", "ft_profit_factor", "ft_trades"}.issubset(scp_cols):
+        source = "scp"
+        cursor.execute("""
+            SELECT
+                strategy_name,
+                symbol,
+                ROUND(ft_profit_factor, 3)                       AS ft_pf,
+                ROUND(COALESCE(ft_win_rate, 0) * 100, 1)         AS ft_wr_pct,
+                ft_trades,
+                ROUND(COALESCE(ft_pnl_pct, 0), 2)                AS ft_pnl_pct,
+                COALESCE(leverage, 1)                            AS leverage
+            FROM strategy_coin_performance
+            WHERE ft_profit_factor IS NOT NULL
+              AND ft_trades >= 20
+            ORDER BY ft_profit_factor DESC
+            LIMIT 10
+        """)
+    elif {"strategy_name", "symbol", "ft_profit_factor"}.issubset(sce_cols) and (
+        "ft_trade_count" in sce_cols or "ft_trades" in sce_cols
+    ):
+        source = "sce"
+        trade_col = "ft_trade_count" if "ft_trade_count" in sce_cols else "ft_trades"
+        wr_col = "ft_win_rate" if "ft_win_rate" in sce_cols else "win_rate"
+        pnl_col = "ft_pnl_pct" if "ft_pnl_pct" in sce_cols else "sum_pnl_pct"
+        lev_col = "leverage" if "leverage" in sce_cols else "1"
+        cursor.execute(f"""
+            SELECT
+                strategy_name,
+                symbol,
+                ROUND(ft_profit_factor, 3)                       AS ft_pf,
+                ROUND(COALESCE({wr_col}, 0) * 100, 1)            AS ft_wr_pct,
+                COALESCE({trade_col}, 0)                         AS ft_trades,
+                ROUND(COALESCE({pnl_col}, 0), 2)                 AS ft_pnl_pct,
+                COALESCE({lev_col}, 1)                           AS leverage
+            FROM strategy_coin_eligibility
+            WHERE ft_profit_factor IS NOT NULL
+              AND COALESCE({trade_col}, 0) >= 20
+            ORDER BY ft_profit_factor DESC
+            LIMIT 10
+        """)
+    else:
+        return jsonify({"pairs": [], "count": 0, "source": "none", "timestamp": datetime.utcnow().isoformat() + "Z"})
+
+    pairs = []
+    for row in cursor.fetchall():
+        pairs.append({
+            "strategy":    row['strategy_name'],
+            "symbol":      row['symbol'],
+            "ft_pf":       float(row['ft_pf'] or 0),
+            "ft_wr_pct":   float(row['ft_wr_pct'] or 0),
+            "ft_trades":   int(row['ft_trades'] or 0),
+            "ft_pnl_pct":  float(row['ft_pnl_pct'] or 0),
+            "leverage":    int(row['leverage'] or 1),
+        })
+    return jsonify({
+        "pairs":     pairs,
+        "count":     len(pairs),
+        "source":    source,
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+    })
+
+
+@app.route('/api/leverage_tiers')
+@cache_response(ttl_seconds=30)
+@safe_query
+def api_leverage_tiers(conn):
+    """
+    Leverage tier distribution: count of pairs at each leverage level (5x, 3x, 2x, 1x).
+    """
+    cursor = conn.cursor()
+    sce_cols = table_columns(conn, "strategy_coin_eligibility")
+    if "leverage" not in sce_cols:
+        return jsonify({
+            "tier_distribution": {},
+            "total_pairs": 0,
+            "timestamp": datetime.utcnow().isoformat() + "Z",
+        })
+
+    cursor.execute("""
+        SELECT leverage, COUNT(*) as count
+        FROM strategy_coin_eligibility
+        WHERE leverage IS NOT NULL
+        GROUP BY leverage
+        ORDER BY leverage DESC
+    """)
+
+    tier_dist = {}
+    for row in cursor.fetchall():
+        tier_dist[int(row['leverage'])] = int(row['count'])
+
+    return jsonify({
+        "tier_distribution": tier_dist,
+        "total_pairs": sum(tier_dist.values()),
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+    })
+
+
+@app.route('/api/leverage_pairs')
+@cache_response(ttl_seconds=30)
+@safe_query
+def api_leverage_pairs(conn):
+    """
+    All pairs with leverage > 1x, ranked by leverage and FT profit factor.
+    Includes strategy, coin, leverage, FT metrics.
+    """
+    cursor = conn.cursor()
+    scp_cols = table_columns(conn, "strategy_coin_performance")
+    if {"strategy_name", "symbol", "leverage"}.issubset(scp_cols):
+        cursor.execute("""
+            SELECT
+                strategy_name,
+                symbol,
+                leverage,
+                ROUND(ft_profit_factor, 3)                 AS ft_pf,
+                ROUND(COALESCE(ft_win_rate, 0) * 100, 1)  AS ft_wr_pct,
+                COALESCE(ft_trades, 0)                     AS ft_trades,
+                ROUND(COALESCE(ft_pnl_pct, 0), 2)          AS ft_pnl_pct
+            FROM strategy_coin_performance
+            WHERE leverage > 1
+            ORDER BY leverage DESC, ft_profit_factor DESC
+        """)
+    else:
+        sce_cols = table_columns(conn, "strategy_coin_eligibility")
+        if not {"strategy_name", "symbol", "leverage"}.issubset(sce_cols):
+            return jsonify({"pairs": [], "count": 0, "timestamp": datetime.utcnow().isoformat() + "Z"})
+        trade_col = "ft_trade_count" if "ft_trade_count" in sce_cols else ("ft_trades" if "ft_trades" in sce_cols else "0")
+        wr_col = "ft_win_rate" if "ft_win_rate" in sce_cols else "win_rate"
+        pnl_col = "ft_pnl_pct" if "ft_pnl_pct" in sce_cols else "sum_pnl_pct"
+        pf_col = "ft_profit_factor" if "ft_profit_factor" in sce_cols else "NULL"
+        cursor.execute(f"""
+            SELECT
+                strategy_name,
+                symbol,
+                leverage,
+                ROUND({pf_col}, 3)                         AS ft_pf,
+                ROUND(COALESCE({wr_col}, 0) * 100, 1)      AS ft_wr_pct,
+                COALESCE({trade_col}, 0)                   AS ft_trades,
+                ROUND(COALESCE({pnl_col}, 0), 2)           AS ft_pnl_pct
+            FROM strategy_coin_eligibility
+            WHERE leverage > 1
+            ORDER BY leverage DESC, {pf_col} DESC
+        """)
+
+    pairs = []
+    for row in cursor.fetchall():
+        pairs.append({
+            "strategy":    row['strategy_name'],
+            "symbol":      row['symbol'],
+            "leverage":    int(row['leverage']),
+            "ft_pf":       float(row['ft_pf'] or 0),
+            "ft_wr_pct":   float(row['ft_wr_pct'] or 0),
+            "ft_trades":   int(row['ft_trades'] or 0),
+            "ft_pnl_pct":  float(row['ft_pnl_pct'] or 0),
+        })
+
+    return jsonify({
+        "pairs":     pairs,
+        "count":     len(pairs),
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+    })
+
+
+@app.route('/api/leverage_trades')
+@cache_response(ttl_seconds=15)
+@safe_query
+def api_leverage_trades(conn):
+    """
+    Recent paper trades with leverage > 1x (last 100 trades).
+    """
+    cursor = conn.cursor()
+    cursor.execute("""
+        SELECT
+            symbol,
+            opened_ts_iso,
+            leverage_used,
+            entry_price,
+            qty,
+            status,
+            pnl_pct,
+            ROUND(exit_price, 4) as exit_price
+        FROM paper_trades
+        WHERE leverage_used > 1
+        ORDER BY opened_ts_ms DESC
+        LIMIT 100
+    """)
+
+    trades = []
+    for row in cursor.fetchall():
+        pnl_pct = float(row['pnl_pct']) if row['pnl_pct'] is not None else None
+        trades.append({
+            "symbol":       row['symbol'],
+            "opened_ts":    row['opened_ts_iso'],
+            "leverage":     int(row['leverage_used']),
+            "entry_price":  float(row['entry_price']),
+            "exit_price":   float(row['exit_price']) if row['exit_price'] else None,
+            "qty":          float(row['qty']),
+            "status":       row['status'],
+            "pnl_pct":      pnl_pct,
+        })
+
+    return jsonify({
+        "trades":    trades,
+        "count":     len(trades),
+        "timestamp": datetime.utcnow().isoformat() + "Z",
+    })
+
+
 @app.route('/health')
 def health():
     """Health check endpoint."""
@@ -1218,7 +1554,7 @@ def health():
 
 
 if __name__ == '__main__':
-    print(f"Starting Blofin Dashboard Server on http://localhost:8888")
+    print(f"Starting Blofin Dashboard Server on http://localhost:8892")
     print(f"Database: {DB_PATH}")
-    print(f"Dashboard: http://localhost:8888/blofin-dashboard.html")
-    app.run(host='0.0.0.0', port=8888, debug=False)
+    print(f"Dashboard: http://localhost:8892/blofin-dashboard.html")
+    app.run(host='0.0.0.0', port=8892, debug=False)

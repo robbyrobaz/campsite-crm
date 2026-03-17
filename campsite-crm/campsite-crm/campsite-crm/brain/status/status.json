@@ -1,0 +1,44 @@
+{
+  "lastUpdated": "2026-02-23T06:19:00Z",
+  "activeTasks": [
+    {
+      "id": "c_320ce3d758467_19c88b9fa12",
+      "title": "fully replace EEP from all boards",
+      "pid": 25122,
+      "recycleCount": 5,
+      "note": "Kanban HTML labels only"
+    },
+    {
+      "id": "c_9afb19c4ecfdd_19c890da17a",
+      "title": "Fix BaseStrategy inheritance in 21 strategy_NNN.py files",
+      "pid": 25195
+    },
+    {
+      "id": "c_e6b5bf2b6ffb2_19c892879d8",
+      "title": "Commit and push all uncommitted changes across repos",
+      "pid": 26486
+    }
+  ],
+  "completedThisCycle": [
+    "c_6c80c3527bd7 QA PASS: T0\u2192T1 gate fix deployed \u2014 promote = _g_pass, demotion sweep added. 37 bad T1 strategies will be demoted next pipeline run.",
+    "c_d10d92129c0c3: Numerai era-boosting completed (era_boost_deploy.py ran, card auto-closed)"
+  ],
+  "inboxQueue": [
+    "c_0b8667a99eb9_19c89: Add demotion sweep to run_pipeline.py Phase 3: any",
+    "c_9f7f41f644c6c_19c8: Blofin dashboard: add per-coin strategy performanc",
+    "c_ec7d3af108ade_19c8: Add gate_status and pnl_rank columns to blofin das",
+    "c_fb277de3dffac_19c8: Run full blofin backtest sweep on all 16 T0 strate",
+    "c_46fcecb6dc411_19c8: Verify and fix the 21 strategies blocked by BaseSt",
+    "c_6fdb7712b3ad8_19c8: make a way to see the live work of any deployed ag",
+    "c_2577b78e1b8fb_19c8: Retrain 4 stale ML models \u2014 momentum_classifier, r",
+    "c_de1e2f50a6d45_19c8: Switch all Numerai ML training to GPU. RTX 2080 at"
+  ],
+  "health": {
+    "cpu_temp": "58C",
+    "load_pct": "10.2%",
+    "disk_pct": "36%",
+    "tokens_5h": "54%",
+    "services": "all active"
+  },
+  "notes": "23:19 MST \u2014 T0\u2192T1 CRITICAL FIX deployed (blofin restarted). Builders created 6 sub-tasks (all assignees fixed). Tokens 54% \u2192 approaching 60% Phase 8 gate. Queue=8 inbox cards. Phase 8 skipped."
+}

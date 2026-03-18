@@ -1,0 +1,8 @@
+Starting blofin data retention at Wed Mar 18 11:51:42 AM MST 2026
+DATA_DIR: /home/rob/.openclaw/workspace/blofin-stack/data
+DB: /home/rob/.openclaw/workspace/blofin-stack/data/blofin_monitor.db
+DB_TIMEOUT: 300
+Step 1: Deleting raw JSONL files older than 1 day
+Step 1 complete
+Step 2: Pruning ticks older than 14 days
+Cutoff ms: 1772650302539

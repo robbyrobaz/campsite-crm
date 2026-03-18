@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-03-18 01:45 MST
+**Updated:** 2026-03-18 02:00 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -9,15 +9,15 @@
 | 7-day (Sonnet) | **89.0%** | Mar 19 08:59 PM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 22.9M (224 requests)
-- **Input:** 849 | **Output:** 39.6K
-- **Cache Read:** 17.8M | **Cache Write:** 5.1M
-- **Cost (est):** $27.49
+- **Total Tokens:** 22.2M (217 requests)
+- **Input:** 802 | **Output:** 38.0K
+- **Cache Read:** 17.5M | **Cache Write:** 4.7M
+- **Cost (est):** $26.20
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| sonnet | 182 | 20.9M | 35.5K | $20.99 |
+| sonnet | 175 | 20.3M | 33.9K | $19.70 |
 | opus | 28 | 2.0M | 4.1K | $6.50 |
 | delivery-mirror | 1 | 0 | 0 | $0.00 |
 | llama-3.3-nemotron-super-49b-v1.5 | 9 | 0 | 0 | $0.00 |

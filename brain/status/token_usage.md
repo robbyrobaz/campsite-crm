@@ -1,7 +1,7 @@
 # Token Usage
-**Updated:** 2026-03-18 06:00 MST
+**Updated:** 2026-03-18 06:15 MST
 
-## ⚡ Anthropic Rate Limits (Live)
+## ⚡ Anthropic Rate Limits (Cached — 15min ago)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
 | 5-hour | **6.0%** | Mar 18 09:00 AM MST |
@@ -20,15 +20,15 @@
 | sonnet | 3 | 193.4K | 1.1K | $0.67 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 66.1M (540 requests)
-- **Output Tokens:** 127.6K
-- **Cost (est):** $101.09
+- **Total Tokens:** 65.4M (531 requests)
+- **Output Tokens:** 125.1K
+- **Cost (est):** $100.28
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
 | sonnet | 381 | 52.4M | 93.8K | $75.52 |
-| opus | 141 | 13.4M | 33.3K | $25.27 |
+| opus | 132 | 12.8M | 30.9K | $24.46 |
 | haiku | 2 | 261.4K | 524 | $0.31 |
 | delivery-mirror | 3 | 0 | 0 | $0.00 |
 | llama-3.3-nemotron-super-49b-v1.5 | 9 | 0 | 0 | $0.00 |

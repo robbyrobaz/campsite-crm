@@ -8,7 +8,7 @@
 ## Model Routing (Updated Mar 16 2026)
 
 - Subscription: Claude Max 20x ($200/mo flat). 7-day Sonnet limit is the binding constraint.
-- **Current routing:** Opus for main Jarvis session. Sonnet for builders. Haiku for crons.
+- **Current routing:** Opus for main Jarvis session. Nemotron-3-super-120b-a12b for builders. Haiku for crons.
 - Gateway config: `~/.openclaw/openclaw.json` → `.agents.defaults.model.primary`
 - Kanban runner model: `claude-haiku-4-5` (CLI format, no `anthropic/` prefix)
 

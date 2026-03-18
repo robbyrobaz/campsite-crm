@@ -1,35 +1,35 @@
 # Token Usage
-**Updated:** 2026-03-18 15:45 MST
+**Updated:** 2026-03-18 16:00 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
 | 5-hour | **3.0%** | Mar 18 07:00 PM MST |
-| 7-day (all) | **94.0%** 🔴 | Mar 19 09:00 PM MST |
-| 7-day (Sonnet) | **97.0%** | Mar 19 09:00 PM MST |
+| 7-day (all) | **94.0%** 🔴 | Mar 19 08:59 PM MST |
+| 7-day (Sonnet) | **97.0%** | Mar 19 08:59 PM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 670.2K (22 requests)
-- **Input:** 463.0K | **Output:** 7.5K
+- **Total Tokens:** 1.2M (35 requests)
+- **Input:** 956.6K | **Output:** 17.8K
 - **Cache Read:** 67.6K | **Cache Write:** 132.0K
 - **Cost (est):** $0.53
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| nvidia/nemotron-3-super-120b-a12b:free | 8 | 239.8K | 5.4K | $0.00 |
+| nvidia/nemotron-3-super-120b-a12b:free | 21 | 743.7K | 15.7K | $0.00 |
 | nvidia/nemotron-3-super-120b-a12b | 6 | 229.4K | 870 | $0.00 |
 | sonnet | 8 | 200.9K | 1.3K | $0.53 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 670.2K (22 requests)
-- **Output Tokens:** 7.5K
+- **Total Tokens:** 1.2M (35 requests)
+- **Output Tokens:** 17.8K
 - **Cost (est):** $0.53
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| nvidia/nemotron-3-super-120b-a12b:free | 8 | 239.8K | 5.4K | $0.00 |
+| nvidia/nemotron-3-super-120b-a12b:free | 21 | 743.7K | 15.7K | $0.00 |
 | nvidia/nemotron-3-super-120b-a12b | 6 | 229.4K | 870 | $0.00 |
 | sonnet | 8 | 200.9K | 1.3K | $0.53 |
 

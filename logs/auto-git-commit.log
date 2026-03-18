@@ -33633,3 +33633,117 @@ CLEAN master-dashboard (nothing to commit)
 [main 938054c] auto: snapshot 2026-03-18T03:00:01Z
  1 file changed, 0 insertions(+), 0 deletions(-)
 COMMITTED blofin-stack
+[main a603850f3] auto: snapshot 2026-03-18T03:00:01Z
+ 19 files changed, 1393 insertions(+), 9 deletions(-)
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_190020-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_190520-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_191020-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_191520-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_192020-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_192520-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_193020-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_193520-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_194020-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_194520-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_195020-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_195520-auto.json
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main 850624b70] auto: snapshot 2026-03-18T03:00:01Z
+ 13 files changed, 1321 insertions(+), 1 deletion(-)
+ create mode 100644 backend/backups/crm-backup-20260317_190020-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_190520-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_191020-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_191520-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_192020-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_192520-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_193020-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_193520-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_194020-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_194520-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_195020-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_195520-auto.json
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 3 committed, 6 skipped
+CLEAN master-dashboard (nothing to commit)
+/home/rob/.openclaw/workspace/scripts/auto-git-commit-projects.sh: line 31: 815447 Bus error               (core dumped) git -C "$dir" add -A
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+/home/rob/.openclaw/workspace/scripts/auto-git-commit-projects.sh: line 31: 1148190 Bus error               (core dumped) git -C "$dir" add -A
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

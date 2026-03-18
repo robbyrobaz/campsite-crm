@@ -4,11 +4,12 @@
 > This is the SINGLE canonical workflow. SOUL.md and AGENTS.md reference this.
 
 ## Before ANY work:
-- [ ] Create kanban card with **status="Planned"** — NEVER use Inbox (dispatcher ignores it)
-  - POST to http://127.0.0.1:8787/api/inbox with `text`, `source`, `project_path`, **`status: "Planned"`**
-  - OR: Create in Inbox then immediately PATCH to Planned + set assignee
-- [ ] Set assignee (required for run): `{"assignee":"claude"}` (or codex/gemini/opencode/copilot/antigravity)
-- [ ] If task involves code AND you're in main session → DELEGATE via kanban runner, do NOT write code yourself
+- [ ] If task involves code OR requires longer execution (>30s) → USE `sessions_spawn` with runtime="subagent" to create isolated builder session
+- [ ] Write specific, scoped instructions — not vague directives
+- [ ] Each Builder gets ONE task, ONE repo scope
+- [ ] Builders report to Jarvis, never to Rob
+- [ ] Review Builder output before delivering (non-negotiable)
+- [ ] If a Builder's work is garbage, fix it or redo it
 
 ## ❌ HARD RULE — NO CARD = NO SPAWN:
 **NEVER call `sessions_spawn` without a kanban card ID in hand.**

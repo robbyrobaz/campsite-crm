@@ -33416,3 +33416,75 @@ CLEAN master-dashboard (nothing to commit)
 [main a82bfe7] auto: snapshot 2026-03-17T22:00:01Z
  1 file changed, 0 insertions(+), 0 deletions(-)
 COMMITTED blofin-stack
+[main 97bb05229] auto: snapshot 2026-03-17T22:00:01Z
+ 31 files changed, 2739 insertions(+), 9 deletions(-)
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_130019-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_130519-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_131019-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_131519-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_132019-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_132519-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_133019-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_133519-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_134019-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_134519-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_135019-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_135519-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_140019-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_140519-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_141019-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_141519-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_142019-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_142519-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_143019-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_143519-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_144020-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_144520-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_145020-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260317_145520-auto.json
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main bf519a48c] auto: snapshot 2026-03-17T22:00:01Z
+ 25 files changed, 2641 insertions(+), 1 deletion(-)
+ create mode 100644 backend/backups/crm-backup-20260317_130019-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_130519-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_131019-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_131519-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_132019-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_132519-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_133019-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_133519-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_134019-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_134519-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_135019-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_135519-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_140019-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_140519-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_141019-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_141519-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_142019-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_142519-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_143019-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_143519-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_144020-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_144520-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_145020-auto.json
+ create mode 100644 backend/backups/crm-backup-20260317_145520-auto.json
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 3 committed, 6 skipped
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+[main b11472f] auto: snapshot 2026-03-18T00:00:01Z
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+COMMITTED blofin-stack

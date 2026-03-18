@@ -1,26 +1,26 @@
 # Token Usage
-**Updated:** 2026-03-18 03:15 MST
+**Updated:** 2026-03-18 03:30 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
-| 5-hour | **8.0%** | Mar 18 04:00 AM MST |
+| 5-hour | **9.0%** | Mar 18 04:00 AM MST |
 | 7-day (all) | **87.0%** 🔴 | Mar 19 09:00 PM MST |
 | 7-day (Sonnet) | **90.0%** | Mar 19 09:00 PM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 4.4M (69 requests)
-- **Input:** 257 | **Output:** 11.6K
-- **Cache Read:** 2.4M | **Cache Write:** 1.9M
-- **Cost (est):** $10.80
+- **Total Tokens:** 2.6M (59 requests)
+- **Input:** 183 | **Output:** 9.1K
+- **Cache Read:** 1.5M | **Cache Write:** 1.1M
+- **Cost (est):** $6.35
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| sonnet | 28 | 2.4M | 7.5K | $4.30 |
-| opus | 28 | 2.0M | 4.1K | $6.50 |
-| llama-3.3-nemotron-super-49b-v1.5 | 9 | 0 | 0 | $0.00 |
+| opus | 26 | 1.4M | 4.0K | $4.47 |
+| sonnet | 21 | 1.2M | 5.1K | $1.89 |
 | nemotron-mini-4b-instruct | 2 | 0 | 0 | $0.00 |
+| llama-3.3-nemotron-super-49b-v1.5 | 8 | 0 | 0 | $0.00 |
 | nemotron-3-super-120b-a12b | 2 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window

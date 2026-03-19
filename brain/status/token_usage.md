@@ -1,7 +1,7 @@
 # Token Usage
-**Updated:** 2026-03-19 01:15 MST
+**Updated:** 2026-03-19 01:30 MST
 
-## ⚡ Anthropic Rate Limits (Cached — 150min ago)
+## ⚡ Anthropic Rate Limits (Cached — 165min ago)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
 | 5-hour | **3.0%** | Mar 19 12:00 AM MST |
@@ -9,7 +9,7 @@
 | 7-day (Sonnet) | **98.0%** | Mar 19 08:59 PM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 1.3M (30 requests)
+- **Total Tokens:** 1.3M (25 requests)
 - **Input:** 26 | **Output:** 4.7K
 - **Cache Read:** 1.1M | **Cache Write:** 238.4K
 - **Cost (est):** $2.14
@@ -18,8 +18,8 @@
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
 | opus | 20 | 1.3M | 4.7K | $2.14 |
-| qwen2.5-coder:14b | 2 | 0 | 0 | $0.00 |
-| nvidia/nemotron-3-super-120b-a12b:free | 8 | 0 | 0 | $0.00 |
+| qwen2.5-coder:14b | 1 | 0 | 0 | $0.00 |
+| nvidia/nemotron-3-super-120b-a12b:free | 4 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
 - **Total Tokens:** 2.3M (76 requests)

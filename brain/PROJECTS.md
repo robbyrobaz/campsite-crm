@@ -8,24 +8,7 @@
 
 ## 🟢 ACTIVE (Primary Focus)
 
-### 0. Blofin Historical Data Backfill ⭐ CRITICAL (70-hour job)
-**Purpose:** Download 365 days of 1-min candles for all 469 Blofin symbols
-**Started:** 2026-03-15 18:14 MST | **ETA:** 2026-03-18/19 (Tuesday/Wednesday)
-**Status:** IN PROGRESS — 67/469 symbols complete (14.3%), 402 remaining
-**Storage:** `/mnt/data/blofin_tickers/raw/{SYMBOL}/tickers/*.parquet`
-**Data:** ~247M candles total, currently 29.3M collected (683 MB on disk)
-**Process:** PID 1743860, restarted 2026-03-16 05:37 MST after 3.5h outage
-**Log:** `blofin-stack/logs/backfill_FINAL_RESTART_20260316_0537.log`
-**Watchdog:** Cron `3128d9ad-1e64-47ba-b73f-7c5cc93aa67c` (every 10 min, auto-restart if dead)
-**Docs:** `blofin-stack/brain/HISTORICAL_BACKFILL_PLAN.md`
 
-**Why it matters:** DuckDB reads these Parquet files directly for backtesting. No migration needed. 365 days of tick data for strategy validation across all crypto pairs.
-
-**Incident (2026-03-16):** Process died 02:10 MST, undetected for 3.5 hours. NO watchdog existed. Watchdog created and backfill restarted 05:37 MST.
-
-**Check progress:** `find /mnt/data/blofin_tickers/raw -type d -name "tickers" | wc -l`
-
----
 
 ### 1. IBKR Options Pipeline ⭐ NEW
 **Repo:** `robbyrobaz/ibkr-pipeline` (private) | **Path:** `~/infrastructure/ibkr/`

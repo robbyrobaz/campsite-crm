@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-03-18 20:30 MST
+**Updated:** 2026-03-18 20:45 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -9,16 +9,16 @@
 | 7-day (Sonnet) | **97.0%** | Mar 19 09:00 PM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 1.0M (51 requests)
-- **Input:** 879.9K | **Output:** 22.0K
-- **Cache Read:** 27.7K | **Cache Write:** 75.9K
-- **Cost (est):** $0.27
+- **Total Tokens:** 733.6K (42 requests)
+- **Input:** 645.4K | **Output:** 16.3K
+- **Cache Read:** 18.5K | **Cache Write:** 53.4K
+- **Cost (est):** $0.18
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| nvidia/nemotron-3-super-120b-a12b:free | 42 | 900.8K | 20.9K | $0.00 |
-| sonnet | 3 | 81.5K | 886 | $0.25 |
+| nvidia/nemotron-3-super-120b-a12b:free | 34 | 660.9K | 15.5K | $0.00 |
+| sonnet | 2 | 49.4K | 543 | $0.16 |
 | haiku | 1 | 23.2K | 203 | $0.02 |
 | deepseek-coder-v2:16b | 1 | 0 | 0 | $0.00 |
 | qwen2.5-coder:14b | 3 | 0 | 0 | $0.00 |

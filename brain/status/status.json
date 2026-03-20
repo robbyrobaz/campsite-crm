@@ -1,7 +1,7 @@
 {
   "activeTasks": [],
   "lastDispatch": "2026-03-16T19:31:00-07:00",
-  "lastHealthCheck": "2026-03-19T19:44:00-07:00",
+  "lastHealthCheck": "2026-03-19T23:04:00-07:00",
   "nqServices": {
     "nq-data-sync": "active",
     "nq-dashboard-v3": "active",
@@ -18,5 +18,5 @@
     "recentFtTrades7d": 167,
     "mlModelsDeployed": 27
   },
-  "notes": "Heartbeat 19:44 MST — CPU 81°C (OK), disk 63%, RAM 20GB avail. Backfill running (PID 1312047). NQ repo backed up. blofin-stack git repo has bus error on git add — repo corruption needs repair. Old ingestor.py still running (PID 842369)."
+  "notes": "Heartbeat 23:04 MST — CPU 83°C (OK, down from 97°C after killing zombie ingestor). Disk 64%. Backfill running (134/468). Git: NQ + moonshot backed up, blofin-stack still corrupted."
 }

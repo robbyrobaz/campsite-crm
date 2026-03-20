@@ -7755,13 +7755,13 @@ function renderCameras(cameras) {
 
       let thumbHtml, sourceBadge;
       if (rtspId) {
-        // TRUE LIVE VIDEO via MediaMTX HLS — real streaming video with <3s latency
+        // Live HLS video via MediaMTX — iframe src set lazily to avoid blocking page load
         thumbHtml = `<iframe id="cam-stream-${mac}" 
-             src="http://${window.location.hostname}:8888/${rtspId}/"
              class="camera-thumb" 
              style="border:none;background:#000"
              allow="autoplay"
-             sandbox="allow-scripts allow-same-origin"></iframe>`;
+             sandbox="allow-scripts allow-same-origin"
+             data-cam-src="http://${window.location.hostname}:8888/${rtspId}/"></iframe>`;
         sourceBadge = `<span class="badge" style="background:rgba(0,255,128,.15);color:#00ff80;margin-right:6px">🔴 LIVE VIDEO</span>`;
       } else if (isFront) {
         // No RTSP — snapshot with fast refresh every 5s
@@ -7798,12 +7798,17 @@ function renderCameras(cameras) {
 
     _camListCache = cameras;  // Update cache
 
-    // Setup refresh timers only for non-streaming cameras (Ring, etc.)
+    // Setup refresh timers for non-streaming cameras; lazy-load HLS iframes after page settles
     cameras.forEach(cam => {
       const mac    = cam.mac || cam.type;
       const rtspId = _getRtspId(cam);
-      // Only need polling for non-streaming cameras (HLS iframes handle their own refresh)
-      if (!rtspId && !_camRefreshTimers[mac]) {
+      if (rtspId) {
+        // Lazy-load HLS iframe: set src after DOM is ready so page doesn't show loading spinner
+        const iframe = document.getElementById('cam-stream-' + mac);
+        if (iframe && !iframe.src.includes('8888')) {
+          setTimeout(() => { iframe.src = iframe.dataset.camSrc; }, 500);
+        }
+      } else if (!_camRefreshTimers[mac]) {
         const interval = 30000;  // 30s for snapshots
         _camRefreshTimers[mac] = setInterval(() => refreshCameraImg(mac), interval);
       }

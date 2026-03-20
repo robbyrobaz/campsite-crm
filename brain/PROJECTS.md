@@ -10,6 +10,34 @@
 
 
 
+### 0. Hyperliquid S&P 500 Pipeline ⭐ NEW (Mar 20 2026)
+**Repo:** `hyperliquid-sp500-pipeline/` | **Path:** `/home/rob/.openclaw/workspace/hyperliquid-sp500-pipeline/`
+**Dashboard:** http://127.0.0.1:8897 | **Services:** `sp500-ingestor.service`, `sp500-dashboard.service`
+**GitHub:** https://github.com/robbyrobaz/hyperliquid-sp500-pipeline (private)
+**Status:** Data pipeline LIVE. SPY backfill running. Paper trading ready once backfill completes.
+
+**Contract:** `xyz:SP500` on Trade[XYZ] perp dex (Hyperliquid L1 blockchain)
+- 50x max leverage, isolated margin, USDC settled, 24/7 trading
+- Officially licensed by S&P Dow Jones Indices (launched Mar 18 2026)
+- Oracle: institutional S&P DJI data feed
+
+**Architecture:**
+- WebSocket ingestor → DuckDB (1-min candles)
+- 10 strategies ported from NQ pipeline (ORB variants, momentum, power hour, FVG, london killzone)
+- Backtester + paper engine + executor stub
+- Historical data: IBKR SPY × 10 as proxy (365 days backfilling)
+
+**API Key Detail:** All requests need `"dex":"xyz"` parameter for Trade[XYZ] assets
+
+**Next actions:**
+- [ ] Complete SPY 1-year backfill via IBKR (~1 hour)
+- [ ] Run backtests on all 10 strategies
+- [ ] Start paper trading
+- [ ] Configure CyberGhost VPN (UK dedicated IP) for live trading
+- [ ] ⛔ Live trading requires Rob's explicit approval + VPN active
+
+---
+
 ### 1. IBKR Options Pipeline ⭐ NEW
 **Repo:** `robbyrobaz/ibkr-pipeline` (private) | **Path:** `~/infrastructure/ibkr/`
 **Status:** Infrastructure DONE. Waiting on OPRA subscription (~Thursday Mar 5 when $500 clears).

@@ -21,6 +21,21 @@
 
 **Rob's directive (Mar 15):** FT is FREE. Expect 95% losers. Only track top performers. Never report aggregate metrics.
 
+## Hyperliquid S&P 500 Pipeline (Mar 20 2026 — NEW)
+
+- **Repo:** `robbyrobaz/hyperliquid-sp500-pipeline`
+- **Contract:** `xyz:SP500` on Trade[XYZ] perp dex (Hyperliquid L1)
+- **Leverage:** 50x max (isolated margin only)
+- **API:** POST `https://api.hyperliquid.xyz/info` with `"dex":"xyz"` — THIS IS CRITICAL, without dex param you see the wrong SPX (meme coin)
+- **WebSocket:** `wss://api.hyperliquid.xyz/ws`
+- **Launched:** March 18, 2026 — officially licensed by S&P Dow Jones Indices
+- **Services:** `sp500-ingestor.service`, `sp500-dashboard.service` (port 8897)
+- **Data:** DuckDB at `data/sp500_pipeline.duckdb`
+- **Backtest data:** SPY × 10 from IBKR (proxy for S&P 500 index, ~99.9% correlation)
+- **10 strategies** ported from NQ pipeline
+- **US geo-restricted** — needs CyberGhost VPN (UK dedicated IP) for live trading
+- Paper trading only until Rob approves live + VPN is configured
+
 ## Numerai (Cross-Cutting — Jarvis Owns)
 
 - 3 models: robbyrobml, robbyrob2, robbyrob3

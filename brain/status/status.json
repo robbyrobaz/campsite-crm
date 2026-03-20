@@ -1,7 +1,7 @@
 {
   "activeTasks": [],
   "lastDispatch": "2026-03-16T19:31:00-07:00",
-  "lastHealthCheck": "2026-03-19T23:04:00-07:00",
+  "lastHealthCheck": "2026-03-20T00:04:00-07:00",
   "nqServices": {
     "nq-data-sync": "active",
     "nq-dashboard-v3": "active",
@@ -18,5 +18,5 @@
     "recentFtTrades7d": 167,
     "mlModelsDeployed": 27
   },
-  "notes": "Heartbeat 23:04 MST — CPU 83°C (OK, down from 97°C after killing zombie ingestor). Disk 64%. Backfill running (134/468). Git: NQ + moonshot backed up, blofin-stack still corrupted."
+  "notes": "Heartbeat 00:04 MST — CPU 73°C (cooled down after killing zombie ingestor), disk 64%, RAM 20GB avail. Backfill running 148/468. NQ repo backed up. blofin-stack git still corrupted."
 }

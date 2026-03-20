@@ -260,6 +260,7 @@ def write_report():
         
         fh_reset = fh.get("resets_at", "")
         sd_reset = sd.get("resets_at", "")
+        sd_sonnet_reset = sd_sonnet.get("resets_at", "") if sd_sonnet else sd_reset
         
         # Parse reset times to MST
         def fmt_reset(iso_str):
@@ -286,7 +287,7 @@ def write_report():
             f"|--------|-------|-----------|",
             f"| 5-hour | **{fh_pct}%**{fh_warn} | {fmt_reset(fh_reset)} |",
             f"| 7-day (all) | **{sd_pct}%**{sd_warn} | {fmt_reset(sd_reset)} |",
-            f"| 7-day (Sonnet) | **{sd_sonnet_pct}%** | {fmt_reset(sd_reset)} |",
+            f"| 7-day (Sonnet) | **{sd_sonnet_pct}%** | {fmt_reset(sd_sonnet_reset)} |",
             "",
         ])
     

@@ -1,22 +1,6 @@
 {
   "activeTasks": [],
   "lastDispatch": "2026-03-16T19:31:00-07:00",
-  "lastHealthCheck": "2026-03-20T00:04:00-07:00",
-  "nqServices": {
-    "nq-data-sync": "active",
-    "nq-dashboard-v3": "active",
-    "nq-orb-signal": "active",
-    "nq-orb15-signal": "active",
-    "nq-watcher": "active"
-  },
-  "nqPipeline": {
-    "totalStrategies": 151,
-    "tier3": 2,
-    "tier2": 4,
-    "tier1": 24,
-    "tier0": 121,
-    "recentFtTrades7d": 167,
-    "mlModelsDeployed": 27
-  },
-  "notes": "Heartbeat 00:04 MST — CPU 73°C (cooled down after killing zombie ingestor), disk 64%, RAM 20GB avail. Backfill running 148/468. NQ repo backed up. blofin-stack git still corrupted."
+  "lastHealthCheck": "2026-03-20T02:04:00-07:00",
+  "notes": "Heartbeat 02:04 MST — CPU 62°C (excellent, down from 95°C after killing zombie processes), disk 65%, RAM 21GB avail. All services nominal. Backfill running (171/468). NQ repo backed up. blofin-stack git still corrupted (known)."
 }

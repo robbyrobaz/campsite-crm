@@ -1,13 +1,13 @@
 {
   "activeTasks": [],
   "lastDispatch": "2026-03-16T19:31:00-07:00",
-  "lastHealthCheck": "2026-03-18T14:32:00-07:00",
+  "lastHealthCheck": "2026-03-19T19:44:00-07:00",
   "nqServices": {
     "nq-data-sync": "active",
     "nq-dashboard-v3": "active",
     "nq-orb-signal": "active",
     "nq-orb15-signal": "active",
-    "nq-watcher": "active (restarted 19:31 to load new ML models)"
+    "nq-watcher": "active"
   },
   "nqPipeline": {
     "totalStrategies": 151,
@@ -18,5 +18,5 @@
     "recentFtTrades7d": 167,
     "mlModelsDeployed": 27
   },
-  "notes": "Heartbeat 14:32 MST — all systems nominal. Git backup complete (NQ repo 4 files)."
+  "notes": "Heartbeat 19:44 MST — CPU 81°C (OK), disk 63%, RAM 20GB avail. Backfill running (PID 1312047). NQ repo backed up. blofin-stack git repo has bus error on git add — repo corruption needs repair. Old ingestor.py still running (PID 842369)."
 }

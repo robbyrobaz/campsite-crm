@@ -35925,3 +35925,56 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 2 committed, 7 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+warning: adding embedded git repository: hyperliquid-sp500-pipeline
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint: 
+hint: 	git submodule add <url> hyperliquid-sp500-pipeline
+hint: 
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint: 
+hint: 	git rm --cached hyperliquid-sp500-pipeline
+hint: 
+hint: See "git help submodule" for more information.
+[main 130b5fa5e] auto: snapshot 2026-03-20T22:00:01Z
+ 17 files changed, 1385 insertions(+), 2 deletions(-)
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260320_140032-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260320_140532-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260320_141032-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260320_141532-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260320_142032-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260320_142532-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260320_143032-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260320_143532-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260320_144032-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260320_144532-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260320_145032-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260320_145532-auto.json
+ create mode 160000 hyperliquid-sp500-pipeline
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main 7303e060f] auto: snapshot 2026-03-20T22:00:01Z
+ 13 files changed, 1321 insertions(+), 1 deletion(-)
+ create mode 100644 backend/backups/crm-backup-20260320_140032-auto.json
+ create mode 100644 backend/backups/crm-backup-20260320_140532-auto.json
+ create mode 100644 backend/backups/crm-backup-20260320_141032-auto.json
+ create mode 100644 backend/backups/crm-backup-20260320_141532-auto.json
+ create mode 100644 backend/backups/crm-backup-20260320_142032-auto.json
+ create mode 100644 backend/backups/crm-backup-20260320_142532-auto.json
+ create mode 100644 backend/backups/crm-backup-20260320_143032-auto.json
+ create mode 100644 backend/backups/crm-backup-20260320_143532-auto.json
+ create mode 100644 backend/backups/crm-backup-20260320_144032-auto.json
+ create mode 100644 backend/backups/crm-backup-20260320_144532-auto.json
+ create mode 100644 backend/backups/crm-backup-20260320_145032-auto.json
+ create mode 100644 backend/backups/crm-backup-20260320_145532-auto.json
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 2 committed, 7 skipped
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

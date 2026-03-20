@@ -34951,3 +34951,355 @@ CLEAN master-dashboard (nothing to commit)
  2 files changed, 0 insertions(+), 0 deletions(-)
  create mode 100644 data/tickers/2026-03-20.parquet
 COMMITTED blofin-stack
+[main 2aa50cfe7] auto: snapshot 2026-03-20T01:00:01Z
+ 140 files changed, 14913 insertions(+), 16 deletions(-)
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_070027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_070527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_071027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_071527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_072027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_072527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_073027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_073527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_074027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_074527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_075027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_075527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_080027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_080527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_081027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_081527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_082027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_082527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_083027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_083527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_084027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_084527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_085027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_085527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_090027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_090527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_091027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_091527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_092027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_092527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_093027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_093527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_094027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_094527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_095027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_095527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_100027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_100527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_101027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_101527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_102027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_102527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_103027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_103527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_104027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_104527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_105027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_105527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_110027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_110527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_111027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_111527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_112027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_112527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_113027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_113527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_114027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_114527-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_115027-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_115528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_120028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_120528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_121028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_121528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_122028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_122528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_123028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_123528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_124028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_124528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_125028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_125528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_130028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_130528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_131028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_131528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_132028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_132528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_133028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_133528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_134028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_134528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_135028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_135528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_140028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_140528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_141028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_141528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_142028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_142528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_143028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_143528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_144028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_144528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_145028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_145528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_150028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_150528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_151028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_151528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_152028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_152528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_153028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_153528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_154028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_154528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_155028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_155528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_160028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_160528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_161028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_161528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_162028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_162528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_163028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_163528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_164028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_164528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_165028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_165528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_170028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_170528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_171028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_171528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_172028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_172528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_173028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_173528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_174028-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_174528-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_175029-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260319_175529-auto.json
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main d601eaa9a] auto: snapshot 2026-03-20T01:00:01Z
+ 133 files changed, 14521 insertions(+), 1 deletion(-)
+ create mode 100644 backend/backups/crm-backup-20260319_070027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_070527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_071027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_071527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_072027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_072527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_073027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_073527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_074027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_074527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_075027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_075527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_080027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_080527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_081027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_081527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_082027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_082527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_083027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_083527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_084027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_084527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_085027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_085527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_090027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_090527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_091027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_091527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_092027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_092527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_093027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_093527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_094027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_094527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_095027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_095527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_100027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_100527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_101027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_101527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_102027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_102527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_103027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_103527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_104027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_104527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_105027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_105527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_110027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_110527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_111027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_111527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_112027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_112527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_113027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_113527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_114027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_114527-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_115027-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_115528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_120028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_120528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_121028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_121528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_122028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_122528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_123028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_123528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_124028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_124528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_125028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_125528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_130028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_130528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_131028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_131528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_132028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_132528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_133028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_133528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_134028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_134528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_135028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_135528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_140028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_140528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_141028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_141528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_142028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_142528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_143028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_143528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_144028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_144528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_145028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_145528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_150028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_150528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_151028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_151528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_152028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_152528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_153028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_153528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_154028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_154528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_155028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_155528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_160028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_160528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_161028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_161528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_162028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_162528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_163028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_163528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_164028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_164528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_165028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_165528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_170028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_170528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_171028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_171528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_172028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_172528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_173028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_173528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_174028-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_174528-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_175029-auto.json
+ create mode 100644 backend/backups/crm-backup-20260319_175529-auto.json
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 3 committed, 6 skipped
+CLEAN master-dashboard (nothing to commit)
+/home/rob/.openclaw/workspace/scripts/auto-git-commit-projects.sh: line 31: 1249111 Bus error               (core dumped) git -C "$dir" add -A
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+fatal: Unable to create '/home/rob/.openclaw/workspace/blofin-stack/.git/index.lock': File exists.
+
+Another git process seems to be running in this repository, e.g.
+an editor opened by 'git commit'. Please make sure all processes
+are terminated then try again. If it still fails, a git process
+may have crashed in this repository earlier:
+remove the file manually to continue.
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

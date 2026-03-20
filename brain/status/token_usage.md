@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-03-19 17:45 MST
+**Updated:** 2026-03-19 18:00 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -20,20 +20,18 @@
 | sonnet | 22 | 1.1M | 6.1K | $2.29 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 6.6M (119 requests)
-- **Output Tokens:** 20.1K
-- **Cost (est):** $10.06
+- **Total Tokens:** 6.5M (115 requests)
+- **Output Tokens:** 18.6K
+- **Cost (est):** $10.04
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
 | sonnet | 63 | 4.7M | 12.4K | $6.67 |
 | opus | 26 | 1.8M | 5.8K | $3.37 |
-| nvidia/nemotron-3-super-120b-a12b:free | 23 | 76.0K | 1.8K | $0.00 |
-| haiku | 1 | 23.2K | 203 | $0.02 |
+| nvidia/nemotron-3-super-120b-a12b:free | 21 | 25.2K | 494 | $0.00 |
 | deepseek-coder-v2:16b | 1 | 0 | 0 | $0.00 |
 | qwen2.5-coder:14b | 4 | 0 | 0 | $0.00 |
-| openrouter/nemo-super | 1 | 0 | 0 | $0.00 |
 
 ---
 *Note: Max 5x plan is $100/mo flat. Cost shown is equivalent API pricing, not actual charges.*

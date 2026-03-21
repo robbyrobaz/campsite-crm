@@ -1,0 +1,392 @@
+#!/bin/bash
+set -euo pipefail
+
+# OpenClaw Comprehensive Backup System
+# Usage: backup-all.sh [--hourly|--daily|--weekly|--full|--verify]
+
+BACKUP_ROOT="/mnt/data/backups"
+LOG_FILE="${BACKUP_ROOT}/backup.log"
+MANIFEST="${BACKUP_ROOT}/manifest.json"
+TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+
+# Ensure backup root and log exist
+mkdir -p "${BACKUP_ROOT}"
+touch "${LOG_FILE}"
+
+# Logging function
+log() {
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] $*" | tee -a "${LOG_FILE}"
+}
+
+log "=== Backup started: $TIMESTAMP ==="
+
+# Parse arguments
+MODE="hourly"
+VERIFY_ONLY=false
+if [[ $# -gt 0 ]]; then
+    case "$1" in
+        --hourly) MODE="hourly" ;;
+        --daily) MODE="daily" ;;
+        --weekly) MODE="weekly" ;;
+        --full) MODE="full" ;;
+        --verify) VERIFY_ONLY=true ;;
+        *) log "ERROR: Unknown flag $1"; exit 1 ;;
+    esac
+fi
+
+log "Mode: ${MODE}"
+
+# Track backup stats
+declare -a CREATED_FILES=()
+TOTAL_SIZE=0
+ERRORS=0
+
+# Check if we need tier2 (models/data) based on last run
+should_run_tier2() {
+    if [[ ! -f "${MANIFEST}" ]]; then
+        return 0  # First run
+    fi
+    
+    local last_weekly=$(jq -r '.last_weekly // empty' "${MANIFEST}" 2>/dev/null || echo "")
+    if [[ -z "$last_weekly" ]]; then
+        return 0
+    fi
+    
+    local last_epoch=$(date -d "$last_weekly" +%s 2>/dev/null || echo "0")
+    local now_epoch=$(date +%s)
+    local days_diff=$(( (now_epoch - last_epoch) / 86400 ))
+    
+    [[ $days_diff -ge 7 ]]
+}
+
+# Retention cleanup function
+cleanup_old_backups() {
+    local dir="$1"
+    local keep_count="$2"
+    
+    if [[ ! -d "$dir" ]]; then
+        return
+    fi
+    
+    # Keep newest N files, delete older
+    local file_count=$(find "$dir" -type f | wc -l)
+    if [[ $file_count -gt $keep_count ]]; then
+        log "Cleaning up old backups in $dir (keep $keep_count)"
+        find "$dir" -type f -printf '%T@ %p\n' | sort -rn | tail -n +$((keep_count + 1)) | cut -d' ' -f2- | while read -r old_file; do
+            log "  Removing old backup: $(basename "$old_file")"
+            rm -f "$old_file"
+        done
+    fi
+}
+
+# Check if sqlite3 is available
+if ! command -v sqlite3 &>/dev/null; then
+    log "ERROR: sqlite3 CLI not found. Installing..."
+    sudo apt-get update && sudo apt-get install -y sqlite3 || {
+        log "ERROR: Failed to install sqlite3"
+        exit 1
+    }
+fi
+
+# ========== TIER 1: DATABASE BACKUPS ==========
+backup_databases() {
+    log "--- Database Backups (Tier 1) ---"
+    local db_dir="${BACKUP_ROOT}/databases/hourly"
+    mkdir -p "$db_dir"
+    
+    # SQLite databases (use sqlite3 .backup - WAL safe)
+    local -a SQLITE_DBS=(
+        "/home/rob/.openclaw/workspace/blofin-moonshot-v2/data/moonshot_v2.db"
+        "/home/rob/.openclaw/workspace/blofin-moonshot/data/moonshot.db"
+        "/home/rob/.openclaw/workspace/kanban-dashboard/kanban.sqlite"
+        "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/data/nq_pipeline.db"
+        "/home/rob/.openclaw/workspace/jarvis-home-energy/energy_data.db"
+        "/mnt/data/blofin_monitor.db"
+    )
+    
+    for db in "${SQLITE_DBS[@]}"; do
+        if [[ ! -f "$db" ]]; then
+            log "  SKIP: $db (not found)"
+            continue
+        fi
+        
+        local db_name=$(basename "$db")
+        local backup_path="${db_dir}/${db_name%.db}_${TIMESTAMP}.db"
+        
+        log "  Backing up SQLite: $db_name"
+        if sqlite3 "$db" ".backup '$backup_path'" 2>>"${LOG_FILE}"; then
+            log "    Created: $backup_path"
+            gzip -f "$backup_path"
+            local gz_file="${backup_path}.gz"
+            CREATED_FILES+=("$gz_file")
+            TOTAL_SIZE=$((TOTAL_SIZE + $(stat -f%z "$gz_file" 2>/dev/null || stat -c%s "$gz_file")))
+        else
+            log "    ERROR: Failed to backup $db_name"
+            ERRORS=$((ERRORS + 1))
+        fi
+    done
+    
+    # DuckDB databases (use cp with fuser check)
+    local -a DUCKDB_DBS=(
+        "/home/rob/infrastructure/ibkr/data/nq_feed.duckdb"
+        "/home/rob/.openclaw/workspace/hyperliquid-sp500-pipeline/data/sp500_pipeline.duckdb"
+        "/home/rob/infrastructure/ibkr/data/ibkr_options.duckdb"
+    )
+    
+    for db in "${DUCKDB_DBS[@]}"; do
+        if [[ ! -f "$db" ]]; then
+            log "  SKIP: $db (not found)"
+            continue
+        fi
+        
+        local db_name=$(basename "$db")
+        local backup_path="${db_dir}/${db_name%.duckdb}_${TIMESTAMP}.duckdb"
+        
+        # Check if file is open
+        if command -v fuser &>/dev/null && fuser "$db" 2>/dev/null; then
+            log "  WARN: $db_name is in use, waiting 5s..."
+            sleep 5
+        fi
+        
+        log "  Backing up DuckDB: $db_name"
+        if cp "$db" "$backup_path" 2>>"${LOG_FILE}"; then
+            log "    Created: $backup_path"
+            gzip -f "$backup_path"
+            local gz_file="${backup_path}.gz"
+            CREATED_FILES+=("$gz_file")
+            TOTAL_SIZE=$((TOTAL_SIZE + $(stat -f%z "$gz_file" 2>/dev/null || stat -c%s "$gz_file")))
+        else
+            log "    ERROR: Failed to backup $db_name"
+            ERRORS=$((ERRORS + 1))
+        fi
+    done
+    
+    # Cleanup old hourly backups (keep last 24)
+    cleanup_old_backups "$db_dir" 24
+    
+    # Promote oldest hourly to daily (if daily backup)
+    if [[ "$MODE" == "daily" || "$MODE" == "weekly" || "$MODE" == "full" ]]; then
+        local daily_dir="${BACKUP_ROOT}/databases/daily"
+        mkdir -p "$daily_dir"
+        
+        # Find oldest hourly backup and copy to daily
+        local oldest_hourly=$(find "$db_dir" -type f -printf '%T@ %p\n' | sort -n | head -1 | cut -d' ' -f2-)
+        if [[ -n "$oldest_hourly" ]]; then
+            local daily_name=$(basename "$oldest_hourly" | sed "s/_[0-9]\{8\}_[0-9]\{6\}/_daily_${TIMESTAMP}/")
+            log "  Promoting to daily: $daily_name"
+            cp "$oldest_hourly" "${daily_dir}/${daily_name}"
+        fi
+        
+        # Cleanup old daily backups (keep last 30)
+        cleanup_old_backups "$daily_dir" 30
+    fi
+}
+
+# ========== TIER 1: CONFIG BACKUPS ==========
+backup_configs() {
+    log "--- Config Backups (Tier 1) ---"
+    local config_dir="${BACKUP_ROOT}/config/daily"
+    mkdir -p "$config_dir"
+    
+    local archive_path="${config_dir}/openclaw_config_${TIMESTAMP}.tar.gz"
+    
+    log "  Creating config archive..."
+    
+    # Build tar command with all config paths
+    local tar_args=()
+    
+    # OpenClaw core configs
+    [[ -f ~/.openclaw/openclaw.json ]] && tar_args+=("-C" ~ ".openclaw/openclaw.json")
+    [[ -d ~/.openclaw/identity ]] && tar_args+=("-C" ~ ".openclaw/identity")
+    [[ -d ~/.openclaw/credentials ]] && tar_args+=("-C" ~ ".openclaw/credentials")
+    
+    # Cron configs (exclude runs/)
+    if [[ -d ~/.openclaw/cron ]]; then
+        tar_args+=("-C" ~/.openclaw "--exclude=cron/runs" "cron")
+    fi
+    
+    # Agent configs (all 4 agents)
+    for agent_dir in ~/.openclaw/agents/*/agent; do
+        if [[ -d "$agent_dir" ]]; then
+            local rel_path=$(realpath --relative-to=~ "$agent_dir")
+            tar_args+=("-C" ~ "$rel_path")
+        fi
+    done
+    
+    # Workspace brain and memory
+    [[ -d ~/.openclaw/workspace/brain ]] && tar_args+=("-C" ~/.openclaw/workspace "brain")
+    [[ -d ~/.openclaw/workspace/memory ]] && tar_args+=("-C" ~/.openclaw/workspace "memory")
+    [[ -d ~/.openclaw/workspace/scripts ]] && tar_args+=("-C" ~/.openclaw/workspace "scripts")
+    [[ -d ~/.openclaw/workspace/runbooks ]] && tar_args+=("-C" ~/.openclaw/workspace "runbooks")
+    
+    # Workspace markdown files
+    for md_file in ~/.openclaw/workspace/*.md; do
+        if [[ -f "$md_file" ]]; then
+            local basename=$(basename "$md_file")
+            tar_args+=("-C" ~/.openclaw/workspace "$basename")
+        fi
+    done
+    
+    # Systemd user units
+    if [[ -d ~/.config/systemd/user ]]; then
+        for unit_file in ~/.config/systemd/user/*.{service,timer}; do
+            if [[ -f "$unit_file" ]]; then
+                local basename=$(basename "$unit_file")
+                tar_args+=("-C" ~/.config/systemd/user "$basename")
+            fi
+        done
+    fi
+    
+    # All .env files (excluding .venv/)
+    while IFS= read -r -d '' env_file; do
+        local rel_path=$(realpath --relative-to=~/.openclaw/workspace "$env_file")
+        tar_args+=("-C" ~/.openclaw/workspace "$rel_path")
+    done < <(find ~/.openclaw/workspace -name ".env" -not -path "*/.venv/*" -print0 2>/dev/null)
+    
+    # Create archive
+    if tar czf "$archive_path" "${tar_args[@]}" 2>>"${LOG_FILE}"; then
+        log "    Created: $archive_path"
+        CREATED_FILES+=("$archive_path")
+        TOTAL_SIZE=$((TOTAL_SIZE + $(stat -f%z "$archive_path" 2>/dev/null || stat -c%s "$archive_path")))
+    else
+        log "    ERROR: Failed to create config archive"
+        ERRORS=$((ERRORS + 1))
+    fi
+    
+    # Cleanup old daily configs (keep last 30)
+    cleanup_old_backups "$config_dir" 30
+}
+
+# ========== TIER 2: ML MODELS ==========
+backup_models() {
+    log "--- ML Model Backups (Tier 2) ---"
+    local models_dir="${BACKUP_ROOT}/models/weekly"
+    mkdir -p "$models_dir"
+    
+    local -a MODEL_DIRS=(
+        "/home/rob/.openclaw/workspace/blofin-moonshot-v2/models"
+        "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/ml/models"
+        "/home/rob/.openclaw/workspace/hyperliquid-sp500-pipeline/ml/models"
+        "/home/rob/.openclaw/workspace/numerai-tournament/models_elite"
+        "/home/rob/.openclaw/workspace/numerai-tournament/models_robbyrob3"
+    )
+    
+    for model_dir in "${MODEL_DIRS[@]}"; do
+        if [[ ! -d "$model_dir" ]]; then
+            log "  SKIP: $model_dir (not found)"
+            continue
+        fi
+        
+        local dir_name=$(basename "$model_dir")
+        local parent_name=$(basename "$(dirname "$model_dir")")
+        local archive_name="${parent_name}_${dir_name}_${TIMESTAMP}.tar.gz"
+        local archive_path="${models_dir}/${archive_name}"
+        
+        log "  Backing up models: $parent_name/$dir_name"
+        if tar czf "$archive_path" -C "$(dirname "$model_dir")" "$dir_name" 2>>"${LOG_FILE}"; then
+            log "    Created: $archive_path"
+            CREATED_FILES+=("$archive_path")
+            TOTAL_SIZE=$((TOTAL_SIZE + $(stat -f%z "$archive_path" 2>/dev/null || stat -c%s "$archive_path")))
+        else
+            log "    ERROR: Failed to backup $dir_name"
+            ERRORS=$((ERRORS + 1))
+        fi
+    done
+    
+    # Cleanup old weekly models (keep last 8)
+    cleanup_old_backups "$models_dir" 8
+}
+
+# ========== TIER 2: DATA BACKUPS ==========
+backup_data() {
+    log "--- Data Backups (Tier 2) ---"
+    local data_dir="${BACKUP_ROOT}/data/weekly"
+    mkdir -p "$data_dir"
+    
+    local source_dir="/mnt/data/blofin_tickers"
+    if [[ ! -d "$source_dir" ]]; then
+        log "  SKIP: $source_dir (not found)"
+        return
+    fi
+    
+    local archive_path="${data_dir}/blofin_tickers_${TIMESTAMP}.tar.gz"
+    
+    log "  Backing up blofin_tickers parquet files..."
+    if tar czf "$archive_path" -C /mnt/data blofin_tickers 2>>"${LOG_FILE}"; then
+        log "    Created: $archive_path"
+        CREATED_FILES+=("$archive_path")
+        TOTAL_SIZE=$((TOTAL_SIZE + $(stat -f%z "$archive_path" 2>/dev/null || stat -c%s "$archive_path")))
+    else
+        log "    ERROR: Failed to backup blofin_tickers"
+        ERRORS=$((ERRORS + 1))
+    fi
+    
+    # Cleanup old weekly data (keep last 4)
+    cleanup_old_backups "$data_dir" 4
+}
+
+# ========== MAIN EXECUTION ==========
+if [[ "$VERIFY_ONLY" == true ]]; then
+    log "Verify-only mode - running backup-verify.sh"
+    exec /home/rob/.openclaw/workspace/scripts/backup-verify.sh
+fi
+
+# Run appropriate backup tiers
+backup_databases
+
+if [[ "$MODE" == "daily" || "$MODE" == "weekly" || "$MODE" == "full" ]]; then
+    backup_configs
+fi
+
+if [[ "$MODE" == "weekly" || "$MODE" == "full" ]] || should_run_tier2; then
+    backup_models
+    backup_data
+fi
+
+# ========== MANIFEST UPDATE ==========
+log "--- Updating Manifest ---"
+
+# Get current manifest data
+if [[ -f "${MANIFEST}" ]]; then
+    PREV_MANIFEST=$(cat "${MANIFEST}")
+else
+    PREV_MANIFEST="{}"
+fi
+
+# Build new manifest
+cat > "${MANIFEST}" <<EOF
+{
+  "last_run": "$(date -Iseconds)",
+  "last_mode": "${MODE}",
+  "last_hourly": "$(date -Iseconds)",
+  "last_daily": $(echo "$PREV_MANIFEST" | jq -r '.last_daily // "null"' | sed 's/null/"'$(date -Iseconds)'"/'),
+  "last_weekly": $(echo "$PREV_MANIFEST" | jq -r '.last_weekly // "null"' | sed 's/null/"'$(date -Iseconds)'"/'),
+  "files_created": $(printf '%s\n' "${CREATED_FILES[@]}" | jq -R . | jq -s .),
+  "total_size_bytes": ${TOTAL_SIZE},
+  "errors": ${ERRORS},
+  "timestamp": "${TIMESTAMP}"
+}
+EOF
+
+# Update last_daily and last_weekly if appropriate
+if [[ "$MODE" == "daily" || "$MODE" == "weekly" || "$MODE" == "full" ]]; then
+    jq ".last_daily = \"$(date -Iseconds)\"" "${MANIFEST}" > "${MANIFEST}.tmp" && mv "${MANIFEST}.tmp" "${MANIFEST}"
+fi
+
+if [[ "$MODE" == "weekly" || "$MODE" == "full" ]]; then
+    jq ".last_weekly = \"$(date -Iseconds)\"" "${MANIFEST}" > "${MANIFEST}.tmp" && mv "${MANIFEST}.tmp" "${MANIFEST}"
+fi
+
+# ========== SUMMARY ==========
+log "=== Backup Complete ==="
+log "Files created: ${#CREATED_FILES[@]}"
+log "Total size: $(numfmt --to=iec-i --suffix=B ${TOTAL_SIZE} 2>/dev/null || echo "${TOTAL_SIZE} bytes")"
+log "Errors: ${ERRORS}"
+
+if [[ ${ERRORS} -gt 0 ]]; then
+    log "WARNING: Backup completed with errors. Check ${LOG_FILE}"
+    exit 1
+fi
+
+log "Backup successful!"
+exit 0

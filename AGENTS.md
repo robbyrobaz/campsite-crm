@@ -109,11 +109,38 @@ In groups, you're a participant — not Rob's voice, not his proxy.
 - Discord links: Wrap in `<>` to suppress embeds
 - WhatsApp: No headers — use **bold** or CAPS
 
+## Backup Ownership (Mar 21 2026 — NON-NEGOTIABLE)
+
+**Jarvis owns ALL backups.** No domain agent touches backup infrastructure.
+
+**Architecture:**
+- `/mnt/data/backups/` on 1TB external drive (500GB budget)
+- `databases/hourly/` — SQLite .backup snapshots every hour (24 retained)
+- `databases/daily/` — promoted from hourly (30 retained)
+- `config/daily/` — secrets, agent configs, brain, systemd (30 retained)
+- `models/weekly/` — ML weights (8 weeks retained)
+- `data/weekly/` — backfill parquet (4 weeks retained)
+
+**Services:**
+- `openclaw-backup.timer` — hourly DB backups
+- `openclaw-backup-daily.timer` — daily config backups (3 AM)
+- `openclaw-backup-weekly.timer` — weekly models + data (Sun 4 AM)
+- **Cron: Backup Health Check** — every 12h, Haiku, verifies integrity + recency
+
+**Rules:**
+- ALWAYS use `sqlite3 .backup` for SQLite — NEVER `cp` on live databases
+- For DuckDB, check `fuser` before copying
+- No agent may delete anything in `/mnt/data/backups/`
+- If backup health check fails, alert Rob immediately
+
+**What caused this:** On Mar 21, a subagent corrupted the 53GB blofin_monitor.db during a WAL checkpoint. Zero backups existed. 1 month of FT research lost. Never again.
+
 ## Jarvis Crons (post-workspace-split)
 
 Domain crons belong to domain agents. Jarvis only owns:
 - **Oversight heartbeat** (every 1-2h, Haiku): server health, kanban sweep, git backup
 - **AI Token Usage Audit** (weekly, Haiku): token efficiency report
+- **Backup Health Check** (every 12h, Haiku): verify all backups are current and intact
 
 **Kanban status semantics:**
 - **Inbox** = idea bucket / Rob's scratchpad. Dispatcher ignores.

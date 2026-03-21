@@ -21,7 +21,7 @@
 
 **Rob's directive (Mar 15):** FT is FREE. Expect 95% losers. Only track top performers. Never report aggregate metrics.
 
-## Hyperliquid S&P 500 Pipeline (Mar 20 2026 — NEW)
+## Hyperliquid S&P 500 Pipeline (Mar 20 2026 — LIVE)
 
 - **Repo:** `robbyrobaz/hyperliquid-sp500-pipeline`
 - **Contract:** `xyz:SP500` on Trade[XYZ] perp dex (Hyperliquid L1)
@@ -29,12 +29,17 @@
 - **API:** POST `https://api.hyperliquid.xyz/info` with `"dex":"xyz"` — THIS IS CRITICAL, without dex param you see the wrong SPX (meme coin)
 - **WebSocket:** `wss://api.hyperliquid.xyz/ws`
 - **Launched:** March 18, 2026 — officially licensed by S&P Dow Jones Indices
-- **Services:** `sp500-ingestor.service`, `sp500-dashboard.service` (port 8897)
-- **Data:** DuckDB at `data/sp500_pipeline.duckdb`
-- **Backtest data:** SPY × 10 from IBKR (proxy for S&P 500 index, ~99.9% correlation)
-- **10 strategies** ported from NQ pipeline
-- **US geo-restricted** — needs CyberGhost VPN (UK dedicated IP) for live trading
-- Paper trading only until Rob approves live + VPN is configured
+- **Services:** `sp500-ingestor.service`, `sp500-dashboard.service` (port 8897), `sp500-bulk-ft.service`
+- **Data:** DuckDB at `data/sp500_pipeline.duckdb` — 237K 1-min candles (1 year SPY×10)
+- **20 ML models** trained on GPU (XGBoost + CUDA), at ml/models/
+- **200+ strategies** forward testing simultaneously via bulk FT engine
+- **Execution PROVEN on mainnet** — market orders, 50x leverage, TP/SL, trail stops all working
+- **Agent wallet:** stored in .env (NEVER display private key)
+- **Subaccount:** 0xb778265... (omen-claw), ~$50 balance
+- **Grid search results:** ORB Retest PF 3.0 champion (ta=$1.0, tr=$0.5, sl=$20)
+- **Optimal SP500 trail params:** activate=$1.0, trail=$0.5, hard_sl=$20 (TIGHTER than NQ, not wider)
+- **Auto-promotion:** PF≥2.0 + 20 FT trades → Apex. PF<0.8 + 30 trades → demote.
+- **GPU:** RTX 2080 Super, CUDA enabled for XGBoost training
 
 ## Numerai (Cross-Cutting — Jarvis Owns)
 

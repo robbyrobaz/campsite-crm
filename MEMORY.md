@@ -21,7 +21,7 @@
 
 **Rob's directive (Mar 15):** FT is FREE. Expect 95% losers. Only track top performers. Never report aggregate metrics.
 
-## Hyperliquid S&P 500 Pipeline (Mar 20 2026 — LIVE)
+## Hyperliquid S&P 500 Pipeline (Mar 20 2026 — LIVE) → SP Agent Owns This
 
 - **Repo:** `robbyrobaz/hyperliquid-sp500-pipeline`
 - **Contract:** `xyz:SP500` on Trade[XYZ] perp dex (Hyperliquid L1)
@@ -65,10 +65,12 @@
 - Jarvis workspace: `~/.openclaw/workspace` (this one)
 - NQ workspace: `~/.openclaw/workspace-nq`
 - Crypto workspace: `~/.openclaw/workspace-crypto`
+- SP workspace: `~/.openclaw/workspace-sp` (added Mar 21 2026)
 - Church workspace: `~/.openclaw/workspace-church`
 
 ### Agent-to-Agent Communication
 - `sessions_send(sessionKey="agent:nq:main", message="...")` works bidirectionally
+- SP agent: `sessions_send(sessionKey="agent:sp:main", message="...")`
 - Agents escalate issues they can't fix to Jarvis
 - Jarvis relays Rob's domain questions to the right agent
 

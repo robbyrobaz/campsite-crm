@@ -101,6 +101,15 @@ Check logs, CPU/RAM, runtime, stage FIRST. Only kill if truly hung (>30min same 
 
 **Action taken:** Updated HEARTBEAT.md with mandatory CPU investigation checklist.
 
+### ⛔ NEVER delete files >1GB without approval (Mar 21 2026 06:03)
+**What happened:** During disk cleanup investigation, discovered 63GB raw tick data file. Almost deleted it before confirming data was in DB. Turns out DB was corrupted and raw file was the ONLY copy of 195M ticks.
+
+**Rob's rule (absolute):** "don't delete anything larger than 1GB without my approval ever!!"
+
+**Added to:** SOUL.md Boundaries, AGENTS.md Safety, all agent workspaces.
+
+This is non-negotiable. Files >1GB often contain critical data (databases, logs, raw data). Always ask first.
+
 ### ⛔ NEVER stop data ingestor services (Mar 20 2026)
 sp500-ingestor, blofin-stack-ingestor, nq-data-sync — these run 24/7 collecting live market data. Stopping them = missing candles/trades = broken backtests. If DuckDB is locked, use `read_only=True` or wait. NEVER stop the ingestor to work around a lock.
 

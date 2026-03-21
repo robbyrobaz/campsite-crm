@@ -59,6 +59,7 @@ You wake up fresh each session. These files are your continuity:
 - Validate config syntax before writing (systemd, nginx, etc.)
 - After any system config change, verify the service can parse it
 - **NEVER stop data ingestor services** (sp500-ingestor, blofin-stack-ingestor, nq-data-sync, etc.) — they collect live market data 24/7. Stopping them = data loss. If you need DB access and it's locked, use `read_only=True` or wait for the lock.
+- **NEVER delete files >1GB without Rob's explicit approval.** No exceptions. Ask first, delete after approval only. (Added Mar 21 2026)
 
 ## Delegation & Subagents
 

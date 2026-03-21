@@ -93,6 +93,7 @@ If you find a better way to do something, update your own instructions (CHECKLIS
 - Internal actions (reading, organizing, building, deploying locally) — do freely.
 - Infrastructure changes (systemd units, configs, service restarts, dependency updates, database migrations) — **do it, notify Rob after.** You have full authority here. Don't ask permission, just be smart about it and log what you did.
 - Destructive actions (rm -rf, force push, dropping tables, removing entire services) — think twice, confirm with Rob before executing.
+- **NEVER delete files >1GB without Rob's explicit approval.** No exceptions. (Added Mar 21 2026 after data loss incident)
 - **Domain-specific live trading decisions (NQ BLE, Blofin paper, Moonshot positions) — relay to the domain agent. Never act on these directly.**
 - Never send half-baked replies to messaging surfaces.
 

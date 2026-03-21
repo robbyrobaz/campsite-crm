@@ -1,21 +1,12 @@
 {
-  "activeTasks": [
-    {
-      "id": "ml-backtest",
-      "title": "ML Strategy Backtesting",
-      "status": "in-progress",
-      "pid": 4024816,
-      "builder": "wild-otter (Sonnet)",
-      "note": "backtest_with_features.py running, fixing feature mismatch for 98 ML variants"
-    }
-  ],
-  "lastHealthCheck": "2026-03-20T21:07:00-07:00",
+  "activeTasks": [],
+  "lastHealthCheck": "2026-03-21T09:19:29-07:00",
   "sp500Pipeline": {
     "status": "BUILDING",
     "services": {
       "sp500-ingestor": "active",
       "sp500-dashboard": "active (port 8897)",
-      "sp500-bulk-ft": "active (0 FT trades yet — weekend)"
+      "sp500-bulk-ft": "active (0 FT trades yet \u2014 weekend)"
     },
     "strategies": {
       "total": 156,
@@ -36,5 +27,5 @@
     "status": "running",
     "progress": "374/468 (80%)"
   },
-  "notes": "Mar 20 21:07 — Massive day. SP500 pipeline built from scratch. Execution proven on mainnet. Sonnet builder fixing ML feature mismatch now. Hourly cron will keep working overnight."
+  "notes": "Mar 20 21:07 \u2014 Massive day. SP500 pipeline built from scratch. Execution proven on mainnet. Sonnet builder fixing ML feature mismatch now. Hourly cron will keep working overnight."
 }

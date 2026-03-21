@@ -116,6 +116,11 @@ fi
 git config user.name "Rob Hartwig"
 git config user.email "rob.hartwig@gmail.com"
 git commit -m "backup: full-restore snapshot ${stamp}" >/dev/null
+
+# Prune git history older than 30 days to prevent repo bloat
+cutoff_date="$(date -u -d '30 days ago' +%Y-%m-%d)"
+git rev-list --all --since="$cutoff_date" | git pack-objects --stdout >/dev/null 2>&1 || true
+
 # Kill stale pushes from previous runs before starting
 pkill -f "git-remote-https.*openclaw-full-restore" 2>/dev/null || true
 # Push with 180s timeout to prevent hanging CPU hogs
@@ -123,4 +128,8 @@ timeout 180 git push --force -u origin "$BRANCH" >/dev/null || {
   echo "WARNING: git push timed out after 180s"
   exit 1
 }
+
+# Clean up local git repo after push (remove dangling objects, repack)
+git gc --auto --quiet >/dev/null 2>&1 || true
+
 echo "Created + pushed snapshot: $OWNER/$REPO snapshots/workspace-${stamp}.tar.gz ($(du -h "$archive" | cut -f1))"

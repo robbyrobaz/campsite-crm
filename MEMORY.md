@@ -113,6 +113,19 @@ This is non-negotiable. Files >1GB often contain critical data (databases, logs,
 ### ⛔ NEVER stop data ingestor services (Mar 20 2026)
 sp500-ingestor, blofin-stack-ingestor, nq-data-sync — these run 24/7 collecting live market data. Stopping them = missing candles/trades = broken backtests. If DuckDB is locked, use `read_only=True` or wait. NEVER stop the ingestor to work around a lock.
 
+### ⛔ Backup infrastructure is NON-OPTIONAL (Mar 21 2026)
+**What happened:** Crypto agent's builder corrupted 53GB blofin_monitor.db during WAL checkpoint. Zero backups existed. 1 month of FT research (86K paper trades, strategy performance) permanently lost. The blofin-db-backup.sh script existed but was NEVER wired to a cron. The full-restore backup explicitly excluded blofin-stack.
+
+**Root cause chain:** Jarvis flagged 48% CPU on ingestor → crypto agent spawned builder to fix DB locks → builder stopped ingestor, attempted WAL checkpoint on 40GB WAL → checkpoint corrupted 53GB DB → builder deleted corrupted files → data gone forever.
+
+**New architecture (Jarvis owns):**
+- Hourly: `sqlite3 .backup` for ALL databases to /mnt/data/backups/databases/hourly/ (24 retained)
+- Daily: configs, secrets, agent identity, systemd units to /mnt/data/backups/config/daily/ (30 retained)
+- Weekly: ML models + backfill data (8 weeks retained)
+- 12-hour health check cron verifies integrity + recency
+- Budget: 500GB on 1TB drive
+- **NEVER use `cp` on live SQLite — always `sqlite3 .backup`**
+
 ### General
 - **Haiku WILL hallucinate** — must include step-by-step API call instructions with "WARNING: Do NOT make up data"
 - **Subagents die on heavy data tasks** — multi-GB loads → run in main session

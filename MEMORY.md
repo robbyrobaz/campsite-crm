@@ -82,6 +82,9 @@ Before answering "why didn't X happen": read the file/code/DB, check actual stat
 ### ⛔ Investigate before killing processes (Mar 16 2026)
 Check logs, CPU/RAM, runtime, stage FIRST. Only kill if truly hung (>30min same stage), OOM, or confirmed loop. Slow ≠ broken.
 
+### ⛔ NEVER stop data ingestor services (Mar 20 2026)
+sp500-ingestor, blofin-stack-ingestor, nq-data-sync — these run 24/7 collecting live market data. Stopping them = missing candles/trades = broken backtests. If DuckDB is locked, use `read_only=True` or wait. NEVER stop the ingestor to work around a lock.
+
 ### General
 - **Haiku WILL hallucinate** — must include step-by-step API call instructions with "WARNING: Do NOT make up data"
 - **Subagents die on heavy data tasks** — multi-GB loads → run in main session

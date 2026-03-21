@@ -192,66 +192,71 @@ backup_configs() {
     
     log "  Creating config archive..."
     
-    # Build tar command with all config paths
-    local tar_args=()
+    # Stage everything into a temp dir, then tar it in one shot
+    local staging=$(mktemp -d)
+    trap "rm -rf $staging" RETURN
+    
+    local HOME_DIR="$HOME"
+    local OC="$HOME_DIR/.openclaw"
+    local WS="$OC/workspace"
     
     # OpenClaw core configs
-    [[ -f ~/.openclaw/openclaw.json ]] && tar_args+=("-C" ~ ".openclaw/openclaw.json")
-    [[ -d ~/.openclaw/identity ]] && tar_args+=("-C" ~ ".openclaw/identity")
-    [[ -d ~/.openclaw/credentials ]] && tar_args+=("-C" ~ ".openclaw/credentials")
+    mkdir -p "$staging/openclaw"
+    [[ -f "$OC/openclaw.json" ]] && cp "$OC/openclaw.json" "$staging/openclaw/"
+    [[ -d "$OC/identity" ]] && cp -r "$OC/identity" "$staging/openclaw/"
+    [[ -d "$OC/credentials" ]] && cp -r "$OC/credentials" "$staging/openclaw/"
     
     # Cron configs (exclude runs/)
-    if [[ -d ~/.openclaw/cron ]]; then
-        tar_args+=("-C" ~/.openclaw "--exclude=cron/runs" "cron")
+    if [[ -d "$OC/cron" ]]; then
+        mkdir -p "$staging/openclaw/cron"
+        find "$OC/cron" -maxdepth 1 -not -name "runs" -not -path "$OC/cron" -exec cp -r {} "$staging/openclaw/cron/" \;
     fi
     
     # Agent configs (all 4 agents)
-    for agent_dir in ~/.openclaw/agents/*/agent; do
+    for agent_dir in "$OC"/agents/*/agent; do
         if [[ -d "$agent_dir" ]]; then
-            local rel_path=$(realpath --relative-to=~ "$agent_dir")
-            tar_args+=("-C" ~ "$rel_path")
+            local agent_name=$(basename "$(dirname "$agent_dir")")
+            mkdir -p "$staging/agents/$agent_name"
+            cp -r "$agent_dir" "$staging/agents/$agent_name/"
         fi
     done
     
-    # Workspace brain and memory
-    [[ -d ~/.openclaw/workspace/brain ]] && tar_args+=("-C" ~/.openclaw/workspace "brain")
-    [[ -d ~/.openclaw/workspace/memory ]] && tar_args+=("-C" ~/.openclaw/workspace "memory")
-    [[ -d ~/.openclaw/workspace/scripts ]] && tar_args+=("-C" ~/.openclaw/workspace "scripts")
-    [[ -d ~/.openclaw/workspace/runbooks ]] && tar_args+=("-C" ~/.openclaw/workspace "runbooks")
+    # Workspace brain, memory, scripts, runbooks
+    mkdir -p "$staging/workspace"
+    for dir in brain memory scripts runbooks; do
+        [[ -d "$WS/$dir" ]] && cp -r "$WS/$dir" "$staging/workspace/"
+    done
     
     # Workspace markdown files
-    for md_file in ~/.openclaw/workspace/*.md; do
-        if [[ -f "$md_file" ]]; then
-            local basename=$(basename "$md_file")
-            tar_args+=("-C" ~/.openclaw/workspace "$basename")
-        fi
+    for md_file in "$WS"/*.md; do
+        [[ -f "$md_file" ]] && cp "$md_file" "$staging/workspace/"
     done
     
     # Systemd user units
-    if [[ -d ~/.config/systemd/user ]]; then
-        for unit_file in ~/.config/systemd/user/*.{service,timer}; do
-            if [[ -f "$unit_file" ]]; then
-                local basename=$(basename "$unit_file")
-                tar_args+=("-C" ~/.config/systemd/user "$basename")
-            fi
-        done
-    fi
+    mkdir -p "$staging/systemd"
+    for unit_file in "$HOME_DIR/.config/systemd/user"/*.service "$HOME_DIR/.config/systemd/user"/*.timer; do
+        [[ -f "$unit_file" ]] && cp "$unit_file" "$staging/systemd/"
+    done
     
     # All .env files (excluding .venv/)
+    mkdir -p "$staging/env-files"
     while IFS= read -r -d '' env_file; do
-        local rel_path=$(realpath --relative-to=~/.openclaw/workspace "$env_file")
-        tar_args+=("-C" ~/.openclaw/workspace "$rel_path")
-    done < <(find ~/.openclaw/workspace -name ".env" -not -path "*/.venv/*" -print0 2>/dev/null)
+        local rel_dir=$(dirname "$env_file" | sed "s|$WS/||")
+        mkdir -p "$staging/env-files/$rel_dir"
+        cp "$env_file" "$staging/env-files/$rel_dir/"
+    done < <(find "$WS" -name ".env" -not -path "*/.venv/*" -not -path "*/node_modules/*" -print0 2>/dev/null)
     
-    # Create archive
-    if tar czf "$archive_path" "${tar_args[@]}" 2>>"${LOG_FILE}"; then
-        log "    Created: $archive_path"
+    # Create archive from staging dir
+    if tar czf "$archive_path" -C "$staging" . 2>>"${LOG_FILE}"; then
+        log "    Created: $archive_path ($(du -h "$archive_path" | cut -f1))"
         CREATED_FILES+=("$archive_path")
-        TOTAL_SIZE=$((TOTAL_SIZE + $(stat -f%z "$archive_path" 2>/dev/null || stat -c%s "$archive_path")))
+        TOTAL_SIZE=$((TOTAL_SIZE + $(stat -c%s "$archive_path" 2>/dev/null || echo 0)))
     else
         log "    ERROR: Failed to create config archive"
         ERRORS=$((ERRORS + 1))
     fi
+    
+    rm -rf "$staging"
     
     # Cleanup old daily configs (keep last 30)
     cleanup_old_backups "$config_dir" 30
@@ -354,19 +359,31 @@ else
 fi
 
 # Build new manifest
-cat > "${MANIFEST}" <<EOF
-{
-  "last_run": "$(date -Iseconds)",
-  "last_mode": "${MODE}",
-  "last_hourly": "$(date -Iseconds)",
-  "last_daily": $(echo "$PREV_MANIFEST" | jq -r '.last_daily // "null"' | sed 's/null/"'$(date -Iseconds)'"/'),
-  "last_weekly": $(echo "$PREV_MANIFEST" | jq -r '.last_weekly // "null"' | sed 's/null/"'$(date -Iseconds)'"/'),
-  "files_created": $(printf '%s\n' "${CREATED_FILES[@]}" | jq -R . | jq -s .),
-  "total_size_bytes": ${TOTAL_SIZE},
-  "errors": ${ERRORS},
-  "timestamp": "${TIMESTAMP}"
-}
-EOF
+PREV_DAILY=$(echo "$PREV_MANIFEST" | jq -r '.last_daily // "null"' 2>/dev/null)
+PREV_WEEKLY=$(echo "$PREV_MANIFEST" | jq -r '.last_weekly // "null"' 2>/dev/null)
+
+# Use jq to build properly escaped JSON
+jq -n \
+  --arg last_run "$(date -Iseconds)" \
+  --arg mode "${MODE}" \
+  --arg hourly "$(date -Iseconds)" \
+  --arg daily "$PREV_DAILY" \
+  --arg weekly "$PREV_WEEKLY" \
+  --argjson files "$(printf '%s\n' "${CREATED_FILES[@]}" | jq -R . | jq -s .)" \
+  --argjson size "${TOTAL_SIZE}" \
+  --argjson errors "${ERRORS}" \
+  --arg ts "${TIMESTAMP}" \
+  '{
+    last_run: $last_run,
+    last_mode: $mode,
+    last_hourly: $hourly,
+    last_daily: $daily,
+    last_weekly: $weekly,
+    files_created: $files,
+    total_size_bytes: $size,
+    errors: $errors,
+    timestamp: $ts
+  }' > "${MANIFEST}"
 
 # Update last_daily and last_weekly if appropriate
 if [[ "$MODE" == "daily" || "$MODE" == "weekly" || "$MODE" == "full" ]]; then

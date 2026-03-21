@@ -107,6 +107,13 @@ check_db_integrity() {
     
     # Only check SQLite integrity (DuckDB doesn't have CLI integrity check)
     if [[ "$db_type" == "sqlite" ]]; then
+        # Check the most recent SQLite backup (skip duckdb files)
+        latest_backup=$(find "$backup_dir" -type f -name "*.db.gz" -printf '%T@ %p\n' 2>/dev/null | sort -rn | head -1 | cut -d' ' -f2-)
+        if [[ -z "$latest_backup" ]]; then
+            add_detail "WARN" "No SQLite backups found in $backup_dir"
+            return
+        fi
+        
         local temp_db=$(mktemp /tmp/backup_verify_XXXXXX.db)
         
         # Uncompress to temp
@@ -120,17 +127,20 @@ check_db_integrity() {
         local integrity_result=$(sqlite3 "$temp_db" "PRAGMA integrity_check;" 2>&1 || echo "ERROR")
         
         if [[ "$integrity_result" == "ok" ]]; then
-            add_detail "OK" "Integrity OK: $(basename "$latest_backup")"
+            add_detail "OK" "SQLite integrity OK: $(basename "$latest_backup")"
         else
             add_detail "FAIL" "Integrity check failed: $(basename "$latest_backup")"
         fi
         
         rm -f "$temp_db"
+    else
+        add_detail "OK" "DuckDB backups present in $backup_dir (no CLI integrity check available)"
     fi
 }
 
 # Check database backups
 check_db_integrity "${BACKUP_ROOT}/databases/hourly" "sqlite"
+check_db_integrity "${BACKUP_ROOT}/databases/hourly" "duckdb"
 
 # Check if config backup exists
 CONFIG_DIR="${BACKUP_ROOT}/config/daily"

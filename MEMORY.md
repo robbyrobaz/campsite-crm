@@ -82,6 +82,25 @@ Before answering "why didn't X happen": read the file/code/DB, check actual stat
 ### ⛔ Investigate before killing processes (Mar 16 2026)
 Check logs, CPU/RAM, runtime, stage FIRST. Only kill if truly hung (>30min same stage), OOM, or confirmed loop. Slow ≠ broken.
 
+### ⛔ High CPU requires investigation, not acceptance (Mar 21 2026 05:37)
+**What happened:** Heartbeat saw Moonshot 570% CPU + Blofin ingestor 48% CPU and said "NORMAL" without investigating.
+
+**What was ACTUALLY happening:**
+- **Moonshot:** Recomputing ALL features for 467 coins every 4h cycle (1.2M cached features ignored, no incremental logic)
+- **Blofin ingestor:** Database lock retry loop with NO backoff (391 errors/log, burning CPU in tight loop)
+
+**The mistake:** Saw high CPU on "expected" processes (ML training, data ingestor) and assumed it was normal workload without checking logs or efficiency.
+
+**The lesson:** Before calling high CPU "normal":
+1. Check service logs for error patterns (`grep -iE "error|lock|retry"`)
+2. For ML: verify it's not recomputing cached data
+3. For ingestors: verify no retry loops (DB locks, network errors)
+4. Count error frequency - if >100 recent errors, it's a bug not normal load
+
+**Rob's directive:** "I shouldn't have to push you into figuring out obvious things like this."
+
+**Action taken:** Updated HEARTBEAT.md with mandatory CPU investigation checklist.
+
 ### ⛔ NEVER stop data ingestor services (Mar 20 2026)
 sp500-ingestor, blofin-stack-ingestor, nq-data-sync — these run 24/7 collecting live market data. Stopping them = missing candles/trades = broken backtests. If DuckDB is locked, use `read_only=True` or wait. NEVER stop the ingestor to work around a lock.
 

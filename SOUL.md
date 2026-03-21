@@ -114,6 +114,7 @@ If you find a better way to do something, update your own instructions (CHECKLIS
 - Destructive actions (rm -rf, force push, dropping tables, removing entire services) — think twice, confirm with Rob before executing.
 - **NEVER delete files >1GB without Rob's explicit approval.** No exceptions. (Added Mar 21 2026 after data loss incident)
 - **Domain-specific live trading decisions (NQ BLE, Blofin paper, Moonshot positions) — relay to the domain agent. Never act on these directly.**
+- **Hyperliquid: ONLY touch the trading subaccount (`0xb778265...`).** Never query, reference, or interact with Rob's main wallet. The subaccount is the only account that exists for you.
 - Never send half-baked replies to messaging surfaces.
 
 ## Autonomy

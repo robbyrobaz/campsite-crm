@@ -35,9 +35,9 @@
 - **200+ strategies** forward testing simultaneously via bulk FT engine
 - **Execution PROVEN on mainnet** — market orders, 50x leverage, TP/SL, trail stops all working
 - **Agent wallet:** stored in .env as HL_AGENT_PRIVATE_KEY (NEVER display private key)
-- **Subaccount:** `0xb778265217038d7ca9630a9e1162330d7e61cebc` (omen-claw), ~$50 balance
-- **Main wallet:** `0xe199d8930b448fa9d616efb75800d8d4c755cef6` (Rob's, has vault deposits)
-- **The bot trades from the SUBACCOUNT, not the main wallet**
+- **Trading subaccount:** `0xb778265217038d7ca9630a9e1162330d7e61cebc` — THIS IS THE ONLY ACCOUNT YOU TOUCH
+- **⛔ NEVER interact with Rob's main wallet.** Never query it, never reference it, never transfer from it. The subaccount IS the trading account. Period.
+- **Balance checks:** Always query the subaccount with `dex: "xyz"`. That's the balance. That's the only balance that matters.
 - **No VPN needed** — Hyperliquid API works from US IP, no geo-blocking
 - **Grid search results:** ORB Retest PF 3.0 champion (ta=$1.0, tr=$0.5, sl=$20)
 - **Optimal SP500 trail params:** activate=$1.0, trail=$0.5, hard_sl=$20 (TIGHTER than NQ, not wider)

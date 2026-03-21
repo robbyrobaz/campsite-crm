@@ -114,17 +114,29 @@ This is non-negotiable. Files >1GB often contain critical data (databases, logs,
 sp500-ingestor, blofin-stack-ingestor, nq-data-sync — these run 24/7 collecting live market data. Stopping them = missing candles/trades = broken backtests. If DuckDB is locked, use `read_only=True` or wait. NEVER stop the ingestor to work around a lock.
 
 ### ⛔ Backup infrastructure is NON-OPTIONAL (Mar 21 2026)
-**What happened:** Crypto agent's builder corrupted 53GB blofin_monitor.db during WAL checkpoint. Zero backups existed. 1 month of FT research (86K paper trades, strategy performance) permanently lost. The blofin-db-backup.sh script existed but was NEVER wired to a cron. The full-restore backup explicitly excluded blofin-stack.
+**What happened:** Crypto agent's builder corrupted 53GB blofin_monitor.db during WAL checkpoint. Zero backups existed. 1 month of FT research (86K paper trades, strategy performance) permanently lost.
 
 **Root cause chain:** Jarvis flagged 48% CPU on ingestor → crypto agent spawned builder to fix DB locks → builder stopped ingestor, attempted WAL checkpoint on 40GB WAL → checkpoint corrupted 53GB DB → builder deleted corrupted files → data gone forever.
 
-**New architecture (Jarvis owns):**
-- Hourly: `sqlite3 .backup` for ALL databases to /mnt/data/backups/databases/hourly/ (24 retained)
-- Daily: configs, secrets, agent identity, systemd units to /mnt/data/backups/config/daily/ (30 retained)
-- Weekly: ML models + backfill data (8 weeks retained)
-- 12-hour health check cron verifies integrity + recency
-- Budget: 500GB on 1TB drive
+**GFS Backup Architecture (Jarvis owns — primary responsibility):**
+- **Son (hourly):** `sqlite3 .backup` for ALL databases → `/mnt/data/backups/databases/hourly/` (6 sets retained)
+- **Father (daily):** Auto-promoted from hourly, 1/day → `databases/daily/` (7 days retained)
+- **Grandfather (weekly):** Auto-promoted from daily, 1/week → `databases/weekly/` (4 weeks retained)
+- **Great-grandfather (monthly):** Auto-promoted from weekly, 1/month → `databases/monthly/` (3 months retained)
+- **Configs:** Agent identity, secrets, systemd, .env, brain, memory → `config/daily/` (30 days)
+- **ML Models:** Weekly tar.gz → `models/weekly/` (8 weeks)
+- **Data:** Blofin tickers parquet → `data/weekly/` (4 weeks)
+- Budget: 500GB on 1TB drive at `/mnt/data/backups/`
 - **NEVER use `cp` on live SQLite — always `sqlite3 .backup`**
+
+**Backup crons:**
+- `openclaw-backup.timer` — hourly DB snapshots
+- `openclaw-backup-daily.timer` — daily configs (3 AM)
+- `openclaw-backup-weekly.timer` — weekly models + data (Sun 4 AM)
+- **Backup Deep Audit** — every 24h, Opus, thorough integrity + GFS verification
+- **Backup Health Check** — every 12h, Haiku, quick recency + status check
+
+**This is a PRIMARY RESPONSIBILITY — not a nice-to-have.** Losing data because backups weren't running is unacceptable.
 
 ### General
 - **Haiku WILL hallucinate** — must include step-by-step API call instructions with "WARNING: Do NOT make up data"

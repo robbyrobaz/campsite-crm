@@ -12,6 +12,7 @@ You have three autonomous sub-agents. They own their domains. You do NOT microma
 
 - **NQ Agent** (`agent:nq:main`) — owns NQ futures pipeline, BLE engines, L2 scalping, IBKR options
 - **Crypto Agent** (`agent:crypto:main`) — owns Blofin stack, Moonshot v2, crypto paper trading
+- **SP Agent** (`agent:sp:main`) — owns SP500 pipeline, Hyperliquid perps, xyz:SP500 trading
 - **Church Agent** (`agent:church:main`) — owns volunteer SMS system
 
 **Your role:**

@@ -60,6 +60,158 @@ should_run_tier2() {
 }
 
 # Retention cleanup function
+# ========== GFS RETENTION (Grandfather-Father-Son) ==========
+# Son    = recent hourly backups (keep last 6 = ~6 hours of coverage)
+# Father = 1 daily snapshot kept per day (keep last 7 days)
+# Grand  = 1 weekly snapshot (keep last 4 weeks)
+# Great  = 1 monthly snapshot (keep last 3 months)
+#
+# Promotion: before deleting an old Son, check if it's the last one for its
+# day/week/month — if so, move it to the Father/Grand/Great tier.
+
+gfs_rotate() {
+    local base_dir="$1"       # e.g. /mnt/data/backups/databases
+    local hourly_dir="${base_dir}/hourly"
+    local daily_dir="${base_dir}/daily"
+    local weekly_dir="${base_dir}/weekly"
+    local monthly_dir="${base_dir}/monthly"
+
+    mkdir -p "$hourly_dir" "$daily_dir" "$weekly_dir" "$monthly_dir"
+
+    [[ ! -d "$hourly_dir" ]] && return
+
+    local KEEP_HOURLY=6    # ~6 hours of Son backups
+    local KEEP_DAILY=7     # 7 Father snapshots (1 per day)
+    local KEEP_WEEKLY=4    # 4 Grandfather snapshots (1 per week)
+    local KEEP_MONTHLY=3   # 3 Great-grandfather snapshots (1 per month)
+
+    # --- Group hourly files by timestamp prefix (YYYYMMDD_HHMMSS) ---
+    # Each hourly run creates multiple files sharing the same timestamp.
+    # We work in "sets" grouped by timestamp.
+
+    # Get unique timestamps from filenames, sorted newest first
+    local -a timestamps=()
+    while IFS= read -r ts; do
+        [[ -n "$ts" ]] && timestamps+=("$ts")
+    done < <(ls "$hourly_dir" 2>/dev/null | grep -oP '\d{8}_\d{6}' | sort -ru)
+
+    local total_sets=${#timestamps[@]}
+    if [[ $total_sets -le $KEEP_HOURLY ]]; then
+        log "  GFS: $total_sets hourly sets, keeping all (≤$KEEP_HOURLY)"
+    else
+        log "  GFS: $total_sets hourly sets, trimming to $KEEP_HOURLY"
+
+        # Timestamps to remove (oldest beyond KEEP_HOURLY)
+        local -a old_timestamps=("${timestamps[@]:$KEEP_HOURLY}")
+
+        for old_ts in "${old_timestamps[@]}"; do
+            local day_str="${old_ts:0:8}"   # YYYYMMDD
+            local year_month="${old_ts:0:6}" # YYYYMM
+
+            # Check: is there already a daily for this day?
+            local has_daily=$(find "$daily_dir" -name "*_${day_str}*" -type f 2>/dev/null | head -1)
+
+            if [[ -z "$has_daily" ]]; then
+                # Promote one file per DB to daily (this is the Father)
+                log "  GFS: promoting $old_ts → daily (day $day_str)"
+                for f in "$hourly_dir"/*"${old_ts}"*; do
+                    [[ -f "$f" ]] && cp "$f" "$daily_dir/"
+                done
+            fi
+
+            # Delete the hourly set
+            for f in "$hourly_dir"/*"${old_ts}"*; do
+                [[ -f "$f" ]] && rm -f "$f"
+            done
+        done
+    fi
+
+    # --- Trim daily: keep KEEP_DAILY, promote oldest to weekly ---
+    local -a daily_days=()
+    while IFS= read -r d; do
+        [[ -n "$d" ]] && daily_days+=("$d")
+    done < <(ls "$daily_dir" 2>/dev/null | grep -oP '\d{8}' | sort -ru | uniq)
+
+    if [[ ${#daily_days[@]} -gt $KEEP_DAILY ]]; then
+        local -a old_days=("${daily_days[@]:$KEEP_DAILY}")
+        for old_day in "${old_days[@]}"; do
+            # Get ISO week for this day
+            local iso_week=$(date -d "${old_day:0:4}-${old_day:4:2}-${old_day:6:2}" +%G-W%V 2>/dev/null || echo "")
+            local has_weekly=$(find "$weekly_dir" -name "*_${old_day}*" -type f 2>/dev/null | head -1)
+
+            if [[ -z "$has_weekly" && -n "$iso_week" ]]; then
+                # Check if we already have a snapshot for this ISO week
+                local week_start=$(date -d "${old_day:0:4}-${old_day:4:2}-${old_day:6:2}" +%G%V 2>/dev/null || echo "0")
+                local existing_week_snap=$(ls "$weekly_dir" 2>/dev/null | grep -oP '\d{8}' | while read wd; do
+                    local wk=$(date -d "${wd:0:4}-${wd:4:2}-${wd:6:2}" +%G%V 2>/dev/null || echo "x")
+                    [[ "$wk" == "$week_start" ]] && echo "yes"
+                done | head -1)
+
+                if [[ -z "$existing_week_snap" ]]; then
+                    log "  GFS: promoting daily $old_day → weekly"
+                    for f in "$daily_dir"/*"${old_day}"*; do
+                        [[ -f "$f" ]] && cp "$f" "$weekly_dir/"
+                    done
+                fi
+            fi
+
+            # Delete old daily files for this day
+            for f in "$daily_dir"/*"${old_day}"*; do
+                [[ -f "$f" ]] && rm -f "$f"
+            done
+        done
+    fi
+
+    # --- Trim weekly: keep KEEP_WEEKLY, promote oldest to monthly ---
+    local -a weekly_days=()
+    while IFS= read -r d; do
+        [[ -n "$d" ]] && weekly_days+=("$d")
+    done < <(ls "$weekly_dir" 2>/dev/null | grep -oP '\d{8}' | sort -ru | uniq)
+
+    if [[ ${#weekly_days[@]} -gt $KEEP_WEEKLY ]]; then
+        local -a old_weeks=("${weekly_days[@]:$KEEP_WEEKLY}")
+        for old_w in "${old_weeks[@]}"; do
+            local year_month="${old_w:0:6}"
+            local has_monthly=$(find "$monthly_dir" -name "*${year_month}*" -type f 2>/dev/null | head -1)
+
+            if [[ -z "$has_monthly" ]]; then
+                log "  GFS: promoting weekly $old_w → monthly"
+                for f in "$weekly_dir"/*"${old_w}"*; do
+                    [[ -f "$f" ]] && cp "$f" "$monthly_dir/"
+                done
+            fi
+
+            for f in "$weekly_dir"/*"${old_w}"*; do
+                [[ -f "$f" ]] && rm -f "$f"
+            done
+        done
+    fi
+
+    # --- Trim monthly: keep KEEP_MONTHLY ---
+    local -a monthly_months=()
+    while IFS= read -r d; do
+        [[ -n "$d" ]] && monthly_months+=("$d")
+    done < <(ls "$monthly_dir" 2>/dev/null | grep -oP '\d{6}' | sort -ru | uniq)
+
+    if [[ ${#monthly_months[@]} -gt $KEEP_MONTHLY ]]; then
+        local -a old_months=("${monthly_months[@]:$KEEP_MONTHLY}")
+        for old_m in "${old_months[@]}"; do
+            log "  GFS: deleting monthly $old_m (beyond $KEEP_MONTHLY month retention)"
+            for f in "$monthly_dir"/*"${old_m}"*; do
+                [[ -f "$f" ]] && rm -f "$f"
+            done
+        done
+    fi
+
+    # Report
+    local h_count=$(ls "$hourly_dir" 2>/dev/null | grep -oP '\d{8}_\d{6}' | sort -u | wc -l)
+    local d_count=$(ls "$daily_dir" 2>/dev/null | wc -l)
+    local w_count=$(ls "$weekly_dir" 2>/dev/null | wc -l)
+    local m_count=$(ls "$monthly_dir" 2>/dev/null | wc -l)
+    log "  GFS status: ${h_count} hourly sets, ${d_count} daily, ${w_count} weekly, ${m_count} monthly"
+}
+
+# Legacy wrapper for non-DB dirs (configs, models, data — simple count-based)
 cleanup_old_backups() {
     local dir="$1"
     local keep_count="$2"
@@ -68,10 +220,9 @@ cleanup_old_backups() {
         return
     fi
     
-    # Keep newest N files, delete older
     local file_count=$(find "$dir" -type f | wc -l)
     if [[ $file_count -gt $keep_count ]]; then
-        log "Cleaning up old backups in $dir (keep $keep_count)"
+        log "  Cleaning up old backups in $dir (keep $keep_count)"
         find "$dir" -type f -printf '%T@ %p\n' | sort -rn | tail -n +$((keep_count + 1)) | cut -d' ' -f2- | while read -r old_file; do
             log "  Removing old backup: $(basename "$old_file")"
             rm -f "$old_file"
@@ -102,6 +253,14 @@ backup_databases() {
         "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/data/nq_pipeline.db"
         "/home/rob/.openclaw/workspace/jarvis-home-energy/energy_data.db"
         "/mnt/data/blofin_monitor.db"
+        "/home/rob/.openclaw/workspace/ninja_trader_strategies/data/nq_pipeline.db"
+        "/home/rob/.openclaw/workspace/blofin-stack/data/paper_trading.db"
+        "/mnt/data/market_macro.db"
+        "/mnt/data/backtest_results.db"
+        "/home/rob/.openclaw/workspace/ai-workshop/projects/sports-betting/data/betting.db"
+        "/home/rob/.openclaw/memory/main.sqlite"
+        "/home/rob/.openclaw/memory/nq.sqlite"
+        "/home/rob/.openclaw/memory/crypto.sqlite"
     )
     
     for db in "${SQLITE_DBS[@]}"; do
@@ -130,7 +289,9 @@ backup_databases() {
     local -a DUCKDB_DBS=(
         "/home/rob/infrastructure/ibkr/data/nq_feed.duckdb"
         "/home/rob/.openclaw/workspace/hyperliquid-sp500-pipeline/data/sp500_pipeline.duckdb"
+        "/home/rob/.openclaw/workspace/hyperliquid-sp500-pipeline/data/sp500_pipeline_training.duckdb"
         "/home/rob/infrastructure/ibkr/data/ibkr_options.duckdb"
+        "/home/rob/infrastructure/ibkr/data/options.duckdb"
     )
     
     for db in "${DUCKDB_DBS[@]}"; do
@@ -161,25 +322,8 @@ backup_databases() {
         fi
     done
     
-    # Cleanup old hourly backups (keep last 24)
-    cleanup_old_backups "$db_dir" 24
-    
-    # Promote oldest hourly to daily (if daily backup)
-    if [[ "$MODE" == "daily" || "$MODE" == "weekly" || "$MODE" == "full" ]]; then
-        local daily_dir="${BACKUP_ROOT}/databases/daily"
-        mkdir -p "$daily_dir"
-        
-        # Find oldest hourly backup and copy to daily
-        local oldest_hourly=$(find "$db_dir" -type f -printf '%T@ %p\n' | sort -n | head -1 | cut -d' ' -f2-)
-        if [[ -n "$oldest_hourly" ]]; then
-            local daily_name=$(basename "$oldest_hourly" | sed "s/_[0-9]\{8\}_[0-9]\{6\}/_daily_${TIMESTAMP}/")
-            log "  Promoting to daily: $daily_name"
-            cp "$oldest_hourly" "${daily_dir}/${daily_name}"
-        fi
-        
-        # Cleanup old daily backups (keep last 30)
-        cleanup_old_backups "$daily_dir" 30
-    fi
+    # GFS rotation: hourly → daily → weekly → monthly
+    gfs_rotate "${BACKUP_ROOT}/databases"
 }
 
 # ========== TIER 1: CONFIG BACKUPS ==========
@@ -236,6 +380,16 @@ backup_configs() {
     mkdir -p "$staging/systemd"
     for unit_file in "$HOME_DIR/.config/systemd/user"/*.service "$HOME_DIR/.config/systemd/user"/*.timer; do
         [[ -f "$unit_file" ]] && cp "$unit_file" "$staging/systemd/"
+    done
+    
+    # Session logs (conversation history)
+    for agent in main nq crypto church; do
+        local sess_dir="$OC/agents/$agent/sessions"
+        if [[ -d "$sess_dir" ]]; then
+            mkdir -p "$staging/sessions/$agent"
+            cp "$sess_dir"/*.jsonl "$staging/sessions/$agent/" 2>/dev/null || true
+            cp "$sess_dir"/sessions.json "$staging/sessions/$agent/" 2>/dev/null || true
+        fi
     done
     
     # All .env files (excluding .venv/)

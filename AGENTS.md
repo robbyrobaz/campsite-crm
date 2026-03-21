@@ -113,13 +113,16 @@ In groups, you're a participant — not Rob's voice, not his proxy.
 
 **Jarvis owns ALL backups.** No domain agent touches backup infrastructure.
 
-**Architecture:**
+**Architecture (GFS Rotation — Grandfather-Father-Son):**
 - `/mnt/data/backups/` on 1TB external drive (500GB budget)
-- `databases/hourly/` — SQLite .backup snapshots every hour (24 retained)
-- `databases/daily/` — promoted from hourly (30 retained)
+- `databases/hourly/` — Son: last 6 hourly snapshots (~6h coverage)
+- `databases/daily/` — Father: promoted from hourly, 1/day, 7 days retained
+- `databases/weekly/` — Grandfather: promoted from daily, 1/week, 4 weeks retained
+- `databases/monthly/` — Great-grandfather: promoted from weekly, 1/month, 3 months retained
 - `config/daily/` — secrets, agent configs, brain, systemd (30 retained)
 - `models/weekly/` — ML weights (8 weeks retained)
 - `data/weekly/` — backfill parquet (4 weeks retained)
+- Promotion is automatic: old Sons become Fathers, old Fathers become Grandfathers, etc.
 
 **Services:**
 - `openclaw-backup.timer` — hourly DB backups
@@ -140,7 +143,8 @@ In groups, you're a participant — not Rob's voice, not his proxy.
 Domain crons belong to domain agents. Jarvis only owns:
 - **Oversight heartbeat** (every 1-2h, Haiku): server health, kanban sweep, git backup
 - **AI Token Usage Audit** (weekly, Haiku): token efficiency report
-- **Backup Health Check** (every 12h, Haiku): verify all backups are current and intact
+- **Backup Health Check** (every 12h, Haiku): quick recency + status check
+- **Backup Deep Audit** (every 24h, Opus): thorough investigation — decompress + integrity check every GFS tier, verify promotion logic, check disk budget, validate restore capability, alert Rob on ANY issue
 
 **Kanban status semantics:**
 - **Inbox** = idea bucket / Rob's scratchpad. Dispatcher ignores.

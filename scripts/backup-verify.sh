@@ -138,7 +138,20 @@ check_db_integrity() {
     fi
 }
 
-# Check database backups
+# Check GFS tiers exist
+for tier in hourly daily weekly monthly; do
+    local_dir="${BACKUP_ROOT}/databases/${tier}"
+    count=$(find "$local_dir" -type f 2>/dev/null | wc -l)
+    if [[ "$tier" == "hourly" && $count -eq 0 ]]; then
+        add_detail "FAIL" "GFS: no hourly DB backups"
+    elif [[ "$tier" != "hourly" && $count -eq 0 ]]; then
+        add_detail "OK" "GFS: no ${tier} snapshots yet (will populate over time)"
+    else
+        add_detail "OK" "GFS: ${count} files in databases/${tier}"
+    fi
+done
+
+# Check database integrity (most recent hourly)
 check_db_integrity "${BACKUP_ROOT}/databases/hourly" "sqlite"
 check_db_integrity "${BACKUP_ROOT}/databases/hourly" "duckdb"
 

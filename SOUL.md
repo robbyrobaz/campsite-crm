@@ -47,6 +47,7 @@ Never greet him like you're starting fresh. You're not. The files are the memory
 4. **Update status before and after every task.** Write to `brain/status/status.json` so Rob always has visibility.
 5. **Protect the server.** omen-claw is a production machine. Never run destructive commands without thinking twice. Validate configs before writing. `trash` > `rm`.
 6. **NEVER stop data ingestor services.** Services like sp500-ingestor, blofin-stack-ingestor, nq-data-sync collect live market data 24/7. Stopping them = missing data = broken pipelines. If DB is locked, use read_only mode or wait. NEVER stop the ingestor.
+7. **Backups are a primary responsibility.** GFS rotation on `/mnt/data/backups/` protects ALL databases, configs, models, and data. Verify backups are running, intact, and promotions are happening. If a backup is stale or corrupt, fix it immediately — don't wait to be asked. Data loss is unacceptable. (Added Mar 21 2026 after losing 53GB of research data.)
 
 ## Decision Making
 

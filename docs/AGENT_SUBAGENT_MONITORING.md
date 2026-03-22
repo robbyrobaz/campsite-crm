@@ -2,72 +2,110 @@
 
 **Date:** 2026-03-22  
 **Author:** Jarvis (COO)  
-**Purpose:** Document how agents should monitor their builders/subagents in OpenClaw
+**Status:** CANONICAL — all agents must follow this  
+**Last Updated:** 2026-03-22 (kanban removed, ACP harness added)
 
 ---
 
-## The Problem
+## Executive Summary
 
-Agents spawn subagents for coding work, but visibility is inconsistent:
-- Sometimes subagents appear in the "Live Agent Work" section of the master dashboard
-- Sometimes they don't
-- Agents need a reliable way to check on their spawned work
+**Kanban is deprecated.** All agent work uses OpenClaw's native `sessions_spawn`:
+- **Quick tasks:** `runtime="subagent"` (data analysis, validation, queries)
+- **Coding tasks:** `runtime="acp"` with `agentId="claude-code"` (features, bugs, refactoring)
 
-## How OpenClaw Subagents Work
-
-### Two Types of "Subagents"
-
-OpenClaw has **two distinct execution models** that are often confused:
-
-1. **OpenClaw Subagents** (`sessions_spawn` with `runtime="subagent"`)
-   - Internal OpenClaw sessions
-   - Tracked in OpenClaw's session registry
-   - Visible via `subagents(action="list")` and `sessions_list`
-   - Execute using OpenClaw's native agent runtime
-
-2. **Claude CLI Builders** (External coding agents)
-   - Separate processes (`claude` command)
-   - NOT tracked in OpenClaw sessions
-   - Visible in master dashboard "Live Agent Work" (scans `/proc`)
-   - Execute in isolated repos with PTY/background spawns
-
-### What the Dashboard Shows
-
-The master dashboard's **"Live Agent Work"** panel shows:
-- **Claude CLI processes** found by scanning `/proc` for running `claude` binaries
-- **Kanban "In Progress" cards** from the kanban API
-- **Claude Agent Teams** from `~/.claude/teams/`
-
-**It does NOT show:**
-- OpenClaw subagents spawned via `sessions_spawn(runtime="subagent")`
-- Cron jobs (those are OpenClaw isolated sessions)
-- Background Python scripts or other non-Claude processes
+**Both monitored the same way:** `subagents(action="list")`
 
 ---
 
-## How to Monitor Subagents (The Right Way)
+## How to Spawn Work
 
-### For OpenClaw Subagents (`sessions_spawn` runtime="subagent")
+### Quick Tasks (< 5 min, single query/analysis)
 
-**Use `subagents(action="list")`:**
+Use **OpenClaw subagents:**
 
 ```python
-subagents(action="list")
+sessions_spawn(
+    task="Count failed trades in the last 24 hours",
+    runtime="subagent",
+    mode="run",
+    model="claude-haiku-4-5"
+)
+```
+
+**When to use:**
+- Database queries ("How many trades in Apex tier?")
+- File analysis ("Parse this log for errors")
+- Config validation ("Check if systemd unit is valid")
+- Quick calculations ("Average PnL over 30 days")
+
+---
+
+### Coding Tasks (features, bugs, refactoring)
+
+Use **ACP harness** (Claude Code, Codex, etc.):
+
+```python
+sessions_spawn(
+    task="Fix the ORB 15min strategy — it's losing money on low-volume days",
+    runtime="acp",
+    agentId="claude-code",  # or "codex" depending on config
+    mode="run",  # or "session" for persistent/thread-bound
+    cwd="/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+    runTimeoutSeconds=3600  # 1 hour for complex work
+)
+```
+
+**When to use:**
+- Feature implementation ("Add trailing stop to strategy X")
+- Bug fixes ("Fix database lock retry loop")
+- Refactoring ("Clean up this 500-line function")
+- Multi-file changes across a codebase
+
+**Mode options:**
+- `mode="run"` — one-shot task, completes and exits
+- `mode="session"` — persistent session (useful for thread-bound Discord/Telegram work)
+
+**Thread-bound sessions:**
+```python
+sessions_spawn(
+    task="Review this PR and suggest improvements",
+    runtime="acp",
+    agentId="claude-code",
+    mode="session",
+    thread=True  # creates thread-bound session in Discord/Telegram
+)
+```
+
+---
+
+## How to Monitor Work
+
+### For ALL OpenClaw Work (subagents + ACP harness)
+
+Use `subagents(action="list")`:
+
+```python
+result = subagents(action="list")
 ```
 
 **Returns:**
 ```json
 {
-  "status": "ok",
-  "action": "list",
   "total": 2,
   "active": [
     {
-      "sessionKey": "agent:main:sub:abc123",
-      "label": "Fix bug in NQ pipeline",
+      "sessionKey": "agent:nq:subagent:abc123",
+      "label": "Count failed trades in the last 24 hours",
       "status": "running",
-      "startedAt": 1774212000000,
-      "model": "nemotron-3-super-120b-a12b"
+      "runtime": "30s",
+      "model": "anthropic/claude-haiku-4-5"
+    },
+    {
+      "sessionKey": "agent:nq:acp:def456",
+      "label": "Fix the ORB 15min strategy — it's losing...",
+      "status": "running",
+      "runtime": "5m",
+      "model": "claude-code"
     }
   ],
   "recent": []
@@ -75,189 +113,207 @@ subagents(action="list")
 ```
 
 **Key fields:**
-- `active`: Currently running subagents spawned by YOUR session
-- `recent`: Completed/failed subagents from last 30 minutes
-- `sessionKey`: Use this for `sessions_send` or `sessions_history`
+- `active`: Currently running work spawned by YOUR session
+- `recent`: Completed/failed work from last 30 minutes
+- `sessionKey`: Use for `sessions_send` or `sessions_history`
+- `runtime`: How long it's been running
+- `model`: Which model/agent is executing
 
-**This is scoped to YOUR session** — you only see subagents YOU spawned, not other agents' subagents.
-
----
-
-### For Claude CLI Builders (External Coding Agents)
-
-Claude CLI builders are **separate processes**, so OpenClaw subagent tools don't see them.
-
-**Option 1: Check the master dashboard**
-- URL: `http://127.0.0.1:8080` (or your dashboard port)
-- Look at "Live Agent Work" → shows running `claude` processes
-- **Limitation:** Only shows processes while they're running; no history after completion
-
-**Option 2: Query the dashboard API directly**
-
-```bash
-curl -s http://127.0.0.1:8080/api/live-work/processes | jq '.agents'
-```
-
-**Returns:**
-```json
-{
-  "agents": [
-    {
-      "pid": 123456,
-      "cwd": "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
-      "runtime_s": 120,
-      "is_subagent": true,
-      "model": "nemotron-3-super-120b-a12b",
-      "card_title": "Fix ORB strategy bug"
-    }
-  ]
-}
-```
-
-**Option 3: Check kanban cards (if using kanban dispatch)**
-
-```bash
-curl -s http://127.0.0.1:8787/api/cards?status=In%20Progress | jq '.cards'
-```
-
-**Returns:**
-```json
-{
-  "cards": [
-    {
-      "id": "abc123",
-      "title": "Fix bug in NQ pipeline",
-      "status": "In Progress",
-      "runner_pid": 123456,
-      "updated_at": "2026-03-22T13:30:00Z"
-    }
-  ]
-}
-```
-
-**Option 4: Check process directly (if you have the PID)**
-
-```bash
-ps -p <pid> -o pid,etime,%cpu,%mem,cmd
-```
+**This is scoped to YOUR session** — you only see work YOU spawned.
 
 ---
 
-## Recommended Workflows
+### Waiting for Completion
 
-### Scenario 1: Agent Spawns OpenClaw Subagent
+After spawning work, use `sessions_yield()` to pause and wait:
 
-**When to use:** Quick isolated tasks (data analysis, config validation, simple fixes)
-
-**How to spawn:**
 ```python
-sessions_spawn(
-    task="Analyze the last 100 trades in nq_pipeline.db",
-    runtime="subagent",
-    mode="run",
-    model="nemotron-3-super-120b-a12b"
+# Spawn work
+sessions_spawn(task="...", runtime="subagent", mode="run")
+
+# Pause and wait for completion
+sessions_yield(message="Waiting for analysis to complete...")
+
+# Next message will be the completion event
+```
+
+**Completion is push-based** — the result arrives as a message. Don't poll with `sessions_list` or `subagents(action="list")`.
+
+---
+
+### Checking on Other Agents' Work
+
+You can't see other agents' subagents via `subagents(action="list")` — it's scoped to your session.
+
+**To check on another agent's work:**
+```python
+sessions_send(
+    sessionKey="agent:crypto:main",
+    message="What subagents are you running right now?"
 )
 ```
 
-**How to monitor:**
+Or use `sessions_list` to see all sessions globally:
 ```python
-# Immediately after spawn
-subagents(action="list")
-
-# Later, to check status
-result = subagents(action="list")
-if result["total"] == 0:
-    # Subagent finished — check sessions_list for completed sessions
-    sessions_list(kinds=["subagent"], limit=5)
-```
-
-**How to get results:**
-```python
-# Use sessions_yield to pause and wait for completion
-sessions_yield(message="Waiting for analysis subagent...")
-# Next message will be the subagent's response
+sessions_list(limit=20, messageLimit=0)
+# Filter results by sessionKey pattern: ":subagent:" or ":acp:"
 ```
 
 ---
 
-### Scenario 2: Agent Dispatches Claude CLI Builder via Kanban
+## Master Dashboard Integration
 
-**When to use:** Coding tasks (feature implementation, bug fixes, refactoring)
+The master dashboard "Live Agent Work" panel shows:
+- **Claude CLI processes** from `/proc` scan (legacy, rarely used now)
+- **OpenClaw subagents** via `sessions_list` API (NEW — shows all active subagent/acp work)
 
-**How to spawn:**
-```bash
-# POST a card to kanban
-curl -X POST http://127.0.0.1:8787/api/cards \
-  -H "Content-Type: application/json" \
-  -d '{
-    "title": "Fix ORB strategy bug",
-    "description": "The ORB 15min variant is losing money...",
-    "status": "Planned",
-    "project": "NQ-Trading-PIPELINE"
-  }'
+**URL:** `http://127.0.0.1:8080` (or your configured dashboard port)
 
-# Then trigger the runner
-curl -X POST http://127.0.0.1:8787/api/cards/<id>/run
+---
+
+## Deprecated: Kanban Dispatch
+
+**Kanban is no longer used.** All coding work goes through `sessions_spawn(runtime="acp")`.
+
+**Why kanban was removed:**
+- Added unnecessary complexity (extra API, card state management, log files)
+- Duplicate monitoring (kanban API + OpenClaw sessions)
+- `sessions_spawn` provides the same capability natively
+
+**If you see kanban references in old code/docs, ignore them.**
+
+The kanban codebase remains in the repo for potential future use, but it is NOT part of the active workflow.
+
+---
+
+## Common Workflows
+
+### Scenario 1: Agent Needs Quick Data Analysis
+
+```python
+# Spawn subagent
+sessions_spawn(
+    task="Query nq_pipeline.db and return the top 5 strategies by profit factor",
+    runtime="subagent",
+    mode="run",
+    model="claude-haiku-4-5"
+)
+
+# Wait for result
+sessions_yield()
+
+# Result arrives as next message
 ```
 
-**How to monitor:**
-```bash
-# Check In Progress cards
-curl -s http://127.0.0.1:8787/api/cards?status=In%20Progress | jq '.cards[] | {id, title, updated_at}'
+---
 
-# Check specific card status
-curl -s http://127.0.0.1:8787/api/cards/<id> | jq '.status, .runner_pid'
+### Scenario 2: Agent Needs to Fix a Bug
 
-# Check live processes (master dashboard API)
-curl -s http://127.0.0.1:8080/api/live-work/processes | jq '.agents[] | select(.card_id == "<id>")'
+```python
+# Spawn ACP harness
+sessions_spawn(
+    task="""
+    The ORB 15min strategy in NQ-Trading-PIPELINE is losing money.
+    Debug the entry logic and fix the issue. Test with backtest data before committing.
+    """,
+    runtime="acp",
+    agentId="claude-code",
+    mode="run",
+    cwd="/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE",
+    runTimeoutSeconds=1800  # 30 min
+)
+
+# Check status (optional)
+result = subagents(action="list")
+if result["total"] > 0:
+    print(f"Builder running: {result['active'][0]['runtime']}")
+
+# Wait for completion
+sessions_yield(message="Waiting for bug fix...")
 ```
 
-**How to get results:**
-```bash
-# Check card log
-cat /home/rob/.openclaw/workspace/kanban-dashboard/logs/<id>.log | tail -50
+---
 
-# Or query final status
-curl -s http://127.0.0.1:8787/api/cards/<id> | jq '.status, .completion_note'
+### Scenario 3: Agent Wants to Check on All Active Work
+
+```python
+# List all your subagents/builders
+result = subagents(action="list")
+
+for agent in result["active"]:
+    print(f"[{agent['runtime']}] {agent['label']}")
+
+# Example output:
+# [2m] Fix ORB strategy bug
+# [30s] Count Apex tier models
 ```
 
 ---
 
 ## Common Pitfalls
 
-### ❌ Using `sessions_list` to find Claude CLI builders
-**Why it fails:** Claude CLI processes are NOT OpenClaw sessions. They don't appear in the session registry.
+### ❌ Spawning ACP harness without `agentId`
+**Error:** `runtime="acp"` requires `agentId` unless `acp.defaultAgent` is configured.
 
-**Fix:** Use the dashboard API (`/api/live-work/processes`) or kanban API instead.
+**Fix:**
+```python
+sessions_spawn(
+    task="Fix bug",
+    runtime="acp",
+    agentId="claude-code",  # REQUIRED
+    mode="run"
+)
+```
 
 ---
 
-### ❌ Using `subagents(action="list")` to find other agents' subagents
-**Why it fails:** `subagents` is scoped to YOUR session. You can't see another agent's subagents.
+### ❌ Using `sessions_list` to monitor your own subagents
+**Why it fails:** `sessions_list` shows ALL sessions globally. You want `subagents(action="list")` which is scoped to YOUR work only.
 
-**Fix:** Use `sessions_list` to see ALL sessions (including other agents), or use `sessions_send` to ask the other agent directly.
+**Fix:** Use `subagents(action="list")` instead.
 
 ---
 
-### ❌ Expecting finished subagents to stay in `subagents(action="list")`
-**Why it fails:** `active` only shows RUNNING subagents. Completed ones move to `recent` for 30 min, then disappear.
+### ❌ Polling for completion
+**Why it fails:** Completion is push-based. After spawning, use `sessions_yield()` to wait.
 
-**Fix:** Use `sessions_list(kinds=["subagent"], limit=10)` to see completed subagent sessions with history.
+**Wrong:**
+```python
+sessions_spawn(task="...", ...)
+while True:
+    result = subagents(action="list")
+    if result["total"] == 0:
+        break
+    time.sleep(5)
+```
+
+**Right:**
+```python
+sessions_spawn(task="...", ...)
+sessions_yield()  # Completion arrives as next message
+```
+
+---
+
+### ❌ Expecting finished work to stay in `subagents(action="list")`
+**Why it fails:** `active` only shows RUNNING work. Completed work moves to `recent` for 30 min, then disappears.
+
+**Fix:** After completion, the result is delivered as a message. Don't poll for it.
 
 ---
 
 ## Testing: Verified Behaviors (2026-03-22)
 
 ### Test 1: `sessions_list` with no filters
-**Result:** Returns all sessions (agents, crons, subagents) sorted by `updatedAt` descending.  
+**Result:** Returns all sessions (agents, crons, subagents, acp) sorted by `updatedAt` descending.  
 **Verified:** ✅ Shows 20 sessions including main agents, cron jobs.
 
 ### Test 2: `sessions_list(kinds=["subagent"])`
 **Result:** Filter does NOT work — still returns all sessions.  
-**Conclusion:** The `kinds` filter may not be implemented yet. Use `sessionKey` pattern matching instead (e.g., `":subagent:"` in key).
+**Conclusion:** The `kinds` filter may not be implemented yet. Use `sessionKey` pattern matching instead (e.g., `":subagent:"` or `":acp:"` in key).
 
 ### Test 3: `subagents(action="list")` from main session
-**Result:** Returns `{"total": 0, "active": [], "recent": []}` when no subagents are running.  
+**Result:** Returns `{"total": 0, "active": [], "recent": []}` when no work is running.  
 **Verified:** ✅ Correctly scoped to the calling session.
 
 ### Test 4: `subagents(action="list")` with active subagent
@@ -278,28 +334,8 @@ curl -s http://127.0.0.1:8787/api/cards/<id> | jq '.status, .completion_note'
 **Verified:** ✅ Shows active subagent with sessionKey, label, runtime, model. Perfect for monitoring.
 
 ### Test 5: Master dashboard "Live Agent Work"
-**Result:** Shows Claude CLI processes from `/proc` scan + kanban In Progress cards.  
-**Verified:** ✅ Does NOT show OpenClaw subagents (they're not `claude` processes).
-
----
-
-## Recommendations for Agent SOUL.md Files
-
-Add this to each agent's workflow documentation:
-
-```markdown
-## Monitoring My Subagents
-
-### For OpenClaw subagents (sessions_spawn):
-- Check actively running: `subagents(action="list")`
-- Check recent history: `sessions_list` and filter by `sessionKey` containing `:sub:`
-- Wait for completion: `sessions_yield()` after spawning
-
-### For Claude CLI builders (kanban dispatch):
-- Check In Progress: `GET http://127.0.0.1:8787/api/cards?status=In%20Progress`
-- Check live processes: `GET http://127.0.0.1:8080/api/live-work/processes`
-- Check logs: `cat /home/rob/.openclaw/workspace/kanban-dashboard/logs/<card-id>.log`
-```
+**Result:** Shows Claude CLI processes from `/proc` scan (legacy).  
+**Verified:** ✅ Does NOT show OpenClaw subagents (need to add API endpoint).
 
 ---
 
@@ -307,15 +343,26 @@ Add this to each agent's workflow documentation:
 
 | Tool | Shows | Scope | Use When |
 |------|-------|-------|----------|
-| `subagents(action="list")` | Active OpenClaw subagents | YOUR session only | Checking on `sessions_spawn` work |
-| `sessions_list` | All sessions (agents, crons, subagents) | Global | Finding completed subagent sessions or other agents |
-| Dashboard `/api/live-work/processes` | Running `claude` CLI processes | Global | Checking on coding agents/builders |
-| Kanban `/api/cards?status=In Progress` | Active kanban cards | Global | Checking on dispatched coding tasks |
+| `subagents(action="list")` | All YOUR active work (subagent + acp) | YOUR session only | Default monitoring method |
+| `sessions_list` | All sessions globally (agents, crons, subagents, acp) | Global | Finding other agents' sessions |
+| `sessions_send` | Send message to another agent | Cross-agent | Asking another agent about their work |
+| `sessions_yield` | Pause and wait for completion | Current session | After spawning work |
+| Dashboard "Live Agent Work" | Claude CLI processes + OpenClaw sessions (NEW) | Global | Visual overview of all active work |
 
 ---
 
-## Next Steps
+## Next Steps for Agents
 
-1. **Test with a real subagent spawn** to verify `subagents(action="list")` behavior with active work
-2. **Document in each agent's SOUL.md** how to check their specific subagent types
-3. **Consider adding a unified "My Work" API** that shows both OpenClaw subagents AND kanban cards for an agent
+1. **Update your SOUL.md** with delegation strategy:
+   ```markdown
+   ## Delegation
+   - Quick tasks: `sessions_spawn(runtime="subagent")`
+   - Coding tasks: `sessions_spawn(runtime="acp", agentId="claude-code")`
+   - Monitor: `subagents(action="list")`
+   ```
+
+2. **Remove all kanban references** from your workflow docs
+
+3. **Test ACP harness** with a simple coding task to verify it works in your environment
+
+4. **Use `sessions_yield()` after spawning** — don't poll for completion

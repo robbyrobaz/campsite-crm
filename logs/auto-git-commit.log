@@ -36898,3 +36898,41 @@ CLEAN master-dashboard (nothing to commit)
 [dev 82df6ed] auto: snapshot 2026-03-21T23:00:01Z
  2 files changed, 10 insertions(+), 10 deletions(-)
 COMMITTED blofin-stack
+[main 2a28de219] auto: snapshot 2026-03-21T23:00:01Z
+ 19 files changed, 1391 insertions(+), 4 deletions(-)
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260321_150036-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260321_150536-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260321_151036-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260321_151536-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260321_152036-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260321_152536-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260321_153036-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260321_153536-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260321_154036-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260321_154536-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260321_155036-auto.json
+ create mode 100644 campsite-crm/backend/backups/crm-backup-20260321_155536-auto.json
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+[main d8e84ca26] auto: snapshot 2026-03-21T23:00:01Z
+ 13 files changed, 1321 insertions(+), 1 deletion(-)
+ create mode 100644 backend/backups/crm-backup-20260321_150036-auto.json
+ create mode 100644 backend/backups/crm-backup-20260321_150536-auto.json
+ create mode 100644 backend/backups/crm-backup-20260321_151036-auto.json
+ create mode 100644 backend/backups/crm-backup-20260321_151536-auto.json
+ create mode 100644 backend/backups/crm-backup-20260321_152036-auto.json
+ create mode 100644 backend/backups/crm-backup-20260321_152536-auto.json
+ create mode 100644 backend/backups/crm-backup-20260321_153036-auto.json
+ create mode 100644 backend/backups/crm-backup-20260321_153536-auto.json
+ create mode 100644 backend/backups/crm-backup-20260321_154036-auto.json
+ create mode 100644 backend/backups/crm-backup-20260321_154536-auto.json
+ create mode 100644 backend/backups/crm-backup-20260321_155036-auto.json
+ create mode 100644 backend/backups/crm-backup-20260321_155536-auto.json
+COMMITTED campsite-crm
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 3 committed, 6 skipped
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

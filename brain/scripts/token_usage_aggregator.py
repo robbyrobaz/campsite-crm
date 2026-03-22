@@ -247,7 +247,7 @@ def write_report():
     rate_data = usage_api
     stale_minutes = None
     if not rate_data:
-        rate_data, stale_minutes = _load_rate_limit_cache(max_age_hours=24)
+        rate_data, stale_minutes = _load_rate_limit_cache(max_age_hours=168)  # 7 days — show stale data rather than nothing
     
     if rate_data:
         fh = rate_data.get("five_hour", {})

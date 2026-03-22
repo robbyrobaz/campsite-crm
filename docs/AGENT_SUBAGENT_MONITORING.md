@@ -351,6 +351,114 @@ sessions_yield()  # Completion arrives as next message
 
 ---
 
+## Logging Standards
+
+All agents must follow these logging conventions for visibility and debugging.
+
+### Log File Locations
+
+**OpenClaw sessions (subagent/ACP):**
+- Automatically logged to: `~/.openclaw/agents/{agent}/sessions/{session-id}.jsonl`
+- Viewable via dashboard "Live Agent Work" → click session
+
+**Python scripts (background processes):**
+- Standard location: `~/.openclaw/workspace/logs/{script-name}-{timestamp}.log`
+- Always use `tee` to write stdout/stderr to log file
+
+**Systemd services:**
+- Use journalctl: `journalctl --user -u {service-name} -f`
+- Dashboard can tail recent entries
+
+---
+
+### Spawning Scripts with Logging
+
+**Template:**
+```python
+exec(
+    command=f"python scripts/backtest_sweep.py 2>&1 | tee logs/backtest-sweep-$(date +%s).log",
+    background=True,
+    workdir="/home/rob/.openclaw/workspace/my-repo"
+)
+```
+
+**Key points:**
+- `2>&1` — capture stderr too
+- `tee` — write to file AND stdout
+- `$(date +%s)` — unique timestamp per run
+- Store in `logs/` subdirectory (create if needed: `mkdir -p logs`)
+
+---
+
+### Progress Logging Format
+
+Use structured logging for long-running tasks:
+
+```
+[TIMESTAMP] [STAGE] message
+```
+
+**Example:**
+```
+[2026-03-22 14:00:00] [INIT] Starting backtest sweep for 500 strategies
+[2026-03-22 14:05:00] [PROGRESS] 100/500 completed (20%, ETA 20min)
+[2026-03-22 14:10:00] [PROGRESS] 200/500 completed (40%, ETA 15min)
+[2026-03-22 14:25:00] [COMPLETE] All 500 strategies processed in 25min
+[2026-03-22 14:25:01] [SUMMARY] Top 3: strategy_A (PF 3.2), strategy_B (PF 2.8), strategy_C (PF 2.5)
+```
+
+**Stages:**
+- `[INIT]` — starting up, loading data
+- `[PROGRESS]` — periodic updates (every 5-10% or every 5 min, whichever is less frequent)
+- `[ERROR]` — recoverable errors
+- `[FATAL]` — unrecoverable errors, about to exit
+- `[COMPLETE]` — task finished successfully
+- `[SUMMARY]` — final results
+
+**Don't spam:** Log progress every N iterations, not every single item.
+
+---
+
+### Dashboard Integration
+
+**To view logs:**
+1. Open master dashboard: `http://127.0.0.1:8080`
+2. Go to "Live Agent Work" panel
+3. Click on any running session/process
+4. Log streams in real-time (SSE)
+
+**Supported log types:**
+- OpenClaw session transcripts (subagent/ACP)
+- Workspace log files (`logs/*.log`)
+- Systemd service journals
+
+---
+
+### Example: Backtest Sweep with Proper Logging
+
+```python
+# Create logs directory
+exec(command="mkdir -p logs", workdir="/home/rob/.openclaw/workspace/blofin-stack")
+
+# Spawn backtest with logging
+exec(
+    command="""
+python scripts/backtest_sweep.py 2>&1 | tee logs/backtest-sweep-$(date +%s).log
+    """.strip(),
+    background=True,
+    workdir="/home/rob/.openclaw/workspace/blofin-stack",
+    timeout=3600
+)
+
+# Script should print progress:
+# [2026-03-22 14:00:00] [INIT] Loading 500 strategies...
+# [2026-03-22 14:01:00] [PROGRESS] 50/500 (10%)
+# ...
+# [2026-03-22 14:30:00] [COMPLETE] 500 strategies tested
+```
+
+---
+
 ## Next Steps for Agents
 
 1. **Update your SOUL.md** with delegation strategy:
@@ -361,8 +469,13 @@ sessions_yield()  # Completion arrives as next message
    - Monitor: `subagents(action="list")`
    ```
 
-2. **Remove all kanban references** from your workflow docs
+2. **Adopt logging standards:**
+   - All scripts: use `tee logs/{script}-$(date +%s).log`
+   - Progress updates: structured format `[TIMESTAMP] [STAGE] message`
+   - Create `logs/` directory in your repos
 
-3. **Test ACP harness** with a simple coding task to verify it works in your environment
+3. **Remove all kanban references** from your workflow docs
 
-4. **Use `sessions_yield()` after spawning** — don't poll for completion
+4. **Test ACP harness** with a simple coding task to verify it works in your environment
+
+5. **Use `sessions_yield()` after spawning** — don't poll for completion

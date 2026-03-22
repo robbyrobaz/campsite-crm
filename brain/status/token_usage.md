@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-03-22 07:30 MST
+**Updated:** 2026-03-22 07:45 MST
 
 ## Rolling 5-Hour Window
 - **Total Tokens:** 3.9M (22 requests)
@@ -13,14 +13,14 @@
 | opus | 22 | 3.9M | 5.7K | $11.09 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 38.2M (252 requests)
-- **Output Tokens:** 86.9K
-- **Cost (est):** $46.36
+- **Total Tokens:** 35.0M (236 requests)
+- **Output Tokens:** 80.0K
+- **Cost (est):** $44.10
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 247 | 38.0M | 84.0K | $46.23 |
+| opus | 231 | 34.8M | 77.0K | $43.96 |
 | nvidia/nemotron-3-super-120b-a12b:free | 1 | 67.4K | 847 | $0.00 |
 | sonnet | 2 | 55.9K | 1.7K | $0.11 |
 | haiku | 2 | 40.8K | 383 | $0.03 |

@@ -480,6 +480,21 @@ backup_data() {
         ERRORS=$((ERRORS + 1))
     fi
     
+    # Backup blofin OHLCV candle data (new ingestor, Mar 22 2026)
+    local ohlcv_dir="/mnt/data/blofin_ohlcv"
+    if [[ -d "$ohlcv_dir" ]]; then
+        local ohlcv_archive="${data_dir}/blofin_ohlcv_${TIMESTAMP}.tar.gz"
+        log "  Backing up blofin_ohlcv parquet files..."
+        if tar czf "$ohlcv_archive" -C /mnt/data blofin_ohlcv 2>>"${LOG_FILE}"; then
+            log "    Created: $ohlcv_archive"
+            CREATED_FILES+=("$ohlcv_archive")
+            TOTAL_SIZE=$((TOTAL_SIZE + $(stat -c%s "$ohlcv_archive" 2>/dev/null || echo 0)))
+        else
+            log "    ERROR: Failed to backup blofin_ohlcv"
+            ERRORS=$((ERRORS + 1))
+        fi
+    fi
+    
     # Cleanup old weekly data (keep last 4)
     cleanup_old_backups "$data_dir" 4
 }

@@ -143,6 +143,20 @@ sp500-ingestor, blofin-stack-ingestor, nq-data-sync — these run 24/7 collectin
 
 **This is a PRIMARY RESPONSIBILITY — not a nice-to-have.** Losing data because backups weren't running is unacceptable.
 
+### ⛔ Dashboard session logs — subagent transcript behavior (Mar 23 2026 06:08)
+**Issue:** Master dashboard Live Agent Work panel showed OpenClaw sessions but clicking them displayed nothing.
+
+**Root cause:** OpenClaw subagents (`sessions_spawn(runtime="subagent")`) don't create their own transcript files. Output is delivered to parent session as completion event.
+
+**Solution:** `/api/live-work/session-log/<sessionKey>` now shows the parent session's transcript (where completion events appear). Subagent clicks route to parent agent's most recent `.jsonl` file in `~/.openclaw/agents/{agent}/sessions/`.
+
+**Key distinction:**
+- **Logging standards** (LOGGING.md, DELEGATION.md) apply to **exec-spawned scripts** using `tee` → `workspace/logs/`
+- **OpenClaw native subagents** don't log to files — they return completion events to parent
+- Dashboard correctly handles this by streaming parent transcript
+
+**Commits:** `93ebcf3`, `3265a1a`, `50ee3d7`, `89ca060` (master-dashboard repo, Mar 22-23)
+
 ### General
 - **Haiku WILL hallucinate** — must include step-by-step API call instructions with "WARNING: Do NOT make up data"
 - **Subagents die on heavy data tasks** — multi-GB loads → run in main session

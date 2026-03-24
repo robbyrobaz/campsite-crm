@@ -21,7 +21,7 @@ OUTPUT_DIR="$WORK_DIR/outputs"
 STATUS_FILE="/home/rob/.openclaw/workspace/echomimic-status.txt"
 
 # Check if already complete
-if [ -f "$STATUS_FILE" ] && grep -q "COMPLETE" "$STATUS_FILE"; then
+if ls "$SONG_REPO"/*.mp4 1> /dev/null 2>&1; then
     echo "[$(date)] Music video already generated. Exiting."
     exit 0
 fi

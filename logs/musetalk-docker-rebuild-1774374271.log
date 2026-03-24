@@ -1,0 +1,52 @@
+#0 building with "default" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.27kB done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+#2 DONE 0.6s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [1/8] FROM docker.io/nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04@sha256:85fb7ac694079fff1061a0140fd5b5a641997880e12112d92589c3bbb1e8b7ca
+#4 resolve docker.io/nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04@sha256:85fb7ac694079fff1061a0140fd5b5a641997880e12112d92589c3bbb1e8b7ca 0.0s done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 9.06MB 1.7s done
+#5 DONE 1.9s
+
+#6 [5/8] COPY . /app
+#6 CACHED
+
+#7 [6/8] RUN pip3 install --no-cache-dir     torch==2.0.1     torchvision==0.15.2     torchaudio==2.0.2     --index-url https://download.pytorch.org/whl/cu118
+#7 CACHED
+
+#8 [2/8] RUN apt-get update && apt-get install -y     python3.10     python3.10-dev     python3-pip     git     wget     ffmpeg     libsm6     libxext6     libxrender-dev     libgomp1     && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [3/8] WORKDIR /app
+#9 CACHED
+
+#10 [4/8] COPY models /app/models
+#10 CACHED
+
+#11 [7/8] RUN pip3 install --no-cache-dir     mmcv==2.0.0 -f https://download.openmmlab.com/mmcv/dist/cu118/torch2.0/index.html
+#11 CACHED
+
+#12 [8/8] RUN pip3 install --no-cache-dir     gradio==4.44.1     diffusers==0.27.0     transformers==4.36.2     librosa==0.11.0     opencv-python==4.9.0.80     omegaconf==2.3.0     einops==0.8.1     imageio-ffmpeg==0.6.0     mmpose==1.3.2     mmdet==3.3.0
+#12 CACHED
+
+#13 exporting to image
+#13 exporting layers done
+#13 exporting manifest sha256:b569b0928da0658f441037c9dfa45dd5f61dc0a1ea581038d5c9def80f79fc5b done
+#13 exporting config sha256:17fb1032f409c827cd2c630da7bb0da0d57e2ebc0882197a57c702f146caa0df done
+#13 exporting attestation manifest sha256:46bd4b1432194395128d27ddc053a174790c203f61cb0a6ae6577a5856d32235 0.0s done
+#13 exporting manifest list sha256:3477bfe2eca6c297f40a56042d92a15675987a2ade6a2fc9f5ba777da99b0e7b 0.0s done
+#13 naming to docker.io/library/musetalk:local done
+#13 unpacking to docker.io/library/musetalk:local
+#13 unpacking to docker.io/library/musetalk:local 154.1s done
+#13 DONE 154.2s

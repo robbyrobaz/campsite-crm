@@ -1,0 +1,5 @@
+The following required model files are missing:
+- Whisper
+
+Please run the download script to download the missing models:
+Linux/Mac: Run ./download_weights.sh

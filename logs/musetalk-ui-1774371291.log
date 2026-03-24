@@ -1,0 +1,11 @@
+2026-03-24 09:54:56.018510: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2026-03-24 09:54:56.142433: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-03-24 09:54:56.906077: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+All required model files exist.
+Traceback (most recent call last):
+  File "/home/rob/ai-projects/MuseTalk/app.py", line 172, in <module>
+    from musetalk.utils.preprocessing import get_landmark_and_bbox, read_imgs, coord_placeholder, get_bbox_range
+  File "/home/rob/ai-projects/MuseTalk/musetalk/utils/preprocessing.py", line 10, in <module>
+    from mmpose.apis import inference_topdown, init_model
+ModuleNotFoundError: No module named 'mmpose'

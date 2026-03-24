@@ -38789,3 +38789,33 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 1 committed, 8 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+warning: adding embedded git repository: come_follow_me_songs
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint: 
+hint: 	git submodule add <url> come_follow_me_songs
+hint: 
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint: 
+hint: 	git rm --cached come_follow_me_songs
+hint: 
+hint: See "git help submodule" for more information.
+[main df7d45d1f] auto: snapshot 2026-03-24T08:00:01Z
+ 12 files changed, 335 insertions(+), 23 deletions(-)
+ create mode 160000 come_follow_me_songs
+ create mode 100644 echomimic-status.txt
+ create mode 100644 logs/echomimic-20260324-001903.log
+ create mode 100755 scripts/echomimic-setup-and-run.sh
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+CLEAN campsite-crm (nothing to commit)
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 1 committed, 8 skipped
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

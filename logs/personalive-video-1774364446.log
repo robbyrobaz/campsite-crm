@@ -1,0 +1,11 @@
+The cache for model files in Transformers v4.22.0 has been updated. Migrating your old cache. This is a one-time only operation. You can interrupt this and resume the migration later on by calling `transformers.utils.move_cache()`.
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+/home/rob/ai-projects/PersonaLive/.venv/lib/python3.10/site-packages/diffusers/models/dual_transformer_2d.py:20: FutureWarning: `DualTransformer2DModel` is deprecated and will be removed in version 0.29. Importing `DualTransformer2DModel` from `diffusers.models.dual_transformer_2d` is deprecated and this will be removed in a future version. Please use `from diffusers.models.transformers.dual_transformer_2d import DualTransformer2DModel`, instead.
+  deprecate("DualTransformer2DModel", "0.29", deprecation_message)
+usage: inference_offline.py [-h] [--config CONFIG] [--name NAME] [-W W] [-H H]
+                            [-L L] [--seed SEED] [--device DEVICE]
+                            [--use_xformers USE_XFORMERS]
+                            [--stream_gen STREAM_GEN]
+                            [--reference_image REFERENCE_IMAGE]
+                            [--driving_video DRIVING_VIDEO]
+inference_offline.py: error: unrecognized arguments: --ref_image demo/ref_image.png --audio_file /home/rob/.openclaw/workspace/come_follow_me_songs/soft - I Have Remembered My Covenant.mp3 --output_dir /home/rob/.openclaw/workspace/come_follow_me_songs/ --output_name I_Have_Remembered_My_Covenant

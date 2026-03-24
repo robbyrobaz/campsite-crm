@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "/home/rob/ai-projects/MuseTalk/scripts/inference.py", line 17, in <module>
+    from musetalk.utils.blending import get_image
+ModuleNotFoundError: No module named 'musetalk'

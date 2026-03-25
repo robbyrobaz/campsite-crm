@@ -139,48 +139,27 @@ def format_tokens(n):
     return str(n)
 
 
-OAUTH_TOKEN_URL = "https://platform.claude.com/v1/oauth/token"
-OAUTH_CLIENT_ID = "9d1c250a-e61b-44d9-88ed-5944d1962f5e"
-
-
-def _refresh_oauth_token(creds_path):
-    """Refresh the OAuth token using the refresh_token from credentials.json.
-    Updates the file in-place and returns the new access token, or None on failure."""
+def _refresh_oauth_token_via_cli(creds_path):
+    """Refresh the OAuth token by triggering Claude CLI to do it.
+    The Claude CLI's built-in refresh logic is more reliable than manual OAuth calls.
+    Returns True if refresh succeeded (file timestamp updated), False otherwise."""
     try:
-        with open(creds_path, 'r') as f:
-            creds = json.load(f)
-        refresh_token = creds.get("claudeAiOauth", {}).get("refreshToken", "")
-        if not refresh_token:
-            return None
+        # Get current file mtime
+        old_mtime = os.path.getmtime(creds_path)
         
+        # Trigger Claude CLI to refresh by making a minimal inference call
+        # (--version doesn't trigger refresh, but an actual API call does)
         result = subprocess.run(
-            ["curl", "-sS", "-X", "POST", OAUTH_TOKEN_URL,
-             "-H", "Content-Type: application/json",
-             "-d", json.dumps({
-                 "grant_type": "refresh_token",
-                 "refresh_token": refresh_token,
-                 "client_id": OAUTH_CLIENT_ID
-             })],
+            ["bash", "-c", "echo 'ping' | timeout 10 claude 2>/dev/null"],
             capture_output=True, text=True, timeout=15
         )
-        resp = json.loads(result.stdout)
-        if "access_token" not in resp:
-            # Log the error type for debugging
-            err_type = resp.get("error", {}).get("type", "unknown") if isinstance(resp.get("error"), dict) else resp.get("error", "unknown")
-            import sys
-            print(f"OAuth refresh failed: {err_type}", file=sys.stderr)
-            return None
         
-        # Update credentials.json with new token
-        creds["claudeAiOauth"]["accessToken"] = resp["access_token"]
-        if "refresh_token" in resp:
-            creds["claudeAiOauth"]["refreshToken"] = resp["refresh_token"]
-        creds["claudeAiOauth"]["expiresAt"] = int((time.time() + resp["expires_in"]) * 1000)
+        # Check if credentials.json was updated
+        new_mtime = os.path.getmtime(creds_path)
+        if new_mtime > old_mtime:
+            return True
         
-        with open(creds_path, 'w') as f:
-            json.dump(creds, f, indent=2)
-        
-        return resp["access_token"]
+        return False
     except Exception:
         return None
 
@@ -220,12 +199,19 @@ def _try_fetch_usage(creds_path):
         if data is not None:
             return data
     
-    # Token expired or fetch failed — refresh it
-    new_token = _refresh_oauth_token(creds_path)
-    if not new_token:
+    # Token expired or fetch failed — refresh via Claude CLI
+    refreshed = _refresh_oauth_token_via_cli(creds_path)
+    if not refreshed:
         return None
     
-    return _fetch_usage_with_token(new_token)
+    # Re-read credentials after refresh
+    with open(creds_path, 'r') as f:
+        creds = json.load(f)
+    token = creds.get("claudeAiOauth", {}).get("accessToken", "")
+    if not token:
+        return None
+    
+    return _fetch_usage_with_token(token)
 
 
 def _validate_usage_data(data):

@@ -139,23 +139,89 @@ def format_tokens(n):
     return str(n)
 
 
+OAUTH_TOKEN_URL = "https://platform.claude.com/v1/oauth/token"
+OAUTH_CLIENT_ID = "9d1c250a-e61b-44d9-88ed-5944d1962f5e"
+
+
+def _refresh_oauth_token(creds_path):
+    """Refresh the OAuth token using the refresh_token from credentials.json.
+    Updates the file in-place and returns the new access token, or None on failure."""
+    try:
+        with open(creds_path, 'r') as f:
+            creds = json.load(f)
+        refresh_token = creds.get("claudeAiOauth", {}).get("refreshToken", "")
+        if not refresh_token:
+            return None
+        
+        result = subprocess.run(
+            ["curl", "-sS", "-X", "POST", OAUTH_TOKEN_URL,
+             "-H", "Content-Type: application/json",
+             "-d", json.dumps({
+                 "grant_type": "refresh_token",
+                 "refresh_token": refresh_token,
+                 "client_id": OAUTH_CLIENT_ID
+             })],
+            capture_output=True, text=True, timeout=15
+        )
+        resp = json.loads(result.stdout)
+        if "access_token" not in resp:
+            return None
+        
+        # Update credentials.json with new token
+        creds["claudeAiOauth"]["accessToken"] = resp["access_token"]
+        if "refresh_token" in resp:
+            creds["claudeAiOauth"]["refreshToken"] = resp["refresh_token"]
+        creds["claudeAiOauth"]["expiresAt"] = int((time.time() + resp["expires_in"]) * 1000)
+        
+        with open(creds_path, 'w') as f:
+            json.dump(creds, f, indent=2)
+        
+        return resp["access_token"]
+    except Exception:
+        return None
+
+
+def _fetch_usage_with_token(token):
+    """Fetch usage data with a specific token. Returns data or None."""
+    try:
+        result = subprocess.run(
+            ["curl", "-s", "-H", f"Authorization: Bearer {token}",
+             "-H", "anthropic-beta: oauth-2025-04-20",
+             "https://api.anthropic.com/api/oauth/usage"],
+            capture_output=True, text=True, timeout=10
+        )
+        data = json.loads(result.stdout)
+        if isinstance(data, dict) and data.get('type') == 'error':
+            return None
+        return data
+    except Exception:
+        return None
+
+
 def _try_fetch_usage(creds_path):
-    """Single attempt to fetch Anthropic usage with token from creds_path."""
+    """Fetch usage data, refreshing the OAuth token if needed."""
     with open(creds_path, 'r') as f:
         creds = json.load(f)
     token = creds.get("claudeAiOauth", {}).get("accessToken", "")
     if not token:
         return None
-    result = subprocess.run(
-        ["curl", "-s", "-H", f"Authorization: Bearer {token}",
-         "-H", "anthropic-beta: oauth-2025-04-20",
-         "https://api.anthropic.com/api/oauth/usage"],
-        capture_output=True, text=True, timeout=10
-    )
-    data = json.loads(result.stdout)
-    if isinstance(data, dict) and data.get('type') == 'error':
+    
+    # Check if token is expired (with 5min buffer)
+    expires_at = creds.get("claudeAiOauth", {}).get("expiresAt", 0)
+    token_expired = (time.time() * 1000 + 300000) >= expires_at
+    
+    if not token_expired:
+        # Try with current token first
+        data = _fetch_usage_with_token(token)
+        if data is not None:
+            return data
+    
+    # Token expired or fetch failed — refresh it
+    new_token = _refresh_oauth_token(creds_path)
+    if not new_token:
         return None
-    return data
+    
+    return _fetch_usage_with_token(new_token)
 
 
 def _validate_usage_data(data):

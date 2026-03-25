@@ -165,6 +165,10 @@ def _refresh_oauth_token(creds_path):
         )
         resp = json.loads(result.stdout)
         if "access_token" not in resp:
+            # Log the error type for debugging
+            err_type = resp.get("error", {}).get("type", "unknown") if isinstance(resp.get("error"), dict) else resp.get("error", "unknown")
+            import sys
+            print(f"OAuth refresh failed: {err_type}", file=sys.stderr)
             return None
         
         # Update credentials.json with new token

@@ -1,7 +1,7 @@
 # Token Usage
-**Updated:** 2026-03-25 09:45 MST
+**Updated:** 2026-03-25 10:00 MST
 
-## ⚡ Anthropic Rate Limits (Cached — 1200min ago)
+## ⚡ Anthropic Rate Limits (Cached — 1215min ago)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
 | 5-hour | **33.0%** | Mar 24 03:00 PM MST |
@@ -9,28 +9,27 @@
 | 7-day (Sonnet) | **55.0%** | Mar 27 08:00 AM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 13.7M (63 requests)
-- **Input:** 90 | **Output:** 21.8K
-- **Cache Read:** 10.1M | **Cache Write:** 3.6M
-- **Cost (est):** $28.07
+- **Total Tokens:** 14.0M (72 requests)
+- **Input:** 101 | **Output:** 24.8K
+- **Cache Read:** 10.3M | **Cache Write:** 3.7M
+- **Cost (est):** $28.42
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 61 | 13.7M | 21.4K | $28.03 |
+| opus | 70 | 13.9M | 24.4K | $28.38 |
 | haiku | 2 | 40.8K | 352 | $0.04 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 28.7M (249 requests)
-- **Output Tokens:** 77.3K
-- **Cost (est):** $39.16
+- **Total Tokens:** 28.6M (245 requests)
+- **Output Tokens:** 73.9K
+- **Cost (est):** $38.99
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 213 | 25.8M | 68.9K | $38.87 |
+| opus | 216 | 25.9M | 68.3K | $38.92 |
 | nvidia/nemotron-3-super-120b-a12b:free | 24 | 2.6M | 4.9K | $0.00 |
-| sonnet | 7 | 201.6K | 2.8K | $0.21 |
 | haiku | 4 | 81.6K | 723 | $0.07 |
 | qwen/qwen3.5-122b-a10b:free | 1 | 0 | 0 | $0.00 |
 

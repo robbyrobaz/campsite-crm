@@ -1,12 +1,12 @@
 # Token Usage
-**Updated:** 2026-03-26 06:15 MST
+**Updated:** 2026-03-26 06:30 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
-| 5-hour | **6.0%** | Mar 26 07:00 AM MST |
+| 5-hour | **7.0%** | Mar 26 07:00 AM MST |
 | 7-day (all) | **79.0%** ⚠️ | Mar 26 09:00 PM MST |
-| 7-day (Sonnet) | **70.0%** | Mar 27 08:00 AM MST |
+| 7-day (Sonnet) | **71.0%** | Mar 27 08:00 AM MST |
 
 ## Rolling 5-Hour Window
 - **Total Tokens:** 1.2M (10 requests)

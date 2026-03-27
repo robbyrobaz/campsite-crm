@@ -1,12 +1,22 @@
 {
   "activeTasks": [],
-  "lastHealthCheck": "2026-03-27T03:25:00-07:00",
+  "lastHealthCheck": "2026-03-27T04:25:00-07:00",
+  "incidents": [
+    {
+      "time": "2026-03-27T04:25:00-07:00",
+      "issue": "home-energy-os.service rapid restart loop (19,227+ restarts)",
+      "cause": "Zombie process PID 1764 holding port 8892",
+      "impact": "CPU temp spiked to 91°C",
+      "resolution": "Stopped service, killed PID 1764, temp dropped to 85°C",
+      "action": "Service disabled until port conflict resolved"
+    }
+  ],
   "sp500Pipeline": {
     "status": "BUILDING",
     "services": {
       "sp500-ingestor": "active",
       "sp500-dashboard": "active (port 8897)",
-      "sp500-bulk-ft": "active (19% CPU, 4h23m runtime)"
+      "sp500-bulk-ft": "active"
     },
     "strategies": {
       "total": 156,
@@ -27,5 +37,5 @@
     "status": "running",
     "progress": "374/468 (80%)"
   },
-  "notes": "Mar 27 03:25 — Server healthy. CPU 63°C, disk 70%, RAM 24GB free. Gateway active. 5 failed services (none critical). Backups healthy (22GB/500GB, all timers active, latest hourly 22min old). Kanban clear (0 In Progress, 0 Planned, 0 Failed). Git clean. Numerai models ready (15/15/15). nq_feed.py 41% CPU for 2h19m (0 errors, DB growing to 1.4GB, normal ops)."
+  "notes": "Mar 27 04:25 — INCIDENT RESOLVED: home-energy-os restart loop caused 91°C spike, stopped service + killed zombie process, temp now 85°C. Server otherwise healthy: disk 70%, RAM 23GB free. Gateway active. 5 failed services (none critical). Backups healthy (22GB/500GB, all timers active, latest 40min old). Kanban clear. NQ health log committed. Moonshot cycle running 20min (11% CPU, normal). nq_feed 3h19m runtime (40.7% CPU, normal ops)."
 }

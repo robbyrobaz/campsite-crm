@@ -1,12 +1,12 @@
 {
   "activeTasks": [],
-  "lastHealthCheck": "2026-03-24T09:52:00-07:00",
+  "lastHealthCheck": "2026-03-27T00:03:00-07:00",
   "sp500Pipeline": {
     "status": "BUILDING",
     "services": {
       "sp500-ingestor": "active",
       "sp500-dashboard": "active (port 8897)",
-      "sp500-bulk-ft": "active (running 2h50m, 5.9% CPU)"
+      "sp500-bulk-ft": "active"
     },
     "strategies": {
       "total": 156,
@@ -27,5 +27,5 @@
     "status": "running",
     "progress": "374/468 (80%)"
   },
-  "notes": "Mar 24 09:52 — Server clean. CPU: 84°C (normal), disk 60%, RAM 23GB free. FreeRDP-shadow running 12h @ 78% CPU (needs investigation). 6 failed services (none critical). Backups healthy (19GB/500GB, all timers active, GFS on track). Kanban clear, repos clean, Numerai models ready."
+  "notes": "Mar 27 00:03 — Server healthy. CPU 70°C, disk 70%, RAM 24GB free. Gateway active. 5 failed services (2 minor: auto-code-backup-sync has git conflict, blofin-stack-gapfill missing file). Backups healthy (22GB/500GB, all timers active, latest hourly 18min old). Kanban clear (0 In Progress, 0 Planned, 0 Failed). Git clean (NQ logs committed). Numerai models ready (15/15/15)."
 }

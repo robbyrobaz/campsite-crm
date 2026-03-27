@@ -1,12 +1,12 @@
 {
   "activeTasks": [],
-  "lastHealthCheck": "2026-03-27T00:03:00-07:00",
+  "lastHealthCheck": "2026-03-27T01:25:00-07:00",
   "sp500Pipeline": {
     "status": "BUILDING",
     "services": {
       "sp500-ingestor": "active",
       "sp500-dashboard": "active (port 8897)",
-      "sp500-bulk-ft": "active"
+      "sp500-bulk-ft": "active (18% CPU)"
     },
     "strategies": {
       "total": 156,
@@ -27,5 +27,5 @@
     "status": "running",
     "progress": "374/468 (80%)"
   },
-  "notes": "Mar 27 00:03 — Server healthy. CPU 70°C, disk 70%, RAM 24GB free. Gateway active. 5 failed services (2 minor: auto-code-backup-sync has git conflict, blofin-stack-gapfill missing file). Backups healthy (22GB/500GB, all timers active, latest hourly 18min old). Kanban clear (0 In Progress, 0 Planned, 0 Failed). Git clean (NQ logs committed). Numerai models ready (15/15/15)."
+  "notes": "Mar 27 01:25 — Server healthy. CPU 62°C, disk 71%, RAM 24GB free. Gateway active. 5 failed services (none critical). Backups healthy (22GB/500GB, all timers active, latest hourly 40min old). Kanban clear (0 In Progress, 0 Planned, 0 Failed). Git clean (NQ logs committed). Numerai models ready (15/15/15). nq_feed.py 46% CPU for 19min (fresh start, normal), sp500 bulk FT 18% CPU (active)."
 }

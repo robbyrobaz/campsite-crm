@@ -1,6 +1,6 @@
 {
   "activeTasks": [],
-  "lastHealthCheck": "2026-03-27T09:41:00-07:00",
+  "lastHealthCheck": "2026-03-27T10:41:00-07:00",
   "sp500Pipeline": {
     "status": "BUILDING",
     "services": {
@@ -9,7 +9,7 @@
       "sp500-bulk-ft": "active"
     },
     "activeBacktests": {
-      "pid_2623914": "backtest_using_ft_signals.py --strategy volume_climax_mlv3_50 (4min runtime, 735% CPU)"
+      "pid_2713206": "backtest_using_ft_signals.py --strategy ib_extension_mlv3_30 (31min runtime, 325% CPU)"
     },
     "strategies": {
       "total": 156,
@@ -30,5 +30,5 @@
     "status": "running",
     "progress": "374/468 (80%)"
   },
-  "notes": "Mar 27 09:41 — Server healthy. CPU 83°C (good, temp recovered from 96°C spike). Single SP500 backtest active (volume_climax_mlv3_50, 4min runtime, 735% CPU - normal). Disk 70%, RAM 21GB free. Gateway active. 5 failed services (none critical). Backups healthy (28GB/500GB, all timers active, latest 0min old - just completed fresh backup including 4.9GB Moonshot DB). Kanban clear (0/0/0). Git clean except pycache (ignored). Numerai models ready (45 total). Moonshot cycle 1h37m runtime (372% CPU, normal FT). nq_feed 8h35m runtime (62% CPU, market hours)."
+  "notes": "Mar 27 10:41 — CPU 89°C (high but stable). Moonshot cycle 2h37m runtime (398% CPU) + SP500 backtest 31min (325% CPU). Backup running (moonshot_v2 4.9GB backup in progress). Server healthy: disk 70%, RAM 22GB free. Gateway active. 5 failed services (none critical). Backups healthy (28GB/500GB, all timers active). Kanban clear. NQ log committed. Numerai ready (15/15/15). nq_feed 9h35m runtime (61% CPU, market hours)."
 }

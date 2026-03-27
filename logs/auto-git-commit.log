@@ -39625,3 +39625,16 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 1 committed, 8 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+[main 5670d02bc] auto: snapshot 2026-03-27T01:00:01Z
+ 4 files changed, 85 insertions(+), 1 deletion(-)
+ create mode 100644 sbir/company_info.md
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+CLEAN campsite-crm (nothing to commit)
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 1 committed, 8 skipped
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

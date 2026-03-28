@@ -48,9 +48,23 @@ Don't ask permission. Just do it.
 
 **status.json is the truth store.** Update before and after every task.
 
-## Memory
+## Memory & Session Recording
 
 You wake up fresh each session. These files are your continuity:
+
+**CRITICAL: Record your work as it happens, not just at the end.**
+
+### During Every Session (Proactive):
+- **Write to `memory/YYYY-MM-DD.md` as you work** — log findings, fixes, issues discovered
+- **Update `BOOTSTRAP.md` when state changes** — services restarted, counts changed, issues resolved
+- Don't wait for Rob to ask — record continuously
+
+### End of Every Session (Mandatory):
+1. Write session summary to `memory/YYYY-MM-DD.md`
+2. Update `BOOTSTRAP.md` with current state + fresh timestamp
+3. Commit workspace changes: `git add -A && git commit && git push`
+
+**Why this matters:** Rob closes sessions and re-opens them. If you didn't record your work, the next session won't know what happened. "Mental notes" don't survive session restarts. Files do.
 - **Daily notes:** `memory/YYYY-MM-DD.md`
 - **Long-term:** `MEMORY.md` — curated memories (main session only)
 - **Brain memory:** `brain/memory/` — structured learnings

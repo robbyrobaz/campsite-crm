@@ -40136,3 +40136,30 @@ CLEAN master-dashboard (nothing to commit)
 [dev e30d1e1] auto: snapshot 2026-03-28T19:00:01Z
  1 file changed, 22 insertions(+), 10 deletions(-)
 COMMITTED blofin-stack
+warning: adding embedded git repository: NQ_Ninja_Trader
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint: 
+hint: 	git submodule add <url> NQ_Ninja_Trader
+hint: 
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint: 
+hint: 	git rm --cached NQ_Ninja_Trader
+hint: 
+hint: See "git help submodule" for more information.
+[main 1a99c1149] auto: snapshot 2026-03-28T19:00:01Z
+ 4 files changed, 40 insertions(+), 1 deletion(-)
+ create mode 160000 NQ_Ninja_Trader
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+CLEAN campsite-crm (nothing to commit)
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 2 committed, 7 skipped
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

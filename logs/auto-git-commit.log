@@ -40083,3 +40083,18 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 1 committed, 8 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+[main 9e720c36b] auto: snapshot 2026-03-28T15:00:01Z
+ 7 files changed, 315 insertions(+), 20 deletions(-)
+ create mode 100644 brain/AGENT_CONTEXT_PROTOCOL.md
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+CLEAN campsite-crm (nothing to commit)
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 1 committed, 8 skipped
+CLEAN master-dashboard (nothing to commit)
+[dev c24ac83] auto: snapshot 2026-03-28T16:00:01Z
+ 1 file changed, 7 insertions(+), 3 deletions(-)
+COMMITTED blofin-stack

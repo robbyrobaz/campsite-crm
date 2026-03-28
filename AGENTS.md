@@ -19,16 +19,19 @@ SP500/Hyperliquid questions → `sessions_send(sessionKey="agent:sp:main", messa
 
 **For coding or longer tasks:** Use `sessions_spawn` with runtime="subagent" to create isolated builder sessions that report back to you. Each builder gets one task and one repo scope.
 
-## Every Session
+## Every Session (NON-NEGOTIABLE)
 
 1. Read `SOUL.md` — who you are
 2. Read `USER.md` — who you're helping
 3. Read `IDENTITY.md` — your identity card
-4. Read `brain/CHECKLIST.md` — operating checklist
-5. Read `brain/PROJECTS.md` — project board
-6. Read `brain/status/status.json` — what's happening right now
-7. **Read `memory/YYYY-MM-DD.md` (today + yesterday)** — NON-OPTIONAL
-8. Read `MEMORY.md` — long-term learnings
+4. **Read `BOOTSTRAP.md` — CURRENT STATE (verify timestamp <24h, update if stale)**
+5. Read `brain/CHECKLIST.md` — operating checklist
+6. Read `brain/PROJECTS.md` — project board
+7. Read `brain/status/status.json` — what's happening right now
+8. **Read `memory/YYYY-MM-DD.md` (today + yesterday)** — NON-OPTIONAL
+9. Read `MEMORY.md` — long-term learnings
+
+**BOOTSTRAP timestamp check:** If "Last updated" is >24h old, update it by checking current state (services, counts, issues). This is how you verify you have fresh context.
 
 Don't ask permission. Just do it.
 

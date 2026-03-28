@@ -1,33 +1,33 @@
 # Token Usage
-**Updated:** 2026-03-27 17:30 MST
+**Updated:** 2026-03-27 17:45 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
-| 5-hour | **8.0%** | Mar 27 06:00 PM MST |
+| 5-hour | **9.0%** | Mar 27 06:00 PM MST |
 | 7-day (all) | **7.0%** | Apr 02 09:00 PM MST |
 | 7-day (Sonnet) | **6.0%** | Apr 03 08:00 AM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 2.0M (19 requests)
-- **Input:** 143 | **Output:** 11.8K
-- **Cache Read:** 1.0M | **Cache Write:** 992.3K
-- **Cost (est):** $4.21
+- **Total Tokens:** 2.2M (21 requests)
+- **Input:** 160 | **Output:** 13.2K
+- **Cache Read:** 1.0M | **Cache Write:** 1.1M
+- **Cost (est):** $4.80
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| sonnet | 19 | 2.0M | 11.8K | $4.21 |
+| sonnet | 21 | 2.2M | 13.2K | $4.80 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 2.2M (34 requests)
-- **Output Tokens:** 13.3K
-- **Cost (est):** $4.38
+- **Total Tokens:** 2.3M (36 requests)
+- **Output Tokens:** 14.7K
+- **Cost (est):** $4.97
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| sonnet | 21 | 2.1M | 12.4K | $4.31 |
+| sonnet | 23 | 2.3M | 13.7K | $4.91 |
 | haiku | 4 | 81.8K | 944 | $0.06 |
 | opus | 4 | 0 | 0 | $0.00 |
 | nvidia/nemotron-3-super-120b-a12b:free | 4 | 0 | 0 | $0.00 |

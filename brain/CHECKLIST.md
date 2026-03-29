@@ -25,15 +25,16 @@
 
 ## Session Startup (MANDATORY)
 
-1. Read `SOUL.md`
-2. Read `USER.md`
-3. Read `IDENTITY.md`
-4. Read `BOOTSTRAP.md` — verify timestamp <24h, update if stale
-5. Read this file (`brain/CHECKLIST.md`)
-6. Read `brain/PROJECTS.md`
-7. Read `brain/status/status.json`
-8. Read `memory/YYYY-MM-DD.md` (today + yesterday)
-9. Read `MEMORY.md`
+**Already in your system prompt (Project Context — do NOT re-read):**
+AGENTS.md, SOUL.md, TOOLS.md, IDENTITY.md, USER.md, HEARTBEAT.md, BOOTSTRAP.md, MEMORY.md
+
+**Check BOOTSTRAP.md timestamp (visible in Project Context) — if >24h stale, update silently. Do NOT narrate internal steps to Rob.**
+
+**Read these (NOT auto-injected):**
+1. This file (`brain/CHECKLIST.md`) — already reading it
+2. `brain/PROJECTS.md` — project board
+3. `brain/status/status.json` — what's happening right now
+4. `memory/YYYY-MM-DD.md` (today + yesterday) — daily notes
 
 ---
 

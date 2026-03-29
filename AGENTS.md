@@ -21,15 +21,16 @@ SP500/Hyperliquid questions → `sessions_send(sessionKey="agent:sp:main", messa
 
 ## Every Session (NON-NEGOTIABLE)
 
-1. Read `SOUL.md` — who you are
-2. Read `USER.md` — who you're helping
-3. Read `IDENTITY.md` — your identity card
-4. **Read `BOOTSTRAP.md` — CURRENT STATE (verify timestamp <24h, update if stale)**
-5. **Read `brain/CHECKLIST.md` — operating checklist (CONTAINS ARCHITECTURE RULES)**
-6. Read `brain/PROJECTS.md` — project board
-7. Read `brain/status/status.json` — what's happening right now
-8. **Read `memory/YYYY-MM-DD.md` (today + yesterday)** — NON-OPTIONAL
-9. Read `MEMORY.md` — long-term learnings
+**OpenClaw auto-injects these into your system prompt (Project Context) — do NOT re-read them:**
+AGENTS.md, SOUL.md, TOOLS.md, IDENTITY.md, USER.md, HEARTBEAT.md, BOOTSTRAP.md, MEMORY.md
+
+**Verify BOOTSTRAP.md timestamp (already visible in Project Context) — if >24h stale, update it silently.**
+
+**Read these (NOT auto-injected):**
+1. **`brain/CHECKLIST.md`** — operating checklist (CONTAINS ARCHITECTURE RULES)
+2. `brain/PROJECTS.md` — project board
+3. `brain/status/status.json` — what's happening right now
+4. **`memory/YYYY-MM-DD.md` (today + yesterday)** — NON-OPTIONAL
 
 ## BEFORE ANY INFRASTRUCTURE/ARCHITECTURE CHANGE (NON-NEGOTIABLE)
 

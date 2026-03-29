@@ -47,22 +47,21 @@ Each agent has an isolated workspace with core identity files:
 
 **AGENTS.md already defines this — enforcement is the issue.**
 
-Every session MUST read (non-negotiable):
-1. `SOUL.md` — Who you are
-2. `USER.md` — Who you're helping (Jarvis only)
-3. `IDENTITY.md` — Your identity card
-4. `BOOTSTRAP.md` — Current state (services, counts, issues)
-5. `MEMORY.md` — Long-term learnings
-6. `memory/YYYY-MM-DD.md` — Today's notes
-7. `memory/YYYY-MM-DD.md` (yesterday) — Yesterday's notes
+**Auto-injected by OpenClaw (do NOT re-read):**
+AGENTS.md, SOUL.md, TOOLS.md, IDENTITY.md, USER.md, HEARTBEAT.md, BOOTSTRAP.md, MEMORY.md
 
-**Total read time:** ~30 seconds  
-**Benefit:** Complete context before first action
+These are in the system prompt under "Project Context" before the agent makes any tool calls.
+
+**Must READ with tool (not auto-injected):**
+1. `brain/CHECKLIST.md` — operating checklist
+2. `brain/PROJECTS.md` — project board
+3. `brain/status/status.json` — current tasks
+4. `memory/YYYY-MM-DD.md` — Today's notes
+5. `memory/YYYY-MM-DD.md` (yesterday) — Yesterday's notes
 
 **Enforcement mechanism:**
-- System prompt already says "Read files before responding"
-- Add freshness check: BOOTSTRAP.md must have "Last updated: YYYY-MM-DD HH:MM" header
-- Agents verify timestamp is <24h old, flag if stale
+- BOOTSTRAP.md timestamp visible in Project Context — verify <24h, update silently if stale
+- Do NOT narrate startup steps to the user
 
 ---
 
@@ -140,24 +139,24 @@ What needs to happen next
 
 ---
 
-## Agent Startup Flow (30 seconds)
+## Agent Startup Flow
 
-```
-1. Read SOUL.md (5s) — Identity
-2. Read BOOTSTRAP.md (10s) — Current state
-   - Check timestamp — flag if >24h old
-3. Read MEMORY.md (10s) — Long-term learnings
-4. Read memory/YYYY-MM-DD.md (5s) — Today's notes
-5. Read memory/YYYY-MM-DD.md (yesterday) (5s) — Yesterday's notes
+**Auto-injected (already in prompt — skip):** SOUL.md, AGENTS.md, IDENTITY.md, USER.md, TOOLS.md, HEARTBEAT.md, BOOTSTRAP.md, MEMORY.md
 
-Total: ~35 seconds
-```
+**Read with tool:**
+1. brain/CHECKLIST.md — operating rules
+2. brain/PROJECTS.md — project board
+3. brain/status/status.json — current tasks
+4. memory/YYYY-MM-DD.md (today + yesterday) — daily notes
+
+**Verify:** BOOTSTRAP.md timestamp (visible in Project Context) <24h? If stale, update silently.
 
 **Now agent knows:**
-- Who they are (SOUL)
-- Current state (BOOTSTRAP)
-- What happened recently (daily memory)
-- Patterns and lessons (MEMORY)
+- Who they are (SOUL — auto-injected)
+- Current state (BOOTSTRAP — auto-injected)
+- What happened recently (daily memory — read)
+- Patterns and lessons (MEMORY — auto-injected)
+- Operating rules (CHECKLIST — read)
 
 ---
 

@@ -28,7 +28,7 @@
 **Already in your system prompt (Project Context — do NOT re-read):**
 AGENTS.md, SOUL.md, TOOLS.md, IDENTITY.md, USER.md, HEARTBEAT.md, BOOTSTRAP.md, MEMORY.md
 
-**Check BOOTSTRAP.md timestamp (visible in Project Context) — if >24h stale, update silently. Do NOT narrate internal steps to Rob.**
+**Check BOOTSTRAP.md timestamp (visible in Project Context) — if >24h stale, update it.**
 
 **Read these (NOT auto-injected):**
 1. This file (`brain/CHECKLIST.md`) — already reading it

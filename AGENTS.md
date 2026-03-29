@@ -24,7 +24,7 @@ SP500/Hyperliquid questions → `sessions_send(sessionKey="agent:sp:main", messa
 **OpenClaw auto-injects these into your system prompt (Project Context) — do NOT re-read them:**
 AGENTS.md, SOUL.md, TOOLS.md, IDENTITY.md, USER.md, HEARTBEAT.md, BOOTSTRAP.md, MEMORY.md
 
-**Verify BOOTSTRAP.md timestamp (already visible in Project Context) — if >24h stale, update it silently.**
+**Verify BOOTSTRAP.md timestamp (already visible in Project Context) — if >24h stale, update it.**
 
 **Read these (NOT auto-injected):**
 1. **`brain/CHECKLIST.md`** — operating checklist (CONTAINS ARCHITECTURE RULES)

@@ -79,6 +79,21 @@ Workspace-level SOUL.md was corrupted with "You are the CRYPTO AGENT" — bled i
 
 ### ⛔ NEVER put identity files in a shared workspace root
 
+## Critical Escalation Protocol (Mar 28 2026)
+
+**When domain agents escalate critical issues to Jarvis:**
+1. Assess the situation
+2. **Send Telegram notification to Rob** (use `message` tool) — MANDATORY
+3. Post detailed assessment in webchat for record
+
+**Why:** Rob may be away from webchat but checking his phone. Critical escalations must reach him on all channels. Webchat-only notifications can be missed for hours.
+
+**Lesson learned:** Crypto Agent escalated 20% live trading drawdown. I posted assessment in webchat but didn't ping Telegram. Rob missed it entirely because he was on his phone, not at his desk.
+
+**Added:** 2026-03-28 17:12 MST
+
+---
+
 ## Lessons Learned
 
 ### ⛔ Always READ the source first, never GUESS (Mar 12 2026)

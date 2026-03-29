@@ -1,34 +1,31 @@
 {
   "activeTasks": [],
-  "lastHealthCheck": "2026-03-27T12:42:00-07:00",
-  "sp500Pipeline": {
-    "status": "BUILDING",
-    "services": {
-      "sp500-ingestor": "active",
-      "sp500-dashboard": "active (port 8897)",
-      "sp500-bulk-ft": "active"
-    },
-    "activeBacktests": {
-      "pid_2713206": "backtest_using_ft_signals.py --strategy ib_extension_mlv3_30 (31min runtime, 325% CPU)"
-    },
-    "strategies": {
-      "total": 156,
-      "rule_based_with_bt": 58,
-      "ml_missing_bt": 98,
-      "non_orb_pf_gt_2": 0,
-      "target": 10
-    },
-    "mlModels": 20,
-    "gpuEnabled": true,
-    "executionProven": true
+  "lastHealthCheck": "2026-03-29T10:22:00-07:00",
+  "serverHealth": {
+    "cpu_temp": "66°C",
+    "disk": "75% (330G/468G)",
+    "ram": "23GB available / 31GB total",
+    "failedServices": 5,
+    "gateway": "active (HTTP 200)"
   },
-  "crons": {
-    "sp500_builder": "66c1308c-6495-425f-aa30-902c0f81dd99 (hourly, announces to webchat)",
-    "blofin_backfill_monitor": "2c728169-a09a-477b-8284-9c63dc59da12 (hourly)"
+  "backups": {
+    "allTimersActive": true,
+    "hourlyBackupInProgress": "blofin_monitor (5.6GB, 37min runtime, PID 717836)",
+    "totalSize": "64GB / 500GB budget"
   },
-  "blofinBackfill": {
-    "status": "running",
-    "progress": "374/468 (80%)"
+  "kanban": {
+    "done": 1171,
+    "inProgress": 0,
+    "planned": 0,
+    "inbox": 5,
+    "stopped": 9,
+    "failed": 0
   },
-  "notes": "Mar 27 10:41 — CPU 89°C (high but stable). Moonshot cycle 2h37m runtime (398% CPU) + SP500 backtest 31min (325% CPU). Backup running (moonshot_v2 4.9GB backup in progress). Server healthy: disk 70%, RAM 22GB free. Gateway active. 5 failed services (none critical). Backups healthy (28GB/500GB, all timers active). Kanban clear. NQ log committed. Numerai ready (15/15/15). nq_feed 9h35m runtime (61% CPU, market hours)."
+  "numerai": {
+    "models_elite": 15,
+    "models_robbyrob2": 15,
+    "models_robbyrob3": 15,
+    "lastRun": "2026-03-29 06:38 MST (success)"
+  },
+  "notes": "Mar 29 10:22 — Sunday quiet. Blofin ingestor DB lock spam (50 errors/30min) caused by sqlite3 .backup holding read lock on blofin_monitor.db (5.6GB, 37min). This is EXPECTED during backup — ingestor retries and recovers once backup completes. NQ feed running (PID 799275). All repos clean except NQ (committed). No ai-task issues queued."
 }

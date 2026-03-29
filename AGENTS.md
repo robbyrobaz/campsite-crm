@@ -25,11 +25,20 @@ SP500/Hyperliquid questions → `sessions_send(sessionKey="agent:sp:main", messa
 2. Read `USER.md` — who you're helping
 3. Read `IDENTITY.md` — your identity card
 4. **Read `BOOTSTRAP.md` — CURRENT STATE (verify timestamp <24h, update if stale)**
-5. Read `brain/CHECKLIST.md` — operating checklist
+5. **Read `brain/CHECKLIST.md` — operating checklist (CONTAINS ARCHITECTURE RULES)**
 6. Read `brain/PROJECTS.md` — project board
 7. Read `brain/status/status.json` — what's happening right now
 8. **Read `memory/YYYY-MM-DD.md` (today + yesterday)** — NON-OPTIONAL
 9. Read `MEMORY.md` — long-term learnings
+
+## BEFORE ANY INFRASTRUCTURE/ARCHITECTURE CHANGE (NON-NEGOTIABLE)
+
+**READ THE PROTOCOL DOC FIRST. Do NOT implement from memory.**
+- Agent files/workspaces → `brain/AGENT_CONTEXT_PROTOCOL.md`
+- Backup system → `docs/backup-system.md`
+- Anything else → check `brain/` for existing docs
+
+**If you find yourself about to add symlinks, edit agentDir, or restructure how agents work: STOP and read `brain/AGENT_CONTEXT_PROTOCOL.md`. The answer is already written.**
 
 **BOOTSTRAP timestamp check:** If "Last updated" is >24h old, update it by checking current state (services, counts, issues). This is how you verify you have fresh context.
 

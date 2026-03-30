@@ -44,6 +44,17 @@
 - **Auto-promotion:** PF≥2.0 + 20 FT trades → Apex. PF<0.8 + 30 trades → demote.
 - **GPU:** RTX 2080 Super, CUDA enabled for XGBoost training
 
+## REBEL-ALLIANCE Windows Node (Mar 29 2026)
+
+- **What:** Rob's Windows 11 trading laptop, connected as OpenClaw node via Tailscale
+- **Purpose:** NQ agent execution bridge to NinjaTrader for live order execution
+- **Connection:** `openclaw node run --host omen-claw.tail76e7df.ts.net --port 443 --tls --display-name "REBEL-ALLIANCE"`
+- **Exec approvals:** `security: "full", ask: "off"` — no prompts (dedicated trading machine)
+- **Set remotely via:** `openclaw approvals set --node REBEL-ALLIANCE --file <json>`
+- **NQ uses it for:** ATI commands to NinjaTrader via Direct API (Client.dll), not TCP/HTTP
+- **Can install as service:** `openclaw node install` on the laptop for auto-start on boot
+- **If disconnected:** Laptop offline or `openclaw node run` not running — tell Rob
+
 ## Numerai (Cross-Cutting — Jarvis Owns)
 
 - 3 models: robbyrobml, robbyrob2, robbyrob3

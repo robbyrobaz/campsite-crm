@@ -245,14 +245,18 @@ backup_databases() {
     local db_dir="${BACKUP_ROOT}/databases/hourly"
     mkdir -p "$db_dir"
     
+    # GFS rotation FIRST — prune old backups before writing new ones
+    # This ensures rotation runs even if blofin_monitor backup takes forever
+    gfs_rotate "${BACKUP_ROOT}/databases"
+    
     # SQLite databases (use sqlite3 .backup - WAL safe)
+    # NOTE: blofin_monitor.db moved to end with lock check (takes 80-100+ min)
     local -a SQLITE_DBS=(
         "/home/rob/.openclaw/workspace/blofin-moonshot-v2/data/moonshot_v2.db"
         "/home/rob/.openclaw/workspace/blofin-moonshot/data/moonshot.db"
         "/home/rob/.openclaw/workspace/kanban-dashboard/kanban.sqlite"
         "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/data/nq_pipeline.db"
         "/home/rob/.openclaw/workspace/jarvis-home-energy/energy_data.db"
-        "/mnt/data/blofin_monitor.db"
         "/home/rob/.openclaw/workspace/ninja_trader_strategies/data/nq_pipeline.db"
         "/home/rob/.openclaw/workspace/blofin-stack/data/paper_trading.db"
         "/mnt/data/market_macro.db"
@@ -322,8 +326,28 @@ backup_databases() {
         fi
     done
     
-    # GFS rotation: hourly → daily → weekly → monthly
-    gfs_rotate "${BACKUP_ROOT}/databases"
+    # Backup blofin_monitor.db LAST with lock check (takes 80-100+ min)
+    local blofin_db="/mnt/data/blofin_monitor.db"
+    local blofin_lock="${BACKUP_ROOT}/.blofin_backup.lock"
+    if [[ -f "$blofin_db" ]]; then
+        # Skip if another blofin_monitor backup is already running
+        if [[ -f "$blofin_lock" ]] && kill -0 "$(cat "$blofin_lock" 2>/dev/null)" 2>/dev/null; then
+            log "  SKIP: blofin_monitor.db (another backup in progress, PID $(cat "$blofin_lock"))"
+        else
+            echo $$ > "$blofin_lock"
+            local backup_path="${db_dir}/blofin_monitor_${TIMESTAMP}.db"
+            log "  Backing up SQLite: blofin_monitor.db (large — may take 60-100+ min)"
+            if sqlite3 "$blofin_db" ".backup '$backup_path'" 2>>"${LOG_FILE}"; then
+                log "    Created: $backup_path"
+                CREATED_FILES+=("$backup_path")
+                TOTAL_SIZE=$((TOTAL_SIZE + $(stat -c%s "$backup_path" 2>/dev/null || echo 0)))
+            else
+                log "    ERROR: Failed to backup blofin_monitor.db"
+                ERRORS=$((ERRORS + 1))
+            fi
+            rm -f "$blofin_lock"
+        fi
+    fi
 }
 
 # ========== TIER 1: CONFIG BACKUPS ==========

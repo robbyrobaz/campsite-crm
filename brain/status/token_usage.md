@@ -1,34 +1,34 @@
 # Token Usage
-**Updated:** 2026-03-30 09:00 MST
+**Updated:** 2026-03-30 09:15 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
-| 5-hour | **48.0%** | Mar 30 11:00 AM MST |
-| 7-day (all) | **64.0%** ⚠️ | Apr 02 09:00 PM MST |
+| 5-hour | **55.0%** | Mar 30 11:00 AM MST |
+| 7-day (all) | **65.0%** ⚠️ | Apr 02 09:00 PM MST |
 | 7-day (Sonnet) | **44.0%** | Apr 03 08:00 AM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 10.9M (62 requests)
-- **Input:** 97 | **Output:** 12.5K
-- **Cache Read:** 9.0M | **Cache Write:** 1.8M
-- **Cost (est):** $15.98
+- **Total Tokens:** 9.3M (53 requests)
+- **Input:** 86 | **Output:** 10.6K
+- **Cache Read:** 7.7M | **Cache Write:** 1.7M
+- **Cost (est):** $14.37
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 60 | 10.8M | 12.1K | $15.88 |
+| opus | 51 | 9.3M | 10.2K | $14.27 |
 | sonnet | 2 | 45.5K | 453 | $0.10 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 36.0M (293 requests)
+- **Total Tokens:** 36.2M (294 requests)
 - **Output Tokens:** 76.5K
-- **Cost (est):** $58.93
+- **Cost (est):** $60.13
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 260 | 35.0M | 70.6K | $58.15 |
+| opus | 261 | 35.2M | 70.6K | $59.35 |
 | sonnet | 33 | 988.3K | 5.9K | $0.78 |
 
 ---

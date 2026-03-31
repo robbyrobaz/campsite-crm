@@ -13,3 +13,6 @@
 [2026-03-30 09:00:02] === SBIR Monitor Run ===
 [2026-03-30 09:00:05] Error fetching topics: 404 Client Error: Not Found for url: https://www.sbir.gov/api/topics.json
 [2026-03-30 09:00:05] No topics returned from API (may still be down post-reauthorization)
+[2026-03-31 09:00:01] === SBIR Monitor Run ===
+[2026-03-31 09:00:03] Error fetching topics: 404 Client Error: Not Found for url: https://www.sbir.gov/api/topics.json
+[2026-03-31 09:00:03] No topics returned from API (may still be down post-reauthorization)

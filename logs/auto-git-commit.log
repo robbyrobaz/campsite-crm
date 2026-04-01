@@ -41308,3 +41308,22 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 2 committed, 7 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+[main 1d49dc587] auto: snapshot 2026-04-01T18:00:01Z
+ 5 files changed, 45 insertions(+), 9 deletions(-)
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+CLEAN campsite-crm (nothing to commit)
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 1 committed, 8 skipped
+CLEAN master-dashboard (nothing to commit)
+[dev b3c741a] auto: snapshot 2026-04-01T19:00:01Z
+ 5 files changed, 1050 insertions(+)
+ create mode 100644 scripts/backtest_new_scouts_2026_04_01.py
+ create mode 100644 strategies/generated/mtf_ensemble_vote_v1.py
+ create mode 100644 strategies/generated/regime_adaptive_hybrid_v1.py
+ create mode 100644 strategies/generated/vpoc_mean_reversion_v1.py
+ create mode 100644 strategy_ideas/2026-04-01-blofin.md
+COMMITTED blofin-stack

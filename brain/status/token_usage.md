@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-03-31 20:45 MST
+**Updated:** 2026-03-31 21:00 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -20,14 +20,14 @@
 | sonnet | 43 | 5.4M | 6.4K | $5.79 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 16.8M (200 requests)
-- **Output Tokens:** 47.3K
-- **Cost (est):** $18.37
+- **Total Tokens:** 16.4M (194 requests)
+- **Output Tokens:** 46.1K
+- **Cost (est):** $17.96
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| sonnet | 182 | 16.3M | 32.9K | $18.37 |
+| sonnet | 176 | 15.8M | 31.7K | $17.96 |
 | nvidia/nemotron-3-super-120b-a12b:free | 12 | 515.4K | 9.7K | $0.00 |
 | deepseek/deepseek-r1-0528 | 1 | 21.5K | 4.7K | $0.00 |
 | qwen/qwen3-coder:free | 4 | 0 | 0 | $0.00 |

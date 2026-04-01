@@ -1,0 +1,2229 @@
+{
+  "timestamp": 1775060662.546934,
+  "total_sessions": 247,
+  "sessions": [
+    {
+      "key": "agent:main:main",
+      "agent": "main",
+      "model": "claude-sonnet-4-5",
+      "input": 10,
+      "output": 3449,
+      "total": 116921,
+      "updated": 1775060621014
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 195,
+      "total": 17371,
+      "updated": 1775060595306
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:68e46429-0889-481a-8b7c-a452919707a5",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 195,
+      "total": 17371,
+      "updated": 1775060595306
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:477075ac-7b12-4a9f-8cad-2b34e0d9f4c2",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 193,
+      "total": 17371,
+      "updated": 1775060475291
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 335,
+      "total": 18772,
+      "updated": 1775060460336
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:2411c35e-899e-4118-916a-27c3874c4cc2",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 335,
+      "total": 18772,
+      "updated": 1775060460336
+    },
+    {
+      "key": "agent:crypto:cron:bd962d78-2690-47d8-b000-8e11f1707352",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 46,
+      "output": 1642,
+      "total": 26221,
+      "updated": 1775060389665
+    },
+    {
+      "key": "agent:crypto:cron:bd962d78-2690-47d8-b000-8e11f1707352:run:1f8f4ee3-077d-44c2-9595-2c44eab8031e",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 46,
+      "output": 1642,
+      "total": 26221,
+      "updated": 1775060389665
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:ed4fbf31-c243-462e-aa5f-6a1c4de7a0ef",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 190,
+      "total": 17370,
+      "updated": 1775060355284
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:3fc2bdf3-f25a-473f-8dc7-8eb7709c5228",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 182,
+      "total": 17371,
+      "updated": 1775060235278
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:7f383a0c-25fc-40cb-b71f-36f8bebfb15b",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 285,
+      "total": 18772,
+      "updated": 1775060160324
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:a3b375a3-123c-4fda-bcd2-2862baf61394",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 200,
+      "total": 17370,
+      "updated": 1775060115272
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:c44b29a5-74a6-4510-ad41-d555d30cc5e9",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 200,
+      "total": 18382,
+      "updated": 1775059995259
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:67b4af57-ac1e-424a-ab80-53a5b5f9068b",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 185,
+      "total": 18382,
+      "updated": 1775059875248
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:b80787d8-c19e-463d-bd32-4a4d0d03fd4a",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 364,
+      "total": 19766,
+      "updated": 1775059860312
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:b5cf4e17-d1ea-4a93-a368-022426dc469a",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 191,
+      "total": 18382,
+      "updated": 1775059741673
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:f6d977a6-298d-406b-af9b-70709414ebe6",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 181,
+      "total": 18382,
+      "updated": 1775059621658
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:36e451ae-7271-4fb1-bc0b-4dfb657f7179",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 295,
+      "total": 19766,
+      "updated": 1775059560289
+    },
+    {
+      "key": "agent:crypto:cron:eaaa8c43-dd49-4a8e-89ab-30fc2ef53d7e",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 24,
+      "output": 1458,
+      "total": 95177,
+      "updated": 1775059510646
+    },
+    {
+      "key": "agent:crypto:cron:eaaa8c43-dd49-4a8e-89ab-30fc2ef53d7e:run:53309596-601e-4ba1-82f5-9ec8eaec3130",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 24,
+      "output": 1458,
+      "total": 95177,
+      "updated": 1775059510646
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:d1406dc4-0d6f-4eae-88da-d5fcedf874f1",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 185,
+      "total": 18382,
+      "updated": 1775059502168
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:3a06f0eb-456d-46d8-9731-6c1eef3a1821",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 188,
+      "total": 18382,
+      "updated": 1775059370959
+    },
+    {
+      "key": "agent:sp:cron:a6732b42-345a-44e5-ab94-4e8f4efb65a1",
+      "agent": "sp",
+      "model": "claude-sonnet-4-5",
+      "input": 55,
+      "output": 3199,
+      "total": 29465,
+      "updated": 1775059284914
+    },
+    {
+      "key": "agent:sp:cron:a6732b42-345a-44e5-ab94-4e8f4efb65a1:run:9848a875-eeaf-4ec3-98a6-ffc05f9d2717",
+      "agent": "sp",
+      "model": "claude-sonnet-4-5",
+      "input": 55,
+      "output": 3199,
+      "total": 29465,
+      "updated": 1775059284914
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:d5579d1b-809b-48c4-9785-e5b13119a4ff",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 267,
+      "total": 19766,
+      "updated": 1775059260274
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:776e963a-d6ab-47ee-a858-4447848e2f66",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 181,
+      "total": 18382,
+      "updated": 1775059232408
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:72aa556b-2e2f-4ace-90f9-62b897bb9b65",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 191,
+      "total": 18382,
+      "updated": 1775059112398
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:45231a76-4f6c-4913-9821-c868a57bf7bf",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 183,
+      "total": 18382,
+      "updated": 1775058992377
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:692b5ba4-31f5-4d94-a4d3-1eaba454e776",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 253,
+      "total": 19766,
+      "updated": 1775058960241
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:678768e8-8fe5-471a-adb7-6fcb5c4c1610",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 191,
+      "total": 18382,
+      "updated": 1775058872360
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:8c7cd276-bcab-44c8-9e2b-68f0530ef20d",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 202,
+      "total": 18381,
+      "updated": 1775058752347
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:e4b0f3ef-7b89-4729-b5a1-f62c8e6fa1fd",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 224,
+      "total": 19765,
+      "updated": 1775058660228
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:167ed87a-6063-4e1c-80b9-0e4d9112b154",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 191,
+      "total": 18382,
+      "updated": 1775058632335
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:77855857-bbba-4a7a-bfc4-3d00d26d46f6",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 179,
+      "total": 18382,
+      "updated": 1775058512326
+    },
+    {
+      "key": "agent:sp:main",
+      "agent": "sp",
+      "model": "nvidia/nemotron-3-super-120b-a12b:free",
+      "input": 3527240,
+      "output": 15926,
+      "total": 95987,
+      "updated": 1775058507891
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:69f5ee49-ff3b-4aff-aff9-1aa381882d3a",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 189,
+      "total": 18384,
+      "updated": 1775058392313
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:2c2a0d8c-65b6-4b59-9a2e-0a7dea533232",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 310,
+      "total": 19766,
+      "updated": 1775058360219
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:26fb2dbe-09f3-4ad1-b717-a597582c9d92",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 192,
+      "total": 18382,
+      "updated": 1775058272295
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:88e74caa-8ce7-41ac-bc40-be99b0f07564",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 192,
+      "total": 18382,
+      "updated": 1775058152282
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:d57a8db4-867e-4704-8105-25866ba37441",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 307,
+      "total": 19765,
+      "updated": 1775058060202
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:f7bef727-2e0d-4e0d-abf0-3f4393ff4e84",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 136,
+      "total": 18381,
+      "updated": 1775058032263
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:e535c52f-487d-4abb-8b0d-974feec8288f",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 187,
+      "total": 18382,
+      "updated": 1775057912238
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:f0c93684-479f-407e-b572-da78fca3e845",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 184,
+      "total": 18382,
+      "updated": 1775057792217
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:219609cc-dfb8-41de-8c57-ca328e6ac5d6",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 279,
+      "total": 19766,
+      "updated": 1775057760188
+    },
+    {
+      "key": "agent:crypto:cron:bd962d78-2690-47d8-b000-8e11f1707352:run:36b8de93-1f7f-4c94-bac8-787225c3532b",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 35,
+      "output": 1453,
+      "total": 25674,
+      "updated": 1775057689660
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:66ee1853-872d-4847-a237-825807dc5c10",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 183,
+      "total": 18382,
+      "updated": 1775057672198
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:6c8c9a8b-0b48-4527-8f89-ba325f0a7eda",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 180,
+      "total": 18382,
+      "updated": 1775057552174
+    },
+    {
+      "key": "agent:crypto:cron:896d1239-0823-4f46-8a8e-e2263cb95dfb",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 50,
+      "output": 2826,
+      "total": 28349,
+      "updated": 1775057474875
+    },
+    {
+      "key": "agent:crypto:cron:896d1239-0823-4f46-8a8e-e2263cb95dfb:run:2872dd41-4117-460f-b87e-847f2f93fa93",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 50,
+      "output": 2826,
+      "total": 28349,
+      "updated": 1775057474875
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:7fa5528c-9f41-4391-9dca-f52c56d16304",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 277,
+      "total": 19766,
+      "updated": 1775057460175
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:7f9dafaa-1cc9-46b8-9834-c09d656f4039",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 200,
+      "total": 18382,
+      "updated": 1775057432159
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:f5095b3a-80f0-499c-a4f9-fad6308be3b9",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 179,
+      "total": 18382,
+      "updated": 1775057312147
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:12d6625c-258a-4165-909c-6dbd0ad80fff",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 185,
+      "total": 18382,
+      "updated": 1775057191724
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:2e4233a3-3d05-4730-b595-a686db6cfd97",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 267,
+      "total": 19766,
+      "updated": 1775057154166
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:9e8544f3-3c38-4cd5-991d-53c4f25f86f6",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 179,
+      "total": 18382,
+      "updated": 1775057071703
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:7d724fd1-79d2-4e47-a8c1-b7ad295fbbce",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 203,
+      "total": 18381,
+      "updated": 1775056951695
+    },
+    {
+      "key": "agent:nq:main",
+      "agent": "nq",
+      "model": "claude-opus-4-5",
+      "input": 7,
+      "output": 4021,
+      "total": 107879,
+      "updated": 1775056913598
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:16c4e1a9-966e-40cc-ac38-2d3892911444",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 298,
+      "total": 19766,
+      "updated": 1775056854148
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:e1e81ec6-5acc-4c28-9811-07e9d9c7914c",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 180,
+      "total": 18382,
+      "updated": 1775056831688
+    },
+    {
+      "key": "agent:main:node",
+      "agent": "main",
+      "model": "claude-sonnet-4-5",
+      "input": 3,
+      "output": 7,
+      "total": 29879,
+      "updated": 1775056786421
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:69874289-db44-43a9-9235-598e90b438ba",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 195,
+      "total": 18381,
+      "updated": 1775056711665
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:42a7e771-1a4f-4994-afda-18e5dbe0ff14",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 195,
+      "total": 18382,
+      "updated": 1775056591658
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:8c1f4041-f515-489f-9aae-24156af702db",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 277,
+      "total": 19766,
+      "updated": 1775056554140
+    },
+    {
+      "key": "agent:church:cron:6ed7ce2d-4830-4926-a098-b7ae4761836c",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 29,
+      "output": 1115,
+      "total": 21396,
+      "updated": 1775056500013
+    },
+    {
+      "key": "agent:church:cron:6ed7ce2d-4830-4926-a098-b7ae4761836c:run:864809d4-3c35-47aa-9d69-06f456a6b673",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 29,
+      "output": 1115,
+      "total": 21396,
+      "updated": 1775056500013
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:de6a7f84-12b5-443d-b26a-0f4e637d76d4",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 174,
+      "total": 18382,
+      "updated": 1775056471652
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:4fa71ad6-9f4b-44d2-bd72-66536fc68778",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 183,
+      "total": 18382,
+      "updated": 1775056351644
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:e3ad4564-c2b1-46ed-8974-62a457f4758f",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 298,
+      "total": 19766,
+      "updated": 1775056254133
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:5098ac66-42d5-4be6-a858-8eb8e6e8e510",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 185,
+      "total": 18381,
+      "updated": 1775056231638
+    },
+    {
+      "key": "agent:nq:cron:e84f2dd3-f40b-4046-bfae-72ccf86dbc26",
+      "agent": "nq",
+      "model": "claude-sonnet-4-5",
+      "input": 31,
+      "output": 982,
+      "total": 32921,
+      "updated": 1775056200010
+    },
+    {
+      "key": "agent:nq:cron:e84f2dd3-f40b-4046-bfae-72ccf86dbc26:run:d1a4026e-38ed-40a8-8eb0-2a39b0cf2e18",
+      "agent": "nq",
+      "model": "claude-sonnet-4-5",
+      "input": 31,
+      "output": 982,
+      "total": 32921,
+      "updated": 1775056200010
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:dc54974c-048d-440d-a852-44f1cb97c082",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 183,
+      "total": 18381,
+      "updated": 1775056101671
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:bea1310a-b571-4557-870f-7c9842def018",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 169,
+      "total": 18382,
+      "updated": 1775055981663
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:bc20ff1c-5309-4629-81e9-11c4ed1b4cba",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 245,
+      "total": 19765,
+      "updated": 1775055954119
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:fc42136c-7484-4ba5-90d3-cee7240b47c0",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 186,
+      "total": 18382,
+      "updated": 1775055861651
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:d512b987-3aca-415f-9c10-5a1a725ed3b4",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 182,
+      "total": 18381,
+      "updated": 1775055741634
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:c685461a-818a-4ec3-b37d-ea6aea223b9f",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 297,
+      "total": 19783,
+      "updated": 1775055654098
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:f957050b-dcdc-4b43-a841-36c6296f4946",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 188,
+      "total": 18382,
+      "updated": 1775055621626
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:e8bdd632-caa1-4e9b-9aaf-953ab433d608",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 194,
+      "total": 18381,
+      "updated": 1775055501608
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:a1a9c2c1-14f0-4ceb-b3f7-7764a9d645a9",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 186,
+      "total": 18382,
+      "updated": 1775055381599
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:5611916d-7c84-4cbc-afc3-f8eaeeb41640",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 234,
+      "total": 19765,
+      "updated": 1775055354090
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:07081b0c-fa6f-45c8-a2a5-a676ece77871",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 199,
+      "total": 18381,
+      "updated": 1775055261589
+    },
+    {
+      "key": "agent:main:cron:22618f0b-6ca6-45ce-abfc-4a3080a8690f",
+      "agent": "main",
+      "model": "claude-sonnet-4-5",
+      "input": 17,
+      "output": 311,
+      "total": 22688,
+      "updated": 1775055150061
+    },
+    {
+      "key": "agent:main:cron:22618f0b-6ca6-45ce-abfc-4a3080a8690f:run:4ac6fd6a-5b81-4754-bfee-df8cb2dcf6a9",
+      "agent": "main",
+      "model": "claude-sonnet-4-5",
+      "input": 17,
+      "output": 311,
+      "total": 22688,
+      "updated": 1775055150061
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:1b4b2764-2554-44c0-91cf-823817b9486b",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 178,
+      "total": 18382,
+      "updated": 1775055141583
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:9043e32a-4119-42cf-88b4-f80c3d06f928",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 351,
+      "total": 19766,
+      "updated": 1775055054083
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:d37755ce-079d-4bfb-9fa3-ce653b201bac",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 197,
+      "total": 18382,
+      "updated": 1775055021572
+    },
+    {
+      "key": "agent:crypto:cron:bd962d78-2690-47d8-b000-8e11f1707352:run:96675447-9293-4a9c-98d8-9f64324dc144",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 29,
+      "output": 1003,
+      "total": 24744,
+      "updated": 1775054982386
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:0031d04a-07fb-4263-a780-9173528cd3cb",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 176,
+      "total": 18381,
+      "updated": 1775054901560
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:47b47609-d62d-4cd8-bacb-754ab6b73063",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 172,
+      "total": 18382,
+      "updated": 1775054781550
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:0db2257c-d113-4a18-8638-679f263c25a7",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 264,
+      "total": 19766,
+      "updated": 1775054754070
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:83552394-ab74-4081-b496-93a22529a181",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 191,
+      "total": 18381,
+      "updated": 1775054661538
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:bf885470-a7f2-4667-ad2c-c4db0c512bf4",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 195,
+      "total": 18381,
+      "updated": 1775054541496
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:2b868753-9da8-4ada-87f9-c7adcadcfeb0",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 272,
+      "total": 19766,
+      "updated": 1775054454060
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:5fddac78-662e-4be3-ab72-2216d087bd16",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 198,
+      "total": 18382,
+      "updated": 1775054421488
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:2fb526cb-add3-4a24-a81d-420d6ce0abdc",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 177,
+      "total": 18382,
+      "updated": 1775054301479
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:fba2e7ea-e2f1-44a8-b2b4-72d97d158ef5",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 184,
+      "total": 18382,
+      "updated": 1775054181462
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:60d3b817-9475-4126-bb97-f6a6cd484702",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 263,
+      "total": 19766,
+      "updated": 1775054154050
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:414ca0be-22b4-40bb-b7d2-4428b134745b",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 197,
+      "total": 18381,
+      "updated": 1775054061454
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:7151c1c2-978f-44e7-b2ee-73cfe71c2c6b",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 196,
+      "total": 18382,
+      "updated": 1775053941447
+    },
+    {
+      "key": "agent:crypto:cron:896d1239-0823-4f46-8a8e-e2263cb95dfb:run:0cf4649e-ed9e-4f71-83d0-bb9966141405",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 52,
+      "output": 3925,
+      "total": 33934,
+      "updated": 1775053868845
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:96546c9e-b19c-46dd-962e-95558860d65b",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 288,
+      "total": 19766,
+      "updated": 1775053854042
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:01da2efe-bd54-427c-ab36-b17ee9009b63",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 184,
+      "total": 18381,
+      "updated": 1775053767706
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:3bc21ea7-d5dc-4517-a452-1584f10e4ff2",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 181,
+      "total": 18381,
+      "updated": 1775053647380
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:f9009dc3-495e-42bd-94b0-52b60f1b1cb6",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 316,
+      "total": 19766,
+      "updated": 1775053554032
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:e31e8362-c4a8-4a02-8571-c85d384c9d09",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 190,
+      "total": 18381,
+      "updated": 1775053527369
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:41837d92-8033-458a-b527-6bf8520be1c2",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 172,
+      "total": 18381,
+      "updated": 1775053407351
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:6f12beac-a707-4fed-80a7-ea0b9b697b05",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 184,
+      "total": 18382,
+      "updated": 1775053287340
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:0efbea9a-1eaf-4ce1-9eb7-a955f5d5377e",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 357,
+      "total": 19783,
+      "updated": 1775053254018
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:fc02fefb-9219-405d-917d-544dd4269a38",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 200,
+      "total": 18382,
+      "updated": 1775053167326
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:7bcfd605-c64e-4c00-8e5a-b1f3142292cd",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 175,
+      "total": 18382,
+      "updated": 1775053047314
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:6ec87e41-e91f-402a-981f-1c184e8c4cb2",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 305,
+      "total": 19783,
+      "updated": 1775052954007
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:4c8ef307-22a9-44ba-bd5d-ef09f8506db3",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 192,
+      "total": 18382,
+      "updated": 1775052927302
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:8b9fe816-6d0f-4aef-bec2-aa399580e89c",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 205,
+      "total": 18382,
+      "updated": 1775052807287
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:437b615b-8466-4d60-b108-afc817d9e7f4",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 177,
+      "total": 18381,
+      "updated": 1775052687261
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:d5313fd9-2f76-45db-aaba-2af439b4a817",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 292,
+      "total": 19766,
+      "updated": 1775052653996
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:3cd367e7-b334-4ec6-bd3d-bee9820e2155",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 182,
+      "total": 18382,
+      "updated": 1775052567252
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:bf4d6922-1a63-4f83-b0d3-9bb98a5e09a2",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 181,
+      "total": 18381,
+      "updated": 1775052447231
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:5d623c16-d117-4507-ad44-a84e1292300a",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 323,
+      "total": 19770,
+      "updated": 1775052353986
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:6f46514c-afbf-45e8-be1e-aec4c87ca587",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 176,
+      "total": 18382,
+      "updated": 1775052327219
+    },
+    {
+      "key": "agent:crypto:cron:bd962d78-2690-47d8-b000-8e11f1707352:run:63f67b08-3a04-4d59-8887-5f625c973e62",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 26,
+      "output": 1129,
+      "total": 25033,
+      "updated": 1775052282376
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:55afcbbe-e3e7-46ef-8ca2-345a69a9ffa5",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 204,
+      "total": 18381,
+      "updated": 1775052207199
+    },
+    {
+      "key": "agent:sp:cron:a6732b42-345a-44e5-ab94-4e8f4efb65a1:run:1596acaa-046b-4bd5-9e37-b12c25857ac6",
+      "agent": "sp",
+      "model": "claude-haiku-4-5",
+      "input": 55,
+      "output": 4248,
+      "total": 29056,
+      "updated": 1775052084924
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:e9a94b08-ed35-4221-afff-34fff0f990a2",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 253,
+      "total": 19766,
+      "updated": 1775052053974
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:c6fd576f-2e5d-4683-97dc-e38c01bbb449",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 186,
+      "total": 18381,
+      "updated": 1775052041285
+    },
+    {
+      "key": "agent:crypto:cron:d1def7a5-ced4-44d5-aedf-b3e8f7075595",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 110,
+      "output": 6920,
+      "total": 43805,
+      "updated": 1775051875283
+    },
+    {
+      "key": "agent:crypto:cron:d1def7a5-ced4-44d5-aedf-b3e8f7075595:run:4be710ad-1033-4628-87f4-dd4c201a910b",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 110,
+      "output": 6920,
+      "total": 43805,
+      "updated": 1775051875283
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:848b620b-1dfd-43bb-9677-daae0f375821",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 197,
+      "total": 18382,
+      "updated": 1775051807653
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:023d60a9-2ba4-49a0-b88b-b5d71731e4fe",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 301,
+      "total": 19766,
+      "updated": 1775051730096
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:1327d4bd-5626-4f59-a872-1f92d39c161f",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 197,
+      "total": 18382,
+      "updated": 1775051687637
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:11329690-2bc5-4a5e-9eaf-8d16191d6a94",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 215,
+      "total": 18382,
+      "updated": 1775051567628
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:9fb558c3-6712-4b38-b8ee-713e795c1d6b",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 191,
+      "total": 18382,
+      "updated": 1775051447614
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:d68bfecf-4eb4-4f71-98ea-3c61e91c5cc3",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 250,
+      "total": 19766,
+      "updated": 1775051430080
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:d283173e-bded-40fb-b740-43c8fb017c7b",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 186,
+      "total": 18382,
+      "updated": 1775051327600
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:92e42c11-9c9c-4713-ab97-58d9a9cd6d63",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 175,
+      "total": 18382,
+      "updated": 1775051207589
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:1e3ef085-5a7c-4b3c-8f9f-447dc8d1cbad",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 341,
+      "total": 19783,
+      "updated": 1775051130064
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:bec8d967-4bea-4724-91a9-4b17bacab487",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 192,
+      "total": 18382,
+      "updated": 1775051087577
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:2ce4c304-6e4f-4a60-9193-ffba7848cb28",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 175,
+      "total": 18381,
+      "updated": 1775050967563
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:f9629a85-dbc3-4ab6-8edd-81156d5e1434",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 206,
+      "total": 18381,
+      "updated": 1775050847554
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:468542c1-0335-4f18-8c94-b6ec13e9aa10",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 302,
+      "total": 19776,
+      "updated": 1775050830056
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:a98ebb93-b66d-463c-8f0f-376c16bed48f",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 184,
+      "total": 18382,
+      "updated": 1775050727545
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:b1b699e1-c767-4990-9cdc-6e0cd7b94151",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 193,
+      "total": 18382,
+      "updated": 1775050607528
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:9def37b7-a7fb-4733-8d15-ff6fb991b7c8",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 340,
+      "total": 19766,
+      "updated": 1775050530040
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:a82a2ca6-d0c9-4116-aeec-38fb20ba575a",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 185,
+      "total": 18382,
+      "updated": 1775050487518
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:2532a0aa-8146-4535-878b-1c74e09eeb32",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 177,
+      "total": 18382,
+      "updated": 1775050367501
+    },
+    {
+      "key": "agent:crypto:cron:896d1239-0823-4f46-8a8e-e2263cb95dfb:run:b19579b3-bdd5-4f91-8eb1-5a6c70ada1e9",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 86,
+      "output": 6171,
+      "total": 38475,
+      "updated": 1775050255319
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:42b3cbf6-0f8a-47a3-8e6f-72b2539e1e4d",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 252,
+      "total": 19757,
+      "updated": 1775050230032
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:7d52d64e-cd40-4fcc-9023-1ddc07528bb3",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 193,
+      "total": 18382,
+      "updated": 1775050162151
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:ecd29d8f-256a-409b-8a8f-d9bc23672800",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 180,
+      "total": 18382,
+      "updated": 1775050042141
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:9d90ba09-78e0-4b39-87e8-5820723b651c",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 301,
+      "total": 19765,
+      "updated": 1775049930005
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:1085197b-4f8b-4980-a3dc-05dd692098d8",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 174,
+      "total": 18382,
+      "updated": 1775049922126
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:51491574-b255-4864-b708-8c8911353b22",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 191,
+      "total": 18382,
+      "updated": 1775049802117
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:e0aec94e-fc33-46f2-9bc4-90ee70058cad",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 150,
+      "total": 18382,
+      "updated": 1775049682106
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:bb28634b-bee7-49b8-8551-5da14bad35cf",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 297,
+      "total": 19766,
+      "updated": 1775049629996
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:9b4d35c0-d09e-4fd7-8a25-39bf4de3fef6",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 180,
+      "total": 18381,
+      "updated": 1775049562095
+    },
+    {
+      "key": "agent:crypto:cron:bd962d78-2690-47d8-b000-8e11f1707352:run:04452dae-6db5-42db-a33c-6d27d1ec9c80",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 40,
+      "output": 1258,
+      "total": 25235,
+      "updated": 1775049522653
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:5b298c62-96a7-439f-9641-a446bb2e04f0",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 178,
+      "total": 18382,
+      "updated": 1775049430158
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:aeaaabf6-d24f-4df2-9cdc-16e9855c2c4b",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 270,
+      "total": 19766,
+      "updated": 1775049329984
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:faadd843-21d4-41b2-8a5d-d6a6800f2d04",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 175,
+      "total": 18382,
+      "updated": 1775049310150
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:c8fe1a19-c9e9-4405-b1f9-a0475b1d8ac4",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 191,
+      "total": 18382,
+      "updated": 1775049190130
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:a6429acf-a31d-41c1-9f01-02dc6959b00e",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 200,
+      "total": 18382,
+      "updated": 1775049070120
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:0f71b834-a388-47b4-bf54-d3bd1a1a1fc3",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 313,
+      "total": 19765,
+      "updated": 1775049029973
+    },
+    {
+      "key": "agent:nq:cron:e84f2dd3-f40b-4046-bfae-72ccf86dbc26:run:e7b7ee8c-37fa-41e3-a28c-78c13ac07e99",
+      "agent": "nq",
+      "model": "claude-sonnet-4-5",
+      "input": 36,
+      "output": 925,
+      "total": 28719,
+      "updated": 1775049000014
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:65a9c400-707d-4ee6-8a3b-eff601b642d1",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 195,
+      "total": 18382,
+      "updated": 1775048950106
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:a3a412d2-ef01-4765-a6a4-3b3c856b247b",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 185,
+      "total": 18382,
+      "updated": 1775048830071
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:4bb39305-fa46-4df8-b152-3c5089d76bdd",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 303,
+      "total": 19783,
+      "updated": 1775048720116
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:e40d1203-d6c7-4786-a5da-62e2298c8850",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 172,
+      "total": 18382,
+      "updated": 1775048710056
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:a045eb48-9145-4051-b750-62e105883588",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 187,
+      "total": 18382,
+      "updated": 1775048447992
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:b05b235b-d7fb-4b65-9b39-83950c3ba247",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 271,
+      "total": 19757,
+      "updated": 1775048373989
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:45b61841-7aec-457b-956f-aa1182859b4c",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 196,
+      "total": 18381,
+      "updated": 1775048327981
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:c921aa24-a274-4306-85f4-4d41c1f1c22b",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 206,
+      "total": 18382,
+      "updated": 1775048207971
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:4499867b-a55a-4fa8-b408-2ad0696973c6",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 206,
+      "total": 18381,
+      "updated": 1775048087960
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:e1cf6011-a262-4d55-ae17-2c882e146bfe",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 288,
+      "total": 19766,
+      "updated": 1775048073977
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:c1127c7d-1f10-4c9f-a035-c7e5b437ff27",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 196,
+      "total": 18382,
+      "updated": 1775047967951
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:826c4201-1237-4c64-a5a8-cb6778eb5500",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 198,
+      "total": 18381,
+      "updated": 1775047847936
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:71c9895d-02d8-4370-ad8c-32c96bf79bd0",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 307,
+      "total": 19766,
+      "updated": 1775047773960
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:8371daf9-4d65-4705-85d1-5ef0ffece9ec",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 202,
+      "total": 18381,
+      "updated": 1775047727918
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:0492e6da-0356-46af-bd93-20c98d22426e",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 205,
+      "total": 18381,
+      "updated": 1775047607903
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:fd45d5f3-966e-4703-afa4-06ec005c19e3",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 193,
+      "total": 18382,
+      "updated": 1775047487887
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:774daf37-03b2-4521-9551-650cd45cee8a",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 225,
+      "total": 19766,
+      "updated": 1775047473940
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:7a08b0d6-cb10-43a9-b38e-33a56588237a",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 213,
+      "total": 18382,
+      "updated": 1775047367876
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:6296e710-42dd-4ff2-a7fe-9f0b3441d704",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 192,
+      "total": 18381,
+      "updated": 1775047247866
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:641bba4f-07b6-40b7-95ac-c1c1cae10cbe",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 321,
+      "total": 19766,
+      "updated": 1775047173929
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:a94f3f7e-f8e2-43d5-8043-878d4e05f025",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 197,
+      "total": 18382,
+      "updated": 1775047127857
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:bae62b46-b44f-49ab-bf4c-c82a0dab772f",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 211,
+      "total": 18382,
+      "updated": 1775047007845
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:f6dec9aa-5f38-40b8-ad3c-37d7587b1a33",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 185,
+      "total": 18382,
+      "updated": 1775046887831
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:0c03fa72-ca2d-4a73-8493-3c929c140f2e",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 360,
+      "total": 19783,
+      "updated": 1775046873909
+    },
+    {
+      "key": "agent:crypto:cron:bd962d78-2690-47d8-b000-8e11f1707352:run:a5a69d9e-95ea-4641-b3aa-f5969cf972c1",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 36,
+      "output": 2115,
+      "total": 26102,
+      "updated": 1775046822629
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:0e51d31a-1c14-4b2f-8d6e-e77184acaf07",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 172,
+      "total": 18381,
+      "updated": 1775046761947
+    },
+    {
+      "key": "agent:crypto:cron:896d1239-0823-4f46-8a8e-e2263cb95dfb:run:cec24540-ea34-4914-b242-988c20f35752",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 89,
+      "output": 4723,
+      "total": 35884,
+      "updated": 1775046655290
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:7b9da8f0-35ad-48ab-933b-840cd4a02f3a",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 174,
+      "total": 18382,
+      "updated": 1775046641936
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:e9ecbff7-f2d0-4abd-bf7f-cf38f9b2d805",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 344,
+      "total": 19766,
+      "updated": 1775046568353
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:288a5c81-facb-4e2b-aed2-c45eb43515b9",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 199,
+      "total": 18381,
+      "updated": 1775046521926
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:dfdc8e2b-443e-48ac-8b82-e155a230a406",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 189,
+      "total": 18382,
+      "updated": 1775046401913
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:340cc469-ac9c-4d45-9c78-df6881ba14ca",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 192,
+      "total": 18382,
+      "updated": 1775046281900
+    },
+    {
+      "key": "agent:crypto:cron:d1af2efa-bdf1-47e5-8d46-8e35de464cc2:run:beacf967-f809-410c-9c11-976744f0e9e8",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 266,
+      "total": 19765,
+      "updated": 1775046268343
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:55c3b782-9473-4fb1-9908-49e4db107f63",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 191,
+      "total": 18382,
+      "updated": 1775046161893
+    },
+    {
+      "key": "agent:church:cron:211ef379-a2c8-4a4e-999b-10c9e02c353b:run:430d11fd-eb3a-4513-ad90-6c02dd0bb358",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 15,
+      "output": 171,
+      "total": 18382,
+      "updated": 1775046041873
+    },
+    {
+      "key": "agent:church:main",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 10,
+      "output": 1706,
+      "total": 52917,
+      "updated": 1774996155112
+    },
+    {
+      "key": "agent:main:subagent:75ed7048-0e87-4e46-8b1d-a0f228b81294",
+      "agent": "main",
+      "model": "nvidia/nemotron-3-super-120b-a12b:free",
+      "input": 255943,
+      "output": 8855,
+      "total": 30187,
+      "updated": 1774983238984
+    },
+    {
+      "key": "agent:main:subagent:3f05cd69-47d0-4b6d-a8d3-eeeb13d1fb2d",
+      "agent": "main",
+      "model": "deepseek/deepseek-r1-0528",
+      "input": 16794,
+      "output": 4733,
+      "total": 16794,
+      "updated": 1774983175831
+    },
+    {
+      "key": "agent:main:subagent:74179f8d-542e-4a2c-8f5d-a7fa592f4f57",
+      "agent": "main",
+      "model": "qwen-coder",
+      "input": null,
+      "output": null,
+      "total": null,
+      "updated": 1774983105947
+    },
+    {
+      "key": "agent:main:subagent:d5db0127-b38b-4c56-8d52-b5956b88623b",
+      "agent": "main",
+      "model": "qwen/qwen3.5-122b-a10b:free",
+      "input": null,
+      "output": null,
+      "total": null,
+      "updated": 1774983089897
+    },
+    {
+      "key": "agent:crypto:cron:55a92266-7038-4c5f-87a5-1dafefbfc3bf",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 182,
+      "output": 24041,
+      "total": 68925,
+      "updated": 1774980226322
+    },
+    {
+      "key": "agent:main:cron:69a66940-80ed-43cf-8051-815015c177d2",
+      "agent": "main",
+      "model": "claude-sonnet-4-5",
+      "input": 42,
+      "output": 2113,
+      "total": 51000,
+      "updated": 1774976902644
+    },
+    {
+      "key": "agent:crypto:cron:1423731a-1749-4972-a45a-ea90c61e46bb",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 81,
+      "output": 12998,
+      "total": 57827,
+      "updated": 1774976457235
+    },
+    {
+      "key": "agent:church:cron:46a5aa19-63c7-471d-bfe2-ed510eb409e2",
+      "agent": "church",
+      "model": "claude-sonnet-4-5",
+      "input": 35,
+      "output": 1586,
+      "total": 34025,
+      "updated": 1774976400011
+    },
+    {
+      "key": "agent:main:cron:ff285ff2-20b8-48f5-bc78-b4b6eb44ea81",
+      "agent": "main",
+      "model": "claude-sonnet-4-5",
+      "input": 61,
+      "output": 4795,
+      "total": 33264,
+      "updated": 1774975825918
+    },
+    {
+      "key": "agent:crypto:main",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 65,
+      "output": 3780,
+      "total": 47237,
+      "updated": 1774915069883
+    },
+    {
+      "key": "agent:crypto:cron:4f62514c-a69c-4380-b15d-6fa1a997b232",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 57,
+      "output": 1897,
+      "total": 23610,
+      "updated": 1774883038778
+    },
+    {
+      "key": "agent:nq:subagent:6a1fc624-58fc-41a3-b2ee-01d3c2801e9f",
+      "agent": "nq",
+      "model": "claude-sonnet-4-5",
+      "input": 24,
+      "output": 2260,
+      "total": 57264,
+      "updated": 1774875724713
+    },
+    {
+      "key": "agent:nq:subagent:0ade73c8-323c-4839-bffb-2357c0ff7ef1",
+      "agent": "nq",
+      "model": "claude-sonnet-4-5",
+      "input": 42,
+      "output": 1507,
+      "total": 24121,
+      "updated": 1774875722450
+    },
+    {
+      "key": "agent:nq:cron:0735accf-7edd-4677-b617-366db3418d7d",
+      "agent": "nq",
+      "model": "claude-sonnet-4-5",
+      "input": 125,
+      "output": 17370,
+      "total": 63242,
+      "updated": 1774803888080
+    },
+    {
+      "key": "agent:crypto:telegram:group:-1002381931352",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": null,
+      "output": null,
+      "total": null,
+      "updated": 1774803869756
+    },
+    {
+      "key": "agent:sp:cron:95266e72-a4aa-45b2-bd56-31e381a6f8e5",
+      "agent": "sp",
+      "model": "claude-opus-4-6",
+      "input": 14,
+      "output": 7117,
+      "total": 28747,
+      "updated": 1774752210285
+    },
+    {
+      "key": "agent:nq:cron:d49efb3b-95aa-4b02-9d03-467cb705e11d",
+      "agent": "nq",
+      "model": "claude-opus-4-6",
+      "input": 26,
+      "output": 25102,
+      "total": 84912,
+      "updated": 1774747583647
+    },
+    {
+      "key": "agent:nq:cron:7ab571ee-bb65-47b8-b2cf-9e17f4cde169",
+      "agent": "nq",
+      "model": "claude-opus-4-6",
+      "input": 19,
+      "output": 5386,
+      "total": 37530,
+      "updated": 1774717912354
+    },
+    {
+      "key": "agent:main:cron:98c2de9f-4d1a-4c7d-ae62-65d987e06ad8",
+      "agent": "main",
+      "model": "claude-sonnet-4-5",
+      "input": 10,
+      "output": 331,
+      "total": 20000,
+      "updated": 1774660320301
+    },
+    {
+      "key": "agent:sp:cron:4ca9df7d-1315-47ac-b6e8-593119a844a2",
+      "agent": "sp",
+      "model": "claude-sonnet-4-5",
+      "input": 30,
+      "output": 4899,
+      "total": 38939,
+      "updated": 1774632600112
+    },
+    {
+      "key": "agent:nq:cron:5b1fd54f-9f73-481b-9af4-e0e85da48cda",
+      "agent": "nq",
+      "model": "claude-sonnet-4-5",
+      "input": 41,
+      "output": 4109,
+      "total": 71751,
+      "updated": 1774603134901
+    },
+    {
+      "key": "agent:nq:cron:34099bd8-07a1-414f-92f4-b9366694802f",
+      "agent": "nq",
+      "model": "claude-sonnet-4-5",
+      "input": 139,
+      "output": 12477,
+      "total": 89820,
+      "updated": 1774601930963
+    },
+    {
+      "key": "agent:nq:cron:e6e35538-5267-41a0-bc07-03ce1a384c80",
+      "agent": "nq",
+      "model": "nvidia/nemotron-3-super-120b-a12b:free",
+      "input": 293636,
+      "output": 10567,
+      "total": 40853,
+      "updated": 1774601362569
+    },
+    {
+      "key": "agent:nq:cron:febac01b-c668-4335-8637-99d3fc26eae0",
+      "agent": "nq",
+      "model": "nvidia/nemotron-3-super-120b-a12b:free",
+      "input": 392619,
+      "output": 17303,
+      "total": 72721,
+      "updated": 1774599933072
+    },
+    {
+      "key": "agent:sp:cron:dabc4a9d-2c63-4d4c-bdcc-c6c06695fab6",
+      "agent": "sp",
+      "model": "claude-opus-4-6",
+      "input": 9,
+      "output": 6755,
+      "total": 53447,
+      "updated": 1774591420050
+    },
+    {
+      "key": "agent:crypto:cron:5815c435-ce80-421c-8955-4cd11b098aa5",
+      "agent": "crypto",
+      "model": "claude-opus-4-6",
+      "input": 8,
+      "output": 1388,
+      "total": 22732,
+      "updated": 1774229412770
+    },
+    {
+      "key": "agent:crypto:cron:6ab0d78e-04ea-4d66-881c-d551490726c5",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 190,
+      "output": 11639,
+      "total": 55178,
+      "updated": 1774186646088
+    },
+    {
+      "key": "agent:crypto:cron:389c6fbd-d986-4fff-843c-49ffc1bb4d32",
+      "agent": "crypto",
+      "model": "claude-opus-4-6",
+      "input": 14,
+      "output": 2569,
+      "total": 21087,
+      "updated": 1774184870284
+    },
+    {
+      "key": "agent:sp:cron:ac520c0a-7c6e-4e5a-99b0-9399a92042fb",
+      "agent": "sp",
+      "model": "claude-sonnet-4-5",
+      "input": 137,
+      "output": 24759,
+      "total": 55143,
+      "updated": 1774137600060
+    },
+    {
+      "key": "agent:crypto:cron:2e3c0761-c56b-4739-9485-7104970d14f1",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 36,
+      "output": 1625,
+      "total": 19159,
+      "updated": 1773958827475
+    },
+    {
+      "key": "agent:crypto:cron:b7a3e821-4a8f-4bed-a27d-816fd92807e7",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 29,
+      "output": 566,
+      "total": 18647,
+      "updated": 1773875880095
+    },
+    {
+      "key": "agent:nq:cron:b609fccf-c359-4de8-be52-af3b228e953f",
+      "agent": "nq",
+      "model": "claude-sonnet-4-5",
+      "input": 90,
+      "output": 5791,
+      "total": 33635,
+      "updated": 1773860412803
+    },
+    {
+      "key": "agent:crypto:cron:3128d9ad-1e64-47ba-b73f-7c5cc93aa67c",
+      "agent": "crypto",
+      "model": "claude-haiku-4-5",
+      "input": 24,
+      "output": 795,
+      "total": 17096,
+      "updated": 1773859471818
+    },
+    {
+      "key": "agent:crypto:cron:fac4302a-f16d-4de1-96ff-c959b9556cc3",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 16,
+      "output": 261,
+      "total": 16304,
+      "updated": 1773846857812
+    },
+    {
+      "key": "agent:crypto:cron:7f22b85e-dced-426c-835f-2d93cd36b81c",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 21,
+      "output": 349,
+      "total": 16541,
+      "updated": 1773846142857
+    },
+    {
+      "key": "agent:nq:cron:l2-scalping-daily-optimize",
+      "agent": "nq",
+      "model": "claude-sonnet-4-5",
+      "input": 66,
+      "output": 6965,
+      "total": 27796,
+      "updated": 1773824400007
+    },
+    {
+      "key": "agent:crypto:cron:c78e1d97-346c-4955-9f65-2d61d0aff79c",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 49,
+      "output": 6014,
+      "total": 24631,
+      "updated": 1773817552203
+    },
+    {
+      "key": "agent:crypto:cron:9cc55f54-8923-4524-a297-e4b769f0f380",
+      "agent": "crypto",
+      "model": "claude-haiku-4-5",
+      "input": 22,
+      "output": 487,
+      "total": 16151,
+      "updated": 1773803392096
+    },
+    {
+      "key": "agent:crypto:cron:c8025698-0155-45fd-a8e0-288fc46bff54",
+      "agent": "crypto",
+      "model": "claude-haiku-4-5",
+      "input": 29,
+      "output": 569,
+      "total": 16511,
+      "updated": 1773798840362
+    },
+    {
+      "key": "agent:crypto:cron:a782b874-39f9-4890-b686-b4309b8baaf1",
+      "agent": "crypto",
+      "model": "claude-haiku-4-5",
+      "input": 22,
+      "output": 828,
+      "total": 17062,
+      "updated": 1773790513035
+    },
+    {
+      "key": "agent:main:cron:4494f814-e67e-43fc-8929-d12264fe893a",
+      "agent": "main",
+      "model": "claude-sonnet-4-5",
+      "input": 56,
+      "output": 1800,
+      "total": 22994,
+      "updated": 1773718200020
+    },
+    {
+      "key": "agent:crypto:cron:114c7423-a7ba-4065-ac51-f6ef7a1061f2",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 23,
+      "output": 545,
+      "total": 24490,
+      "updated": 1773685630881
+    },
+    {
+      "key": "agent:main:cron:36f47279-520f-4ce7-8f9c-a7c44be0771a",
+      "agent": "main",
+      "model": "claude-sonnet-4-5",
+      "input": 83,
+      "output": 2591,
+      "total": 27509,
+      "updated": 1773685344059
+    },
+    {
+      "key": "agent:nq:cron:235d8a06-92e1-42c8-91ef-0f58e5d46354",
+      "agent": "nq",
+      "model": "claude-sonnet-4-5",
+      "input": 23,
+      "output": 721,
+      "total": 20527,
+      "updated": 1773684193132
+    },
+    {
+      "key": "agent:crypto:cron:5e786162-afc1-4a6f-9f49-6f3712048f8a",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 44,
+      "output": 1667,
+      "total": 24925,
+      "updated": 1773680280104
+    },
+    {
+      "key": "agent:crypto:cron:464f448f-820e-4eac-b3f0-95d06b6fcb1c",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 77,
+      "output": 4353,
+      "total": 42909,
+      "updated": 1773673229282
+    },
+    {
+      "key": "agent:crypto:cron:41d87ae8-adf9-42a0-9b0e-1f3f0b7e28d4",
+      "agent": "crypto",
+      "model": "claude-sonnet-4-5",
+      "input": 19,
+      "output": 494,
+      "total": 19914,
+      "updated": 1773594032225
+    },
+    {
+      "key": "agent:nq:cron:l2-scalping-weekly-discovery",
+      "agent": "nq",
+      "model": "claude-sonnet-4-5",
+      "input": 66,
+      "output": 5414,
+      "total": 93748,
+      "updated": 1773586800092
+    }
+  ]
+}

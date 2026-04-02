@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-04-02 14:00 MST
+**Updated:** 2026-04-02 14:15 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -9,7 +9,7 @@
 | 7-day (Sonnet) | **92.0%** | Apr 03 08:00 AM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 0 (1034 requests)
+- **Total Tokens:** 0 (1007 requests)
 - **Input:** 0 | **Output:** 0
 - **Cache Read:** 0 | **Cache Write:** 0
 - **Cost (est):** $0.00
@@ -18,10 +18,10 @@
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
 | x-ai/grok-4.1-fast | 2 | 0 | 0 | $0.00 |
-| x-ai/grok-4-fast | 1032 | 0 | 0 | $0.00 |
+| x-ai/grok-4-fast | 1005 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 41.2M (4428 requests)
+- **Total Tokens:** 41.2M (4471 requests)
 - **Output Tokens:** 88.0K
 - **Cost (est):** $35.05
 
@@ -33,7 +33,7 @@
 | nvidia/nemotron-3-super-120b-a12b:free | 30 | 2.1M | 9.6K | $0.00 |
 | x-ai/grok-4.1-fast | 7 | 0 | 0 | $0.00 |
 | gateway-injected | 1 | 0 | 0 | $0.00 |
-| x-ai/grok-4-fast | 1040 | 0 | 0 | $0.00 |
+| x-ai/grok-4-fast | 1083 | 0 | 0 | $0.00 |
 
 ---
 *Note: Max 5x plan is $100/mo flat. Cost shown is equivalent API pricing, not actual charges.*

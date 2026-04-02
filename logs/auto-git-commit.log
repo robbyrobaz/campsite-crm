@@ -41541,3 +41541,36 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 1 committed, 8 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+warning: adding embedded git repository: kalshi-edge
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint: 
+hint: 	git submodule add <url> kalshi-edge
+hint: 
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint: 
+hint: 	git rm --cached kalshi-edge
+hint: 
+hint: See "git help submodule" for more information.
+[main c521c3b40] auto: snapshot 2026-04-02T13:00:01Z
+ 12 files changed, 866 insertions(+), 17 deletions(-)
+ create mode 100644 .secrets/kalshi/demo.key.pem
+ create mode 100644 .secrets/kalshi/prod.key.pem
+ create mode 100644 kalshi-bot/kalshi_demo_probe.py
+ create mode 100644 kalshi-bot/kalshi_prod_probe.py
+ create mode 100644 kalshi-bot/kalshi_shadow_scanner.py
+ create mode 100644 kalshi-bot/shadow_scan_latest.json
+ create mode 160000 kalshi-edge
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+CLEAN campsite-crm (nothing to commit)
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 1 committed, 8 skipped
+CLEAN master-dashboard (nothing to commit)
+CLEAN blofin-stack (nothing to commit)

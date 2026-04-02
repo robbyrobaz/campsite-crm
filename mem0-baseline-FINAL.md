@@ -1,5 +1,59 @@
 # Mem0 Installation Baseline — April 1, 2026 09:24 MST
 
+## Status Update — April 1, 2026 16:26 MST
+
+Mem0 is now active on live OpenClaw chat sessions for Jarvis and agent chats, but the implementation is no longer the original OSS Mem0 path from this morning.
+
+## A/B Benchmark Update — April 1, 2026 16:40 MST
+
+A controlled scratch-session benchmark was run against `openai-codex/gpt-5.4` using the NQ agent path. The benchmark confirmed that auto capture and auto recall are active, but it did **not** show token savings in its current form.
+
+### Benchmark result
+- Report: `research/mem0_ab/mem0_ab_report_20260401-1640.json`
+- Baseline follow-up turn (`no mem`, repeated context in prompt):
+  - `3507` uncached input tokens
+  - `24320` cache-read tokens
+  - `$0.015883`
+- With-memory follow-up turn (`mem on`, short follow-up prompt):
+  - `24482` uncached input tokens
+  - `0` cache-read tokens
+  - `$0.062240`
+
+### Why the result is not a clean final verdict
+- The current memory implementation is storing and reinjecting large raw transcript blocks, not compact fact summaries.
+- That made the with-memory follow-up prompt much larger than intended.
+- The NQ agent also invoked `memory_store` / `memory_search` tools on its own in the baseline arm, which contaminates an attempt to isolate automatic plugin savings.
+- The no-memory arm got a large provider prompt-cache hit, which further biases the comparison.
+
+### Practical conclusion
+- Current state proves **memory is active**.
+- Current state does **not yet prove memory saves tokens**.
+- The next meaningful optimization is to shrink stored memories and recalled payloads into compact facts instead of raw transcript chunks.
+
+### What changed from the original install
+- The original `@mem0/openclaw-mem0` OSS path did not work reliably in this environment.
+- Trigger filtering was preventing live webchat recall/capture.
+- The OSS extraction path also failed with `Anthropic API key is required` and intermittent `fetch failed` errors.
+- The installed plugin bundle was patched so live chat recall/capture now uses a simple durable local store instead of the unstable OSS extraction/vector path.
+
+### Current working memory path
+- Plugin bundle: `/home/rob/.openclaw/extensions/openclaw-mem0/dist/index.js`
+- Durable store: `/home/rob/.mem0-local/memories.json`
+- Current store status at 16:26 MST:
+  - `12` total records
+  - `7` for `jarvis-main`
+  - `1` for `jarvis-main:agent:nq`
+  - `1` for `jarvis-main:agent:crypto`
+  - `3` for `jarvis-main:agent:church`
+
+### Live proof from gateway logs
+- `openclaw-mem0: auto-captured 1 memories`
+- `openclaw-mem0: injecting 1 memories into context`
+- `openclaw-mem0: injecting 2 memories into context`
+- `openclaw-mem0: injecting 3 memories into context`
+
+This confirms the current plugin is now participating in real OpenClaw chat turns.
+
 ## Installation Timestamp
 - **Installed:** 2026-04-01 09:14 MST
 - **Gateway Restarted:** 2026-04-01 09:15 MST
@@ -56,14 +110,14 @@
 3. **Main session** — 273K input over 13 sessions = good compression target
 4. **Output tokens unchanged** — Mem0 can't reduce response length
 
-## Mem0 Configuration
+## Original Mem0 Configuration
 
 ### Plugin Details
 - **Version:** 0.4.1 (@mem0/openclaw-mem0)
 - **Install Path:** /home/rob/.openclaw/extensions/openclaw-mem0
 - **Memory Slot:** Replaced memory-core (memory-core and memory-lancedb disabled)
 
-### Local Open-Source Mode Settings
+### Local Open-Source Mode Settings At Install Time
 ```json
 {
   "mode": "open-source",
@@ -87,6 +141,23 @@
 }
 ```
 
+## Current Reality
+
+The original plan assumed:
+- local Ollama embeddings
+- local vector DB
+- Anthropic-backed fact extraction
+
+That did not hold up in practice. The part that is working now is:
+- local durable memory store
+- live recall injection before replies
+- live capture after replies
+- no Anthropic API dependency for memory extraction
+
+This means the token-savings test is now cleaner:
+- no extra Anthropic extraction overhead
+- any benefit now comes from recall/continuity reducing repeated context reconstruction
+
 ### Hardware Resources
 - **CPU:** AMD (Package id 0 temp: 53°C at baseline)
 - **GPU:** RTX 2080 Super (0% load, 823MB/8GB VRAM = 10% — Ollama embedder loaded)
@@ -100,9 +171,9 @@
 2. **Session continuity** — memories survive context compaction/pruning
 3. **Semantic recall** — better than file-based search for relevant context
 
-### What Mem0 WON'T Help With
+### What It WON'T Help With
 1. **Output tokens** — response length unchanged (quality maintained)
-2. **Extraction cost** — uses Sonnet to summarize conversations (adds tokens)
+2. **Output tokens** still dominate on long answers
 3. **Conversation volume** — if Rob asks 100 questions, that's still 100 API calls
 4. **Data processing** — SP bulk FT sessions won't benefit (processing not conversation)
 
@@ -110,77 +181,150 @@
 - **Best case:** 30-50% reduction in INPUT tokens for conversational sessions
 - **Main session:** Could drop from 273K/13 = 21K avg input to ~10-15K avg
 - **NQ/Crypto agents:** Should see input reduction on status/question sessions
-- **Net impact:** 15-25% total token reduction (input is ~50% of conversational load)
-- **Break-even risk:** Extraction overhead might offset savings on short sessions
+- **Net impact:** most likely visible in repeated follow-up chats, not one-off tasks
+- **Break-even risk:** much lower now because the current path does not depend on Anthropic extraction
 
 ## Measurement Plan
 
+### What to measure now
+
+The correct question is not just "does memory exist?"
+
+The real question is:
+- do repeated Jarvis/NQ follow-up chats use fewer input tokens than they did before memory worked?
+
+### Best measurement method
+
+Use the baseline session data from this morning, then compare it against new post-fix sessions.
+
+Baseline files:
+- `mem0-baseline-sessions.json`
+- `mem0-baseline-FINAL.md`
+
+Working-memory start time:
+- approximately **2026-04-01 16:24 MST**
+
+So the clean comparison is:
+1. pre-working-memory sessions: before `2026-04-01 16:24 MST`
+2. post-working-memory sessions: after `2026-04-01 16:24 MST`
+
+### Primary metrics
+
+1. **Average input tokens per conversational session**
+- especially for `main` and `nq`
+- this is the most important metric
+
+2. **Average total tokens per session**
+- useful secondary check
+
+3. **Repeated follow-up question behavior**
+- ask the same domain follow-ups in new sessions
+- check whether the agent avoids reloading/explaining large background context
+
+4. **Memory activity count**
+- how often recall/capture actually fires
+
+### Recommended command checks
+
+Check live memory activity:
+
+```bash
+rg -n 'openclaw-mem0: (auto-captured|injecting [0-9]+ memories into context)' /tmp/openclaw/openclaw-$(date +%F).log | tail -n 40
+```
+
+Check store contents:
+
+```bash
+python3 - <<'PY'
+import json
+p='/home/rob/.mem0-local/memories.json'
+data=json.load(open(p))
+print('total', len(data))
+for k in sorted({r.get('user_id') for r in data}):
+    print(k, sum(1 for r in data if r.get('user_id')==k))
+PY
+```
+
+Inspect current session usage:
+
+```bash
+jq '.["agent:main:main"], .["agent:nq:main"]' /home/rob/.openclaw/agents/main/sessions/sessions.json /home/rob/.openclaw/agents/nq/sessions/sessions.json
+```
+
+### Practical comparison to run tomorrow
+
+Compare:
+- Jarvis sessions created after `2026-04-01 16:24 MST`
+- NQ sessions created after `2026-04-01 16:24 MST`
+
+against the session averages captured in `mem0-baseline-sessions.json`.
+
+If memory is helping, the pattern should be:
+- fewer input tokens on follow-up sessions
+- fewer repeated long restatements of background context
+- more answers that begin from remembered state rather than rebuilding it
+
 ### Checkpoints
-1. **6 hours (15:24 MST today):** Check 5-hour window — should stay ≤12% if helping
-2. **24 hours (09:24 MST tomorrow):** Check 7-day trend — growth rate should slow
-3. **48 hours (09:24 MST Apr 3):** Final assessment — keep vs rollback
+1. **Today:** confirm recall/capture keeps firing in live chats
+2. **Tomorrow morning:** compare post-16:24 Jarvis/NQ sessions against baseline
+3. **After 24-48 hours:** decide whether to keep this local memory path
 
 ### Success Metrics
-- **5-hour windows stay low** — <12% consistently vs climbing to 15-20%
-- **7-day quota slows** — grows <2%/day instead of 6%/day
-- **Session input tokens drop** — compare main/NQ/Crypto avg input per session
+- **Session input tokens drop** — compare main/NQ average input per session
+- **Recall actually fires** — gateway logs show `injecting ... memories into context`
 - **Response quality maintained** — no context loss, correct recall
+- **Reduced repeated setup** — less re-explaining in fresh sessions
 
 ### Warning Signs (Rollback If...)
-1. **7-day usage climbs FASTER** — extraction overhead > compression savings
-2. **5-hour windows grow** — 15-20% windows instead of staying <12%
-3. **Response quality degrades** — missing context, wrong answers
-4. **Responses slower** — embedding/search adds noticeable latency
+1. **Session input tokens do not improve**
+2. **Recall noise grows** — bad or irrelevant memories injected
+3. **Response quality degrades** — missing or wrong remembered context
+4. **Memory store grows with low-signal junk**
 
 ## Monitoring Commands
 
 ```bash
-# Check Mem0 vector DB size
-du -sh /home/rob/.openclaw/mem0_chroma_db/
+# Memory activity
+rg -n 'openclaw-mem0: (auto-captured|injecting [0-9]+ memories into context)' /tmp/openclaw/openclaw-$(date +%F).log | tail -n 40
 
-# Check Ollama status
-ollama list | grep nomic-embed-text
-ps aux | grep ollama
-
-# Gateway logs for Mem0 activity
-journalctl --user -u openclaw-gateway.service --since "1 hour ago" | grep -i mem0
-
-# Session stats (compare to baseline)
-openclaw sessions --json --all-agents 2>/dev/null | jq '{
-  sessions: [.sessions[] | {agent: .agentId, model, input: .inputTokens, output: .outputTokens}]
-}' | jq '.sessions | group_by(.agent) | map({agent: .[0].agent, total_input: (map(.input // 0) | add)})'
+# Store summary
+python3 - <<'PY'
+import json
+p='/home/rob/.mem0-local/memories.json'
+data=json.load(open(p))
+print('total', len(data))
+for k in sorted({r.get('user_id') for r in data}):
+    print(k, sum(1 for r in data if r.get('user_id')==k))
+PY
 
 # Quick session status
-# Via webchat: just ask "session status"
+# Via webchat: ask "session status"
 ```
 
 ## Rollback Plan
 
-If Mem0 doesn't help or makes things worse:
+If the current memory path doesn't help or makes things worse:
 
 ```bash
-# Restore backup config
-cp /home/rob/.openclaw/openclaw.json.bak /home/rob/.openclaw/openclaw.json
-
-# Restart gateway
-openclaw gateway restart
-
-# Verify memory-core is back
-openclaw plugins list | grep memory
+# revert /home/rob/.openclaw/extensions/openclaw-mem0/dist/index.js
+# restart gateway
+# re-test without memory injection
 ```
 
 ## Files
 - **Baseline sessions:** `mem0-baseline-sessions.json` (247 sessions, full token data)
 - **Baseline summary:** `mem0-baseline-FINAL.md` (this file)
 - **Config backup:** `/home/rob/.openclaw/openclaw.json.bak`
+- **Live store:** `/home/rob/.mem0-local/memories.json`
 
 ## Reality Check
 
-**Starting at 94% quota is PERFECT for testing:**
-- High usage = maximum opportunity for compression savings
-- Near limit = every token saved extends runway
-- Clear measurement = can see impact within hours, not days
-- High stakes = if it doesn't help, we'll know fast
+**Important correction:** the current working memory path is not the same as the original morning design.
+
+The original install assumptions in this file are still useful as a historical baseline, but current measurement should be based on:
+- live recall/capture behavior
+- session input-token changes after 16:24 MST
+- quality of remembered context in new sessions
 
 **If Mem0 saves 20% of input tokens:**
 - Main session: 273K → 218K input (55K saved over 13 sessions)

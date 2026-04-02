@@ -1,0 +1,83 @@
+{
+  "createdAt": "2026-04-01T16:40:30-07:00",
+  "agent": "nq",
+  "model": "openai-codex/gpt-5.4",
+  "fixture": {
+    "marker": "MEM0-AB-B24D8570",
+    "facts": [
+      "benchmark marker: MEM0-AB-B24D8570",
+      "codename: Quartz Falcon",
+      "risk budget: 1.75%",
+      "preferred broker: IBKR paper",
+      "exit model: dynamic trail 7.5 initial and 0.75 floor",
+      "deployment window: 14:35 MST"
+    ]
+  },
+  "sessions": {
+    "baseline_seed": {
+      "sessionKey": "agent:nq:ab-nomem:seed:1775086701",
+      "sessionId": "0568beb1-e021-441a-b715-6b60ff586a79",
+      "usage": {
+        "input": 3624,
+        "output": 7,
+        "cacheRead": 24448,
+        "cacheWrite": 0,
+        "totalTokens": 28079,
+        "costTotalUsd": 0.015277
+      }
+    },
+    "baseline_follow": {
+      "sessionKey": "agent:nq:ab-nomem:follow:1775086701",
+      "sessionId": "7712f457-9937-4a06-9c3e-23c9edbdc16a",
+      "usage": {
+        "input": 3507,
+        "output": 69,
+        "cacheRead": 24320,
+        "cacheWrite": 0,
+        "totalTokens": 27896,
+        "costTotalUsd": 0.015883
+      },
+      "answerOk": true
+    },
+    "withmem_seed": {
+      "sessionKey": "agent:nq:ab-withmem:seed:1775086772",
+      "sessionId": "e96aadc6-e919-4768-8d04-d1bba93ff504",
+      "usage": {
+        "input": 1379,
+        "output": 7,
+        "cacheRead": 24320,
+        "cacheWrite": 0,
+        "totalTokens": 25706,
+        "costTotalUsd": 0.009633
+      }
+    },
+    "withmem_follow": {
+      "sessionKey": "agent:nq:ab-withmem:follow:1775086772",
+      "sessionId": "aaa0fefc-f075-4d99-aee2-ae307d6b34c9",
+      "usage": {
+        "input": 24482,
+        "output": 69,
+        "cacheRead": 0,
+        "cacheWrite": 0,
+        "totalTokens": 24551,
+        "costTotalUsd": 0.06224
+      },
+      "answerOk": true,
+      "injectedMemoriesObserved": true
+    }
+  },
+  "comparison": {
+    "follow_input_delta_withmem_minus_baseline": 20975,
+    "follow_total_token_delta_withmem_minus_baseline": -3345,
+    "workflow_total_token_delta_withmem_minus_baseline": -5718,
+    "workflow_cost_delta_usd_withmem_minus_baseline": 0.040713
+  },
+  "findings": [
+    "Auto recall and auto capture both fired on the with-memory arm.",
+    "The with-memory follow-up injected a large raw memory transcript into the prompt.",
+    "That injection raised uncached input tokens sharply on the with-memory follow-up turn.",
+    "The no-memory baseline was contaminated by the NQ agent's own memory_store and memory_search tool usage.",
+    "The no-memory baseline also benefited from large provider prompt-cache reads, which makes the raw comparison unsuitable as a final token-savings verdict."
+  ],
+  "verdict": "This run proves the current plugin is active, but it does not prove token savings. In this scratch benchmark, the current recall payload was too verbose and made the with-memory follow-up materially more expensive in USD than the no-memory repeated-context follow-up."
+}

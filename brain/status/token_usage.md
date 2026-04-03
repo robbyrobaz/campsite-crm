@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-04-03 12:00 MST
+**Updated:** 2026-04-03 12:15 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -9,7 +9,7 @@
 | 7-day (Sonnet) | **5.0%** | Apr 10 08:00 AM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 0 (1356 requests)
+- **Total Tokens:** 0 (1466 requests)
 - **Input:** 0 | **Output:** 0
 - **Cache Read:** 0 | **Cache Write:** 0
 - **Cost (est):** $0.00
@@ -18,10 +18,10 @@
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
 | x-ai/grok-4.1-fast | 3 | 0 | 0 | $0.00 |
-| x-ai/grok-4-fast | 1353 | 0 | 0 | $0.00 |
+| x-ai/grok-4-fast | 1463 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 0 (6698 requests)
+- **Total Tokens:** 0 (6835 requests)
 - **Output Tokens:** 0
 - **Cost (est):** $0.00
 
@@ -29,7 +29,7 @@
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
 | x-ai/grok-4.1-fast | 4 | 0 | 0 | $0.00 |
-| x-ai/grok-4-fast | 6694 | 0 | 0 | $0.00 |
+| x-ai/grok-4-fast | 6831 | 0 | 0 | $0.00 |
 
 ---
 *Note: Max 5x plan is $100/mo flat. Cost shown is equivalent API pricing, not actual charges.*

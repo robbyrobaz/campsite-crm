@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-04-03 03:45 MST
+**Updated:** 2026-04-03 04:00 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -9,7 +9,7 @@
 | 7-day (Sonnet) | **97.0%** | Apr 03 08:00 AM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 0 (2787 requests)
+- **Total Tokens:** 0 (2833 requests)
 - **Input:** 0 | **Output:** 0
 - **Cache Read:** 0 | **Cache Write:** 0
 - **Cost (est):** $0.00
@@ -17,10 +17,10 @@
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| x-ai/grok-4-fast | 2787 | 0 | 0 | $0.00 |
+| x-ai/grok-4-fast | 2833 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 34.7M (6032 requests)
+- **Total Tokens:** 34.7M (6017 requests)
 - **Output Tokens:** 85.3K
 - **Cost (est):** $27.88
 
@@ -29,9 +29,9 @@
 |-------|----------|--------|--------|------|
 | codex/mini | 205 | 32.6M | 75.7K | $27.88 |
 | nvidia/nemotron-3-super-120b-a12b:free | 30 | 2.1M | 9.6K | $0.00 |
-| sonnet | 970 | 0 | 0 | $0.00 |
+| sonnet | 910 | 0 | 0 | $0.00 |
 | x-ai/grok-4.1-fast | 8 | 0 | 0 | $0.00 |
-| x-ai/grok-4-fast | 4818 | 0 | 0 | $0.00 |
+| x-ai/grok-4-fast | 4863 | 0 | 0 | $0.00 |
 | gateway-injected | 1 | 0 | 0 | $0.00 |
 
 ---

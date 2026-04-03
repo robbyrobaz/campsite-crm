@@ -1,7 +1,7 @@
 # Token Usage
-**Updated:** 2026-04-03 12:45 MST
+**Updated:** 2026-04-03 13:00 MST
 
-## ⚡ Anthropic Rate Limits (Cached — 15min ago)
+## ⚡ Anthropic Rate Limits (Cached — 30min ago)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
 | 5-hour | **28.0%** | Apr 03 02:00 PM MST |
@@ -9,7 +9,7 @@
 | 7-day (Sonnet) | **6.0%** | Apr 10 08:00 AM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 0 (1607 requests)
+- **Total Tokens:** 0 (1651 requests)
 - **Input:** 0 | **Output:** 0
 - **Cache Read:** 0 | **Cache Write:** 0
 - **Cost (est):** $0.00
@@ -17,11 +17,11 @@
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| x-ai/grok-4.1-fast | 3 | 0 | 0 | $0.00 |
-| x-ai/grok-4-fast | 1604 | 0 | 0 | $0.00 |
+| x-ai/grok-4-fast | 1649 | 0 | 0 | $0.00 |
+| x-ai/grok-4.1-fast | 2 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 0 (7014 requests)
+- **Total Tokens:** 0 (7108 requests)
 - **Output Tokens:** 0
 - **Cost (est):** $0.00
 
@@ -29,7 +29,7 @@
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
 | x-ai/grok-4.1-fast | 4 | 0 | 0 | $0.00 |
-| x-ai/grok-4-fast | 7010 | 0 | 0 | $0.00 |
+| x-ai/grok-4-fast | 7104 | 0 | 0 | $0.00 |
 
 ---
 *Note: Max 5x plan is $100/mo flat. Cost shown is equivalent API pricing, not actual charges.*

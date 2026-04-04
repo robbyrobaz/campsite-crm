@@ -3402,6 +3402,7 @@ def ring_page():
                 document.getElementById('dingCountdown').textContent = `Dismiss in ${remaining}s`;
                 if (remaining <= 0) {
                     popup.classList.remove('show');
+                    hideStream();  // Close audio/video when popup auto-dismisses
                     return;
                 }
                 remaining--;
@@ -3412,6 +3413,7 @@ def ring_page():
             // Click to dismiss
             popup.onclick = () => {
                 popup.classList.remove('show');
+                hideStream();  // Close audio/video when manually dismissed
                 clearTimeout(dingPopupTimer);
             };
         }

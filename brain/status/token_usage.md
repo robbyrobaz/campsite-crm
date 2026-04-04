@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-04-04 08:00 MST
+**Updated:** 2026-04-04 08:15 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -9,27 +9,27 @@
 | 7-day (Sonnet) | **27.0%** | Apr 10 08:00 AM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 44.5K (2 requests)
-- **Input:** 17 | **Output:** 264
-- **Cache Read:** 21.2K | **Cache Write:** 23.0K
-- **Cost (est):** $0.10
+- **Total Tokens:** 140.6K (5 requests)
+- **Input:** 29 | **Output:** 443
+- **Cache Read:** 85.0K | **Cache Write:** 55.2K
+- **Cost (est):** $0.24
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| sonnet | 2 | 44.5K | 264 | $0.10 |
+| sonnet | 5 | 140.6K | 443 | $0.24 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 4.5M (2695 requests)
-- **Output Tokens:** 9.6K
-- **Cost (est):** $2.97
+- **Total Tokens:** 4.6M (2610 requests)
+- **Output Tokens:** 9.8K
+- **Cost (est):** $3.11
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| sonnet | 82 | 4.5M | 9.6K | $2.97 |
+| sonnet | 85 | 4.6M | 9.8K | $3.11 |
 | delivery-mirror | 2 | 0 | 0 | $0.00 |
-| x-ai/grok-4-fast | 2609 | 0 | 0 | $0.00 |
+| x-ai/grok-4-fast | 2521 | 0 | 0 | $0.00 |
 | x-ai/grok-4.1-fast | 2 | 0 | 0 | $0.00 |
 
 ---

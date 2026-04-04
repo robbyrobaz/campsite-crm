@@ -2,11 +2,31 @@
 
 > **Strategic project overview.** Kanban board (:8787) is the live work queue.
 > This file is the high-level view — project status, architecture, what matters.
-> Last updated: 2026-02-26
+> Last updated: 2026-04-04
 
 ---
 
 ## 🟢 ACTIVE (Primary Focus)
+
+### NSF SBIR Phase I — OPEN NOW ⭐ NEW (Apr 4 2026)
+**Program:** NSF 24-579 | **Phase I Award:** $275K | **Duration:** 6-12 months
+**Status:** Rolling Project Pitch submissions → quarterly full proposal deadlines
+**Apply:** https://seedfund.nsf.gov/apply/project-pitch/
+
+**Why This Fits OpenClaw:**
+- Broad tech mandate: AI, robotics, advanced manufacturing all eligible
+- Non-dilutive funding, no equity taken
+- Requires R&D intensity (multi-agent coordination, safety boundaries, autonomous decision-making)
+- Strong commercial potential (software testing, cybersecurity ops, DevOps automation)
+
+**Next Actions:**
+- [ ] Draft 2-page Project Pitch (decide angle: QA automation vs cybersec vs DevOps)
+- [ ] Submit pitch to NSF seedfund portal
+- [ ] Monitor DoD SBIR 25.4 reauthorization (imminent — awaiting presidential signature)
+
+**Estimated Timeline:** Pitch submission → invite decision ~4 weeks → full proposal at next quarterly deadline
+
+---
 
 
 

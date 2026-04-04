@@ -42206,3 +42206,33 @@ CLEAN gilbert-pd-radio-trainer (nothing to commit)
 Done: 1 committed, 8 skipped
 CLEAN master-dashboard (nothing to commit)
 CLEAN blofin-stack (nothing to commit)
+warning: adding embedded git repository: BettaFish
+hint: You've added another git repository inside your current repository.
+hint: Clones of the outer repository will not contain the contents of
+hint: the embedded repository and will not know how to obtain it.
+hint: If you meant to add a submodule, use:
+hint: 
+hint: 	git submodule add <url> BettaFish
+hint: 
+hint: If you added this path by mistake, you can remove it from the
+hint: index with:
+hint: 
+hint: 	git rm --cached BettaFish
+hint: 
+hint: See "git help submodule" for more information.
+[main e6f7cb082] auto: snapshot 2026-04-04T18:00:01Z
+ 4 files changed, 38 insertions(+), 1 deletion(-)
+ create mode 160000 BettaFish
+COMMITTED blofin-dashboard
+CLEAN arb-dashboard (nothing to commit)
+CLEAN kanban-dashboard (nothing to commit)
+CLEAN numerai-tournament (nothing to commit)
+CLEAN ai-workshop (nothing to commit)
+CLEAN campsite-crm (nothing to commit)
+CLEAN gilbert-pd-radio-trainer (nothing to commit)
+Done: 1 committed, 8 skipped
+CLEAN master-dashboard (nothing to commit)
+[dev acd1cb4] auto: snapshot 2026-04-04T19:00:01Z
+ 1 file changed, 332 insertions(+)
+ create mode 100644 research/backtest_results_2026_04_04.json
+COMMITTED blofin-stack

@@ -341,6 +341,16 @@ backup_databases() {
                 log "    Created: $backup_path"
                 CREATED_FILES+=("$backup_path")
                 TOTAL_SIZE=$((TOTAL_SIZE + $(stat -c%s "$backup_path" 2>/dev/null || echo 0)))
+                
+                # Compress blofin_monitor backup (may take 10-20+ min for 22GB file)
+                log "    Compressing blofin_monitor backup..."
+                if gzip "$backup_path" 2>>"${LOG_FILE}"; then
+                    log "    Compressed: ${backup_path}.gz"
+                    CREATED_FILES+=("${backup_path}.gz")
+                else
+                    log "    ERROR: Failed to compress blofin_monitor backup"
+                    ERRORS=$((ERRORS + 1))
+                fi
             else
                 log "    ERROR: Failed to backup blofin_monitor.db"
                 ERRORS=$((ERRORS + 1))

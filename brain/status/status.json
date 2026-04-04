@@ -1,17 +1,17 @@
 {
   "activeTasks": [],
-  "lastHealthCheck": "2026-03-29T10:22:00-07:00",
+  "lastHealthCheck": "2026-04-04T12:01:00-07:00",
   "serverHealth": {
-    "cpu_temp": "66°C",
-    "disk": "75% (330G/468G)",
+    "cpu_temp": "79°C",
+    "disk": "58% (257G/468G)",
     "ram": "23GB available / 31GB total",
-    "failedServices": 5,
+    "failedServices": 6,
     "gateway": "active (HTTP 200)"
   },
   "backups": {
     "allTimersActive": true,
-    "hourlyBackupInProgress": "blofin_monitor (5.6GB, 37min runtime, PID 717836)",
-    "totalSize": "64GB / 500GB budget"
+    "hourlyBackupInProgress": "blofin_monitor (23GB → compressing to .gz)",
+    "totalSize": "186GB / 500GB budget"
   },
   "kanban": {
     "done": 1171,
@@ -27,5 +27,5 @@
     "models_robbyrob3": 15,
     "lastRun": "2026-03-29 06:38 MST (success)"
   },
-  "notes": "Mar 29 10:22 — Sunday quiet. Blofin ingestor DB lock spam (50 errors/30min) caused by sqlite3 .backup holding read lock on blofin_monitor.db (5.6GB, 37min). This is EXPECTED during backup — ingestor retries and recovers once backup completes. NQ feed running (PID 799275). All repos clean except NQ (committed). No ai-task issues queued."
+  "notes": "Apr 4 12:01 — Backup system running (hourly backup compressing 23GB blofin_monitor). CPU 79°C (normal under load). Blofin ingestor 29.5% CPU (7d uptime, normal). All repos committed and pushed. 6 failed oneshot services (expected, no active issues)."
 }

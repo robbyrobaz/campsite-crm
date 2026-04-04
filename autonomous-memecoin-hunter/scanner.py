@@ -25,17 +25,12 @@ API_ID = os.getenv('TELEGRAM_API_ID')
 API_HASH = os.getenv('TELEGRAM_API_HASH')
 PHONE = os.getenv('TELEGRAM_PHONE')
 
-# Channels to monitor (top Solana memecoin channels)
+# Channels to monitor
+# Tested Apr 4 2026 - 3 active channels found out of 50+ tested
 CHANNELS = [
-    '@alphacalls',           # ✅ Active - posts contracts directly
-    '@solanamemecoins',      # General memecoin news
-    '@solana_calls',         # Calls channel
-    '@SolanaGems',           # Gems
-    '@degencalls',           # Degen calls
-    '@soltrending',          # Trending
-    '@SolanaWhales',         # Whale tracking
-    '@pumpdotfun',           # Pump.fun
-    '@SolShitcoins',         # Shitcoin calls
+    '@gmgnsignals',          # 100 contracts/day - GMGN Featured Signals (Solana)
+    '@XAceCalls',            # 84 contracts/day - XAce Calls Multichain (NEW!)
+    '@batman_gem',           # 25 contracts/day - Batman's Gems (high volume)
 ]
 
 # Hype keywords
@@ -49,9 +44,9 @@ REJECTIONS_LOG = BASE_DIR / 'logs' / 'rejections.jsonl'
 POSITIONS_FILE = BASE_DIR / 'data' / 'positions.json'
 
 # Paper trading state
-PAPER_BALANCE = 10000.0
-POSITION_SIZE_PCT = 0.05  # 5% per trade
-MAX_POSITIONS = 3
+PAPER_BALANCE = 100.0  # $100 total (realistic small account)
+POSITION_SIZE = 10.0  # $10 per trade (fixed size)
+MAX_POSITIONS = 5  # 5 concurrent
 
 
 def extract_contract_address(text: str) -> Optional[str]:
@@ -97,10 +92,11 @@ def check_rugcheck(contract: str) -> tuple[bool, str, Dict]:
         score = data.get('score', 0)
         risks = data.get('risks', [])
         
-        if score < 60:
+        # AGGRESSIVE: Accept score >= 20 (was 60) - we want risky early plays
+        if score < 20:
             return False, f"Rug score too low: {score}", data
         
-        return True, "PASS", data
+        return True, f"PASS (score: {score})", data
     except Exception as e:
         return False, f"Rugcheck error: {e}", {}
 
@@ -114,7 +110,8 @@ def check_birdeye(contract: str) -> tuple[bool, str, Dict]:
         resp = requests.get(url, timeout=10)
         
         if resp.status_code != 200:
-            return False, f"API error: {resp.status_code}", {}
+            # Birdeye API not working - skip check (we have Rugcheck + Dexscreener)
+            return True, f"Birdeye unavailable (HTTP {resp.status_code}), skipping", {}
         
         data = resp.json().get('data', {})
         
@@ -134,7 +131,7 @@ def check_birdeye(contract: str) -> tuple[bool, str, Dict]:
 
 
 def check_dexscreener(contract: str) -> tuple[bool, str, Dict]:
-    """Check price, volume, age via Dexscreener"""
+    """Check price, volume, age via Dexscreener - MINIMAL filters for early entry"""
     try:
         url = f"https://api.dexscreener.com/latest/dex/tokens/{contract}"
         resp = requests.get(url, timeout=10)
@@ -155,20 +152,15 @@ def check_dexscreener(contract: str) -> tuple[bool, str, Dict]:
         volume_24h = float(pair.get('volume', {}).get('h24', 0) or 0)
         created_at = pair.get('pairCreatedAt')
         
-        if liquidity < 10000:
-            return False, f"Low DEX liquidity: ${liquidity:,.0f}", pair
+        # SUPER RELAXED: Just need ANY liquidity (was $5k)
+        if liquidity < 500:
+            return False, f"No liquidity: ${liquidity:,.0f}", pair
         
-        if volume_24h < 5000:
-            return False, f"Low 24h volume: ${volume_24h:,.0f}", pair
+        # REMOVED volume check - early coins have low volume
         
-        # Check age
-        if created_at:
-            created = datetime.fromtimestamp(created_at / 1000)
-            age_hours = (datetime.now() - created).total_seconds() / 3600
-            if age_hours < 0.5:
-                return False, f"Too new: {age_hours:.1f}h old", pair
+        # REMOVED age check - we WANT brand new coins
         
-        return True, "PASS", pair
+        return True, f"PASS (liq: ${liquidity:,.0f})", pair
     except Exception as e:
         return False, f"Dexscreener error: {e}", {}
 
@@ -210,22 +202,24 @@ def open_position(contract: str, entry_price: float, signal_data: Dict):
     # Check position limits
     open_count = len([p for p in positions if p['status'] == 'OPEN'])
     if open_count >= MAX_POSITIONS:
-        log_rejection(contract, "Max positions reached", signal_data)
+        print(f"⚠️  Max positions ({MAX_POSITIONS}) reached, skipping")
         return
     
-    # Calculate position size
+    # Get balance
     with open(BASE_DIR / 'data' / 'balance.txt') as f:
         balance = float(f.read().strip())
     
-    size = balance * POSITION_SIZE_PCT
+    # Fixed position size
+    size = POSITION_SIZE  # $10 fixed
     
     position = {
         'contract': contract,
         'entry_price': entry_price,
         'entry_time': datetime.now().isoformat(),
         'size_usd': size,
-        'target_price': entry_price * 2.0,  # 100% profit
-        'stop_loss': entry_price * 0.7,  # -30% stop
+        'initial_stop': entry_price * 0.70,  # -30% initial stop (tight on rugs)
+        'trailing_stop': None,  # Activated once profitable
+        'peak_price': entry_price,  # Track highest price for trailing
         'status': 'OPEN',
         'signal_data': signal_data
     }
@@ -243,7 +237,7 @@ def open_position(contract: str, entry_price: float, signal_data: Dict):
 
 
 def check_exits():
-    """Check all open positions for exit conditions"""
+    """Check all open positions for exit conditions with TRAILING STOPS"""
     positions = load_positions()
     
     for pos in positions:
@@ -256,16 +250,42 @@ def check_exits():
         
         entry_time = datetime.fromisoformat(pos['entry_time'])
         hours_held = (datetime.now() - entry_time).total_seconds() / 3600
+        entry_price = pos['entry_price']
         
-        # Check exit conditions
-        pnl_pct = (current_price / pos['entry_price'] - 1) * 100
+        # Update peak price
+        peak_price = pos.get('peak_price', entry_price)
+        if current_price > peak_price:
+            peak_price = current_price
+            pos['peak_price'] = peak_price
         
-        if current_price >= pos['target_price']:
-            close_position(pos, current_price, 'TARGET_HIT', pnl_pct)
-        elif current_price <= pos['stop_loss']:
+        # Calculate P&L
+        pnl_pct = (current_price / entry_price - 1) * 100
+        
+        # TRAILING STOP LOGIC
+        # Once profitable, use trailing stop (30% below peak)
+        if current_price > entry_price:
+            trailing_stop = peak_price * 0.70  # 30% below peak
+            pos['trailing_stop'] = trailing_stop
+            
+            if current_price <= trailing_stop:
+                # Hit trailing stop - lock in profits
+                close_position(pos, current_price, 'TRAILING_STOP', pnl_pct)
+                continue
+        
+        # INITIAL STOP LOSS (before profitable)
+        # -30% hard stop on rugs
+        initial_stop = pos.get('initial_stop', entry_price * 0.70)
+        if current_price <= initial_stop:
             close_position(pos, current_price, 'STOP_LOSS', pnl_pct)
-        elif hours_held >= 6:
+            continue
+        
+        # TIME LIMIT (safety exit after 4 hours)
+        if hours_held >= 4:
             close_position(pos, current_price, 'TIME_LIMIT', pnl_pct)
+            continue
+        
+        # Save updated position (peak price, trailing stop)
+        save_positions(positions)
 
 
 def close_position(pos: Dict, exit_price: float, reason: str, pnl_pct: float):
@@ -363,7 +383,9 @@ async def scan_telegram_channels():
             messages = await client.get_messages(channel, limit=50)
             
             for msg in messages:
-                if msg.date.replace(tzinfo=None) < since:
+                # Check if message is recent (handle timezone-aware datetime)
+                msg_date = msg.date.replace(tzinfo=None) if msg.date.tzinfo else msg.date
+                if msg_date < since:
                     continue
                 
                 text = msg.message or ''

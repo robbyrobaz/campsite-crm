@@ -1,7 +1,7 @@
 # Token Usage
-**Updated:** 2026-04-04 14:30 MST
+**Updated:** 2026-04-04 14:45 MST
 
-## ⚡ Anthropic Rate Limits (Cached — 45min ago)
+## ⚡ Anthropic Rate Limits (Cached — 60min ago)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
 | 5-hour | **25.0%** | Apr 04 03:00 PM MST |
@@ -21,7 +21,7 @@
 | delivery-mirror | 2 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 9.1M (361 requests)
+- **Total Tokens:** 9.1M (360 requests)
 - **Output Tokens:** 27.5K
 - **Cost (est):** $6.01
 
@@ -30,7 +30,7 @@
 |-------|----------|--------|--------|------|
 | sonnet | 177 | 9.1M | 27.5K | $6.01 |
 | delivery-mirror | 4 | 0 | 0 | $0.00 |
-| x-ai/grok-4-fast | 180 | 0 | 0 | $0.00 |
+| x-ai/grok-4-fast | 179 | 0 | 0 | $0.00 |
 
 ---
 *Note: Max 5x plan is $100/mo flat. Cost shown is equivalent API pricing, not actual charges.*

@@ -1,7 +1,7 @@
 # Token Usage
-**Updated:** 2026-04-04 14:00 MST
+**Updated:** 2026-04-04 14:15 MST
 
-## ⚡ Anthropic Rate Limits (Cached — 15min ago)
+## ⚡ Anthropic Rate Limits (Cached — 30min ago)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
 | 5-hour | **25.0%** | Apr 04 03:00 PM MST |
@@ -9,28 +9,28 @@
 | 7-day (Sonnet) | **33.0%** | Apr 10 08:00 AM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 2.7M (62 requests)
-- **Input:** 215 | **Output:** 13.9K
-- **Cache Read:** 2.4M | **Cache Write:** 305.2K
-- **Cost (est):** $2.07
+- **Total Tokens:** 4.2M (86 requests)
+- **Input:** 228 | **Output:** 17.1K
+- **Cache Read:** 3.8M | **Cache Write:** 372.7K
+- **Cost (est):** $2.80
 
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| sonnet | 61 | 2.7M | 13.9K | $2.07 |
-| delivery-mirror | 1 | 0 | 0 | $0.00 |
+| sonnet | 84 | 4.2M | 17.1K | $2.80 |
+| delivery-mirror | 2 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 7.6M (478 requests)
-- **Output Tokens:** 24.2K
-- **Cost (est):** $5.28
+- **Total Tokens:** 9.1M (361 requests)
+- **Output Tokens:** 27.5K
+- **Cost (est):** $6.01
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| sonnet | 154 | 7.6M | 24.2K | $5.28 |
-| delivery-mirror | 3 | 0 | 0 | $0.00 |
-| x-ai/grok-4-fast | 321 | 0 | 0 | $0.00 |
+| sonnet | 177 | 9.1M | 27.5K | $6.01 |
+| delivery-mirror | 4 | 0 | 0 | $0.00 |
+| x-ai/grok-4-fast | 180 | 0 | 0 | $0.00 |
 
 ---
 *Note: Max 5x plan is $100/mo flat. Cost shown is equivalent API pricing, not actual charges.*

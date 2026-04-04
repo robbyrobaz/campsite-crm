@@ -1,0 +1,261 @@
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 13:00:02
+============================================================
+
+💰 Initialized paper balance: $10,000.00
+
+🔍 Checking open positions for exits...
+Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 473, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 412, in main
+    signals = await scan_telegram_channels()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 343, in scan_telegram_channels
+    client = TelegramClient('memecoin_hunter', API_ID, API_HASH)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/venv/lib/python3.11/site-packages/telethon/client/telegrambaseclient.py", line 320, in __init__
+    self.api_id = int(api_id)
+                  ^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'FILLME'
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 13:05:01
+============================================================
+
+🔍 Checking open positions for exits...
+Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 473, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 412, in main
+    signals = await scan_telegram_channels()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 343, in scan_telegram_channels
+    client = TelegramClient('memecoin_hunter', API_ID, API_HASH)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/venv/lib/python3.11/site-packages/telethon/client/telegrambaseclient.py", line 320, in __init__
+    self.api_id = int(api_id)
+                  ^^^^^^^^^^^
+ValueError: invalid literal for int() with base 10: 'FILLME'
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 13:10:01
+============================================================
+
+🔍 Checking open positions for exits...
+Please enter the code you received: Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 473, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 412, in main
+    signals = await scan_telegram_channels()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 345, in scan_telegram_channels
+    await client.start(phone=PHONE)
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/venv/lib/python3.11/site-packages/telethon/client/auth.py", line 189, in _start
+    value = code_callback()
+            ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/venv/lib/python3.11/site-packages/telethon/client/auth.py", line 102, in code_callback
+    return input('Please enter the code you received: ')
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+EOFError: EOF when reading a line
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 13:15:01
+============================================================
+
+🔍 Checking open positions for exits...
+❌ Not authorized! Run manual auth first:
+   cd ~/.openclaw/workspace/autonomous-memecoin-hunter
+   source venv/bin/activate
+   python -c 'from scanner import *; import asyncio; client = TelegramClient("memecoin_hunter", API_ID, API_HASH); asyncio.run(client.start(phone=PHONE))'
+
+📊 Found 0 signals
+
+
+============================================================
+📈 Summary:
+   Balance: $10,000.00
+   Open: 0 | Closed: 0
+   Total P&L: $+0.00
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 13:20:01
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 10 Telegram channels...
+
+📊 Found 0 signals
+
+
+============================================================
+📈 Summary:
+   Balance: $10,000.00
+   Open: 0 | Closed: 0
+   Total P&L: $+0.00
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 13:25:02
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 10 Telegram channels...
+
+📊 Found 0 signals
+
+
+============================================================
+📈 Summary:
+   Balance: $10,000.00
+   Open: 0 | Closed: 0
+   Total P&L: $+0.00
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 13:30:02
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 9 Telegram channels...
+Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 481, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 420, in main
+    signals = await scan_telegram_channels()
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 358, in scan_telegram_channels
+    since_time = datetime.now(timezone.utc) - timedelta(hours=2)
+                              ^^^^^^^^
+NameError: name 'timezone' is not defined
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 13:35:01
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 9 Telegram channels...
+
+📊 Found 0 signals
+
+
+============================================================
+📈 Summary:
+   Balance: $10,000.00
+   Open: 0 | Closed: 0
+   Total P&L: $+0.00
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 13:40:01
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 9 Telegram channels...
+
+📊 Found 0 signals
+
+
+============================================================
+📈 Summary:
+   Balance: $10,000.00
+   Open: 0 | Closed: 0
+   Total P&L: $+0.00
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 13:45:01
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 9 Telegram channels...
+
+📊 Found 0 signals
+
+
+============================================================
+📈 Summary:
+   Balance: $10,000.00
+   Open: 0 | Closed: 0
+   Total P&L: $+0.00
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 13:50:01
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 9 Telegram channels...
+
+📊 Found 0 signals
+
+
+============================================================
+📈 Summary:
+   Balance: $10,000.00
+   Open: 0 | Closed: 0
+   Total P&L: $+0.00
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 13:55:01
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 9 Telegram channels...
+
+📊 Found 0 signals
+
+
+============================================================
+📈 Summary:
+   Balance: $10,000.00
+   Open: 0 | Closed: 0
+   Total P&L: $+0.00
+============================================================
+

@@ -27,16 +27,15 @@ PHONE = os.getenv('TELEGRAM_PHONE')
 
 # Channels to monitor (top Solana memecoin channels)
 CHANNELS = [
-    '@solanamemecoins',
-    '@SolanaFloor',
-    '@solana_calls',
-    '@SolanaGems',
-    '@degencalls',
-    '@alphacalls',
-    '@soltrending',
-    '@SolanaWhales',
-    '@pumpdotfun',
-    '@SolShitcoins',
+    '@alphacalls',           # ✅ Active - posts contracts directly
+    '@solanamemecoins',      # General memecoin news
+    '@solana_calls',         # Calls channel
+    '@SolanaGems',           # Gems
+    '@degencalls',           # Degen calls
+    '@soltrending',          # Trending
+    '@SolanaWhales',         # Whale tracking
+    '@pumpdotfun',           # Pump.fun
+    '@SolShitcoins',         # Shitcoin calls
 ]
 
 # Hype keywords
@@ -342,13 +341,21 @@ async def scan_telegram_channels():
     """Scan Telegram channels for signals"""
     client = TelegramClient('memecoin_hunter', API_ID, API_HASH)
     
-    await client.start(phone=PHONE)
+    # For cron/non-interactive mode, expect session to already exist
+    await client.connect()
+    
+    if not await client.is_user_authorized():
+        print("❌ Not authorized! Run manual auth first:")
+        print("   cd ~/.openclaw/workspace/autonomous-memecoin-hunter")
+        print("   source venv/bin/activate") 
+        print("   python -c 'from scanner import *; import asyncio; client = TelegramClient(\"memecoin_hunter\", API_ID, API_HASH); asyncio.run(client.start(phone=PHONE))'")
+        await client.disconnect()
+        return []
     
     print(f"📡 Scanning {len(CHANNELS)} Telegram channels...")
     
-    # Get messages from last 10 minutes
-    since = datetime.now() - timedelta(minutes=10)
-    
+    # Get messages from last 24 hours (catch signals posted throughout the day)
+    since = datetime.now() - timedelta(hours=24)
     signals = []
     
     for channel in CHANNELS:
@@ -369,7 +376,7 @@ async def scan_telegram_channels():
                 # Calculate hype score
                 score = calculate_hype_score(text)
                 
-                if score >= 5:
+                if score >= 2:  # Lower threshold to catch more signals
                     signals.append({
                         'contract': contract,
                         'score': score,

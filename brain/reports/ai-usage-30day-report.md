@@ -16,9 +16,9 @@
 - **Total Models:** 2
 - **Data Quality:** ⚠️ Estimated token counts (character-based, not actual API usage)
 
-**IMPORTANT:** If OpenClaw and Hermes use the same Anthropic API key, all usage is billed together.
-The OpenClaw data above likely includes Hermes usage (both hit the same account).
-Hermes estimates below are for informational purposes only - they may double-count with OpenClaw.
+**IMPORTANT:** OpenClaw and Hermes use the same OAuth account and are billed together by Anthropic.
+The sessions are SEPARATE (OpenClaw = automated agents, Hermes = your interactive CLI sessions).
+This report is the ONLY billing aggregator - the combined total below is your actual usage.
 
 ---
 
@@ -45,10 +45,10 @@ Hermes estimates below are for informational purposes only - they may double-cou
 
 ---
 
-## Hermes Usage by Model (ESTIMATED - Not Actual API Usage)
+## Hermes Usage by Model (ESTIMATED - Character-Based Counts)
 
-⚠️ **Note:** These are estimated token counts from Hermes database, not actual API-reported usage.
-If Hermes uses the same API key as OpenClaw, this usage is already counted above.
+⚠️ **Note:** These are estimated token counts from Hermes database (character-based approximations).
+OpenClaw tracks actual API usage, Hermes estimates. Both contribute to your total bill.
 
 | Model | Requests | Input | Output | Cache Read | Cache Write | Total Tokens | Est. Cost |
 |-------|----------|-------|--------|------------|-------------|--------------|----------|

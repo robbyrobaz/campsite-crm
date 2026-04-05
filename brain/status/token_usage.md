@@ -1,7 +1,7 @@
 # Token Usage
-**Updated:** 2026-04-04 20:00 MST
+**Updated:** 2026-04-04 20:15 MST
 
-## ⚡ Anthropic Rate Limits (Cached — 30min ago)
+## ⚡ Anthropic Rate Limits (Cached — 45min ago)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
 | 5-hour | **14.0%** | Apr 04 08:00 PM MST |

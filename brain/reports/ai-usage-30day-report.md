@@ -1,18 +1,24 @@
 # AI Token Usage Report
-**Period:** 2026-03-05 to 2026-04-04 (30 days)
-**Generated:** 2026-04-04 23:26:02 UTC
+**Period:** 2026-03-06 to 2026-04-05 (30 days)
+**Generated:** 2026-04-05 02:46:14 UTC
 
 ---
 
 ## Summary
 
 ### OpenClaw
-- **Sessions Analyzed:** 34,253
+- **Sessions Analyzed:** 34,399
 - **Total Models:** 15
+- **Data Quality:** ✅ Actual API usage (from provider responses)
 
 ### Hermes  
-- **Sessions Analyzed:** 0
-- **Total Models:** 0
+- **Sessions Analyzed:** 52
+- **Total Models:** 2
+- **Data Quality:** ⚠️ Estimated token counts (character-based, not actual API usage)
+
+**IMPORTANT:** If OpenClaw and Hermes use the same Anthropic API key, all usage is billed together.
+The OpenClaw data above likely includes Hermes usage (both hit the same account).
+Hermes estimates below are for informational purposes only - they may double-count with OpenClaw.
 
 ---
 
@@ -20,14 +26,14 @@
 
 | Model | Requests | Input | Output | Cache Read | Cache Write | Total Tokens | Est. Cost |
 |-------|----------|-------|--------|------------|-------------|--------------|----------|
-| **anthropic-sonnet** | 16,695 | 54.7K | 4.9M | 914.6M | 186.4M | **1106.0M** | $1047.05 |
+| **anthropic-sonnet** | 16,840 | 55.3K | 4.9M | 920.3M | 186.8M | **1112.1M** | $1050.77 |
 | **anthropic-opus** | 6,130 | 7.8K | 2.3M | 915.9M | 85.0M | **1003.2M** | $1046.58 |
 | **openai-gpt5-codex** | 713 | 23.2M | 258.8K | 73.1M | 0 | **96.6M** | $80.23 |
 | **openrouter-nemotron** | 1,491 | 40.0M | 239.8K | 0 | 0 | **40.3M** | $0.00 |
 | **anthropic-haiku** | 143 | 793 | 50.0K | 4.8M | 1.1M | **5.9M** | $2.13 |
 | **deepseek/deepseek-r1-0528** | 10 | 218.5K | 17.5K | 4 | 0 | **236.0K** | $0.00 |
 | **x-ai/grok-4.1-fast** | 60 | 0 | 0 | 0 | 0 | **0** | $0.00 |
-| **delivery-mirror** | 42 | 0 | 0 | 0 | 0 | **0** | $0.00 |
+| **delivery-mirror** | 43 | 0 | 0 | 0 | 0 | **0** | $0.00 |
 | **qwen/qwen3.5-122b-a10b:free** | 11 | 0 | 0 | 0 | 0 | **0** | $0.00 |
 | **gateway-injected** | 5 | 0 | 0 | 0 | 0 | **0** | $0.00 |
 | **qwen2.5-coder:14b** | 5 | 0 | 0 | 0 | 0 | **0** | $0.00 |
@@ -35,29 +41,34 @@
 | **deepseek-coder-v2:16b** | 1 | 0 | 0 | 0 | 0 | **0** | $0.00 |
 | **x-ai/grok-4-fast** | 8,942 | 0 | 0 | 0 | 0 | **0** | $0.00 |
 | **openrouter/nemo-super** | 1 | 0 | 0 | 0 | 0 | **0** | $0.00 |
-| **TOTAL** | **34,253** | **63.5M** | **7.7M** | **1908.4M** | **272.6M** | **2252.3M** | **$2175.98** |
+| **TOTAL** | **34,399** | **63.5M** | **7.8M** | **1914.0M** | **273.0M** | **2258.3M** | **$2179.70** |
 
 ---
 
-## Hermes Usage by Model
+## Hermes Usage by Model (ESTIMATED - Not Actual API Usage)
+
+⚠️ **Note:** These are estimated token counts from Hermes database, not actual API-reported usage.
+If Hermes uses the same API key as OpenClaw, this usage is already counted above.
 
 | Model | Requests | Input | Output | Cache Read | Cache Write | Total Tokens | Est. Cost |
 |-------|----------|-------|--------|------------|-------------|--------------|----------|
-| **TOTAL** | **0** | **0** | **0** | **0** | **0** | **0** | **$0.00** |
+| **anthropic-sonnet** | 50 | 20.4K | 1.4M | 191.4M | 17.3M | **210.2M** | $0.00 |
+| **nvidia/nemotron-3-super-120b-a12b:free** | 2 | 195.8K | 1.2K | 0 | 0 | **197.0K** | $0.00 |
+| **TOTAL** | **52** | **216.1K** | **1.4M** | **191.4M** | **17.3M** | **210.4M** | **$0.00** |
 
 ---
 
 ## Combined Totals (OpenClaw + Hermes)
 
-- **Total Requests:** 34,253
-- **Total Tokens:** 2252.3M (2,252,257,572)
-- **Estimated Cost:** $2175.98
-- **Cost per Day:** $72.53
-- **Projected Monthly:** $2175.98
+- **Total Requests:** 34,451
+- **Total Tokens:** 2468.7M (2,468,704,829)
+- **Estimated Cost:** $2179.70
+- **Cost per Day:** $72.66
+- **Projected Monthly:** $2179.70
 
 ### Cache Efficiency
-- **Cache Read Tokens:** 1908.4M
-- **Cache Hit Rate:** 84.7%
+- **Cache Read Tokens:** 2105.4M
+- **Cache Hit Rate:** 85.3%
 
 ---
 
@@ -66,80 +77,33 @@
 **Claude Max 20x:** $200/month
 
 ### Analysis
-- **Actual Usage:** $2175.98/month (projected)
+- **Actual Usage:** $2179.70/month (projected)
 - **Subscription Value:** ✅ Good deal
-- **Cache Savings:** Estimated $5725.20 saved via prompt caching
+- **Cache Savings:** Estimated $6316.31 saved via prompt caching
 
 ---
 
-## Alternative Provider Options (WITH Caching Support)
+## Alternative Provider Options
 
-**IMPORTANT:** MiniMax and DeepSeek on OpenRouter SUPPORT prompt caching with similar efficiency to Anthropic!
+### OpenRouter
+- **Pros:** Access to multiple models, pay-per-use, no subscription
+- **Cons:** No prompt caching on most models
+- **Estimated Cost:** $2179.70 for this 30-day period (without caching benefits)
 
-### Cost Comparison (Actual 30-day usage breakdown)
+### Direct Anthropic API
+- **Pros:** Full caching support, usage-based pricing
+- **Cons:** Higher per-token cost than subscription if usage is heavy
+- **Estimated Cost:** $2179.70 for this 30-day period
 
-**Your Token Usage:**
-- Fresh input: 63.5M (new content)
-- Cache write: 272.6M (creating cache entries)  
-- Cache read: 1,908.4M (84.7% cache hit rate!)
-- Output: 7.7M
+### Keep Claude Max 20x If:
+1. Cache hit rate stays above 80% (currently 85.3%)
+2. Projected monthly > $200 (currently $2179.70)
+3. Need higher rate limits for bursts
 
-| Provider/Model | Input | Cache Read | Output | **30-Day Cost** | vs. Current |
-|----------------|-------|------------|--------|-----------------|-------------|
-| **Current: Claude Max 20x** | Unlimited | Unlimited | Unlimited | **$200.00** | Baseline |
-| **OpenRouter: MiniMax M2.5** | $0.118/M | **$0.059/M** | $0.99/M | **$140-170** | **-15 to -30%** ✅ |
-| **OpenRouter: DeepSeek V3.2** | $0.26/M | **$0.13/M** | $0.38/M | **$290-330** | +45-65% |
-| **OpenRouter: Claude Sonnet 4.6** | $3.00/M | $0.30/M | $15.00/M | **~$800** | +300% |
-
-### Detailed Breakdown: MiniMax M2.5 (BEST VALUE)
-
-**With automatic caching (no code changes needed):**
-- Fresh input: 63.5M × $0.118/M = **$7.49**
-- Cache write: 272.6M × $0.118/M = **$32.17**
-- Cache read: 1,908.4M × $0.059/M = **$112.60**
-- Output: 7.7M × $0.99/M = **$7.62**
-- OpenRouter fee (5.5%): **$8.83**
-- **Total: ~$169/month**
-
-**Savings: $31/month vs. Claude Max 20x**
-
-**Key Benefits of OpenRouter:**
-- ✅ **Prompt caching works** on MiniMax, DeepSeek, and Claude
-- ✅ No subscription lock-in (pay-per-use)
-- ✅ 300+ models for fallback/testing
-- ✅ One API key, easy routing
-- ✅ MiniMax M2.5 quality rivals Sonnet for coding/agents (80%+ SWE-Bench)
-
-### Recommendation
-
-**RECOMMENDATION: Switch to OpenRouter MiniMax M2.5**
-
-With correct pricing, **MiniMax M2.5 is cheaper** ($140-170/mo vs. $200/mo):
-
-**Why Switch:**
-1. **Save $30-60/month** with same or better performance
-2. **No subscription lock-in** (pay-per-use)
-3. **Automatic caching** - no code changes needed
-4. **80%+ quality** on coding/agents (rivals Sonnet on SWE-Bench)
-5. **300+ model fallback** options on OpenRouter
-
-**Implementation:**
-```bash
-# OpenRouter API key already configured
-# Default model: minimax/minimax-m2.5
-# Fallback: anthropic/claude-sonnet-4.6 (for critical tasks)
-```
-
-**Keep Claude Max 20x IF:**
-- You need guaranteed burst capacity / priority
-- You want zero hassle / don't want to monitor costs
-- MiniMax quality doesn't meet your standards (test first!)
-
-### Cache Efficiency is Your Superpower
-Your 84.7% cache hit rate is EXCELLENT. This means:
-- You're reusing context efficiently (long conversations, repeated system prompts)
-- Switching providers preserves this advantage (caching works similarly everywhere)
-- Without caching, your cost would be **$6,800/month** (3.4× higher!)
+### Switch to Pay-Per-Use If:
+1. Usage drops significantly
+2. Cache hit rate falls below 50%
+3. Projected monthly consistently < $150
 
 ---
 

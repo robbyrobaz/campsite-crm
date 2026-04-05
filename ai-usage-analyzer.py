@@ -104,9 +104,14 @@ def parse_openclaw_sessions(days=30) -> Dict:
     }
 
 def parse_hermes_sessions(days=30) -> Dict:
-    """Parse Hermes sessions (main + profiles) for token usage"""
+    """Parse Hermes sessions (main + profiles) for token usage
+    
+    NOTE: Hermes doesn't track actual API usage in its database, only estimated
+    token counts based on character length. If Hermes uses the same Anthropic API
+    key as OpenClaw, the actual usage is already captured in OpenClaw's data.
+    """
     cutoff = datetime.now(timezone.utc) - timedelta(days=days)
-    cutoff_ms = cutoff.timestamp() * 1000
+    cutoff_sec = cutoff.timestamp()  # Hermes uses SECONDS, not milliseconds!
     
     usage_by_model = defaultdict(lambda: {
         'requests': 0,
@@ -115,84 +120,73 @@ def parse_hermes_sessions(days=30) -> Dict:
         'cache_read': 0,
         'cache_write': 0,
         'total_tokens': 0,
-        'cost': 0.0
+        'cost': 0.0,
+        'estimated': True  # Flag that these are estimates, not actual
     })
     
     session_count = 0
     
-    # Parse main Hermes sessions
-    hermes_sessions = Path.home() / '.hermes/sessions'
+    # Parse from SQLite databases (Hermes stores in state.db, not JSONL)
     
-    # Parse profile sessions
+    import sqlite3
+    
+    # Check main Hermes database
+    hermes_db = Path.home() / '.hermes/state.db'
+    
+    # Check profile databases
     hermes_profiles = Path.home() / '.hermes/profiles'
     
-    all_session_dirs = [hermes_sessions]
+    all_dbs = [hermes_db]
     if hermes_profiles.exists():
-        for profile_dir in hermes_profiles.glob('*/sessions'):
-            if profile_dir.exists():
-                all_session_dirs.append(profile_dir)
+        for profile_dir in hermes_profiles.iterdir():
+            profile_db = profile_dir / 'state.db'
+            if profile_db.exists():
+                all_dbs.append(profile_db)
     
-    for session_dir in all_session_dirs:
-        if not session_dir.exists():
+    for db_path in all_dbs:
+        if not db_path.exists():
             continue
         
-        for fpath in session_dir.glob("*.jsonl"):
-            if not fpath.exists() or fpath.stat().st_size == 0:
-                continue
+        try:
+            conn = sqlite3.connect(db_path)
+            cursor = conn.cursor()
             
-            try:
-                with open(fpath, 'r') as f:
-                    for line in f:
-                        try:
-                            entry = json.loads(line)
-                            
-                            # Hermes format: usage is directly in entry
-                            usage = entry.get("usage")
-                            if not usage:
-                                continue
-                            
-                            ts = entry.get("timestamp", 0)
-                            
-                            # Parse timestamp
-                            if isinstance(ts, str):
-                                dt = datetime.fromisoformat(ts.replace('Z', '+00:00'))
-                                ts_ms = dt.timestamp() * 1000
-                            else:
-                                ts_ms = ts
-                            
-                            if ts_ms < cutoff_ms:
-                                continue
-                            
-                            model = entry.get("model", "unknown")
-                            
-                            # Normalize model name
-                            if "opus" in model.lower():
-                                model_key = "anthropic-opus"
-                            elif "sonnet" in model.lower():
-                                model_key = "anthropic-sonnet"
-                            elif "haiku" in model.lower():
-                                model_key = "anthropic-haiku"
-                            else:
-                                model_key = model
-                            
-                            # Aggregate usage
-                            usage_by_model[model_key]['requests'] += 1
-                            usage_by_model[model_key]['input_tokens'] += usage.get('input', 0)
-                            usage_by_model[model_key]['output_tokens'] += usage.get('output', 0)
-                            usage_by_model[model_key]['cache_read'] += usage.get('cacheRead', 0)
-                            usage_by_model[model_key]['cache_write'] += usage.get('cacheWrite', 0)
-                            usage_by_model[model_key]['total_tokens'] += usage.get('totalTokens', 0)
-                            
-                            cost_data = usage.get('cost', {})
-                            if isinstance(cost_data, dict):
-                                usage_by_model[model_key]['cost'] += cost_data.get('total', 0)
-                            
-                            session_count += 1
-                            
-                        except Exception as e:
-                            continue
-            except Exception as e:
-                continue
+            # Query sessions table for usage data
+            cursor.execute("""
+                SELECT model, input_tokens, output_tokens, cache_read_tokens, cache_write_tokens, started_at
+                FROM sessions
+                WHERE started_at > ?
+            """, (cutoff_sec,))
+            
+            for row in cursor.fetchall():
+                model, input_tok, output_tok, cache_read, cache_write, ts = row
+                
+                if not model:
+                    model = "unknown"
+                
+                # Normalize model name
+                if "opus" in model.lower():
+                    model_key = "anthropic-opus"
+                elif "sonnet" in model.lower():
+                    model_key = "anthropic-sonnet"
+                elif "haiku" in model.lower():
+                    model_key = "anthropic-haiku"
+                else:
+                    model_key = model
+                
+                # Aggregate usage (these are estimates, not actual API counts)
+                usage_by_model[model_key]['requests'] += 1
+                usage_by_model[model_key]['input_tokens'] += input_tok or 0
+                usage_by_model[model_key]['output_tokens'] += output_tok or 0
+                usage_by_model[model_key]['cache_read'] += cache_read or 0
+                usage_by_model[model_key]['cache_write'] += cache_write or 0
+                usage_by_model[model_key]['total_tokens'] += (input_tok or 0) + (output_tok or 0) + (cache_read or 0) + (cache_write or 0)
+                
+                session_count += 1
+            
+            conn.close()
+        except Exception as e:
+            continue
     
     return {
         'system': 'Hermes',
@@ -224,10 +218,16 @@ def generate_report(openclaw_data, hermes_data, days=30):
 ### OpenClaw
 - **Sessions Analyzed:** {openclaw_data['sessions_analyzed']:,}
 - **Total Models:** {len(openclaw_data['usage_by_model'])}
+- **Data Quality:** ✅ Actual API usage (from provider responses)
 
 ### Hermes  
 - **Sessions Analyzed:** {hermes_data['sessions_analyzed']:,}
 - **Total Models:** {len(hermes_data['usage_by_model'])}
+- **Data Quality:** ⚠️ Estimated token counts (character-based, not actual API usage)
+
+**IMPORTANT:** If OpenClaw and Hermes use the same Anthropic API key, all usage is billed together.
+The OpenClaw data above likely includes Hermes usage (both hit the same account).
+Hermes estimates below are for informational purposes only - they may double-count with OpenClaw.
 
 ---
 
@@ -265,7 +265,9 @@ def generate_report(openclaw_data, hermes_data, days=30):
     report += f"| **TOTAL** | **{oc_totals['requests']:,}** | **{format_tokens(oc_totals['input'])}** | **{format_tokens(oc_totals['output'])}** | **{format_tokens(oc_totals['cache_read'])}** | **{format_tokens(oc_totals['cache_write'])}** | **{format_tokens(oc_totals['total'])}** | **${oc_totals['cost']:.2f}** |\n\n"
     
     # Hermes table
-    report += "---\n\n## Hermes Usage by Model\n\n"
+    report += "---\n\n## Hermes Usage by Model (ESTIMATED - Not Actual API Usage)\n\n"
+    report += "⚠️ **Note:** These are estimated token counts from Hermes database, not actual API-reported usage.\n"
+    report += "If Hermes uses the same API key as OpenClaw, this usage is already counted above.\n\n"
     
     h_models = sorted(hermes_data['usage_by_model'].items(), key=lambda x: x[1]['total_tokens'], reverse=True)
     

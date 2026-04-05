@@ -6424,3 +6424,1086 @@ Traceback (most recent call last):
     'holders': rug_data.get('topHolders', {}).get('count', 0) if rug_pass else 0,
                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'list' object has no attribute 'get'
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 19:00:02
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 3 Telegram channels...
+🔥 Signal: HenMJ3U9... (score: 3) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 3) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 2) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 3) from @gmgnsignals
+🔥 Signal: DS8QKnGU... (score: 3) from @gmgnsignals
+🔥 Signal: 49A2QR3S... (score: 3) from @gmgnsignals
+🔥 Signal: BGo4RuCB... (score: 4) from @gmgnsignals
+🔥 Signal: BGo4RuCB... (score: 7) from @gmgnsignals
+🔥 Signal: 4Ar1d6wx... (score: 3) from @gmgnsignals
+🔥 Signal: CMiXje5m... (score: 3) from @gmgnsignals
+🔥 Signal: 31Cypak3... (score: 4) from @gmgnsignals
+🔥 Signal: HHhQVTP6... (score: 5) from @gmgnsignals
+🔥 Signal: Cgsfqxj5... (score: 3) from @gmgnsignals
+🔥 Signal: HtqYCLDq... (score: 3) from @gmgnsignals
+🔥 Signal: 3WCeezya... (score: 2) from @gmgnsignals
+🔥 Signal: 5nvrARVJ... (score: 3) from @gmgnsignals
+🔥 Signal: 8Ffm97Xy... (score: 3) from @gmgnsignals
+🔥 Signal: 5nvrARVJ... (score: 2) from @gmgnsignals
+🔥 Signal: 5nvrARVJ... (score: 2) from @gmgnsignals
+🔥 Signal: 5nvrARVJ... (score: 3) from @gmgnsignals
+🔥 Signal: 3WCeezya... (score: 3) from @gmgnsignals
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+
+📊 Found 23 signals
+
+
+🔬 Analyzing HenMJ3U9...
+  ❌ Rugcheck: Rugcheck error: HTTPSConnectionPool(host='api.rugcheck.xyz', port=443): Read timed out. (read timeout=10)
+
+🔬 Analyzing 9tyUCts9...
+  ❌ Rugcheck: Rugcheck error: HTTPSConnectionPool(host='api.rugcheck.xyz', port=443): Read timed out. (read timeout=10)
+
+🔬 Analyzing 9tyUCts9...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $14,663)
+Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 541, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 514, in main
+    'holders': rug_data.get('topHolders', {}).get('count', 0) if rug_pass else 0,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 19:05:02
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 3 Telegram channels...
+🔥 Signal: 6mwLAmNp... (score: 4) from @gmgnsignals
+🔥 Signal: aSRX4ok3... (score: 3) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: aSRX4ok3... (score: 5) from @gmgnsignals
+🔥 Signal: HenMJ3U9... (score: 2) from @gmgnsignals
+🔥 Signal: HenMJ3U9... (score: 3) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 3) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 2) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 3) from @gmgnsignals
+🔥 Signal: DS8QKnGU... (score: 3) from @gmgnsignals
+🔥 Signal: 49A2QR3S... (score: 3) from @gmgnsignals
+🔥 Signal: BGo4RuCB... (score: 4) from @gmgnsignals
+🔥 Signal: BGo4RuCB... (score: 7) from @gmgnsignals
+🔥 Signal: 4Ar1d6wx... (score: 3) from @gmgnsignals
+🔥 Signal: CMiXje5m... (score: 3) from @gmgnsignals
+🔥 Signal: 31Cypak3... (score: 4) from @gmgnsignals
+🔥 Signal: HHhQVTP6... (score: 5) from @gmgnsignals
+🔥 Signal: Cgsfqxj5... (score: 3) from @gmgnsignals
+🔥 Signal: HtqYCLDq... (score: 3) from @gmgnsignals
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+
+📊 Found 21 signals
+
+
+🔬 Analyzing 6mwLAmNp...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing aSRX4ok3...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing CNqrdV2j...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing aSRX4ok3...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing HenMJ3U9...
+  ✅ Rugcheck: PASS (score: 16683)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ❌ Dexscreener: No liquidity: $0
+
+🔬 Analyzing HenMJ3U9...
+  ✅ Rugcheck: PASS (score: 16683)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ❌ Dexscreener: No liquidity: $0
+
+🔬 Analyzing 9tyUCts9...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,355)
+Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 541, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 514, in main
+    'holders': rug_data.get('topHolders', {}).get('count', 0) if rug_pass else 0,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 19:10:01
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 3 Telegram channels...
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: ACiWcYmV... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: GKw6Zecf... (score: 5) from @gmgnsignals
+🔥 Signal: 6mwLAmNp... (score: 4) from @gmgnsignals
+🔥 Signal: aSRX4ok3... (score: 3) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: aSRX4ok3... (score: 5) from @gmgnsignals
+🔥 Signal: HenMJ3U9... (score: 2) from @gmgnsignals
+🔥 Signal: HenMJ3U9... (score: 3) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 3) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 2) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 3) from @gmgnsignals
+🔥 Signal: DS8QKnGU... (score: 3) from @gmgnsignals
+🔥 Signal: 49A2QR3S... (score: 3) from @gmgnsignals
+🔥 Signal: BGo4RuCB... (score: 4) from @gmgnsignals
+🔥 Signal: BGo4RuCB... (score: 7) from @gmgnsignals
+🔥 Signal: 4Ar1d6wx... (score: 3) from @gmgnsignals
+🔥 Signal: CMiXje5m... (score: 3) from @gmgnsignals
+🔥 Signal: 31Cypak3... (score: 4) from @gmgnsignals
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+
+📊 Found 24 signals
+
+
+🔬 Analyzing 9GdpdwSQ...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing 9GdpdwSQ...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing ACiWcYmV...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing zkCCB5AW...
+  ✅ Rugcheck: PASS (score: 48001)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ❌ Dexscreener: No liquidity: $0
+
+🔬 Analyzing zkCCB5AW...
+  ✅ Rugcheck: PASS (score: 48001)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ❌ Dexscreener: No liquidity: $0
+
+🔬 Analyzing GKw6Zecf...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing 6mwLAmNp...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing aSRX4ok3...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing CNqrdV2j...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing aSRX4ok3...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing HenMJ3U9...
+  ✅ Rugcheck: PASS (score: 16683)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ❌ Dexscreener: No liquidity: $0
+
+🔬 Analyzing HenMJ3U9...
+  ✅ Rugcheck: PASS (score: 16683)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ❌ Dexscreener: No liquidity: $0
+
+🔬 Analyzing 9tyUCts9...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,175)
+Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 541, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 514, in main
+    'holders': rug_data.get('topHolders', {}).get('count', 0) if rug_pass else 0,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 19:15:01
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 3 Telegram channels...
+🔥 Signal: EsumRhn2... (score: 3) from @gmgnsignals
+🔥 Signal: 7hhmGGS1... (score: 5) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: ACiWcYmV... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: GKw6Zecf... (score: 5) from @gmgnsignals
+🔥 Signal: 6mwLAmNp... (score: 4) from @gmgnsignals
+🔥 Signal: aSRX4ok3... (score: 3) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: aSRX4ok3... (score: 5) from @gmgnsignals
+🔥 Signal: HenMJ3U9... (score: 2) from @gmgnsignals
+🔥 Signal: HenMJ3U9... (score: 3) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 3) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 2) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 3) from @gmgnsignals
+🔥 Signal: DS8QKnGU... (score: 3) from @gmgnsignals
+🔥 Signal: 49A2QR3S... (score: 3) from @gmgnsignals
+🔥 Signal: BGo4RuCB... (score: 4) from @gmgnsignals
+🔥 Signal: BGo4RuCB... (score: 7) from @gmgnsignals
+🔥 Signal: 4Ar1d6wx... (score: 3) from @gmgnsignals
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+
+📊 Found 25 signals
+
+
+🔬 Analyzing EsumRhn2...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing 7hhmGGS1...
+  ✅ Rugcheck: PASS (score: 16801)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ❌ Dexscreener: No liquidity: $0
+
+🔬 Analyzing CNqrdV2j...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $12,931)
+Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 541, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 514, in main
+    'holders': rug_data.get('topHolders', {}).get('count', 0) if rug_pass else 0,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 19:20:02
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 3 Telegram channels...
+🔥 Signal: EsumRhn2... (score: 3) from @gmgnsignals
+🔥 Signal: 7hhmGGS1... (score: 5) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: ACiWcYmV... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: GKw6Zecf... (score: 5) from @gmgnsignals
+🔥 Signal: 6mwLAmNp... (score: 4) from @gmgnsignals
+🔥 Signal: aSRX4ok3... (score: 3) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: aSRX4ok3... (score: 5) from @gmgnsignals
+🔥 Signal: HenMJ3U9... (score: 2) from @gmgnsignals
+🔥 Signal: HenMJ3U9... (score: 3) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 3) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 2) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 3) from @gmgnsignals
+🔥 Signal: DS8QKnGU... (score: 3) from @gmgnsignals
+🔥 Signal: 49A2QR3S... (score: 3) from @gmgnsignals
+🔥 Signal: BGo4RuCB... (score: 4) from @gmgnsignals
+🔥 Signal: BGo4RuCB... (score: 7) from @gmgnsignals
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+
+📊 Found 24 signals
+
+
+🔬 Analyzing EsumRhn2...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing 7hhmGGS1...
+  ❌ Rugcheck: Rugcheck error: HTTPSConnectionPool(host='api.rugcheck.xyz', port=443): Read timed out. (read timeout=10)
+
+🔬 Analyzing CNqrdV2j...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $16,519)
+Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 541, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 514, in main
+    'holders': rug_data.get('topHolders', {}).get('count', 0) if rug_pass else 0,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 19:25:01
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 3 Telegram channels...
+🔥 Signal: noQRY4Dq... (score: 4) from @gmgnsignals
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: DWredgYP... (score: 3) from @gmgnsignals
+🔥 Signal: 4iX6ecpU... (score: 3) from @gmgnsignals
+🔥 Signal: EsumRhn2... (score: 3) from @gmgnsignals
+🔥 Signal: 7hhmGGS1... (score: 5) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: ACiWcYmV... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: GKw6Zecf... (score: 5) from @gmgnsignals
+🔥 Signal: 6mwLAmNp... (score: 4) from @gmgnsignals
+🔥 Signal: aSRX4ok3... (score: 3) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: aSRX4ok3... (score: 5) from @gmgnsignals
+🔥 Signal: HenMJ3U9... (score: 2) from @gmgnsignals
+🔥 Signal: HenMJ3U9... (score: 3) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 3) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 2) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 3) from @gmgnsignals
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+
+📊 Found 24 signals
+
+
+🔬 Analyzing noQRY4Dq...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing HrFH13e6...
+  ✅ Rugcheck: PASS (score: 21601)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ❌ Dexscreener: No liquidity: $0
+
+🔬 Analyzing DWredgYP...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing 4iX6ecpU...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing EsumRhn2...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing 7hhmGGS1...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing CNqrdV2j...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $16,341)
+Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 541, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 514, in main
+    'holders': rug_data.get('topHolders', {}).get('count', 0) if rug_pass else 0,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 19:30:01
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 3 Telegram channels...
+🔥 Signal: D2dDaKt5... (score: 5) from @gmgnsignals
+🔥 Signal: 2Cx67EVT... (score: 3) from @gmgnsignals
+🔥 Signal: xYZpMjny... (score: 3) from @gmgnsignals
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: noQRY4Dq... (score: 4) from @gmgnsignals
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: DWredgYP... (score: 3) from @gmgnsignals
+🔥 Signal: 4iX6ecpU... (score: 3) from @gmgnsignals
+🔥 Signal: EsumRhn2... (score: 3) from @gmgnsignals
+🔥 Signal: 7hhmGGS1... (score: 5) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: ACiWcYmV... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: GKw6Zecf... (score: 5) from @gmgnsignals
+🔥 Signal: 6mwLAmNp... (score: 4) from @gmgnsignals
+🔥 Signal: aSRX4ok3... (score: 3) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: aSRX4ok3... (score: 5) from @gmgnsignals
+🔥 Signal: HenMJ3U9... (score: 2) from @gmgnsignals
+🔥 Signal: HenMJ3U9... (score: 3) from @gmgnsignals
+🔥 Signal: 9tyUCts9... (score: 3) from @gmgnsignals
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+
+📊 Found 26 signals
+
+
+🔬 Analyzing D2dDaKt5...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing 2Cx67EVT...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing xYZpMjny...
+  ✅ Rugcheck: PASS (score: 2924)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $18,398)
+Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 541, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 514, in main
+    'holders': rug_data.get('topHolders', {}).get('count', 0) if rug_pass else 0,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 19:35:01
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 3 Telegram channels...
+🔥 Signal: 9UazdTUM... (score: 3) from @gmgnsignals
+🔥 Signal: Ev7GDvah... (score: 3) from @gmgnsignals
+🔥 Signal: 5ptgRsoN... (score: 3) from @gmgnsignals
+🔥 Signal: D2dDaKt5... (score: 5) from @gmgnsignals
+🔥 Signal: 2Cx67EVT... (score: 3) from @gmgnsignals
+🔥 Signal: xYZpMjny... (score: 3) from @gmgnsignals
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: noQRY4Dq... (score: 4) from @gmgnsignals
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: DWredgYP... (score: 3) from @gmgnsignals
+🔥 Signal: 4iX6ecpU... (score: 3) from @gmgnsignals
+🔥 Signal: EsumRhn2... (score: 3) from @gmgnsignals
+🔥 Signal: 7hhmGGS1... (score: 5) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: ACiWcYmV... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: GKw6Zecf... (score: 5) from @gmgnsignals
+🔥 Signal: 6mwLAmNp... (score: 4) from @gmgnsignals
+🔥 Signal: aSRX4ok3... (score: 3) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+
+📊 Found 25 signals
+
+
+🔬 Analyzing 9UazdTUM...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing Ev7GDvah...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing 5ptgRsoN...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing D2dDaKt5...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $14,184)
+Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 541, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 514, in main
+    'holders': rug_data.get('topHolders', {}).get('count', 0) if rug_pass else 0,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 19:40:01
+============================================================
+
+🔍 Checking open positions for exits...
+📡 Scanning 3 Telegram channels...
+🔥 Signal: 4TD4UBFk... (score: 3) from @gmgnsignals
+🔥 Signal: 7hhmGGS1... (score: 3) from @gmgnsignals
+🔥 Signal: GFZ9t1Nm... (score: 3) from @gmgnsignals
+🔥 Signal: 9UazdTUM... (score: 3) from @gmgnsignals
+🔥 Signal: Ev7GDvah... (score: 3) from @gmgnsignals
+🔥 Signal: 5ptgRsoN... (score: 3) from @gmgnsignals
+🔥 Signal: D2dDaKt5... (score: 5) from @gmgnsignals
+🔥 Signal: 2Cx67EVT... (score: 3) from @gmgnsignals
+🔥 Signal: xYZpMjny... (score: 3) from @gmgnsignals
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: noQRY4Dq... (score: 4) from @gmgnsignals
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: DWredgYP... (score: 3) from @gmgnsignals
+🔥 Signal: 4iX6ecpU... (score: 3) from @gmgnsignals
+🔥 Signal: EsumRhn2... (score: 3) from @gmgnsignals
+🔥 Signal: 7hhmGGS1... (score: 5) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: 9GdpdwSQ... (score: 3) from @gmgnsignals
+🔥 Signal: ACiWcYmV... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: zkCCB5AW... (score: 3) from @gmgnsignals
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+
+📊 Found 24 signals
+
+
+🔬 Analyzing 4TD4UBFk...
+  ❌ Rugcheck: Rug score too low: 1
+
+🔬 Analyzing 7hhmGGS1...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $18,697)
+Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 541, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 514, in main
+    'holders': rug_data.get('topHolders', {}).get('count', 0) if rug_pass else 0,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 19:45:01
+============================================================
+
+🔍 Checking open positions for exits...
+🎯 CLOSED 8fxs3dts... TIME_LIMIT: +2.4% ($+0.02)
+❌ CLOSED JE5rzcjJ... TIME_LIMIT: -22.4% ($-0.22)
+❌ CLOSED EXwaW2gt... TIME_LIMIT: -18.4% ($-0.18)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: CuU6pnDk... (score: 3) from @gmgnsignals
+🔥 Signal: 9UazdTUM... (score: 3) from @gmgnsignals
+🔥 Signal: BHezpZDm... (score: 3) from @gmgnsignals
+🔥 Signal: HmQhFeET... (score: 3) from @gmgnsignals
+🔥 Signal: Hwq1mHqM... (score: 3) from @gmgnsignals
+🔥 Signal: 4TD4UBFk... (score: 3) from @gmgnsignals
+🔥 Signal: 7hhmGGS1... (score: 3) from @gmgnsignals
+🔥 Signal: GFZ9t1Nm... (score: 3) from @gmgnsignals
+🔥 Signal: 9UazdTUM... (score: 3) from @gmgnsignals
+🔥 Signal: Ev7GDvah... (score: 3) from @gmgnsignals
+🔥 Signal: 5ptgRsoN... (score: 3) from @gmgnsignals
+🔥 Signal: D2dDaKt5... (score: 5) from @gmgnsignals
+🔥 Signal: 2Cx67EVT... (score: 3) from @gmgnsignals
+🔥 Signal: xYZpMjny... (score: 3) from @gmgnsignals
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: noQRY4Dq... (score: 4) from @gmgnsignals
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: DWredgYP... (score: 3) from @gmgnsignals
+🔥 Signal: 4iX6ecpU... (score: 3) from @gmgnsignals
+🔥 Signal: EsumRhn2... (score: 3) from @gmgnsignals
+🔥 Signal: 7hhmGGS1... (score: 5) from @gmgnsignals
+🔥 Signal: CNqrdV2j... (score: 3) from @gmgnsignals
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+
+📊 Found 24 signals
+
+
+🔬 Analyzing CuU6pnDk...
+  ✅ Rugcheck: PASS (score: 108001)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ❌ Dexscreener: No liquidity: $0
+
+🔬 Analyzing 9UazdTUM...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,545)
+Traceback (most recent call last):
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 541, in <module>
+    asyncio.run(main())
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/rob/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/rob/.openclaw/workspace/autonomous-memecoin-hunter/scanner.py", line 514, in main
+    'holders': rug_data.get('topHolders', {}).get('count', 0) if rug_pass else 0,
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'list' object has no attribute 'get'
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 19:50:01
+============================================================
+
+🔍 Checking open positions for exits...
+❌ CLOSED HmQhFeET... STOP_LOSS: -85.2% ($-0.85)
+❌ CLOSED 7hhmGGS1... STOP_LOSS: -86.2% ($-0.86)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: noQRY4Dq... (score: 2) from @gmgnsignals
+🔥 Signal: DpT6a2ao... (score: 3) from @gmgnsignals
+🔥 Signal: DzaiHYpG... (score: 3) from @gmgnsignals
+🔥 Signal: CuU6pnDk... (score: 3) from @gmgnsignals
+🔥 Signal: 9UazdTUM... (score: 3) from @gmgnsignals
+🔥 Signal: BHezpZDm... (score: 3) from @gmgnsignals
+🔥 Signal: HmQhFeET... (score: 3) from @gmgnsignals
+🔥 Signal: Hwq1mHqM... (score: 3) from @gmgnsignals
+🔥 Signal: 4TD4UBFk... (score: 3) from @gmgnsignals
+🔥 Signal: 7hhmGGS1... (score: 3) from @gmgnsignals
+🔥 Signal: GFZ9t1Nm... (score: 3) from @gmgnsignals
+🔥 Signal: 9UazdTUM... (score: 3) from @gmgnsignals
+🔥 Signal: Ev7GDvah... (score: 3) from @gmgnsignals
+🔥 Signal: 5ptgRsoN... (score: 3) from @gmgnsignals
+🔥 Signal: D2dDaKt5... (score: 5) from @gmgnsignals
+🔥 Signal: 2Cx67EVT... (score: 3) from @gmgnsignals
+🔥 Signal: xYZpMjny... (score: 3) from @gmgnsignals
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: noQRY4Dq... (score: 4) from @gmgnsignals
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: DWredgYP... (score: 3) from @gmgnsignals
+🔥 Signal: 4iX6ecpU... (score: 3) from @gmgnsignals
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+
+📊 Found 25 signals
+
+
+🔬 Analyzing HrFH13e6...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $54,630)
+✅ OPENED position: HrFH13e6... at $0.00050020 (size: $1.00)
+
+🔬 Analyzing noQRY4Dq...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: noQRY4Dq... at $0.00001097 (size: $1.00)
+
+🔬 Analyzing DpT6a2ao...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $15,322)
+✅ OPENED position: DpT6a2ao... at $0.00004134 (size: $1.00)
+
+🔬 Analyzing DzaiHYpG...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: DzaiHYpG... at $0.00001206 (size: $1.00)
+
+🔬 Analyzing CuU6pnDk...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: CuU6pnDk... at $0.00000880 (size: $1.00)
+
+🔬 Analyzing 9UazdTUM...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $14,437)
+✅ OPENED position: 9UazdTUM... at $0.00003658 (size: $1.00)
+
+🔬 Analyzing BHezpZDm...
+  ✅ Rugcheck: PASS (score: 15887)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: BHezpZDm... at $0.00000226 (size: $1.00)
+
+🔬 Analyzing HmQhFeET...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: HmQhFeET... at $0.00000229 (size: $1.00)
+
+🔬 Analyzing Hwq1mHqM...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: Hwq1mHqM... at $0.00000225 (size: $1.00)
+
+🔬 Analyzing 4TD4UBFk...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 4TD4UBFk... at $0.00000243 (size: $1.00)
+
+🔬 Analyzing 7hhmGGS1...
+  ✅ Rugcheck: PASS (score: 623)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $5,966)
+✅ OPENED position: 7hhmGGS1... at $0.00000620 (size: $1.00)
+
+🔬 Analyzing GFZ9t1Nm...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: GFZ9t1Nm... at $0.00000225 (size: $1.00)
+
+🔬 Analyzing 9UazdTUM...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $14,437)
+✅ OPENED position: 9UazdTUM... at $0.00003658 (size: $1.00)
+
+🔬 Analyzing Ev7GDvah...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: Ev7GDvah... at $0.00000226 (size: $1.00)
+
+🔬 Analyzing 5ptgRsoN...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 5ptgRsoN... at $0.00002017 (size: $1.00)
+
+🔬 Analyzing D2dDaKt5...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $11,962)
+✅ OPENED position: D2dDaKt5... at $0.00002520 (size: $1.00)
+
+🔬 Analyzing 2Cx67EVT...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 2Cx67EVT... at $0.00000517 (size: $1.00)
+
+🔬 Analyzing xYZpMjny...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $27,432)
+✅ OPENED position: xYZpMjny... at $0.00012480 (size: $1.00)
+
+🔬 Analyzing HrFH13e6...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $54,630)
+✅ OPENED position: HrFH13e6... at $0.00050020 (size: $1.00)
+
+🔬 Analyzing noQRY4Dq...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: noQRY4Dq... at $0.00001097 (size: $1.00)
+
+🔬 Analyzing HrFH13e6...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $54,630)
+✅ OPENED position: HrFH13e6... at $0.00050020 (size: $1.00)
+
+🔬 Analyzing DWredgYP...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: DWredgYP... at $0.00000226 (size: $1.00)
+
+🔬 Analyzing 4iX6ecpU...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 4iX6ecpU... at $0.00000229 (size: $1.00)
+
+🔬 Analyzing Dj6UU5NC...
+  ✅ Rugcheck: PASS (score: 4998)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,525)
+✅ OPENED position: Dj6UU5NC... at $0.00000207 (size: $1.00)
+
+🔬 Analyzing Dj6UU5NC...
+  ✅ Rugcheck: PASS (score: 4998)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,525)
+✅ OPENED position: Dj6UU5NC... at $0.00000207 (size: $1.00)
+
+============================================================
+📈 Summary:
+   Balance: $52.29
+   Open: 43 | Closed: 11
+   Total P&L: $-4.71
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-04 19:55:01
+============================================================
+
+🔍 Checking open positions for exits...
+❌ CLOSED 9UazdTUM... STOP_LOSS: -40.4% ($-0.40)
+❌ CLOSED 9UazdTUM... STOP_LOSS: -40.4% ($-0.40)
+❌ CLOSED 9UazdTUM... STOP_LOSS: -43.0% ($-0.43)
+❌ CLOSED 9UazdTUM... STOP_LOSS: -43.0% ($-0.43)
+❌ CLOSED 9UazdTUM... STOP_LOSS: -33.4% ($-0.33)
+❌ CLOSED 9UazdTUM... STOP_LOSS: -33.4% ($-0.33)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: 8rGb72KY... (score: 3) from @gmgnsignals
+🔥 Signal: E66Lgmxi... (score: 3) from @gmgnsignals
+🔥 Signal: CuU6pnDk... (score: 3) from @gmgnsignals
+🔥 Signal: 8rGb72KY... (score: 3) from @gmgnsignals
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: noQRY4Dq... (score: 2) from @gmgnsignals
+🔥 Signal: DpT6a2ao... (score: 3) from @gmgnsignals
+🔥 Signal: DzaiHYpG... (score: 3) from @gmgnsignals
+🔥 Signal: CuU6pnDk... (score: 3) from @gmgnsignals
+🔥 Signal: 9UazdTUM... (score: 3) from @gmgnsignals
+🔥 Signal: BHezpZDm... (score: 3) from @gmgnsignals
+🔥 Signal: HmQhFeET... (score: 3) from @gmgnsignals
+🔥 Signal: Hwq1mHqM... (score: 3) from @gmgnsignals
+🔥 Signal: 4TD4UBFk... (score: 3) from @gmgnsignals
+🔥 Signal: 7hhmGGS1... (score: 3) from @gmgnsignals
+🔥 Signal: GFZ9t1Nm... (score: 3) from @gmgnsignals
+🔥 Signal: 9UazdTUM... (score: 3) from @gmgnsignals
+🔥 Signal: Ev7GDvah... (score: 3) from @gmgnsignals
+🔥 Signal: 5ptgRsoN... (score: 3) from @gmgnsignals
+🔥 Signal: D2dDaKt5... (score: 5) from @gmgnsignals
+🔥 Signal: 2Cx67EVT... (score: 3) from @gmgnsignals
+🔥 Signal: xYZpMjny... (score: 3) from @gmgnsignals
+🔥 Signal: HrFH13e6... (score: 3) from @gmgnsignals
+🔥 Signal: noQRY4Dq... (score: 4) from @gmgnsignals
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+🔥 Signal: Dj6UU5NC... (score: 2) from @XAceCalls
+
+📊 Found 26 signals
+
+
+🔬 Analyzing 8rGb72KY...
+  ✅ Rugcheck: PASS (score: 118101)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $15,916)
+✅ OPENED position: 8rGb72KY... at $0.00004437 (size: $1.00)
+
+🔬 Analyzing E66Lgmxi...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: E66Lgmxi... at $0.00000225 (size: $1.00)
+
+🔬 Analyzing CuU6pnDk...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: CuU6pnDk... at $0.00001726 (size: $1.00)
+
+🔬 Analyzing 8rGb72KY...
+  ✅ Rugcheck: PASS (score: 118101)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $15,916)
+✅ OPENED position: 8rGb72KY... at $0.00004437 (size: $1.00)
+
+🔬 Analyzing HrFH13e6...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $63,880)
+✅ OPENED position: HrFH13e6... at $0.00067850 (size: $1.00)
+
+🔬 Analyzing noQRY4Dq...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: noQRY4Dq... at $0.00001041 (size: $1.00)
+
+🔬 Analyzing DpT6a2ao...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $16,883)
+✅ OPENED position: DpT6a2ao... at $0.00004995 (size: $1.00)
+
+🔬 Analyzing DzaiHYpG...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: DzaiHYpG... at $0.00001299 (size: $1.00)
+
+🔬 Analyzing CuU6pnDk...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: CuU6pnDk... at $0.00001726 (size: $1.00)
+
+🔬 Analyzing 9UazdTUM...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $10,917)
+✅ OPENED position: 9UazdTUM... at $0.00002086 (size: $1.00)
+
+🔬 Analyzing BHezpZDm...
+  ✅ Rugcheck: PASS (score: 15887)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: BHezpZDm... at $0.00000226 (size: $1.00)
+
+🔬 Analyzing HmQhFeET...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: HmQhFeET... at $0.00000228 (size: $1.00)
+
+🔬 Analyzing Hwq1mHqM...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: Hwq1mHqM... at $0.00000225 (size: $1.00)
+
+🔬 Analyzing 4TD4UBFk...
+  ✅ Rugcheck: PASS (score: 7201)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 4TD4UBFk... at $0.00000242 (size: $1.00)
+
+🔬 Analyzing 7hhmGGS1...
+  ✅ Rugcheck: PASS (score: 1005)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $5,377)
+✅ OPENED position: 7hhmGGS1... at $0.00000503 (size: $1.00)
+
+🔬 Analyzing GFZ9t1Nm...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: GFZ9t1Nm... at $0.00000225 (size: $1.00)
+
+🔬 Analyzing 9UazdTUM...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $11,873)
+✅ OPENED position: 9UazdTUM... at $0.00002467 (size: $1.00)
+
+🔬 Analyzing Ev7GDvah...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: Ev7GDvah... at $0.00000226 (size: $1.00)
+
+🔬 Analyzing 5ptgRsoN...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 5ptgRsoN... at $0.00002060 (size: $1.00)
+
+🔬 Analyzing D2dDaKt5...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $12,045)
+✅ OPENED position: D2dDaKt5... at $0.00002553 (size: $1.00)
+
+🔬 Analyzing 2Cx67EVT...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 2Cx67EVT... at $0.00000517 (size: $1.00)
+
+🔬 Analyzing xYZpMjny...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $24,327)
+✅ OPENED position: xYZpMjny... at $0.00009688 (size: $1.00)
+
+🔬 Analyzing HrFH13e6...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $64,084)
+✅ OPENED position: HrFH13e6... at $0.00068260 (size: $1.00)
+
+🔬 Analyzing noQRY4Dq...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: noQRY4Dq... at $0.00001041 (size: $1.00)
+
+🔬 Analyzing Dj6UU5NC...
+  ✅ Rugcheck: PASS (score: 4997)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,525)
+✅ OPENED position: Dj6UU5NC... at $0.00000207 (size: $1.00)
+
+🔬 Analyzing Dj6UU5NC...
+  ✅ Rugcheck: PASS (score: 4997)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,525)
+✅ OPENED position: Dj6UU5NC... at $0.00000207 (size: $1.00)
+
+============================================================
+📈 Summary:
+   Balance: $4.96
+   Open: 88 | Closed: 17
+   Total P&L: $-7.04
+============================================================
+

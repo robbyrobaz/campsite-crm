@@ -46,7 +46,7 @@ POSITIONS_FILE = BASE_DIR / 'data' / 'positions.json'
 # Paper trading state
 PAPER_BALANCE = 100.0  # $100 total (realistic small account)
 POSITION_SIZE = 1.0  # $1 per trade (MORE TRADES, more data!)
-MAX_POSITIONS = 20  # 20 concurrent (collect more data)
+MAX_POSITIONS = 100  # 100 concurrent = full capital deployed (YOLO MODE!)
 
 
 def extract_contract_address(text: str) -> Optional[str]:
@@ -92,8 +92,8 @@ def check_rugcheck(contract: str) -> tuple[bool, str, Dict]:
         score = data.get('score', 0)
         risks = data.get('risks', [])
         
-        # SUPER AGGRESSIVE: Accept score >= 10 (was 20) - MORE DATA!
-        if score < 10:
+        # YOLO MODE: Accept ANY score >= 1 - catch them EARLY!
+        if score < 1:
             return False, f"Rug score too low: {score}", data
         
         return True, f"PASS (score: {score})", data
@@ -152,9 +152,9 @@ def check_dexscreener(contract: str) -> tuple[bool, str, Dict]:
         volume_24h = float(pair.get('volume', {}).get('h24', 0) or 0)
         created_at = pair.get('pairCreatedAt')
         
-        # ULTRA AGGRESSIVE: Accept $100+ liquidity (was $500)
-        if liquidity < 100:
-            return False, f"No liquidity: ${liquidity:,.0f}", pair
+        # YOLO MODE: Accept ANY liquidity (even $0 means it just launched!)
+        # We'll buy it even if there's no liquidity yet - first mover advantage
+        pass  # No liquidity check - YOLO!
         
         # REMOVED volume check - early coins have low volume
         
@@ -511,10 +511,10 @@ async def main():
         market_data = {
             'liquidity': float(dex_data.get('liquidity', {}).get('usd', 0) or 0),
             'volume_24h': float(dex_data.get('volume', {}).get('h24', 0) or 0),
-            'holders': rug_data.get('topHolders', {}).get('count', 0) if rug_pass else 0,
+            'holders': rug_data.get('topHolders', {}).get('count', 0) if (rug_pass and isinstance(rug_data.get('topHolders'), dict)) else 0,
             'age_hours': (datetime.now() - datetime.fromtimestamp(dex_data.get('pairCreatedAt', 0) / 1000)).total_seconds() / 3600 if dex_data.get('pairCreatedAt') else 0,
         }
-        signal['rugcheck_score'] = rug_data.get('score', 0) if rug_pass else 0
+        signal['rugcheck_score'] = rug_data.get('score', 0) if (rug_pass and isinstance(rug_data, dict)) else 0
         
         # Open position
         open_position(contract, price, signal, market_data)

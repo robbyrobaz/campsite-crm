@@ -97,15 +97,17 @@ async def login_or_load_cookies(client: Client) -> bool:
             COOKIES_FILE.unlink(missing_ok=True)
     
     # Fresh login
-    if not all([USERNAME, EMAIL, PASSWORD]):
+    if not all([USERNAME, PASSWORD]):
         print("❌ Missing credentials in .env")
         return False
     
     print("Logging in to X...")
     try:
+        # Try with email if provided, otherwise use username for both
+        auth_info_2 = EMAIL if EMAIL else USERNAME
         await client.login(
             auth_info_1=USERNAME,
-            auth_info_2=EMAIL,
+            auth_info_2=auth_info_2,
             password=PASSWORD
         )
         client.save_cookies(str(COOKIES_FILE))

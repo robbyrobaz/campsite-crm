@@ -56677,3 +56677,2271 @@ AttributeError: 'list' object has no attribute 'get'
    Total P&L: $-50.22
 ============================================================
 
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-06 08:00:06
+============================================================
+
+🔍 Checking open positions for exits...
+❌ CLOSED FgES6x1Y... STOP_LOSS: -32.6% ($-0.33)
+❌ CLOSED 9tYyKMom... STOP_LOSS: -50.1% ($-0.50)
+❌ CLOSED CXNLTxHu... STOP_LOSS: -36.4% ($-0.36)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: BkF4uApX... (score: 3) from @gmgnsignals
+🔥 Signal: BkF4uApX... (score: 3) from @gmgnsignals
+🔥 Signal: 6dLv9CZU... (score: 3) from @gmgnsignals
+🔥 Signal: D6Y8W3HJ... (score: 3) from @gmgnsignals
+🔥 Signal: 6dLv9CZU... (score: 3) from @gmgnsignals
+🔥 Signal: 6dLv9CZU... (score: 3) from @gmgnsignals
+🔥 Signal: 76vtyUXA... (score: 2) from @gmgnsignals
+🔥 Signal: 76vtyUXA... (score: 2) from @gmgnsignals
+🔥 Signal: 4YaDwrbj... (score: 2) from @gmgnsignals
+🔥 Signal: 9tYyKMom... (score: 5) from @gmgnsignals
+🔥 Signal: CXNLTxHu... (score: 3) from @gmgnsignals
+🔥 Signal: 4YaDwrbj... (score: 2) from @gmgnsignals
+🔥 Signal: HcjHoMjK... (score: 3) from @gmgnsignals
+🔥 Signal: 4cFeBZcm... (score: 3) from @gmgnsignals
+🔥 Signal: FgES6x1Y... (score: 3) from @gmgnsignals
+🔥 Signal: G3WPf225... (score: 3) from @gmgnsignals
+🔥 Signal: 3U4wtuTF... (score: 3) from @gmgnsignals
+🔥 Signal: FmitLYDn... (score: 2) from @gmgnsignals
+🔥 Signal: shCr9wJ1... (score: 3) from @gmgnsignals
+🔥 Signal: jcUistoA... (score: 3) from @gmgnsignals
+🔥 Signal: 6pmhxM9t... (score: 5) from @gmgnsignals
+🔥 Signal: FmitLYDn... (score: 7) from @gmgnsignals
+🔥 Signal: Etx5b7Qm... (score: 3) from @gmgnsignals
+🔥 Signal: 6FUkRmJW... (score: 3) from @gmgnsignals
+🔥 Signal: 6caHWNWi... (score: 3) from @gmgnsignals
+
+📊 Found 25 signals
+
+
+🔬 Analyzing BkF4uApX...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,821)
+✅ OPENED position: BkF4uApX... at $0.00003299 (size: $1.00)
+
+🔬 Analyzing BkF4uApX...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,821)
+✅ OPENED position: BkF4uApX... at $0.00003299 (size: $1.00)
+
+🔬 Analyzing 6dLv9CZU...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,677)
+✅ OPENED position: 6dLv9CZU... at $0.00003226 (size: $1.00)
+
+🔬 Analyzing D6Y8W3HJ...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 6dLv9CZU...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,677)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 6dLv9CZU...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,677)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 76vtyUXA...
+  ✅ Rugcheck: PASS (score: 15297)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $96,567)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 76vtyUXA...
+  ✅ Rugcheck: PASS (score: 15297)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $96,567)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 4YaDwrbj...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9tYyKMom...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CXNLTxHu...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 4YaDwrbj...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing HcjHoMjK...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 4cFeBZcm...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $9,738)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FgES6x1Y...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing G3WPf225...
+  ✅ Rugcheck: PASS (score: 115201)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3U4wtuTF...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FmitLYDn...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing shCr9wJ1...
+  ✅ Rugcheck: PASS (score: 1920)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,141)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing jcUistoA...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 6pmhxM9t...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FmitLYDn...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing Etx5b7Qm...
+  ✅ Rugcheck: PASS (score: 1100)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 6FUkRmJW...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 6caHWNWi...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+============================================================
+📈 Summary:
+   Balance: $-51.42
+   Open: 100 | Closed: 146
+   Total P&L: $-51.41
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-06 08:05:24
+============================================================
+
+🔍 Checking open positions for exits...
+🎯 CLOSED 3Fh92J5H... TRAILING_STOP: +2097.3% ($+20.97)
+🎯 CLOSED 3Fh92J5H... TRAILING_STOP: +2097.3% ($+20.97)
+❌ CLOSED 8ssH4LHf... STOP_LOSS: -42.1% ($-0.42)
+❌ CLOSED 4YaDwrbj... STOP_LOSS: -62.5% ($-0.62)
+❌ CLOSED BkF4uApX... STOP_LOSS: -86.1% ($-0.86)
+❌ CLOSED BkF4uApX... STOP_LOSS: -86.1% ($-0.86)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: 2kHwo1su... (score: 3) from @gmgnsignals
+🔥 Signal: 2kHwo1su... (score: 3) from @gmgnsignals
+🔥 Signal: 4Sqv6vdg... (score: 3) from @gmgnsignals
+🔥 Signal: 4XvnCh6B... (score: 3) from @gmgnsignals
+🔥 Signal: 4Sqv6vdg... (score: 2) from @gmgnsignals
+🔥 Signal: 4XvnCh6B... (score: 3) from @gmgnsignals
+🔥 Signal: 8TNp7bMv... (score: 3) from @gmgnsignals
+🔥 Signal: 8TNp7bMv... (score: 3) from @gmgnsignals
+🔥 Signal: 5joNzdri... (score: 3) from @gmgnsignals
+🔥 Signal: 8TNp7bMv... (score: 3) from @gmgnsignals
+🔥 Signal: ChGiJcpC... (score: 3) from @gmgnsignals
+🔥 Signal: 8Enmgofr... (score: 3) from @gmgnsignals
+🔥 Signal: BkF4uApX... (score: 3) from @gmgnsignals
+🔥 Signal: BkF4uApX... (score: 3) from @gmgnsignals
+🔥 Signal: 6dLv9CZU... (score: 3) from @gmgnsignals
+🔥 Signal: D6Y8W3HJ... (score: 3) from @gmgnsignals
+🔥 Signal: 6dLv9CZU... (score: 3) from @gmgnsignals
+🔥 Signal: 6dLv9CZU... (score: 3) from @gmgnsignals
+🔥 Signal: 76vtyUXA... (score: 2) from @gmgnsignals
+🔥 Signal: 76vtyUXA... (score: 2) from @gmgnsignals
+🔥 Signal: 4YaDwrbj... (score: 2) from @gmgnsignals
+🔥 Signal: 9tYyKMom... (score: 5) from @gmgnsignals
+🔥 Signal: CXNLTxHu... (score: 3) from @gmgnsignals
+🔥 Signal: 4YaDwrbj... (score: 2) from @gmgnsignals
+🔥 Signal: HcjHoMjK... (score: 3) from @gmgnsignals
+
+📊 Found 25 signals
+
+
+🔬 Analyzing 2kHwo1su...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 2kHwo1su... at $0.00000279 (size: $1.00)
+
+🔬 Analyzing 2kHwo1su...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 2kHwo1su... at $0.00000279 (size: $1.00)
+
+🔬 Analyzing 4Sqv6vdg...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 4Sqv6vdg... at $0.00001419 (size: $1.00)
+
+🔬 Analyzing 4XvnCh6B...
+  ✅ Rugcheck: PASS (score: 1706)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $5,451)
+✅ OPENED position: 4XvnCh6B... at $0.00000513 (size: $1.00)
+
+🔬 Analyzing 4Sqv6vdg...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 4Sqv6vdg... at $0.00001419 (size: $1.00)
+
+🔬 Analyzing 4XvnCh6B...
+  ✅ Rugcheck: PASS (score: 1706)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $5,451)
+✅ OPENED position: 4XvnCh6B... at $0.00000513 (size: $1.00)
+
+🔬 Analyzing 8TNp7bMv...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $18,208)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8TNp7bMv...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $18,208)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 5joNzdri...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $14,393)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8TNp7bMv...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $18,208)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing ChGiJcpC...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8Enmgofr...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $32,425)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing BkF4uApX...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $4,657)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing BkF4uApX...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $4,170)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 6dLv9CZU...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $11,519)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing D6Y8W3HJ...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 6dLv9CZU...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $11,519)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 6dLv9CZU...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $11,519)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 76vtyUXA...
+  ✅ Rugcheck: PASS (score: 15297)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $95,657)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 76vtyUXA...
+  ✅ Rugcheck: PASS (score: 15297)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $95,934)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 4YaDwrbj...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9tYyKMom...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CXNLTxHu...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 4YaDwrbj...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing HcjHoMjK...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+============================================================
+📈 Summary:
+   Balance: $-12.24
+   Open: 100 | Closed: 152
+   Total P&L: $-12.24
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-06 08:10:20
+============================================================
+
+🔍 Checking open positions for exits...
+❌ CLOSED q9N4g6Pr... STOP_LOSS: -49.1% ($-0.49)
+❌ CLOSED 6dLv9CZU... STOP_LOSS: -48.5% ($-0.48)
+❌ CLOSED 4Sqv6vdg... STOP_LOSS: -42.2% ($-0.42)
+❌ CLOSED 4XvnCh6B... STOP_LOSS: -66.0% ($-0.66)
+❌ CLOSED 4Sqv6vdg... STOP_LOSS: -42.2% ($-0.42)
+❌ CLOSED 4XvnCh6B... STOP_LOSS: -66.0% ($-0.66)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: 3dJi1GvR... (score: 4) from @gmgnsignals
+🔥 Signal: GxxeDqsB... (score: 3) from @gmgnsignals
+🔥 Signal: DbfxHfVS... (score: 3) from @gmgnsignals
+🔥 Signal: DbfxHfVS... (score: 3) from @gmgnsignals
+🔥 Signal: Cdpm6GkB... (score: 4) from @gmgnsignals
+🔥 Signal: 2kHwo1su... (score: 3) from @gmgnsignals
+🔥 Signal: AcjRGLS1... (score: 3) from @gmgnsignals
+🔥 Signal: 2kHwo1su... (score: 3) from @gmgnsignals
+🔥 Signal: 2kHwo1su... (score: 3) from @gmgnsignals
+🔥 Signal: 4Sqv6vdg... (score: 3) from @gmgnsignals
+🔥 Signal: 4XvnCh6B... (score: 3) from @gmgnsignals
+🔥 Signal: 4Sqv6vdg... (score: 2) from @gmgnsignals
+🔥 Signal: 4XvnCh6B... (score: 3) from @gmgnsignals
+🔥 Signal: 8TNp7bMv... (score: 3) from @gmgnsignals
+🔥 Signal: 8TNp7bMv... (score: 3) from @gmgnsignals
+🔥 Signal: 5joNzdri... (score: 3) from @gmgnsignals
+🔥 Signal: 8TNp7bMv... (score: 3) from @gmgnsignals
+🔥 Signal: ChGiJcpC... (score: 3) from @gmgnsignals
+🔥 Signal: 8Enmgofr... (score: 3) from @gmgnsignals
+🔥 Signal: BkF4uApX... (score: 3) from @gmgnsignals
+
+📊 Found 20 signals
+
+
+🔬 Analyzing 3dJi1GvR...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 3dJi1GvR... at $0.00000528 (size: $1.00)
+
+🔬 Analyzing GxxeDqsB...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: GxxeDqsB... at $0.00000230 (size: $1.00)
+
+🔬 Analyzing DbfxHfVS...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $10,981)
+✅ OPENED position: DbfxHfVS... at $0.00002060 (size: $1.00)
+
+🔬 Analyzing DbfxHfVS...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $10,981)
+✅ OPENED position: DbfxHfVS... at $0.00002060 (size: $1.00)
+
+🔬 Analyzing Cdpm6GkB...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: Cdpm6GkB... at $0.00000234 (size: $1.00)
+
+🔬 Analyzing 2kHwo1su...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $6,394)
+✅ OPENED position: 2kHwo1su... at $0.00000701 (size: $1.00)
+
+🔬 Analyzing AcjRGLS1...
+  ✅ Rugcheck: PASS (score: 115201)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2kHwo1su...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $6,394)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2kHwo1su...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $6,394)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 4Sqv6vdg...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 4XvnCh6B...
+  ✅ Rugcheck: PASS (score: 1909)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,181)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 4Sqv6vdg...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 4XvnCh6B...
+  ✅ Rugcheck: PASS (score: 1909)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,181)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8TNp7bMv...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $22,088)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8TNp7bMv...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $22,088)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 5joNzdri...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,714)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8TNp7bMv...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $22,088)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing ChGiJcpC...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8Enmgofr...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $32,203)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing BkF4uApX...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $4,015)
+⚠️  Max positions (100) reached, skipping
+
+============================================================
+📈 Summary:
+   Balance: $-15.38
+   Open: 100 | Closed: 158
+   Total P&L: $-15.38
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-06 08:15:29
+============================================================
+
+🔍 Checking open positions for exits...
+❌ CLOSED 3dJi1GvR... STOP_LOSS: -56.4% ($-0.56)
+❌ CLOSED 2kHwo1su... STOP_LOSS: -69.9% ($-0.70)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: 9cwnUAXR... (score: 3) from @gmgnsignals
+🔥 Signal: 83FGmZ5w... (score: 3) from @gmgnsignals
+🔥 Signal: FnddqTuf... (score: 2) from @gmgnsignals
+🔥 Signal: FhJU4puz... (score: 3) from @gmgnsignals
+🔥 Signal: 21wE8Xu5... (score: 3) from @gmgnsignals
+🔥 Signal: 5nMe2y9B... (score: 3) from @gmgnsignals
+🔥 Signal: 8TNp7bMv... (score: 2) from @gmgnsignals
+🔥 Signal: imNgopLA... (score: 3) from @gmgnsignals
+🔥 Signal: CJXDcpgS... (score: 3) from @gmgnsignals
+🔥 Signal: 3dJi1GvR... (score: 4) from @gmgnsignals
+🔥 Signal: GxxeDqsB... (score: 3) from @gmgnsignals
+🔥 Signal: DbfxHfVS... (score: 3) from @gmgnsignals
+🔥 Signal: DbfxHfVS... (score: 3) from @gmgnsignals
+🔥 Signal: Cdpm6GkB... (score: 4) from @gmgnsignals
+🔥 Signal: 2kHwo1su... (score: 3) from @gmgnsignals
+🔥 Signal: AcjRGLS1... (score: 3) from @gmgnsignals
+🔥 Signal: 2kHwo1su... (score: 3) from @gmgnsignals
+🔥 Signal: 2kHwo1su... (score: 3) from @gmgnsignals
+🔥 Signal: 4Sqv6vdg... (score: 3) from @gmgnsignals
+
+📊 Found 19 signals
+
+
+🔬 Analyzing 9cwnUAXR...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 9cwnUAXR... at $0.00000924 (size: $1.00)
+
+🔬 Analyzing 83FGmZ5w...
+  ✅ Rugcheck: PASS (score: 2022)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 83FGmZ5w... at $0.00000442 (size: $1.00)
+
+🔬 Analyzing FnddqTuf...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FhJU4puz...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 21wE8Xu5...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 5nMe2y9B...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8TNp7bMv...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $21,564)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing imNgopLA...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CJXDcpgS...
+  ✅ Rugcheck: PASS (score: 2623)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $2,758)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3dJi1GvR...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing GxxeDqsB...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing DbfxHfVS...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $14,391)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing DbfxHfVS...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $14,391)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing Cdpm6GkB...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2kHwo1su...
+  ✅ Rugcheck: PASS (score: 1742)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,488)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing AcjRGLS1...
+  ✅ Rugcheck: PASS (score: 115201)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2kHwo1su...
+  ✅ Rugcheck: PASS (score: 1742)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,488)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2kHwo1su...
+  ✅ Rugcheck: PASS (score: 1742)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,488)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 4Sqv6vdg...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+============================================================
+📈 Summary:
+   Balance: $-16.64
+   Open: 100 | Closed: 160
+   Total P&L: $-16.64
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-06 08:20:23
+============================================================
+
+🔍 Checking open positions for exits...
+❌ CLOSED 9cwnUAXR... STOP_LOSS: -33.2% ($-0.33)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: 2eRgTMPS... (score: 4) from @gmgnsignals
+🔥 Signal: DLd4HGpS... (score: 3) from @gmgnsignals
+🔥 Signal: FhJU4puz... (score: 3) from @gmgnsignals
+🔥 Signal: CXNLTxHu... (score: 2) from @gmgnsignals
+🔥 Signal: CXNLTxHu... (score: 2) from @gmgnsignals
+🔥 Signal: 2QhLhi4J... (score: 5) from @gmgnsignals
+🔥 Signal: GLxN4Tv8... (score: 2) from @gmgnsignals
+🔥 Signal: 3A5qpvQ2... (score: 2) from @gmgnsignals
+🔥 Signal: 3A5qpvQ2... (score: 3) from @gmgnsignals
+🔥 Signal: FhJU4puz... (score: 3) from @gmgnsignals
+🔥 Signal: 3A5qpvQ2... (score: 3) from @gmgnsignals
+🔥 Signal: FkAtYamt... (score: 3) from @gmgnsignals
+🔥 Signal: 2QhLhi4J... (score: 3) from @gmgnsignals
+🔥 Signal: 2eRgTMPS... (score: 3) from @gmgnsignals
+🔥 Signal: 9cwnUAXR... (score: 3) from @gmgnsignals
+🔥 Signal: 83FGmZ5w... (score: 3) from @gmgnsignals
+🔥 Signal: FnddqTuf... (score: 2) from @gmgnsignals
+🔥 Signal: FhJU4puz... (score: 3) from @gmgnsignals
+🔥 Signal: 21wE8Xu5... (score: 3) from @gmgnsignals
+🔥 Signal: 5nMe2y9B... (score: 3) from @gmgnsignals
+🔥 Signal: 8TNp7bMv... (score: 2) from @gmgnsignals
+🔥 Signal: imNgopLA... (score: 3) from @gmgnsignals
+🔥 Signal: CJXDcpgS... (score: 3) from @gmgnsignals
+
+📊 Found 23 signals
+
+
+🔬 Analyzing 2eRgTMPS...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $15,764)
+✅ OPENED position: 2eRgTMPS... at $0.00004300 (size: $1.00)
+
+🔬 Analyzing DLd4HGpS...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FhJU4puz...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CXNLTxHu...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CXNLTxHu...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2QhLhi4J...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,017)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing GLxN4Tv8...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3A5qpvQ2...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3A5qpvQ2...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FhJU4puz...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3A5qpvQ2...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FkAtYamt...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2QhLhi4J...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,017)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2eRgTMPS...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $15,215)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9cwnUAXR...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 83FGmZ5w...
+  ✅ Rugcheck: PASS (score: 2022)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FnddqTuf...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FhJU4puz...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 21wE8Xu5...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 5nMe2y9B...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8TNp7bMv...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $17,856)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing imNgopLA...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CJXDcpgS...
+  ✅ Rugcheck: PASS (score: 2625)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $2,758)
+⚠️  Max positions (100) reached, skipping
+
+============================================================
+📈 Summary:
+   Balance: $-16.98
+   Open: 100 | Closed: 161
+   Total P&L: $-16.97
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-06 08:25:25
+============================================================
+
+🔍 Checking open positions for exits...
+🎯 CLOSED FJcaDdct... TRAILING_STOP: +45.6% ($+0.46)
+🎯 CLOSED FJcaDdct... TRAILING_STOP: +19.6% ($+0.20)
+🎯 CLOSED DbfxHfVS... TRAILING_STOP: +79.5% ($+0.79)
+🎯 CLOSED DbfxHfVS... TRAILING_STOP: +79.5% ($+0.79)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: AHSUTGso... (score: 2) from @gmgnsignals
+🔥 Signal: jzQuvMUd... (score: 5) from @gmgnsignals
+🔥 Signal: 2eRgTMPS... (score: 4) from @gmgnsignals
+🔥 Signal: DLd4HGpS... (score: 3) from @gmgnsignals
+🔥 Signal: FhJU4puz... (score: 3) from @gmgnsignals
+🔥 Signal: CXNLTxHu... (score: 2) from @gmgnsignals
+🔥 Signal: CXNLTxHu... (score: 2) from @gmgnsignals
+🔥 Signal: 2QhLhi4J... (score: 5) from @gmgnsignals
+🔥 Signal: GLxN4Tv8... (score: 2) from @gmgnsignals
+🔥 Signal: 3A5qpvQ2... (score: 2) from @gmgnsignals
+🔥 Signal: 3A5qpvQ2... (score: 3) from @gmgnsignals
+🔥 Signal: FhJU4puz... (score: 3) from @gmgnsignals
+🔥 Signal: 3A5qpvQ2... (score: 3) from @gmgnsignals
+🔥 Signal: FkAtYamt... (score: 3) from @gmgnsignals
+🔥 Signal: 2QhLhi4J... (score: 3) from @gmgnsignals
+🔥 Signal: 2eRgTMPS... (score: 3) from @gmgnsignals
+🔥 Signal: 9cwnUAXR... (score: 3) from @gmgnsignals
+🔥 Signal: 83FGmZ5w... (score: 3) from @gmgnsignals
+🔥 Signal: FnddqTuf... (score: 2) from @gmgnsignals
+🔥 Signal: FhJU4puz... (score: 3) from @gmgnsignals
+🔥 Signal: 21wE8Xu5... (score: 3) from @gmgnsignals
+🔥 Signal: 5nMe2y9B... (score: 3) from @gmgnsignals
+🔥 Signal: 8TNp7bMv... (score: 2) from @gmgnsignals
+🔥 Signal: imNgopLA... (score: 3) from @gmgnsignals
+
+📊 Found 24 signals
+
+
+🔬 Analyzing AHSUTGso...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: AHSUTGso... at $0.00002196 (size: $1.00)
+
+🔬 Analyzing jzQuvMUd...
+  ✅ Rugcheck: PASS (score: 2916)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $24,790)
+✅ OPENED position: jzQuvMUd... at $0.00010480 (size: $1.00)
+
+🔬 Analyzing 2eRgTMPS...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $15,062)
+✅ OPENED position: 2eRgTMPS... at $0.00003890 (size: $1.00)
+
+🔬 Analyzing DLd4HGpS...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: DLd4HGpS... at $0.00000504 (size: $1.00)
+
+🔬 Analyzing FhJU4puz...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CXNLTxHu...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CXNLTxHu...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2QhLhi4J...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $10,885)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing GLxN4Tv8...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3A5qpvQ2...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3A5qpvQ2...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FhJU4puz...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3A5qpvQ2...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FkAtYamt...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (skipped): HTTPSConnectionPool(host='public-api.birdeye.so', port=443): Read timed out. (read timeout=10)
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2QhLhi4J...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $11,097)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2eRgTMPS...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $14,440)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9cwnUAXR...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 83FGmZ5w...
+  ✅ Rugcheck: PASS (score: 2022)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FnddqTuf...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FhJU4puz...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 21wE8Xu5...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 5nMe2y9B...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8TNp7bMv...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $20,055)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing imNgopLA...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+============================================================
+📈 Summary:
+   Balance: $-14.73
+   Open: 100 | Closed: 165
+   Total P&L: $-14.73
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-06 08:30:28
+============================================================
+
+🔍 Checking open positions for exits...
+❌ CLOSED jzQuvMUd... STOP_LOSS: -42.3% ($-0.42)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: B4ChW4MM... (score: 4) from @gmgnsignals
+🔥 Signal: 3NpnVhW7... (score: 3) from @gmgnsignals
+🔥 Signal: DLd4HGpS... (score: 3) from @gmgnsignals
+🔥 Signal: AHSUTGso... (score: 3) from @gmgnsignals
+🔥 Signal: Bn3U9jdQ... (score: 5) from @gmgnsignals
+🔥 Signal: 3NpnVhW7... (score: 3) from @gmgnsignals
+🔥 Signal: AHSUTGso... (score: 2) from @gmgnsignals
+🔥 Signal: jzQuvMUd... (score: 5) from @gmgnsignals
+🔥 Signal: 2eRgTMPS... (score: 4) from @gmgnsignals
+🔥 Signal: DLd4HGpS... (score: 3) from @gmgnsignals
+🔥 Signal: FhJU4puz... (score: 3) from @gmgnsignals
+🔥 Signal: CXNLTxHu... (score: 2) from @gmgnsignals
+🔥 Signal: CXNLTxHu... (score: 2) from @gmgnsignals
+🔥 Signal: 2QhLhi4J... (score: 5) from @gmgnsignals
+🔥 Signal: GLxN4Tv8... (score: 2) from @gmgnsignals
+🔥 Signal: 3A5qpvQ2... (score: 2) from @gmgnsignals
+🔥 Signal: 3A5qpvQ2... (score: 3) from @gmgnsignals
+🔥 Signal: FhJU4puz... (score: 3) from @gmgnsignals
+🔥 Signal: 3A5qpvQ2... (score: 3) from @gmgnsignals
+🔥 Signal: FkAtYamt... (score: 3) from @gmgnsignals
+🔥 Signal: 2QhLhi4J... (score: 3) from @gmgnsignals
+🔥 Signal: 2eRgTMPS... (score: 3) from @gmgnsignals
+🔥 Signal: 9cwnUAXR... (score: 3) from @gmgnsignals
+🔥 Signal: 83FGmZ5w... (score: 3) from @gmgnsignals
+🔥 Signal: FnddqTuf... (score: 2) from @gmgnsignals
+🔥 Signal: FhJU4puz... (score: 3) from @gmgnsignals
+
+📊 Found 26 signals
+
+
+🔬 Analyzing B4ChW4MM...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: B4ChW4MM... at $0.00001129 (size: $1.00)
+
+🔬 Analyzing 3NpnVhW7...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing DLd4HGpS...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing AHSUTGso...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $11,024)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing Bn3U9jdQ...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3NpnVhW7...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing AHSUTGso...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $11,749)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing jzQuvMUd...
+  ❌ Rugcheck: Rugcheck error: HTTPSConnectionPool(host='api.rugcheck.xyz', port=443): Read timed out. (read timeout=10)
+
+🔬 Analyzing 2eRgTMPS...
+  ❌ Rugcheck: Rugcheck error: HTTPSConnectionPool(host='api.rugcheck.xyz', port=443): Read timed out. (read timeout=10)
+
+🔬 Analyzing DLd4HGpS...
+  ❌ Rugcheck: Rugcheck error: HTTPSConnectionPool(host='api.rugcheck.xyz', port=443): Read timed out. (read timeout=10)
+
+🔬 Analyzing FhJU4puz...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CXNLTxHu...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CXNLTxHu...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2QhLhi4J...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $10,667)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing GLxN4Tv8...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3A5qpvQ2...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3A5qpvQ2...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FhJU4puz...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (skipped): HTTPSConnectionPool(host='public-api.birdeye.so', port=443): Read timed out. (read timeout=10)
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3A5qpvQ2...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FkAtYamt...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2QhLhi4J...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $10,456)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2eRgTMPS...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $14,210)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9cwnUAXR...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 83FGmZ5w...
+  ✅ Rugcheck: PASS (score: 2022)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FnddqTuf...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FhJU4puz...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+============================================================
+📈 Summary:
+   Balance: $-15.16
+   Open: 100 | Closed: 166
+   Total P&L: $-15.15
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-06 08:35:05
+============================================================
+
+🔍 Checking open positions for exits...
+❌ CLOSED 6SrEkHi7... STOP_LOSS: -31.2% ($-0.31)
+❌ CLOSED 6SrEkHi7... STOP_LOSS: -35.7% ($-0.36)
+❌ CLOSED 6SrEkHi7... STOP_LOSS: -33.6% ($-0.34)
+❌ CLOSED 9g2yB2v4... STOP_LOSS: -35.6% ($-0.36)
+❌ CLOSED 2kHwo1su... STOP_LOSS: -36.2% ($-0.36)
+❌ CLOSED 2kHwo1su... STOP_LOSS: -36.2% ($-0.36)
+❌ CLOSED DLd4HGpS... STOP_LOSS: -43.3% ($-0.43)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: jZrhzhJ3... (score: 4) from @gmgnsignals
+🔥 Signal: DHoadXCb... (score: 2) from @gmgnsignals
+🔥 Signal: 2c1KjiyQ... (score: 3) from @gmgnsignals
+🔥 Signal: 2c1KjiyQ... (score: 3) from @gmgnsignals
+🔥 Signal: B54VrtkH... (score: 3) from @gmgnsignals
+🔥 Signal: 9B5V5oJQ... (score: 3) from @gmgnsignals
+🔥 Signal: VZzLrtXf... (score: 3) from @gmgnsignals
+🔥 Signal: B54VrtkH... (score: 3) from @gmgnsignals
+🔥 Signal: 9B5V5oJQ... (score: 2) from @gmgnsignals
+🔥 Signal: 9B5V5oJQ... (score: 3) from @gmgnsignals
+🔥 Signal: B4ChW4MM... (score: 4) from @gmgnsignals
+🔥 Signal: 3NpnVhW7... (score: 3) from @gmgnsignals
+🔥 Signal: DLd4HGpS... (score: 3) from @gmgnsignals
+🔥 Signal: AHSUTGso... (score: 3) from @gmgnsignals
+🔥 Signal: Bn3U9jdQ... (score: 5) from @gmgnsignals
+🔥 Signal: 3NpnVhW7... (score: 3) from @gmgnsignals
+🔥 Signal: AHSUTGso... (score: 2) from @gmgnsignals
+🔥 Signal: jzQuvMUd... (score: 5) from @gmgnsignals
+🔥 Signal: 2eRgTMPS... (score: 4) from @gmgnsignals
+🔥 Signal: DLd4HGpS... (score: 3) from @gmgnsignals
+🔥 Signal: FhJU4puz... (score: 3) from @gmgnsignals
+🔥 Signal: CXNLTxHu... (score: 2) from @gmgnsignals
+🔥 Signal: CXNLTxHu... (score: 2) from @gmgnsignals
+🔥 Signal: 2QhLhi4J... (score: 5) from @gmgnsignals
+🔥 Signal: GLxN4Tv8... (score: 2) from @gmgnsignals
+🔥 Signal: 3A5qpvQ2... (score: 2) from @gmgnsignals
+🔥 Signal: 3A5qpvQ2... (score: 3) from @gmgnsignals
+
+📊 Found 27 signals
+
+
+🔬 Analyzing jZrhzhJ3...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: jZrhzhJ3... at $0.00001164 (size: $1.00)
+
+🔬 Analyzing DHoadXCb...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $38,225)
+✅ OPENED position: DHoadXCb... at $0.00008731 (size: $1.00)
+
+🔬 Analyzing 2c1KjiyQ...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $10,892)
+✅ OPENED position: 2c1KjiyQ... at $0.00002044 (size: $1.00)
+
+🔬 Analyzing 2c1KjiyQ...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $10,892)
+✅ OPENED position: 2c1KjiyQ... at $0.00002044 (size: $1.00)
+
+🔬 Analyzing B54VrtkH...
+  ✅ Rugcheck: PASS (score: 1089)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $4,839)
+✅ OPENED position: B54VrtkH... at $0.00000404 (size: $1.00)
+
+🔬 Analyzing 9B5V5oJQ...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 9B5V5oJQ... at $0.00000321 (size: $1.00)
+
+🔬 Analyzing VZzLrtXf...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $22,597)
+✅ OPENED position: VZzLrtXf... at $0.00008726 (size: $1.00)
+
+🔬 Analyzing B54VrtkH...
+  ✅ Rugcheck: PASS (score: 1098)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $4,838)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9B5V5oJQ...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9B5V5oJQ...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B4ChW4MM...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3NpnVhW7...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing DLd4HGpS...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing AHSUTGso...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $9,473)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing Bn3U9jdQ...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3NpnVhW7...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing AHSUTGso...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $9,350)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing jzQuvMUd...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $29,489)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2eRgTMPS...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $14,941)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing DLd4HGpS...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing FhJU4puz...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CXNLTxHu...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CXNLTxHu...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2QhLhi4J...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $10,483)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing GLxN4Tv8...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3A5qpvQ2...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3A5qpvQ2...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+============================================================
+📈 Summary:
+   Balance: $-17.68
+   Open: 100 | Closed: 173
+   Total P&L: $-17.67
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-06 08:40:27
+============================================================
+
+🔍 Checking open positions for exits...
+❌ CLOSED AhHxFhBS... STOP_LOSS: -32.2% ($-0.32)
+❌ CLOSED 2eRgTMPS... STOP_LOSS: -95.6% ($-0.96)
+❌ CLOSED 2eRgTMPS... STOP_LOSS: -95.2% ($-0.95)
+❌ CLOSED jZrhzhJ3... STOP_LOSS: -80.2% ($-0.80)
+❌ CLOSED DHoadXCb... STOP_LOSS: -31.4% ($-0.31)
+❌ CLOSED 2c1KjiyQ... STOP_LOSS: -85.0% ($-0.85)
+❌ CLOSED 2c1KjiyQ... STOP_LOSS: -85.0% ($-0.85)
+❌ CLOSED B54VrtkH... STOP_LOSS: -51.5% ($-0.51)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: CYC81QQu... (score: 4) from @gmgnsignals
+🔥 Signal: 9jwExoB9... (score: 4) from @gmgnsignals
+🔥 Signal: B4ChW4MM... (score: 3) from @gmgnsignals
+🔥 Signal: 31QnhrCq... (score: 3) from @gmgnsignals
+🔥 Signal: 2Y1UMFGf... (score: 3) from @gmgnsignals
+🔥 Signal: jZrhzhJ3... (score: 4) from @gmgnsignals
+🔥 Signal: DHoadXCb... (score: 2) from @gmgnsignals
+🔥 Signal: 2c1KjiyQ... (score: 3) from @gmgnsignals
+🔥 Signal: 2c1KjiyQ... (score: 3) from @gmgnsignals
+🔥 Signal: B54VrtkH... (score: 3) from @gmgnsignals
+🔥 Signal: 9B5V5oJQ... (score: 3) from @gmgnsignals
+🔥 Signal: VZzLrtXf... (score: 3) from @gmgnsignals
+🔥 Signal: B54VrtkH... (score: 3) from @gmgnsignals
+🔥 Signal: 9B5V5oJQ... (score: 2) from @gmgnsignals
+🔥 Signal: 9B5V5oJQ... (score: 3) from @gmgnsignals
+🔥 Signal: B4ChW4MM... (score: 4) from @gmgnsignals
+🔥 Signal: 3NpnVhW7... (score: 3) from @gmgnsignals
+🔥 Signal: DLd4HGpS... (score: 3) from @gmgnsignals
+🔥 Signal: AHSUTGso... (score: 3) from @gmgnsignals
+🔥 Signal: Bn3U9jdQ... (score: 5) from @gmgnsignals
+🔥 Signal: 3NpnVhW7... (score: 3) from @gmgnsignals
+🔥 Signal: AHSUTGso... (score: 2) from @gmgnsignals
+
+📊 Found 22 signals
+
+
+🔬 Analyzing CYC81QQu...
+  ✅ Rugcheck: PASS (score: 3974)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: CYC81QQu... at $0.00001066 (size: $1.00)
+
+🔬 Analyzing 9jwExoB9...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,771)
+✅ OPENED position: 9jwExoB9... at $0.00003281 (size: $1.00)
+
+🔬 Analyzing B4ChW4MM...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $12,619)
+✅ OPENED position: B4ChW4MM... at $0.00002756 (size: $1.00)
+
+🔬 Analyzing 31QnhrCq...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 31QnhrCq... at $0.00001180 (size: $1.00)
+
+🔬 Analyzing 2Y1UMFGf...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 2Y1UMFGf... at $0.00000239 (size: $1.00)
+
+🔬 Analyzing jZrhzhJ3...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: jZrhzhJ3... at $0.00000231 (size: $1.00)
+
+🔬 Analyzing DHoadXCb...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $30,804)
+✅ OPENED position: DHoadXCb... at $0.00005679 (size: $1.00)
+
+🔬 Analyzing 2c1KjiyQ...
+  ✅ Rugcheck: PASS (score: 1512)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,957)
+✅ OPENED position: 2c1KjiyQ... at $0.00000270 (size: $1.00)
+
+🔬 Analyzing 2c1KjiyQ...
+  ✅ Rugcheck: PASS (score: 1512)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,957)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B54VrtkH...
+  ✅ Rugcheck: PASS (score: 1812)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,374)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9B5V5oJQ...
+  ✅ Rugcheck: PASS (score: 1044)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing VZzLrtXf...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $26,998)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B54VrtkH...
+  ✅ Rugcheck: PASS (score: 1792)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,374)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9B5V5oJQ...
+  ✅ Rugcheck: PASS (score: 1044)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9B5V5oJQ...
+  ✅ Rugcheck: PASS (score: 1044)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B4ChW4MM...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,861)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3NpnVhW7...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing DLd4HGpS...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing AHSUTGso...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $11,632)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing Bn3U9jdQ...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3NpnVhW7...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing AHSUTGso...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $11,632)
+⚠️  Max positions (100) reached, skipping
+
+============================================================
+📈 Summary:
+   Balance: $-23.24
+   Open: 100 | Closed: 181
+   Total P&L: $-23.23
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-06 08:45:02
+============================================================
+
+🔍 Checking open positions for exits...
+❌ CLOSED AHSUTGso... STOP_LOSS: -31.4% ($-0.31)
+❌ CLOSED VZzLrtXf... STOP_LOSS: -47.9% ($-0.48)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: B9ejTsjC... (score: 3) from @gmgnsignals
+🔥 Signal: 8uA2tW1A... (score: 3) from @gmgnsignals
+🔥 Signal: 8uA2tW1A... (score: 3) from @gmgnsignals
+🔥 Signal: 8uA2tW1A... (score: 3) from @gmgnsignals
+🔥 Signal: DVuXiGjU... (score: 5) from @gmgnsignals
+🔥 Signal: B9ejTsjC... (score: 3) from @gmgnsignals
+🔥 Signal: 2nHtwWaC... (score: 3) from @gmgnsignals
+🔥 Signal: CYC81QQu... (score: 4) from @gmgnsignals
+🔥 Signal: 9jwExoB9... (score: 4) from @gmgnsignals
+🔥 Signal: B4ChW4MM... (score: 3) from @gmgnsignals
+🔥 Signal: 31QnhrCq... (score: 3) from @gmgnsignals
+🔥 Signal: 2Y1UMFGf... (score: 3) from @gmgnsignals
+🔥 Signal: jZrhzhJ3... (score: 4) from @gmgnsignals
+🔥 Signal: DHoadXCb... (score: 2) from @gmgnsignals
+🔥 Signal: 2c1KjiyQ... (score: 3) from @gmgnsignals
+🔥 Signal: 2c1KjiyQ... (score: 3) from @gmgnsignals
+🔥 Signal: B54VrtkH... (score: 3) from @gmgnsignals
+🔥 Signal: 9B5V5oJQ... (score: 3) from @gmgnsignals
+🔥 Signal: VZzLrtXf... (score: 3) from @gmgnsignals
+🔥 Signal: B54VrtkH... (score: 3) from @gmgnsignals
+🔥 Signal: 9B5V5oJQ... (score: 2) from @gmgnsignals
+🔥 Signal: 9B5V5oJQ... (score: 3) from @gmgnsignals
+🔥 Signal: B4ChW4MM... (score: 4) from @gmgnsignals
+🔥 Signal: 3NpnVhW7... (score: 3) from @gmgnsignals
+🔥 Signal: DLd4HGpS... (score: 3) from @gmgnsignals
+
+📊 Found 25 signals
+
+
+🔬 Analyzing B9ejTsjC...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: B9ejTsjC... at $0.00001283 (size: $1.00)
+
+🔬 Analyzing 8uA2tW1A...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 8uA2tW1A... at $0.00001329 (size: $1.00)
+
+🔬 Analyzing 8uA2tW1A...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8uA2tW1A...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing DVuXiGjU...
+  ✅ Rugcheck: PASS (score: 1089)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B9ejTsjC...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2nHtwWaC...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CYC81QQu...
+  ✅ Rugcheck: PASS (score: 3974)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9jwExoB9...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $14,534)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B4ChW4MM...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $13,903)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 31QnhrCq...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2Y1UMFGf...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing jZrhzhJ3...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing DHoadXCb...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $31,414)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2c1KjiyQ...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $6,219)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2c1KjiyQ...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $6,219)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B54VrtkH...
+  ✅ Rugcheck: PASS (score: 1781)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,419)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9B5V5oJQ...
+  ✅ Rugcheck: PASS (score: 1044)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing VZzLrtXf...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $16,804)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B54VrtkH...
+  ✅ Rugcheck: PASS (score: 1782)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,419)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9B5V5oJQ...
+  ✅ Rugcheck: PASS (score: 1044)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9B5V5oJQ...
+  ✅ Rugcheck: PASS (score: 1044)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B4ChW4MM...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $15,896)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 3NpnVhW7...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing DLd4HGpS...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+============================================================
+📈 Summary:
+   Balance: $-24.03
+   Open: 100 | Closed: 183
+   Total P&L: $-24.03
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-06 08:50:22
+============================================================
+
+🔍 Checking open positions for exits...
+❌ CLOSED 31QnhrCq... STOP_LOSS: -39.8% ($-0.40)
+❌ CLOSED 8uA2tW1A... STOP_LOSS: -59.7% ($-0.60)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: 9MyKqNfj... (score: 3) from @gmgnsignals
+🔥 Signal: 3Hguawta... (score: 3) from @gmgnsignals
+🔥 Signal: 6EmajB6b... (score: 3) from @gmgnsignals
+🔥 Signal: HeDTCB7T... (score: 5) from @gmgnsignals
+🔥 Signal: Dx7rVjhn... (score: 3) from @gmgnsignals
+🔥 Signal: Cfjxqzfs... (score: 2) from @gmgnsignals
+🔥 Signal: BSRB4tTu... (score: 3) from @gmgnsignals
+🔥 Signal: 9vstSjd6... (score: 2) from @gmgnsignals
+🔥 Signal: HeDTCB7T... (score: 2) from @gmgnsignals
+🔥 Signal: Bcmi8nud... (score: 3) from @gmgnsignals
+🔥 Signal: AtYeXefu... (score: 3) from @gmgnsignals
+🔥 Signal: Bcmi8nud... (score: 3) from @gmgnsignals
+🔥 Signal: B9ejTsjC... (score: 3) from @gmgnsignals
+🔥 Signal: 8uA2tW1A... (score: 3) from @gmgnsignals
+🔥 Signal: 8uA2tW1A... (score: 3) from @gmgnsignals
+🔥 Signal: 8uA2tW1A... (score: 3) from @gmgnsignals
+🔥 Signal: DVuXiGjU... (score: 5) from @gmgnsignals
+🔥 Signal: B9ejTsjC... (score: 3) from @gmgnsignals
+🔥 Signal: 2nHtwWaC... (score: 3) from @gmgnsignals
+🔥 Signal: CYC81QQu... (score: 4) from @gmgnsignals
+🔥 Signal: 9jwExoB9... (score: 4) from @gmgnsignals
+🔥 Signal: B4ChW4MM... (score: 3) from @gmgnsignals
+🔥 Signal: 31QnhrCq... (score: 3) from @gmgnsignals
+🔥 Signal: 2Y1UMFGf... (score: 3) from @gmgnsignals
+🔥 Signal: jZrhzhJ3... (score: 4) from @gmgnsignals
+🔥 Signal: DHoadXCb... (score: 2) from @gmgnsignals
+🔥 Signal: 2c1KjiyQ... (score: 3) from @gmgnsignals
+
+📊 Found 27 signals
+
+
+🔬 Analyzing 9MyKqNfj...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 9MyKqNfj... at $0.00001032 (size: $1.00)
+
+🔬 Analyzing 3Hguawta...
+  ✅ Rugcheck: PASS (score: 120593)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $5,802)
+✅ OPENED position: 3Hguawta... at $0.00000546 (size: $1.00)
+
+🔬 Analyzing 6EmajB6b...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing HeDTCB7T...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing Dx7rVjhn...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing Cfjxqzfs...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing BSRB4tTu...
+  ✅ Rugcheck: PASS (score: 1501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9vstSjd6...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing HeDTCB7T...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing Bcmi8nud...
+  ✅ Rugcheck: PASS (score: 1599)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $4,171)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing AtYeXefu...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing Bcmi8nud...
+  ✅ Rugcheck: PASS (score: 1545)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $4,171)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B9ejTsjC...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8uA2tW1A...
+  ✅ Rugcheck: PASS (score: 1296)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $6)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8uA2tW1A...
+  ✅ Rugcheck: PASS (score: 1296)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $6)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8uA2tW1A...
+  ✅ Rugcheck: PASS (score: 1296)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $6)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing DVuXiGjU...
+  ✅ Rugcheck: PASS (score: 1089)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B9ejTsjC...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2nHtwWaC...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CYC81QQu...
+  ✅ Rugcheck: PASS (score: 3974)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9jwExoB9...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $15,588)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B4ChW4MM...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $17,933)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 31QnhrCq...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2Y1UMFGf...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing jZrhzhJ3...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing DHoadXCb...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $30,431)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2c1KjiyQ...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $7,631)
+⚠️  Max positions (100) reached, skipping
+
+============================================================
+📈 Summary:
+   Balance: $-25.02
+   Open: 100 | Closed: 185
+   Total P&L: $-25.02
+============================================================
+
+
+============================================================
+🤖 Autonomous Memecoin Hunter - 2026-04-06 08:55:04
+============================================================
+
+🔍 Checking open positions for exits...
+❌ CLOSED CYC81QQu... STOP_LOSS: -75.3% ($-0.75)
+❌ CLOSED B9ejTsjC... STOP_LOSS: -73.7% ($-0.74)
+❌ CLOSED 9MyKqNfj... STOP_LOSS: -77.4% ($-0.77)
+📡 Scanning 3 Telegram channels...
+🔥 Signal: 8uA2tW1A... (score: 3) from @gmgnsignals
+🔥 Signal: 43C5CR9U... (score: 2) from @gmgnsignals
+🔥 Signal: 9MyKqNfj... (score: 3) from @gmgnsignals
+🔥 Signal: 3Hguawta... (score: 3) from @gmgnsignals
+🔥 Signal: 6EmajB6b... (score: 3) from @gmgnsignals
+🔥 Signal: HeDTCB7T... (score: 5) from @gmgnsignals
+🔥 Signal: Dx7rVjhn... (score: 3) from @gmgnsignals
+🔥 Signal: Cfjxqzfs... (score: 2) from @gmgnsignals
+🔥 Signal: BSRB4tTu... (score: 3) from @gmgnsignals
+🔥 Signal: 9vstSjd6... (score: 2) from @gmgnsignals
+🔥 Signal: HeDTCB7T... (score: 2) from @gmgnsignals
+🔥 Signal: Bcmi8nud... (score: 3) from @gmgnsignals
+🔥 Signal: AtYeXefu... (score: 3) from @gmgnsignals
+🔥 Signal: Bcmi8nud... (score: 3) from @gmgnsignals
+🔥 Signal: B9ejTsjC... (score: 3) from @gmgnsignals
+🔥 Signal: 8uA2tW1A... (score: 3) from @gmgnsignals
+🔥 Signal: 8uA2tW1A... (score: 3) from @gmgnsignals
+🔥 Signal: 8uA2tW1A... (score: 3) from @gmgnsignals
+🔥 Signal: DVuXiGjU... (score: 5) from @gmgnsignals
+🔥 Signal: B9ejTsjC... (score: 3) from @gmgnsignals
+🔥 Signal: 2nHtwWaC... (score: 3) from @gmgnsignals
+🔥 Signal: CYC81QQu... (score: 4) from @gmgnsignals
+🔥 Signal: 9jwExoB9... (score: 4) from @gmgnsignals
+🔥 Signal: B4ChW4MM... (score: 3) from @gmgnsignals
+🔥 Signal: 31QnhrCq... (score: 3) from @gmgnsignals
+
+📊 Found 25 signals
+
+
+🔬 Analyzing 8uA2tW1A...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $8)
+✅ OPENED position: 8uA2tW1A... at $0.00001208 (size: $1.00)
+
+🔬 Analyzing 43C5CR9U...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 43C5CR9U... at $0.00000424 (size: $1.00)
+
+🔬 Analyzing 9MyKqNfj...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+✅ OPENED position: 9MyKqNfj... at $0.00000233 (size: $1.00)
+
+🔬 Analyzing 3Hguawta...
+  ✅ Rugcheck: PASS (score: 120591)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $5,791)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 6EmajB6b...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing HeDTCB7T...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing Dx7rVjhn...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing Cfjxqzfs...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing BSRB4tTu...
+  ✅ Rugcheck: PASS (score: 1501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9vstSjd6...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing HeDTCB7T...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing Bcmi8nud...
+  ✅ Rugcheck: PASS (score: 1883)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,235)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing AtYeXefu...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing Bcmi8nud...
+  ✅ Rugcheck: PASS (score: 1883)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $3,235)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B9ejTsjC...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8uA2tW1A...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $8)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8uA2tW1A...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $8)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 8uA2tW1A...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $8)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing DVuXiGjU...
+  ✅ Rugcheck: PASS (score: 1089)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B9ejTsjC...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 2nHtwWaC...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing CYC81QQu...
+  ✅ Rugcheck: PASS (score: 3974)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 9jwExoB9...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $16,851)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing B4ChW4MM...
+  ✅ Rugcheck: PASS (score: 501)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $17,143)
+⚠️  Max positions (100) reached, skipping
+
+🔬 Analyzing 31QnhrCq...
+  ✅ Rugcheck: PASS (score: 1)
+  ✅ Birdeye: Birdeye unavailable (HTTP 404), skipping
+  ✅ Dexscreener: PASS (liq: $0)
+⚠️  Max positions (100) reached, skipping
+
+============================================================
+📈 Summary:
+   Balance: $-27.29
+   Open: 100 | Closed: 188
+   Total P&L: $-27.28
+============================================================
+

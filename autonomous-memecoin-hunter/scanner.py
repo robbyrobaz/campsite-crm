@@ -12,6 +12,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Dict, List
 
+import time
 import requests
 from telethon import TelegramClient
 from dotenv import load_dotenv
@@ -133,6 +134,7 @@ def check_birdeye(contract: str) -> tuple[bool, str, Dict]:
 def check_dexscreener(contract: str) -> tuple[bool, str, Dict]:
     """Check price, volume, age via Dexscreener - MINIMAL filters for early entry"""
     try:
+        time.sleep(1.5)  # Rate limit: Dexscreener 429s without delay
         url = f"https://api.dexscreener.com/latest/dex/tokens/{contract}"
         resp = requests.get(url, timeout=10)
         
@@ -190,9 +192,11 @@ def load_positions() -> List[Dict]:
 
 
 def save_positions(positions: List[Dict]):
-    """Save positions to disk"""
-    with open(POSITIONS_FILE, 'w') as f:
+    """Save positions to disk (atomic write to prevent corruption)"""
+    tmp = POSITIONS_FILE.with_suffix('.tmp')
+    with open(tmp, 'w') as f:
         json.dump(positions, f, indent=2)
+    tmp.rename(POSITIONS_FILE)
 
 
 def open_position(contract: str, entry_price: float, signal_data: Dict, market_data: Dict = None):

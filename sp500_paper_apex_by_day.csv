@@ -1,0 +1,7 @@
+Day,Day_Number,Period,Trade_Count,Total_PnL,Avg_PnL,Win_Rate_Pct,Total_Wins,Total_Losses
+Sunday,0,Weekend,55,-42.29,-0.7689,43.64,86.12,-128.41
+Tuesday,2,Weekday,10,-21.63,-2.163,30.0,4.18,-25.81
+Wednesday,3,Weekday,283,-97.01,-0.3428,38.16,257.99,-355.0
+Thursday,4,Weekday,65,-6.17,-0.0949,55.38,138.52,-144.69
+Friday,5,Weekday,14,-3.02,-0.2157,35.71,1.8,-4.82
+Saturday,6,Weekend,31,-54.27,-1.7506,29.03,7.58,-61.85

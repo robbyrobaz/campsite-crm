@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-04-10 04:15 MST
+**Updated:** 2026-04-10 04:30 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -19,14 +19,14 @@
 |-------|----------|--------|--------|------|
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 0 (23 requests)
+- **Total Tokens:** 0 (22 requests)
 - **Output Tokens:** 0
 - **Cost (est):** $0.00
 
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| sonnet | 23 | 0 | 0 | $0.00 |
+| sonnet | 22 | 0 | 0 | $0.00 |
 
 ---
 *Note: Max 5x plan is $100/mo flat. Cost shown is equivalent API pricing, not actual charges.*

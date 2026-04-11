@@ -338,23 +338,23 @@ backup_databases() {
         fi
     done
     
-    # Backup blofin_monitor.db LAST with lock check (takes 80-100+ min)
+    # Backup blofin_monitor.db — DAILY/WEEKLY ONLY (29GB, takes 60-100+ min)
+    # SKIP in hourly mode — it was blocking all subsequent hourly runs
     local blofin_db="/mnt/data/blofin_monitor.db"
     local blofin_lock="${BACKUP_ROOT}/.blofin_backup.lock"
-    if [[ -f "$blofin_db" ]]; then
+    if [[ -f "$blofin_db" && "$MODE" != "hourly" ]]; then
         # Skip if another blofin_monitor backup is already running
         if [[ -f "$blofin_lock" ]] && kill -0 "$(cat "$blofin_lock" 2>/dev/null)" 2>/dev/null; then
             log "  SKIP: blofin_monitor.db (another backup in progress, PID $(cat "$blofin_lock"))"
         else
             echo $$ > "$blofin_lock"
             local backup_path="${db_dir}/blofin_monitor_${TIMESTAMP}.db"
-            log "  Backing up SQLite: blofin_monitor.db (large — may take 60-100+ min)"
-            if sqlite3 "$blofin_db" ".backup '$backup_path'" 2>>"${LOG_FILE}"; then
+            log "  Backing up SQLite: blofin_monitor.db (29GB — daily/weekly only)"
+            # Hard 90-min timeout — if it takes longer something is wrong
+            if timeout 5400 sqlite3 "$blofin_db" ".backup '$backup_path'" 2>>"${LOG_FILE}"; then
                 log "    Created: $backup_path"
                 CREATED_FILES+=("$backup_path")
                 TOTAL_SIZE=$((TOTAL_SIZE + $(stat -c%s "$backup_path" 2>/dev/null || echo 0)))
-                
-                # Compress blofin_monitor backup (may take 10-20+ min for 22GB file)
                 log "    Compressing blofin_monitor backup..."
                 if gzip "$backup_path" 2>>"${LOG_FILE}"; then
                     log "    Compressed: ${backup_path}.gz"
@@ -364,11 +364,14 @@ backup_databases() {
                     ERRORS=$((ERRORS + 1))
                 fi
             else
-                log "    ERROR: Failed to backup blofin_monitor.db"
+                log "    ERROR: Failed/timed-out backing up blofin_monitor.db (90min limit)"
+                rm -f "$backup_path"
                 ERRORS=$((ERRORS + 1))
             fi
             rm -f "$blofin_lock"
         fi
+    elif [[ "$MODE" == "hourly" ]]; then
+        log "  SKIP: blofin_monitor.db (29GB — skipped in hourly mode, runs in daily/weekly)"
     fi
 }
 

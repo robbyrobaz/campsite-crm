@@ -252,19 +252,30 @@ backup_databases() {
     # SQLite databases (use sqlite3 .backup - WAL safe)
     # NOTE: blofin_monitor.db moved to end with lock check (takes 80-100+ min)
     local -a SQLITE_DBS=(
+        # NQ Trading Pipeline
+        "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/data/nq_pipeline.db"
+        "/home/rob/.openclaw/workspace/ninja_trader_strategies/data/nq_pipeline.db"
+        # Blofin
         "/home/rob/.openclaw/workspace/blofin-moonshot-v2/data/moonshot_v2.db"
         "/home/rob/.openclaw/workspace/blofin-moonshot/data/moonshot.db"
-        "/home/rob/.openclaw/workspace/kanban-dashboard/kanban.sqlite"
-        "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/data/nq_pipeline.db"
-        "/home/rob/.openclaw/workspace/jarvis-home-energy/energy_data.db"
-        "/home/rob/.openclaw/workspace/ninja_trader_strategies/data/nq_pipeline.db"
         "/home/rob/.openclaw/workspace/blofin-stack/data/paper_trading.db"
-        "/mnt/data/market_macro.db"
-        "/mnt/data/backtest_results.db"
-        "/home/rob/.openclaw/workspace/ai-workshop/projects/sports-betting/data/betting.db"
+        "/home/rob/.openclaw/workspace/blofin-stack/data/live_trading.db"
+        # Go-trader (Hyperliquid)
+        "/home/rob/go-trader/scheduler/state.db"
+        "/home/rob/go-trader/shared_tools/trading_bot.db"
+        # Openclaw memory (all profiles)
         "/home/rob/.openclaw/memory/main.sqlite"
         "/home/rob/.openclaw/memory/nq.sqlite"
         "/home/rob/.openclaw/memory/crypto.sqlite"
+        "/home/rob/.openclaw/memory/sp.sqlite"
+        # Hermes state
+        "/home/rob/.hermes/state.db"
+        # Misc active
+        "/home/rob/.openclaw/workspace/kanban-dashboard/kanban.sqlite"
+        "/home/rob/.openclaw/workspace/jarvis-home-energy/energy_data.db"
+        "/home/rob/.openclaw/workspace/ai-workshop/projects/sports-betting/data/betting.db"
+        "/mnt/data/market_macro.db"
+        "/mnt/data/backtest_results.db"
     )
     
     for db in "${SQLITE_DBS[@]}"; do
@@ -292,10 +303,11 @@ backup_databases() {
     # DuckDB databases (use cp with fuser check)
     local -a DUCKDB_DBS=(
         "/home/rob/infrastructure/ibkr/data/nq_feed.duckdb"
-        "/home/rob/.openclaw/workspace/hyperliquid-sp500-pipeline/data/sp500_pipeline.duckdb"
-        "/home/rob/.openclaw/workspace/hyperliquid-sp500-pipeline/data/sp500_pipeline_training.duckdb"
         "/home/rob/infrastructure/ibkr/data/ibkr_options.duckdb"
         "/home/rob/infrastructure/ibkr/data/options.duckdb"
+        "/home/rob/.openclaw/workspace/hyperliquid-sp500-pipeline/data/sp500_pipeline.duckdb"
+        "/home/rob/.openclaw/workspace/hyperliquid-sp500-pipeline/data/sp500_pipeline_training.duckdb"
+        "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/data/nq_pipeline.duckdb"
     )
     
     for db in "${DUCKDB_DBS[@]}"; do
@@ -529,6 +541,22 @@ backup_data() {
         fi
     fi
     
+    # Reef scanner database (4.5GB — weekly only, too large for daily)
+    local reef_db="/home/rob/reef-workspace/data/reef.db"
+    if [[ -f "$reef_db" ]]; then
+        local reef_archive="${data_dir}/reef_${TIMESTAMP}.db.gz"
+        log "  Backing up reef.db (large — weekly only)..."
+        if sqlite3 "$reef_db" ".backup '${data_dir}/reef_${TIMESTAMP}.db'" 2>>"${LOG_FILE}"; then
+            gzip -f "${data_dir}/reef_${TIMESTAMP}.db"
+            log "    Created: $reef_archive"
+            CREATED_FILES+=("$reef_archive")
+            TOTAL_SIZE=$((TOTAL_SIZE + $(stat -c%s "$reef_archive" 2>/dev/null || echo 0)))
+        else
+            log "    ERROR: Failed to backup reef.db"
+            ERRORS=$((ERRORS + 1))
+        fi
+    fi
+
     # Cleanup old weekly data (keep last 4)
     cleanup_old_backups "$data_dir" 4
 }

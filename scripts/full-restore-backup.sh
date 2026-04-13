@@ -58,10 +58,8 @@ mkdir -p snapshots manifests
 archive="snapshots/workspace-${stamp}.tar.gz"
 manifest="manifests/workspace-${stamp}.sha256"
 
-# tar exit code 1 = "file changed as we read it" OR unreadable file — harmless for live backups
-# --ignore-failed-read: downgrades permission-denied from fatal (exit 2) to warning (exit 1)
+# tar exit code 1 = "file changed as we read it" — harmless for live backups
 tar -czf "$archive" \
-  --ignore-failed-read \
   --exclude='backups' \
   --exclude='completions' \
   --exclude='subagents' \
@@ -79,7 +77,6 @@ tar -czf "$archive" \
   --exclude='workspace/android-sdk' \
   --exclude='workspace/blofin-stack' \
   --exclude='workspace/blofin-moonshot' \
-  --exclude='workspace/blofin-moonshot-v2' \
   --exclude='workspace/blofin-dashboard' \
   --exclude='workspace/campsite-crm' \
   --exclude='workspace/NQ-Trading-PIPELINE' \
@@ -90,34 +87,10 @@ tar -czf "$archive" \
   --exclude='workspace/gilbert-pd-radio-trainer' \
   --exclude='workspace/jarvis-home-energy' \
   --exclude='workspace/home-energy-os' \
-  --exclude='workspace/BettaFish' \
-  --exclude='workspace/autonomous-memecoin-hunter/data' \
-  --exclude='workspace/autonomous-memecoin-hunter/logs' \
-  --exclude='workspace/hyperliquid-sp500-pipeline/data' \
-  --exclude='workspace/linkedin-optimizer/.next' \
-  --exclude='workspace/linkedin-optimizer/playwright-scraper/chrome-session' \
-  --exclude='workspace/kalshi-edge/data' \
-  --exclude='workspace/ninja_trader_strategies/raw_data' \
-  --exclude='workspace/ninja_trader_strategies/processed_data' \
-  --exclude='workspace/ninja_trader_strategies/ml/results' \
-  --exclude='workspace/NQ_Ninja_Trader' \
-  --exclude='workspace/church-volunteer-coordinator/.next' \
   --exclude='workspace/ai-workshop/projects/campsite-crm' \
   --exclude='workspace/ai-workshop/projects/sports-betting/scraper_env' \
   --exclude='workspace/ai-workshop/projects/sports-betting/_archived' \
-  --exclude='workspace/ai-workshop/projects/lds-cfm-songs' \
-  --exclude='workspace/come_follow_me_songs' \
-  --exclude='workspace/bench_env' \
-  --exclude='workspace/logs' \
-  --exclude='*.db' \
-  --exclude='*.duckdb' \
-  --exclude='*.pkl' \
-  --exclude='*.mp4' \
-  --exclude='*.jsonl' \
-  --exclude='*.csv' \
-  --exclude='*.csv.gz' \
-  --exclude='*.so' \
-  --exclude='agents/*/sessions' \
+  --exclude='agents/main/sessions' \
   -C "$OPENCLAW_DIR" \
   workspace \
   openclaw.json \

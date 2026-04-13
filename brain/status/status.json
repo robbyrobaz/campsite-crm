@@ -1,31 +1,29 @@
 {
-  "activeTasks": [],
-  "lastHealthCheck": "2026-04-05T03:06:00-07:00",
-  "serverHealth": {
-    "cpu_temp": "78°C",
-    "disk": "59% (259G/468G)",
-    "ram": "24GB available / 31GB total",
-    "failedServices": 5,
-    "gateway": "active (HTTP 200)"
+  "last_updated": "2026-04-13T15:03:00Z",
+  "server_health": {
+    "hostname": "omen-claw",
+    "load": "normal",
+    "services_all_healthy": true
   },
-  "backups": {
-    "allTimersActive": true,
-    "dailyTimerMovedTo": "04:00 (was 03:00, fixed timer collision with hourly backups)",
-    "totalSize": "164GB / 500GB budget"
+  "agents": {
+    "nq": "healthy",
+    "crypto": "healthy",
+    "sp": "healthy",
+    "church": "healthy"
   },
-  "kanban": {
-    "done": 1171,
-    "inProgress": 0,
-    "planned": 0,
-    "inbox": 5,
-    "stopped": 9,
-    "failed": 0
-  },
-  "numerai": {
-    "models_elite": 15,
-    "models_robbyrob2": 15,
-    "models_robbyrob3": 15,
-    "lastRun": "2026-03-29 06:38 MST (success)"
-  },
-  "notes": "Apr 5 03:06 — FIXED backup timer collision: daily backup moved from 03:00 → 04:00 to prevent GFS cleanup deleting in-progress hourly backups. Deleted orphaned 16.5GB uncompressed file. Backup store: 164GB. CPU 78°C. 5 failed oneshot services (baseline)."
+  "kalshi_paper_trader": {
+    "last_run": "2026-04-13T15:00:00Z",
+    "total_bets": 5460,
+    "open_positions": 872,
+    "settled": 4588,
+    "record": "3545W-1043L",
+    "win_rate": 77.3,
+    "pnl": -1547.38,
+    "roi": -6.2,
+    "bets_this_run": 24,
+    "settlements_this_run": 12,
+    "active_strategies": ["time_decay_expanded", "expanded_overround", "elections_political", "entertainment_culture", "crypto_extreme_range", "high_volume_fade"],
+    "profitable_strategies": ["parlay_sweet_spot"],
+    "notes": "Only parlay_sweet_spot is net profitable (+$60.85, +39.2% ROI). time_decay_expanded is biggest drag (-$1088.90). 37k markets scanned, edges thin."
+  }
 }

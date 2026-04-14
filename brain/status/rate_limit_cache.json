@@ -6,13 +6,13 @@
     },
     "seven_day": {
       "utilization": 40.0,
-      "resets_at": "2026-04-17T05:00:00.496850+00:00"
+      "resets_at": "2026-04-17T05:00:00.823999+00:00"
     },
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 47.0,
-      "resets_at": "2026-04-17T15:00:00.496863+00:00"
+      "resets_at": "2026-04-17T15:00:00.824010+00:00"
     },
     "seven_day_cowork": null,
     "iguana_necktie": null,
@@ -23,6 +23,6 @@
       "utilization": 100.0
     }
   },
-  "fetched_at": "2026-04-14T04:15:00.985680-07:00",
-  "fetched_ts": 1776165300.985694
+  "fetched_at": "2026-04-14T04:30:01.340482-07:00",
+  "fetched_ts": 1776166201.3404946
 }

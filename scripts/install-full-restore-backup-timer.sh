@@ -14,13 +14,19 @@ Type=oneshot
 ExecStart=/home/rob/.openclaw/workspace/scripts/full-restore-backup.sh
 EOF
 
+mkdir -p "$HOME/.config/systemd/user/openclaw-full-restore-backup.service.d"
+cat > "$HOME/.config/systemd/user/openclaw-full-restore-backup.service.d/timeout.conf" <<'EOF'
+[Service]
+TimeoutStartSec=900
+EOF
+
 cat > "$HOME/.config/systemd/user/openclaw-full-restore-backup.timer" <<'EOF'
 [Unit]
-Description=Run OpenClaw full-restore snapshot backup every 2 hours
+Description=Run OpenClaw full-restore snapshot backup daily
 
 [Timer]
 OnBootSec=3min
-OnUnitActiveSec=2h
+OnCalendar=daily
 Persistent=true
 
 [Install]

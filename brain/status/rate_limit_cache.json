@@ -2,17 +2,17 @@
   "data": {
     "five_hour": {
       "utilization": 0.0,
-      "resets_at": null
+      "resets_at": "2026-04-19T23:59:59.956045+00:00"
     },
     "seven_day": {
       "utilization": 26.0,
-      "resets_at": "2026-04-23T18:59:59.981159+00:00"
+      "resets_at": "2026-04-23T18:59:59.956065+00:00"
     },
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 2.0,
-      "resets_at": "2026-04-23T19:00:00.981179+00:00"
+      "resets_at": "2026-04-23T19:00:00.956072+00:00"
     },
     "seven_day_cowork": null,
     "seven_day_omelette": {
@@ -29,6 +29,6 @@
       "currency": "USD"
     }
   },
-  "fetched_at": "2026-04-19T12:00:02.644972-07:00",
-  "fetched_ts": 1776625202.6449811
+  "fetched_at": "2026-04-19T12:15:02.422377-07:00",
+  "fetched_ts": 1776626102.422387
 }

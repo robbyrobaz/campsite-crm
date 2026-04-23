@@ -1,12 +1,12 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 54.0,
-      "resets_at": "2026-04-23T05:59:59.741289+00:00"
+      "utilization": 56.0,
+      "resets_at": "2026-04-23T06:00:00.077429+00:00"
     },
     "seven_day": {
-      "utilization": 6.0,
-      "resets_at": "2026-04-30T00:59:59.741305+00:00"
+      "utilization": 7.0,
+      "resets_at": "2026-04-30T01:00:00.077453+00:00"
     },
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
@@ -26,6 +26,6 @@
       "currency": "USD"
     }
   },
-  "fetched_at": "2026-04-22T21:30:01.151965-07:00",
-  "fetched_ts": 1776918601.1519814
+  "fetched_at": "2026-04-22T21:45:07.585113-07:00",
+  "fetched_ts": 1776919507.5851233
 }

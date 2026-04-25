@@ -2,11 +2,11 @@
   "data": {
     "five_hour": {
       "utilization": 100.0,
-      "resets_at": "2026-04-25T23:29:59.841261+00:00"
+      "resets_at": "2026-04-25T23:29:59.969534+00:00"
     },
     "seven_day": {
       "utilization": 14.0,
-      "resets_at": "2026-04-25T21:59:59.841284+00:00"
+      "resets_at": "2026-04-25T21:59:59.969557+00:00"
     },
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
@@ -23,12 +23,12 @@
     "omelette_promotional": null,
     "extra_usage": {
       "is_enabled": true,
-      "monthly_limit": 5000,
-      "used_credits": 5004.0,
-      "utilization": 100.0,
+      "monthly_limit": 6000,
+      "used_credits": 5608.0,
+      "utilization": 93.46666666666667,
       "currency": "USD"
     }
   },
-  "fetched_at": "2026-04-25T14:15:02.001612-07:00",
-  "fetched_ts": 1777151702.0016222
+  "fetched_at": "2026-04-25T14:30:02.588239-07:00",
+  "fetched_ts": 1777152602.5882504
 }

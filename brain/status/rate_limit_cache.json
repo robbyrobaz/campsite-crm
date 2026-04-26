@@ -6,7 +6,7 @@
     },
     "seven_day": {
       "utilization": 13.0,
-      "resets_at": "2026-05-02T22:00:00.205134+00:00"
+      "resets_at": "2026-05-02T22:00:00.624230+00:00"
     },
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
@@ -29,6 +29,6 @@
       "currency": "USD"
     }
   },
-  "fetched_at": "2026-04-26T03:45:02.707331-07:00",
-  "fetched_ts": 1777200302.7073417
+  "fetched_at": "2026-04-26T04:00:02.423731-07:00",
+  "fetched_ts": 1777201202.4237447
 }

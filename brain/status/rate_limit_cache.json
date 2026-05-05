@@ -6,13 +6,13 @@
     },
     "seven_day": {
       "utilization": 10.0,
-      "resets_at": "2026-05-09T22:00:00.523937+00:00"
+      "resets_at": "2026-05-09T22:00:00.469404+00:00"
     },
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 8.0,
-      "resets_at": "2026-05-09T22:00:00.523951+00:00"
+      "resets_at": "2026-05-09T22:00:00.469418+00:00"
     },
     "seven_day_cowork": null,
     "seven_day_omelette": {
@@ -30,6 +30,6 @@
       "currency": "USD"
     }
   },
-  "fetched_at": "2026-05-04T17:15:02.094442-07:00",
-  "fetched_ts": 1777940102.09446
+  "fetched_at": "2026-05-04T17:30:00.910261-07:00",
+  "fetched_ts": 1777941000.9102728
 }

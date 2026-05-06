@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-05-06 13:45 MST
+**Updated:** 2026-05-06 14:00 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |

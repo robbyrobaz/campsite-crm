@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-04-13T15:03:00Z",
+  "last_updated": "2026-05-09T15:02:00Z",
   "server_health": {
     "hostname": "omen-claw",
     "load": "normal",
@@ -12,18 +12,18 @@
     "church": "healthy"
   },
   "kalshi_paper_trader": {
-    "last_run": "2026-04-13T15:00:00Z",
-    "total_bets": 5460,
-    "open_positions": 872,
-    "settled": 4588,
-    "record": "3545W-1043L",
-    "win_rate": 77.3,
-    "pnl": -1547.38,
-    "roi": -6.2,
-    "bets_this_run": 24,
-    "settlements_this_run": 12,
-    "active_strategies": ["time_decay_expanded", "expanded_overround", "elections_political", "entertainment_culture", "crypto_extreme_range", "high_volume_fade"],
-    "profitable_strategies": ["parlay_sweet_spot"],
-    "notes": "Only parlay_sweet_spot is net profitable (+$60.85, +39.2% ROI). time_decay_expanded is biggest drag (-$1088.90). 37k markets scanned, edges thin."
+    "last_run": "2026-05-09T15:02:00Z",
+    "total_bets": 21596,
+    "open_positions": 1713,
+    "settled": 19883,
+    "record": "15215W-4668L",
+    "win_rate": 76.5,
+    "pnl": -7353.46,
+    "roi": -7.4,
+    "bets_this_run": 20,
+    "settlements_this_run": 6,
+    "active_strategies": ["time_decay_expanded", "expanded_overround", "high_volume_fade"],
+    "profitable_strategies": ["moderate_longshot_no", "entertainment_culture", "mentions_fade"],
+    "notes": "6 settlements: 4W-2L. 20 new bets placed (time_decay_expanded=8, expanded_overround=8, high_volume_fade=4). Only 3 of 12 strategies placing bets. Running deficit -$7353 on $99k deployed. Best strategy: expanded_overround (-$489, -1.4% ROI). Only 3 strategies net profitable overall: moderate_longshot_no (+$11, +20.4%), entertainment_culture (+$34, +1.3%), mentions_fade (+$0.40)."
   }
 }

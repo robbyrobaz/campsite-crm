@@ -2,17 +2,17 @@
   "data": {
     "five_hour": {
       "utilization": 3.0,
-      "resets_at": "2026-05-19T17:40:00.421599+00:00"
+      "resets_at": "2026-05-19T17:40:00.587650+00:00"
     },
     "seven_day": {
       "utilization": 15.0,
-      "resets_at": "2026-05-23T22:00:00.421618+00:00"
+      "resets_at": "2026-05-23T22:00:00.587673+00:00"
     },
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 4.0,
-      "resets_at": "2026-05-23T22:00:00.421625+00:00"
+      "resets_at": "2026-05-23T22:00:00.587680+00:00"
     },
     "seven_day_cowork": null,
     "seven_day_omelette": {
@@ -31,6 +31,6 @@
       "disabled_reason": "org_level_disabled_until"
     }
   },
-  "fetched_at": "2026-05-19T07:15:02.478108-07:00",
-  "fetched_ts": 1779200102.4781244
+  "fetched_at": "2026-05-19T07:30:00.648177-07:00",
+  "fetched_ts": 1779201000.648197
 }

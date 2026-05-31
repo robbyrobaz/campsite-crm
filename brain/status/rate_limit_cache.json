@@ -6,7 +6,7 @@
     },
     "seven_day": {
       "utilization": 7.0,
-      "resets_at": "2026-06-06T22:00:01.267704+00:00"
+      "resets_at": "2026-06-06T22:00:00.494984+00:00"
     },
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
@@ -28,6 +28,6 @@
       "disabled_reason": "org_level_disabled_until"
     }
   },
-  "fetched_at": "2026-05-31T04:15:01.338850-07:00",
-  "fetched_ts": 1780226101.3388708
+  "fetched_at": "2026-05-31T04:30:00.555568-07:00",
+  "fetched_ts": 1780227000.5555818
 }

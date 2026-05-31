@@ -1,12 +1,12 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 50.0,
-      "resets_at": "2026-05-31T03:50:00.485022+00:00"
+      "utilization": 56.0,
+      "resets_at": "2026-05-31T03:49:59.800931+00:00"
     },
     "seven_day": {
       "utilization": 6.0,
-      "resets_at": "2026-06-06T22:00:00.485040+00:00"
+      "resets_at": "2026-06-06T22:00:00.800950+00:00"
     },
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
@@ -28,6 +28,6 @@
       "disabled_reason": "org_level_disabled_until"
     }
   },
-  "fetched_at": "2026-05-30T19:00:00.521527-07:00",
-  "fetched_ts": 1780192800.5215392
+  "fetched_at": "2026-05-30T19:15:00.834654-07:00",
+  "fetched_ts": 1780193700.834669
 }

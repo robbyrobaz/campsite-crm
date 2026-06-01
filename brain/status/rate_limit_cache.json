@@ -2,11 +2,11 @@
   "data": {
     "five_hour": {
       "utilization": 0.0,
-      "resets_at": null
+      "resets_at": "2026-06-02T01:40:01.020838+00:00"
     },
     "seven_day": {
       "utilization": 0.0,
-      "resets_at": null
+      "resets_at": "2026-06-06T22:00:01.020862+00:00"
     },
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
@@ -29,6 +29,6 @@
       "disabled_reason": null
     }
   },
-  "fetched_at": "2026-06-01T13:30:00.915808-07:00",
-  "fetched_ts": 1780345800.9158242
+  "fetched_at": "2026-06-01T13:45:07.428417-07:00",
+  "fetched_ts": 1780346707.4284303
 }

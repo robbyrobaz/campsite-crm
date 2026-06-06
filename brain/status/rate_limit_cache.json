@@ -2,7 +2,7 @@
   "data": {
     "five_hour": {
       "utilization": 5.0,
-      "resets_at": "2026-06-07T01:20:00.514770+00:00"
+      "resets_at": "2026-06-07T01:20:00.739601+00:00"
     },
     "seven_day": {
       "utilization": 0.0,
@@ -29,6 +29,6 @@
       "disabled_reason": null
     }
   },
-  "fetched_at": "2026-06-06T15:00:03.093470-07:00",
-  "fetched_ts": 1780783203.0934837
+  "fetched_at": "2026-06-06T15:15:01.049476-07:00",
+  "fetched_ts": 1780784101.0494874
 }

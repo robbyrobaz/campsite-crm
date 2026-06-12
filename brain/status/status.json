@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-02T18:30:00Z",
+  "last_updated": "2026-06-12T16:48:00Z",
   "server_health": {
     "hostname": "omen-claw",
     "load": "normal",
@@ -12,18 +12,45 @@
     "church": "healthy"
   },
   "kalshi_paper_trader": {
-    "last_run": "2026-06-02T18:30:00Z",
-    "total_bets": 36770,
-    "open_positions": 2360,
-    "settled": 34410,
-    "record": "26292W-8118L",
-    "win_rate": 76.4,
-    "pnl": -12133.24,
-    "roi": -7.1,
+    "last_run": "2026-06-12T16:48:00Z",
+    "total_bets": 44664,
+    "open_positions": 2638,
+    "open_at_risk_usd": 12019.35,
+    "settled": 42026,
+    "record": "32203W-9823L",
+    "win_rate": 76.6,
+    "pnl": -14396.80,
+    "capital_deployed_usd": 206590.15,
+    "roi": -7.0,
     "bets_this_run": 28,
-    "settlements_this_run": 575,
-    "active_strategies": ["time_decay_expanded", "expanded_overround", "elections_political", "high_volume_fade", "entertainment_culture"],
-    "profitable_strategies": ["moderate_longshot_no", "mentions_fade"],
-    "notes": "575 new settlements (417W-158L) and 28 new paper bets placed (time_decay_expanded=8, expanded_overround=8, elections_political=7, high_volume_fade=3, entertainment_culture=2). Running deficit -$12,133 on $170k deployed. 2 of 11 strategies net positive: moderate_longshot_no (+$8.85, +11.9%), mentions_fade (+$6.05, +8.3%). Worst: time_decay_expanded (-$8131.97, -13.3% ROI, 72% WR but bad R:R). parlay_sweet_spot -15.5% ROI, elections_political -14.1%."
+    "settlements_this_run": 17,
+    "settlements_this_run_record": "8W-9L",
+    "settlements_this_run_pnl": -34.85,
+    "active_strategies_this_run": {
+      "time_decay_expanded": 8,
+      "expanded_overround": 8,
+      "high_volume_fade": 6,
+      "elections_political": 6
+    },
+    "edges_found_this_run": 674,
+    "enriched": 414,
+    "filtered": 149,
+    "final_bets": 28,
+    "strategy_pnl_cumulative": {
+      "time_decay_expanded": -9537.59,
+      "expanded_overround": -964.54,
+      "high_volume_fade": -197.94,
+      "elections_political": -2648.84,
+      "entertainment_culture": 1.97,
+      "crypto_extreme_range": -180.23,
+      "parlay_sweet_spot": -764.81,
+      "sports_blowout": -84.03,
+      "multi_leg_overround": -28.55,
+      "mentions_fade": -2.35,
+      "moderate_longshot_no": 10.11
+    },
+    "profitable_strategies": ["entertainment_culture", "moderate_longshot_no"],
+    "worst_strategy_roi": "parlay_sweet_spot -19.4%",
+    "notes": "Run Jun 12 09:40 PT, completed 09:48 PT (~7 min). 17 settlements this run: 8W-9L, P&L -$34.85. 28 new paper bets placed ($127.58 paper capital). Portfolio now 44,664 bets, 76.6% WR, -$14,396.80 P&L on $206.5k deployed (-7.0% ROI). Only 2/11 strategies profitable: entertainment_culture (+$1.97, n=946) and moderate_longshot_no (+$10.11, n=17 — statistical noise). Top capital destroyers: time_decay_expanded (-$9.5k, -12.9% ROI), elections_political (-$2.6k, -16.0% ROI), parlay_sweet_spot (-$765, -19.4% ROI). High WR (76.6%) masks broken R:R — avg loss ~$4.80 swamps avg win ~$1.00. Strategy quality concern: most 'edges' are overround/NBA props with poor R:R; time_decay_expanded is the biggest bet volume (15,797) and biggest loser. Time to consider pausing time_decay_expanded, elections_political, parlay_sweet_spot."
   }
 }

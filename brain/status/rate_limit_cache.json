@@ -5,14 +5,14 @@
       "resets_at": null
     },
     "seven_day": {
-      "utilization": 100.0,
-      "resets_at": "2026-06-20T21:59:59.596783+00:00"
+      "utilization": 80.0,
+      "resets_at": "2026-06-20T21:59:59.849319+00:00"
     },
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
     "seven_day_sonnet": {
-      "utilization": 6.0,
-      "resets_at": "2026-06-20T21:59:59.596800+00:00"
+      "utilization": 4.0,
+      "resets_at": "2026-06-20T21:59:59.849343+00:00"
     },
     "seven_day_cowork": null,
     "seven_day_omelette": null,
@@ -21,13 +21,13 @@
     "omelette_promotional": null,
     "cinder_cove": null,
     "extra_usage": {
-      "is_enabled": true,
-      "monthly_limit": 2000,
-      "used_credits": 200.0,
-      "utilization": 10.0,
-      "currency": "USD",
-      "decimal_places": 2,
-      "disabled_reason": null,
+      "is_enabled": false,
+      "monthly_limit": null,
+      "used_credits": null,
+      "utilization": null,
+      "currency": null,
+      "decimal_places": null,
+      "disabled_reason": "out_of_credits",
       "daily": null,
       "weekly": null
     },
@@ -44,18 +44,18 @@
       {
         "kind": "weekly_all",
         "group": "weekly",
-        "percent": 100,
-        "severity": "critical",
-        "resets_at": "2026-06-20T21:59:59.596783+00:00",
+        "percent": 80,
+        "severity": "warning",
+        "resets_at": "2026-06-20T21:59:59.849319+00:00",
         "scope": null,
         "is_active": true
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
-        "percent": 6,
+        "percent": 4,
         "severity": "normal",
-        "resets_at": "2026-06-20T21:59:59.596800+00:00",
+        "resets_at": "2026-06-20T21:59:59.849343+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -68,21 +68,17 @@
     ],
     "spend": {
       "used": {
-        "amount_minor": 200,
+        "amount_minor": 0,
         "currency": "USD",
         "exponent": 2
       },
-      "limit": {
-        "amount_minor": 2000,
-        "currency": "USD",
-        "exponent": 2
-      },
-      "percent": 10,
+      "limit": null,
+      "percent": 0,
       "severity": "normal",
-      "enabled": true,
-      "disabled_reason": null
+      "enabled": false,
+      "disabled_reason": "out_of_credits"
     }
   },
-  "fetched_at": "2026-06-18T14:15:04.002512-07:00",
-  "fetched_ts": 1781817304.0025263
+  "fetched_at": "2026-06-18T14:30:04.909810-07:00",
+  "fetched_ts": 1781818204.9098258
 }

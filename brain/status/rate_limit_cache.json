@@ -1,18 +1,27 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 4.0,
-      "resets_at": "2026-06-19T17:39:59.564614+00:00"
+      "utilization": 8.0,
+      "resets_at": "2026-06-19T17:40:00.538085+00:00",
+      "limit_dollars": null,
+      "used_dollars": null,
+      "remaining_dollars": null
     },
     "seven_day": {
-      "utilization": 2.0,
-      "resets_at": "2026-06-20T21:59:59.564636+00:00"
+      "utilization": 3.0,
+      "resets_at": "2026-06-20T22:00:00.538111+00:00",
+      "limit_dollars": null,
+      "used_dollars": null,
+      "remaining_dollars": null
     },
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 1.0,
-      "resets_at": "2026-06-20T21:59:59.564646+00:00"
+      "resets_at": "2026-06-20T22:00:00.538123+00:00",
+      "limit_dollars": null,
+      "used_dollars": null,
+      "remaining_dollars": null
     },
     "seven_day_cowork": null,
     "seven_day_omelette": null,
@@ -20,6 +29,7 @@
     "iguana_necktie": null,
     "omelette_promotional": null,
     "cinder_cove": null,
+    "amber_ladder": null,
     "extra_usage": {
       "is_enabled": false,
       "monthly_limit": null,
@@ -35,18 +45,18 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 4,
+        "percent": 8,
         "severity": "normal",
-        "resets_at": "2026-06-19T17:39:59.564614+00:00",
+        "resets_at": "2026-06-19T17:40:00.538085+00:00",
         "scope": null,
         "is_active": true
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
-        "percent": 2,
+        "percent": 3,
         "severity": "normal",
-        "resets_at": "2026-06-20T21:59:59.564636+00:00",
+        "resets_at": "2026-06-20T22:00:00.538111+00:00",
         "scope": null,
         "is_active": false
       },
@@ -55,7 +65,7 @@
         "group": "weekly",
         "percent": 1,
         "severity": "normal",
-        "resets_at": "2026-06-20T21:59:59.564646+00:00",
+        "resets_at": "2026-06-20T22:00:00.538123+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -79,6 +89,6 @@
       "disabled_reason": "out_of_credits"
     }
   },
-  "fetched_at": "2026-06-19T07:15:00.632619-07:00",
-  "fetched_ts": 1781878500.6326325
+  "fetched_at": "2026-06-19T07:30:00.612614-07:00",
+  "fetched_ts": 1781879400.6126285
 }

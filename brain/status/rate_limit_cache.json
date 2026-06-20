@@ -2,7 +2,7 @@
   "data": {
     "five_hour": {
       "utilization": 100.0,
-      "resets_at": "2026-06-20T23:10:00.238029+00:00",
+      "resets_at": "2026-06-20T23:10:00.210823+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -47,7 +47,7 @@
         "group": "session",
         "percent": 100,
         "severity": "critical",
-        "resets_at": "2026-06-20T23:10:00.238029+00:00",
+        "resets_at": "2026-06-20T23:10:00.210823+00:00",
         "scope": null,
         "is_active": true
       },
@@ -93,6 +93,6 @@
       "disabled_reason": "out_of_credits"
     }
   },
-  "fetched_at": "2026-06-20T15:45:10.290648-07:00",
-  "fetched_ts": 1781995510.2906587
+  "fetched_at": "2026-06-20T16:00:07.263687-07:00",
+  "fetched_ts": 1781996407.263704
 }

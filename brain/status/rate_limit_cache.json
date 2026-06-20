@@ -1,15 +1,15 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 53.0,
-      "resets_at": "2026-06-20T17:39:59.518363+00:00",
+      "utilization": 61.0,
+      "resets_at": "2026-06-20T17:40:00.534294+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
-      "utilization": 6.0,
-      "resets_at": "2026-06-20T21:59:59.518385+00:00",
+      "utilization": 7.0,
+      "resets_at": "2026-06-20T22:00:00.534317+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -17,8 +17,8 @@
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
     "seven_day_sonnet": {
-      "utilization": 0.0,
-      "resets_at": "2026-06-20T21:59:59.518396+00:00",
+      "utilization": 1.0,
+      "resets_at": "2026-06-20T21:59:59.534327+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -45,27 +45,27 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 53,
+        "percent": 61,
         "severity": "normal",
-        "resets_at": "2026-06-20T17:39:59.518363+00:00",
+        "resets_at": "2026-06-20T17:40:00.534294+00:00",
         "scope": null,
         "is_active": true
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
-        "percent": 6,
+        "percent": 7,
         "severity": "normal",
-        "resets_at": "2026-06-20T21:59:59.518385+00:00",
+        "resets_at": "2026-06-20T22:00:00.534317+00:00",
         "scope": null,
         "is_active": false
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
-        "percent": 0,
+        "percent": 1,
         "severity": "normal",
-        "resets_at": "2026-06-20T21:59:59.518396+00:00",
+        "resets_at": "2026-06-20T21:59:59.534327+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -93,6 +93,6 @@
       "disabled_reason": "out_of_credits"
     }
   },
-  "fetched_at": "2026-06-20T08:15:07.604935-07:00",
-  "fetched_ts": 1781968507.6049492
+  "fetched_at": "2026-06-20T08:30:00.591579-07:00",
+  "fetched_ts": 1781969400.5915904
 }

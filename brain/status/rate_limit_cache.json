@@ -1,15 +1,15 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 89.0,
-      "resets_at": "2026-06-20T17:39:59.116733+00:00",
+      "utilization": 92.0,
+      "resets_at": "2026-06-20T17:39:59.533492+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
       "utilization": 10.0,
-      "resets_at": "2026-06-20T21:59:59.116755+00:00",
+      "resets_at": "2026-06-20T21:59:59.533515+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -18,7 +18,7 @@
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 1.0,
-      "resets_at": "2026-06-20T22:00:00.116762+00:00",
+      "resets_at": "2026-06-20T21:59:59.533521+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -45,9 +45,9 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 89,
-        "severity": "warning",
-        "resets_at": "2026-06-20T17:39:59.116733+00:00",
+        "percent": 92,
+        "severity": "critical",
+        "resets_at": "2026-06-20T17:39:59.533492+00:00",
         "scope": null,
         "is_active": true
       },
@@ -56,7 +56,7 @@
         "group": "weekly",
         "percent": 10,
         "severity": "normal",
-        "resets_at": "2026-06-20T21:59:59.116755+00:00",
+        "resets_at": "2026-06-20T21:59:59.533515+00:00",
         "scope": null,
         "is_active": false
       },
@@ -65,7 +65,7 @@
         "group": "weekly",
         "percent": 1,
         "severity": "normal",
-        "resets_at": "2026-06-20T22:00:00.116762+00:00",
+        "resets_at": "2026-06-20T21:59:59.533521+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -93,6 +93,6 @@
       "disabled_reason": "out_of_credits"
     }
   },
-  "fetched_at": "2026-06-20T09:45:02.240440-07:00",
-  "fetched_ts": 1781973902.2404563
+  "fetched_at": "2026-06-20T10:00:00.595175-07:00",
+  "fetched_ts": 1781974800.5951896
 }

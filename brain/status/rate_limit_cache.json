@@ -1,15 +1,15 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 0.0,
-      "resets_at": "2026-06-20T23:10:00.677300+00:00",
+      "utilization": 41.0,
+      "resets_at": "2026-06-20T23:10:00.459279+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
-      "utilization": 10.0,
-      "resets_at": "2026-06-20T21:59:59.677325+00:00",
+      "utilization": 14.0,
+      "resets_at": "2026-06-20T22:00:00.459301+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -17,8 +17,8 @@
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
     "seven_day_sonnet": {
-      "utilization": 1.0,
-      "resets_at": "2026-06-20T21:59:59.677334+00:00",
+      "utilization": 2.0,
+      "resets_at": "2026-06-20T22:00:00.459311+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -45,27 +45,27 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 0,
+        "percent": 41,
         "severity": "normal",
-        "resets_at": "2026-06-20T23:10:00.677300+00:00",
-        "scope": null,
-        "is_active": false
-      },
-      {
-        "kind": "weekly_all",
-        "group": "weekly",
-        "percent": 10,
-        "severity": "normal",
-        "resets_at": "2026-06-20T21:59:59.677325+00:00",
+        "resets_at": "2026-06-20T23:10:00.459279+00:00",
         "scope": null,
         "is_active": true
       },
       {
+        "kind": "weekly_all",
+        "group": "weekly",
+        "percent": 14,
+        "severity": "normal",
+        "resets_at": "2026-06-20T22:00:00.459301+00:00",
+        "scope": null,
+        "is_active": false
+      },
+      {
         "kind": "weekly_scoped",
         "group": "weekly",
-        "percent": 1,
+        "percent": 2,
         "severity": "normal",
-        "resets_at": "2026-06-20T21:59:59.677334+00:00",
+        "resets_at": "2026-06-20T22:00:00.459311+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -93,6 +93,6 @@
       "disabled_reason": "out_of_credits"
     }
   },
-  "fetched_at": "2026-06-20T11:15:00.733261-07:00",
-  "fetched_ts": 1781979300.7332768
+  "fetched_at": "2026-06-20T11:30:02.597314-07:00",
+  "fetched_ts": 1781980202.597331
 }

@@ -1,5 +1,5 @@
 # Token Usage
-**Updated:** 2026-06-21 00:30 MST
+**Updated:** 2026-06-21 00:45 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
@@ -21,7 +21,7 @@
 | haiku | 1 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
-- **Total Tokens:** 0 (25 requests)
+- **Total Tokens:** 0 (26 requests)
 - **Output Tokens:** 0
 - **Cost (est):** $0.00
 
@@ -29,7 +29,7 @@
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
 | opus | 1 | 0 | 0 | $0.00 |
-| sonnet | 21 | 0 | 0 | $0.00 |
+| sonnet | 22 | 0 | 0 | $0.00 |
 | haiku | 3 | 0 | 0 | $0.00 |
 
 ---

@@ -1,15 +1,15 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 6.0,
-      "resets_at": "2026-06-22T07:50:00.427322+00:00",
+      "utilization": 0.0,
+      "resets_at": null,
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
       "utilization": 6.0,
-      "resets_at": "2026-06-27T22:00:00.427341+00:00",
+      "resets_at": "2026-06-27T21:59:59.985379+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -18,7 +18,7 @@
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 3.0,
-      "resets_at": "2026-06-27T22:00:00.427348+00:00",
+      "resets_at": "2026-06-27T21:59:59.985394+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -45,27 +45,27 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 6,
+        "percent": 0,
         "severity": "normal",
-        "resets_at": "2026-06-22T07:50:00.427322+00:00",
+        "resets_at": null,
         "scope": null,
-        "is_active": true
+        "is_active": false
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
         "percent": 6,
         "severity": "normal",
-        "resets_at": "2026-06-27T22:00:00.427341+00:00",
+        "resets_at": "2026-06-27T21:59:59.985379+00:00",
         "scope": null,
-        "is_active": false
+        "is_active": true
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
         "percent": 3,
         "severity": "normal",
-        "resets_at": "2026-06-27T22:00:00.427348+00:00",
+        "resets_at": "2026-06-27T21:59:59.985394+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -93,6 +93,6 @@
       "disabled_reason": "out_of_credits"
     }
   },
-  "fetched_at": "2026-06-22T00:45:00.487717-07:00",
-  "fetched_ts": 1782114300.487727
+  "fetched_at": "2026-06-22T01:00:15.052450-07:00",
+  "fetched_ts": 1782115215.052467
 }

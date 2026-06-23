@@ -9,7 +9,7 @@
     },
     "seven_day": {
       "utilization": 32.0,
-      "resets_at": "2026-06-27T21:59:59.894342+00:00",
+      "resets_at": "2026-06-27T21:59:59.515336+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -18,7 +18,7 @@
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 27.0,
-      "resets_at": "2026-06-27T21:59:59.894358+00:00",
+      "resets_at": "2026-06-27T21:59:59.515351+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -56,7 +56,7 @@
         "group": "weekly",
         "percent": 32,
         "severity": "normal",
-        "resets_at": "2026-06-27T21:59:59.894342+00:00",
+        "resets_at": "2026-06-27T21:59:59.515336+00:00",
         "scope": null,
         "is_active": true
       },
@@ -65,7 +65,7 @@
         "group": "weekly",
         "percent": 27,
         "severity": "normal",
-        "resets_at": "2026-06-27T21:59:59.894358+00:00",
+        "resets_at": "2026-06-27T21:59:59.515351+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -90,9 +90,21 @@
       "percent": 10,
       "severity": "normal",
       "enabled": false,
-      "disabled_reason": "out_of_credits"
+      "disabled_reason": "out_of_credits",
+      "cap": {
+        "money": null,
+        "credits": {
+          "amount_minor": 2000,
+          "exponent": 2
+        }
+      },
+      "balance": null,
+      "auto_reload": null,
+      "disclaimer": "Usage credits cover you when you hit your plan limits. [Learn more](https://support.claude.com/articles/11647753)",
+      "can_purchase_credits": false,
+      "can_toggle": false
     }
   },
-  "fetched_at": "2026-06-23T15:00:00.980604-07:00",
-  "fetched_ts": 1782252000.9806163
+  "fetched_at": "2026-06-23T15:15:00.582504-07:00",
+  "fetched_ts": 1782252900.5825226
 }

@@ -1,15 +1,15 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 44.0,
-      "resets_at": "2026-06-23T04:50:00.494235+00:00",
+      "utilization": 0.0,
+      "resets_at": null,
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
       "utilization": 25.0,
-      "resets_at": "2026-06-27T22:00:00.494257+00:00",
+      "resets_at": "2026-06-27T21:59:59.965574+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -18,7 +18,7 @@
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 19.0,
-      "resets_at": "2026-06-27T22:00:00.494263+00:00",
+      "resets_at": "2026-06-27T21:59:59.965595+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -45,27 +45,27 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 44,
+        "percent": 0,
         "severity": "normal",
-        "resets_at": "2026-06-23T04:50:00.494235+00:00",
+        "resets_at": null,
         "scope": null,
-        "is_active": true
+        "is_active": false
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
         "percent": 25,
         "severity": "normal",
-        "resets_at": "2026-06-27T22:00:00.494257+00:00",
+        "resets_at": "2026-06-27T21:59:59.965574+00:00",
         "scope": null,
-        "is_active": false
+        "is_active": true
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
         "percent": 19,
         "severity": "normal",
-        "resets_at": "2026-06-27T22:00:00.494263+00:00",
+        "resets_at": "2026-06-27T21:59:59.965595+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -93,6 +93,6 @@
       "disabled_reason": "out_of_credits"
     }
   },
-  "fetched_at": "2026-06-22T21:45:00.548616-07:00",
-  "fetched_ts": 1782189900.548637
+  "fetched_at": "2026-06-22T22:00:01.033450-07:00",
+  "fetched_ts": 1782190801.0334687
 }

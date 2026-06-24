@@ -1,15 +1,15 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 23.0,
-      "resets_at": "2026-06-24T04:20:00.532150+00:00",
+      "utilization": 33.0,
+      "resets_at": "2026-06-24T04:19:59.622681+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
-      "utilization": 34.0,
-      "resets_at": "2026-06-27T22:00:00.532179+00:00",
+      "utilization": 35.0,
+      "resets_at": "2026-06-27T21:59:59.622709+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -18,7 +18,7 @@
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 28.0,
-      "resets_at": "2026-06-27T22:00:00.532189+00:00",
+      "resets_at": "2026-06-27T21:59:59.622715+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -45,18 +45,18 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 23,
+        "percent": 33,
         "severity": "normal",
-        "resets_at": "2026-06-24T04:20:00.532150+00:00",
+        "resets_at": "2026-06-24T04:19:59.622681+00:00",
         "scope": null,
         "is_active": false
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
-        "percent": 34,
+        "percent": 35,
         "severity": "normal",
-        "resets_at": "2026-06-27T22:00:00.532179+00:00",
+        "resets_at": "2026-06-27T21:59:59.622709+00:00",
         "scope": null,
         "is_active": true
       },
@@ -65,7 +65,7 @@
         "group": "weekly",
         "percent": 28,
         "severity": "normal",
-        "resets_at": "2026-06-27T22:00:00.532189+00:00",
+        "resets_at": "2026-06-27T21:59:59.622715+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -105,6 +105,6 @@
       "can_toggle": false
     }
   },
-  "fetched_at": "2026-06-23T20:00:00.575633-07:00",
-  "fetched_ts": 1782270000.5756469
+  "fetched_at": "2026-06-23T20:15:00.669061-07:00",
+  "fetched_ts": 1782270900.6690786
 }

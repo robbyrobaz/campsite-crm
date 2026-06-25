@@ -2,27 +2,21 @@
   "data": {
     "five_hour": {
       "utilization": 0.0,
-      "resets_at": null,
+      "resets_at": "2026-06-25T05:00:01.062860+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
       "utilization": 39.0,
-      "resets_at": "2026-06-27T21:59:59.758905+00:00",
+      "resets_at": "2026-06-27T22:00:00.062927+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
-    "seven_day_sonnet": {
-      "utilization": 34.0,
-      "resets_at": "2026-06-27T21:59:59.758920+00:00",
-      "limit_dollars": null,
-      "used_dollars": null,
-      "remaining_dollars": null
-    },
+    "seven_day_sonnet": null,
     "seven_day_cowork": null,
     "seven_day_omelette": null,
     "tangelo": null,
@@ -47,7 +41,7 @@
         "group": "session",
         "percent": 0,
         "severity": "normal",
-        "resets_at": null,
+        "resets_at": "2026-06-25T05:00:01.062860+00:00",
         "scope": null,
         "is_active": false
       },
@@ -56,24 +50,9 @@
         "group": "weekly",
         "percent": 39,
         "severity": "normal",
-        "resets_at": "2026-06-27T21:59:59.758905+00:00",
+        "resets_at": "2026-06-27T22:00:00.062927+00:00",
         "scope": null,
         "is_active": true
-      },
-      {
-        "kind": "weekly_scoped",
-        "group": "weekly",
-        "percent": 34,
-        "severity": "normal",
-        "resets_at": "2026-06-27T21:59:59.758920+00:00",
-        "scope": {
-          "model": {
-            "id": null,
-            "display_name": "Sonnet"
-          },
-          "surface": null
-        },
-        "is_active": false
       }
     ],
     "spend": {
@@ -105,6 +84,6 @@
       "can_toggle": false
     }
   },
-  "fetched_at": "2026-06-24T17:00:00.824753-07:00",
-  "fetched_ts": 1782345600.8247666
+  "fetched_at": "2026-06-24T17:15:18.123756-07:00",
+  "fetched_ts": 1782346518.1237738
 }

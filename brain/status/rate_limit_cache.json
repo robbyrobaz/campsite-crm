@@ -2,14 +2,14 @@
   "data": {
     "five_hour": {
       "utilization": 3.0,
-      "resets_at": "2026-06-27T07:00:00.231167+00:00",
+      "resets_at": "2026-06-27T07:00:00.243708+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
       "utilization": 56.0,
-      "resets_at": "2026-06-27T22:00:00.231186+00:00",
+      "resets_at": "2026-06-27T22:00:00.243726+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -17,8 +17,8 @@
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
     "seven_day_sonnet": {
-      "utilization": 42.0,
-      "resets_at": "2026-06-27T22:00:00.231193+00:00",
+      "utilization": 43.0,
+      "resets_at": "2026-06-27T22:00:00.243732+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -47,7 +47,7 @@
         "group": "session",
         "percent": 3,
         "severity": "normal",
-        "resets_at": "2026-06-27T07:00:00.231167+00:00",
+        "resets_at": "2026-06-27T07:00:00.243708+00:00",
         "scope": null,
         "is_active": false
       },
@@ -56,16 +56,16 @@
         "group": "weekly",
         "percent": 56,
         "severity": "normal",
-        "resets_at": "2026-06-27T22:00:00.231186+00:00",
+        "resets_at": "2026-06-27T22:00:00.243726+00:00",
         "scope": null,
         "is_active": true
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
-        "percent": 42,
+        "percent": 43,
         "severity": "normal",
-        "resets_at": "2026-06-27T22:00:00.231193+00:00",
+        "resets_at": "2026-06-27T22:00:00.243732+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -96,6 +96,6 @@
     },
     "member_dashboard_available": false
   },
-  "fetched_at": "2026-06-26T23:00:15.282451-07:00",
-  "fetched_ts": 1782540015.2824652
+  "fetched_at": "2026-06-26T23:15:11.297784-07:00",
+  "fetched_ts": 1782540911.2977974
 }

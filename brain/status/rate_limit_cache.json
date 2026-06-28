@@ -1,15 +1,15 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 6.0,
-      "resets_at": "2026-06-28T12:59:59.478788+00:00",
+      "utilization": 0.0,
+      "resets_at": null,
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
       "utilization": 1.0,
-      "resets_at": "2026-07-04T21:59:59.478814+00:00",
+      "resets_at": "2026-07-04T21:59:59.534890+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -18,7 +18,7 @@
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 1.0,
-      "resets_at": "2026-07-04T21:59:59.478824+00:00",
+      "resets_at": "2026-07-04T21:59:59.534905+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -45,27 +45,27 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 6,
+        "percent": 0,
         "severity": "normal",
-        "resets_at": "2026-06-28T12:59:59.478788+00:00",
+        "resets_at": null,
         "scope": null,
-        "is_active": true
+        "is_active": false
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
         "percent": 1,
         "severity": "normal",
-        "resets_at": "2026-07-04T21:59:59.478814+00:00",
+        "resets_at": "2026-07-04T21:59:59.534890+00:00",
         "scope": null,
-        "is_active": false
+        "is_active": true
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
         "percent": 1,
         "severity": "normal",
-        "resets_at": "2026-07-04T21:59:59.478824+00:00",
+        "resets_at": "2026-07-04T21:59:59.534905+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -96,6 +96,6 @@
     },
     "member_dashboard_available": false
   },
-  "fetched_at": "2026-06-28T05:45:00.547443-07:00",
-  "fetched_ts": 1782650700.547457
+  "fetched_at": "2026-06-28T06:00:00.590969-07:00",
+  "fetched_ts": 1782651600.5909827
 }

@@ -1,15 +1,15 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 16.0,
-      "resets_at": "2026-06-28T18:10:00.534173+00:00",
+      "utilization": 0.0,
+      "resets_at": "2026-06-28T23:10:00.896074+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
       "utilization": 3.0,
-      "resets_at": "2026-07-04T22:00:00.534195+00:00",
+      "resets_at": "2026-07-04T21:59:59.896098+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -18,7 +18,7 @@
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 3.0,
-      "resets_at": "2026-07-04T22:00:00.534202+00:00",
+      "resets_at": "2026-07-04T21:59:59.896108+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -45,27 +45,27 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 16,
+        "percent": 0,
         "severity": "normal",
-        "resets_at": "2026-06-28T18:10:00.534173+00:00",
+        "resets_at": "2026-06-28T23:10:00.896074+00:00",
         "scope": null,
-        "is_active": true
+        "is_active": false
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
         "percent": 3,
         "severity": "normal",
-        "resets_at": "2026-07-04T22:00:00.534195+00:00",
+        "resets_at": "2026-07-04T21:59:59.896098+00:00",
         "scope": null,
-        "is_active": false
+        "is_active": true
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
         "percent": 3,
         "severity": "normal",
-        "resets_at": "2026-07-04T22:00:00.534202+00:00",
+        "resets_at": "2026-07-04T21:59:59.896108+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -96,6 +96,6 @@
     },
     "member_dashboard_available": false
   },
-  "fetched_at": "2026-06-28T11:00:00.593624-07:00",
-  "fetched_ts": 1782669600.5936391
+  "fetched_at": "2026-06-28T11:15:00.951959-07:00",
+  "fetched_ts": 1782670500.9519696
 }

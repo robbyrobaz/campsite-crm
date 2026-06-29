@@ -2,14 +2,14 @@
   "data": {
     "five_hour": {
       "utilization": 3.0,
-      "resets_at": "2026-06-30T02:00:00.329577+00:00",
+      "resets_at": "2026-06-30T01:59:59.812331+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
       "utilization": 15.0,
-      "resets_at": "2026-07-04T22:00:00.329599+00:00",
+      "resets_at": "2026-07-04T21:59:59.812353+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -17,8 +17,8 @@
     "seven_day_oauth_apps": null,
     "seven_day_opus": null,
     "seven_day_sonnet": {
-      "utilization": 14.0,
-      "resets_at": "2026-07-04T22:00:00.329624+00:00",
+      "utilization": 15.0,
+      "resets_at": "2026-07-04T21:59:59.812361+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -47,7 +47,7 @@
         "group": "session",
         "percent": 3,
         "severity": "normal",
-        "resets_at": "2026-06-30T02:00:00.329577+00:00",
+        "resets_at": "2026-06-30T01:59:59.812331+00:00",
         "scope": null,
         "is_active": false
       },
@@ -56,16 +56,16 @@
         "group": "weekly",
         "percent": 15,
         "severity": "normal",
-        "resets_at": "2026-07-04T22:00:00.329599+00:00",
+        "resets_at": "2026-07-04T21:59:59.812353+00:00",
         "scope": null,
         "is_active": true
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
-        "percent": 14,
+        "percent": 15,
         "severity": "normal",
-        "resets_at": "2026-07-04T22:00:00.329624+00:00",
+        "resets_at": "2026-07-04T21:59:59.812361+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -96,6 +96,6 @@
     },
     "member_dashboard_available": false
   },
-  "fetched_at": "2026-06-29T16:15:13.411155-07:00",
-  "fetched_ts": 1782774913.411165
+  "fetched_at": "2026-06-29T16:30:17.872455-07:00",
+  "fetched_ts": 1782775817.872471
 }

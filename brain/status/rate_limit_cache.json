@@ -1,15 +1,15 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 8.0,
-      "resets_at": "2026-06-29T09:10:00.182002+00:00",
+      "utilization": 9.0,
+      "resets_at": "2026-06-29T09:09:59.847099+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
       "utilization": 8.0,
-      "resets_at": "2026-07-04T22:00:00.182041+00:00",
+      "resets_at": "2026-07-04T21:59:59.847119+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -18,7 +18,7 @@
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 9.0,
-      "resets_at": "2026-07-04T22:00:00.182052+00:00",
+      "resets_at": "2026-07-04T21:59:59.847128+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -45,18 +45,18 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 8,
+        "percent": 9,
         "severity": "normal",
-        "resets_at": "2026-06-29T09:10:00.182002+00:00",
+        "resets_at": "2026-06-29T09:09:59.847099+00:00",
         "scope": null,
-        "is_active": false
+        "is_active": true
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
         "percent": 8,
         "severity": "normal",
-        "resets_at": "2026-07-04T22:00:00.182041+00:00",
+        "resets_at": "2026-07-04T21:59:59.847119+00:00",
         "scope": null,
         "is_active": false
       },
@@ -65,7 +65,7 @@
         "group": "weekly",
         "percent": 9,
         "severity": "normal",
-        "resets_at": "2026-07-04T22:00:00.182052+00:00",
+        "resets_at": "2026-07-04T21:59:59.847128+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -73,7 +73,7 @@
           },
           "surface": null
         },
-        "is_active": true
+        "is_active": false
       }
     ],
     "spend": {
@@ -96,6 +96,6 @@
     },
     "member_dashboard_available": false
   },
-  "fetched_at": "2026-06-28T21:30:15.244462-07:00",
-  "fetched_ts": 1782707415.2444727
+  "fetched_at": "2026-06-28T21:45:17.913221-07:00",
+  "fetched_ts": 1782708317.9132338
 }

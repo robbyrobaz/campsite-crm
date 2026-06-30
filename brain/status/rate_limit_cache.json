@@ -2,14 +2,14 @@
   "data": {
     "five_hour": {
       "utilization": 13.0,
-      "resets_at": "2026-06-30T07:00:00.415394+00:00",
+      "resets_at": "2026-06-30T07:00:00.282828+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
       "utilization": 16.0,
-      "resets_at": "2026-07-04T22:00:00.415416+00:00",
+      "resets_at": "2026-07-04T22:00:00.282852+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -18,7 +18,7 @@
     "seven_day_opus": null,
     "seven_day_sonnet": {
       "utilization": 15.0,
-      "resets_at": "2026-07-04T22:00:00.415425+00:00",
+      "resets_at": "2026-07-04T22:00:00.282861+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -47,7 +47,7 @@
         "group": "session",
         "percent": 13,
         "severity": "normal",
-        "resets_at": "2026-06-30T07:00:00.415394+00:00",
+        "resets_at": "2026-06-30T07:00:00.282828+00:00",
         "scope": null,
         "is_active": false
       },
@@ -56,7 +56,7 @@
         "group": "weekly",
         "percent": 16,
         "severity": "normal",
-        "resets_at": "2026-07-04T22:00:00.415416+00:00",
+        "resets_at": "2026-07-04T22:00:00.282852+00:00",
         "scope": null,
         "is_active": true
       },
@@ -65,7 +65,7 @@
         "group": "weekly",
         "percent": 15,
         "severity": "normal",
-        "resets_at": "2026-07-04T22:00:00.415425+00:00",
+        "resets_at": "2026-07-04T22:00:00.282861+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -90,12 +90,12 @@
       "cap": null,
       "balance": null,
       "auto_reload": null,
-      "disclaimer": "Usage credits cover you when you hit your plan limits. [Learn more](https://support.claude.com/articles/11647753)",
+      "disclaimer": "Usage credits cover you when you hit your plan limits. [Learn more](https://support.claude.com/articles/12429409)",
       "can_purchase_credits": false,
       "can_toggle": false
     },
     "member_dashboard_available": false
   },
-  "fetched_at": "2026-06-29T23:00:05.495812-07:00",
-  "fetched_ts": 1782799205.4958274
+  "fetched_at": "2026-06-29T23:15:01.341106-07:00",
+  "fetched_ts": 1782800101.3411229
 }

@@ -1,15 +1,15 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 62.0,
-      "resets_at": "2026-07-03T18:20:00.217623+00:00",
+      "utilization": 76.0,
+      "resets_at": "2026-07-03T18:20:00.265169+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
-      "utilization": 38.0,
-      "resets_at": "2026-07-04T22:00:00.217645+00:00",
+      "utilization": 39.0,
+      "resets_at": "2026-07-04T22:00:00.265191+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -40,27 +40,27 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 62,
-        "severity": "normal",
-        "resets_at": "2026-07-03T18:20:00.217623+00:00",
+        "percent": 76,
+        "severity": "warning",
+        "resets_at": "2026-07-03T18:20:00.265169+00:00",
         "scope": null,
-        "is_active": false
+        "is_active": true
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
-        "percent": 38,
+        "percent": 39,
         "severity": "normal",
-        "resets_at": "2026-07-04T22:00:00.217645+00:00",
+        "resets_at": "2026-07-04T22:00:00.265191+00:00",
         "scope": null,
         "is_active": false
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
-        "percent": 63,
+        "percent": 66,
         "severity": "normal",
-        "resets_at": "2026-07-04T22:00:00.217939+00:00",
+        "resets_at": "2026-07-04T22:00:00.265519+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -68,7 +68,7 @@
           },
           "surface": null
         },
-        "is_active": true
+        "is_active": false
       }
     ],
     "spend": {
@@ -91,6 +91,6 @@
     },
     "member_dashboard_available": false
   },
-  "fetched_at": "2026-07-03T10:15:01.279591-07:00",
-  "fetched_ts": 1783098901.279601
+  "fetched_at": "2026-07-03T10:30:07.349670-07:00",
+  "fetched_ts": 1783099807.3496852
 }

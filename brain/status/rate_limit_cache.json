@@ -1,15 +1,15 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 100.0,
-      "resets_at": "2026-07-10T18:50:00.442688+00:00",
+      "utilization": 16.0,
+      "resets_at": "2026-07-10T23:50:00.396374+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
-      "utilization": 22.0,
-      "resets_at": "2026-07-11T22:00:00.442715+00:00",
+      "utilization": 23.0,
+      "resets_at": "2026-07-11T22:00:00.396400+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -40,27 +40,27 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 100,
-        "severity": "critical",
-        "resets_at": "2026-07-10T18:50:00.442688+00:00",
+        "percent": 16,
+        "severity": "normal",
+        "resets_at": "2026-07-10T23:50:00.396374+00:00",
         "scope": null,
-        "is_active": true
+        "is_active": false
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
-        "percent": 22,
+        "percent": 23,
         "severity": "normal",
-        "resets_at": "2026-07-11T22:00:00.442715+00:00",
+        "resets_at": "2026-07-11T22:00:00.396400+00:00",
         "scope": null,
         "is_active": false
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
-        "percent": 33,
+        "percent": 36,
         "severity": "normal",
-        "resets_at": "2026-07-11T22:00:00.443023+00:00",
+        "resets_at": "2026-07-11T22:00:00.396724+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -68,7 +68,7 @@
           },
           "surface": null
         },
-        "is_active": false
+        "is_active": true
       }
     ],
     "spend": {
@@ -91,6 +91,6 @@
     },
     "member_dashboard_available": false
   },
-  "fetched_at": "2026-07-10T11:45:00.502361-07:00",
-  "fetched_ts": 1783709100.5023758
+  "fetched_at": "2026-07-10T12:00:13.462758-07:00",
+  "fetched_ts": 1783710013.4627779
 }

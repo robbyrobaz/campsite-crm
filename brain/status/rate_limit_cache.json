@@ -1,15 +1,15 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 52.0,
-      "resets_at": "2026-07-11T16:09:59.721113+00:00",
+      "utilization": 79.0,
+      "resets_at": "2026-07-11T16:10:00.469189+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
-      "utilization": 35.0,
-      "resets_at": "2026-07-11T21:59:59.721136+00:00",
+      "utilization": 38.0,
+      "resets_at": "2026-07-11T22:00:00.469216+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -40,27 +40,27 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 52,
-        "severity": "normal",
-        "resets_at": "2026-07-11T16:09:59.721113+00:00",
+        "percent": 79,
+        "severity": "warning",
+        "resets_at": "2026-07-11T16:10:00.469189+00:00",
         "scope": null,
-        "is_active": false
+        "is_active": true
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
-        "percent": 35,
+        "percent": 38,
         "severity": "normal",
-        "resets_at": "2026-07-11T21:59:59.721136+00:00",
+        "resets_at": "2026-07-11T22:00:00.469216+00:00",
         "scope": null,
         "is_active": false
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
-        "percent": 55,
+        "percent": 60,
         "severity": "normal",
-        "resets_at": "2026-07-11T21:59:59.721464+00:00",
+        "resets_at": "2026-07-11T22:00:00.469529+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -68,7 +68,7 @@
           },
           "surface": null
         },
-        "is_active": true
+        "is_active": false
       }
     ],
     "spend": {
@@ -91,6 +91,6 @@
     },
     "member_dashboard_available": false
   },
-  "fetched_at": "2026-07-11T07:15:00.784393-07:00",
-  "fetched_ts": 1783779300.7844079
+  "fetched_at": "2026-07-11T07:30:00.526055-07:00",
+  "fetched_ts": 1783780200.5260696
 }

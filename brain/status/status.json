@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-21T05:24:41.011585+00:00",
+  "last_updated": "2026-07-21T05:32:17.769603+00:00",
   "server_health": {
     "hostname": "omen-claw",
     "load": "normal",
@@ -12,25 +12,27 @@
     "church": "healthy"
   },
   "kalshi_paper_trader": {
-    "last_run": "2026-07-15T22:52:31Z",
-    "total_bets": 67318,
-    "open_positions": 2761,
+    "last_run": "2026-07-21T05:32:17.769603+00:00",
+    "total_bets": 71826,
+    "open_positions": 2759,
     "open_at_risk_usd": 12610.45,
-    "settled": 64557,
-    "record": "49329W-15228L",
-    "win_rate": 76.4,
-    "pnl": -22640.51,
-    "capital_deployed_usd": 312043.96,
-    "roi": -7.3,
-    "bets_this_run": 17,
-    "bets_this_run_capital": 77.12,
-    "settlements_this_run": 2,
-    "settlements_this_run_record": "2W-0L",
-    "settlements_this_run_pnl": 1.64,
+    "settled": 69067,
+    "record": "52792W-16275L",
+    "win_rate": 76.43,
+    "pnl": -21519.08,
+    "capital_deployed_usd": 320484.08,
+    "roi": -6.71,
+    "bets_this_run": 29,
+    "bets_this_run_capital": 136.26,
+    "settlements_this_run": 33,
+    "settlements_this_run_record": "27W-6L",
+    "settlements_this_run_pnl": 2.27,
     "active_strategies_this_run": {
+      "parlay_sweet_spot": 7,
       "time_decay_expanded": 8,
       "expanded_overround": 8,
-      "high_volume_fade": 1
+      "high_volume_fade": 4,
+      "entertainment_culture": 2
     },
     "strategy_pnl_cumulative": {
       "time_decay_expanded": -12915.0,
@@ -51,7 +53,7 @@
     ],
     "worst_strategy_roi": "parlay_sweet_spot -41.4%",
     "notes": "Run Jul 15 22:52 UTC, completed 23:00 UTC (~8 min). Only 2 settlements this run: 2W-0L, P&L +$1.64. 17 new paper bets placed ($77.12 paper capital). Portfolio now 67,318 bets, 76.4% WR, -$22,640.51 P&L on $312.0k deployed (-7.3% ROI). P&L worsened by $6,729 since Jun 18. Still only 2/11 strategies profitable: entertainment_culture (+$199.87, +2.0% ROI) and moderate_longshot_no (+$6.71, n=19 \u2014 noise). Top capital destroyers: time_decay_expanded (-$12.9k, -11.8% ROI, 23,381 bets), elections_political (-$5.1k, -22.3% ROI), parlay_sweet_spot (-$2.9k, -41.4% ROI). High WR continues to mask broken R:R.",
-    "run_status": "in_progress",
+    "run_status": "completed",
     "run_started": "2026-07-21T05:24:41.011585+00:00"
   }
 }

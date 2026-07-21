@@ -55,5 +55,12 @@
     "notes": "Run Jul 15 22:52 UTC, completed 23:00 UTC (~8 min). Only 2 settlements this run: 2W-0L, P&L +$1.64. 17 new paper bets placed ($77.12 paper capital). Portfolio now 67,318 bets, 76.4% WR, -$22,640.51 P&L on $312.0k deployed (-7.3% ROI). P&L worsened by $6,729 since Jun 18. Still only 2/11 strategies profitable: entertainment_culture (+$199.87, +2.0% ROI) and moderate_longshot_no (+$6.71, n=19 \u2014 noise). Top capital destroyers: time_decay_expanded (-$12.9k, -11.8% ROI, 23,381 bets), elections_political (-$5.1k, -22.3% ROI), parlay_sweet_spot (-$2.9k, -41.4% ROI). High WR continues to mask broken R:R.",
     "run_status": "completed",
     "run_started": "2026-07-21T05:24:41.011585+00:00"
+  },
+  "last_kalshi_paper_run": {
+    "timestamp": "2026-07-21T07:26:32.043112+00:00",
+    "settled": "18 (17W/1L)",
+    "run_pnl": 12.87,
+    "new_bets": 25,
+    "cumulative": "71906 bets; 69102 settled; 52823W-16279L; P&L -21506.28; ROI -6.4%"
   }
 }

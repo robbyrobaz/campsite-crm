@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-06-18T20:36:00Z",
+  "last_updated": "2026-07-21T05:24:41.011585+00:00",
   "server_health": {
     "hostname": "omen-claw",
     "load": "normal",
@@ -33,7 +33,7 @@
       "high_volume_fade": 1
     },
     "strategy_pnl_cumulative": {
-      "time_decay_expanded": -12915.00,
+      "time_decay_expanded": -12915.0,
       "expanded_overround": -1288.52,
       "high_volume_fade": -200.26,
       "elections_political": -5123.15,
@@ -45,8 +45,13 @@
       "mentions_fade": -1.45,
       "moderate_longshot_no": 6.71
     },
-    "profitable_strategies": ["entertainment_culture", "moderate_longshot_no"],
+    "profitable_strategies": [
+      "entertainment_culture",
+      "moderate_longshot_no"
+    ],
     "worst_strategy_roi": "parlay_sweet_spot -41.4%",
-    "notes": "Run Jul 15 22:52 UTC, completed 23:00 UTC (~8 min). Only 2 settlements this run: 2W-0L, P&L +$1.64. 17 new paper bets placed ($77.12 paper capital). Portfolio now 67,318 bets, 76.4% WR, -$22,640.51 P&L on $312.0k deployed (-7.3% ROI). P&L worsened by $6,729 since Jun 18. Still only 2/11 strategies profitable: entertainment_culture (+$199.87, +2.0% ROI) and moderate_longshot_no (+$6.71, n=19 — noise). Top capital destroyers: time_decay_expanded (-$12.9k, -11.8% ROI, 23,381 bets), elections_political (-$5.1k, -22.3% ROI), parlay_sweet_spot (-$2.9k, -41.4% ROI). High WR continues to mask broken R:R."
+    "notes": "Run Jul 15 22:52 UTC, completed 23:00 UTC (~8 min). Only 2 settlements this run: 2W-0L, P&L +$1.64. 17 new paper bets placed ($77.12 paper capital). Portfolio now 67,318 bets, 76.4% WR, -$22,640.51 P&L on $312.0k deployed (-7.3% ROI). P&L worsened by $6,729 since Jun 18. Still only 2/11 strategies profitable: entertainment_culture (+$199.87, +2.0% ROI) and moderate_longshot_no (+$6.71, n=19 \u2014 noise). Top capital destroyers: time_decay_expanded (-$12.9k, -11.8% ROI, 23,381 bets), elections_political (-$5.1k, -22.3% ROI), parlay_sweet_spot (-$2.9k, -41.4% ROI). High WR continues to mask broken R:R.",
+    "run_status": "in_progress",
+    "run_started": "2026-07-21T05:24:41.011585+00:00"
   }
 }

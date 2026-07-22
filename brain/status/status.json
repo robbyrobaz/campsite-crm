@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-22T05:28:17.166009+00:00",
+  "last_updated": "2026-07-22T09:24:28.728457+00:00",
   "server_health": {
     "hostname": "omen-claw",
     "load": "normal",
@@ -12,27 +12,26 @@
     "church": "healthy"
   },
   "kalshi_paper_trader": {
-    "last_run": "2026-07-22T05:28:17.166009+00:00",
-    "total_bets": 72959,
-    "open_positions": 2801,
-    "open_at_risk_usd": 12871.9,
-    "settled": 70158,
-    "record": "53448W-16710L",
+    "last_run": "2026-07-22T09:24:28.728457+00:00",
+    "total_bets": 73133,
+    "open_positions": 2908,
+    "open_at_risk_usd": 13373.09,
+    "settled": 70225,
+    "record": "53505W-16720L",
     "win_rate": 76.2,
-    "pnl": -22912.45,
-    "capital_deployed_usd": 338509.35,
-    "roi": -6.8,
-    "bets_this_run": 26,
-    "bets_this_run_capital": 121.81,
-    "settlements_this_run": 31,
-    "settlements_this_run_record": "25W-6L",
-    "settlements_this_run_pnl": -0.5,
+    "pnl": -22900.55,
+    "capital_deployed_usd": 339322.64,
+    "roi": -6.7,
+    "bets_this_run": 27,
+    "bets_this_run_capital": 127.64,
+    "settlements_this_run": 15,
+    "settlements_this_run_record": "14W-1L",
+    "settlements_this_run_pnl": 10.97,
     "active_strategies_this_run": {
       "parlay_sweet_spot": 8,
       "time_decay_expanded": 8,
       "expanded_overround": 8,
-      "crypto_extreme_range": 1,
-      "high_volume_fade": 1
+      "high_volume_fade": 3
     },
     "strategy_pnl_cumulative": {
       "time_decay_expanded": -12915.0,
@@ -57,10 +56,10 @@
     "run_started": "2026-07-22T05:18:00+00:00"
   },
   "last_kalshi_paper_run": {
-    "timestamp": "2026-07-22T05:28:17.166009+00:00",
-    "settled": "31 (25W/6L)",
-    "run_pnl": -0.5,
-    "new_bets": 26,
-    "cumulative": "72959 bets; 70158 settled; 53448W-16710L; P&L -22912.45; ROI -6.8%"
+    "timestamp": "2026-07-22T09:24:28.728457+00:00",
+    "settled": "15 (14W/1L)",
+    "run_pnl": 10.97,
+    "new_bets": 27,
+    "cumulative": "73133 bets; 70225 settled; 53505W-16720L; P&L -22900.55; ROI -6.7%"
   }
 }

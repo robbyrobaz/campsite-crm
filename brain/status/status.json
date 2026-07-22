@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-22T06:56:00-07:00",
+  "last_updated": "2026-07-22T14:04:00+00:00",
   "server_health": {
     "hostname": "omen-claw",
     "load": "normal",
@@ -12,10 +12,38 @@
     "church": "healthy"
   },
   "kalshi_paper_trader": {
-    "run_status": "in_progress",
+    "last_run": "2026-07-22T14:04:00+00:00",
+    "run_status": "completed",
     "run_started": "2026-07-22T06:56:00-07:00",
-    "command": "python3 -u brain/paper_trader_full.py",
-    "last_completed_run": "2026-07-22T09:24:28.728457+00:00",
-    "last_completed_cumulative": "73133 bets; 70225 settled; 53505W-16720L; P&L -22900.55; ROI -6.7%"
+    "total_bets": 73355,
+    "open_positions": 3002,
+    "open_at_risk_usd": 13813.95,
+    "settled": 70353,
+    "record": "53609W-16744L",
+    "win_rate": 76.2,
+    "pnl": -22899.79,
+    "capital_deployed_usd": 340362.74,
+    "roi": -6.7,
+    "bets_this_run": 32,
+    "bets_this_run_capital": 152.72,
+    "settlements_this_run": 20,
+    "settlements_this_run_record": "16W-4L",
+    "settlements_this_run_pnl": 1.75,
+    "active_strategies_this_run": {
+      "parlay_sweet_spot": 8,
+      "time_decay_expanded": 8,
+      "expanded_overround": 8,
+      "high_volume_fade": 4,
+      "elections_political": 2,
+      "crypto_extreme_range": 1,
+      "entertainment_culture": 1
+    }
+  },
+  "last_kalshi_paper_run": {
+    "timestamp": "2026-07-22T14:04:00+00:00",
+    "settled": "20 (16W/4L)",
+    "run_pnl": 1.75,
+    "new_bets": 32,
+    "cumulative": "73355 bets; 70353 settled; 53609W-16744L; P&L -22899.79; ROI -6.7%"
   }
 }

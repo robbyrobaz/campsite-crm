@@ -1,15 +1,15 @@
 # Token Usage
-**Updated:** 2026-07-23 14:45 MST
+**Updated:** 2026-07-23 15:00 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
-| 5-hour | **0.0%** | Jul 23 07:30 PM MST |
-| 7-day (all) | **75.0%** ⚠️ | Jul 25 03:00 PM MST |
-| 7-day (Sonnet) | **?%** | Jul 25 03:00 PM MST |
+| 5-hour | **1.0%** | Jul 23 07:29 PM MST |
+| 7-day (all) | **75.0%** ⚠️ | Jul 25 02:59 PM MST |
+| 7-day (Sonnet) | **?%** | Jul 25 02:59 PM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 0 (7 requests)
+- **Total Tokens:** 0 (6 requests)
 - **Input:** 0 | **Output:** 0
 - **Cache Read:** 0 | **Cache Write:** 0
 - **Cost (est):** $0.00
@@ -17,7 +17,6 @@
 ### By Model (5h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 1 | 0 | 0 | $0.00 |
 | sonnet | 5 | 0 | 0 | $0.00 |
 | haiku | 1 | 0 | 0 | $0.00 |
 

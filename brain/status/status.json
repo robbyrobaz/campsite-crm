@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-24T11:16:26-07:00",
+  "last_updated": "2026-07-24T11:25:00-07:00",
   "server_health": {
     "hostname": "omen-claw",
     "load": "normal",
@@ -12,39 +12,40 @@
     "church": "healthy"
   },
   "kalshi_paper_trader": {
-    "last_run": "2026-07-23T19:38:00+00:00",
-    "run_status": "running",
+    "last_run": "2026-07-24T11:25:00-07:00",
+    "run_status": "completed",
     "run_started": "2026-07-24T11:16:26-07:00",
-    "total_bets": 74728,
-    "open_positions": 2923,
-    "open_at_risk_usd": 13421.5,
-    "settled": 71805,
-    "record": "54589W-17216L",
-    "win_rate": 76.0,
-    "pnl": -21021.85,
-    "capital_deployed_usd": 346839.35,
+    "total_bets": 75673,
+    "open_positions": 2966,
+    "open_at_risk_usd": 13652.59,
+    "settled": 72707,
+    "record": "55198W-17509L",
+    "win_rate": 75.9,
+    "pnl": -21464.76,
+    "capital_deployed_usd": 351323.35,
     "roi": -6.1,
-    "bets_this_run": 26,
-    "bets_this_run_capital": 122.24,
-    "settlements_this_run": 54,
-    "settlements_this_run_record": "40W-14L",
-    "settlements_this_run_pnl": -26.73,
+    "bets_this_run": 32,
+    "bets_this_run_capital": 155.5,
+    "settlements_this_run": 25,
+    "settlements_this_run_record": "12W-13L",
+    "settlements_this_run_pnl": -48.39,
     "active_strategies_this_run": {
+      "parlay_sweet_spot": 8,
       "time_decay_expanded": 8,
       "expanded_overround": 8,
-      "high_volume_fade": 8,
-      "elections_political": 1,
-      "entertainment_culture": 1
+      "high_volume_fade": 6,
+      "crypto_extreme_range": 1,
+      "elections_political": 1
     }
   },
   "last_kalshi_paper_run": {
-    "timestamp": "2026-07-23T19:38:00+00:00",
-    "settled": "54 (40W/14L)",
-    "run_pnl": -26.73,
-    "new_bets": 26,
-    "cumulative": "74728 bets; 71805 settled; 54589W-17216L; P&L -21021.85; ROI -6.1%"
+    "timestamp": "2026-07-24T11:25:00-07:00",
+    "settled": "25 (12W/13L)",
+    "run_pnl": -48.39,
+    "new_bets": 32,
+    "cumulative": "75673 bets; 72707 settled; 55198W-17509L; P&L -21464.76; ROI -6.1%"
   },
-  "current_task": "Kalshi full paper trader running (all 12 strategies)",
-  "updated_at": "2026-07-24T11:16:26-07:00",
-  "last_kalshi_run_log": "/tmp/kalshi_paper_run_20260723_1229.log"
+  "current_task": "Kalshi full paper trader complete",
+  "updated_at": "2026-07-24T11:25:00-07:00",
+  "last_kalshi_run_log": "/tmp/kalshi_paper_run_20260724_1116.log"
 }

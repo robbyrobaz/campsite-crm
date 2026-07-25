@@ -47,5 +47,10 @@
   },
   "current_task": "Kalshi full paper trader complete",
   "updated_at": "2026-07-24T11:25:00-07:00",
-  "last_kalshi_run_log": "/tmp/kalshi_paper_run_20260724_1116.log"
+  "last_kalshi_run_log": "/tmp/kalshi_paper_run_20260724_1116.log",
+  "last_task": {
+    "task": "Kalshi full paper trader",
+    "completed_at": "2026-07-25T08:09:08",
+    "result": "35 bets; 32 settlements (19W/13L), run P&L -$39.56; cumulative 76,619 bets, 75.8% WR, -$22,258.33 P&L"
+  }
 }

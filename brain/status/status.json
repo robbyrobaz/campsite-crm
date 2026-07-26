@@ -13,8 +13,8 @@
   },
   "kalshi_paper_trader": {
     "last_run": "2026-07-25T19:33:52-07:00",
-    "run_status": "completed",
-    "run_started": "2026-07-25T19:25:01-07:00",
+    "run_status": "running",
+    "run_started": "2026-07-26T10:54:32.275819-07:00",
     "total_bets": 77166,
     "open_positions": 3112,
     "open_at_risk_usd": 14351.61,
@@ -44,8 +44,8 @@
     "new_bets": 29,
     "cumulative": "77166 bets; 74054 settled; 56157W-17897L; P&L -22315.23; ROI -6.2%"
   },
-  "current_task": "Website Sales CRM master-dashboard link complete",
-  "updated_at": "2026-07-26T07:40:19-07:00",
+  "current_task": "Running Kalshi full paper trader (all 12 strategies)",
+  "updated_at": "2026-07-26T10:54:32.275832-07:00",
   "last_kalshi_run_log": "/tmp/kalshi_paper_run_20260725_1925.log",
   "last_task": {
     "task": "Add Website Sales CRM to master status dashboard",

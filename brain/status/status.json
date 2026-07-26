@@ -44,8 +44,8 @@
     "new_bets": 29,
     "cumulative": "77166 bets; 74054 settled; 56157W-17897L; P&L -22315.23; ROI -6.2%"
   },
-  "current_task": "Kalshi full paper trader complete",
-  "updated_at": "2026-07-25T19:33:52-07:00",
+  "current_task": "Add Website Sales CRM link to master status dashboard",
+  "updated_at": "2026-07-26T07:38:22-07:00",
   "last_kalshi_run_log": "/tmp/kalshi_paper_run_20260725_1925.log",
   "last_task": {
     "task": "Kalshi full paper trader",

@@ -1,15 +1,15 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 8.0,
-      "resets_at": "2026-07-26T19:30:00.869517+00:00",
+      "utilization": 11.0,
+      "resets_at": "2026-07-26T19:30:00.253578+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
       "utilization": 4.0,
-      "resets_at": "2026-08-01T22:00:00.869542+00:00",
+      "resets_at": "2026-08-01T22:00:00.253599+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -43,9 +43,9 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 8,
+        "percent": 11,
         "severity": "normal",
-        "resets_at": "2026-07-26T19:30:00.869517+00:00",
+        "resets_at": "2026-07-26T19:30:00.253578+00:00",
         "scope": null,
         "is_active": true
       },
@@ -54,7 +54,7 @@
         "group": "weekly",
         "percent": 4,
         "severity": "normal",
-        "resets_at": "2026-08-01T22:00:00.869542+00:00",
+        "resets_at": "2026-08-01T22:00:00.253599+00:00",
         "scope": null,
         "is_active": false
       },
@@ -63,7 +63,7 @@
         "group": "weekly",
         "percent": 6,
         "severity": "normal",
-        "resets_at": "2026-08-01T22:00:00.869809+00:00",
+        "resets_at": "2026-08-01T22:00:00.253843+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -94,6 +94,6 @@
     },
     "member_dashboard_available": false
   },
-  "fetched_at": "2026-07-26T07:45:06.929624-07:00",
-  "fetched_ts": 1785077106.9296446
+  "fetched_at": "2026-07-26T08:00:03.329262-07:00",
+  "fetched_ts": 1785078003.3292801
 }

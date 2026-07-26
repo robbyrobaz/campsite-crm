@@ -1,5 +1,5 @@
 {
-  "last_updated": "2026-07-24T11:25:00-07:00",
+  "last_updated": "2026-07-25T19:25:01-07:00",
   "server_health": {
     "hostname": "omen-claw",
     "load": "normal",
@@ -13,8 +13,8 @@
   },
   "kalshi_paper_trader": {
     "last_run": "2026-07-24T11:25:00-07:00",
-    "run_status": "completed",
-    "run_started": "2026-07-24T11:16:26-07:00",
+    "run_status": "in_progress",
+    "run_started": "2026-07-25T19:25:01-07:00",
     "total_bets": 75673,
     "open_positions": 2966,
     "open_at_risk_usd": 13652.59,
@@ -45,8 +45,8 @@
     "new_bets": 32,
     "cumulative": "75673 bets; 72707 settled; 55198W-17509L; P&L -21464.76; ROI -6.1%"
   },
-  "current_task": "Kalshi full paper trader complete",
-  "updated_at": "2026-07-24T11:25:00-07:00",
+  "current_task": "Running Kalshi full paper trader (all 12 strategies)",
+  "updated_at": "2026-07-25T19:25:01-07:00",
   "last_kalshi_run_log": "/tmp/kalshi_paper_run_20260724_1116.log",
   "last_task": {
     "task": "Kalshi full paper trader",

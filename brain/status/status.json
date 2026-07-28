@@ -1,7 +1,12 @@
 {
   "kalshi_full_paper_trader": {
-    "status": "in_progress",
-    "started_at": "2026-07-28T14:04:58.657389+00:00",
-    "task": "Run full paper trader with all strategies"
+    "status": "completed",
+    "completed_at": "2026-07-28T14:14:26.312941+00:00",
+    "exit_code": 0,
+    "settlements": 0,
+    "wins": 0,
+    "losses": 0,
+    "settlement_pnl": 0,
+    "new_bets": 30
   }
 }

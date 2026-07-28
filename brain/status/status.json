@@ -1,56 +1,7 @@
 {
-  "last_updated": "2026-07-25T19:33:52-07:00",
-  "server_health": {
-    "hostname": "omen-claw",
-    "load": "normal",
-    "services_all_healthy": true
-  },
-  "agents": {
-    "nq": "healthy",
-    "crypto": "healthy",
-    "sp": "healthy",
-    "church": "healthy"
-  },
-  "kalshi_paper_trader": {
-    "last_run": "2026-07-26T11:03:29.179745-07:00",
-    "run_status": "completed",
-    "run_started": "2026-07-26T10:54:32.275819-07:00",
-    "total_bets": 77823,
-    "open_positions": 3367,
-    "open_at_risk_usd": 15540.61,
-    "settled": 74456,
-    "record": "56452W-18004L",
-    "win_rate": 75.8,
-    "pnl": -22389.47,
-    "capital_deployed_usd": 361472.08,
-    "roi": -6.2,
-    "bets_this_run": 30,
-    "bets_this_run_capital": 143.15,
-    "settlements_this_run": 20,
-    "settlements_this_run_record": "17W-3L",
-    "settlements_this_run_pnl": 4.49,
-    "active_strategies_this_run": {
-      "time_decay_expanded": 8,
-      "expanded_overround": 8,
-      "high_volume_fade": 8,
-      "elections_political": 4,
-      "parlay_sweet_spot": 1,
-      "entertainment_culture": 1
-    }
-  },
-  "last_kalshi_paper_run": {
-    "timestamp": "2026-07-26T11:03:29.179759-07:00",
-    "settled": "20 (17W/3L)",
-    "run_pnl": 4.49,
-    "new_bets": 30,
-    "cumulative": "77823 bets; 74456 settled; 56452W-18004L; P&L -22389.47; ROI -6.2%"
-  },
-  "current_task": "Website Sales CRM master-dashboard link complete",
-  "updated_at": "2026-07-26T11:03:29.179763-07:00",
-  "last_kalshi_run_log": "/tmp/kalshi_paper_run_current.log",
-  "last_task": {
-    "task": "Add Website Sales CRM to master status dashboard",
-    "completed_at": "2026-07-26T07:40:19-07:00",
-    "result": "Sales CRM :8910 added beside Sales AI :8905; website-sales-crm monitored active; master dashboard and CRM verified HTTP 200 over tailnet"
+  "kalshi_full_paper_trader": {
+    "status": "in_progress",
+    "started_at": "2026-07-28T14:04:58.657389+00:00",
+    "task": "Run full paper trader with all strategies"
   }
 }

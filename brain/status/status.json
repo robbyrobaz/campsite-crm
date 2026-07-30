@@ -9,6 +9,8 @@
     "settlement_pnl": 0,
     "new_bets": 30
   },
-  "current_task": "Running Kalshi full paper trader (12 strategies)",
-  "status": "in_progress"
+  "current_task": "",
+  "status": "idle",
+  "last_task": "Kalshi full paper trader completed",
+  "last_result": "28 new bets; 6 settlements, 6 wins, 0 losses"
 }

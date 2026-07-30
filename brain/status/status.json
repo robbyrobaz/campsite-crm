@@ -8,5 +8,7 @@
     "losses": 0,
     "settlement_pnl": 0,
     "new_bets": 30
-  }
+  },
+  "current_task": "Running Kalshi full paper trader (12 strategies)",
+  "status": "in_progress"
 }

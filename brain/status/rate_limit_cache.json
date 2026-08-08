@@ -2,14 +2,14 @@
   "data": {
     "five_hour": {
       "utilization": 2.0,
-      "resets_at": "2026-08-08T03:09:59.537256+00:00",
+      "resets_at": "2026-08-08T03:09:59.478248+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
     },
     "seven_day": {
       "utilization": 88.0,
-      "resets_at": "2026-08-08T21:59:59.537277+00:00",
+      "resets_at": "2026-08-08T21:59:59.478270+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null
@@ -22,7 +22,13 @@
     "tangelo": null,
     "iguana_necktie": null,
     "omelette_promotional": null,
-    "nimbus_quill": null,
+    "nimbus_quill": {
+      "utilization": 0.0,
+      "resets_at": null,
+      "limit_dollars": null,
+      "used_dollars": null,
+      "remaining_dollars": null
+    },
     "cinder_cove": null,
     "amber_ladder": null,
     "extra_usage": {
@@ -45,7 +51,7 @@
         "group": "session",
         "percent": 2,
         "severity": "normal",
-        "resets_at": "2026-08-08T03:09:59.537256+00:00",
+        "resets_at": "2026-08-08T03:09:59.478248+00:00",
         "scope": null,
         "is_active": false
       },
@@ -54,7 +60,7 @@
         "group": "weekly",
         "percent": 88,
         "severity": "warning",
-        "resets_at": "2026-08-08T21:59:59.537277+00:00",
+        "resets_at": "2026-08-08T21:59:59.478270+00:00",
         "scope": null,
         "is_active": true
       },
@@ -63,7 +69,7 @@
         "group": "weekly",
         "percent": 56,
         "severity": "normal",
-        "resets_at": "2026-08-08T21:59:59.537507+00:00",
+        "resets_at": "2026-08-08T22:00:00.478505+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -94,6 +100,6 @@
     },
     "member_dashboard_available": false
   },
-  "fetched_at": "2026-08-07T17:30:05.617393-07:00",
-  "fetched_ts": 1786149005.617414
+  "fetched_at": "2026-08-07T17:45:00.533895-07:00",
+  "fetched_ts": 1786149900.533917
 }

@@ -274,6 +274,10 @@ backup_databases() {
         "/home/rob/.openclaw/workspace/kanban-dashboard/kanban.sqlite"
         "/home/rob/.openclaw/workspace/jarvis-home-energy/energy_data.db"
         "/home/rob/.openclaw/workspace/ai-workshop/projects/sports-betting/data/betting.db"
+        # Flight Deal Radar — price baseline. The alerting thresholds are
+        # derived from this history, so losing it resets the detector to
+        # guessed constants. Added Aug 2 2026.
+        "/home/rob/flight-deal-radar/radar.db"
         "/mnt/data/market_macro.db"
         "/mnt/data/backtest_results.db"
     )

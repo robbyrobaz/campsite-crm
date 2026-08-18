@@ -54,6 +54,12 @@ stamp="$(date -u +%Y%m%dT%H%M%SZ)"
 
 mkdir -p snapshots manifests
 
+# Prune old snapshots FIRST (keep $KEEP_REMOTE) — must run even if tar/push
+# fail later, otherwise failed runs accumulate snapshots and fill the SSD
+# (this happened Apr–Jul 2026: 51 × 2.2G piled up while tar exited 2).
+{ ls -1t snapshots/*.tar.gz 2>/dev/null || true; } | tail -n +$((KEEP_REMOTE + 1)) | xargs -r rm -f
+{ ls -1t manifests/*.sha256  2>/dev/null || true; } | tail -n +$((KEEP_REMOTE + 1)) | xargs -r rm -f
+
 # Build the slim archive directly into the repo dir
 archive="snapshots/workspace-${stamp}.tar.gz"
 manifest="manifests/workspace-${stamp}.sha256"
@@ -74,6 +80,7 @@ tar -czf "$archive" \
   --exclude='*.parquet' \
   --exclude='openclaw.json.bak*' \
   --exclude='workspace/.trash' \
+  --exclude='workspace/BettaFish/db_data' \
   --exclude='workspace/android-sdk' \
   --exclude='workspace/blofin-stack' \
   --exclude='workspace/blofin-moonshot' \
@@ -103,9 +110,15 @@ tar -czf "$archive" \
 
 sha256sum "$archive" > "$manifest"
 
-# Prune old snapshots (keep $KEEP_REMOTE)
-ls -1t snapshots/*.tar.gz 2>/dev/null | tail -n +$((KEEP_REMOTE + 1)) | xargs -r rm -f
-ls -1t manifests/*.sha256  2>/dev/null | tail -n +$((KEEP_REMOTE + 1)) | xargs -r rm -f
+# GitHub rejects files >100MB without LFS (>2GB even with it). The archive has
+# grown from its ~5MB design size to ~2.2GB, so pushes have failed since Apr 13
+# 2026 — and committing anyway bloats .git by the archive size every night.
+# Keep snapshots local-only until the archive is slimmed back down.
+archive_bytes=$(stat -c%s "$archive")
+if (( archive_bytes > 100*1024*1024 )); then
+  echo "WARNING: $archive is $(du -h "$archive" | cut -f1) — exceeds GitHub's 100MB file limit; skipping commit/push (snapshot kept locally)"
+  exit 0
+fi
 
 git add -A
 if git diff --cached --quiet; then

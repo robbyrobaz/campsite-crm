@@ -38,13 +38,23 @@ and repos that have their own GitHub remotes (blofin-stack, campsite-crm, NQ-Tra
 Runs **daily at midnight** via systemd timer. Keeps last 5 snapshots locally.
 Pushes to GitHub: [robbyrobaz/openclaw-full-restore](https://github.com/robbyrobaz/openclaw-full-restore)
 
-### Known issue: archive size
+### Known issue: archive size (updated Jul 11 2026)
 
-The workspace snapshot is ~2.5GB compressed. GitHub pushes may timeout at 180s.
-The prune (keep last 5) runs AFTER tar — if systemd kills the service before prune, old snapshots
-accumulate and fill the SSD. Service timeout is set to 900s to mitigate this.
+The workspace snapshot grew from its ~5MB design size to ~2.2GB compressed, which exceeds
+GitHub's 100MB per-file limit — pushes had silently failed since Apr 13 2026 (the local repo
+had zero commits). The script now **skips commit/push with a logged WARNING whenever the
+archive exceeds 100MB**, so snapshots are currently LOCAL-ONLY. To restore off-box backup,
+either slim the archive (find what bloated the workspace and add tar excludes) or point the
+snapshot at /mnt/data instead of GitHub.
 
-If snapshots pile up again: `ls -1t snapshots/*.tar.gz | tail -n +6 | xargs rm -f`
+Fixed Jul 11 2026 (after 51 snapshots × 2.2G filled the SSD to 92%):
+- Prune (keep last 5) now runs at the START of each run, before tar — a failing tar or push
+  can no longer block pruning. Steady state is 6 archives on disk (5 kept + the new one).
+- `workspace/BettaFish/db_data` (root-owned docker volume) excluded — it made tar exit 2
+  nightly, aborting the script before prune/push.
+- Prune pipeline no longer dies under `set -o pipefail` when a glob matches nothing.
+
+Manual prune if ever needed: `ls -1t snapshots/*.tar.gz | tail -n +6 | xargs rm -f`
 
 ### Systemd units
 

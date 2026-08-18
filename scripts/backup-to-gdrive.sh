@@ -82,15 +82,33 @@ snapshot() {
       fail "integrity_check FAILED: $name"; rm -f "$out"; return 1
     fi
   else
-    # DuckDB: single-writer; cp then prove the copy actually opens
-    if ! cp "$src" "$out" 2>>"$LOG"; then fail "cp failed: $src"; return 1; fi
-    if ! python3 - "$out" <<'PY' 2>>"$LOG"
+    # DuckDB has no online-backup API and /home is ext4 (no snapshots), so this
+    # is a plain cp of a file a live writer may be mutating. A copy that spans a
+    # checkpoint comes out torn ("No more data remaining in MetadataReader").
+    # It usually succeeds -- it failed once at midday RTH when tick rate peaks --
+    # so retry rather than stopping the collector. NEVER upload an unverified copy.
+    local attempt ok=0
+    for attempt in 1 2 3; do
+      if ! cp "$src" "$out" 2>>"$LOG"; then fail "cp failed: $src"; return 1; fi
+      if python3 - "$out" <<'DUCKCHECK' 2>>"$LOG"
 import sys, duckdb
 con = duckdb.connect(sys.argv[1], read_only=True)
 con.execute("SHOW TABLES").fetchall()
 con.close()
-PY
-    then fail "duckdb open FAILED: $name"; rm -f "$out"; return 1; fi
+DUCKCHECK
+      then
+        ok=1
+        [[ $attempt -gt 1 ]] && log "    (opened cleanly on attempt ${attempt})"
+        break
+      else
+        log "    attempt ${attempt}/3: copy was torn, retrying in 30s"
+        sleep 30
+      fi
+    done
+    if (( ok == 0 )); then
+      fail "duckdb open FAILED after 3 attempts: $name (live writer; previous Drive copy retained)"
+      rm -f "$out"; return 1
+    fi
   fi
 
   local sz; sz=$(stat -c%s "$out")

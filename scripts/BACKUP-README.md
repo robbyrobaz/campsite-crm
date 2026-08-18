@@ -76,7 +76,8 @@ Manual prune if ever needed: `ls -1t snapshots/*.tar.gz | tail -n +6 | xargs rm 
 - IBKR DuckDB feeds, SP500 pipeline DuckDB
 - Config archive: openclaw.json, credentials, agent configs, .env files, session logs, systemd units
 
-**Weekly (Sunday 4am):** Above + ML models + blofin_tickers/ohlcv parquet data + reef.db + blofin_monitor.db (29GB)
+**Weekly (Sunday 4am):** Above + ML models + blofin_tickers/ohlcv parquet data + blofin_monitor.db (29GB)
+(reef.db removed 2026-08-18 — no longer needed; it had never backed up successfully anyway)
 
 ### Destination
 
@@ -94,7 +95,7 @@ All backups go to `/mnt/data/backups/` on the **secondary HDD** (916GB, ~16% ful
   models/
     weekly/    ← active (keep 8 weeks)
   data/
-    weekly/    ← blofin_tickers, blofin_ohlcv, reef.db (keep 4 weeks)
+    weekly/    ← blofin_tickers, blofin_ohlcv (keep 4 weeks)
   manifest.json
   backup.log
 ```

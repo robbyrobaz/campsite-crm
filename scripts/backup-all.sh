@@ -548,21 +548,10 @@ backup_data() {
         fi
     fi
     
-    # Reef scanner database (4.5GB — weekly only, too large for daily)
-    local reef_db="/home/rob/reef-workspace/data/reef.db"
-    if [[ -f "$reef_db" ]]; then
-        local reef_archive="${data_dir}/reef_${TIMESTAMP}.db.gz"
-        log "  Backing up reef.db (large — weekly only)..."
-        if sqlite3 "$reef_db" ".backup '${data_dir}/reef_${TIMESTAMP}.db'" 2>>"${LOG_FILE}"; then
-            gzip -f "${data_dir}/reef_${TIMESTAMP}.db"
-            log "    Created: $reef_archive"
-            CREATED_FILES+=("$reef_archive")
-            TOTAL_SIZE=$((TOTAL_SIZE + $(stat -c%s "$reef_archive" 2>/dev/null || echo 0)))
-        else
-            log "    ERROR: Failed to backup reef.db"
-            ERRORS=$((ERRORS + 1))
-        fi
-    fi
+    # reef.db backup DISABLED 2026-08-18 (Rob's call — no longer needed).
+    # It had never worked anyway: reef.db is a DuckDB file, but this called
+    # sqlite3 .backup on it, so every weekly run logged "file is not a database"
+    # and left a 0-byte reef_*.db while reporting Errors: 1.
 
     # Cleanup old weekly data (keep last 4)
     cleanup_old_backups "$data_dir" 4

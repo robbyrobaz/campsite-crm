@@ -22,7 +22,13 @@ MANIFEST=/mnt/data/backups/gdrive-manifest.json
 DATE=$(date +%Y-%m-%d)
 ERRORS=(); WARNINGS=()
 
-log()  { echo "[$(date '+%Y-%m-%d %H:%M:%S %Z')] $*" | tee -a "$LOG"; }
+# NOTE: log() writes to STDERR, not stdout. snapshot() returns the artifact name
+# on stdout via `art=$(snapshot ...)`, so anything log() emitted on stdout would be
+# captured into $art. That is what happened whenever a DuckDB copy tore and retried:
+# the retry line landed in the array key, the manifest heredoc died with
+# "SyntaxError: unterminated string literal", and gdrive-manifest.json stopped being
+# written (frozen 2026-08-19 -> 2026-08-22). Keep the >&2. (fixed 2026-08-22)
+log()  { echo "[$(date '+%Y-%m-%d %H:%M:%S %Z')] $*" | tee -a "$LOG" >&2; }
 fail() { log "ERROR: $*"; ERRORS+=("$*"); }
 
 mkdir -p "$STAGE"
@@ -33,7 +39,11 @@ DBS=(
   "/home/rob/infrastructure/ibkr/data/nq_feed.duckdb|duckdb"
   "/home/rob/infrastructure/ibkr/data/ibkr_options.duckdb|duckdb"
   "/home/rob/.openclaw/workspace/NQ-Trading-PIPELINE/data/nq_pipeline.db|sqlite"
-  "/home/rob/.openclaw/workspace/NQ2/data/nq_pipeline.db|sqlite"
+  # NQ2 dropped 2026-08-22 (Rob: no longer used). It derived the SAME artifact name
+  # as NQ-Trading-PIPELINE's nq_pipeline.db -- basename(dirname)__basename gives
+  # "data__nq_pipeline.db" for both -- so NQ2 was snapshotted second and silently
+  # overwrote the LIVE pipeline DB in the stage dir. Drive held NQ2's 2.4MB copy, not
+  # the pipeline's 10.5MB one. Do not re-add without a unique name.
   "/home/rob/.openclaw/workspace/nq-l2-scalping/data/l2_signals.db|sqlite"
   "/home/rob/.openclaw/workspace/futures_prospector/prospector.db|sqlite"
   "/home/rob/judas-futures-workshop/judasfutures.db|sqlite"
@@ -120,9 +130,41 @@ DUCKCHECK
 log "=== Off-site DB backup -> Google Drive starting ==="
 rm -f "${STAGE}"/*
 declare -A SIZES
+declare -A SRCSTAMP
+
+# Fingerprint of each source file at its last successful backup: "<size>:<mtime>".
+# sqlite .backup output is not byte-stable, so an unchanged DB would otherwise
+# re-compress to different bytes, defeat rclone --checksum, re-upload in full,
+# and shove the old copy into version history. Frozen DBs (momentum.db, last
+# written 2026-06-27) cost >1GB/night for nothing. Skip them at the source.
+declare -A PREVSTAMP OLDSIZES
+if [[ -f "$MANIFEST" ]]; then
+  while IFS=$'\t' read -r k v; do OLDSIZES["$k"]="$v"; done < <(python3 -c "
+import json
+try:
+    d=json.load(open('$MANIFEST')).get('artifacts',{})
+    [print(f'{k}\t{v}') for k,v in d.items()]
+except Exception: pass")
+  while IFS=$'\t' read -r k v; do PREVSTAMP["$k"]="$v"; done < <(python3 -c "
+import json
+try:
+    d=json.load(open('$MANIFEST')).get('sources',{})
+    [print(f'{k}\t{v}') for k,v in d.items()]
+except Exception: pass")
+fi
 for entry in "${DBS[@]}"; do
   IFS='|' read -r src kind <<< "$entry"
   [[ -f "$src" ]] || { log "SKIP (not found): $src"; continue; }
+
+  name="$(basename "$(dirname "$src")")__$(basename "$src")"
+  stamp="$(stat -c '%s:%Y' "$src")"
+  SRCSTAMP["${name}.gz"]="$stamp"
+  if [[ "${PREVSTAMP[${name}.gz]:-}" == "$stamp" ]]; then
+    log "UNCHANGED, skipping: $(basename "$src")"
+    SIZES["${name}.gz"]="${OLDSIZES[${name}.gz]:-0}"
+    continue
+  fi
+
   log "Snapshotting $(basename "$src")"
   if art=$(snapshot "$src" "$kind"); then
     SIZES["$art"]=$(stat -c%s "${STAGE}/${art}")
@@ -150,8 +192,10 @@ fi
 python3 - "$MANIFEST" <<PY
 import json,sys
 arts = {}
+srcs = {}
 $(for k in "${!SIZES[@]}"; do echo "arts['$k'] = ${SIZES[$k]}"; done)
-json.dump({"date":"$DATE","artifacts":arts,
+$(for k in "${!SRCSTAMP[@]}"; do echo "srcs['$k'] = '${SRCSTAMP[$k]}'"; done)
+json.dump({"date":"$DATE","artifacts":arts,"sources":srcs,
            "total_bytes":sum(arts.values())}, open(sys.argv[1],'w'), indent=2)
 PY
 

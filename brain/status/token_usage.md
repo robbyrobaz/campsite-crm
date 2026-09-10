@@ -1,15 +1,15 @@
 # Token Usage
-**Updated:** 2026-09-10 09:45 MST
+**Updated:** 2026-09-10 10:00 MST
 
 ## ⚡ Anthropic Rate Limits (Live)
 | Window | Usage | Resets At |
 |--------|-------|-----------|
-| 5-hour | **10.0%** | Sep 10 02:00 PM MST |
+| 5-hour | **11.0%** | Sep 10 02:00 PM MST |
 | 7-day (all) | **40.0%** | Sep 12 03:00 PM MST |
 | 7-day (Sonnet) | **?%** | Sep 12 03:00 PM MST |
 
 ## Rolling 5-Hour Window
-- **Total Tokens:** 0 (6 requests)
+- **Total Tokens:** 0 (7 requests)
 - **Input:** 0 | **Output:** 0
 - **Cache Read:** 0 | **Cache Write:** 0
 - **Cost (est):** $0.00
@@ -18,6 +18,7 @@
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
 | sonnet | 5 | 0 | 0 | $0.00 |
+| opus | 1 | 0 | 0 | $0.00 |
 | haiku | 1 | 0 | 0 | $0.00 |
 
 ## Rolling 24-Hour Window
@@ -28,9 +29,9 @@
 ### By Model (24h)
 | Model | Requests | Tokens | Output | Cost |
 |-------|----------|--------|--------|------|
-| opus | 1 | 0 | 0 | $0.00 |
 | sonnet | 24 | 0 | 0 | $0.00 |
 | haiku | 3 | 0 | 0 | $0.00 |
+| opus | 1 | 0 | 0 | $0.00 |
 
 ---
 *Note: Max 5x plan is $100/mo flat. Cost shown is equivalent API pricing, not actual charges.*

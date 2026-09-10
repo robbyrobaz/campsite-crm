@@ -1,16 +1,16 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 76.0,
-      "resets_at": "2026-09-10T16:00:00.366403+00:00",
+      "utilization": 0.0,
+      "resets_at": null,
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null,
       "locked_reason": null
     },
     "seven_day": {
-      "utilization": 39.0,
-      "resets_at": "2026-09-12T22:00:00.366422+00:00",
+      "utilization": 40.0,
+      "resets_at": "2026-09-12T22:00:00.361970+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null,
@@ -54,27 +54,27 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 76,
-        "severity": "warning",
-        "resets_at": "2026-09-10T16:00:00.366403+00:00",
+        "percent": 0,
+        "severity": "normal",
+        "resets_at": null,
         "scope": null,
-        "is_active": true
+        "is_active": false
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
-        "percent": 39,
+        "percent": 40,
         "severity": "normal",
-        "resets_at": "2026-09-12T22:00:00.366422+00:00",
+        "resets_at": "2026-09-12T22:00:00.361970+00:00",
         "scope": null,
         "is_active": false
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
-        "percent": 60,
+        "percent": 61,
         "severity": "normal",
-        "resets_at": "2026-09-12T22:00:00.366644+00:00",
+        "resets_at": "2026-09-12T22:00:00.362290+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -82,7 +82,7 @@
           },
           "surface": null
         },
-        "is_active": false
+        "is_active": true
       }
     ],
     "spend": {
@@ -106,6 +106,6 @@
     "member_dashboard_available": false,
     "seven_day_breakdown": null
   },
-  "fetched_at": "2026-09-10T08:45:00.446252-07:00",
-  "fetched_ts": 1789055100.4462686
+  "fetched_at": "2026-09-10T09:00:00.456857-07:00",
+  "fetched_ts": 1789056000.4568756
 }

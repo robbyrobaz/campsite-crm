@@ -1,16 +1,16 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 9.0,
-      "resets_at": "2026-09-11T02:00:00.370940+00:00",
+      "utilization": 10.0,
+      "resets_at": "2026-09-12T04:00:00.373590+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null,
       "locked_reason": null
     },
     "seven_day": {
-      "utilization": 49.0,
-      "resets_at": "2026-09-12T22:00:00.370959+00:00",
+      "utilization": 59.0,
+      "resets_at": "2026-09-12T22:00:00.373615+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null,
@@ -34,6 +34,7 @@
     },
     "cinder_cove": null,
     "copper_kite": null,
+    "harbor_lantern": null,
     "amber_ladder": null,
     "juniper_tide": null,
     "extra_usage": {
@@ -54,27 +55,27 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 9,
+        "percent": 10,
         "severity": "normal",
-        "resets_at": "2026-09-11T02:00:00.370940+00:00",
+        "resets_at": "2026-09-12T04:00:00.373590+00:00",
         "scope": null,
         "is_active": false
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
-        "percent": 49,
+        "percent": 59,
         "severity": "normal",
-        "resets_at": "2026-09-12T22:00:00.370959+00:00",
+        "resets_at": "2026-09-12T22:00:00.373615+00:00",
         "scope": null,
         "is_active": false
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
-        "percent": 77,
-        "severity": "warning",
-        "resets_at": "2026-09-12T22:00:00.371140+00:00",
+        "percent": 92,
+        "severity": "critical",
+        "resets_at": "2026-09-12T22:00:00.373794+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -106,6 +107,6 @@
     "member_dashboard_available": false,
     "seven_day_breakdown": null
   },
-  "fetched_at": "2026-09-10T18:45:00.476004-07:00",
-  "fetched_ts": 1789091100.4760206
+  "fetched_at": "2026-09-11T17:45:00.458088-07:00",
+  "fetched_ts": 1789173900.4581053
 }

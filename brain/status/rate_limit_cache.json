@@ -1,8 +1,8 @@
 {
   "data": {
     "five_hour": {
-      "utilization": 0.0,
-      "resets_at": "2026-09-13T20:00:00.322982+00:00",
+      "utilization": 3.0,
+      "resets_at": "2026-09-13T20:00:00.372109+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null,
@@ -10,7 +10,7 @@
     },
     "seven_day": {
       "utilization": 3.0,
-      "resets_at": "2026-09-19T22:00:00.323002+00:00",
+      "resets_at": "2026-09-19T22:00:00.372130+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null,
@@ -55,27 +55,27 @@
       {
         "kind": "session",
         "group": "session",
-        "percent": 0,
+        "percent": 3,
         "severity": "normal",
-        "resets_at": "2026-09-13T20:00:00.322982+00:00",
+        "resets_at": "2026-09-13T20:00:00.372109+00:00",
         "scope": null,
-        "is_active": false
+        "is_active": true
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
         "percent": 3,
         "severity": "normal",
-        "resets_at": "2026-09-19T22:00:00.323002+00:00",
+        "resets_at": "2026-09-19T22:00:00.372130+00:00",
         "scope": null,
-        "is_active": true
+        "is_active": false
       },
       {
         "kind": "weekly_scoped",
         "group": "weekly",
         "percent": 3,
         "severity": "normal",
-        "resets_at": "2026-09-19T22:00:00.323177+00:00",
+        "resets_at": "2026-09-19T22:00:00.372434+00:00",
         "scope": {
           "model": {
             "id": null,
@@ -106,13 +106,13 @@
     },
     "member_dashboard_available": false,
     "seven_day_breakdown": {
-      "as_of": "2026-09-13T15:45:00.363178+00:00",
-      "window_started_at": "2026-09-12T22:00:00.323002+00:00",
+      "as_of": "2026-09-13T16:00:00.394356+00:00",
+      "window_started_at": "2026-09-12T22:00:00.372130+00:00",
       "rows": [
         {
           "key": "claude_code",
           "display_name": "Claude Code",
-          "percent": 92
+          "percent": 93
         },
         {
           "key": "chat",
@@ -122,7 +122,7 @@
         {
           "key": "cowork",
           "display_name": "Cowork",
-          "percent": 8
+          "percent": 7
         },
         {
           "key": "other",
@@ -132,6 +132,6 @@
       ]
     }
   },
-  "fetched_at": "2026-09-13T08:45:00.408093-07:00",
-  "fetched_ts": 1789314300.4081063
+  "fetched_at": "2026-09-13T09:00:00.470435-07:00",
+  "fetched_ts": 1789315200.4704533
 }

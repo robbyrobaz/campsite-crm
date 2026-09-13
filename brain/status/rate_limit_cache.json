@@ -2,15 +2,15 @@
   "data": {
     "five_hour": {
       "utilization": 0.0,
-      "resets_at": "2026-09-13T10:00:00.314954+00:00",
+      "resets_at": "2026-09-13T10:00:00.283703+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null,
       "locked_reason": null
     },
     "seven_day": {
-      "utilization": 0.0,
-      "resets_at": "2026-09-19T22:00:00.314973+00:00",
+      "utilization": 1.0,
+      "resets_at": "2026-09-19T22:00:00.283728+00:00",
       "limit_dollars": null,
       "used_dollars": null,
       "remaining_dollars": null,
@@ -57,18 +57,18 @@
         "group": "session",
         "percent": 0,
         "severity": "normal",
-        "resets_at": "2026-09-13T10:00:00.314954+00:00",
+        "resets_at": "2026-09-13T10:00:00.283703+00:00",
         "scope": null,
-        "is_active": true
+        "is_active": false
       },
       {
         "kind": "weekly_all",
         "group": "weekly",
-        "percent": 0,
+        "percent": 1,
         "severity": "normal",
-        "resets_at": "2026-09-19T22:00:00.314973+00:00",
+        "resets_at": "2026-09-19T22:00:00.283728+00:00",
         "scope": null,
-        "is_active": false
+        "is_active": true
       },
       {
         "kind": "weekly_scoped",
@@ -105,8 +105,33 @@
       "can_toggle": false
     },
     "member_dashboard_available": false,
-    "seven_day_breakdown": null
+    "seven_day_breakdown": {
+      "as_of": "2026-09-13T06:15:00.314144+00:00",
+      "window_started_at": "2026-09-12T22:00:00.283728+00:00",
+      "rows": [
+        {
+          "key": "claude_code",
+          "display_name": "Claude Code",
+          "percent": 66
+        },
+        {
+          "key": "chat",
+          "display_name": "Chats",
+          "percent": 0
+        },
+        {
+          "key": "cowork",
+          "display_name": "Cowork",
+          "percent": 34
+        },
+        {
+          "key": "other",
+          "display_name": "Other",
+          "percent": 0
+        }
+      ]
+    }
   },
-  "fetched_at": "2026-09-12T23:00:00.374965-07:00",
-  "fetched_ts": 1789279200.3749804
+  "fetched_at": "2026-09-12T23:15:00.365920-07:00",
+  "fetched_ts": 1789280100.3659348
 }

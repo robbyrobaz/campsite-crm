@@ -53,15 +53,18 @@ def seg_start(p: Path) -> float:
     return datetime.strptime(p.stem, "%Y%m%d-%H%M%S").timestamp()
 
 
-def make_mask():
+def make_mask(ignore=()):
     m = np.ones((H, W), dtype=bool)
     # Wyze on-screen clock sits bottom-right; ignore that strip.
     m[int(H * 0.86):, int(W * 0.55):] = False
+    # per-camera ignore boxes from cameras.json: [x0, y0, x1, y1] as fractions of the frame
+    for x0, y0, x1, y1 in ignore:
+        m[int(H * y0):int(H * y1) + 1, int(W * x0):int(W * x1) + 1] = False
     return m
 
 
 class Camera(threading.Thread):
-    def __init__(self, name, url, audio):
+    def __init__(self, name, url, audio, ignore=()):
         super().__init__(name=f"cam-{name}", daemon=True)
         self.cam, self.url, self.audio = name, url, audio
         self.buf = BUFFER / name
@@ -71,7 +74,7 @@ class Camera(threading.Thread):
         self.last_frame = 0.0
         self.proc = None
         self.event = None                # {"segs": [...], "start": t, "peak": score}
-        self.mask = make_mask()
+        self.mask = make_mask(ignore)
         self.peak_minute = (0, 0.0)
 
     # ── ffmpeg ──────────────────────────────────────────────────────────────
@@ -261,7 +264,8 @@ def prune():
 
 def main():
     BUFFER.mkdir(parents=True, exist_ok=True)
-    cams = [Camera(c["name"], c["url"], c.get("audio", False)) for c in CONFIG["cameras"]]
+    cams = [Camera(c["name"], c["url"], c.get("audio", False), c.get("ignore", ()))
+            for c in CONFIG["cameras"]]
 
     def stop(*_):
         _stop.set()

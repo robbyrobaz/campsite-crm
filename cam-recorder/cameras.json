@@ -1,11 +1,12 @@
 {
   "root": "/mnt/data/cameras",
-  "max_archive_gb": 50,
+  "max_archive_gb": 400,
   "min_free_gb": 100,
   "motion_frac": 0.004,
   "cameras": [
     {"name": "front-side-cam", "url": "rtsp://127.0.0.1:8556/front-side-cam-cloud", "audio": true},
     {"name": "upstairs-cam",   "url": "rtsp://127.0.0.1:8554/upstairs-cam"},
-    {"name": "downstairs-cam", "url": "rtsp://127.0.0.1:8554/downstairs-cam"}
+    {"name": "downstairs-cam", "url": "rtsp://127.0.0.1:8554/downstairs-cam",
+     "ignore": [[0.27, 0.16, 0.85, 0.48]], "_ignore_note": "ceiling fan"}
   ]
 }

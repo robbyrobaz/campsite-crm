@@ -47,3 +47,7 @@ SOUL.md
 TOOLS.md
 USER.md
 arb-dashboard
+
+# camera credentials (go2rtc RTSPS login)
+go2rtc-wyze/go2rtc.yaml
+go2rtc-wyze/*.bak*

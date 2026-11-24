@@ -244,7 +244,8 @@ class Camera(threading.Thread):
 def prune():
     """Delete oldest event files until archive < MAX_ARCHIVE_GB and drive free > MIN_FREE_GB.
     Only touches files under ROOT/<camera>/ ."""
-    files = [p for p in ROOT.glob("*/*/*") if p.is_file() and not p.parts[-3].startswith(".")]
+    files = [p for p in ROOT.glob("*/*/*") if p.is_file() and not p.parts[-3].startswith(".")
+             and not (ROOT / ".saved" / p.relative_to(ROOT)).exists()]   # ⭐ saved clips are kept forever
     files += [p for p in ROOT.glob("*/*/*_raw/*.ts") if p.is_file()]
     files.sort(key=lambda p: p.stat().st_mtime)
     total = sum(p.stat().st_size for p in files)

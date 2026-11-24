@@ -7,6 +7,10 @@
     {"name": "front-side-cam", "url": "rtsp://127.0.0.1:8556/front-side-cam-cloud", "audio": true},
     {"name": "upstairs-cam",   "url": "rtsp://127.0.0.1:8554/upstairs-cam"},
     {"name": "downstairs-cam", "url": "rtsp://127.0.0.1:8554/downstairs-cam",
-     "ignore": [[0.24, 0.0, 0.78, 0.17]], "_ignore_note": "ceiling fan"}
+     "ignore": [[0.24, 0.0, 0.78, 0.17]], "_ignore_note": "ceiling fan"},
+    {"name": "doorbell",       "url": "rtsp://127.0.0.1:8556/doorbell",     "audio": true},
+    {"name": "back-porch",     "url": "rtsp://127.0.0.1:8556/back-porch",   "audio": true},
+    {"name": "garage-left",    "url": "rtsp://127.0.0.1:8556/garage-left",  "audio": true},
+    {"name": "garage-right",   "url": "rtsp://127.0.0.1:8556/garage-right", "audio": true}
   ]
 }

@@ -128,7 +128,9 @@ class Camera(threading.Thread):
         for line in proc.stderr:
             s = line.decode(errors="replace").strip()
             if (not s or "non-existing PPS" in s or "decode_slice_header" in s
-                    or "no frame!" in s or "Last message repeated" in s):
+                    or "no frame!" in s or "Last message repeated" in s
+                    or "error while decoding MB" in s or "top block unavailable" in s
+                    or "cabac decode" in s):
                 continue
             if time.time() - last.get(s, 0) > 300:   # rate-limit repeats
                 last[s] = time.time()
